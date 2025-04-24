@@ -73,5 +73,6 @@
 <!-- prettier-ignore-start -->
 |App|Persist|Tag|Description|
 |:-:|:-:|:-:|-|
+|[InputTip](https://github.com/abgox/InputTip)|✔️||一个输入法状态实时提示工具。<br>An input method status tip tool.|
 |[PSCompletions](https://github.com/abgox/PSCompletions)|✔️|`PSModule`|一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。<br>A completion manager for better and simpler use completions in PowerShell.|
 <!-- prettier-ignore-end -->
