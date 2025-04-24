@@ -84,4 +84,5 @@
 |[InputTip](https://inputtip.abgox.com/)|✔️||一个输入法状态实时提示工具。<br>An input method status tip tool.|
 |[PixPin](https://pixpin.cn/)|✔️||一个功能强大使用简单的截图/贴图/录屏工具|
 |[PSCompletions](https://pscompletions.abgox.com/)|✔️|`PSModule`|一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。<br>A completion manager for better and simpler use completions in PowerShell.|
+|[Steampp](https://steampp.net/)|✔️||一个开源跨平台的多功能 Steam 工具箱，包含 Github 网络加速等功能，它也被叫做: "Watt Toolkit"。<br>A toolbox with lots of Steam tools. It's also known as "Watt Toolkit".|
 <!-- prettier-ignore-end -->
