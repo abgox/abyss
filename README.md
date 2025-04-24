@@ -73,6 +73,7 @@
 <!-- prettier-ignore-start -->
 |App|Persist|Tag|Description|
 |:-:|:-:|:-:|-|
+|[Font-Hack-NF](https://github.com/ryanoasis/nerd-fonts)|➖|`Font`|Hack 字体，Nerd Font 系列。<br>Nerd Fonts patched 'Hack' Font family.|
 |[InputTip-zip](https://inputtip.abgox.com)|✔️||一个输入法状态实时提示工具(zip 版本)。<br>An input method status tip tool (zip version).|
 |[InputTip](https://inputtip.abgox.com/)|✔️||一个输入法状态实时提示工具。<br>An input method status tip tool.|
 |[PSCompletions](https://pscompletions.abgox.com/)|✔️|`PSModule`|一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。<br>A completion manager for better and simpler use completions in PowerShell.|
