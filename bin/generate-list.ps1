@@ -1,14 +1,17 @@
 param($path)
 
-$content = @()
+$manifests = Get-ChildItem "$PSScriptRoot\..\bucket"
 
-foreach ($_ in Get-ChildItem "$PSScriptRoot\..\bucket") {
+$content = @("|App ($($manifests.Length))|Persist|Tag|Description|", "|:-:|:-:|:-:|-|")
+
+foreach ($_ in $manifests) {
     $json = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
     $info = @()
 
-    # homepage
     $app = $_.BaseName
-    $info += "[$($app)]($($json.homepage))"
+
+    # homepage
+    $info += "[$app]($($json.homepage))"
 
     # persist
     $info += if ($json.persist) { '✔️' }else { '➖' }
@@ -16,7 +19,7 @@ foreach ($_ in Get-ChildItem "$PSScriptRoot\..\bucket") {
     # Tag
     ## font
     $tag = @()
-    $tag += if ($_.BaseName -like "Font-*") { '`Font`' }
+    $tag += if ($app -like "Font-*") { '`Font`' }
 
     ## AutoUpdate
     $tag += if (!$json.autoupdate) { '`NoAutoUpdate`' }
@@ -36,14 +39,14 @@ foreach ($_ in Get-ChildItem "$PSScriptRoot\..\bucket") {
         $pattern = [regex]::Escape($before) + '(?!.*' + [regex]::Escape($before) + ')'
         return [regex]::Replace($string, $pattern, $after)
     }
-    $info += Replace-LastChar $json.description "。" "。<br>"
+    $info += Replace-LastChar $json.description "。" "。<br />"
     $content += "|" + ($info -join "|") + "|"
 }
 
 function get_static_content($path) {
     $content = Get-Content -Path $path -Encoding UTF8
 
-    $match = $content | Select-String -Pattern "\|:-:\|:-:\|:-:\|-\|"
+    $match = $content | Select-String -Pattern "<!-- prettier-ignore-start -->"
 
     if ($match) {
         $matchLineNumber = ([array]$match.LineNumber)[0]
