@@ -1,7 +1,7 @@
 {
     "version": "2.37.3",
     "description": "一个输入法状态实时提示工具。An input method status tip tool.",
-    "homepage": "https://github.com/abgox/InputTip",
+    "homepage": "https://inputtip.abgox.com/",
     "license": {
         "identifier": "MIT",
         "url": "https://github.com/abgox/InputTip/blob/main/LICENSE"
@@ -14,13 +14,18 @@
             "InputTip"
         ]
     ],
-    "pre_install": "if (!(Test-Path \"$persist_dir\\InputTip.ini\")) { '' | Out-File \"$persist_dir\\InputTip.ini\" -Encoding UTF8 -Force }",
+    "pre_install": [
+        "if (!(Test-Path $persist_dir)) { New-Item -ItemType Directory $persist_dir | Out-Null };",
+        "if (!(Test-Path \"$persist_dir\\InputTip.ini\")) { '' | Out-File \"$persist_dir\\InputTip.ini\" -Encoding UTF8 -Force }"
+    ],
     "persist": [
         "InputTip.ini",
         "InputTipSymbol",
         "InputTipCursor"
     ],
-    "checkver": "github",
+    "checkver": {
+        "github": "https://github.com/abgox/InputTip"
+    },
     "autoupdate": {
         "url": "https://github.com/abgox/InputTip/releases/download/v$version/InputTip.exe"
     }
