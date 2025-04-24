@@ -82,5 +82,6 @@
 |[Font-Sarasa-Fixed-SC](https://github.com/be5invis/Sarasa-Gothic)|➖|`Font`|一款中英文宽度完美2:1的等宽字体 (版本: Fixed-SC)。<br>A perfectly 2:1 monospaced font. (version: Fixed-SC)|
 |[InputTip-zip](https://inputtip.abgox.com)|✔️||一个输入法状态实时提示工具(zip 版本)。<br>An input method status tip tool (zip version).|
 |[InputTip](https://inputtip.abgox.com/)|✔️||一个输入法状态实时提示工具。<br>An input method status tip tool.|
+|[PixPin](https://pixpin.cn/)|✔️||一个功能强大使用简单的截图/贴图/录屏工具|
 |[PSCompletions](https://pscompletions.abgox.com/)|✔️|`PSModule`|一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。<br>A completion manager for better and simpler use completions in PowerShell.|
 <!-- prettier-ignore-end -->
