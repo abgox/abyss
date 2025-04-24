@@ -73,4 +73,5 @@
 <!-- prettier-ignore-start -->
 |App|Persist|Tag|Description|
 |:-:|:-:|:-:|-|
+|[PSCompletions](https://github.com/abgox/PSCompletions)|✔️|`PSModule`|一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。<br>A completion manager for better and simpler use completions in PowerShell.|
 <!-- prettier-ignore-end -->
