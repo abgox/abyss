@@ -28,7 +28,11 @@
 
 ### 正在使用 Scoop
 
-1. 添加 `abgox-bucket`
+1. 添加 `abgox-bucket` (使用 Github 或 Gitee 仓库)
+
+    ```shell
+    scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
+    ```
 
     ```shell
     scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket

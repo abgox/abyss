@@ -28,7 +28,11 @@
 
 ### For ones familiar with Scoop
 
-1.  Add `abgox-bucket`.
+1.  Add `abgox-bucket`. (Use Github or Gitee repository.)
+
+    ```shell
+    scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
+    ```
 
     ```shell
     scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
