@@ -24,49 +24,49 @@
     </a>
 </p>
 
--   [Scoop completion in PSCompletions ](https://github.com/abgox/PSCompletions "PSCompletions")is recommended.
+-   推荐使用 [PSCompletions 项目中的 scoop 补全 ](https://gitee.com/abgox/PSCompletions "PSCompletions")
 
-### For ones familiar with Scoop
+### 正在使用 Scoop
 
-1.  Add `abgox-bucket`.
+1. 添加 `abgox-bucket`
 
     ```shell
     scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
     ```
 
-2.  Install apps. (e.g. `InputTip`)
+2. 安装应用(以 `InputTip` 举例)
 
     ```shell
     scoop install abgox-bucket/InputTip
     ```
 
----
+### 没有使用过 Scoop
 
-### Never used Scoop
-
--   [What is Scoop?](https://github.com/ScoopInstaller/Scoop)
--   [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
--   [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
--   [Scoop install](https://github.com/ScoopInstaller/Install)
--   [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
+-   [什么是 Scoop?](https://github.com/ScoopInstaller/Scoop)
+-   [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop)
+-   [什么是 Scoop 中的应用清单(App-Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
+-   [安装 Scoop](https://github.com/ScoopInstaller/Install)
+-   [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ---
 
-### App Manifests
+### 应用清单
 
--   Guide
+-   说明
 
-    -   **`App`** : App package name.
-        -   Click to view the official website or repository.
-        -   Sort by first letter(0-9,a-z).
-    -   **`Persist`** : Important data of software is saved to `persist` directory.
-        -   **✔️** : It has been done.
-        -   **➖** : It's not necessary, or the conditions are not meet.(e.g. data file not found)
+    -   **`App`** ：应用包名
+        -   点击跳转官网或仓库
+        -   按照数字字母排序(0-9,a-z)
+    -   **`Persist`** ：应用重要数据保存到 `persist` 目录中
+        -   **`✔️`** ：已实现
+        -   **`➖`** ：没必要或不满足条件(比如：找不到数据文件)
     -   **`Tag`**
-        -   `Font`: A font.
-        -   `PSModule`: A PowerShell Module.
-        -   `NoAutoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
-    -   **`Description`**: App Description.
+
+        -   `Font`: 一种字体
+        -   `PSModule`: 一个 PowerShell 模块
+        -   `NoAutoUpdate` : `json.autoupdate` 未配置，Scoop 无法自动检测更新
+
+    -   **`Description`**: 应用描述
 
 ---
 
