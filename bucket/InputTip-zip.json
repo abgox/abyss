@@ -1,0 +1,50 @@
+{
+    "version": "2.37.3",
+    "description": "一个输入法状态实时提示工具(zip 版本)。An input method status tip tool (zip version).",
+    "homepage": "https://inputtip.abgox.com",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/abgox/InputTip/blob/main/LICENSE"
+    },
+    "url": "https://github.com/abgox/InputTip/releases/download/v2.37.3/InputTip.zip",
+    "hash": "9aed962731b284a7af2985ac1fa3cc8737e65e779ae791b7a0324c0950603166",
+    "bin": [
+        [
+            "InputTip-main\\src\\AutoHotkey\\AutoHotkey64.exe",
+            "InputTip",
+            "$dir\\InputTip-main\\src\\InputTip.ahk"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "InputTip-main\\src\\AutoHotkey\\AutoHotkey64.exe",
+            "InputTip",
+            "\"$dir\\InputTip-main\\src\\InputTip.ahk\"",
+            "InputTip-main\\src\\img\\favicon.ico"
+        ]
+    ],
+    "pre_install": [
+        "if (!(Test-Path $persist_dir)) { New-Item -ItemType Directory $persist_dir | Out-Null };",
+        "if (!(Test-Path \"$persist_dir\\InputTip.ini\")) { '' | Out-File \"$persist_dir\\InputTip.ini\" -Encoding UTF8 -Force }"
+    ],
+    "persist": [
+        [
+            "InputTip-main/src/InputTip.ini",
+            "InputTip.ini"
+        ],
+        [
+            "InputTip-main/src/InputTipSymbol",
+            "InputTipSymbol"
+        ],
+        [
+            "InputTip-main/src/InputTipCursor",
+            "InputTipCursor"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/abgox/InputTip"
+    },
+    "autoupdate": {
+        "url": "https://github.com/abgox/InputTip/releases/download/v$version/InputTip.zip"
+    }
+}
