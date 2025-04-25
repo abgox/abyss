@@ -58,19 +58,21 @@
 
 -   说明
 
-    -   **`App`** ：应用包名
-        -   点击跳转官网或仓库
+    -   **`App`**：应用包名
+        -   点击查看官网或仓库
         -   按照数字字母排序(0-9,a-z)
-    -   **`Persist`** ：应用重要数据保存到 `persist` 目录中
-        -   **`✔️`** ：已实现
-        -   **`➖`** ：没必要或不满足条件(比如：找不到数据文件)
-    -   **`Tag`**
+    -   **`Version`**：应用版本
+        -   点击查看应用清单 json 文件
+    -   **`Persist`**：应用重要数据保存到 `persist` 目录中
+        -   **`✔️`**：已实现
+        -   **`➖`**：没必要或不满足条件(如：无数据文件)
+    -   **`Tag`**：应用标签
 
-        -   `Font`: 一种字体
-        -   `PSModule`: 一个 PowerShell 模块
-        -   `NoAutoUpdate` : `json.autoupdate` 未配置，Scoop 无法自动检测更新
+        -   `Font`：一种字体
+        -   `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
+        -   `NoAutoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
 
-    -   **`Description`**: 应用描述
+    -   **`Description`**：应用描述
 
 ---
 

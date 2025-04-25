@@ -63,14 +63,16 @@
     -   **`App`** : App package name.
         -   Click to view the official website or repository.
         -   Sort by first letter(0-9,a-z).
+    -   **`Version`** : App version.
+        -   Click to view the manifest json file.
     -   **`Persist`** : Important data of software is saved to `persist` directory.
         -   **✔️** : It has been done.
         -   **➖** : It's not necessary, or the conditions are not meet.(e.g. data file not found)
     -   **`Tag`**
-        -   `Font`: A font.
-        -   `PSModule`: A PowerShell Module.
+        -   `Font` : A font.
+        -   `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
         -   `NoAutoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
-    -   **`Description`**: App Description.
+    -   **`Description`** : App Description.
 
 ---
 
