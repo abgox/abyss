@@ -2,7 +2,7 @@ param($path)
 
 $manifests = Get-ChildItem "$PSScriptRoot\..\bucket"
 
-$content = @("|App ($($manifests.Length))|Persist|Tag|Description|", "|:-:|:-:|:-:|-|")
+$content = @("|App ($($manifests.Length))|Version|Persist|Tag|Description|", "|:-:|:-:|:-:|:-:|-|")
 
 foreach ($_ in $manifests) {
     $json = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
@@ -12,6 +12,9 @@ foreach ($_ in $manifests) {
 
     # homepage
     $info += "[$app]($($json.homepage))"
+
+    # version
+    $info += "[v$($json.version)](./bucket/$($_.Name))"
 
     # persist
     $info += if ($json.persist) { '✔️' }else { '➖' }
