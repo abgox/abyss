@@ -3,14 +3,14 @@
 </p>
 
 <p align="center">
-    <a href="README.md">English</a> |
-    <a href="README-CN.md">简体中文</a> |
+    <a href="readme.md">English</a> |
+    <a href="readme-cn.md">简体中文</a> |
     <a href="https://github.com/abgox/abgox-bucket">Github</a> |
     <a href="https://gitee.com/abgox/abgox-bucket">Gitee</a>
 </p>
 
 <p align="center">
-    <a href="https://github.com/abgox/abgox-bucket/blob/main/LICENSE">
+    <a href="https://github.com/abgox/abgox-bucket/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abgox-bucket" alt="license" />
     </a>
     <a href="https://img.shields.io/github/languages/code-size/abgox/abgox-bucket.svg">
