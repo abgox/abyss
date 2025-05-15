@@ -24,55 +24,55 @@
     </a>
 </p>
 
--   推荐使用 [PSCompletions 项目中的 scoop 补全 ](https://gitee.com/abgox/PSCompletions "PSCompletions")
+- 推荐使用 [PSCompletions 项目中的 scoop 补全 ](https://gitee.com/abgox/PSCompletions "PSCompletions")
 
 ### 正在使用 Scoop
 
 1. 添加 `abgox-bucket` (使用 Github 或 Gitee 仓库)
 
-    ```shell
-    scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
-    ```
+   ```shell
+   scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
+   ```
 
-    ```shell
-    scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
-    ```
+   ```shell
+   scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+   ```
 
-2. 安装应用(以 `InputTip` 举例)
+2. 安装应用(以 `InputTip-zip` 举例)
 
-    ```shell
-    scoop install abgox-bucket/InputTip
-    ```
+   ```shell
+   scoop install abgox-bucket/InputTip-zip
+   ```
 
 ### 没有使用过 Scoop
 
--   [什么是 Scoop?](https://github.com/ScoopInstaller/Scoop)
--   [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop)
--   [什么是 Scoop 中的应用清单(App-Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
--   [安装 Scoop](https://github.com/ScoopInstaller/Install)
--   [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
+- [什么是 Scoop?](https://github.com/ScoopInstaller/Scoop)
+- [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop)
+- [什么是 Scoop 中的应用清单(App-Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
+- [安装 Scoop](https://github.com/ScoopInstaller/Install)
+- [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ---
 
 ### 应用清单
 
--   说明
+- 说明
 
-    -   **`App`**：应用包名
-        -   点击查看官网或仓库
-        -   按照数字字母排序(0-9,a-z)
-    -   **`Version`**：应用版本
-        -   点击查看应用清单 json 文件
-    -   **`Persist`**：应用重要数据保存到 `persist` 目录中
-        -   **`✔️`**：已实现
-        -   **`➖`**：没必要或不满足条件(如：无数据文件)
-    -   **`Tag`**：应用标签
+  - **`App`**：应用包名
+    - 点击查看官网或仓库
+    - 按照数字字母排序(0-9,a-z)
+  - **`Version`**：应用版本
+    - 点击查看应用清单 json 文件
+  - **`Persist`**：应用重要数据保存到 `persist` 目录中
+    - **`✔️`**：已实现
+    - **`➖`**：没必要或不满足条件(如：无数据文件)
+  - **`Tag`**：应用标签
 
-        -   `Font`：一种字体
-        -   `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
-        -   `NoAutoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
+    - `Font`：一种字体
+    - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
+    - `NoAutoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
 
-    -   **`Description`**：应用描述
+  - **`Description`**：应用描述
 
 ---
 

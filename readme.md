@@ -24,7 +24,7 @@
     </a>
 </p>
 
--   [Scoop completion in PSCompletions ](https://github.com/abgox/PSCompletions "PSCompletions")is recommended.
+- [Scoop completion in PSCompletions ](https://github.com/abgox/PSCompletions "PSCompletions")is recommended.
 
 ### For ones familiar with Scoop
 
@@ -38,41 +38,41 @@
     scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
     ```
 
-2.  Install apps. (e.g. `InputTip`)
+2.  Install apps. (e.g. `InputTip-zip`)
 
     ```shell
-    scoop install abgox-bucket/InputTip
+    scoop install abgox-bucket/InputTip-zip
     ```
 
 ---
 
 ### Never used Scoop
 
--   [What is Scoop?](https://github.com/ScoopInstaller/Scoop)
--   [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
--   [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
--   [Scoop install](https://github.com/ScoopInstaller/Install)
--   [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
+- [What is Scoop?](https://github.com/ScoopInstaller/Scoop)
+- [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
+- [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
+- [Scoop install](https://github.com/ScoopInstaller/Install)
+- [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ---
 
 ### App Manifests
 
--   Guide
+- Guide
 
-    -   **`App`** : App package name.
-        -   Click to view the official website or repository.
-        -   Sort by first letter(0-9,a-z).
-    -   **`Version`** : App version.
-        -   Click to view the manifest json file.
-    -   **`Persist`** : Important data of software is saved to `persist` directory.
-        -   **✔️** : It has been done.
-        -   **➖** : It's not necessary, or the conditions are not meet.(e.g. data file not found)
-    -   **`Tag`**
-        -   `Font` : A font.
-        -   `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
-        -   `NoAutoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
-    -   **`Description`** : App Description.
+  - **`App`** : App package name.
+    - Click to view the official website or repository.
+    - Sort by first letter(0-9,a-z).
+  - **`Version`** : App version.
+    - Click to view the manifest json file.
+  - **`Persist`** : Important data of software is saved to `persist` directory.
+    - **✔️** : It has been done.
+    - **➖** : It's not necessary, or the conditions are not meet.(e.g. data file not found)
+  - **`Tag`**
+    - `Font` : A font.
+    - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
+    - `NoAutoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
+  - **`Description`** : App Description.
 
 ---
 
