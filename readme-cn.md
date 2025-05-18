@@ -77,7 +77,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (12)|Version|Persist|Tag|Description|
+|App (16)|Version|Persist|Tag|Description|
 |:-:|:-:|:-:|:-:|-|
 |[Font-Hack-NF](https://github.com/ryanoasis/nerd-fonts)|[v3.4.0](./bucket/Font-Hack-NF.json)|➖|`Font`|Hack 字体，Nerd Font 系列。<br />Nerd Fonts patched 'Hack' Font family.|
 |[Font-Maple-Mono-Normal-NL-NF-CN-Unhinted](https://github.com/subframe7536/Maple-font)|[v7.2](./bucket/Font-Maple-Mono-Normal-NL-NF-CN-Unhinted.json)|➖|`Font`|一款带连字和控制台图标的圆角等宽字体，中英文宽度完美2:1 (版本: Normal-NL-NF-CN-Unhinted)。<br /> An open source monospace font with round corner and ligatures for IDE and command line. (version: Normal-NL-NF-CN-Unhinted)|
@@ -88,7 +88,11 @@
 |[PowerToysRun-ClipboardManager](https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager)|[v0.11.0](./bucket/PowerToysRun-ClipboardManager.json)|➖||一个 PowerToys Run 插件，用于轻松搜索和粘贴剪贴板历史记录。<br />A PowerToys Run plugin for easily searching and pasting the clipboard history.|
 |[PowerToysRun-Everything](https://github.com/lin-ycv/EverythingPowerToys)|[v0.89.0](./bucket/PowerToysRun-Everything.json)|➖||PowerToys Run 中的 Everything 插件。<br />Everything search plugin for PowerToys Run.|
 |[PowerToysRun-GitHubRepo](https://github.com/8LWXpg/PowerToysRun-GitHubRepo)|[v1.12.0](./bucket/PowerToysRun-GitHubRepo.json)|➖||一个 PowerToys Run 插件，用于搜索 GitHub 存储库，然后在默认浏览器中打开。<br />A PowerToys Run plugin PowerToys Run Plugin for searching and opening GitHub repositories.|
+|[PowerToysRun-HttpStatusCodes](https://github.com/grzhan/HttpStatusCodePowerToys)|[v0.1.3](./bucket/PowerToysRun-HttpStatusCodes.json)|➖||一个 PowerToys Run 插件，用于搜索 HTTP 状态代码。<br />A PowerToys Run plugin for for searching HTTP status codes.|
+|[PowerToysRun-Pomodoro](https://github.com/ruslanlap/PowerToysRun-Pomodoro)|[v0.90.1](./bucket/PowerToysRun-Pomodoro.json)|➖||一个 PowerToys Run 插件，用于管理你的生产力会话。<br />A PowerToys Run plugin that manage your productivity sessions.|
+|[PowerToysRun-ProcessKiller](https://github.com/8LWXpg/PowerToysRun-ProcessKiller)|[v1.12.2](./bucket/PowerToysRun-ProcessKiller.json)|➖||一个 PowerToys Run 插件，用于杀死进程。<br />A PowerToys Run plugin for killing processes.|
 |[PowerToysRun-Translator](https://github.com/N0I0C0K/PowerTranslator)|[v11.1.0](./bucket/PowerToysRun-Translator.json)|➖||一个 PowerToys Run 的翻译插件。<br />A translate plugin for PowerToys Run.|
+|[PowerToysRun-Winget](https://github.com/bostrot/PowerToysRunPluginWinget)|[v1.3.0](./bucket/PowerToysRun-Winget.json)|➖||一个 PowerToys Run 插件，用于从 Winget 包管理器中搜索和安装包。<br />A PowerToys Run plugin that allows you to search and install packages from the Winget package manager.|
 |[PSCompletions](https://pscompletions.abgox.com/)|[v5.5.0](./bucket/PSCompletions.json)|✔️|`PSModule`|一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。<br />A completion manager for better and simpler use completions in PowerShell.|
 |[Steampp](https://steampp.net/)|[v3.0.0-rc.16](./bucket/Steampp.json)|✔️||一个开源跨平台的多功能 Steam 工具箱，包含 Github 网络加速等功能，它也被叫做: "Watt Toolkit"。<br />A toolbox with lots of Steam tools. It's also known as "Watt Toolkit".|
 <!-- prettier-ignore-end -->
