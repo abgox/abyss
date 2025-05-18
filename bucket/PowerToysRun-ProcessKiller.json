@@ -1,0 +1,72 @@
+{
+    "version": "1.12.2",
+    "description": "一个 PowerToys Run 插件，用于杀死进程。A PowerToys Run plugin for killing processes.",
+    "homepage": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller/releases/download/v1.12.2/ProcessKiller-v1.12.2-x64.zip",
+            "hash": "921531681a39054ab9839c844b7c7c10b9b2c981869d8d50c97ed02eb8946ff8"
+        },
+        "arm64": {
+            "url": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller/releases/download/v1.12.2/ProcessKiller-v1.12.2-arm64.zip",
+            "hash": "7d1cf614c30f011d6781949a0be95fdcafb49815933ae5d6687c14aba55ce74f"
+        }
+    },
+    "pre_install": [
+        "$dirName = \"ProcessKiller\"",
+        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
+        "# -------------------------------------------------------------------------------",
+        "try {",
+        "    Write-Host",
+        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
+        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
+        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -Confirm:$false -ErrorAction Stop",
+        "    }",
+        "    $copyingPath = if (Test-Path -Path \"$dir\\$dirName\") { \"$dir\\$dirName\" } else { $dir }",
+        "    Write-Host \"Copying $copyingPath => $pluginsDir\\$dirName\" -ForegroundColor Yellow",
+        "    Copy-Item -Path $copyingPath -Destination \"$pluginsDir\\$dirName\" -Recurse -Force -Confirm:$false",
+        "    Write-Host \"Please restart PowerToys to load the plugin.\" -ForegroundColor Green",
+        "} catch {",
+        "    Write-Host",
+        "    Write-Host \"$dirName plugin folder cannot be removed.\" -ForegroundColor Red",
+        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
+        "    Write-Host",
+        "    throw \"Cannot remove the $dirName plugin folder: '$pluginsDir\\$dirName'\"",
+        "}"
+    ],
+    "pre_uninstall": [
+        "$dirName = \"ProcessKiller\"",
+        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
+        "# -------------------------------------------------------------------------------",
+        "try {",
+        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
+        "        Write-Host",
+        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
+        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -Confirm:$false -ErrorAction Stop",
+        "    }",
+        "} catch {",
+        "    Write-Host",
+        "    Write-Host \"$dirName plugin folder cannot be removed.\" -ForegroundColor Red",
+        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
+        "    Write-Host",
+        "    throw \"Cannot remove the $dirName plugin folder: '$pluginsDir\\$dirName'\"",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller/releases/download/v$version/ProcessKiller-v$version-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller/releases/download/v$version/ProcessKiller-v$version-arm64.zip"
+            }
+        }
+    }
+}
