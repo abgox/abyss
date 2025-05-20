@@ -86,7 +86,7 @@
 |[InputTip](https://inputtip.abgox.com/)|[v2.38.0](./bucket/InputTip.json)|✔️||一个输入法状态实时提示工具。<br />An input method status tip tool.|
 |[PixPin](https://pixpin.cn/)|[v2.0.0.3](./bucket/PixPin.json)|✔️||一个功能强大使用简单的截图/贴图/录屏工具|
 |[PowerToysRun-ClipboardManager](https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager)|[v0.11.0](./bucket/PowerToysRun-ClipboardManager.json)|➖||一个 PowerToys Run 插件，用于轻松搜索和粘贴剪贴板历史记录。<br />A PowerToys Run plugin for easily searching and pasting the clipboard history.|
-|[PowerToysRun-Everything](https://github.com/lin-ycv/EverythingPowerToys)|[v0.89.0](./bucket/PowerToysRun-Everything.json)|➖||PowerToys Run 中的 Everything 插件。<br />Everything search plugin for PowerToys Run.|
+|[PowerToysRun-Everything](https://github.com/lin-ycv/EverythingPowerToys)|[v0.91.1](./bucket/PowerToysRun-Everything.json)|➖||PowerToys Run 中的 Everything 插件。<br />Everything search plugin for PowerToys Run.|
 |[PowerToysRun-GitHubRepo](https://github.com/8LWXpg/PowerToysRun-GitHubRepo)|[v1.12.0](./bucket/PowerToysRun-GitHubRepo.json)|➖||一个 PowerToys Run 插件，用于搜索 GitHub 存储库，然后在默认浏览器中打开。<br />A PowerToys Run plugin PowerToys Run Plugin for searching and opening GitHub repositories.|
 |[PowerToysRun-HttpStatusCodes](https://github.com/grzhan/HttpStatusCodePowerToys)|[v0.1.3](./bucket/PowerToysRun-HttpStatusCodes.json)|➖||一个 PowerToys Run 插件，用于搜索 HTTP 状态代码。<br />A PowerToys Run plugin for for searching HTTP status codes.|
 |[PowerToysRun-Pomodoro](https://github.com/ruslanlap/PowerToysRun-Pomodoro)|[v0.90.1](./bucket/PowerToysRun-Pomodoro.json)|➖||一个 PowerToys Run 插件，用于管理你的生产力会话。<br />A PowerToys Run plugin that manage your productivity sessions.|
