@@ -24,8 +24,10 @@
         ]
     ],
     "pre_install": [
-        "if (!(Test-Path $persist_dir)) { New-Item -ItemType Directory $persist_dir | Out-Null };",
-        "if (!(Test-Path \"$persist_dir\\InputTip.ini\")) { '' | Out-File \"$persist_dir\\InputTip.ini\" -Encoding UTF8 -Force }"
+        "$path_persist = \"$persist_dir\\InputTip.ini\"",
+        "# ------------------------------------------------------------------",
+        "ensure $persist_dir",
+        "if (!(Test-Path $path_persist)) { '' | Out-File $path_persist -Encoding UTF8 -Force }"
     ],
     "persist": [
         [

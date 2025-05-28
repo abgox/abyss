@@ -23,7 +23,17 @@
             "eSearch"
         ]
     ],
-    "persist": "resources/app/portable",
+    "pre_install": [
+        "$path_to = \"$persist_dir\\resources\\app\\portable\"",
+        "$path_from = \"$env:AppData\\eSearch\"",
+        "# ------------------------------------------------------------------",
+        "if (!(Test-Path $path_to) -and (Test-Path $path_from)) {",
+        "    Write-Host",
+        "    Write-Host \"[Portable Mode]: Copying $path_from => $path_to\" -ForegroundColor Yellow",
+        "    Copy-Item -Path $path_from -Destination $path_to -Recurse -Force -Confirm:$false",
+        "}"
+    ],
+    "persist": "resources\\app\\portable",
     "checkver": {
         "github": "https://github.com/xushengfeng/eSearch"
     },

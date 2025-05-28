@@ -16,15 +16,27 @@
             "hash": "388c960e18042b1b38b27b5acf0cc6a8e1e3d03cd6e5a10d39fcf4076f60c419"
         }
     },
+    "bin": [
+        [
+            "lx-music-desktop.exe",
+            "lx-music"
+        ]
+    ],
     "shortcuts": [
         [
             "lx-music-desktop.exe",
             "lx-music"
         ]
     ],
-    "pre_uninstall": [
-        "$dir_TempData = \"$env:APPDATA\\lx-music-desktop\"",
-        "Remove-Item $dir_TempData -Recurse -Force -Confirm:$false"
+    "pre_install": [
+        "$path_to = \"$persist_dir\\portable\\userData\"",
+        "$path_from = \"$env:AppData\\lx-music-desktop\"",
+        "# ------------------------------------------------------------------",
+        "if (!(Test-Path $path_to) -and (Test-Path $path_from)) {",
+        "    Write-Host",
+        "    Write-Host \"[Portable Mode]: Copying $path_from => $path_to\" -ForegroundColor Yellow",
+        "    Copy-Item -Path $path_from -Destination $path_to -Recurse -Force -Confirm:$false",
+        "}"
     ],
     "persist": "portable",
     "checkver": "github",
