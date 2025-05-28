@@ -30,17 +30,17 @@
 
 1.  Add `abgox-bucket`. (Use Github or Gitee repository.)
 
-    ```shell
+    ```pwsh
     scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
     ```
 
-    ```shell
+    ```pwsh
     scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
     ```
 
 2.  Install apps. (e.g. `InputTip-zip`)
 
-    ```shell
+    ```pwsh
     scoop install abgox-bucket/InputTip-zip
     ```
 
@@ -53,6 +53,34 @@
 - [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 - [Scoop install](https://github.com/ScoopInstaller/Install)
 - [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
+
+---
+
+### Unable to Access Github Resources
+
+> [!Tip]
+> If you cannot access Github resources due to network issues, you can try the following solutions:
+
+1. Use the Gitee repository
+   ```pwsh
+   scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+   ```
+2. Install [scoop-install](https://gitee.com/abgox/scoop-install)
+   ```pwsh
+   scoop install abgox-bucket/scoop-install
+   ```
+3. Configure URL replacement settings
+   ```pwsh
+   scoop config scoop-install-url-replace-from "https://github.com"
+   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
+   ```
+4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install applications. For example, install `InputTip-zip`:
+
+   ```pwsh
+   scoop-install abgox-bucket/InputTip-zip
+   ```
+
+5. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.
 
 ---
 

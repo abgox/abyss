@@ -30,17 +30,17 @@
 
 1. 添加 `abgox-bucket` (使用 Github 或 Gitee 仓库)
 
-   ```shell
+   ```pwsh
    scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
    ```
 
-   ```shell
+   ```pwsh
    scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
    ```
 
 2. 安装应用(以 `InputTip-zip` 举例)
 
-   ```shell
+   ```pwsh
    scoop install abgox-bucket/InputTip-zip
    ```
 
@@ -51,6 +51,35 @@
 - [什么是 Scoop 中的应用清单(App-Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 - [安装 Scoop](https://github.com/ScoopInstaller/Install)
 - [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
+
+---
+
+### 无法访问 Github 资源
+
+> [!Tip]
+>
+> 如果因为网络问题无法访问 Github 资源，可以尝试以下方案
+
+1. 使用 Gitee 仓库
+   ```pwsh
+   scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+   ```
+2. 安装 [scoop-install](https://gitee.com/abgox/scoop-install)
+   ```pwsh
+   scoop install abgox-bucket/scoop-install
+   ```
+3. 设置 url 替换配置
+   ```pwsh
+   scoop config scoop-install-url-replace-from "https://github.com"
+   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
+   ```
+4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用，以 `InputTip-zip` 为例
+
+   ```pwsh
+   scoop-install abgox-bucket/InputTip-zip
+   ```
+
+5. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)
 
 ---
 
