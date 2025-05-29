@@ -1,0 +1,54 @@
+{
+    "version": "0.9.3",
+    "description": "一个开源的 Notion 替代品，数据和定制由你掌控。An open-source alternative to Notion. You are in charge of your data and customizations.",
+    "homepage": "https://www.appflowy.io/",
+    "license": {
+        "identifier": "GNU Affero General Public License v3.0",
+        "url": "https://github.com/AppFlowy-IO/AppFlowy/blob/main/LICENSE"
+    },
+    "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/0.9.3/AppFlowy-0.9.3-windows-x86_64.zip",
+    "hash": "dcb54101cd59cabf8194b3292b8eb96aa117009bec7087fe4d4c13a54f2f7698",
+    "extract_dir": "AppFlowy",
+    "shortcuts": [
+        [
+            "AppFlowy.exe",
+            "AppFlowy"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\io.appflowy\")",
+        "$linkTargets = @(\"$persist_dir\\io.appflowy\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/AppFlowy-IO/AppFlowy"
+    },
+    "autoupdate": {
+        "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/$version/AppFlowy-$version-windows-x86_64.zip"
+    }
+}
