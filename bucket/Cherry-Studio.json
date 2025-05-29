@@ -1,0 +1,87 @@
+{
+    "version": "1.3.12",
+    "description": "一款支持多个大语言模型(LLM)供应商的桌面客户端。A desktop client that supports for multiple LLM providers.",
+    "homepage": "https://cherry-ai.com",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/CherryHQ/cherry-studio/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.3.12/Cherry-Studio-1.3.12-x64-portable.exe",
+            "hash": "bded1267c12384acf362cb04053fb4fc806626656895aaa1fb632e018b84843d",
+            "shortcuts": [
+                [
+                    "Cherry-Studio-1.3.12-x64-portable.exe",
+                    "Cherry Studio"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.3.12/Cherry-Studio-1.3.12-arm64-portable.exe",
+            "hash": "f9e6ac226f3c5c439a339743914228faf60476e4e63d6b0d7b0c27758087f854",
+            "shortcuts": [
+                [
+                    "Cherry-Studio-1.3.12-arm64-portable.exe",
+                    "Cherry Studio"
+                ]
+            ]
+        }
+    },
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\CherryStudio\")",
+        "$linkTargets = @(\"$persist_dir\\CherryStudio\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/CherryHQ/cherry-studio"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-x64-portable.exe",
+                "shortcuts": [
+                    [
+                        "Cherry-Studio-$version-x64-portable.exe",
+                        "Cherry Studio"
+                    ]
+                ]
+            },
+            "arm64": {
+                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-arm64-portable.exe",
+                "shortcuts": [
+                    [
+                        "Cherry-Studio-$version-arm64-portable.exe",
+                        "Cherry Studio"
+                    ]
+                ]
+            }
+        }
+    }
+}
