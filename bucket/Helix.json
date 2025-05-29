@@ -1,0 +1,62 @@
+{
+    "version": "25.01.1",
+    "description": "后现代文本编辑器。A post-modern modal text editor.",
+    "homepage": "https://helix-editor.com",
+    "license": {
+        "identifier": "Mozilla Public License 2.0",
+        "url": "https://github.com/helix-editor/helix/blob/master/LICENSE"
+    },
+    "suggest": {
+        "vcredist": "extras/vcredist2022"
+    },
+    "url": "https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64-windows.zip",
+    "hash": "564055657cf24a4ebb0ef929ee2bc40d379431868e06fd82e41a0def01a5a320",
+    "extract_dir": "helix-25.01.1-x86_64-windows",
+    "bin": [
+        [
+            "hx.exe",
+            "helix"
+        ],
+        [
+            "hx.exe",
+            "hx"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\helix\")",
+        "$linkTargets = @(\"$persist_dir\\helix\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/helix-editor/helix"
+    },
+    "autoupdate": {
+        "url": "https://github.com/helix-editor/helix/releases/download/$version/helix-$version-x86_64-windows.zip",
+        "extract_dir": "helix-$version-x86_64-windows"
+    }
+}
