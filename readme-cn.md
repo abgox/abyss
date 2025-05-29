@@ -83,7 +83,48 @@
 
 ---
 
+### Persist
+
+> [!Tip]
+>
+> 假设 Scoop 的根目录是 `D:\Scoop`
+
+- Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录下的数据文件
+
+  - 以 [VSCode.json](./bucket/VSCode.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\VSCode` 目录下
+  - 然后会持久化数据目录: `D:\Scoop\apps\VSCode\data` => `D:\Scoop\persist\VSCode\data`
+  - 卸载后，它的设置、插件、快捷键等数据仍然会保存在 `D:\Scoop\persist\VSCode\data` 目录下
+    - 如果卸载时使用 `-p/--purge` 参数，`D:\Scoop\persist\VSCode` 目录会被删除
+  - 重新安装后，又会继续使用这些数据
+
+- 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
+  - 假如你换了新的电脑，只要将 `D:\Scoop` 目录备份到新电脑中，然后运行以下命令即可恢复所有应用
+    ```pwsh
+    scoop reset *
+    ```
+
+## Link
+
+> [!Tip]
+>
+> 假设 Scoop 的根目录是 `D:\Scoop`
+
+- Scoop 的 persist 非常强大，遗憾的是它有局限性: 只有应用数据在应用安装目录下，才可以使用它
+- 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录下
+- 像这样的应用，本仓库中使用 `New-Item -ItemType Junction` 进行链接
+- 以 [Helix](./bucket/Helix.json) 为例
+  - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
+  - 它会进行链接: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
+
+> [!Warning]
+>
+> 需要注意: 卸载应用时不会删除链接目录
+
+---
+
 ### 应用清单
+
+[English](readme.md#app-manifests) | [简体中文](./readme-cn.md#应用清单)
 
 - 说明
 
@@ -92,8 +133,9 @@
     - 按照数字字母排序(0-9,a-z)
   - **`Version`**：应用版本
     - 点击查看应用清单 json 文件
-  - **`Persist`**：应用重要数据保存到 `persist` 目录中
+  - **`Persist`**：持久化应用数据, 详情参考 [Persist](#persist)
     - **`✔️`**：已实现
+    - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
     - **`➖`**：没必要或不满足条件(如：无数据文件)
   - **`Tag`**：应用标签
 

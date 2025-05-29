@@ -85,7 +85,46 @@
 
 ---
 
+### Persist
+
+> [!Tip]
+>
+> Assume the Scoop root directory is `D:\Scoop`
+
+- Scoop provides a `persist` configuration in the manifest files, which can persist data files in the application directory.
+  - Taking [VSCode.json](./bucket/VSCode.json) as an example, Scoop will install it to `D:\Scoop\apps\VSCode`.
+  - It will persist data directory: `D:\Scoop\apps\VSCode\data` => `D:\Scoop\persist\VSCode\data`.
+  - After uninstalling, its settings, plugins, keybindings and other data will still be saved in the `D:\Scoop\apps\VSCode\data` directory.
+    - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\VSCode` directory will be removed.
+  - After reinstalling, the data will continue to be used again.
+- This is the most powerful feature of Scoop, which can quickly restore your application environment.
+  - If you change to a new computer, just back up the `D:\Scoop` directory to new computer and run the following command to restore all applications.
+    ```pwsh
+    scoop reset *
+    ```
+
+## Link
+
+> [!Tip]
+>
+> Assume the Scoop root directory is `D:\Scoop`
+
+- Scoop's `persist` is extremely powerful, but unfortunately, it has a limitation: it only works if the application data resides within the installation directory.
+- However, some applications store their data outside the installation directory, commonly in `$env:AppData`.
+- For such applications, this repository uses `New-Item -ItemType Junction` to link.
+- Taking [Helix](./bucket/Helix.json) as an example:
+  - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`.
+  - It will to link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
+
+> [!Warning]
+>
+> Note: The linked directory will not be removed when the application is uninstalled.
+
+---
+
 ### App Manifests
+
+[简体中文](./readme-cn.md#应用清单) | [English](readme.md#app-manifests)
 
 - Guide
 
@@ -94,8 +133,9 @@
     - Sort by first letter(0-9,a-z).
   - **`Version`** : App version.
     - Click to view the manifest json file.
-  - **`Persist`** : Important data of software is saved to `persist` directory.
+  - **`Persist`** : Persist data. Refer to [Persist](#persist) for details.
     - **✔️** : It has been done.
+    - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](#link) for details.
     - **➖** : It's not necessary, or the conditions are not meet.(e.g. data file not found)
   - **`Tag`**
     - `Font` : A font.
