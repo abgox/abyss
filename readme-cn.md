@@ -1,26 +1,26 @@
 <p align="center">
-    <h1 align="center">✨ abgox-bucket ✨</h1>
+    <h1 align="center">✨ aether ✨</h1>
 </p>
 
 <p align="center">
     <a href="readme.md">English</a> |
     <a href="readme-cn.md">简体中文</a> |
-    <a href="https://github.com/abgox/abgox-bucket">Github</a> |
-    <a href="https://gitee.com/abgox/abgox-bucket">Gitee</a>
+    <a href="https://github.com/abgox/aether">Github</a> |
+    <a href="https://gitee.com/abgox/aether">Gitee</a>
 </p>
 
 <p align="center">
-    <a href="https://github.com/abgox/abgox-bucket/blob/main/license">
-        <img src="https://img.shields.io/github/license/abgox/abgox-bucket" alt="license" />
+    <a href="https://github.com/abgox/aether/blob/main/license">
+        <img src="https://img.shields.io/github/license/abgox/aether" alt="license" />
     </a>
-    <a href="https://img.shields.io/github/languages/code-size/abgox/abgox-bucket.svg">
-        <img src="https://img.shields.io/github/languages/code-size/abgox/abgox-bucket.svg" alt="code size" />
+    <a href="https://img.shields.io/github/languages/code-size/abgox/aether.svg">
+        <img src="https://img.shields.io/github/languages/code-size/abgox/aether.svg" alt="code size" />
     </a>
-    <a href="https://img.shields.io/github/repo-size/abgox/abgox-bucket.svg">
-        <img src="https://img.shields.io/github/repo-size/abgox/abgox-bucket.svg" alt="code size" />
+    <a href="https://img.shields.io/github/repo-size/abgox/aether.svg">
+        <img src="https://img.shields.io/github/repo-size/abgox/aether.svg" alt="code size" />
     </a>
-    <a href="https://github.com/abgox/abgox-bucket">
-        <img src="https://img.shields.io/github/created-at/abgox/abgox-bucket" alt="created" />
+    <a href="https://github.com/abgox/aether">
+        <img src="https://img.shields.io/github/created-at/abgox/aether" alt="created" />
     </a>
 </p>
 
@@ -28,26 +28,26 @@
 
 ### 正在使用 Scoop
 
-1. 添加 `abgox-bucket` (使用 Github 或 Gitee 仓库)
+1. 添加 `aether` (使用 Github 或 Gitee 仓库)
 
    ```pwsh
-   scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
+   scoop bucket add aether https://github.com/abgox/aether
    ```
 
    ```pwsh
-   scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+   scoop bucket add aether https://gitee.com/abgox/aether
    ```
 
 2. 安装应用(以 `InputTip-zip` 举例)
 
    ```pwsh
-   scoop install abgox-bucket/InputTip-zip
+   scoop install aether/InputTip-zip
    ```
 
 ### 没有使用过 Scoop
 
-- [什么是 Scoop?](https://github.com/ScoopInstaller/Scoop)
-- [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop)
+- [什么是 Scoop?](https://scoop.sh/)
+- [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
 - [什么是 Scoop 中的应用清单(App-Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 - [安装 Scoop](https://github.com/ScoopInstaller/Install)
 - [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
@@ -62,11 +62,11 @@
 
 1. 使用 Gitee 仓库
    ```pwsh
-   scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+   scoop bucket add aether https://gitee.com/abgox/aether
    ```
 2. 安装 [scoop-install](https://gitee.com/abgox/scoop-install)
    ```pwsh
-   scoop install abgox-bucket/scoop-install
+   scoop install aether/scoop-install
    ```
 3. 设置 url 替换配置
    ```pwsh
@@ -76,7 +76,7 @@
 4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用，以 `InputTip-zip` 为例
 
    ```pwsh
-   scoop-install abgox-bucket/InputTip-zip
+   scoop-install aether/InputTip-zip
    ```
 
 5. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)

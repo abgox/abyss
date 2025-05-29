@@ -1,26 +1,26 @@
 <p align="center">
-    <h1 align="center">✨ abgox-bucket ✨</h1>
+    <h1 align="center">✨ aether ✨</h1>
 </p>
 
 <p align="center">
-    <a href="readme.md">English</a> |
     <a href="readme-cn.md">简体中文</a> |
-    <a href="https://github.com/abgox/abgox-bucket">Github</a> |
-    <a href="https://gitee.com/abgox/abgox-bucket">Gitee</a>
+    <a href="readme.md">English</a> |
+    <a href="https://github.com/abgox/aether">Github</a> |
+    <a href="https://gitee.com/abgox/aether">Gitee</a>
 </p>
 
 <p align="center">
-    <a href="https://github.com/abgox/abgox-bucket/blob/main/license">
-        <img src="https://img.shields.io/github/license/abgox/abgox-bucket" alt="license" />
+    <a href="https://github.com/abgox/aether/blob/main/license">
+        <img src="https://img.shields.io/github/license/abgox/aether" alt="license" />
     </a>
-    <a href="https://img.shields.io/github/languages/code-size/abgox/abgox-bucket.svg">
-        <img src="https://img.shields.io/github/languages/code-size/abgox/abgox-bucket.svg" alt="code size" />
+    <a href="https://img.shields.io/github/languages/code-size/abgox/aether.svg">
+        <img src="https://img.shields.io/github/languages/code-size/abgox/aether.svg" alt="code size" />
     </a>
-    <a href="https://img.shields.io/github/repo-size/abgox/abgox-bucket.svg">
-        <img src="https://img.shields.io/github/repo-size/abgox/abgox-bucket.svg" alt="code size" />
+    <a href="https://img.shields.io/github/repo-size/abgox/aether.svg">
+        <img src="https://img.shields.io/github/repo-size/abgox/aether.svg" alt="code size" />
     </a>
-    <a href="https://github.com/abgox/abgox-bucket">
-        <img src="https://img.shields.io/github/created-at/abgox/abgox-bucket" alt="created" />
+    <a href="https://github.com/abgox/aether">
+        <img src="https://img.shields.io/github/created-at/abgox/aether" alt="created" />
     </a>
 </p>
 
@@ -28,27 +28,27 @@
 
 ### For ones familiar with Scoop
 
-1.  Add `abgox-bucket`. (Use Github or Gitee repository.)
+1.  Add `aether`. (Use Github or Gitee repository.)
 
     ```pwsh
-    scoop bucket add abgox-bucket https://github.com/abgox/abgox-bucket
+    scoop bucket add aether https://github.com/abgox/aether
     ```
 
     ```pwsh
-    scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+    scoop bucket add aether https://gitee.com/abgox/aether
     ```
 
 2.  Install apps. (e.g. `InputTip-zip`)
 
     ```pwsh
-    scoop install abgox-bucket/InputTip-zip
+    scoop install aether/InputTip-zip
     ```
 
 ---
 
 ### Never used Scoop
 
-- [What is Scoop?](https://github.com/ScoopInstaller/Scoop)
+- [What is Scoop?](https://scoop.sh/)
 - [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
 - [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 - [Scoop install](https://github.com/ScoopInstaller/Install)
@@ -59,15 +59,16 @@
 ### Unable to Access Github Resources
 
 > [!Tip]
+>
 > If you cannot access Github resources due to network issues, you can try the following solutions:
 
 1. Use the Gitee repository
    ```pwsh
-   scoop bucket add abgox-bucket https://gitee.com/abgox/abgox-bucket
+   scoop bucket add aether https://gitee.com/abgox/aether
    ```
 2. Install [scoop-install](https://gitee.com/abgox/scoop-install)
    ```pwsh
-   scoop install abgox-bucket/scoop-install
+   scoop install aether/scoop-install
    ```
 3. Configure URL replacement settings
    ```pwsh
@@ -77,7 +78,7 @@
 4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install applications. For example, install `InputTip-zip`:
 
    ```pwsh
-   scoop-install abgox-bucket/InputTip-zip
+   scoop-install aether/InputTip-zip
    ```
 
 5. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.
