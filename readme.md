@@ -114,7 +114,7 @@
 - For such applications, this repository uses `New-Item -ItemType Junction` to link.
 - Taking [Helix](./bucket/Helix.json) as an example:
   - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`.
-  - It will to link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
+  - It will link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
 
 > [!Warning]
 >
