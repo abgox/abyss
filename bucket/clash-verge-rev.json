@@ -1,0 +1,68 @@
+{
+    "version": "2.2.3",
+    "description": "一款基于 Tauri 的现代图形用户界面客户端，提供定制化的代理体验。A modern GUI client based on Tauri for tailored proxy experience.",
+    "homepage": "https://github.com/clash-verge-rev/clash-verge-rev",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/clash-verge-rev/clash-verge-rev/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.3/Clash.Verge_2.2.3_x64-setup.exe#/dl.7z",
+            "hash": "dc252a38f57923bd1afb12a6bd88236851b1106ee0f7042fce147a94e14474c6"
+        },
+        "arm64": {
+            "url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v2.2.3/Clash.Verge_2.2.3_arm64-setup.exe#/dl.7z",
+            "hash": "f59297264d7a25ed32a70b39162a3f979a630e50c419eb86df506bb145673cff"
+        }
+    },
+    "shortcuts": [
+        [
+            "clash-verge.exe",
+            "Clash Verge"
+        ]
+    ],
+    "post_install": [
+        "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\uninst*\" -Force -Recurse",
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\io.github.clash-verge-rev.clash-verge-rev\")",
+        "$linkTargets = @(\"$persist_dir\\io.github.clash-verge-rev.clash-verge-rev\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v$version/Clash.Verge_$version_x64-setup.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v$version/Clash.Verge_$version_arm64-setup.exe#/dl.7z"
+            }
+        }
+    }
+}
