@@ -1,0 +1,71 @@
+{
+    "version": "3.0.7",
+    "description": "一个跨平台的划词翻译和 OCR 软件。A cross-platform software for text translation and OCR.",
+    "homepage": "https://pot-app.com/",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/pot-app/pot-desktop/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pot-app/pot-desktop/releases/download/3.0.7/pot_3.0.7_x64-setup.exe#/dl.7z",
+            "hash": "0a6ac5309bfc41234d58cf6615a779c66d167d3a0da5542a0de2ea118fc6bc56"
+        },
+        "32bit": {
+            "url": "https://github.com/pot-app/pot-desktop/releases/download/3.0.7/pot_3.0.7_x86-setup.exe#/dl.7z",
+            "hash": "ff9b69bea285ca60b9f0075a740dc022f9baf873221b14e2c20a960502f09761"
+        }
+    },
+    "bin": "pot.exe",
+    "shortcuts": [
+        [
+            "pot.exe",
+            "Pot"
+        ]
+    ],
+    "post_install": [
+        "Remove-Item \"$dir\\`$PLUGINSDIR\" -Force -Recurse",
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\com.pot-app.desktop\")",
+        "$linkTargets = @(\"$persist_dir\\com.pot-app.desktop\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/pot-app/pot-desktop"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x64-setup.exe#/dl.7z"
+            },
+            "32bit": {
+                "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x86-setup.exe#/dl.7z"
+            }
+        }
+    }
+}
