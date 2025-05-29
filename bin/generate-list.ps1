@@ -15,10 +15,48 @@ foreach ($_ in $manifests) {
 
     # version
     # $info += "[v$($json.version)](./bucket/$($_.Name))"
-    $info += '<a href="./bucket/' + $_.Name + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabgox-bucket%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+    $info += '<a href="./bucket/' + $_.Name + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Faether%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
 
     # persist
-    $info += if ($json.persist) { '✔️' }else { '➖' }
+    $isPersist = $json.persist
+    $isPersistLink = $false
+
+    if (!$isPersist) {
+        function Handle-Persist($obj, $isPersistLink = $isPersistLink) {
+            foreach ($_ in @('pre_install', 'post_install', 'pre_uninstall', 'post_uninstall')) {
+                if (!$isPersistLink -and $obj.$_) {
+                    $isPersistLink = ($obj.$_ -join "`n") -match '.*New-Item.*-ItemType.*Junction.*'
+                }
+                if (!$isPersistLink -and $obj.$_.script) {
+                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*New-Item.*-ItemType.*Junction.*'
+                }
+            }
+            foreach ($_ in @('installer', 'uninstaller')) {
+                if (!$isPersistLink -and $obj.$_.script) {
+                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*New-Item.*-ItemType.*Junction.*'
+                }
+            }
+            return $isPersistLink
+        }
+        if ($json.architecture) {
+            if ($json.architecture.'64bit') {
+                $isPersistLink = Handle-Persist $json.architecture.'64bit'
+            }
+            if ($json.architecture.'32bit') {
+                $isPersistLink = Handle-Persist $json.architecture.'32bit'
+            }
+            if ($json.architecture.arm64) {
+                $isPersistLink = Handle-Persist $json.architecture.arm64
+            }
+        }
+        $isPersistLink = Handle-Persist $json
+    }
+    if ($isPersistLink) {
+        $info += '`Link`'
+    }
+    else {
+        $info += if ($isPersist) { '✔️' }else { '➖' }
+    }
 
     # Tag
     ## font
@@ -34,16 +72,15 @@ foreach ($_ in $manifests) {
     $info += $tag -join ' '
 
     ## description
-    function Replace-LastChar {
-        param (
-            [string]$string,
-            [string]$before,
-            [string]$after
-        )
-        $pattern = [regex]::Escape($before) + '(?!.*' + [regex]::Escape($before) + ')'
-        return [regex]::Replace($string, $pattern, $after)
+    $description = $json.description -split '(?<=。)(?=[^。]+$)'
+
+    if ($path -like "*cn*.md") {
+        $info += $description[0]
     }
-    $info += Replace-LastChar $json.description "。" "。<br />"
+    else {
+        $info += $description[1]
+    }
+
     $content += "|" + ($info -join "|") + "|"
 }
 
