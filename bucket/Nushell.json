@@ -1,0 +1,74 @@
+{
+    "version": "0.104.1",
+    "description": "一种用 Rust 编写的新型 shell。A new type of shell written in Rust.",
+    "homepage": "https://www.nushell.sh",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/nushell/nushell/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nushell/nushell/releases/download/0.104.1/nu-0.104.1-x86_64-pc-windows-msvc.zip",
+            "hash": "d98ecf68ccb2b0a7a233f72bb5ed01c1c80a39724e57a8ed05837d7d50a5a060"
+        },
+        "arm64": {
+            "url": "https://github.com/nushell/nushell/releases/download/0.104.1/nu-0.104.1-aarch64-pc-windows-msvc.zip",
+            "hash": "7c078a0efc0caf8a9f6e67b79c9ba9af38925a411edbc952f3cae7a40d1b5824"
+        }
+    },
+    "bin": "nu.exe",
+    "shortcuts": [
+        [
+            "nu.exe",
+            "Nushell",
+            "--execute \"cd ~\""
+        ]
+    ],
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\nushell\")",
+        "$linkTargets = @(\"$persist_dir\\nushell\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/nushell/nushell"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nushell/nushell/releases/download/$version/nu-$version-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/nushell/nushell/releases/download/$version/nu-$version-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/SHA256SUMS"
+        }
+    }
+}
