@@ -1,0 +1,85 @@
+{
+    "version": "1.29.6",
+    "description": "使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动。Graphical Scrcpy to display and control Android, devices powered by Electron.",
+    "homepage": "https://github.com/viarotel-org/escrcpy",
+    "license": {
+        "identifier": "Apache License 2.0",
+        "url": "https://github.com/viarotel-org/escrcpy/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-portable-x64.exe",
+            "hash": "5864e35f10179a56aa2b7397f78980ad74f0761be14db0e703522c415977a0ae",
+            "shortcuts": [
+                [
+                    "Escrcpy-1.29.6-win-portable-x64.exe",
+                    "Escrcpy"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-portable-arm64.exe",
+            "hash": "c39f02a884983618de1818539390ab984f9d8347735c7199b5df95dffb8a1a88",
+            "shortcuts": [
+                [
+                    "Escrcpy-1.29.6-win-portable-arm64.exe",
+                    "Escrcpy"
+                ]
+            ]
+        }
+    },
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\escrcpy\")",
+        "$linkTargets = @(\"$persist_dir\\escrcpy\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v$version/Escrcpy-$version-win-portable-x64.exe",
+                "shortcuts": [
+                    [
+                        "Escrcpy-$version-win-portable-x64.exe",
+                        "Escrcpy"
+                    ]
+                ]
+            },
+            "arm64": {
+                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v$version/Escrcpy-$version-win-portable-arm64.exe",
+                "shortcuts": [
+                    [
+                        "Escrcpy-$version-win-portable-arm64.exe",
+                        "Escrcpy"
+                    ]
+                ]
+            }
+        }
+    }
+}
