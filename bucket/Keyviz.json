@@ -1,0 +1,60 @@
+{
+    "version": "1.0.6",
+    "description": "一个免费的开源工具来可视化你的击键 ⌨️ 和 🖱️ 鼠标实时动作。A free and open-source tool to visualize your keystrokes ⌨️ and 🖱️ mouse actions in real-time.",
+    "homepage": "https://mularahul.github.io/keyviz",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/mulaRahul/keyviz/blob/main/LICENSE"
+    },
+    "url": "https://github.com/mulaRahul/keyviz/releases/download/v1.0.6/keyviz-v1.0.6-portable.zip",
+    "hash": "5dcebe08768ecd7e86d453f6be36346b2cc744183598195fee4c7b4931a8b4b3",
+    "shortcuts": [
+        [
+            "keyviz-v1.0.6-portable.exe",
+            "Keyviz"
+        ]
+    ],
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\com.example\\keyviz\")",
+        "$linkTargets = @(\"$persist_dir\\com.example\\keyviz\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/mulaRahul/keyviz"
+    },
+    "autoupdate": {
+        "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz-v$version-portable.zip",
+        "shortcuts": [
+            [
+                "keyviz-v$version-portable.exe",
+                "Keyviz"
+            ]
+        ]
+    }
+}
