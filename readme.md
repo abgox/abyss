@@ -24,7 +24,9 @@
     </a>
 </p>
 
-- [Scoop completion in PSCompletions ](https://github.com/abgox/PSCompletions "PSCompletions")is recommended.
+> [!Tip]
+>
+> [scoop and scoop-install completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
 ### For ones familiar with Scoop
 
@@ -98,10 +100,8 @@
     - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\VSCode` directory will be removed.
   - After reinstalling, the data will continue to be used again.
 - This is the most powerful feature of Scoop, which can quickly restore your application environment.
-  - If you change to a new computer, just back up the `D:\Scoop` directory to new computer and run the following command to restore all applications.
-    ```pwsh
-    scoop reset *
-    ```
+  - Some applications in `abyss` use [Link](#link), which cannot be reset correctly by `scoop reset`.
+  - It is recommended to uninstall and reinstall it.
 
 ## Link
 

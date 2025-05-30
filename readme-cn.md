@@ -24,7 +24,9 @@
     </a>
 </p>
 
-- 推荐使用 [PSCompletions 项目中的 scoop 补全 ](https://gitee.com/abgox/PSCompletions "PSCompletions")
+> [!Tip]
+>
+> 推荐使用 [PSCompletions 中的 scoop 和 scoop-install 命令补全](https://gitee.com/abgox/PSCompletions)
 
 ### 正在使用 Scoop
 
@@ -98,10 +100,8 @@
   - 重新安装后，又会继续使用这些数据
 
 - 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
-  - 假如你换了新的电脑，只要将 `D:\Scoop` 目录备份到新电脑中，然后运行以下命令即可恢复所有应用
-    ```pwsh
-    scoop reset *
-    ```
+  - 由于本仓库中一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
+  - 建议通过 `scoop uninstall` 卸载应用，然后再重新安装
 
 ## Link
 
