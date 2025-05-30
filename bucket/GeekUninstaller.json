@@ -1,0 +1,53 @@
+{
+    "version": "1.5.2.165",
+    "description": "简单便捷的免费卸载程序。The good free uninstaller.",
+    "homepage": "https://geekuninstaller.com/",
+    "license": "Unknown",
+    "url": "https://geekuninstaller.com/geek.7z",
+    "hash": "c7592de79d2cd5fa6039c61443e46962738256c4c256351c11a06af5ff1f7bc8",
+    "bin": "geek.exe",
+    "shortcuts": [
+        [
+            "geek.exe",
+            "Geek Uninstaller"
+        ]
+    ],
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\Geek Uninstaller\")",
+        "$linkTargets = @(\"$persist_dir\\Geek Uninstaller\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "url": "https://geekuninstaller.com/download",
+        "regex": "<b>([\\d\\.]+)"
+    },
+    "autoupdate": {
+        "url": "https://geekuninstaller.com/geek.7z"
+    }
+}
