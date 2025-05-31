@@ -1,0 +1,52 @@
+{
+    "version": "0.11",
+    "description": "Notepad++ 的跨平台重新实现。A cross-platform, reimplementation of Notepad++.",
+    "homepage": "https://github.com/dail8859/NotepadNext",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/dail8859/NotepadNext/blob/master/LICENSE"
+    },
+    "url": "https://github.com/dail8859/NotepadNext/releases/download/v0.11/NotepadNext-v0.11-win64.zip",
+    "hash": "15f705f2dc09721d19df85a3a6fc81d0abaf8531e26f08446e2d6df0d9da445c",
+    "bin": "NotepadNext.exe",
+    "shortcuts": [
+        [
+            "NotepadNext.exe",
+            "NotepadNext"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\NotepadNext\")",
+        "$linkTargets = @(\"$persist_dir\\NotepadNext\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/dail8859/NotepadNext/releases/download/v$version/NotepadNext-v$version-win64.zip"
+    }
+}
