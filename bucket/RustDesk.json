@@ -1,0 +1,108 @@
+{
+    "version": "1.4.0",
+    "description": "一个安全的远程桌面访问工具，用 Rust 语言编写。An open-source remote desktop software, written in Rust.",
+    "homepage": "https://github.com/rustdesk/rustdesk",
+    "license": {
+        "identifier": "GNU Affero General Public License v3.0",
+        "url": "https://github.com/rustdesk/rustdesk/blob/master/LICENCE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/rustdesk/rustdesk/releases/download/1.4.0/rustdesk-1.4.0-x86_64.exe",
+            "hash": "118d2ca9c9388a7f781ae56c0bfe1e765e7c3272312bea5569b4cb5710d8c419",
+            "bin": [
+                [
+                    "rustdesk-1.4.0-x86_64.exe",
+                    "rustdesk"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "rustdesk-1.4.0-x86_64.exe",
+                    "RustDesk"
+                ]
+            ]
+        },
+        "32bit": {
+            "url": "https://github.com/rustdesk/rustdesk/releases/download/1.4.0/rustdesk-1.4.0-x86-sciter.exe",
+            "hash": "6abc7a882dd5d581d709534f414abdf55c11790eb4bad46dc5e86edf5fb35c33",
+            "bin": [
+                [
+                    "rustdesk-1.4.0-x86-sciter.exe",
+                    "rustdesk"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "rustdesk-1.4.0-x86-sciter.exe",
+                    "RustDesk"
+                ]
+            ]
+        }
+    },
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\RustDesk\")",
+        "$linkTargets = @(\"$persist_dir\\RustDesk\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rustdesk/rustdesk/releases/download/$version/rustdesk-$version-x86_64.exe",
+                "bin": [
+                    [
+                        "rustdesk-$version-x86_64.exe",
+                        "rustdesk"
+                    ]
+                ],
+                "shortcuts": [
+                    [
+                        "rustdesk-$version-x86_64.exe",
+                        "RustDesk"
+                    ]
+                ]
+            },
+            "32bit": {
+                "url": "https://github.com/rustdesk/rustdesk/releases/download/$version/rustdesk-$version-x86-sciter.exe",
+                "bin": [
+                    [
+                        "rustdesk-$version-x86-sciter.exe",
+                        "rustdesk"
+                    ]
+                ],
+                "shortcuts": [
+                    [
+                        "rustdesk-$version-x86-sciter.exe",
+                        "RustDesk"
+                    ]
+                ]
+            }
+        }
+    }
+}
