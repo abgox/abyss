@@ -1,0 +1,53 @@
+{
+    "version": "2.4.0",
+    "description": "用于探索和测试 API 的开源集成开发环境(Postman/Insomnia 的轻量级替代品)。Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia).",
+    "homepage": "https://www.usebruno.com/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/usebruno/bruno/blob/main/license.md"
+    },
+    "url": "https://github.com/usebruno/bruno/releases/download/v2.4.0/bruno_2.4.0_x64_win.zip",
+    "hash": "6223596e028449221341cdcf8259d2fd5f75f29efc77023ce2dac13eee6c2276",
+    "shortcuts": [
+        [
+            "Bruno.exe",
+            "Bruno"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\bruno\")",
+        "$linkTargets = @(\"$persist_dir\\bruno\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/usebruno/bruno"
+    },
+    "autoupdate": {
+        "url": "https://github.com/usebruno/bruno/releases/download/v$version/bruno_$version_x64_win.zip"
+    }
+}
