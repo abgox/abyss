@@ -1,0 +1,54 @@
+{
+    "version": "1.8.19",
+    "description": "一个全功能的下载器。A full-featured download manager.",
+    "homepage": "https://motrix.app",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/agalwood/Motrix/blob/master/LICENSE"
+    },
+    "url": "https://github.com/agalwood/Motrix/releases/download/v1.8.19/Motrix-1.8.19-win.zip",
+    "hash": "5238865630e99dc4981bcc6082ba2b8221c4a543f35b41c0205a34984fd8f3b5",
+    "shortcuts": [
+        [
+            "Motrix.exe",
+            "Motrix"
+        ]
+    ],
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\Motrix\")",
+        "$linkTargets = @(\"$persist_dir\\Motrix\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/agalwood/Motrix"
+    },
+    "autoupdate": {
+        "url": "https://github.com/agalwood/Motrix/releases/download/v$version/Motrix-$version-win.zip"
+    }
+}
