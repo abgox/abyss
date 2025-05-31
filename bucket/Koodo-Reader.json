@@ -1,0 +1,60 @@
+{
+    "version": "1.9.9",
+    "description": "一个跨平台的电子书阅读器。A cross-platform ebook reader.",
+    "homepage": "https://koodo.960960.xyz",
+    "license": {
+        "identifier": "GNU Affero General Public License v3.0",
+        "url": "https://github.com/koodo-reader/koodo-reader/blob/master/LICENSE"
+    },
+    "url": "https://github.com/koodo-reader/koodo-reader/releases/download/v1.9.9/Koodo-Reader-1.9.9-Portable.exe",
+    "hash": "548759e48742c839eb1ef79d190467fe881abb7396327d97f67d9012e77de37a",
+    "shortcuts": [
+        [
+            "Koodo-Reader-1.9.9-Portable.exe",
+            "Koodo Reader"
+        ]
+    ],
+    "post_install": [
+        "# ------------------------------------------------------------------",
+        "$linkPaths = @(\"$env:AppData\\koodo-reader\")",
+        "$linkTargets = @(\"$persist_dir\\koodo-reader\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/troyeguo/koodo-reader"
+    },
+    "autoupdate": {
+        "url": "https://github.com/koodo-reader/koodo-reader/releases/download/v$version/Koodo-Reader-$version-Portable.exe",
+        "shortcuts": [
+            [
+                "Koodo-Reader-$version-Portable.exe",
+                "Koodo Reader"
+            ]
+        ]
+    }
+}
