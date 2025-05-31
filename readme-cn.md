@@ -103,7 +103,7 @@
   - 由于本仓库中一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
   - 建议通过 `scoop uninstall` 卸载应用，然后再重新安装
 
-## Link
+### Link
 
 > [!Tip]
 >

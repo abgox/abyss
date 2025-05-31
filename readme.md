@@ -103,7 +103,7 @@
   - Some applications in `abyss` use [Link](#link), which cannot be reset correctly by `scoop reset`.
   - It is recommended to uninstall and reinstall it.
 
-## Link
+### Link
 
 > [!Tip]
 >
