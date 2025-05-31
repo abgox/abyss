@@ -28,19 +28,19 @@
 >
 > [scoop and scoop-install completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
-### For ones familiar with Scoop
+### If you are using Scoop
 
-1.  Add `abyss`. (Use Github or Gitee repository.)
+1.  Add `abyss` with Github or Gitee repository.
 
     ```pwsh
-    scoop bucket add abyss https://github.com/abgox/abyss
+    scoop bucket add abyss https://github.com/abgox/abyss.git
     ```
 
     ```pwsh
-    scoop bucket add abyss https://gitee.com/abgox/abyss
+    scoop bucket add abyss https://gitee.com/abgox/abyss.git
     ```
 
-2.  Install apps. (e.g. `InputTip-zip`)
+2.  Install apps.
 
     ```pwsh
     scoop install abyss/InputTip-zip
@@ -48,7 +48,7 @@
 
 ---
 
-### Never used Scoop
+### If you are not using Scoop
 
 - [What is Scoop?](https://scoop.sh/)
 - [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
@@ -58,26 +58,26 @@
 
 ---
 
-### Unable to Access Github Resources
+### If you cannot access Github
 
 > [!Tip]
 >
 > If you cannot access Github resources due to network issues, you can try the following solutions:
 
-1. Use the Gitee repository
+1. Use the Gitee repository.
    ```pwsh
-   scoop bucket add abyss https://gitee.com/abgox/abyss
+   scoop bucket add abyss https://gitee.com/abgox/abyss.git
    ```
-2. Install [scoop-install](https://gitee.com/abgox/scoop-install)
+2. Install [scoop-install](https://gitee.com/abgox/scoop-install).
    ```pwsh
    scoop install abyss/scoop-install
    ```
-3. Configure URL replacement settings
+3. Configure URL replacement settings.
    ```pwsh
    scoop config scoop-install-url-replace-from "https://github.com"
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
    ```
-4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install applications. For example, install `InputTip-zip`:
+4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install applications.
 
    ```pwsh
    scoop-install abyss/InputTip-zip
@@ -100,7 +100,7 @@
     - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\VSCode` directory will be removed.
   - After reinstalling, the data will continue to be used again.
 - This is the most powerful feature of Scoop, which can quickly restore your application environment.
-  - Some applications in `abyss` use [Link](#link), which cannot be reset correctly by `scoop reset`.
+  - Some applications use [Link](#link), which cannot be reset correctly by `scoop reset`.
   - It is recommended to uninstall and reinstall it.
 
 ### Link
@@ -109,11 +109,11 @@
 >
 > Assume the Scoop root directory is `D:\Scoop`
 
-- Scoop's `persist` is extremely powerful, but unfortunately, it has a limitation: it only works if the application data resides within the installation directory.
+- Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the application data resides within the installation directory.
 - However, some applications store their data outside the installation directory, commonly in `$env:AppData`.
 - For such applications, this repository uses `New-Item -ItemType Junction` to link.
 - Taking [Helix](./bucket/Helix.json) as an example:
-  - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`.
+  - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`
   - It will link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
 
 > [!Warning]
@@ -135,8 +135,8 @@
     - Click to view the manifest json file.
   - **`Persist`** : Persist data. Refer to [Persist](#persist) for details.
     - **✔️** : It has been done.
+    - **➖** : It is not necessary, or there are no data files.
     - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](#link) for details.
-    - **➖** : It's not necessary, or the conditions are not meet.(e.g. data file not found)
   - **`Tag`**
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).

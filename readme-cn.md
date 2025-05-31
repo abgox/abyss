@@ -28,7 +28,7 @@
 >
 > 推荐使用 [PSCompletions 中的 scoop 和 scoop-install 命令补全](https://gitee.com/abgox/PSCompletions)
 
-### 正在使用 Scoop
+### 如果你正在使用 Scoop
 
 1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
 
@@ -46,7 +46,7 @@
    scoop install abyss/InputTip-zip
    ```
 
-### 没有使用过 Scoop
+### 如果你没有使用 Scoop
 
 - [什么是 Scoop?](https://scoop.sh/)
 - [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
@@ -56,26 +56,32 @@
 
 ---
 
-### 无法访问 Github 资源
+### 如果你无法访问 Github
 
 > [!Tip]
 >
 > 如果因为网络问题无法访问 Github 资源，可以尝试以下方案
 
 1. 使用 Gitee 仓库
+
    ```pwsh
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
+
 2. 安装 [scoop-install](https://gitee.com/abgox/scoop-install)
+
    ```pwsh
    scoop install abyss/scoop-install
    ```
+
 3. 设置 url 替换配置
+
    ```pwsh
    scoop config scoop-install-url-replace-from "https://github.com"
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
    ```
-4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用，以 `InputTip-zip` 为例
+
+4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
 
    ```pwsh
    scoop-install abyss/InputTip-zip
@@ -91,16 +97,16 @@
 >
 > 假设 Scoop 的根目录是 `D:\Scoop`
 
-- Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录下的数据文件
+- Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录中的数据文件
 
-  - 以 [VSCode.json](./bucket/VSCode.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\VSCode` 目录下
+  - 以 [VSCode.json](./bucket/VSCode.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\VSCode` 目录中
   - 然后会持久化数据目录: `D:\Scoop\apps\VSCode\data` => `D:\Scoop\persist\VSCode\data`
-  - 卸载后，它的设置、插件、快捷键等数据仍然会保存在 `D:\Scoop\persist\VSCode\data` 目录下
+  - 卸载后，它的设置、插件、快捷键等数据仍然会保存在 `D:\Scoop\persist\VSCode\data` 目录中
     - 如果卸载时使用 `-p/--purge` 参数，`D:\Scoop\persist\VSCode` 目录会被删除
   - 重新安装后，又会继续使用这些数据
 
 - 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
-  - 由于本仓库中一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
+  - 一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
   - 建议通过 `scoop uninstall` 卸载应用，然后再重新安装
 
 ### Link
@@ -109,8 +115,8 @@
 >
 > 假设 Scoop 的根目录是 `D:\Scoop`
 
-- Scoop 的 persist 非常强大，遗憾的是它有局限性: 只有应用数据在应用安装目录下，才可以使用它
-- 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录下
+- Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
+- 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
 - 像这样的应用，本仓库中使用 `New-Item -ItemType Junction` 进行链接
 - 以 [Helix](./bucket/Helix.json) 为例
   - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
@@ -135,8 +141,8 @@
     - 点击查看应用清单 json 文件
   - **`Persist`**：持久化应用数据, 详情参考 [Persist](#persist)
     - **`✔️`**：已实现
+    - **`➖`**：没有必要或者没有数据文件
     - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
-    - **`➖`**：没必要或不满足条件(如：无数据文件)
   - **`Tag`**：应用标签
 
     - `Font`：一种字体
