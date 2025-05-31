@@ -1,0 +1,68 @@
+{
+    "version": "2.77.1",
+    "description": "一款集音乐播放、歌词显示、格式转换等众多功能于一身的音频播放软件。Audio player which supports music collection playback, lyrics display, format conversion and many other functions.",
+    "homepage": "https://github.com/zhongyang219/MusicPlayer2",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/zhongyang219/MusicPlayer2/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zhongyang219/MusicPlayer2/releases/download/V2.77.1/MusicPlayer2_V2.77.1_x64.zip",
+            "hash": "46144191ee0dfccd05a211699f3e8d4922ac42f38ef3d5dbd1fc9ac4c65b3e11",
+            "extract_dir": "MusicPlayer2_x64"
+        },
+        "32bit": {
+            "url": "https://github.com/zhongyang219/MusicPlayer2/releases/download/V2.77.1/MusicPlayer2_V2.77.1_x86.zip",
+            "hash": "b589cceda1553ae4e2467faa489030e71c30a81ce9b14df1fcb498bbf1617d8f",
+            "extract_dir": "MusicPlayer2"
+        }
+    },
+    "shortcuts": [
+        [
+            "MusicPlayer2.exe",
+            "MusicPlayer2"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\MusicPlayer2\")",
+        "$linkTargets = @(\"$persist_dir\\MusicPlayer2\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zhongyang219/MusicPlayer2/releases/download/V$version/MusicPlayer2_V$version_x64.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/zhongyang219/MusicPlayer2/releases/download/V$version/MusicPlayer2_V$version_x86.zip"
+            }
+        }
+    }
+}
