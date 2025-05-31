@@ -1,0 +1,57 @@
+{
+    "version": "0.15.0",
+    "description": "一个 Neovim 的简单图形用户界面。A simple graphical user interface for Neovim.",
+    "homepage": "https://neovide.dev",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/neovide/neovide/blob/main/LICENSE"
+    },
+    "suggest": {
+        "neovim": "abyss/neovim"
+    },
+    "url": "https://github.com/neovide/neovide/releases/download/0.15.0/neovide.exe.zip",
+    "hash": "bec596a700acb4e88333404d91503669201bc269e1c7d40ebd4f0332a7b5bfaa",
+    "bin": "neovide.exe",
+    "shortcuts": [
+        [
+            "neovide.exe",
+            "Neovide"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\neovide\")",
+        "$linkTargets = @(\"$persist_dir\\neovide\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/neovide/neovide"
+    },
+    "autoupdate": {
+        "url": "https://github.com/neovide/neovide/releases/download/$version/neovide.exe.zip"
+    }
+}
