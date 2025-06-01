@@ -1,0 +1,68 @@
+{
+    "version": "2.6.7",
+    "description": "一款专业的写作软件，致力于为作者提供专注且流畅的写作体验。A professional writing software dedicated to providing writers with a focused and smooth writing experience.",
+    "homepage": "https://www.tominlab.com/wonderpen",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-x64#/dl.7z",
+            "hash": "c0166e9ccac7970299ebe18b8d9f8d6582d92b8b7e868b8cde582ebfcc8f32f0",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
+        },
+        "32bit": {
+            "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-ia32#/dl.7z",
+            "hash": "5521b9f403aa6cb983e7c435f7df7b5fbce612a02f654efb3eb7c2672047dd5e",
+            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-32.7z\" \"$dir\""
+        }
+    },
+    "shortcuts": [
+        [
+            "WonderPen.exe",
+            "WonderPen"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\WonderPen\")",
+        "$linkTargets = @(\"$persist_dir\\WonderPen\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "url": "https://www.tominlab.com/wonderpen/downloads/all",
+        "regex": "([\\d\\.]+)\\((?<build>[\\d]+)\\)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-x64#/dl.7z"
+            },
+            "32bit": {
+                "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-ia32#/dl.7z"
+            }
+        }
+    }
+}
