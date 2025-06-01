@@ -1,0 +1,54 @@
+{
+    "version": "2.2.0",
+    "description": "一个免费和开源的极简每周计划和待办事项应用程序，专注于隐私。A free and open source minimalist weekly planner and To Do list App focused on privacy.",
+    "homepage": "https://weektodo.me/",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/manuelernestog/weektodo/blob/main/LICENSE"
+    },
+    "url": "https://github.com/manuelernestog/weektodo/releases/download/v2.2.0/WeekToDo.Setup.2.2.0.exe#/dl.7z",
+    "hash": "c214f85207e4d0e377b573f8d3b25d5badcc06e5cfb4315187f1ca77a001ace0",
+    "shortcuts": [
+        [
+            "WeekToDo.exe",
+            "WeekToDo"
+        ]
+    ],
+    "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\WeekToDo\")",
+        "$linkTargets = @(\"$persist_dir\\WeekToDo\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/manuelernestog/weektodo"
+    },
+    "autoupdate": {
+        "url": "https://github.com/manuelernestog/weektodo/releases/download/v$version/WeekToDo.Setup.$version.exe#/dl.7z"
+    }
+}
