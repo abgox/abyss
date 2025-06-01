@@ -1,0 +1,68 @@
+{
+    "version": "1.2.3",
+    "description": "一款现代轻量级跨平台 Redis 桌面管理器。A modern lightweight cross-platform Redis Desktop Manager.",
+    "homepage": "https://redis.tinycraft.cc/",
+    "license": {
+        "identifier": "GNU General Public License v3.0",
+        "url": "https://github.com/tiny-craft/tiny-rdm/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v1.2.3/TinyRDM_Portable_1.2.3_windows_x64.zip",
+            "hash": "a891b82e8d953a7ba3fa25bf986d0157b02bbf8a10c35907b1f8b77db74410fc"
+        },
+        "arm64": {
+            "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v1.2.3/TinyRDM_Portable_1.2.3_windows_arm64.zip",
+            "hash": "436dabdc190654e8021e5d06ef4d61df91e273fb47a3de1f31b0c7a7e05e6d86"
+        }
+    },
+    "shortcuts": [
+        [
+            "Tiny RDM.exe",
+            "Tiny RDM"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\TinyRDM\")",
+        "$linkTargets = @(\"$persist_dir\\TinyRDM\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/tiny-craft/tiny-rdm"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v$version/TinyRDM_Portable_$version_windows_x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v$version/TinyRDM_Portable_$version_windows_arm64.zip"
+            }
+        }
+    }
+}
