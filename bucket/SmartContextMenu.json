@@ -1,0 +1,51 @@
+{
+    "version": "1.7.0",
+    "description": "系统中所有窗口的智能上下文菜单。Smart context menu for all windows in the system.",
+    "homepage": "https://github.com/AlexanderPro/SmartContextMenu",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/AlexanderPro/SmartContextMenu/blob/main/LICENSE"
+    },
+    "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v1.7.0/SmartContextMenu_v1.7.0.zip",
+    "hash": "911eef51ba148b6b3b15b2b970aea18fd34d4afc2e6f63447feb9e8b8f13bd17",
+    "shortcuts": [
+        [
+            "SmartContextMenu.exe",
+            "SmartContextMenu"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\SmartContextMenu\")",
+        "$linkTargets = @(\"$persist_dir\\SmartContextMenu\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v$version/SmartContextMenu_v$version.zip"
+    }
+}
