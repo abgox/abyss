@@ -97,13 +97,13 @@
 
 ---
 
-### 特殊配置
+### Config
 
-- 本仓库中的应用会有一些特性，由配置项 `action-level-when-uninstall` 控制
+- 本仓库中的应用会有一些特性，由配置项 `app_uninstall_action_level` 控制
 - 你可以通过以下命令去设置
 
   ```pwsh
-  scoop config action-level-when-uninstall 123
+  scoop config app_uninstall_action_level 123
   ```
 
 - 如果没有设置，则默认为 `1`

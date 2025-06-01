@@ -30,7 +30,7 @@
 
 > [!Warning]
 >
-> - The manifests in this repository depend on [bin/utils.ps1](./bin/utils.ps1).
+> - Manifests in this repository depend on [bin/utils.ps1](./bin/utils.ps1).
 >
 > - Other buckets should be careful when considering merging them.
 
@@ -93,13 +93,13 @@
 
 ---
 
-### Special Configuration
+### Config
 
-- Apps in this repository include specific behaviors controlled by `action-level-when-uninstall`.
+- Apps in this repository include specific behaviors controlled by `app_uninstall_action_level`.
 - You can set it using the following command:
 
   ```pwsh
-  scoop config action-level-when-uninstall 123
+  scoop config app_uninstall_action_level 123
   ```
 
 - If not configured, the default value is `1`.
@@ -108,12 +108,12 @@
 
   - Values can be combined, e.g. `12` means both `1` and `2` will execute.
 
-  | Value | Action                                                    |
-  | ----- | --------------------------------------------------------- |
-  | `0`   | No additional operations                                  |
-  | `1`   | Attempt to terminate processes before uninstallation      |
-  | `2`   | Remove Link directories (those created via [Link](#link)) |
-  | `3`   | Clean up temporary data during uninstallation             |
+  | Value | Action                                                   |
+  | ----- | -------------------------------------------------------- |
+  | `0`   | No additional operations                                 |
+  | `1`   | Attempt to terminate processes before uninstallation     |
+  | `2`   | Remove Link directories (those created by [Link](#link)) |
+  | `3`   | Clean up temporary data during uninstallation            |
 
 ### Persist
 
