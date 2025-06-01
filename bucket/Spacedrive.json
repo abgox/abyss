@@ -1,0 +1,53 @@
+{
+    "version": "0.4.3",
+    "description": "一个开源的跨平台文件浏览器，由一个用 Rust 编写的虚拟分布式文件系统提供支持。An open source cross-platform file explorer, powered by a virtual distributed filesystem written in Rust.",
+    "homepage": "https://www.spacedrive.com",
+    "license": {
+        "identifier": "GNU Affero General Public License v3.0",
+        "url": "https://github.com/spacedriveapp/spacedrive/blob/main/LICENSE"
+    },
+    "url": "https://github.com/spacedriveapp/spacedrive/releases/download/0.4.3/Spacedrive-windows-x86_64.msi",
+    "hash": "0238532f899fdd152e15508aa72f512c3b41faf58be7600a625737fcfce999e8",
+    "shortcuts": [
+        [
+            "PFiles\\Spacedrive\\sd-desktop.exe",
+            "Spacedrive"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\spacedrive\")",
+        "$linkTargets = @(\"$persist_dir\\spacedrive\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/spacedriveapp/spacedrive"
+    },
+    "autoupdate": {
+        "url": "https://github.com/spacedriveapp/spacedrive/releases/download/$version/Spacedrive-windows-x86_64.msi"
+    }
+}
