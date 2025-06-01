@@ -1,0 +1,52 @@
+{
+    "version": "1.4.1.1027",
+    "description": "文件搜索工具，基于名称快速定位文件和文件夹。Locate files and folders by name instantly.",
+    "homepage": "https://www.voidtools.com",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.voidtools.com/License.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.voidtools.com/Everything-1.4.1.1027.x64.msi",
+            "hash": "dcafbd92f5a39ab599b20a13dbce7e9f38b25ae986d025a0d8f22c2a0b289bd8"
+        },
+        "32bit": {
+            "url": "https://www.voidtools.com/Everything-1.4.1.1027.x86.msi",
+            "hash": "8727e8e90121106be500b927325d46bb87ccc558389fe1b0db9797996a7cc5e5"
+        }
+    },
+    "extract_dir": "Everything",
+    "bin": "Everything.exe",
+    "shortcuts": [
+        [
+            "Everything.exe",
+            "Everything"
+        ]
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$LinkPaths = @(\"$env:AppData\\Everything\")",
+        "$LinkTargets = @(\"$persist_dir\\Everything\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Service Everything",
+        "A-Stop-Process",
+        "A-Remove-LinkDirectory",
+        "A-Remove-TempData @(\"$env:LocalAppData\\Everything\")"
+    ],
+    "checkver": "Download Everything ([\\d\\.]+)",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.voidtools.com/Everything-$version.x64.msi"
+            },
+            "32bit": {
+                "url": "https://www.voidtools.com/Everything-$version.x86.msi"
+            }
+        }
+    }
+}
