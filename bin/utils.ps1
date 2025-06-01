@@ -6,7 +6,7 @@ $scoop_temp_config_path = "$dir\scoop-script-temp-data.jsonc"
 # 卸载时的操作等级。
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
-$uninstallActionLevel = (scoop config).'app_uninstall_action_level'
+$uninstallActionLevel = (scoop config).'app-uninstall-action-level'
 if ($uninstallActionLevel -eq $null) {
     $uninstallActionLevel = "1"
 }
