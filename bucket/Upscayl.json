@@ -1,0 +1,53 @@
+{
+    "version": "2.15.0",
+    "description": "免费开源的 AI 图像质量增强器。Free and Open Source AI Image Upscaler.",
+    "homepage": "https://upscayl.org/",
+    "license": {
+        "identifier": "GNU Affero General Public License v3.0",
+        "url": "https://github.com/upscayl/upscayl/blob/main/LICENSE"
+    },
+    "url": "https://github.com/upscayl/upscayl/releases/download/v2.15.0/upscayl-2.15.0-win.zip",
+    "hash": "6aa2f137ce45bac3877c5634bb0829f398ed757cbf4a72ccdef12b7473407823",
+    "shortcuts": [
+        [
+            "Upscayl.exe",
+            "Upscayl"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\Upscayl\")",
+        "$linkTargets = @(\"$persist_dir\\Upscayl\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "github": "https://github.com/upscayl/upscayl"
+    },
+    "autoupdate": {
+        "url": "https://github.com/upscayl/upscayl/releases/download/v$version/upscayl-$version-win.zip"
+    }
+}
