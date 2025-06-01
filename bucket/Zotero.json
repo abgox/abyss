@@ -1,0 +1,75 @@
+{
+    "version": "7.0.15",
+    "description": "一个免费，易于使用的工具，可帮助您收集，组织，注释，引用和共享研究。A free, easy-to-use tool to help you collect, organize, annotate, cite, and share research.",
+    "homepage": "https://www.zotero.org/",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_x64_setup.exe#/dl.7z",
+            "hash": "2943a3b6b5bc55e9bdc7d52c5b22b213a0137ec4559d0c177e79e47b444202ff"
+        },
+        "32bit": {
+            "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_win32_setup.exe#/dl.7z",
+            "hash": "3ca2b4bfac05f611f1dfd43f5a7e8217290f6a8c4d49b5f2b4286cb4e1c44bc5"
+        },
+        "arm64": {
+            "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_arm64_setup.exe#/dl.7z",
+            "hash": "2ccc9b93ed8f2c2a45fb9a5f5dc6c9db97970a47764c97950278bc318013eeb1"
+        }
+    },
+    "extract_dir": "core",
+    "bin": "zotero.exe",
+    "shortcuts": [
+        [
+            "zotero.exe",
+            "Zotero"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\Zotero\",\"$env:UserProfile\\Zotero\")",
+        "$linkTargets = @(\"$persist_dir\\Zotero\",\"$persist_dir\\Zotero-UserProfile\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "url": "https://www.zotero.org/support/changelog",
+        "regex": "Changes in ([\\d\\.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://download.zotero.org/client/release/$version/Zotero-$version_x64_setup.exe#/dl.7z"
+            },
+            "32bit": {
+                "url": "https://download.zotero.org/client/release/$version/Zotero-$version_win32_setup.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://download.zotero.org/client/release/$version/Zotero-$version_arm64_setup.exe#/dl.7z"
+            }
+        }
+    }
+}
