@@ -147,7 +147,7 @@
 
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
-    - `NoAutoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
+    - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
 
   - **`Description`**：应用描述
 
