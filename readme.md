@@ -32,7 +32,7 @@
 >
 > - The manifests in this repository depend on [bin/utils.ps1](./bin/utils.ps1).
 >
-> - Other buckets should exercise caution when considering merging them.
+> - Other buckets should be careful when considering merging them.
 
 ### If you are using Scoop
 
@@ -83,7 +83,7 @@
    scoop config scoop-install-url-replace-from "https://github.com"
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
    ```
-4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install applications.
+4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install apps.
 
    ```pwsh
    scoop-install abyss/InputTip-zip
@@ -93,20 +93,42 @@
 
 ---
 
+### Special Configuration
+
+- Apps in this repository include specific behaviors controlled by `action-level-when-uninstall`.
+- You can set it using the following command:
+
+  ```pwsh
+  scoop config action-level-when-uninstall 123
+  ```
+
+- If not configured, the default value is `1`.
+
+- Configuration values and their action:
+
+  - Values can be combined, e.g. `12` means both `1` and `2` will execute.
+
+  | Value | Action                                                    |
+  | ----- | --------------------------------------------------------- |
+  | `0`   | No additional operations                                  |
+  | `1`   | Attempt to terminate processes before uninstallation      |
+  | `2`   | Remove Link directories (those created via [Link](#link)) |
+  | `3`   | Clean up temporary data during uninstallation             |
+
 ### Persist
 
 > [!Tip]
 >
 > Assume the Scoop root directory is `D:\Scoop`
 
-- Scoop provides a `persist` configuration in the manifest files, which can persist data files in the application directory.
+- Scoop provides a `persist` configuration in the manifest files, which can persist data files in the app directory.
   - Taking [VSCode.json](./bucket/VSCode.json) as an example, Scoop will install it to `D:\Scoop\apps\VSCode`.
   - It will persist data directory: `D:\Scoop\apps\VSCode\data` => `D:\Scoop\persist\VSCode\data`.
   - After uninstalling, its settings, plugins, keybindings and other data will still be saved in the `D:\Scoop\apps\VSCode\data` directory.
     - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\VSCode` directory will be removed.
   - After reinstalling, the data will continue to be used again.
-- This is the most powerful feature of Scoop, which can quickly restore your application environment.
-  - Some applications use [Link](#link), which cannot be reset correctly by `scoop reset`.
+- This is the most powerful feature of Scoop, which can quickly restore your app environment.
+  - Some apps use [Link](#link), which cannot be reset correctly by `scoop reset`.
   - It is recommended to uninstall and reinstall it.
 
 ### Link
@@ -115,16 +137,12 @@
 >
 > Assume the Scoop root directory is `D:\Scoop`
 
-- Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the application data resides within the installation directory.
-- However, some applications store their data outside the installation directory, commonly in `$env:AppData`.
-- For such applications, this repository uses `New-Item -ItemType Junction` to link.
+- Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the app data resides within the installation directory.
+- However, some apps store their data outside the installation directory, commonly in `$env:AppData`.
+- For such apps, this repository uses `New-Item -ItemType Junction` to link.
 - Taking [Helix](./bucket/Helix.json) as an example:
   - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`
   - It will link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
-
-> [!Warning]
->
-> Note: The linked directory will not be removed when the application is uninstalled.
 
 ---
 

@@ -32,7 +32,7 @@
 >
 > - 此仓库中的应用清单高度依赖 [bin/utils.ps1](./bin/utils.ps1)
 >
-> - 如有需要，其他 bucket 请谨慎合并
+> - 如果其他 bucket 想要合并它们，请谨慎检查
 
 ### 如果你正在使用 Scoop
 
@@ -97,6 +97,26 @@
 
 ---
 
+### 特殊配置
+
+- 本仓库中的应用会有一些特性，由配置项 `action-level-when-uninstall` 控制
+- 你可以通过以下命令去设置
+
+  ```pwsh
+  scoop config action-level-when-uninstall 123
+  ```
+
+- 如果没有设置，则默认为 `1`
+
+- 配置值的含义如下，你可以任意组合这些值，如 `12` 表示 `1` 和 `2` 都要执行
+
+  | 可选的值 | 行为                                                |
+  | :------: | --------------------------------------------------- |
+  |   `0`    | 无额外操作                                          |
+  |   `1`    | 卸载时先尝试终止进程，然后进行卸载操作              |
+  |   `2`    | 卸载时删除 Link 目录(通过 [Link](#link) 创建的目录) |
+  |   `3`    | 卸载时删除临时数据                                  |
+
 ### Persist
 
 > [!Tip]
@@ -127,10 +147,6 @@
 - 以 [Helix](./bucket/Helix.json) 为例
   - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
   - 它会进行链接: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
-
-> [!Warning]
->
-> 需要注意: 卸载应用时不会删除链接目录
 
 ---
 
