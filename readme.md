@@ -28,6 +28,12 @@
 >
 > [scoop and scoop-install completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
+> [!Warning]
+>
+> - The manifests in this repository depend on [bin/utils.ps1](./bin/utils.ps1).
+>
+> - Other buckets should exercise caution when considering merging them.
+
 ### If you are using Scoop
 
 1.  Add `abyss` with Github or Gitee repository.

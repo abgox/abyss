@@ -28,6 +28,12 @@
 >
 > 推荐使用 [PSCompletions 中的 scoop 和 scoop-install 命令补全](https://gitee.com/abgox/PSCompletions)
 
+> [!Warning]
+>
+> - 此仓库中的应用清单高度依赖 [bin/utils.ps1](./bin/utils.ps1)
+>
+> - 如有需要，其他 bucket 请谨慎合并
+
 ### 如果你正在使用 Scoop
 
 1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
