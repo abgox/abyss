@@ -64,7 +64,7 @@ foreach ($_ in $manifests) {
     $tag += if ($app -like "Font-*") { '`Font`' }
 
     ## AutoUpdate
-    $tag += if (!$json.autoupdate) { '`NoAutoUpdate`' }
+    $tag += if (!$json.autoupdate) { '`NoUpdate`' }
 
     ## PSModule
     $tag += if ($json.psmodule) { '`PSModule`' }
