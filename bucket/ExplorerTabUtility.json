@@ -1,0 +1,74 @@
+{
+    "version": "2.5.0",
+    "description": "提升 Windows 11 文件资源管理器的功能：自动将窗口转换为标签页、复制标签页、重新打开已关闭的标签页等等。Supercharge Windows 11's File Explorer: Auto-convert windows to tabs, duplicate tabs, reopen closed ones, and more.",
+    "homepage": "https://github.com/w4po/ExplorerTabUtility",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/w4po/ExplorerTabUtility/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/w4po/ExplorerTabUtility/releases/download/v2.5.0/ExplorerTabUtility_v2.5.0_x64_NetFW4.8.1.zip",
+            "hash": "73bf031262185a63d6af4ffd0ae5f828cec64e8bca479b02be14d98428bbaad4"
+        },
+        "32bit": {
+            "url": "https://github.com/w4po/ExplorerTabUtility/releases/download/v2.5.0/ExplorerTabUtility_v2.5.0_x86_NetFW4.8.1.zip",
+            "hash": "662490819c37822e1129286864456dd45683b15fe0aeecff1b5e9c223159ed29"
+        },
+        "arm64": {
+            "url": "https://github.com/w4po/ExplorerTabUtility/releases/download/v2.5.0/ExplorerTabUtility_v2.5.0_arm64_NetFW4.8.1.zip",
+            "hash": "2496e4cb5a315e78be51ef4c2d9a894c45636fc8469319f2bf15f9e0ac02cd6c"
+        }
+    },
+    "extract_dir": "ExplorerTabUtility",
+    "shortcuts": [
+        [
+            "ExplorerTabUtility.exe",
+            "ExplorerTabUtility"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\ExplorerTabUtility\")",
+        "$linkTargets = @(\"$persist_dir\\ExplorerTabUtility\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/w4po/ExplorerTabUtility/releases/download/v$version/ExplorerTabUtility_v$version_x64_NetFW4.8.1.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/w4po/ExplorerTabUtility/releases/download/v$version/ExplorerTabUtility_v$version_x86_NetFW4.8.1.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/w4po/ExplorerTabUtility/releases/download/v$version/ExplorerTabUtility_v$version_arm64_NetFW4.8.1.zip"
+            }
+        }
+    }
+}
