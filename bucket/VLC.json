@@ -1,0 +1,72 @@
+{
+    "version": "3.0.21",
+    "description": "一款免费、开源的跨平台多媒体播放器及框架，可播放大多数多媒体文件，以及 DVD、音频 CD、VCD 及各类流媒体协议。A free and open source cross-platform multimedia player and framework that plays most multimedia files as well as DVDs, Audio CDs, VCDs, and various streaming protocols.",
+    "homepage": "https://www.videolan.org/vlc",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://download.videolan.org/pub/vlc/3.0.21/win64/vlc-3.0.21-win64.7z",
+            "hash": "9d2b24d6bc4196b3da8d181a3878678ba272e2a7690321f8826da76a69b2fb9c"
+        },
+        "32bit": {
+            "url": "https://download.videolan.org/pub/vlc/3.0.21/win32/vlc-3.0.21-win32.7z",
+            "hash": "77b2a79c4baf0dcc7c453f74f29fbdb55d42c790d277b5f9e0dbed0f3abc0131"
+        }
+    },
+    "extract_dir": "vlc-3.0.21",
+    "bin": "vlc.exe",
+    "shortcuts": [
+        [
+            "vlc.exe",
+            "VLC media player"
+        ]
+    ],
+    "post_install": [
+        "$linkPaths = @(\"$env:AppData\\vlc\")",
+        "$linkTargets = @(\"$persist_dir\\vlc\")",
+        "# ------------------------------------------------------------------",
+        "Write-Host",
+        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
+        "    $linkPath = $linkPaths[$i]",
+        "    $linkTarget = $linkTargets[$i]",
+        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
+        "        if (!(Test-Path $linkTarget)) {",
+        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
+        "        }",
+        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
+        "        try {",
+        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
+        "        } catch {",
+        "            Write-Host",
+        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
+        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
+        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
+        "            Write-Host",
+        "            throw \"Failed to remove the directory: '$linkPath'\"",
+        "        }",
+        "    }",
+        "    ensure $linkTarget | Out-Null",
+        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
+        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
+        "}"
+    ],
+    "checkver": {
+        "url": "https://www.videolan.org/vlc/download-windows.html",
+        "regex": "\\s+([\\d\\.]+)</span>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://download.videolan.org/pub/vlc/$version/win64/vlc-$version-win64.7z"
+            },
+            "32bit": {
+                "url": "https://download.videolan.org/pub/vlc/$version/win32/vlc-$version-win32.7z"
+            }
+        },
+        "hash": {
+            "url": "$url.sha256"
+        },
+        "extract_dir": "vlc-$version"
+    }
+}
