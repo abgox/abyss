@@ -95,11 +95,11 @@
 
 ### Config
 
-- Apps in this repository include specific behaviors controlled by `app_uninstall_action_level`.
+- Apps in this repository include specific behaviors controlled by `app-uninstall-action-level`.
 - You can set it using the following command:
 
   ```pwsh
-  scoop config app_uninstall_action_level 123
+  scoop config app-uninstall-action-level 123
   ```
 
 - If not configured, the default value is `1`.
