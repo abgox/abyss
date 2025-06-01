@@ -1,6 +1,6 @@
 {
     "version": "2.4.0",
-    "description": "用于探索和测试 API 的开源集成开发环境(Postman/Insomnia 的轻量级替代品)。Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia).",
+    "description": "用于探索和测试 API 的开源集成开发环境 (Postman/Insomnia 的轻量级替代品)。Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia).",
     "homepage": "https://www.usebruno.com/",
     "license": {
         "identifier": "MIT",
@@ -15,34 +15,16 @@
         ]
     ],
     "post_install": [
-        "$linkPaths = @(\"$env:AppData\\bruno\")",
-        "$linkTargets = @(\"$persist_dir\\bruno\")",
-        "# ------------------------------------------------------------------",
-        "Write-Host",
-        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
-        "    $linkPath = $linkPaths[$i]",
-        "    $linkTarget = $linkTargets[$i]",
-        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
-        "        if (!(Test-Path $linkTarget)) {",
-        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
-        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
-        "        }",
-        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
-        "        try {",
-        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
-        "        } catch {",
-        "            Write-Host",
-        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
-        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
-        "            Write-Host",
-        "            throw \"Failed to remove the directory: '$linkPath'\"",
-        "        }",
-        "    }",
-        "    ensure $linkTarget | Out-Null",
-        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
-        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
-        "}"
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$LinkPaths = @(\"$env:AppData\\bruno\")",
+        "$LinkTargets = @(\"$persist_dir\\bruno\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process",
+        "A-Remove-LinkDirectory"
     ],
     "checkver": {
         "github": "https://github.com/usebruno/bruno"

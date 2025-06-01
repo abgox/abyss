@@ -11,11 +11,14 @@
             "Vov Sticky Notes"
         ]
     ],
-    "pre_install": [
-        "$path_persist = \"$persist_dir\\data.ini\"",
-        "# ------------------------------------------------------------------",
-        "ensure $persist_dir | Out-Null",
-        "if (!(Test-Path $path_persist)) { '' | Out-File $path_persist -Encoding utf8 -Force }"
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-New-PersistFile \"$persist_dir\\data.ini\" -content ''"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process"
     ],
     "persist": "data.ini",
     "checkver": "Version:</b>\\s?([\\d\\.]+)",

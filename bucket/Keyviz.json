@@ -1,6 +1,6 @@
 {
     "version": "1.0.6",
-    "description": "一个免费的开源工具来可视化你的击键 ⌨️ 和 🖱️ 鼠标实时动作。A free and open-source tool to visualize your keystrokes ⌨️ and 🖱️ mouse actions in real-time.",
+    "description": "一个免费的开源工具来可视化你的击键和鼠标实时动作。A free and open-source tool to visualize your keystrokes and mouse actions in real-time.",
     "homepage": "https://mularahul.github.io/keyviz",
     "license": {
         "identifier": "GNU General Public License v3.0",
@@ -15,35 +15,16 @@
         ]
     ],
     "post_install": [
-        "# ------------------------------------------------------------------",
-        "$linkPaths = @(\"$env:AppData\\com.example\\keyviz\")",
-        "$linkTargets = @(\"$persist_dir\\com.example\\keyviz\")",
-        "# ------------------------------------------------------------------",
-        "Write-Host",
-        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
-        "    $linkPath = $linkPaths[$i]",
-        "    $linkTarget = $linkTargets[$i]",
-        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
-        "        if (!(Test-Path $linkTarget)) {",
-        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
-        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
-        "        }",
-        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
-        "        try {",
-        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
-        "        } catch {",
-        "            Write-Host",
-        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
-        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
-        "            Write-Host",
-        "            throw \"Failed to remove the directory: '$linkPath'\"",
-        "        }",
-        "    }",
-        "    ensure $linkTarget | Out-Null",
-        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
-        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
-        "}"
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$LinkPaths = @(\"$env:AppData\\com.example\\keyviz\")",
+        "$LinkTargets = @(\"$persist_dir\\com.example\\keyviz\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process",
+        "A-Remove-LinkDirectory"
     ],
     "checkver": {
         "github": "https://github.com/mulaRahul/keyviz"

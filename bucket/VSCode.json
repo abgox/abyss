@@ -59,6 +59,12 @@
         "    (Get-Content \"$extensions_file\") -replace '(?<=vscode(/|\\\\\\\\)).*?(?=(/|\\\\\\\\)data(/|\\\\\\\\)extensions)', $version | Set-Content \"$extensions_file\"",
         "}"
     ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process",
+        "A-Remove-TempData @(\"$env:UserProfile\\.vscode\",\"$env:AppData\\Code\")"
+    ],
     "uninstaller": {
         "script": [
             "if ($cmd -eq 'uninstall')",

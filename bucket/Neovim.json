@@ -6,9 +6,6 @@
         "identifier": "Apache License 2.0,Vim",
         "url": "https://github.com/neovim/neovim/blob/master/LICENSE.txt"
     },
-    "suggest": {
-        "vcredist": "extras/vcredist2022"
-    },
     "url": "https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-win64.zip",
     "hash": "dfa66afc95422b7c4a0f8ae330f30a00dbb8e9848993d7bfde8e2e85be30de13",
     "extract_dir": "nvim-win64",
@@ -20,34 +17,16 @@
         ]
     ],
     "post_install": [
-        "$linkPaths = @(\"$env:LocalAppData\\nvim\",\"$env:LocalAppData\\nvim-data\")",
-        "$linkTargets = @(\"$persist_dir\\nvim\",\"$persist_dir\\nvim-data\")",
-        "# ------------------------------------------------------------------",
-        "Write-Host",
-        "for ($i = 0; $i -lt $linkPaths.Count; $i++) {",
-        "    $linkPath = $linkPaths[$i]",
-        "    $linkTarget = $linkTargets[$i]",
-        "    if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {",
-        "        if (!(Test-Path $linkTarget)) {",
-        "            Write-Host \"Copying $linkPath => $linkTarget\" -ForegroundColor Yellow",
-        "            Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force",
-        "        }",
-        "        Write-Host \"Removing $linkPath\" -ForegroundColor Yellow",
-        "        try {",
-        "            Remove-Item $linkPath -Recurse -Force -ErrorAction Stop",
-        "        } catch {",
-        "            Write-Host",
-        "            Write-Host \"Failed to remove the directory: '$linkPath'\" -ForegroundColor Red",
-        "            Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "            Write-Host \"Please stop the relevant processes and try to $cmd $app again.\" -ForegroundColor Red",
-        "            Write-Host",
-        "            throw \"Failed to remove the directory: '$linkPath'\"",
-        "        }",
-        "    }",
-        "    ensure $linkTarget | Out-Null",
-        "    New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null",
-        "    Write-Host \"Linking $linkPath => $linkTarget\" -ForegroundColor Yellow",
-        "}"
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$LinkPaths = @(\"$env:LocalAppData\\nvim\",\"$env:LocalAppData\\nvim-data\")",
+        "$LinkTargets = @(\"$persist_dir\\nvim\",\"$persist_dir\\nvim-data\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process",
+        "A-Remove-LinkDirectory"
     ],
     "checkver": {
         "github": "https://github.com/neovim/neovim"

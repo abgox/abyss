@@ -18,6 +18,11 @@
         "    if (!(Test-Path \"$persist_dir\\$_\") -and !(Test-Path \"$dir\\$_\")) { New-Item \"$dir\\$_\" | Out-Null }",
         "}"
     ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process"
+    ],
     "persist": [
         "FSSettings.db",
         "HisFolderList.db"

@@ -23,17 +23,18 @@
             "eSearch"
         ]
     ],
-    "pre_install": [
-        "$path_to = \"$persist_dir\\resources\\app\\portable\"",
-        "$path_from = \"$env:AppData\\eSearch\"",
-        "# ------------------------------------------------------------------",
-        "if (!(Test-Path $path_to) -and (Test-Path $path_from)) {",
-        "    Write-Host",
-        "    Write-Host \"[Portable Mode]: Copying $path_from => $path_to\" -ForegroundColor Yellow",
-        "    Copy-Item -Path $path_from -Destination $path_to -Recurse -Force",
-        "}"
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$LinkPaths = @(\"$env:AppData\\eSearch\")",
+        "$LinkTargets = @(\"$persist_dir\\eSearch\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
     ],
-    "persist": "resources\\app\\portable",
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process",
+        "A-Remove-LinkDirectory"
+    ],
     "checkver": {
         "github": "https://github.com/xushengfeng/eSearch"
     },

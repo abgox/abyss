@@ -28,17 +28,18 @@
             "lx-music"
         ]
     ],
-    "pre_install": [
-        "$path_to = \"$persist_dir\\portable\\userData\"",
-        "$path_from = \"$env:AppData\\lx-music-desktop\"",
-        "# ------------------------------------------------------------------",
-        "if (!(Test-Path $path_to) -and (Test-Path $path_from)) {",
-        "    Write-Host",
-        "    Write-Host \"[Portable Mode]: Copying $path_from => $path_to\" -ForegroundColor Yellow",
-        "    Copy-Item -Path $path_from -Destination $path_to -Recurse -Force",
-        "}"
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$LinkPaths = @(\"$env:AppData\\lx-music-desktop\")",
+        "$LinkTargets = @(\"$persist_dir\\lx-music-desktop\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
     ],
-    "persist": "portable",
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process",
+        "A-Remove-LinkDirectory"
+    ],
     "checkver": "github",
     "autoupdate": {
         "architecture": {

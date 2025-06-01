@@ -13,10 +13,10 @@
     ],
     "url": "https://psg-prod-eastus.azureedge.net/packages/pscompletions.5.5.1.nupkg",
     "hash": "780735bca9f9c0d0ba1e1f22ca5e22b764edcb8056e366dc960718104de97e4d",
-    "pre_install": [
-        "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse",
-        "ensure $persist_dir | Out-Null",
-        "if (!(Test-Path \"$persist_dir\\data.json\")) { '{}' | Out-File \"$persist_dir\\data.json\" -Encoding UTF8 -Force }"
+    "pre_install": "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse",
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-New-PersistFile \"$persist_dir\\data.json\" -Content '{}'"
     ],
     "psmodule": {
         "name": "PSCompletions"

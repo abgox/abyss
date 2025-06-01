@@ -21,6 +21,11 @@
         "ensure $persist_dir | Out-Null",
         "if (!(Test-Path $path_persist)) { New-Item -ItemType File -Path $path_persist -Force | Out-Null }"
     ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Stop-Process"
+    ],
     "persist": "gopeed.db",
     "checkver": {
         "github": "https://github.com/GopeedLab/gopeed"
