@@ -1,20 +1,26 @@
+name: Excavator
 on:
   workflow_dispatch:
   schedule:
     # At minute 20 past every 4th hour.
-    - cron: '20 */4 * * *'
-name: Excavator
+    - cron: "20 */4 * * *"
 jobs:
   excavate:
     name: Excavate
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SKIP_UPDATED: 1
+          THROW_ERROR: 1
+
   workflow-keepalive:
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
