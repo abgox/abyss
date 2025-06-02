@@ -179,10 +179,12 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (95)|Version|Persist|Tag|Description|
+|App (97)|Version|Persist|Tag|Description|
 |:-:|:-:|:-:|:-:|-|
+|[Apifox](https://apifox.com)|<a href="./bucket/Apifox.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FApifox.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||API 设计、开发、测试一体化协作平台。|
 |[AppFlowy](https://www.appflowy.io/)|<a href="./bucket/AppFlowy.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FAppFlowy.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一个开源的 Notion 替代品，数据和定制由你掌控。|
 |[Beekeeper-Studio](https://www.beekeeperstudio.io)|<a href="./bucket/Beekeeper-Studio.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBeekeeper-Studio.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一款跨平台的 SQL 编辑器和数据库管理器。|
+|[Bilibili](https://app.bilibili.com/)|<a href="./bucket/Bilibili.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBilibili.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||哔哩哔哩(Bilibili) 的 Windows 桌面程序。|
 |[BongoCat](https://github.com/ayangweb/BongoCat)|<a href="./bucket/BongoCat.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBongoCat.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一个跨平台桌宠。|
 |[Bruno](https://www.usebruno.com/)|<a href="./bucket/Bruno.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBruno.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||用于探索和测试 API 的开源集成开发环境 (Postman/Insomnia 的轻量级替代品)。|
 |[Carnac](http://carnackeys.com/)|<a href="./bucket/Carnac.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FCarnac.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|✔️||一个键盘按键记录和演示实用程序。|

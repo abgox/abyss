@@ -173,10 +173,12 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (95)|Version|Persist|Tag|Description|
+|App (97)|Version|Persist|Tag|Description|
 |:-:|:-:|:-:|:-:|-|
+|[Apifox](https://apifox.com)|<a href="./bucket/Apifox.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FApifox.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||All-in-one collaboration platform for API documentation, API debugging, API Mock and API test automation.|
 |[AppFlowy](https://www.appflowy.io/)|<a href="./bucket/AppFlowy.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FAppFlowy.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||An open-source alternative to Notion. You are in charge of your data and customizations.|
 |[Beekeeper-Studio](https://www.beekeeperstudio.io)|<a href="./bucket/Beekeeper-Studio.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBeekeeper-Studio.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||A cross-platform SQL editor and database manager.|
+|[Bilibili](https://app.bilibili.com/)|<a href="./bucket/Bilibili.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBilibili.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||A windows client for Bilibili.|
 |[BongoCat](https://github.com/ayangweb/BongoCat)|<a href="./bucket/BongoCat.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBongoCat.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||A cross-platform desktop pet.|
 |[Bruno](https://www.usebruno.com/)|<a href="./bucket/Bruno.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FBruno.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia).|
 |[Carnac](http://carnackeys.com/)|<a href="./bucket/Carnac.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FCarnac.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|✔️||A keyboard logging and presentation utility.|
