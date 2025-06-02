@@ -336,7 +336,10 @@ function A-Remove-LinkDirectory {
         [array]$LinkPaths
     )
 
-    if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
+    if (Test-Path "$dir\scoop-install-add-appxpackage.jsonc") {
+        # 对于通过 A-Add-MsixPackage 或 A-Add-AppxPackage 安装的软件，必须先删除其链接目录
+    }
+    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
         return
     }
 
