@@ -25,15 +25,15 @@ foreach ($_ in $manifests) {
         function Handle-Persist($obj, $isPersistLink = $isPersistLink) {
             foreach ($_ in @('pre_install', 'post_install', 'pre_uninstall', 'post_uninstall')) {
                 if (!$isPersistLink -and $obj.$_) {
-                    $isPersistLink = ($obj.$_ -join "`n") -match '.*New-Item.*-ItemType.*Junction.*'
+                    $isPersistLink = ($obj.$_ -join "`n") -match '.*A-New-LinkDirectory.*'
                 }
                 if (!$isPersistLink -and $obj.$_.script) {
-                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*New-Item.*-ItemType.*Junction.*'
+                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*A-New-LinkDirectory.*'
                 }
             }
             foreach ($_ in @('installer', 'uninstaller')) {
                 if (!$isPersistLink -and $obj.$_.script) {
-                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*New-Item.*-ItemType.*Junction.*'
+                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*A-New-LinkDirectory.*'
                 }
             }
             return $isPersistLink

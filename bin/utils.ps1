@@ -1,9 +1,6 @@
 ﻿Write-Host
 
-# 一个临时文件，用于保存安装时的一些数据，以便在卸载时使用这些数据
-$scoop_temp_config_path = "$dir\scoop-script-temp-data.jsonc"
-
-# 卸载时的操作等级。
+# 卸载时的操作行为。
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
 $uninstallActionLevel = (scoop config).'app-uninstall-action-level'
@@ -127,14 +124,16 @@ function A-New-LinkDirectory {
         exit 1
     }
 
-    $scoopInstallTempData = @{
+    $path_file = "$dir\scoop-install-new-link-directory.jsonc"
+
+    $installData = @{
         "LinkPaths" = @()
     }
 
     for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
         $linkPath = $LinkPaths[$i]
         $linkTarget = $LinkTargets[$i]
-        $scoopInstallTempData.LinkPaths += $linkPath
+        $installData.LinkPaths += $linkPath
         if ($cmd -ne "update" -and (Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
             if (!(Test-Path $linkTarget)) {
                 Write-Host "$($words["Copying"]) $linkPath => $linkTarget" -ForegroundColor Yellow
@@ -157,7 +156,7 @@ function A-New-LinkDirectory {
         Write-Host "$($words["Linking"]) $linkPath => $linkTarget" -ForegroundColor Yellow
     }
     if ($LinkPaths.Count) {
-        $scoopInstallTempData | ConvertTo-Json | Out-File -FilePath $scoop_temp_config_path -Force -Encoding utf8
+        $installData | ConvertTo-Json | Out-File -FilePath $path_file -Force -Encoding utf8
     }
 }
 
@@ -323,7 +322,7 @@ function A-Remove-LinkDirectory {
 
     .PARAMETER LinkPaths
         要删除的目录路径数组，支持通过管道传入。
-        若未指定参数且存在配置文件 $scoop_temp_config_path，则自动从配置文件读取路径。
+        若未指定参数且存在文件 $path_file，则自动从文件读取。
 
     .EXAMPLE
         A-Remove-LinkDirectory -LinkPaths @("C:\LinkDir1", "D:\LinkDir2")
@@ -331,15 +330,17 @@ function A-Remove-LinkDirectory {
     #>
     param (
         [Parameter(Position = 0, ValueFromPipeline)]
-        [array]
-        $LinkPaths
+        [array]$LinkPaths
     )
 
     if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
         return
     }
-    if (!$PSBoundParameters.ContainsKey('LinkPaths') -and (Test-Path $scoop_temp_config_path)) {
-        $LinkPaths = Get-Content $scoop_temp_config_path | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
+
+    $path_file = "$dir\scoop-install-new-link-directory.jsonc"
+
+    if (!$PSBoundParameters.ContainsKey('LinkPaths') -and (Test-Path $path_file)) {
+        $LinkPaths = Get-Content $path_file -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
     }
     foreach ($_ in $LinkPaths) {
         if (Test-Path $_ ) {
@@ -372,8 +373,7 @@ function A-Remove-TempData {
     #>
     param (
         [Parameter(Position = 0, ValueFromPipeline)]
-        [array]
-        $Paths
+        [array]$Paths
     )
 
     if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
@@ -402,8 +402,7 @@ function A-Install-Font {
     param(
         [Parameter(Position = 0, ValueFromPipeline)]
         [ValidateSet("ttf", "otf", "ttc")]
-        [string]
-        $FontType = "ttf"
+        [string]$FontType = "ttf"
     )
 
     $filter = "*.$($FontType)"
@@ -480,8 +479,7 @@ function A-Uninstall-Font {
     param(
         [Parameter(Position = 0, ValueFromPipeline)]
         [ValidateSet("ttf", "otf", "ttc")]
-        [string]
-        $FontType = "ttf"
+        [string]$FontType = "ttf"
     )
 
     $filter = "*.$($FontType)"
@@ -549,5 +547,75 @@ function A-Uninstall-Font {
         else {
             Write-Host "The '$app' Font family has been uninstalled and will not be present after restarting your computer." -Foreground Magenta
         }
+    }
+}
+
+function A-Add-AppxPackage {
+    <#
+    .SYNOPSIS
+        安装 AppX/MSIX 包并记录安装信息供 Scoop 管理
+
+    .DESCRIPTION
+        该函数使用 Add-AppxPackage 命令安装应用程序包 (.appx 或 .msix)，
+        然后创建一个 JSON 文件用于 Scoop 管理安装信息。
+
+    .PARAMETER Path
+        要安装的 AppX/MSIX 包的文件路径。支持管道输入。
+
+    .EXAMPLE
+        A-Add-AppxPackage -Path "D:\demo.msix"
+
+    .EXAMPLE
+        "D:\demo.msix" | A-Add-AppxPackage
+    #>
+    param(
+        [Parameter(Position = 0, ValueFromPipeline)]
+        [string]$Path
+    )
+
+    Add-AppxPackage -Path $Path -ErrorAction Stop
+
+    $path_file = "$dir\scoop-install-add-appxpackage.jsonc"
+    $installData = @{
+        package = @{
+            PackageFamilyName = $PackageFamilyName
+        }
+    }
+    $installData | ConvertTo-Json | Out-File -FilePath $path_file -Force -Encoding utf8
+
+    if ($PSUICulture -like "zh*") {
+        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的持久化(persist)、安装、更新以及卸载操作。" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the persistence of data and operations for installing, updating, and uninstalling." -ForegroundColor Yellow
+    }
+}
+
+function A-Remove-AppxPackage {
+    <#
+    .SYNOPSIS
+        移除 AppX/MSIX 包
+
+    .DESCRIPTION
+        该函数使用 Remove-AppxPackage 命令移除应用程序包 (.appx 或 .msix)
+
+    .PARAMETER Package
+        要移除的 AppX/MSIX 包的名称。
+        若未指定参数且存在文件 $path_file，则自动从文件读取。
+    #>
+    param(
+        [Parameter(Position = 0, ValueFromPipeline)]
+        [string]$Package
+    )
+
+    $path_file = "$dir\scoop-install-add-appxpackage.jsonc"
+
+    if ($PSBoundParameters.ContainsKey('Package')) {
+        Remove-AppxPackage -Package $Package
+    }
+    elseif (Test-Path $path_file) {
+        $p = Get-Content $path_file | ConvertFrom-Json | Select-Object -ExpandProperty "package"
+
+        Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $p.PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
     }
 }
