@@ -8,7 +8,11 @@ if ($uninstallActionLevel -eq $null) {
     $uninstallActionLevel = "1"
 }
 
-if ($PSUICulture -like "zh*") {
+
+# 如果没有 $cmd，表示在自动化执行更新检查，此时中文内容可能导致错误。
+$needLocalization = $PSUICulture -like "zh*" -and $cmd
+
+if ($needLocalization) {
     $cmdMap_zh = @{
         "install"   = "安装"
         "uninstall" = "卸载"
@@ -16,7 +20,7 @@ if ($PSUICulture -like "zh*") {
     }
 
     $words = @{
-        "Creating directory:"                                                                           = "正在创建目录："
+        "Creating directory:"                                                                           = "正在创建目录:"
         "The script in this manifest is incorrectly defined."                                           = "这个清单中的脚本定义有误。"
         "Copying"                                                                                       = "正在复制"
         "Removing"                                                                                      = "正在删除"
@@ -59,7 +63,6 @@ else {
         "Removing Temp data:"                                                                           = "Removing Temp data:"
     }
 }
-
 
 function A-Ensure-Directory {
     <#
@@ -382,8 +385,8 @@ function A-Remove-TempData {
     foreach ($_ in $Paths) {
         if (Test-Path $_ ) {
             Write-Host "$($words["Removing Temp data:" ]) $_" -ForegroundColor Yellow
+            Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
         }
-        Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
     }
 }
 
@@ -419,7 +422,7 @@ function A-Install-Font {
     if (!$isPerUserFontInstallationSupported -and !$global) {
         scoop uninstall $app
 
-        if ($PSUICulture -like "zh*") {
+        if ($needLocalization) {
             Write-Host
             Write-Host "对于 Windows 版本低于 Windows 10 版本 1809 (OS Build 17763)，" -Foreground DarkRed
             Write-Host "字体只能安装为所有用户。" -Foreground DarkRed
@@ -497,7 +500,7 @@ function A-Uninstall-Font {
                 Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
             }
             catch {
-                if ($PSUICulture -like "zh*") {
+                if ($needLocalization) {
                     Write-Host
                     Write-Host " 错误 " -Background DarkRed -Foreground White -NoNewline
                     Write-Host
@@ -541,7 +544,7 @@ function A-Uninstall-Font {
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
     if ($cmd -eq "uninstall") {
-        if ($PSUICulture -like "zh*") {
+        if ($needLocalization) {
             Write-Host "$app 字体已经成功卸载，重启电脑后将不会再显示。" -Foreground Magenta
         }
         else {
@@ -606,7 +609,7 @@ function A-Add-AppxPackage {
     }
     $installData | ConvertTo-Json | Out-File -FilePath $path_file -Force -Encoding utf8
 
-    if ($PSUICulture -like "zh*") {
+    if ($needLocalization) {
         Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
     }
     else {
@@ -641,4 +644,68 @@ function A-Remove-AppxPackage {
 
         Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $p.PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
     }
+}
+
+function A-Get-InstallerInfoFromWinget {
+    <#
+    .SYNOPSIS
+        从 winget 获取安装信息
+
+    .DESCRIPTION
+        该函数使用 winget 获取应用程序安装信息，并返回一个包含安装信息的对象。
+
+    .PARAMETER PackageName
+        要获取安装信息的包名。
+        格式为 'Microsoft/VisualStudioCode'
+
+    .PARAMETER InstallerType
+        要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
+    #>
+    param(
+        [string]$PackageName,
+        [string]$InstallerType
+    )
+
+    $rootDir = $PackageName.ToLower()[0]
+    $parts = $PackageName -split '/'
+    $id = $parts -join '.'
+
+    $latestVersion = (Invoke-WebRequest -Uri "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackageName").Content |
+    ConvertFrom-Json |
+    ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } |
+    Sort-Object { try { [version]$_ } catch {} } -Descending |
+    Select-Object -First 1
+
+    $installerYaml = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackageName/$latestVersion/$id.installer.yaml"
+
+    $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
+    if (!$hasCommand) {
+        Install-Module powershell-yaml -Repository PSGallery -Force
+        Import-Module -Name powershell-yaml -Force
+        Write-Host "Install and import powershell-yaml module" -ForegroundColor Green
+    }
+
+    $installerInfo = ConvertFrom-Yaml $installerYaml.Content
+
+    $scope = $installerInfo.Scope
+
+    foreach ($_ in $installerInfo.Installers) {
+        $arch = $_.Architecture
+        $type = [regex]::Match($_.InstallerUrl, '\.(\w+)$').Groups[1].Value.ToLower()
+        if ($arch -and $type -eq $InstallerType) {
+            $res = $arch
+            if ($scope) {
+                $res += '_' + $scope.ToLower()
+            }
+            elseif ($_.Scope) {
+                $res += '_' + $_.Scope.ToLower()
+            }
+            $installerInfo.$res = $_
+        }
+    }
+
+    # 写入到 bin/scoop-auto-check-update-temp-data.jsonc，用于后续读取
+    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
+
+    $installerInfo
 }
