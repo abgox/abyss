@@ -179,7 +179,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (97)|Version|Persist|Tag|Description|
+|App (98)|Version|Persist|Tag|Description|
 |:-:|:-:|:-:|:-:|-|
 |[Apifox](https://apifox.com)|<a href="./bucket/Apifox.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FApifox.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||API 设计、开发、测试一体化协作平台。|
 |[AppFlowy](https://www.appflowy.io/)|<a href="./bucket/AppFlowy.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FAppFlowy.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一个开源的 Notion 替代品，数据和定制由你掌控。|
@@ -192,6 +192,7 @@
 |[clash-verge-rev](https://github.com/clash-verge-rev/clash-verge-rev)|<a href="./bucket/clash-verge-rev.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2Fclash-verge-rev.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一款基于 Tauri 的现代图形用户界面客户端，提供定制化的代理体验。|
 |[ContextMenuManager](https://github.com/BluePointLilac/ContextMenuManager)|<a href="./bucket/ContextMenuManager.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FContextMenuManager.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一个纯粹的 Windows 右键菜单管理程序。|
 |[Coriander-Player](https://github.com/Ferry-200/coriander_player)|<a href="./bucket/Coriander-Player.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FCoriander-Player.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一个 Windows 上的本地音乐播放器。|
+|[DevToys](https://devtoys.app/)|<a href="./bucket/DevToys.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FDevToys.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`|`Msix`|开发人员的瑞士军刀。|
 |[DownKyi](https://github.com/leiurayer/downkyi)|<a href="./bucket/DownKyi.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FDownKyi.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|✔️||一个B站(bilibili)视频下载工具。|
 |[draw.io](https://www.diagrams.net)|<a href="./bucket/draw.io.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2Fdraw.io.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||一款基于 Electron 的桌面绘图应用程序，它封装了 draw.io 核心编辑器。|
 |[Escrcpy](https://github.com/viarotel-org/escrcpy)|<a href="./bucket/Escrcpy.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2FEscrcpy.json&query=%24.version&prefix=v&label=%20" alt="version" /></a>|`Link`||使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动。|
