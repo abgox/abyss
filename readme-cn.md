@@ -167,6 +167,9 @@
     - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
   - **`Tag`**：应用标签
 
+    - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
+      - 它的安装目录不在 Scoop 中
+      - Scoop 只管理 [persist](#persist)，应用的安装、更新以及卸载操作。
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
     - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新

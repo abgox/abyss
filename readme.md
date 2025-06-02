@@ -162,6 +162,9 @@
     - **➖** : It is not necessary, or there are no data files.
     - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](#link) for details.
   - **`Tag`**
+    - `Msix`: Apps packaged via [Msix](https://learn.microsoft.com/windows/msix/overview)
+      - The installation directory is not in Scoop.
+      - Scoop only manages the [persist](#persist) and operations for installing, updating, and uninstalling.
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
     - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
