@@ -4,6 +4,59 @@ $manifests = Get-ChildItem "$PSScriptRoot\..\bucket"
 
 $content = @("|App ($($manifests.Length))|Version|Persist|Tag|Description|", "|:-:|:-:|:-:|:-:|-|")
 
+function A-Test-ScriptPattern {
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSObject]$InputObject,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Pattern,
+
+        [string[]]$ScriptSections = @('pre_install', 'post_install', 'pre_uninstall', 'post_uninstall'),
+
+        [string[]]$ScriptProperties = @('installer', 'uninstaller')
+    )
+
+    function Test-ObjectForPattern {
+        param(
+            [PSObject]$Object,
+            [string]$SearchPattern
+        )
+
+        $found = $false
+
+        foreach ($section in $ScriptSections) {
+            if (!$found -and $Object.$section) {
+                $found = ($Object.$section -join "`n") -match $SearchPattern
+            }
+        }
+
+        foreach ($property in $ScriptProperties) {
+            if (!$found -and $Object.$property.script) {
+                $found = ($Object.$property.script -join "`n") -match $SearchPattern
+            }
+        }
+
+        return $found
+    }
+
+    $patternFound = Test-ObjectForPattern -Object $InputObject -SearchPattern $Pattern
+
+    if (!$patternFound -and $InputObject.architecture) {
+        if ($InputObject.architecture.'64bit') {
+            $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.'64bit' -SearchPattern $Pattern
+        }
+        if (!$patternFound -and $InputObject.architecture.'32bit') {
+            $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.'32bit' -SearchPattern $Pattern
+        }
+        if (!$patternFound -and $InputObject.architecture.arm64) {
+            $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.arm64 -SearchPattern $Pattern
+        }
+    }
+
+    return $patternFound
+}
+
 foreach ($_ in $manifests) {
     $json = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
     $info = @()
@@ -19,39 +72,12 @@ foreach ($_ in $manifests) {
 
     # persist
     $isPersist = $json.persist
-    $isPersistLink = $false
+    $isLinkDirectory = $false
 
     if (!$isPersist) {
-        function Handle-Persist($obj, $isPersistLink = $isPersistLink) {
-            foreach ($_ in @('pre_install', 'post_install', 'pre_uninstall', 'post_uninstall')) {
-                if (!$isPersistLink -and $obj.$_) {
-                    $isPersistLink = ($obj.$_ -join "`n") -match '.*A-New-LinkDirectory.*'
-                }
-                if (!$isPersistLink -and $obj.$_.script) {
-                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*A-New-LinkDirectory.*'
-                }
-            }
-            foreach ($_ in @('installer', 'uninstaller')) {
-                if (!$isPersistLink -and $obj.$_.script) {
-                    $isPersistLink = ($obj.$_.script -join "`n") -match '.*A-New-LinkDirectory.*'
-                }
-            }
-            return $isPersistLink
-        }
-        if ($json.architecture) {
-            if ($json.architecture.'64bit') {
-                $isPersistLink = Handle-Persist $json.architecture.'64bit'
-            }
-            if ($json.architecture.'32bit') {
-                $isPersistLink = Handle-Persist $json.architecture.'32bit'
-            }
-            if ($json.architecture.arm64) {
-                $isPersistLink = Handle-Persist $json.architecture.arm64
-            }
-        }
-        $isPersistLink = Handle-Persist $json
+        $isLinkDirectory = A-Test-ScriptPattern $json '.*A-New-LinkDirectory.*'
     }
-    if ($isPersistLink) {
+    if ($isLinkDirectory) {
         $info += '`Link`'
     }
     else {
@@ -59,8 +85,13 @@ foreach ($_ in $manifests) {
     }
 
     # Tag
-    ## font
     $tag = @()
+
+    ## Msix
+    $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
+    $tag += if ($isMsix) { '`Msix`' }
+
+    ## font
     $tag += if ($app -like "Font-*") { '`Font`' }
 
     ## AutoUpdate

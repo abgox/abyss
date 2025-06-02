@@ -550,6 +550,29 @@ function A-Uninstall-Font {
     }
 }
 
+function A-Add-MsixPackage {
+    param(
+        [Parameter(Position = 0, ValueFromPipeline)]
+        [string]$Path
+    )
+
+    A-Add-AppxPackage -Path $Path
+}
+
+function A-Remove-MsixPackage {
+    param(
+        [Parameter(Position = 0, ValueFromPipeline)]
+        [string]$Package
+    )
+
+    if ($PSBoundParameters.ContainsKey('Package')) {
+        A-Remove-AppxPackage -Package $Package
+    }
+    else {
+        A-Remove-AppxPackage
+    }
+}
+
 function A-Add-AppxPackage {
     <#
     .SYNOPSIS
@@ -584,7 +607,7 @@ function A-Add-AppxPackage {
     $installData | ConvertTo-Json | Out-File -FilePath $path_file -Force -Encoding utf8
 
     if ($PSUICulture -like "zh*") {
-        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的持久化(persist)、安装、更新以及卸载操作。" -ForegroundColor Yellow
+        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
     }
     else {
         Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the persistence of data and operations for installing, updating, and uninstalling." -ForegroundColor Yellow
