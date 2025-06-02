@@ -1,0 +1,31 @@
+{
+    "version": "1.0.13.0",
+    "description": "开发人员的瑞士军刀。A Swiss Army knife for developers.",
+    "homepage": "https://devtoys.app/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/veler/DevToys/blob/main/LICENSE.md"
+    },
+    "url": "https://github.com/veler/DevToys/releases/download/v1.0.13.0/64360VelerSoftware.DevToys_1.0.13.0_neutral_._j80j2txgjg9dj.msixbundle#/dl.msixbundle",
+    "hash": "020dd37d165ce2568405a32cdbcb93bfbe0a79864df9eb8c742a6a771c785ae3",
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "$PackageFamilyName = \"64360VelerSoftware.DevToys_j80j2txgjg9dj\"",
+        "A-Add-MsixPackage -Path \"$dir\\dl.msixbundle\"",
+        "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")",
+        "$LinkTargets = @(\"$persist_dir\\$PackageFamilyName\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Remove-LinkDirectory",
+        "A-Remove-MsixPackage"
+    ],
+    "checkver": {
+        "github": "https://github.com/veler/DevToys"
+    },
+    "autoupdate": {
+        "url": "https://github.com/veler/DevToys/releases/download/v$version/64360VelerSoftware.DevToys_$version_neutral_._j80j2txgjg9dj.msixbundle#/dl.msixbundle"
+    }
+}
