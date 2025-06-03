@@ -19,19 +19,24 @@
             "Apifox"
         ]
     ],
-    "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Expand-SetupExe"
+    ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "$LinkPaths = @(\"$env:AppData\\apifox\")",
         "$LinkTargets = @(\"$persist_dir\\apifox\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+        "A-New-LinkDirectory $LinkPaths $LinkTargets",
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Stop-Process @(\"$env:AppData\\apifox\")",
         "A-Remove-LinkDirectory",
-        "A-Remove-TempData @(\"$env:LocalAppData\\apifox-updater\")"
+        "A-Remove-TempData @(\"$env:LocalAppData\\apifox-updater\")",
+        "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [

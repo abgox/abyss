@@ -1,36 +1,42 @@
 {
-    "version": "5.2.10",
-    "description": "一款跨平台的 SQL 编辑器和数据库管理器。A cross-platform SQL editor and database manager.",
-    "homepage": "https://www.beekeeperstudio.io",
-    "license": {
-        "identifier": "Unknown",
-        "url": "https://github.com/beekeeper-studio/beekeeper-studio/blob/master/LICENSE.md"
-    },
-    "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v5.2.10/Beekeeper-Studio-Setup-5.2.10.exe#/dl.7z",
-    "hash": "sha512:a8f09dba7ae538d60fc2ab78ea3f586ca1920691aa4e12bfe37e23c180a8f0610ff33c93e907acdf928f319381f0c6fdfd7bdb201212491620688b6a69afdf4a",
-    "shortcuts": [
-        [
-            "Beekeeper Studio.exe",
-            "Beekeeper Studio"
-        ]
-    ],
-    "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\beekeeper-studio\")",
-        "$LinkTargets = @(\"$persist_dir\\beekeeper-studio\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/beekeeper-studio/beekeeper-studio"
-    },
-    "autoupdate": {
-        "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v$version/Beekeeper-Studio-Setup-$version.exe#/dl.7z"
-    }
+  "version": "5.2.10",
+  "description": "一款跨平台的 SQL 编辑器和数据库管理器。A cross-platform SQL editor and database manager.",
+  "homepage": "https://www.beekeeperstudio.io",
+  "license": {
+    "identifier": "Unknown",
+    "url": "https://github.com/beekeeper-studio/beekeeper-studio/blob/master/LICENSE.md"
+  },
+  "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v5.2.10/Beekeeper-Studio-Setup-5.2.10.exe#/dl.7z",
+  "hash": "sha512:a8f09dba7ae538d60fc2ab78ea3f586ca1920691aa4e12bfe37e23c180a8f0610ff33c93e907acdf928f319381f0c6fdfd7bdb201212491620688b6a69afdf4a",
+  "shortcuts": [
+    [
+      "Beekeeper Studio.exe",
+      "Beekeeper Studio"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Expand-SetupExe"
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\beekeeper-studio\")",
+    "$LinkTargets = @(\"$persist_dir\\beekeeper-studio\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/beekeeper-studio/beekeeper-studio"
+  },
+  "autoupdate": {
+    "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v$version/Beekeeper-Studio-Setup-$version.exe#/dl.7z"
+  }
 }

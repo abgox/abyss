@@ -1,0 +1,35 @@
+{
+  "version": "9.6",
+  "description": "创建数字贴纸和提醒事项。Creates digital stickers and reminders.",
+  "homepage": "https://vovsoft.com/software/vov-sticky-notes/",
+  "license": "Shareware",
+  "url": "https://files.vovsoft.com/vov-sticky-notes-portable.zip?v=9.6",
+  "hash": "775d4d0131490c4d353c4d055aeff8852f833bfae89340447fa27cf890d451dd",
+  "shortcuts": [
+    [
+      "sticky.exe",
+      "Vov Sticky Notes"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-New-PersistFile \"$persist_dir\\data.ini\" -content ''",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "persist": "data.ini",
+  "checkver": "Version:</b>\\s?([\\d\\.]+)",
+  "autoupdate": {
+    "url": "https://files.vovsoft.com/vov-sticky-notes-portable.zip?v=$version"
+  }
+}
