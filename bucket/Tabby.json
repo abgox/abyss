@@ -1,45 +1,55 @@
 {
-    "version": "1.0.223",
-    "description": "一个现代终端。A terminal for a more modern age.",
-    "homepage": "https://tabby.sh",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/Eugeny/tabby/blob/master/LICENSE"
+  "version": "1.0.223",
+  "description": "一个现代终端。A terminal for a more modern age.",
+  "homepage": "https://tabby.sh",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/Eugeny/tabby/blob/master/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.223/tabby-1.0.223-portable-x64.zip",
+      "hash": "fead9f7cd89a620cae8808063ee02c0cea73b84f8896d3bd00d83690385a0c67"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.223/tabby-1.0.223-portable-x64.zip",
-            "hash": "fead9f7cd89a620cae8808063ee02c0cea73b84f8896d3bd00d83690385a0c67"
-        },
-        "arm64": {
-            "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.223/tabby-1.0.223-portable-arm64.zip",
-            "hash": "3f23357db3c0a2eaf2da6e7b7b1dd977258f1424293533c9f110b2acc03794df"
-        }
-    },
-    "bin": "Tabby.exe",
-    "shortcuts": [
-        [
-            "Tabby.exe",
-            "Tabby"
-        ]
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process"
-    ],
-    "persist": "data",
-    "checkver": {
-        "github": "https://github.com/Eugeny/tabby"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/Eugeny/tabby/releases/download/v$version/tabby-$version-portable-x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/Eugeny/tabby/releases/download/v$version/tabby-$version-portable-arm64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.223/tabby-1.0.223-portable-arm64.zip",
+      "hash": "3f23357db3c0a2eaf2da6e7b7b1dd977258f1424293533c9f110b2acc03794df"
     }
+  },
+  "bin": "Tabby.exe",
+  "shortcuts": [
+    [
+      "Tabby.exe",
+      "Tabby"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "persist": "data",
+  "checkver": {
+    "github": "https://github.com/Eugeny/tabby"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/Eugeny/tabby/releases/download/v$version/tabby-$version-portable-x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/Eugeny/tabby/releases/download/v$version/tabby-$version-portable-arm64.zip"
+      }
+    }
+  }
 }

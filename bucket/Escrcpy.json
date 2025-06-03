@@ -1,50 +1,55 @@
 {
-    "version": "1.29.6",
-    "description": "使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动。Graphical Scrcpy to display and control Android, devices powered by Electron.",
-    "homepage": "https://github.com/viarotel-org/escrcpy",
-    "license": {
-        "identifier": "Apache License 2.0",
-        "url": "https://github.com/viarotel-org/escrcpy/blob/main/LICENSE"
+  "version": "1.29.6",
+  "description": "使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动。Graphical Scrcpy to display and control Android, devices powered by Electron.",
+  "homepage": "https://github.com/viarotel-org/escrcpy",
+  "license": {
+    "identifier": "Apache License 2.0",
+    "url": "https://github.com/viarotel-org/escrcpy/blob/main/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-x64.exe#/dl.7z",
+      "hash": "62ecbb737f14f51c3ee3fd2f714ea9f87cb09186601564889a9f116ee66835c6"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-x64.exe#/dl.7z",
-            "hash": "62ecbb737f14f51c3ee3fd2f714ea9f87cb09186601564889a9f116ee66835c6",
-            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\""
-        },
-        "arm64": {
-            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-arm64.exe#/dl.7z",
-            "hash": "1606202c1ac547747858a6134b64b826f0576066d37a7553fa98f9699989ee6d",
-            "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\""
-        }
-    },
-    "shortcuts": [
-        [
-            "Escrcpy.exe",
-            "Escrcpy"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\escrcpy\")",
-        "$LinkTargets = @(\"$persist_dir\\escrcpy\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": "github",
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-x64.exe#/dl.7z"
-            },
-            "arm64": {
-                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-arm64.exe#/dl.7z"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-arm64.exe#/dl.7z",
+      "hash": "1606202c1ac547747858a6134b64b826f0576066d37a7553fa98f9699989ee6d"
     }
+  },
+  "shortcuts": [
+    [
+      "Escrcpy.exe",
+      "Escrcpy"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Expand-SetupExe"
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\escrcpy\")",
+    "$LinkTargets = @(\"$persist_dir\\escrcpy\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-x64.exe#/dl.7z"
+      },
+      "arm64": {
+        "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-arm64.exe#/dl.7z"
+      }
+    }
+  }
 }

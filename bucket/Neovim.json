@@ -1,40 +1,46 @@
 {
-    "version": "0.11.2",
-    "description": "一个旨在重构 Vim 的文本编辑器项目。A project that seeks to aggressively refactor Vim.",
-    "homepage": "https://neovim.io/",
-    "license": {
-        "identifier": "Apache License 2.0,Vim",
-        "url": "https://github.com/neovim/neovim/blob/master/LICENSE.txt"
-    },
-    "url": "https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-win64.zip",
-    "hash": "dfa66afc95422b7c4a0f8ae330f30a00dbb8e9848993d7bfde8e2e85be30de13",
-    "extract_dir": "nvim-win64",
-    "bin": "bin\\nvim.exe",
-    "shortcuts": [
-        [
-            "bin\\nvim.exe",
-            "Neovim"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:LocalAppData\\nvim\",\"$env:LocalAppData\\nvim-data\")",
-        "$LinkTargets = @(\"$persist_dir\\nvim\",\"$persist_dir\\nvim-data\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/neovim/neovim"
-    },
-    "autoupdate": {
-        "url": "https://github.com/neovim/neovim/releases/download/v$version/nvim-win64.zip",
-        "hash": {
-            "url": "$url.sha256sum"
-        }
+  "version": "0.11.2",
+  "description": "一个旨在重构 Vim 的文本编辑器项目。A project that seeks to aggressively refactor Vim.",
+  "homepage": "https://neovim.io/",
+  "license": {
+    "identifier": "Apache License 2.0,Vim",
+    "url": "https://github.com/neovim/neovim/blob/master/LICENSE.txt"
+  },
+  "url": "https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-win64.zip",
+  "hash": "dfa66afc95422b7c4a0f8ae330f30a00dbb8e9848993d7bfde8e2e85be30de13",
+  "extract_dir": "nvim-win64",
+  "bin": "bin\\nvim.exe",
+  "shortcuts": [
+    [
+      "bin\\nvim.exe",
+      "Neovim"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:LocalAppData\\nvim\",\"$env:LocalAppData\\nvim-data\")",
+    "$LinkTargets = @(\"$persist_dir\\nvim\",\"$persist_dir\\nvim-data\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/neovim/neovim"
+  },
+  "autoupdate": {
+    "url": "https://github.com/neovim/neovim/releases/download/v$version/nvim-win64.zip",
+    "hash": {
+      "url": "$url.sha256sum"
     }
+  }
 }

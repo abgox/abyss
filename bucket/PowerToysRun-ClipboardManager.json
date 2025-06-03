@@ -1,72 +1,44 @@
 {
-    "version": "0.11.0",
-    "description": "一个 PowerToys Run 插件，用于轻松搜索和粘贴剪贴板历史记录。A PowerToys Run plugin for easily searching and pasting the clipboard history.",
-    "homepage": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/blob/master/LICENSE.txt"
+  "version": "0.11.0",
+  "description": "一个 PowerToys Run 插件，用于轻松搜索和粘贴剪贴板历史记录。A PowerToys Run plugin for easily searching and pasting the clipboard history.",
+  "homepage": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/blob/master/LICENSE.txt"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v0.11.0/ClipboardManager-0.11.0-x64.zip",
+      "hash": "cb93f642841daae43b604c59dd338210981e81e9016798c587a39e6b4f55d934"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v0.11.0/ClipboardManager-0.11.0-x64.zip",
-            "hash": "cb93f642841daae43b604c59dd338210981e81e9016798c587a39e6b4f55d934"
-        },
-        "arm64": {
-            "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v0.11.0/ClipboardManager-0.11.0-ARM64.zip",
-            "hash": "7c5fd8eb6fc6e7f50001a273c8beec0c361bab4e77f9475952f02bf499ae0bc8"
-        }
-    },
-    "pre_install": [
-        "$dirName = \"ClipboardManager\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    Write-Host",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "    $copyingPath = if (Test-Path -Path \"$dir\\$dirName\") { \"$dir\\$dirName\" } else { $dir }",
-        "    Write-Host \"Copying $copyingPath => $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "    Copy-Item -Path $copyingPath -Destination \"$pluginsDir\\$dirName\" -Recurse -Force",
-        "    Write-Host \"Please restart PowerToys to load the plugin.\" -ForegroundColor Green",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "pre_uninstall": [
-        "$dirName = \"ClipboardManager\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "checkver": "github",
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v$version/ClipboardManager-$version-x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v$version/ClipboardManager-$version-ARM64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v0.11.0/ClipboardManager-0.11.0-ARM64.zip",
+      "hash": "7c5fd8eb6fc6e7f50001a273c8beec0c361bab4e77f9475952f02bf499ae0bc8"
     }
+  },
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Add-PowerToysRunPlugin 'ClipboardManager'",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Remove-PowerToysRunPlugin",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v$version/ClipboardManager-$version-x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager/releases/download/v$version/ClipboardManager-$version-ARM64.zip"
+      }
+    }
+  }
 }

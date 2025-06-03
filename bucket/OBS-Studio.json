@@ -1,39 +1,45 @@
 {
-    "version": "31.0.3",
-    "description": "用于视频录制和直播的免费开源软件。Free and open source software for video recording and live streaming.",
-    "homepage": "https://obsproject.com",
-    "license": {
-        "identifier": "GNU General Public License v2.0",
-        "url": "https://github.com/obsproject/obs-studio/blob/master/COPYING"
-    },
-    "url": "https://github.com/obsproject/obs-studio/releases/download/31.0.3/OBS-Studio-31.0.3-Windows.zip",
-    "hash": "b7086a6b6162d5122eedf7773e96c723e455ad1a931b59d1097f020ee7ff145e",
-    "shortcuts": [
-        [
-            "bin\\64bit\\obs64.exe",
-            "OBS Studio"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\obs-studio\")",
-        "$LinkTargets = @(\"$persist_dir\\obs-studio\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/obsproject/obs-studio"
-    },
-    "autoupdate": {
-        "url": "https://github.com/obsproject/obs-studio/releases/download/$version/OBS-Studio-$version-Windows.zip",
-        "hash": {
-            "url": "https://github.com/obsproject/obs-studio/releases/$version",
-            "regex": "(?sm)$basename.*?$sha256"
-        }
+  "version": "31.0.3",
+  "description": "用于视频录制和直播的免费开源软件。Free and open source software for video recording and live streaming.",
+  "homepage": "https://obsproject.com",
+  "license": {
+    "identifier": "GNU General Public License v2.0",
+    "url": "https://github.com/obsproject/obs-studio/blob/master/COPYING"
+  },
+  "url": "https://github.com/obsproject/obs-studio/releases/download/31.0.3/OBS-Studio-31.0.3-Windows.zip",
+  "hash": "b7086a6b6162d5122eedf7773e96c723e455ad1a931b59d1097f020ee7ff145e",
+  "shortcuts": [
+    [
+      "bin\\64bit\\obs64.exe",
+      "OBS Studio"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\obs-studio\")",
+    "$LinkTargets = @(\"$persist_dir\\obs-studio\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/obsproject/obs-studio"
+  },
+  "autoupdate": {
+    "url": "https://github.com/obsproject/obs-studio/releases/download/$version/OBS-Studio-$version-Windows.zip",
+    "hash": {
+      "url": "https://github.com/obsproject/obs-studio/releases/$version",
+      "regex": "(?sm)$basename.*?$sha256"
     }
+  }
 }

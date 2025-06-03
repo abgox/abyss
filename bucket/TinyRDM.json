@@ -1,50 +1,56 @@
 {
-    "version": "1.2.3",
-    "description": "一款现代轻量级跨平台 Redis 桌面管理器。A modern lightweight cross-platform Redis Desktop Manager.",
-    "homepage": "https://redis.tinycraft.cc/",
-    "license": {
-        "identifier": "GNU General Public License v3.0",
-        "url": "https://github.com/tiny-craft/tiny-rdm/blob/main/LICENSE"
+  "version": "1.2.3",
+  "description": "一款现代轻量级跨平台 Redis 桌面管理器。A modern lightweight cross-platform Redis Desktop Manager.",
+  "homepage": "https://redis.tinycraft.cc/",
+  "license": {
+    "identifier": "GNU General Public License v3.0",
+    "url": "https://github.com/tiny-craft/tiny-rdm/blob/main/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v1.2.3/TinyRDM_Portable_1.2.3_windows_x64.zip",
+      "hash": "a891b82e8d953a7ba3fa25bf986d0157b02bbf8a10c35907b1f8b77db74410fc"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v1.2.3/TinyRDM_Portable_1.2.3_windows_x64.zip",
-            "hash": "a891b82e8d953a7ba3fa25bf986d0157b02bbf8a10c35907b1f8b77db74410fc"
-        },
-        "arm64": {
-            "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v1.2.3/TinyRDM_Portable_1.2.3_windows_arm64.zip",
-            "hash": "436dabdc190654e8021e5d06ef4d61df91e273fb47a3de1f31b0c7a7e05e6d86"
-        }
-    },
-    "shortcuts": [
-        [
-            "Tiny RDM.exe",
-            "Tiny RDM"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\TinyRDM\")",
-        "$LinkTargets = @(\"$persist_dir\\TinyRDM\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/tiny-craft/tiny-rdm"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v$version/TinyRDM_Portable_$version_windows_x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v$version/TinyRDM_Portable_$version_windows_arm64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v1.2.3/TinyRDM_Portable_1.2.3_windows_arm64.zip",
+      "hash": "436dabdc190654e8021e5d06ef4d61df91e273fb47a3de1f31b0c7a7e05e6d86"
     }
+  },
+  "shortcuts": [
+    [
+      "Tiny RDM.exe",
+      "Tiny RDM"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\TinyRDM\")",
+    "$LinkTargets = @(\"$persist_dir\\TinyRDM\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Complete-Uninstall",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/tiny-craft/tiny-rdm"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v$version/TinyRDM_Portable_$version_windows_x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/tiny-craft/tiny-rdm/releases/download/v$version/TinyRDM_Portable_$version_windows_arm64.zip"
+      }
+    }
+  }
 }

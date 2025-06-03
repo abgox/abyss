@@ -1,36 +1,42 @@
 {
-    "version": "27.0.9",
-    "description": "一款基于 Electron 的桌面绘图应用程序，它封装了 draw.io 核心编辑器。A diagramming desktop app based on Electron that wraps the core draw.io editor.",
-    "homepage": "https://www.diagrams.net",
-    "license": {
-        "identifier": "Apache License 2.0",
-        "url": "https://github.com/jgraph/drawio-desktop/blob/dev/LICENSE"
-    },
-    "url": "https://github.com/jgraph/drawio-desktop/releases/download/v27.0.9/draw.io-27.0.9-windows.zip",
-    "hash": "f1ba1ab1fd60e6daf7fe51ac5aedae7c8ec393e391048fe432cfc4c00781c408",
-    "bin": "draw.io.exe",
-    "shortcuts": [
-        [
-            "draw.io.exe",
-            "draw.io"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\draw.io\")",
-        "$LinkTargets = @(\"$persist_dir\\draw.io\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/jgraph/drawio-desktop"
-    },
-    "autoupdate": {
-        "url": "https://github.com/jgraph/drawio-desktop/releases/download/v$version/draw.io-$version-windows.zip"
-    }
+  "version": "27.0.9",
+  "description": "一款基于 Electron 的桌面绘图应用程序，它封装了 draw.io 核心编辑器。A diagramming desktop app based on Electron that wraps the core draw.io editor.",
+  "homepage": "https://www.diagrams.net",
+  "license": {
+    "identifier": "Apache License 2.0",
+    "url": "https://github.com/jgraph/drawio-desktop/blob/dev/LICENSE"
+  },
+  "url": "https://github.com/jgraph/drawio-desktop/releases/download/v27.0.9/draw.io-27.0.9-windows.zip",
+  "hash": "f1ba1ab1fd60e6daf7fe51ac5aedae7c8ec393e391048fe432cfc4c00781c408",
+  "bin": "draw.io.exe",
+  "shortcuts": [
+    [
+      "draw.io.exe",
+      "draw.io"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\draw.io\")",
+    "$LinkTargets = @(\"$persist_dir\\draw.io\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/jgraph/drawio-desktop"
+  },
+  "autoupdate": {
+    "url": "https://github.com/jgraph/drawio-desktop/releases/download/v$version/draw.io-$version-windows.zip"
+  }
 }

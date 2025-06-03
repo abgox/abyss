@@ -1,35 +1,41 @@
 {
-    "version": "1.8.19",
-    "description": "一个全功能的下载器。A full-featured download manager.",
-    "homepage": "https://motrix.app",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/agalwood/Motrix/blob/master/LICENSE"
-    },
-    "url": "https://github.com/agalwood/Motrix/releases/download/v1.8.19/Motrix-1.8.19-win.zip",
-    "hash": "5238865630e99dc4981bcc6082ba2b8221c4a543f35b41c0205a34984fd8f3b5",
-    "shortcuts": [
-        [
-            "Motrix.exe",
-            "Motrix"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\Motrix\")",
-        "$LinkTargets = @(\"$persist_dir\\Motrix\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/agalwood/Motrix"
-    },
-    "autoupdate": {
-        "url": "https://github.com/agalwood/Motrix/releases/download/v$version/Motrix-$version-win.zip"
-    }
+  "version": "1.8.19",
+  "description": "一个全功能的下载器。A full-featured download manager.",
+  "homepage": "https://motrix.app",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/agalwood/Motrix/blob/master/LICENSE"
+  },
+  "url": "https://github.com/agalwood/Motrix/releases/download/v1.8.19/Motrix-1.8.19-win.zip",
+  "hash": "5238865630e99dc4981bcc6082ba2b8221c4a543f35b41c0205a34984fd8f3b5",
+  "shortcuts": [
+    [
+      "Motrix.exe",
+      "Motrix"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\Motrix\")",
+    "$LinkTargets = @(\"$persist_dir\\Motrix\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/agalwood/Motrix"
+  },
+  "autoupdate": {
+    "url": "https://github.com/agalwood/Motrix/releases/download/v$version/Motrix-$version-win.zip"
+  }
 }

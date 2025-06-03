@@ -1,44 +1,50 @@
 {
-    "version": "11.1.0",
-    "description": "一个开源的跨平台 API 客户端，适用于 GraphQL、REST、WebSockets、SSE 和 gRPC。具有 Cloud、Local 和 Git 存储。The open-source, cross-platform API client for GraphQL, REST, WebSockets, SSE and gRPC. With Cloud, Local and Git storage.",
-    "homepage": "https://insomnia.rest",
-    "license": {
-        "identifier": "Apache License 2.0",
-        "url": "https://github.com/Kong/insomnia/blob/develop/LICENSE"
+  "version": "11.1.0",
+  "description": "一个开源的跨平台 API 客户端，适用于 GraphQL、REST、WebSockets、SSE 和 gRPC。具有 Cloud、Local 和 Git 存储。The open-source, cross-platform API client for GraphQL, REST, WebSockets, SSE and gRPC. With Cloud, Local and Git storage.",
+  "homepage": "https://insomnia.rest",
+  "license": {
+    "identifier": "Apache License 2.0",
+    "url": "https://github.com/Kong/insomnia/blob/develop/LICENSE"
+  },
+  "url": "https://github.com/Kong/insomnia/releases/download/core%4011.1.0/insomnia-11.1.0-full.nupkg",
+  "hash": "sha1:8006f9f719b69226f1ce9957b9aa007dc77a4d40",
+  "extract_dir": "lib\\net45",
+  "shortcuts": [
+    [
+      "Insomnia.exe",
+      "Insomnia"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\Insomnia\")",
+    "$LinkTargets = @(\"$persist_dir\\Insomnia\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "url": "https://api.github.com/repositories/56899284/releases",
+    "regex": "\"core@([\\d.]+)\""
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/Kong/insomnia/releases/download/core%40$version/insomnia-$version-full.nupkg"
+      }
     },
-    "url": "https://github.com/Kong/insomnia/releases/download/core%4011.1.0/insomnia-11.1.0-full.nupkg",
-    "hash": "sha1:8006f9f719b69226f1ce9957b9aa007dc77a4d40",
-    "extract_dir": "lib\\net45",
-    "shortcuts": [
-        [
-            "Insomnia.exe",
-            "Insomnia"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\Insomnia\")",
-        "$LinkTargets = @(\"$persist_dir\\Insomnia\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "url": "https://api.github.com/repositories/56899284/releases",
-        "regex": "\"core@([\\d.]+)\""
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/Kong/insomnia/releases/download/core%40$version/insomnia-$version-full.nupkg"
-            }
-        },
-        "hash": {
-            "url": "$baseurl/RELEASES"
-        }
+    "hash": {
+      "url": "$baseurl/RELEASES"
     }
+  }
 }

@@ -1,72 +1,44 @@
 {
-    "version": "11.1.0",
-    "description": "一个 PowerToys Run 的翻译插件。A translate plugin for PowerToys Run.",
-    "homepage": "https://github.com/N0I0C0K/PowerTranslator",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/N0I0C0K/PowerTranslator/blob/main/LICENSE"
+  "version": "11.1.0",
+  "description": "一个 PowerToys Run 的翻译插件。A translate plugin for PowerToys Run.",
+  "homepage": "https://github.com/N0I0C0K/PowerTranslator",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/N0I0C0K/PowerTranslator/blob/main/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v11.1.0/Translator_x64.zip",
+      "hash": "ca05e89039774f5371f2cfa343f4ebd6fc6bdc2367208906f891f209c69b344d"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v11.1.0/Translator_x64.zip",
-            "hash": "ca05e89039774f5371f2cfa343f4ebd6fc6bdc2367208906f891f209c69b344d"
-        },
-        "arm64": {
-            "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v11.1.0/Translator_ARM64.zip",
-            "hash": "4641165d56f4933cd166c2fa1d3c0d69e24ec6cd3934b41f32f2da0f2a58ff98"
-        }
-    },
-    "pre_install": [
-        "$dirName = \"Translator\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    Write-Host",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "    $copyingPath = if (Test-Path -Path \"$dir\\$dirName\") { \"$dir\\$dirName\" } else { $dir }",
-        "    Write-Host \"Copying $copyingPath => $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "    Copy-Item -Path $copyingPath -Destination \"$pluginsDir\\$dirName\" -Recurse -Force",
-        "    Write-Host \"Please restart PowerToys to load the plugin.\" -ForegroundColor Green",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "pre_uninstall": [
-        "$dirName = \"Translator\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "checkver": "github",
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v$version/Translator_x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v$version/Translator_ARM64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v11.1.0/Translator_ARM64.zip",
+      "hash": "4641165d56f4933cd166c2fa1d3c0d69e24ec6cd3934b41f32f2da0f2a58ff98"
     }
+  },
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Add-PowerToysRunPlugin 'Translator'",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Remove-PowerToysRunPlugin",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v$version/Translator_x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/N0I0C0K/PowerTranslator/releases/download/v$version/Translator_ARM64.zip"
+      }
+    }
+  }
 }

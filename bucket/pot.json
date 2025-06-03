@@ -1,53 +1,58 @@
 {
-    "version": "3.0.7",
-    "description": "一个跨平台的划词翻译和 OCR 软件。A cross-platform software for text translation and OCR.",
-    "homepage": "https://pot-app.com/",
-    "license": {
-        "identifier": "GNU General Public License v3.0",
-        "url": "https://github.com/pot-app/pot-desktop/blob/master/LICENSE"
+  "version": "3.0.7",
+  "description": "一个跨平台的划词翻译和 OCR 软件。A cross-platform software for text translation and OCR.",
+  "homepage": "https://pot-app.com/",
+  "license": {
+    "identifier": "GNU General Public License v3.0",
+    "url": "https://github.com/pot-app/pot-desktop/blob/master/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/pot-app/pot-desktop/releases/download/3.0.7/pot_3.0.7_x64-setup.exe#/dl.7z",
+      "hash": "0a6ac5309bfc41234d58cf6615a779c66d167d3a0da5542a0de2ea118fc6bc56"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/pot-app/pot-desktop/releases/download/3.0.7/pot_3.0.7_x64-setup.exe#/dl.7z",
-            "hash": "0a6ac5309bfc41234d58cf6615a779c66d167d3a0da5542a0de2ea118fc6bc56"
-        },
-        "32bit": {
-            "url": "https://github.com/pot-app/pot-desktop/releases/download/3.0.7/pot_3.0.7_x86-setup.exe#/dl.7z",
-            "hash": "ff9b69bea285ca60b9f0075a740dc022f9baf873221b14e2c20a960502f09761"
-        }
-    },
-    "bin": "pot.exe",
-    "shortcuts": [
-        [
-            "pot.exe",
-            "Pot"
-        ]
-    ],
-    "pre_install": "Remove-Item \"$dir\\`$PLUGINSDIR\" -Force -Recurse",
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\com.pot-app.desktop\")",
-        "$LinkTargets = @(\"$persist_dir\\com.pot-app.desktop\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory",
-        "A-Remove-TempData @(\"$env:LocalAppData\\com.pot-app.desktop\")"
-    ],
-    "checkver": {
-        "github": "https://github.com/pot-app/pot-desktop"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x64-setup.exe#/dl.7z"
-            },
-            "32bit": {
-                "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x86-setup.exe#/dl.7z"
-            }
-        }
+    "32bit": {
+      "url": "https://github.com/pot-app/pot-desktop/releases/download/3.0.7/pot_3.0.7_x86-setup.exe#/dl.7z",
+      "hash": "ff9b69bea285ca60b9f0075a740dc022f9baf873221b14e2c20a960502f09761"
     }
+  },
+  "bin": "pot.exe",
+  "shortcuts": [
+    [
+      "pot.exe",
+      "Pot"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "Remove-Item \"$dir\\`$PLUGINSDIR\" -Force -Recurse"
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\com.pot-app.desktop\")",
+    "$LinkTargets = @(\"$persist_dir\\com.pot-app.desktop\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData @(\"$env:LocalAppData\\com.pot-app.desktop\")",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/pot-app/pot-desktop"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x64-setup.exe#/dl.7z"
+      },
+      "32bit": {
+        "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x86-setup.exe#/dl.7z"
+      }
+    }
+  }
 }

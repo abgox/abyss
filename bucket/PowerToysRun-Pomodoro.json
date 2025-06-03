@@ -1,72 +1,44 @@
 {
-    "version": "0.90.1",
-    "description": "一个 PowerToys Run 插件，用于管理你的生产力会话。A PowerToys Run plugin for managing your productivity sessions.",
-    "homepage": "https://github.com/ruslanlap/PowerToysRun-Pomodoro",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/blob/master/LICENSE"
+  "version": "0.90.1",
+  "description": "一个 PowerToys Run 插件，用于管理你的生产力会话。A PowerToys Run plugin for managing your productivity sessions.",
+  "homepage": "https://github.com/ruslanlap/PowerToysRun-Pomodoro",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/blob/master/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v0.90.1/Pomodoro-0.90.1-x64.zip",
+      "hash": "db4f4e8713f45a2f79b0887a02a6461796f4a544dbc0467afe5062ab65130320"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v0.90.1/Pomodoro-0.90.1-x64.zip",
-            "hash": "db4f4e8713f45a2f79b0887a02a6461796f4a544dbc0467afe5062ab65130320"
-        },
-        "arm64": {
-            "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v0.90.1/Pomodoro-0.90.1-ARM64.zip",
-            "hash": "cdca4a3bf91da627e7d85428583dfae79110c073f34a24740d705165015eff6c"
-        }
-    },
-    "pre_install": [
-        "$dirName = \"Pomodoro\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    Write-Host",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "    $copyingPath = if (Test-Path -Path \"$dir\\$dirName\") { \"$dir\\$dirName\" } else { $dir }",
-        "    Write-Host \"Copying $copyingPath => $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "    Copy-Item -Path $copyingPath -Destination \"$pluginsDir\\$dirName\" -Recurse -Force",
-        "    Write-Host \"Please restart PowerToys to load the plugin.\" -ForegroundColor Green",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "pre_uninstall": [
-        "$dirName = \"Pomodoro\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "checkver": "github",
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v$version/Pomodoro-$version-x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v$version/Pomodoro-$version-ARM64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v0.90.1/Pomodoro-0.90.1-ARM64.zip",
+      "hash": "cdca4a3bf91da627e7d85428583dfae79110c073f34a24740d705165015eff6c"
     }
+  },
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Add-PowerToysRunPlugin 'Pomodoro'",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Remove-PowerToysRunPlugin",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v$version/Pomodoro-$version-x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/ruslanlap/PowerToysRun-Pomodoro/releases/download/v$version/Pomodoro-$version-ARM64.zip"
+      }
+    }
+  }
 }

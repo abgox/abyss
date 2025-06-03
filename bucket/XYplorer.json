@@ -1,31 +1,41 @@
 {
-    "version": "27.00.0600",
-    "description": "一个 Windows 上的第三方文件管理器。A file manager for Windows.",
-    "homepage": "https://www.xyplorer.com/index.php",
-    "license": {
-        "identifier": "Proprietary",
-        "url": "https://www.xyplorer.com/purchase.php"
-    },
-    "url": "https://www.xyplorer.com/download/xyplorer_full_noinstall.zip",
-    "hash": "87879954a06792a71463751476045871361155390010888e4bfdd973698f5708",
-    "bin": "XYplorer.exe",
-    "shortcuts": [
-        [
-            "XYplorer.exe",
-            "XYplorer"
-        ]
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process"
-    ],
-    "persist": "Data",
-    "checkver": {
-        "url": "https://www.xyplorer.com/download.php",
-        "regex": "Version.+>([\\d\\.]+)"
-    },
-    "autoupdate": {
-        "url": "https://www.xyplorer.com/download/xyplorer_full_noinstall.zip"
-    }
+  "version": "27.00.0600",
+  "description": "一个 Windows 上的第三方文件管理器。A file manager for Windows.",
+  "homepage": "https://www.xyplorer.com/index.php",
+  "license": {
+    "identifier": "Proprietary",
+    "url": "https://www.xyplorer.com/purchase.php"
+  },
+  "url": "https://www.xyplorer.com/download/xyplorer_full_noinstall.zip",
+  "hash": "87879954a06792a71463751476045871361155390010888e4bfdd973698f5708",
+  "bin": "XYplorer.exe",
+  "shortcuts": [
+    [
+      "XYplorer.exe",
+      "XYplorer"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "persist": "Data",
+  "checkver": {
+    "url": "https://www.xyplorer.com/download.php",
+    "regex": "Version.+>([\\d\\.]+)"
+  },
+  "autoupdate": {
+    "url": "https://www.xyplorer.com/download/xyplorer_full_noinstall.zip"
+  }
 }

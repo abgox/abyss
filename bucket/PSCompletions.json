@@ -1,34 +1,51 @@
 {
-    "version": "5.5.1",
-    "description": "一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。A completion manager for better and simpler use completions in PowerShell.",
-    "homepage": "https://pscompletions.abgox.com/",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/abgox/PSCompletions/blob/main/LICENSE"
-    },
-    "notes": [
-        "Use the module by running:",
-        "Import-Module PSCompletions",
-        "Add it to your $PROFILE to make it permanent."
-    ],
-    "url": "https://psg-prod-eastus.azureedge.net/packages/pscompletions.5.5.1.nupkg",
-    "hash": "780735bca9f9c0d0ba1e1f22ca5e22b764edcb8056e366dc960718104de97e4d",
-    "pre_install": "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse",
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-New-PersistFile \"$persist_dir\\data.json\" -Content '{}'"
-    ],
-    "psmodule": {
-        "name": "PSCompletions"
-    },
-    "persist": [
-        "completions",
-        "data.json"
-    ],
-    "checkver": {
-        "github": "https://github.com/abgox/PSCompletions"
-    },
-    "autoupdate": {
-        "url": "https://psg-prod-eastus.azureedge.net/packages/pscompletions.$version.nupkg"
-    }
+  "version": "5.5.1",
+  "description": "一个 PowerShell 命令补全管理模块，更简单、更方便的在 PowerShell 中使用命令补全。A completion manager for better and simpler use completions in PowerShell.",
+  "homepage": "https://pscompletions.abgox.com/",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/abgox/PSCompletions/blob/main/LICENSE"
+  },
+  "notes": [
+    "Use the module by running:",
+    "Import-Module PSCompletions",
+    "Add it to your $Profile to make it permanent."
+  ],
+  "notes-cn": [
+    "运行下面的命令来导入模块使用:",
+    "Import-Module PSCompletions",
+    "如果不想重复导入，你可以将它写入 $Profile 中"
+  ],
+  "url": "https://psg-prod-eastus.azureedge.net/packages/pscompletions.5.5.1.nupkg",
+  "hash": "780735bca9f9c0d0ba1e1f22ca5e22b764edcb8056e366dc960718104de97e4d",
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse"
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-New-PersistFile \"$persist_dir\\data.json\" -Content '{}'",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "psmodule": {
+    "name": "PSCompletions"
+  },
+  "persist": [
+    "completions",
+    "data.json"
+  ],
+  "checkver": {
+    "github": "https://github.com/abgox/PSCompletions"
+  },
+  "autoupdate": {
+    "url": "https://psg-prod-eastus.azureedge.net/packages/pscompletions.$version.nupkg"
+  }
 }

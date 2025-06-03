@@ -1,72 +1,44 @@
 {
-    "version": "1.4.0",
-    "description": "一个 PowerToys Run 插件，用于从 Scoop 包管理器中搜索、安装、更新和卸载软件包。A PowerToys Run plugin that allows you to search, install, update and uninstall packages from the Scoop package manager.",
-    "homepage": "https://github.com/Quriz/PowerToysRunScoop",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/Quriz/PowerToysRunScoop/blob/main/LICENSE"
+  "version": "1.4.0",
+  "description": "一个 PowerToys Run 插件，用于从 Scoop 包管理器中搜索、安装、更新和卸载软件包。A PowerToys Run plugin that allows you to search, install, update and uninstall packages from the Scoop package manager.",
+  "homepage": "https://github.com/Quriz/PowerToysRunScoop",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/Quriz/PowerToysRunScoop/blob/main/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v1.4.0/Scoop-v1.4.0-x64.zip",
+      "hash": "3ac13cf10a73f59a59dd5b4d7f481c9ac00114e0eb064056e4cc68d36741aa19"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v1.4.0/Scoop-v1.4.0-x64.zip",
-            "hash": "3ac13cf10a73f59a59dd5b4d7f481c9ac00114e0eb064056e4cc68d36741aa19"
-        },
-        "arm64": {
-            "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v1.4.0/Scoop-v1.4.0-arm64.zip",
-            "hash": "95072199500a7fe31fa59028708dcc387d537cfb98f5385637f25de8729664d8"
-        }
-    },
-    "pre_install": [
-        "$dirName = \"Scoop\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    Write-Host",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "    $copyingPath = if (Test-Path -Path \"$dir\\$dirName\") { \"$dir\\$dirName\" } else { $dir }",
-        "    Write-Host \"Copying $copyingPath => $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "    Copy-Item -Path $copyingPath -Destination \"$pluginsDir\\$dirName\" -Recurse -Force",
-        "    Write-Host \"Please restart PowerToys to load the plugin.\" -ForegroundColor Green",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "pre_uninstall": [
-        "$dirName = \"Scoop\"",
-        "$pluginsDir = \"$env:LOCALAPPDATA\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\"",
-        "# -------------------------------------------------------------------------------",
-        "try {",
-        "    if (Test-Path -Path \"$pluginsDir\\$dirName\") {",
-        "        Write-Host",
-        "        Write-Host \"Removing $pluginsDir\\$dirName\" -ForegroundColor Yellow",
-        "        Remove-Item -Path \"$pluginsDir\\$dirName\" -Recurse -Force -ErrorAction Stop",
-        "    }",
-        "} catch {",
-        "    Write-Host",
-        "    Write-Host \"Failed to remove the directory: '$pluginsDir\\$dirName'\" -ForegroundColor Red",
-        "    Write-Host \"Failed to $cmd $app.\" -ForegroundColor Red",
-        "    Write-Host \"Please stop PowerToys and try to $cmd $app again.\" -ForegroundColor Red",
-        "    Write-Host",
-        "    throw \"Failed to remove the directory: '$pluginsDir\\$dirName'\"",
-        "}"
-    ],
-    "checkver": "github",
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v$version/Scoop-v$version-x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v$version/Scoop-v$version-arm64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v1.4.0/Scoop-v1.4.0-arm64.zip",
+      "hash": "95072199500a7fe31fa59028708dcc387d537cfb98f5385637f25de8729664d8"
     }
+  },
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Add-PowerToysRunPlugin 'Scoop'",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Remove-PowerToysRunPlugin",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v$version/Scoop-v$version-x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/Quriz/PowerToysRunScoop/releases/download/v$version/Scoop-v$version-arm64.zip"
+      }
+    }
+  }
 }

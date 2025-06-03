@@ -1,63 +1,73 @@
 {
-    "version": "25.05r5690",
-    "description": "一个轻量级的基于 Scintilla 的文本编辑器。Light-weight Scintilla based text editor.",
-    "homepage": "https://github.com/zufuliu/notepad4",
-    "license": {
-        "identifier": "Unknown",
-        "url": "https://github.com/zufuliu/notepad4/blob/main/License.txt"
+  "version": "25.05r5690",
+  "description": "一个轻量级的基于 Scintilla 的文本编辑器。Light-weight Scintilla based text editor.",
+  "homepage": "https://github.com/zufuliu/notepad4",
+  "license": {
+    "identifier": "Unknown",
+    "url": "https://github.com/zufuliu/notepad4/blob/main/License.txt"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/zufuliu/notepad4/releases/download/v25.05r5690/Notepad4_HD_i18n_x64_v25.05r5690.zip",
+      "hash": "92689048d1fbb77c718afbbcd96fc0c617aa209b30153f7d67432f06bdc9e4d2"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/zufuliu/notepad4/releases/download/v25.05r5690/Notepad4_HD_i18n_x64_v25.05r5690.zip",
-            "hash": "92689048d1fbb77c718afbbcd96fc0c617aa209b30153f7d67432f06bdc9e4d2"
-        },
-        "32bit": {
-            "url": "https://github.com/zufuliu/notepad4/releases/download/v25.05r5690/Notepad4_i18n_Win32_v25.05r5690.zip",
-            "hash": "aaffba40e042e8b65c752b9f413b229b7b80d948df4bf7c89033c67f6b35cf8c"
-        },
-        "arm64": {
-            "url": "https://github.com/zufuliu/notepad4/releases/download/v25.05r5690/Notepad4_HD_i18n_ARM64_v25.05r5690.zip",
-            "hash": "12f9bf13430433631e77e24d4c9f57297958e4d87f8f2bfe0e888e35b2fe2399"
-        }
+    "32bit": {
+      "url": "https://github.com/zufuliu/notepad4/releases/download/v25.05r5690/Notepad4_i18n_Win32_v25.05r5690.zip",
+      "hash": "aaffba40e042e8b65c752b9f413b229b7b80d948df4bf7c89033c67f6b35cf8c"
     },
-    "bin": [
-        "Notepad4.exe",
-        "minipath.exe"
-    ],
-    "shortcuts": [
-        [
-            "Notepad4.exe",
-            "Notepad4"
-        ],
-        [
-            "matepath.exe",
-            "matepath"
-        ]
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process"
-    ],
-    "persist": [
-        "Notepad4.ini",
-        "matepath.ini"
-    ],
-    "checkver": {
-        "url": "https://api.github.com/repos/zufuliu/notepad4/releases",
-        "regex": "Notepad4_HD_i18n_x64_v([\\d\\.]+r\\d+).zip"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/zufuliu/notepad4/releases/download/v$version/Notepad4_HD_i18n_x64_v$version.zip"
-            },
-            "32bit": {
-                "url": "https://github.com/zufuliu/notepad4/releases/download/v$version/Notepad4_i18n_Win32_v$version.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/zufuliu/notepad4/releases/download/v$version/Notepad4_HD_i18n_ARM64_v$version.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/zufuliu/notepad4/releases/download/v25.05r5690/Notepad4_HD_i18n_ARM64_v25.05r5690.zip",
+      "hash": "12f9bf13430433631e77e24d4c9f57297958e4d87f8f2bfe0e888e35b2fe2399"
     }
+  },
+  "bin": [
+    "Notepad4.exe",
+    "minipath.exe"
+  ],
+  "shortcuts": [
+    [
+      "Notepad4.exe",
+      "Notepad4"
+    ],
+    [
+      "matepath.exe",
+      "matepath"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "persist": [
+    "Notepad4.ini",
+    "matepath.ini"
+  ],
+  "checkver": {
+    "url": "https://api.github.com/repos/zufuliu/notepad4/releases",
+    "regex": "Notepad4_HD_i18n_x64_v([\\d\\.]+r\\d+).zip"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/zufuliu/notepad4/releases/download/v$version/Notepad4_HD_i18n_x64_v$version.zip"
+      },
+      "32bit": {
+        "url": "https://github.com/zufuliu/notepad4/releases/download/v$version/Notepad4_i18n_Win32_v$version.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/zufuliu/notepad4/releases/download/v$version/Notepad4_HD_i18n_ARM64_v$version.zip"
+      }
+    }
+  }
 }

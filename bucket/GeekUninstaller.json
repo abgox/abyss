@@ -1,34 +1,40 @@
 {
-    "version": "1.5.2.165",
-    "description": "简单便捷的免费卸载程序。The good free uninstaller.",
-    "homepage": "https://geekuninstaller.com/",
-    "license": "Unknown",
-    "url": "https://geekuninstaller.com/geek.7z",
-    "hash": "c7592de79d2cd5fa6039c61443e46962738256c4c256351c11a06af5ff1f7bc8",
-    "bin": "geek.exe",
-    "shortcuts": [
-        [
-            "geek.exe",
-            "Geek Uninstaller"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\Geek Uninstaller\")",
-        "$LinkTargets = @(\"$persist_dir\\Geek Uninstaller\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "url": "https://geekuninstaller.com/download",
-        "regex": "<b>([\\d\\.]+)"
-    },
-    "autoupdate": {
-        "url": "https://geekuninstaller.com/geek.7z"
-    }
+  "version": "1.5.2.165",
+  "description": "简单便捷的免费卸载程序。The good free uninstaller.",
+  "homepage": "https://geekuninstaller.com/",
+  "license": "Unknown",
+  "url": "https://geekuninstaller.com/geek.7z",
+  "hash": "c7592de79d2cd5fa6039c61443e46962738256c4c256351c11a06af5ff1f7bc8",
+  "bin": "geek.exe",
+  "shortcuts": [
+    [
+      "geek.exe",
+      "Geek Uninstaller"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\Geek Uninstaller\")",
+    "$LinkTargets = @(\"$persist_dir\\Geek Uninstaller\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "url": "https://geekuninstaller.com/download",
+    "regex": "<b>([\\d\\.]+)"
+  },
+  "autoupdate": {
+    "url": "https://geekuninstaller.com/geek.7z"
+  }
 }

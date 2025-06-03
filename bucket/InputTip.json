@@ -1,38 +1,45 @@
 {
-    "version": "2.38.0",
-    "description": "(exe 版本) 一个输入法状态实时提示工具。(exe version) An input method status tip tool.",
-    "homepage": "https://inputtip.abgox.com/",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/abgox/InputTip/blob/main/LICENSE"
-    },
-    "url": "https://github.com/abgox/InputTip/releases/download/v2.38.0/InputTip.exe",
-    "hash": "dc4098a6b80bb31c9d59eaeb1f2692b54c958c6463970a583d916ff6e4530c62",
-    "bin": "InputTip.exe",
-    "shortcuts": [
-        [
-            "InputTip.exe",
-            "InputTip"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process"
-    ],
-    "persist": [
-        "InputTip.ini",
-        "InputTipSymbol",
-        "InputTipCursor"
-    ],
-    "checkver": {
-        "github": "https://github.com/abgox/InputTip"
-    },
-    "autoupdate": {
-        "url": "https://github.com/abgox/InputTip/releases/download/v$version/InputTip.exe"
-    }
+  "version": "2.38.0",
+  "description": "(exe 版本) 一个输入法状态实时提示工具。(exe version) An input method status tip tool.",
+  "homepage": "https://inputtip.abgox.com/",
+  "license": {
+    "identifier": "MIT",
+    "url": "https://github.com/abgox/InputTip/blob/main/LICENSE"
+  },
+  "url": "https://github.com/abgox/InputTip/releases/download/v2.38.0/InputTip.exe",
+  "hash": "dc4098a6b80bb31c9d59eaeb1f2692b54c958c6463970a583d916ff6e4530c62",
+  "bin": "InputTip.exe",
+  "shortcuts": [
+    [
+      "InputTip.exe",
+      "InputTip"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "persist": [
+    "InputTip.ini",
+    "InputTipSymbol",
+    "InputTipCursor"
+  ],
+  "checkver": {
+    "github": "https://github.com/abgox/InputTip"
+  },
+  "autoupdate": {
+    "url": "https://github.com/abgox/InputTip/releases/download/v$version/InputTip.exe"
+  }
 }

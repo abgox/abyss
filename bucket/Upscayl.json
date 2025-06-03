@@ -1,35 +1,41 @@
 {
-    "version": "2.15.0",
-    "description": "免费开源的 AI 图像质量增强器。Free and Open Source AI Image Upscaler.",
-    "homepage": "https://upscayl.org/",
-    "license": {
-        "identifier": "GNU Affero General Public License v3.0",
-        "url": "https://github.com/upscayl/upscayl/blob/main/LICENSE"
-    },
-    "url": "https://github.com/upscayl/upscayl/releases/download/v2.15.0/upscayl-2.15.0-win.zip",
-    "hash": "6aa2f137ce45bac3877c5634bb0829f398ed757cbf4a72ccdef12b7473407823",
-    "shortcuts": [
-        [
-            "Upscayl.exe",
-            "Upscayl"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\Upscayl\")",
-        "$LinkTargets = @(\"$persist_dir\\Upscayl\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/upscayl/upscayl"
-    },
-    "autoupdate": {
-        "url": "https://github.com/upscayl/upscayl/releases/download/v$version/upscayl-$version-win.zip"
-    }
+  "version": "2.15.0",
+  "description": "免费开源的 AI 图像质量增强器。Free and Open Source AI Image Upscaler.",
+  "homepage": "https://upscayl.org/",
+  "license": {
+    "identifier": "GNU Affero General Public License v3.0",
+    "url": "https://github.com/upscayl/upscayl/blob/main/LICENSE"
+  },
+  "url": "https://github.com/upscayl/upscayl/releases/download/v2.15.0/upscayl-2.15.0-win.zip",
+  "hash": "6aa2f137ce45bac3877c5634bb0829f398ed757cbf4a72ccdef12b7473407823",
+  "shortcuts": [
+    [
+      "Upscayl.exe",
+      "Upscayl"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\Upscayl\")",
+    "$LinkTargets = @(\"$persist_dir\\Upscayl\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/upscayl/upscayl"
+  },
+  "autoupdate": {
+    "url": "https://github.com/upscayl/upscayl/releases/download/v$version/upscayl-$version-win.zip"
+  }
 }

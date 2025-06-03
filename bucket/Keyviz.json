@@ -1,41 +1,47 @@
 {
-    "version": "1.0.6",
-    "description": "一个免费的开源工具来可视化你的击键和鼠标实时动作。A free and open-source tool to visualize your keystrokes and mouse actions in real-time.",
-    "homepage": "https://mularahul.github.io/keyviz",
-    "license": {
-        "identifier": "GNU General Public License v3.0",
-        "url": "https://github.com/mulaRahul/keyviz/blob/main/LICENSE"
-    },
-    "url": "https://github.com/mulaRahul/keyviz/releases/download/v1.0.6/keyviz-v1.0.6-portable.zip",
-    "hash": "5dcebe08768ecd7e86d453f6be36346b2cc744183598195fee4c7b4931a8b4b3",
+  "version": "1.0.6",
+  "description": "一个免费的开源工具来可视化你的击键和鼠标实时动作。A free and open-source tool to visualize your keystrokes and mouse actions in real-time.",
+  "homepage": "https://mularahul.github.io/keyviz",
+  "license": {
+    "identifier": "GNU General Public License v3.0",
+    "url": "https://github.com/mulaRahul/keyviz/blob/main/LICENSE"
+  },
+  "url": "https://github.com/mulaRahul/keyviz/releases/download/v1.0.6/keyviz-v1.0.6-portable.zip",
+  "hash": "5dcebe08768ecd7e86d453f6be36346b2cc744183598195fee4c7b4931a8b4b3",
+  "shortcuts": [
+    [
+      "keyviz-v1.0.6-portable.exe",
+      "Keyviz"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\com.example\\keyviz\")",
+    "$LinkTargets = @(\"$persist_dir\\com.example\\keyviz\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/mulaRahul/keyviz"
+  },
+  "autoupdate": {
+    "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz-v$version-portable.zip",
     "shortcuts": [
-        [
-            "keyviz-v1.0.6-portable.exe",
-            "Keyviz"
-        ]
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\com.example\\keyviz\")",
-        "$LinkTargets = @(\"$persist_dir\\com.example\\keyviz\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-LinkDirectory"
-    ],
-    "checkver": {
-        "github": "https://github.com/mulaRahul/keyviz"
-    },
-    "autoupdate": {
-        "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz-v$version-portable.zip",
-        "shortcuts": [
-            [
-                "keyviz-v$version-portable.exe",
-                "Keyviz"
-            ]
-        ]
-    }
+      [
+        "keyviz-v$version-portable.exe",
+        "Keyviz"
+      ]
+    ]
+  }
 }
