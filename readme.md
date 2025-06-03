@@ -30,8 +30,7 @@
 
 > [!Warning]
 >
-> - Manifests in this repository depend on [bin/utils.ps1](./bin/utils.ps1).
->
+> - Manifests in `abyss` is based on [bin/utils.ps1](./bin/utils.ps1).
 > - Other buckets should be careful when considering merging them.
 
 ### If you are using Scoop
@@ -95,7 +94,7 @@
 
 ### Config
 
-- Apps in this repository include specific behaviors controlled by `app-uninstall-action-level`.
+- Apps in `abyss` include specific behaviors controlled by `app-uninstall-action-level`.
 - You can set it using the following command:
 
   ```pwsh
@@ -122,11 +121,16 @@
 > Assume the Scoop root directory is `D:\Scoop`
 
 - Scoop provides a `persist` configuration in the manifest files, which can persist data files in the app directory.
-  - Taking [VSCode.json](./bucket/VSCode.json) as an example, Scoop will install it to `D:\Scoop\apps\VSCode`.
-  - It will persist data directory: `D:\Scoop\apps\VSCode\data` => `D:\Scoop\persist\VSCode\data`.
-  - After uninstalling, its settings, plugins, keybindings and other data will still be saved in the `D:\Scoop\apps\VSCode\data` directory.
-    - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\VSCode` directory will be removed.
-  - After reinstalling, the data will continue to be used again.
+
+  - Taking [PSCompletions](./bucket/PSCompletions.json) as an example, Scoop will install it to `D:\Scoop\apps\PSCompletions`.
+  - It will persist data directory and file:
+    - `D:\Scoop\apps\PSCompletions\completions` => `D:\Scoop\persist\PSCompletions\completions`
+    - `D:\Scoop\apps\PSCompletions\data.json` => `D:\Scoop\persist\PSCompletions\data.json`
+  - When uninstalling [PSCompletions](./bucket/PSCompletions.json), Scoop only removes the `D:\Scoop\apps\PSCompletions` directory, not the `D:\Scoop\persist\PSCompletions` directory.
+    - So, its settings and completion data will still be saved in the `D:\Scoop\persist\PSCompletions` directory.
+    - After reinstalling, the data will continue to be used again.
+  - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\PSCompletions` directory will be removed.
+
 - This is the most powerful feature of Scoop, which can quickly restore your app environment.
   - Some apps use [Link](#link), which cannot be reset correctly by `scoop reset`.
   - It is recommended to uninstall and reinstall it.
@@ -139,15 +143,15 @@
 
 - Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the app data resides within the installation directory.
 - However, some apps store their data outside the installation directory, commonly in `$env:AppData`.
-- For such apps, this repository uses `New-Item -ItemType Junction` to link.
+- For such apps, they will use `New-Item -ItemType Junction` to link.
 - Taking [Helix](./bucket/Helix.json) as an example:
   - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`
   - It will link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
 
 > [!Warning]
 >
-> - Some apps store data as files instead of directories, requiring SymboLink to link.
-> - SymboLink requires administrator permission, so these apps will be added with the `Admin` tag.
+> - Some apps store data as files instead of directories, requiring SymbolicLink to link.
+> - SymbolicLink requires administrator permission, so these apps will be added with the `Admin` tag.
 
 ---
 
@@ -167,14 +171,14 @@
     - **➖** : It is not necessary, or there are no data files.
     - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](#link) for details.
   - **`Tag`**
-    - `Msix`: Apps packaged via [Msix](https://learn.microsoft.com/windows/msix/overview)
-      - The installation directory is not in Scoop.
-      - Scoop only manages the [persist](#persist) and operations for installing, updating, and uninstalling.
-    - `Admin`: Apps that require administrator permission are required in the following cases.
-      - The App store data as files instead of directories, requiring SymboLink to link, and SymboLink requires administrator permission.
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
     - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
+    - `Msix`: Apps packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
+      - The installation directory is not in Scoop.
+      - Scoop only manages the [persist](#persist) and operations for installing, updating, and uninstalling.
+    - `AdminToInstall`: Apps that require administrator permission to install.
+      - Because The App store data as files instead of directories, requiring SymbolicLink to link, and SymbolicLink requires administrator permission.
   - **`Description`** : App Description.
 
 ---

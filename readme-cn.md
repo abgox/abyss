@@ -30,8 +30,7 @@
 
 > [!Warning]
 >
-> - 此仓库中的应用清单高度依赖 [bin/utils.ps1](./bin/utils.ps1)
->
+> - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
 > - 如果其他 bucket 想要合并它们，请谨慎检查
 
 ### 如果你正在使用 Scoop
@@ -99,7 +98,7 @@
 
 ### Config
 
-- 本仓库中的应用会有一些特性，由配置项 `app-uninstall-action-level` 控制
+- `abyss` 中的应用会有一些特性，由配置项 `app-uninstall-action-level` 控制
 - 你可以通过以下命令去设置
 
   ```pwsh
@@ -125,11 +124,16 @@
 
 - Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录中的数据文件
 
-  - 以 [VSCode.json](./bucket/VSCode.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\VSCode` 目录中
-  - 然后会持久化数据目录: `D:\Scoop\apps\VSCode\data` => `D:\Scoop\persist\VSCode\data`
-  - 卸载后，它的设置、插件、快捷键等数据仍然会保存在 `D:\Scoop\persist\VSCode\data` 目录中
-    - 如果卸载时使用 `-p/--purge` 参数，`D:\Scoop\persist\VSCode` 目录会被删除
-  - 重新安装后，又会继续使用这些数据
+  - 以 [PSCompletions](./bucket/PSCompletions.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\PSCompletions` 目录中
+  - 然后会持久化(persist)数据目录和配置文件:
+
+    - `D:\Scoop\apps\PSCompletions\completions` => `D:\Scoop\persist\PSCompletions\completions`
+    - `D:\Scoop\apps\PSCompletions\data.json` => `D:\Scoop\persist\PSCompletions\data.json`
+
+  - 当卸载 [PSCompletions](./bucket/PSCompletions.json) 时，Scoop 只会删除 `D:\Scoop\apps\PSCompletions` 目录，而不会删除 `D:\Scoop\persist\PSCompletions` 目录
+    - 因此，它的设置、补全数据仍然会保存在 `D:\Scoop\persist\PSCompletions` 目录中
+    - 重新安装后，又会继续使用这些数据
+  - 如果卸载时使用了 `-p/--purge` 参数，`D:\Scoop\persist\PSCompletions` 目录才会被删除
 
 - 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
   - 一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
@@ -143,15 +147,15 @@
 
 - Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
 - 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
-- 像这样的应用，本仓库中使用 `New-Item -ItemType Junction` 进行链接
+- 像这样的应用，`abyss` 选择使用 `New-Item -ItemType Junction` 进行链接
 - 以 [Helix](./bucket/Helix.json) 为例
   - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
   - 它会进行链接: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
 
 > [!Warning]
 >
-> - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymboLink 进行链接
-> - SymboLink 需要管理员权限，因此这些应用会被添加 `Admin` 标签
+> - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
+> - SymbolicLink 需要管理员权限，因此这些应用会被添加 `Admin` 标签
 
 ---
 
@@ -161,7 +165,7 @@
 
 - 说明
 
-  - **`App`**：应用包名
+  - **`App`**：应用包的名称
     - 点击查看官网或仓库
     - 按照数字字母排序(0-9,a-z)
   - **`Version`**：应用版本
@@ -172,16 +176,14 @@
     - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
   - **`Tag`**：应用标签
 
-    - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
-      - 它的安装目录不在 Scoop 中
-      - Scoop 只管理 [persist](#persist)，应用的安装、更新以及卸载操作。
-    - `Admin`: 因为以下情况，需要使用管理员权限的应用
-
-      - 应用的数据通过文件而不是目录进行存储，需要使用 SymboLink 进行链接，而 SymboLink 需要管理员权限
-
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
     - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
+    - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
+      - 它的安装目录不在 Scoop 中
+      - Scoop 只管理 [persist](#persist)，应用的安装、更新以及卸载操作。
+    - `AdminToInstall`: 需要使用管理员权限才能安装的应用
+      - 因为应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接，而 SymbolicLink 需要管理员权限
 
   - **`Description`**：应用描述
 
