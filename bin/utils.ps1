@@ -227,22 +227,33 @@ function A-New-LinkDirectory {
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
 }
 
-function A-Remove-LinkFile {
+function A-Remove-Link {
     <#
     .SYNOPSIS
-        删除在应用安装过程中创建的链接文件
+        删除符号链接
+
+    .DESCRIPTION
+        该函数用于删除在应用安装过程中创建的链接
     #>
 
-    A-Remove-Link -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
-}
+    if (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") {
+        # 通过 Msix 打包的程序，在卸载时会删除所有数据文件，因此必须先删除链接目录
+    }
+    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
+        return
+    }
 
-function A-Remove-LinkDirectory {
-    <#
-    .SYNOPSIS
-        删除在应用安装过程中创建的链接目录
-    #>
-
-    A-Remove-Link -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
+    @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
+        if (Test-Path $_) {
+            $LinkPaths = Get-Content $_ -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
+            foreach ($p in $LinkPaths) {
+                if (Test-Path $p) {
+                    Write-Host "$($words["Removing link:"]) $p" -ForegroundColor Yellow
+                    Remove-Item $p -Force -Recurse -ErrorAction SilentlyContinue
+                }
+            }
+        }
+    }
 }
 
 function A-Remove-TempData {
@@ -840,39 +851,6 @@ function A-New-Link {
     }
 }
 
-function A-Remove-Link {
-    <#
-    .SYNOPSIS
-        删除符号链接
-
-    .PARAMETER OutFile
-        在创建链接时，相关链接路径信息已写入到该文件中，此处读取该文件并删除链接
-
-    .DESCRIPTION
-        该函数用于删除在应用安装过程中创建的链接
-    #>
-    param(
-        [string]$OutFile
-    )
-
-    if (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") {
-        # 通过 Msix 打包的程序，在卸载时会删除所有数据文件，因此必须先删除链接目录
-    }
-    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
-        return
-    }
-
-    if (Test-Path $OutFile) {
-        $LinkPaths = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
-        foreach ($_ in $LinkPaths) {
-            if (Test-Path $_ ) {
-                Write-Host "$($words["Removing link:"]) $_" -ForegroundColor Yellow
-                Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
-            }
-        }
-    }
-}
-
 function A-Add-AppxPackage {
     <#
     .SYNOPSIS
@@ -1028,18 +1006,44 @@ if ($ShowCN) {
     Set-Item -Path Function:\show_notes -Value {
         param($manifest, $dir, $original_dir, $persist_dir)
 
+        $label = 'Notes'
         $note = $manifest.notes
         $noteCN = $manifest.'notes-cn'
 
         if ($noteCN) {
+            $label = '说明'
             $note = $noteCN
         }
 
         if ($note) {
-            Write-Output 'Notes'
+            Write-Host
+            Write-Output $label
             Write-Output '-----'
             Write-Output (wraptext (substitute $note @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir }))
         }
     }
 }
+#endregion
+
+
+
+#region 废弃函数，不要在清单中使用
+function A-Remove-LinkFile {
+    <#
+    .SYNOPSIS
+        删除在应用安装过程中创建的链接文件
+    #>
+
+    A-Remove-Link
+}
+
+function A-Remove-LinkDirectory {
+    <#
+    .SYNOPSIS
+        删除在应用安装过程中创建的链接目录
+    #>
+
+    A-Remove-Link
+}
+
 #endregion
