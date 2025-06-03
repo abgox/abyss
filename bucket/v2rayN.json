@@ -1,0 +1,39 @@
+{
+  "version": "7.12.5",
+  "description": "一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心。A V2Ray client for Windows, support Xray & v2fly core.",
+  "homepage": "https://github.com/2dust/v2rayN",
+  "license": {
+    "identifier": "GNU General Public License v3.0",
+    "url": "https://github.com/2dust/v2rayN/blob/master/LICENSE"
+  },
+  "url": "https://github.com/2dust/v2rayN/releases/download/7.12.5/v2rayN-windows-64.zip",
+  "hash": "67ad805f4f282a26e142a65d622a208138dba3b9d86ee944961753340f701dcd",
+  "extract_dir": "v2rayN-windows-64",
+  "bin": "v2rayN.exe",
+  "shortcuts": [
+    [
+      "v2rayN.exe",
+      "v2rayN"
+    ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-LinkDirectory",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "persist": "guiConfigs",
+  "checkver": "github",
+  "autoupdate": {
+    "url": "https://github.com/2dust/v2rayN/releases/download/$version/v2rayN-windows-64.zip"
+  }
+}
