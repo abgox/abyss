@@ -57,6 +57,9 @@ function A-Test-ScriptPattern {
     return $patternFound
 }
 
+
+$isCN = $path -like "*cn*.md"
+
 foreach ($_ in $manifests) {
     $json = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
     $info = @()
@@ -64,24 +67,54 @@ foreach ($_ in $manifests) {
     $app = $_.BaseName
 
     # homepage
-    $info += "[$app]($($json.homepage))"
+    if ($isCN) {
+        $info += "[$app]($($json.homepage) `"点击查看 $($app) 的主页或仓库`")"
+    }
+    else {
+        $info += "[$app]($($json.homepage) `"Click to view the homepage or repository of $($app)`")"
+    }
 
     # version
     # $info += "[v$($json.version)](./bucket/$($_.Name))"
-    $info += '<a href="./bucket/' + $_.Name + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+    $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
+    $info += '<a href="./bucket/' + $_.Name + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
 
     # persist
     $isPersist = $json.persist
-    $isLinkDirectory = $false
+    $isLink = $false
 
     if (!$isPersist) {
-        $isLinkDirectory = A-Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
+        $isLink = A-Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
     }
-    if ($isLinkDirectory) {
-        $info += '`Link`'
+    if ($isLink) {
+        if ($isCN) {
+            $label = '<code title="' + $app + ' 使用 Link 进行数据持久化">`Link`</code>'
+        }
+        else {
+            $label = '<code title="' + $app + ' uses Link for data persistence">`Link`</code>'
+        }
+
+        $info += $label
     }
     else {
-        $info += if ($isPersist) { '✔️' }else { '➖' }
+        if ($isPersist) {
+            if ($isCN) {
+                $label = '<code title="' + $app + ' 使用 Scoop 官方的 persist 实现">`✔️`</code>'
+            }
+            else {
+                $label = '<code title="' + $app + ' uses Scoop official persist implementation">`✔️`</code>'
+            }
+            $info += $label
+        }
+        else {
+            if ($isCN) {
+                $label = '<code title="' + $app + ' 未实现 persist，因为不存在数据或者没有实现的必要">`➖`</code>'
+            }
+            else {
+                $label = '<code title="' + $app + ' does not implement persist because there is no data or no need for persist">`➖`</code>'
+            }
+            $info += $label
+        }
     }
 
     # Tag
@@ -89,20 +122,46 @@ foreach ($_ in $manifests) {
 
     ## Msix
     $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
-    $tag += if ($isMsix) { '`Msix`' }
+    if ($isCN) {
+        $label = '<code title="' + $app + ' 通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据、安装、卸载、更新">`Msix`</code>'
+    }
+    else {
+        $label = '<code title="' + $app + ' installs using Msix, installation directory is not in Scoop, Scoop only manages data, installation, uninstallation, and updates">`Msix`</code>'
+    }
+    $tag += if ($isMsix) { $label }
 
-    ## NeedAdmin
-    $isNeedAdmin = A-Test-ScriptPattern $json '.*A-New-LinkFile.*'
-    $tag += if ($isNeedAdmin) { '`Admin`' }
+    ## NeedAdminToInstall
+    $NeedAdminToInstall = A-Test-ScriptPattern $json '.*A-New-LinkFile.*'
+
+    $label = if ($isCN) { '<code title=" ' + $app + ' 需要管理员权限才能安装">`AdminToInstall`</code>' } else { '<code title="' + $app + ' needs admin permission to install">`AdminToInstall`</code>' }
+    $tag += if ($NeedAdminToInstall) { $label }
 
     ## font
-    $tag += if ($app -like "Font-*") { '`Font`' }
+    if ($isCN) {
+        $label = '<code title="' + $app + ' 是一个字体">`Font`</code>'
+    }
+    else {
+        $label = '<code title="' + $app + ' is a font">`Font`</code>'
+    }
+    $tag += if ($app -like "Font-*") { $label }
 
-    ## AutoUpdate
-    $tag += if (!$json.autoupdate) { '`NoUpdate`' }
+    ## NoUpdate
+    if ($isCN) {
+        $label = '<code title="Scoop 不会检查它的版本更新，因为 ' + $app + ' 没有配置 autoupdate">`NoUpdate`</code>'
+    }
+    else {
+        $label = '<code title="Scoop will not check for its version updates, because autoupdate is not configured">`NoUpdate`</code>'
+    }
+    $tag += if (!$json.autoupdate) { $label }
 
     ## PSModule
-    $tag += if ($json.psmodule) { '`PSModule`' }
+    if ($isCN) {
+        $label = '<code title="' + $app + ' 是一个 Powershell 模块">`PSModule`</code>'
+    }
+    else {
+        $label = $label = '<code title="' + $app + ' is a Powershell module">`PSModule`</code>'
+    }
+    $tag += if ($json.psmodule) { $label }
 
     $info += $tag -join ' '
 
