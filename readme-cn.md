@@ -148,6 +148,11 @@
   - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
   - 它会进行链接: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
 
+> [!Warning]
+>
+> - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymboLink 进行链接
+> - SymboLink 需要管理员权限，因此这些应用会被添加 `Admin` 标签
+
 ---
 
 ### 应用清单
@@ -170,6 +175,10 @@
     - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
       - 它的安装目录不在 Scoop 中
       - Scoop 只管理 [persist](#persist)，应用的安装、更新以及卸载操作。
+    - `Admin`: 因为以下情况，需要使用管理员权限的应用
+
+      - 应用的数据通过文件而不是目录进行存储，需要使用 SymboLink 进行链接，而 SymboLink 需要管理员权限
+
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
     - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新

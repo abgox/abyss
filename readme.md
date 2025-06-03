@@ -144,6 +144,11 @@
   - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`
   - It will link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
 
+> [!Warning]
+>
+> - Some apps store data as files instead of directories, requiring SymboLink to link.
+> - SymboLink requires administrator permission, so these apps will be added with the `Admin` tag.
+
 ---
 
 ### App Manifests
@@ -165,6 +170,8 @@
     - `Msix`: Apps packaged via [Msix](https://learn.microsoft.com/windows/msix/overview)
       - The installation directory is not in Scoop.
       - Scoop only manages the [persist](#persist) and operations for installing, updating, and uninstalling.
+    - `Admin`: Apps that require administrator permission are required in the following cases.
+      - The App store data as files instead of directories, requiring SymboLink to link, and SymboLink requires administrator permission.
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
     - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
