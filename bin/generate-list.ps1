@@ -75,7 +75,7 @@ foreach ($_ in $manifests) {
     $isLinkDirectory = $false
 
     if (!$isPersist) {
-        $isLinkDirectory = A-Test-ScriptPattern $json '.*A-New-LinkDirectory.*'
+        $isLinkDirectory = A-Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
     }
     if ($isLinkDirectory) {
         $info += '`Link`'
@@ -90,6 +90,10 @@ foreach ($_ in $manifests) {
     ## Msix
     $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
     $tag += if ($isMsix) { '`Msix`' }
+
+    ## NeedAdmin
+    $isNeedAdmin = A-Test-ScriptPattern $json '.*A-New-LinkFile.*'
+    $tag += if ($isNeedAdmin) { '`Admin`' }
 
     ## font
     $tag += if ($app -like "Font-*") { '`Font`' }

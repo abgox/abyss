@@ -10,9 +10,9 @@ if ($uninstallActionLevel -eq $null) {
 
 
 # 如果没有 $cmd，表示在自动化执行更新检查，此时中文内容可能导致错误。
-$needLocalization = $PSUICulture -like "zh*" -and $cmd
+$ShowCN = $PSUICulture -like "zh*" -and $cmd
 
-if ($needLocalization) {
+if ($ShowCN) {
     $cmdMap_zh = @{
         "install"   = "安装"
         "uninstall" = "卸载"
@@ -22,12 +22,12 @@ if ($needLocalization) {
     $words = @{
         "Creating directory:"                                                                           = "正在创建目录:"
         "The script in this manifest is incorrectly defined."                                           = "这个清单中的脚本定义有误。"
-        "Copying"                                                                                       = "正在复制"
-        "Removing"                                                                                      = "正在删除"
+        "Copying"                                                                                       = "正在复制:"
+        "Removing"                                                                                      = "正在删除:"
         "Failed to $cmd $app."                                                                          = "无法$($cmdMap_zh[$cmd]) $app"
         "Please stop the relevant processes and try to $cmd $app again."                                = "请停止相关进程并再次尝试$($cmdMap_zh[$cmd]) $app。"
-        "Failed to remove the directory:"                                                               = "无法删除目录:"
-        "Linking"                                                                                       = "正在链接"
+        "Failed to remove:"                                                                             = "无法删除:"
+        "Linking"                                                                                       = "正在链接:"
         "Successfully terminated the process:"                                                          = "成功终止进程:"
         "Failed to terminate the process:"                                                              = "无法终止进程:"
         "You may need to try $cmd $app again or use administrator permissions."                         = "可能需要再次尝试$($cmdMap_zh[$cmd]) $app 或者使用管理员权限。"
@@ -36,7 +36,7 @@ if ($needLocalization) {
         "Successfully terminated the service:"                                                          = "成功终止服务:"
         "Failed to terminate the service:"                                                              = "无法终止服务:"
         "Failed to remove the service:"                                                                 = "无法删除服务:"
-        "Removing link directory:"                                                                      = "正在删除链接目录:"
+        "Removing link:"                                                                                = "正在删除链接:"
         "Removing Temp data:"                                                                           = "正在删除临时数据:"
     }
 
@@ -49,7 +49,7 @@ else {
         "Removing"                                                                                      = "Removing"
         "Failed to $cmd $app."                                                                          = "Failed to $cmd $app."
         "Please stop the relevant processes and try to $cmd $app again."                                = "Please stop the relevant processes and try to $cmd $app again."
-        "Failed to remove the directory:"                                                               = "Failed to remove the directory:"
+        "Failed to remove:"                                                                             = "Failed to remove:"
         "Linking"                                                                                       = "Linking"
         "Successfully terminated the process:"                                                          = "Successfully terminated the process:"
         "Failed to terminate the process:"                                                              = "Failed to terminate the process:"
@@ -59,7 +59,7 @@ else {
         "Successfully terminated the service:"                                                          = "Successfully terminated the service:"
         "Failed to terminate the service:"                                                              = "Failed to terminate the service:"
         "Failed to remove the service:"                                                                 = "Failed to remove the service:"
-        "Removing link directory:"                                                                      = "Removing link directory:"
+        "Removing link:"                                                                                = "Removing link:"
         "Removing Temp data:"                                                                           = "Removing Temp data:"
     }
 }
@@ -69,10 +69,7 @@ function A-Ensure-Directory {
     .SYNOPSIS
         确保指定目录路径存在
 
-    .DESCRIPTION
-        确保指定目录路径存在
-
-    .PARAMETER path
+    .PARAMETER Path
         需要确保存在的目录路径
 
     .EXAMPLE
@@ -92,93 +89,22 @@ function A-Ensure-Directory {
     }
 }
 
-function A-New-LinkDirectory {
-    <#
-    .SYNOPSIS
-        创建目录链接
-
-    .DESCRIPTION
-        该函数用于将现有目录替换为指向目标目录的符号链接（junction point）。
-        如果源目录存在且不是链接，会先将其内容复制到目标目录，然后删除源目录并创建链接。
-
-    .PARAMETER linkPaths
-        要创建链接的路径数组
-
-    .PARAMETER linkTargets
-        链接指向的目标路径数组
-
-    .EXAMPLE
-        A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data") -LinkTargets @("$persist_dir\nvim","$persist_dir\nvim-data")
-        创建链接目录: "$env:LocalAppData\nvim" => "$persist_dir\nvim"
-        创建链接目录: "$env:LocalAppData\nvim-data" => "$persist_dir\nvim-data"
-
-    .LINK
-        https://github.com/abgox/abyss#link
-        https://gitee.com/abgox/abyss#link
-    #>
-    param (
-        [array]$LinkPaths, # 源路径数组（将被替换为链接）
-
-        [array]$LinkTargets # 目标路径数组（链接指向的位置）
-    )
-
-    if ($LinkPaths.Count -ne $LinkTargets.Count) {
-        Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
-        exit 1
-    }
-
-    $path_file = "$dir\scoop-install-new-link-directory.jsonc"
-
-    $installData = @{
-        "LinkPaths" = @()
-    }
-
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $linkPath = $LinkPaths[$i]
-        $linkTarget = $LinkTargets[$i]
-        $installData.LinkPaths += $linkPath
-        if ($cmd -ne "update" -and (Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
-            if (!(Test-Path $linkTarget)) {
-                Write-Host "$($words["Copying"]) $linkPath => $linkTarget" -ForegroundColor Yellow
-                Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force
-            }
-            Write-Host "$($words["Removing"]) $linkPath" -ForegroundColor Yellow
-            try {
-                Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
-            }
-            catch {
-                Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-                Write-Host $words["Please stop the relevant processes and try to $cmd $app again."] -ForegroundColor Red
-                Write-Host
-                Write-Host "$($words["Failed to remove the directory:"]) $linkPath" -ForegroundColor Red
-                exit 1
-            }
-        }
-        A-Ensure-Directory $linkTarget
-        New-Item -ItemType Junction -Path $linkPath -Target $linkTarget -Force | Out-Null
-        Write-Host "$($words["Linking"]) $linkPath => $linkTarget" -ForegroundColor Yellow
-    }
-    if ($LinkPaths.Count) {
-        $installData | ConvertTo-Json | Out-File -FilePath $path_file -Force -Encoding utf8
-    }
-}
-
 function A-New-PersistFile {
     <#
     .SYNOPSIS
-        创建文件并确保其存在，可选择设置内容
+        创建文件，可选择设置内容
 
-    .DESCRIPTION
-        创建指定路径的文件，如果指定了 -content 参数，则写入内容，否则创建空文件
-
-    .PARAMETER path
+    .PARAMETER Path
         要创建的文件路径
 
-    .PARAMETER content
+    .PARAMETER Content
         文件内容。如果指定了此参数，则写入文件内容，否则创建空文件
 
-    .PARAMETER encoding
+    .PARAMETER Encoding
         文件编码（默认: utf8），此参数仅在指定了 -content 参数时有效
+
+    .PARAMETER Force
+        强制创建文件，即使文件已存在。
 
     .EXAMPLE
         A-New-PersistFile -path "$persist_dir\data.json" -content "{}"
@@ -186,7 +112,7 @@ function A-New-PersistFile {
 
     .EXAMPLE
         A-New-PersistFile -path "$persist_dir\data.ini"
-        创建空文件（不指定内容）
+        创建空文件
     #>
     param (
         [Parameter(Position = 0, ValueFromPipeline)]
@@ -195,11 +121,18 @@ function A-New-PersistFile {
         [string]$Content,
 
         [ValidateSet("utf8", "utf8Bom", "utf8NoBom", "unicode", "ansi", "ascii", "bigendianunicode", "bigendianutf32", "oem", "utf7", "utf32")]
-        [string]$Encoding = "utf8"
+        [string]$Encoding = "utf8",
+
+        [switch]$Force
     )
 
     if (Test-Path $Path) {
-        return
+        if ($Force) {
+            Remove-Item $Path -Force -ErrorAction SilentlyContinue
+        }
+        else {
+            return
+        }
     }
 
     if ($PSBoundParameters.ContainsKey('content')) {
@@ -213,6 +146,142 @@ function A-New-PersistFile {
     }
 }
 
+function A-New-LinkFile {
+    <#
+    .SYNOPSIS
+        创建文件链接 (SymbolicLink)
+
+    .PARAMETER LinkPaths
+        要创建链接的路径数组 (将被替换为链接)
+
+    .PARAMETER LinkTargets
+        链接指向的目标路径数组 (链接指向的位置)
+
+    .EXAMPLE
+        A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml") -LinkTargets @("$persist_dir\starship.toml")
+        创建文件链接: "$env:UserProfile\.config\starship.toml" => "$persist_dir\starship.toml"
+
+    .LINK
+        https://github.com/abgox/abyss#link
+        https://gitee.com/abgox/abyss#link
+    #>
+    param (
+        [array]$LinkPaths,
+
+        [array]$LinkTargets
+    )
+
+    if ($LinkPaths.Count -ne $LinkTargets.Count) {
+        Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
+        exit 1
+    }
+
+    $isAdmin = A-Test-Admin
+    if (!$isAdmin) {
+        if ($ShowCN) {
+            Write-Host "$app 需要去链接以下的数据文件:" -ForegroundColor Yellow
+            for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+                Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
+            }
+            Write-Host "它需要管理员权限。`n请使用管理员身份再次尝试。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "$app needs to link the following data file:"
+            for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+                Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
+            }
+            Write-Host "It requires administrator permission for $app.`nPlease Try again with administrator permission." -ForegroundColor Red
+        }
+        exit 1
+    }
+
+    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-new-link-file.jsonc"
+}
+
+function A-New-LinkDirectory {
+    <#
+    .SYNOPSIS
+        创建目录链接 (Junction)
+
+    .PARAMETER LinkPaths
+        要创建链接的路径数组 (将被替换为链接)
+
+    .PARAMETER LinkTargets
+        链接指向的目标路径数组 (链接指向的位置)
+
+    .EXAMPLE
+        A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data") -LinkTargets @("$persist_dir\nvim","$persist_dir\nvim-data")
+        创建目录链接: "$env:LocalAppData\nvim" => "$persist_dir\nvim"
+        创建目录链接: "$env:LocalAppData\nvim-data" => "$persist_dir\nvim-data"
+
+    .LINK
+        https://github.com/abgox/abyss#link
+        https://gitee.com/abgox/abyss#link
+    #>
+    param (
+        [array]$LinkPaths,
+
+        [array]$LinkTargets
+    )
+
+    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-new-link-directory.jsonc"
+}
+
+function A-Remove-LinkFile {
+    <#
+    .SYNOPSIS
+        删除在应用安装过程中创建的链接文件
+    #>
+
+    A-Remove-Link -OutFile "$dir\scoop-install-new-link-file.jsonc"
+}
+
+function A-Remove-LinkDirectory {
+    <#
+    .SYNOPSIS
+        删除在应用安装过程中创建的链接目录
+    #>
+
+    A-Remove-Link -OutFile "$dir\scoop-install-new-link-directory.jsonc"
+}
+
+function A-Remove-TempData {
+    <#
+    .SYNOPSIS
+        删除临时数据目录或文件
+
+    .DESCRIPTION
+        该函数用于递归删除指定的临时数据目录或文件。
+        根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
+
+    .PARAMETER Paths
+        要删除的临时数据路径数组，支持通过管道传入。
+        可以包含文件或目录路径。
+
+    .EXAMPLE
+        A-Remove-TempData -Paths @("C:\Temp\Logs", "D:\Cache")
+        删除指定的两个临时数据目录
+
+    .EXAMPLE
+        "C:\Windows\Temp" | A-Remove-TempData
+        通过管道传入单个临时目录路径
+    #>
+    param (
+        [Parameter(Position = 0, ValueFromPipeline)]
+        [array]$Paths
+    )
+
+    if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
+        return
+    }
+    foreach ($_ in $Paths) {
+        if (Test-Path $_ ) {
+            Write-Host "$($words["Removing Temp data:" ]) $_" -ForegroundColor Yellow
+            Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 function A-Stop-Process {
     <#
     .SYNOPSIS
@@ -220,21 +289,14 @@ function A-Stop-Process {
 
     .DESCRIPTION
         该函数用于查找并终止从指定目录路径加载模块的所有进程。
+        函数默认会搜索 $dir 和 $dir\current 目录。
 
-    .PARAMETER path
-        要搜索运行中可执行文件的目录路径数组。
-
-    .EXAMPLE
-        A-Stop-Process -path @("C:\Program Files\MyApp", "D:\Services")
-        停止从这两个目录运行的所有进程
-
-    .EXAMPLE
-        Get-ChildItem "C:\Apps" -Directory | A-Stop-Process
-        通过管道传入目录路径来停止相关进程
+    .PARAMETER ExtraPaths
+        要搜索运行中可执行文件的额外目录路径数组。
     #>
     param(
         [Parameter(Position = 0, ValueFromPipeline)]
-        [string[]]$ExtraPaths = @()
+        [string[]]$ExtraPaths
     )
 
     $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
@@ -292,8 +354,8 @@ function A-Stop-Service {
         [string]$ServiceName
     )
 
-    $serviceExists = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
-    if (!$serviceExists) {
+    $isExist = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
+    if (!$isExist) {
         return
     }
 
@@ -315,82 +377,18 @@ function A-Stop-Service {
     }
 }
 
-function A-Remove-LinkDirectory {
+function A-Complete-Install {
     <#
     .SYNOPSIS
-        删除符号链接目录或指定目录
-
-    .DESCRIPTION
-        该函数用于删除通过符号链接创建的目录或指定的物理目录。
-
-    .PARAMETER LinkPaths
-        要删除的目录路径数组，支持通过管道传入。
-        若未指定参数且存在文件 $path_file，则自动从文件读取。
-
-    .EXAMPLE
-        A-Remove-LinkDirectory -LinkPaths @("C:\LinkDir1", "D:\LinkDir2")
-        直接删除指定的两个链接目录
+        处理安装完成后的操作
     #>
-    param (
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [array]$LinkPaths
-    )
-
-    if (Test-Path "$dir\scoop-install-add-appxpackage.jsonc") {
-        # 对于通过 A-Add-MsixPackage 或 A-Add-AppxPackage 安装的软件，必须先删除其链接目录
-    }
-    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
-        return
-    }
-
-    $path_file = "$dir\scoop-install-new-link-directory.jsonc"
-
-    if (!$PSBoundParameters.ContainsKey('LinkPaths') -and (Test-Path $path_file)) {
-        $LinkPaths = Get-Content $path_file -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
-    }
-    foreach ($_ in $LinkPaths) {
-        if (Test-Path $_ ) {
-            Write-Host "$($words["Removing link directory:"]) $_" -ForegroundColor Yellow
-        }
-        Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
-    }
 }
 
-function A-Remove-TempData {
+Function A-Complete-Uninstall {
     <#
     .SYNOPSIS
-        删除临时数据目录或文件
-
-    .DESCRIPTION
-        该函数用于递归删除指定的临时数据目录或文件。
-        根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
-
-    .PARAMETER Paths
-        要删除的临时数据路径数组，支持通过管道传入。
-        可以包含文件或目录路径。
-
-    .EXAMPLE
-        A-Remove-TempData -Paths @("C:\Temp\Logs", "D:\Cache")
-        删除指定的两个临时数据目录
-
-    .EXAMPLE
-        "C:\Windows\Temp" | A-Remove-TempData
-        通过管道传入单个临时目录路径
+        处理卸载完成后的操作
     #>
-    param (
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [array]$Paths
-    )
-
-    if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
-        return
-    }
-    foreach ($_ in $Paths) {
-        if (Test-Path $_ ) {
-            Write-Host "$($words["Removing Temp data:" ]) $_" -ForegroundColor Yellow
-            Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
-        }
-    }
 }
 
 function A-Install-Font {
@@ -425,7 +423,7 @@ function A-Install-Font {
     if (!$isPerUserFontInstallationSupported -and !$global) {
         scoop uninstall $app
 
-        if ($needLocalization) {
+        if ($ShowCN) {
             Write-Host
             Write-Host "对于 Windows 版本低于 Windows 10 版本 1809 (OS Build 17763)，" -Foreground DarkRed
             Write-Host "字体只能安装为所有用户。" -Foreground DarkRed
@@ -503,7 +501,7 @@ function A-Uninstall-Font {
                 Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
             }
             catch {
-                if ($needLocalization) {
+                if ($ShowCN) {
                     Write-Host
                     Write-Host " 错误 " -Background DarkRed -Foreground White -NoNewline
                     Write-Host
@@ -547,7 +545,7 @@ function A-Uninstall-Font {
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
     if ($cmd -eq "uninstall") {
-        if ($needLocalization) {
+        if ($ShowCN) {
             Write-Host "$app 字体已经成功卸载，重启电脑后将不会再显示。" -Foreground Magenta
         }
         else {
@@ -566,87 +564,42 @@ function A-Add-MsixPackage {
 }
 
 function A-Remove-MsixPackage {
-    param(
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [string]$Package
-    )
-
-    if ($PSBoundParameters.ContainsKey('Package')) {
-        A-Remove-AppxPackage -Package $Package
-    }
-    else {
-        A-Remove-AppxPackage
-    }
+    A-Remove-AppxPackage
 }
 
-function A-Add-AppxPackage {
-    <#
-    .SYNOPSIS
-        安装 AppX/MSIX 包并记录安装信息供 Scoop 管理
+function A-Expand-SetupExe {
 
-    .DESCRIPTION
-        该函数使用 Add-AppxPackage 命令安装应用程序包 (.appx 或 .msix)，
-        然后创建一个 JSON 文件用于 Scoop 管理安装信息。
-
-    .PARAMETER Path
-        要安装的 AppX/MSIX 包的文件路径。支持管道输入。
-
-    .EXAMPLE
-        A-Add-AppxPackage -Path "D:\demo.msix"
-
-    .EXAMPLE
-        "D:\demo.msix" | A-Add-AppxPackage
-    #>
-    param(
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [string]$Path
-    )
-
-    Add-AppxPackage -Path $Path -ErrorAction Stop
-
-    $path_file = "$dir\scoop-install-add-appxpackage.jsonc"
-    $installData = @{
-        package = @{
-            PackageFamilyName = $PackageFamilyName
-        }
+    $archMap = @{
+        '64bit' = '64'
+        '32bit' = '32'
+        'arm64' = 'arm64'
     }
-    $installData | ConvertTo-Json | Out-File -FilePath $path_file -Force -Encoding utf8
 
-    if ($needLocalization) {
-        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
+    $all7z = Get-ChildItem "$dir\`$PLUGINSDIR" -Filter "app*.7z"
+    $matched = $all7z | Where-Object { $_.Name -match "app.+$($archMap[$architecture])\.7z" }
+
+    if ($matched.Length) {
+        $7z = $matched[0].FullName
     }
     else {
-        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the persistence of data and operations for installing, updating, and uninstalling." -ForegroundColor Yellow
+        $7z = $all7z[0].FullName
     }
+    Expand-7zipArchive $7z $dir
+
+    Remove-Item "$dir\`$*" -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-function A-Remove-AppxPackage {
+function A-Test-Admin {
     <#
     .SYNOPSIS
-        移除 AppX/MSIX 包
+        检查当前用户是否具有管理员权限
 
     .DESCRIPTION
-        该函数使用 Remove-AppxPackage 命令移除应用程序包 (.appx 或 .msix)
-
-    .PARAMETER Package
-        要移除的 AppX/MSIX 包的名称。
-        若未指定参数且存在文件 $path_file，则自动从文件读取。
+        该函数检查当前用户是否具有管理员权限，并返回一个布尔值。
     #>
-    param(
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [string]$Package
-    )
-
-    $path_file = "$dir\scoop-install-add-appxpackage.jsonc"
-
-    if ($PSBoundParameters.ContainsKey('Package')) {
-        Remove-AppxPackage -Package $Package
-    }
-    elseif (Test-Path $path_file) {
-        $p = Get-Content $path_file | ConvertFrom-Json | Select-Object -ExpandProperty "package"
-
-        Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $p.PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
-    }
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and ($identity.Groups -contains "S-1-5-32-544")
 }
 
 function A-Get-InstallerInfoFromWinget {
@@ -712,3 +665,305 @@ function A-Get-InstallerInfoFromWinget {
 
     $installerInfo
 }
+
+
+
+#region 以下的函数不建议在应用清单的脚本中直接使用
+
+function A-New-Link {
+    <#
+    .SYNOPSIS
+        创建符号链接
+
+    .DESCRIPTION
+        该函数用于将现有文件替换为指向目标文件的符号链接。
+        如果源文件存在且不是链接，会先将其内容复制到目标文件，然后删除源文件并创建链接。
+
+    .PARAMETER linkPaths
+        要创建链接的路径数组
+
+    .PARAMETER linkTargets
+        链接指向的目标路径数组
+
+    .PARAMETER ItemType
+        链接类型，可选值为 SymbolicLink/Junction
+
+    .PARAMETER OutFile
+        相关链接路径信息会写入到该文件中
+
+    .LINK
+        https://github.com/abgox/abyss#link
+        https://gitee.com/abgox/abyss#link
+    #>
+    param (
+        [array]$LinkPaths, # 源路径数组（将被替换为链接）
+
+        [array]$LinkTargets, # 目标路径数组（链接指向的位置）
+
+        [ValidateSet("SymbolicLink", "Junction")]
+        [string]$ItemType,
+
+        [string]$OutFile
+    )
+
+    if ($LinkPaths.Count -ne $LinkTargets.Count) {
+        Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
+        exit 1
+    }
+
+    $installData = @{
+        "LinkPaths" = @()
+    }
+
+    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+        $linkPath = $LinkPaths[$i]
+        $linkTarget = $LinkTargets[$i]
+        $installData.LinkPaths += $linkPath
+        if ($cmd -ne "update" -and (Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
+            if (!(Test-Path $linkTarget)) {
+                Write-Host "$($words["Copying"]) $linkPath => $linkTarget" -ForegroundColor Yellow
+                try {
+                    Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
+                }
+                catch {
+                    Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
+                    Write-Host $_.Exception.Message -ForegroundColor Red
+                    exit 1
+                }
+            }
+            try {
+                Write-Host "$($words["Removing"]) $linkPath" -ForegroundColor Yellow
+                Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
+            }
+            catch {
+                Write-Host "$($words["Failed to remove:"]) $linkPath" -ForegroundColor Red
+                Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
+                Write-Host $words["Please stop the relevant processes and try to $cmd $app again."] -ForegroundColor Red
+                exit 1
+            }
+        }
+        A-Ensure-Directory $linkTarget
+
+        if ((Get-Service -Name cexecsvc -ErrorAction SilentlyContinue)) {
+            # test if this script is being executed inside a docker container
+            if ($ItemType -eq "Junction") {
+                cmd.exe /d /c "mklink /j `"$linkPath`" `"$linkTarget`""
+            }
+            else {
+                # SymbolicLink
+                cmd.exe /d /c "mklink `"$linkPath`" `"$linkTarget`""
+            }
+        }
+        else {
+            New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+        }
+        Write-Host "$($words["Linking"]) $linkPath => $linkTarget" -ForegroundColor Yellow
+    }
+    if ($LinkPaths.Count) {
+        $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+    }
+}
+
+function A-Remove-Link {
+    <#
+    .SYNOPSIS
+        删除符号链接
+
+    .PARAMETER OutFile
+        在创建链接时，相关链接路径信息已写入到该文件中，此处读取该文件并删除链接
+
+    .DESCRIPTION
+        该函数用于删除在应用安装过程中创建的链接
+    #>
+    param(
+        [string]$OutFile
+    )
+
+    if (Test-Path "$dir\scoop-install-add-appxpackage.jsonc") {
+        # 通过 Msix 打包的程序，在卸载时会删除所有数据文件，因此必须先删除链接目录
+    }
+    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
+        return
+    }
+
+    if (Test-Path $OutFile) {
+        $LinkPaths = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
+        foreach ($_ in $LinkPaths) {
+            if (Test-Path $_ ) {
+                Write-Host "$($words["Removing link:"]) $_" -ForegroundColor Yellow
+                Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+
+function A-Add-AppxPackage {
+    <#
+    .SYNOPSIS
+        安装 AppX/Msix 包并记录安装信息供 Scoop 管理
+
+    .DESCRIPTION
+        该函数使用 Add-AppxPackage 命令安装应用程序包 (.appx 或 .msix)，
+        然后创建一个 JSON 文件用于 Scoop 管理安装信息。
+
+    .PARAMETER Path
+        要安装的 AppX/Msix 包的文件路径。支持管道输入。
+
+    .EXAMPLE
+        A-Add-AppxPackage -Path "D:\dl.msixbundle"
+
+    .EXAMPLE
+        "D:\dl.msixbundle" | A-Add-AppxPackage
+    #>
+    param(
+        [Parameter(Position = 0, ValueFromPipeline)]
+        [string]$Path
+    )
+
+    try {
+        Add-AppxPackage -Path $Path -ErrorAction Stop
+    }
+    catch {
+        Write-Host $_.Exception.Message -ForegroundColor Red
+        scoop uninstall $app
+        exit 1
+    }
+
+    $installData = @{
+        package = @{
+            PackageFamilyName = $PackageFamilyName
+        }
+    }
+    $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-add-appxpackage.jsonc" -Force -Encoding utf8
+
+    if ($ShowCN) {
+        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the persistence of data and operations for installing, updating, and uninstalling." -ForegroundColor Yellow
+    }
+}
+
+function A-Remove-AppxPackage {
+    <#
+    .SYNOPSIS
+        移除 AppX/Msix 包
+
+    .DESCRIPTION
+        该函数使用 Remove-AppxPackage 命令移除应用程序包 (.appx 或 .msixbundle)
+    #>
+
+    $OutFile = "$dir\scoop-install-add-appxpackage.jsonc"
+
+    if (Test-Path $OutFile) {
+        $PackageFamilyName = (Get-Content $OutFile | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
+        Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
+    }
+}
+
+#endregion
+
+
+
+#region 重写 scoop 内置函数
+
+if ($ShowCN) {
+
+    # function success: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L367
+    Set-Item -Path Function:\success -Value {
+        param($msg)
+
+        function Translate-Message {
+            param([string]$msg)
+
+            if ($msgMap.ContainsKey($msg)) {
+                return $msgMap[$msg]
+            }
+
+            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
+                $escapedPattern = [regex]::Escape($pattern)
+                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
+
+                $match = [regex]::Match($msg, $regexPattern)
+                if ($match.Success) {
+                    $translation = $msgMap[$pattern]
+                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
+                            param($m)
+                            $index = [int]$m.Groups[1].Value
+                            return $match.Groups[$index + 1].Value.Trim()
+                        })
+                    return $translation
+                }
+            }
+
+            return $msg
+        }
+
+        $msgMap = @{
+            "'$app' ($version) was installed successfully!" = "已成功安装 $app ($version)!"
+            "'{0}' was uninstalled."                        = "已成功卸载 {0}!"
+        }
+
+        $translated = Translate-Message $msg
+
+        Write-Host $translated -ForegroundColor darkgreen
+    }
+
+    # function abort: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L334
+    Set-Item -Path Function:\abort -Value {
+        param($msg, [int] $exit_code = 1)
+
+        function Translate-Message {
+            param([string]$msg)
+
+            if ($msgMap.ContainsKey($msg)) {
+                return $msgMap[$msg]
+            }
+
+            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
+                $escapedPattern = [regex]::Escape($pattern)
+                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
+
+                $match = [regex]::Match($msg, $regexPattern)
+                if ($match.Success) {
+                    $translation = $msgMap[$pattern]
+                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
+                            param($m)
+                            $index = [int]$m.Groups[1].Value
+                            return $match.Groups[$index + 1].Value.Trim()
+                        })
+                    return $translation
+                }
+            }
+
+            return $msg
+        }
+
+        $msgMap = @{
+            "Error: Version 'current' is not allowed!" = "错误：不允许使用 current 作为版本!"
+        }
+
+        $translated = Translate-Message $msg
+
+        Write-Host $msg -f red; exit $exit_code
+    }
+
+    # function show_notes: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L923
+    Set-Item -Path Function:\show_notes -Value {
+        param($manifest, $dir, $original_dir, $persist_dir)
+
+        $note = $manifest.notes
+        $noteCN = $manifest.'notes-cn'
+
+        if ($noteCN) {
+            $note = $noteCN
+        }
+
+        if ($note) {
+            Write-Output 'Notes'
+            Write-Output '-----'
+            Write-Output (wraptext (substitute $note @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir }))
+        }
+    }
+}
+#endregion
