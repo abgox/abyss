@@ -195,7 +195,7 @@ function A-New-LinkFile {
         exit 1
     }
 
-    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-new-link-file.jsonc"
+    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
 }
 
 function A-New-LinkDirectory {
@@ -224,7 +224,7 @@ function A-New-LinkDirectory {
         [array]$LinkTargets
     )
 
-    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-new-link-directory.jsonc"
+    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
 }
 
 function A-Remove-LinkFile {
@@ -233,7 +233,7 @@ function A-Remove-LinkFile {
         删除在应用安装过程中创建的链接文件
     #>
 
-    A-Remove-Link -OutFile "$dir\scoop-install-new-link-file.jsonc"
+    A-Remove-Link -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
 }
 
 function A-Remove-LinkDirectory {
@@ -242,7 +242,7 @@ function A-Remove-LinkDirectory {
         删除在应用安装过程中创建的链接目录
     #>
 
-    A-Remove-Link -OutFile "$dir\scoop-install-new-link-directory.jsonc"
+    A-Remove-Link -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
 }
 
 function A-Remove-TempData {
@@ -302,7 +302,9 @@ function A-Stop-Process {
     $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
     $Paths += $ExtraPaths
 
-    if ($uninstallActionLevel -notlike "*1*") {
+
+    # Msix/Appx 在移除包时会自动终止进程，不需要手动终止
+    if ($uninstallActionLevel -notlike "*1*" -or (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc")) {
         return
     }
 
@@ -391,7 +393,7 @@ Function A-Complete-Uninstall {
     #>
 }
 
-function A-Install-Font {
+function A-Add-Font {
     <#
     .SYNOPSIS
         安装字体
@@ -468,7 +470,7 @@ function A-Install-Font {
     }
 }
 
-function A-Uninstall-Font {
+function A-Remove-Font {
     <#
     .SYNOPSIS
         卸载字体
@@ -566,6 +568,80 @@ function A-Add-MsixPackage {
 function A-Remove-MsixPackage {
     A-Remove-AppxPackage
 }
+
+function A-Add-PowerToysRunPlugin {
+    param(
+        [string]$PluginName
+    )
+
+    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+    $PluginPath = "$PluginsDir\$PluginName"
+    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
+
+    try {
+        if (Test-Path -Path $PluginPath) {
+            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
+            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
+        }
+        $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
+        Write-Host "$($words["Copying"]) $CopyingPath => $PluginPath" -ForegroundColor Yellow
+        Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
+
+        if ($ShowCN) {
+            Write-Host "请重启 PowerToys 以加载插件。" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Please restart PowerToys to load the plugin." -ForegroundColor Green
+        }
+
+        @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+    }
+    catch {
+        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
+        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
+        if ($ShowCN) {
+            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
+        }
+        exit 1
+    }
+
+}
+
+function A-Remove-PowerToysRunPlugin {
+    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+
+    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
+
+    try {
+        if (Test-Path -Path $OutFile) {
+            $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
+            $PluginPath = "$PluginsDir\$PluginName"
+        }
+        else {
+            return
+        }
+
+        if (Test-Path -Path $PluginPath) {
+            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
+            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
+        }
+    }
+    catch {
+        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
+        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
+        if ($ShowCN) {
+            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
+        }
+        exit 1
+    }
+}
+
 
 function A-Expand-SetupExe {
 
@@ -779,7 +855,7 @@ function A-Remove-Link {
         [string]$OutFile
     )
 
-    if (Test-Path "$dir\scoop-install-add-appxpackage.jsonc") {
+    if (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") {
         # 通过 Msix 打包的程序，在卸载时会删除所有数据文件，因此必须先删除链接目录
     }
     elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
@@ -834,7 +910,7 @@ function A-Add-AppxPackage {
             PackageFamilyName = $PackageFamilyName
         }
     }
-    $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-add-appxpackage.jsonc" -Force -Encoding utf8
+    $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-AppxPackage.jsonc" -Force -Encoding utf8
 
     if ($ShowCN) {
         Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
@@ -853,10 +929,10 @@ function A-Remove-AppxPackage {
         该函数使用 Remove-AppxPackage 命令移除应用程序包 (.appx 或 .msixbundle)
     #>
 
-    $OutFile = "$dir\scoop-install-add-appxpackage.jsonc"
+    $OutFile = "$dir\scoop-install-A-Add-AppxPackage.jsonc"
 
     if (Test-Path $OutFile) {
-        $PackageFamilyName = (Get-Content $OutFile | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
+        $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
         Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
     }
 }
