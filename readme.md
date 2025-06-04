@@ -33,6 +33,14 @@
 > - Manifests in `abyss` is based on [bin/utils.ps1](./bin/utils.ps1).
 > - Other buckets should be careful when considering merging them.
 
+### Features
+
+- For apps that cannot use [persist](#persist), [Link](#link) will be used as a fallback.
+- When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
+- Improved information output during installation and uninstallation, displaying messages in the appropriate language (Chinese or English) based on the system locale.
+
+---
+
 ### If you are using Scoop
 
 1.  Add `abyss` with Github or Gitee repository.
@@ -94,7 +102,7 @@
 
 ### Config
 
-- Apps in `abyss` include specific behaviors controlled by `app-uninstall-action-level`.
+- Apps in `abyss` include [some features](#features) controlled by `app-uninstall-action-level`.
 - You can set it using the following command:
 
   ```pwsh
@@ -107,12 +115,12 @@
 
   - Values can be combined, e.g. `12` means both `1` and `2` will execute.
 
-  | Value | Action                                                   |
-  | ----- | -------------------------------------------------------- |
-  | `0`   | No additional operations                                 |
-  | `1`   | Attempt to terminate processes before uninstallation     |
-  | `2`   | Remove Link directories (those created by [Link](#link)) |
-  | `3`   | Clean up temporary data during uninstallation            |
+  | Value | Action                                                      |
+  | ----- | ----------------------------------------------------------- |
+  | `0`   | No additional operations                                    |
+  | `1`   | Attempt to terminate processes before uninstallation/update |
+  | `2`   | Remove Link directories (those created by [Link](#link))    |
+  | `3`   | Clean up temporary data during uninstallation               |
 
 ### Persist
 
