@@ -974,50 +974,51 @@ function A-Remove-LinkDirectory {
 #endregion
 
 
-#region 重写 scoop 内置函数
+#region 重写部分 scoop 内置函数，添加本地化输出
 
 if ($ShowCN) {
 
-    # function abort: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L334
-    Set-Item -Path Function:\abort -Value {
-        param($msg, [int] $exit_code = 1)
+    #region function abort: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L334
+    # Set-Item -Path Function:\abort -Value {
+    #     param($msg, [int] $exit_code = 1)
 
-        function Translate-Message {
-            param([string]$msg)
+    #     function Translate-Message {
+    #         param([string]$msg)
 
-            if ($msgMap.ContainsKey($msg)) {
-                return $msgMap[$msg]
-            }
+    #         if ($msgMap.ContainsKey($msg)) {
+    #             return $msgMap[$msg]
+    #         }
 
-            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
-                $escapedPattern = [regex]::Escape($pattern)
-                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
+    #         foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
+    #             $escapedPattern = [regex]::Escape($pattern)
+    #             $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
 
-                $match = [regex]::Match($msg, $regexPattern)
-                if ($match.Success) {
-                    $translation = $msgMap[$pattern]
-                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
-                            param($m)
-                            $index = [int]$m.Groups[1].Value
-                            return $match.Groups[$index + 1].Value.Trim()
-                        })
-                    return $translation
-                }
-            }
+    #             $match = [regex]::Match($msg, $regexPattern)
+    #             if ($match.Success) {
+    #                 $translation = $msgMap[$pattern]
+    #                 $translation = [regex]::Replace($translation, '\{(\d+)\}', {
+    #                         param($m)
+    #                         $index = [int]$m.Groups[1].Value
+    #                         return $match.Groups[$index + 1].Value.Trim()
+    #                     })
+    #                 return $translation
+    #             }
+    #         }
 
-            return $msg
-        }
+    #         return $msg
+    #     }
 
-        $msgMap = @{
-            "Error: Version 'current' is not allowed!" = "错误：不允许使用 current 作为版本!"
-        }
+    #     $msgMap = @{
+    #         "Error: Version 'current' is not allowed!" = "错误：不允许使用 current 作为版本!"
+    #     }
 
-        $translated = Translate-Message $msg
+    #     $translated = Translate-Message $msg
 
-        Write-Host $msg -f red; exit $exit_code
-    }
+    #     Write-Host $msg -f red; exit $exit_code
+    # }
+    #endregion
 
-    # function error: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L335
+    #region function error: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L335
     Set-Item -Path Function:\error -Value {
         param($msg)
 
@@ -1054,12 +1055,13 @@ if ($ShowCN) {
         $translated = Translate-Message $msg
         Write-Host "错误 $translated" -f darkred
     }
+    #endregion
 
     # function warn: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L336
 
     # function info: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L337
 
-    # function success: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L367
+    #region function success: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L367
     Set-Item -Path Function:\success -Value {
         param($msg)
 
@@ -1098,8 +1100,9 @@ if ($ShowCN) {
 
         Write-Host $translated -ForegroundColor darkgreen
     }
+    #endregion
 
-    # function show_notes: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L923
+    #region function show_notes: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L923
     Set-Item -Path Function:\show_notes -Value {
         param($manifest, $dir, $original_dir, $persist_dir)
 
@@ -1119,8 +1122,9 @@ if ($ShowCN) {
             Write-Output (wraptext (substitute $note @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir }))
         }
     }
+    #endregion
 
-    # function Invoke-HookScript: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L713
+    #region function Invoke-HookScript: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L713
     Set-Item -Path Function:\Invoke-HookScript -Value {
         [CmdletBinding()]
         param(
@@ -1147,8 +1151,9 @@ if ($ShowCN) {
             Write-Host '完成!' -ForegroundColor Green
         }
     }
+    #endregion
 
-    # function ensure_install_dir_not_in_path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L849
+    #region function ensure_install_dir_not_in_path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L849
     Set-Item -Path Function:\ensure_install_dir_not_in_path -Value {
         param($dir, $global)
         $path = (Get-EnvVar -Name 'PATH' -Global:$global)
@@ -1166,8 +1171,9 @@ if ($ShowCN) {
             }
         }
     }
+    #endregion
 
-    # function link_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L804
+    #region function link_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L804
     Set-Item -Path Function:\link_current -Value {
         param($versiondir)
         if (get_config NO_JUNCTION) { return $versiondir.ToString() }
@@ -1190,8 +1196,9 @@ if ($ShowCN) {
         attrib $currentdir +R /L
         return $currentdir
     }
+    #endregion
 
-    # function create_shims: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L746
+    #region function create_shims: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L746
     Set-Item -Path Function:\create_shims -Value {
         param($manifest, $dir, $global, $arch)
         $shims = @(arch_specific 'bin' $manifest $arch)
@@ -1213,7 +1220,9 @@ if ($ShowCN) {
             shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
         }
     }
-    # function shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L952
+    #endregion
+
+    #region function shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L952
     Set-Item -Path Function:\shim -Value {
         param($path, $global, $name, $arg)
         if (!(Test-Path $path)) { abort "不能 shim '$(fname $path)': 不能找到 $path" }
@@ -1241,7 +1250,7 @@ if ($ShowCN) {
             $target_subsystem = Get-PESubsystem $resolved_path
             if ($target_subsystem -eq 2) {
                 # we only want to make shims GUI
-                Write-Output "$shim.exe 是一个 GUI 二进制文件。"
+                Write-Output "$shim.exe 是一个 GUI 二进制文件"
                 Set-PESubsystem "$shim.exe" $target_subsystem | Out-Null
             }
         }
@@ -1364,8 +1373,9 @@ if ($ShowCN) {
             ) -join "`n" | Out-UTF8File $shim -NoNewLine
         }
     }
+    #endregion
 
-    # function warn_on_overwrite: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L933
+    #region function warn_on_overwrite: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L933
     Set-Item -Path Function:\warn_on_overwrite -Value {
         param($shim, $path)
         if (!(Test-Path $shim)) {
@@ -1386,8 +1396,9 @@ if ($ShowCN) {
         $filename = (fname $path) -replace '\.shim$', '.exe'
         warn "正在覆盖$(if ($shim_app) { "从应用程序 $shim_app 安装的" }) shim ('$shimname' -> '$filename')"
     }
+    #endregion
 
-    # function startmenu_shortcut: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L31
+    #region function startmenu_shortcut: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L31
     Set-Item -Path Function:\startmenu_shortcut -Value {
         param([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global)
         if (!$target.Exists) {
@@ -1418,8 +1429,9 @@ if ($ShowCN) {
         $wsShell.Save()
         Write-Host "为 $(fname $target) 创建了快捷方式 $shortcutName"
     }
+    #endregion
 
-    # function install_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L1
+    #region function install_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L1
     Set-Item -Path Function:\install_psmodule -Value {
         param($manifest, $dir, $global)
 
@@ -1447,8 +1459,9 @@ if ($ShowCN) {
 
         New-DirectoryJunction $linkfrom $dir | Out-Null
     }
+    #endregion
 
-    # function ensure_in_psmodulepath: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L44
+    #region function ensure_in_psmodulepath: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L44
     Set-Item -Path Function:\ensure_in_psmodulepath -Value {
         param($dir, $global)
         $path = Get-EnvVar -Name 'PSModulePath' -Global:$global
@@ -1461,8 +1474,9 @@ if ($ShowCN) {
             Set-EnvVar -Name 'PSModulePath' -Value "$dir;$path" -Global:$global
         }
     }
+    #endregion
 
-    # function Add-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L96
+    #region function Add-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L96
     Set-Item -Path Function:\Add-Path -Value {
         param(
             [string[]]$Path,
@@ -1488,8 +1502,9 @@ if ($ShowCN) {
             $env:PATH = (@($Path) + $strippedPath) -join ';'
         }
     }
+    #endregion
 
-    # function persist_data: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1011
+    #region function persist_data: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1011
     Set-Item -Path Function:\persist_data -Value {
         param($manifest, $original_dir, $persist_dir)
         $persist = $manifest.persist
@@ -1545,8 +1560,9 @@ if ($ShowCN) {
             }
         }
     }
+    #endregion
 
-    # function test_running_process: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1100
+    #region function test_running_process: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1100
     Set-Item -Path Function:\test_running_process -Value {
         param($app, $global)
         $processdir = appdir $app $global | Convert-Path
@@ -1568,8 +1584,9 @@ if ($ShowCN) {
             return $false
         }
     }
+    #endregion
 
-    # function rm_shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L765
+    #region function rm_shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L765
     Set-Item -Path Function:\rm_shim -Value {
         param($name, $shimdir, $app)
         '', '.shim', '.cmd', '.ps1' | ForEach-Object {
@@ -1595,8 +1612,9 @@ if ($ShowCN) {
             }
         }
     }
+    #endregion
 
-    # function unlink_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L831
+    #region function unlink_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L831
     Set-Item -Path Function:\unlink_current -Value {
         param($versiondir)
         if (get_config NO_JUNCTION) { return $versiondir.ToString() }
@@ -1614,8 +1632,9 @@ if ($ShowCN) {
         }
         return $versiondir
     }
+    #endregion
 
-    # function rm_startmenu_shortcuts: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L62
+    #region function rm_startmenu_shortcuts: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L62
     Set-Item -Path Function:\rm_startmenu_shortcuts -Value {
         param($manifest, $global, $arch)
         $shortcuts = @(arch_specific 'shortcuts' $manifest $arch)
@@ -1628,8 +1647,9 @@ if ($ShowCN) {
             }
         }
     }
+    #endregion
 
-    # function uninstall_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L27
+    #region function uninstall_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L27
     Set-Item -Path Function:\uninstall_psmodule -Value {
         param($manifest, $dir, $global)
         $psmodule = $manifest.psmodule
@@ -1647,8 +1667,9 @@ if ($ShowCN) {
             Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
         }
     }
+    #endregion
 
-    # function Remove-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L122
+    #region function Remove-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L122
     Set-Item -Path Function:\Remove-Path -Value {
         param(
             [string[]]$Path,
@@ -1677,8 +1698,9 @@ if ($ShowCN) {
             return $inPath
         }
     }
+    #endregion
 
-    # function ensure_none_failed: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L947
+    #region function ensure_none_failed: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L947
     Set-Item -Path Function:\ensure_none_failed -Value {
         param($apps)
         foreach ($app in $apps) {
@@ -1704,77 +1726,73 @@ if ($ShowCN) {
             }
         }
     }
-
-
-    #region 重写后无效果的一些函数
-
-    #region Invoke-Installer
-    # function Invoke-Installer: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L654
-    # Set-Item -Path Function:\Invoke-Installer -Value {
-    #     [CmdletBinding()]
-    #     param (
-    #         [string]
-    #         $Path,
-    #         [string[]]
-    #         $Name,
-    #         [psobject]
-    #         $Manifest,
-    #         [Alias('Arch', 'Architecture')]
-    #         [ValidateSet('32bit', '64bit', 'arm64')]
-    #         [string]
-    #         $ProcessorArchitecture,
-    #         [string]
-    #         $AppName,
-    #         [switch]
-    #         $Global,
-    #         [switch]
-    #         $Uninstall
-    #     )
-    #     $type = if ($Uninstall) { 'uninstaller' } else { 'installer' }
-    #     $installer = arch_specific $type $Manifest $ProcessorArchitecture
-    #     if ($installer.file -or $installer.args) {
-    #         # Installer filename is either explicit defined ('installer.file') or file name in the first URL
-    #         if (!$Name) {
-    #             $Name = url_filename @(url $manifest $architecture)
-    #         }
-    #         $progName = "$Path\$(coalesce $installer.file $Name[0])"
-    #         if (!(is_in_dir $Path $progName)) {
-    #             abort "应用清单(manifest)错误: $((Get-Culture).TextInfo.ToTitleCase($type)) $progName 在应用程序目录之外。"
-    #         }
-    #         elseif (!(Test-Path $progName)) {
-    #             abort "$((Get-Culture).TextInfo.ToTitleCase($type)) $progName 不存在。"
-    #         }
-    #         $substitutions = @{
-    #             '$dir'     = $Path
-    #             '$global'  = $Global
-    #             '$version' = $Manifest.version
-    #         }
-    #         $fnArgs = substitute $installer.args $substitutions
-    #         if ($progName.EndsWith('.ps1')) {
-    #             & $progName @fnArgs
-    #         }
-    #         else {
-    #             $status = Invoke-ExternalCommand $progName -ArgumentList $fnArgs -Activity "正在运行 $type ..."
-    #             if (!$status) {
-    #                 if ($Uninstall) {
-    #                     abort '卸载已中止。'
-    #                 }
-    #                 else {
-    #                     abort "安装已中止。在再次尝试之前，您可能需要运行 scoop uninstall $appName"
-    #                 }
-    #             }
-    #             # Don't remove installer if "keep" flag is set to true
-    #             if (!$installer.keep) {
-    #                 Remove-Item $progName
-    #             }
-    #         }
-    #     }
-    #     Invoke-HookScript -HookType $type -Manifest $Manifest -ProcessorArchitecture $ProcessorArchitecture
-    # }
     #endregion
 
-    #region Invoke-ExternalCommand
-    # function Invoke-ExternalCommand: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L720
+    #region function Invoke-Installer: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L654
+    Set-Item -Path Function:\Invoke-Installer -Value {
+        [CmdletBinding()]
+        param (
+            [string]
+            $Path,
+            [string[]]
+            $Name,
+            [psobject]
+            $Manifest,
+            [Alias('Arch', 'Architecture')]
+            [ValidateSet('32bit', '64bit', 'arm64')]
+            [string]
+            $ProcessorArchitecture,
+            [string]
+            $AppName,
+            [switch]
+            $Global,
+            [switch]
+            $Uninstall
+        )
+        $type = if ($Uninstall) { 'uninstaller' } else { 'installer' }
+        $installer = arch_specific $type $Manifest $ProcessorArchitecture
+        if ($installer.file -or $installer.args) {
+            # Installer filename is either explicit defined ('installer.file') or file name in the first URL
+            if (!$Name) {
+                $Name = url_filename @(url $manifest $architecture)
+            }
+            $progName = "$Path\$(coalesce $installer.file $Name[0])"
+            if (!(is_in_dir $Path $progName)) {
+                abort "应用清单(manifest)错误: $((Get-Culture).TextInfo.ToTitleCase($type)) $progName 在应用程序目录之外。"
+            }
+            elseif (!(Test-Path $progName)) {
+                abort "$((Get-Culture).TextInfo.ToTitleCase($type)) $progName 不存在。"
+            }
+            $substitutions = @{
+                '$dir'     = $Path
+                '$global'  = $Global
+                '$version' = $Manifest.version
+            }
+            $fnArgs = substitute $installer.args $substitutions
+            if ($progName.EndsWith('.ps1')) {
+                & $progName @fnArgs
+            }
+            else {
+                $status = Invoke-ExternalCommand $progName -ArgumentList $fnArgs -Activity "正在运行 $type ..."
+                if (!$status) {
+                    if ($Uninstall) {
+                        abort '卸载已中止。'
+                    }
+                    else {
+                        abort "安装已中止。在再次尝试之前，您可能需要运行 scoop uninstall $appName"
+                    }
+                }
+                # Don't remove installer if "keep" flag is set to true
+                if (!$installer.keep) {
+                    Remove-Item $progName
+                }
+            }
+        }
+        Invoke-HookScript -HookType $type -Manifest $Manifest -ProcessorArchitecture $ProcessorArchitecture
+    }
+    #endregion
+
+    #region function Invoke-ExternalCommand: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L720
     # Set-Item -Path Function:\Invoke-ExternalCommand -Value {
     #     [CmdletBinding(DefaultParameterSetName = "Default")]
     #     [OutputType([Boolean])]
@@ -1908,89 +1926,87 @@ if ($ShowCN) {
     # }
     #endregion
 
-    #region install_app
-    # function install_app: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L8
-    # Set-Item -Path Function:\install_app -Value {
-    #     param($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true)
-    #     $app, $manifest, $bucket, $url = Get-Manifest $app
+    #region function install_app: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L8
+    Set-Item -Path Function:\install_app -Value {
+        param($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true)
+        $app, $manifest, $bucket, $url = Get-Manifest $app
 
-    #     if (!$manifest) {
-    #         abort "无法找到应用 $app 的清单文件(manifest) $(if ($bucket) { "(来自存储桶 $bucket)" } elseif ($url) { "(URL地址: $url)" })"
-    #     }
+        if (!$manifest) {
+            abort "无法找到应用 $app 的清单文件(manifest) $(if ($bucket) { "(来自存储桶 $bucket)" } elseif ($url) { "(URL地址: $url)" })"
+        }
 
-    #     $version = $manifest.version
-    #     if (!$version) { abort "清单(manifest) 中没有指定一个版本号。" }
-    #     if ($version -match '[^\w\.\-\+_]') {
-    #         abort "清单(manifest) 中的版本具有不支持的字符: $($matches[0])"
-    #     }
+        $version = $manifest.version
+        if (!$version) { abort "清单(manifest) 中没有指定一个版本号。" }
+        if ($version -match '[^\w\.\-\+_]') {
+            abort "清单(manifest) 中的版本具有不支持的字符: $($matches[0])"
+        }
 
-    #     $is_nightly = $version -eq 'nightly'
-    #     if ($is_nightly) {
-    #         $version = nightly_version
-    #         $check_hash = $false
-    #     }
+        $is_nightly = $version -eq 'nightly'
+        if ($is_nightly) {
+            $version = nightly_version
+            $check_hash = $false
+        }
 
-    #     $architecture = Get-SupportedArchitecture $manifest $architecture
-    #     if ($null -eq $architecture) {
-    #         error "$app 不支持当前的架构!"
-    #         return
-    #     }
+        $architecture = Get-SupportedArchitecture $manifest $architecture
+        if ($null -eq $architecture) {
+            error "$app 不支持当前的架构!"
+            return
+        }
 
-    #     if ((get_config SHOW_MANIFEST $false) -and ($MyInvocation.ScriptName -notlike '*scoop-update*')) {
-    #         Write-Host "应用清单(manifest): $app.json"
-    #         $style = get_config CAT_STYLE
-    #         if ($style) {
-    #             $manifest | ConvertToPrettyJson | bat --no-paging --style $style --language json
-    #         }
-    #         else {
-    #             $manifest | ConvertToPrettyJson
-    #         }
-    #         $answer = Read-Host -Prompt '继续安装? [Y/n]'
-    #         if (($answer -eq 'n') -or ($answer -eq 'N')) {
-    #             return
-    #         }
-    #     }
-    #     Write-Output "正在从 $(if ($bucket) { "$bucket bucket" } else { "$url" }) 安装 $app ($version) [$architecture]"
+        if ((get_config SHOW_MANIFEST $false) -and ($MyInvocation.ScriptName -notlike '*scoop-update*')) {
+            Write-Host "应用清单(manifest): $app.json"
+            $style = get_config CAT_STYLE
+            if ($style) {
+                $manifest | ConvertToPrettyJson | bat --no-paging --style $style --language json
+            }
+            else {
+                $manifest | ConvertToPrettyJson
+            }
+            $answer = Read-Host -Prompt '继续安装? [Y/n]'
+            if (($answer -eq 'n') -or ($answer -eq 'N')) {
+                return
+            }
+        }
+        Write-Output "正在从 $(if ($bucket) { "$bucket bucket" } else { "$url" }) 中安装 $app ($version) [$architecture]"
 
-    #     $dir = ensure (versiondir $app $version $global)
-    #     $original_dir = $dir # keep reference to real (not linked) directory
-    #     $persist_dir = persistdir $app $global
+        $dir = ensure (versiondir $app $version $global)
+        $original_dir = $dir # keep reference to real (not linked) directory
+        $persist_dir = persistdir $app $global
 
-    #     $fname = Invoke-ScoopDownload $app $version $manifest $bucket $architecture $dir $use_cache $check_hash
-    #     Invoke-Extraction -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture
-    #     Invoke-HookScript -HookType 'pre_install' -Manifest $manifest -ProcessorArchitecture $architecture
+        $fname = Invoke-ScoopDownload $app $version $manifest $bucket $architecture $dir $use_cache $check_hash
+        Invoke-Extraction -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture
+        Invoke-HookScript -HookType 'pre_install' -Manifest $manifest -ProcessorArchitecture $architecture
 
-    #     Invoke-Installer -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture -AppName $app -Global:$global
-    #     ensure_install_dir_not_in_path $dir $global
-    #     $dir = link_current $dir
-    #     create_shims $manifest $dir $global $architecture
-    #     create_startmenu_shortcuts $manifest $dir $global $architecture
-    #     install_psmodule $manifest $dir $global
-    #     env_add_path $manifest $dir $global $architecture
-    #     env_set $manifest $global $architecture
+        Invoke-Installer -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture -AppName $app -Global:$global
+        ensure_install_dir_not_in_path $dir $global
+        $dir = link_current $dir
+        create_shims $manifest $dir $global $architecture
+        create_startmenu_shortcuts $manifest $dir $global $architecture
+        install_psmodule $manifest $dir $global
+        env_add_path $manifest $dir $global $architecture
+        env_set $manifest $global $architecture
 
-    #     # persist data
-    #     persist_data $manifest $original_dir $persist_dir
-    #     persist_permission $manifest $global
+        # persist data
+        persist_data $manifest $original_dir $persist_dir
+        persist_permission $manifest $global
 
-    #     Invoke-HookScript -HookType 'post_install' -Manifest $manifest -ProcessorArchitecture $architecture
+        Invoke-HookScript -HookType 'post_install' -Manifest $manifest -ProcessorArchitecture $architecture
 
-    #     # save info for uninstall
-    #     save_installed_manifest $app $bucket $dir $url
-    #     save_install_info @{ 'architecture' = $architecture; 'url' = $url; 'bucket' = $bucket } $dir
+        # save info for uninstall
+        save_installed_manifest $app $bucket $dir $url
+        save_install_info @{ 'architecture' = $architecture; 'url' = $url; 'bucket' = $bucket } $dir
 
-    #     if ($manifest.suggest) {
-    #         $suggested[$app] = $manifest.suggest
-    #     }
+        if ($manifest.suggest) {
+            $suggested[$app] = $manifest.suggest
+        }
 
-    #     success "已成功安装 $app ($version)!"
+        success "$app ($version) 已成功安装!"
 
-    #     show_notes $manifest $dir $original_dir $persist_dir
-    # }
+        show_notes $manifest $dir $original_dir $persist_dir
+    }
     #endregion
 
-    #region Invoke-ScoopDownload
-    # function Invoke-ScoopDownload: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L539
+    #region function Invoke-ScoopDownload: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L539
     # Set-Item -Path Function:\Invoke-ScoopDownload -Value {
     #     param($app, $version, $manifest, $bucket, $architecture, $dir, $use_cache = $true, $check_hash = $true)
     #     # we only want to show this warning once
@@ -2041,198 +2057,197 @@ if ($ShowCN) {
     # }
     #endregion
 
-    #region Invoke-CachedAria2Download
-    # function Invoke-CachedAria2Download: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L186
-    # Set-Item -Path Function:\Invoke-CachedAria2Download -Value {
-    #     param($app, $version, $manifest, $architecture, $dir, $cookies = $null, $use_cache = $true, $check_hash = $true)
-    #     $data = @{}
-    #     $urls = @(script:url $manifest $architecture)
+    #region function Invoke-CachedAria2Download: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L186
+    Set-Item -Path Function:\Invoke-CachedAria2Download -Value {
+        param($app, $version, $manifest, $architecture, $dir, $cookies = $null, $use_cache = $true, $check_hash = $true)
 
-    #     # aria2 input file
-    #     $urlstxt = Join-Path $cachedir "$app.txt"
-    #     $urlstxt_content = ''
-    #     $download_finished = $true
+        $data = @{}
+        $urls = @(script:url $manifest $architecture)
 
-    #     # aria2 options
-    #     $options = @(
-    #         "--input-file='$urlstxt'"
-    #         "--user-agent='$(Get-UserAgent)'"
-    #         '--allow-overwrite=true'
-    #         '--auto-file-renaming=false'
-    #         "--retry-wait=$(get_config 'aria2-retry-wait' 2)"
-    #         "--split=$(get_config 'aria2-split' 5)"
-    #         "--max-connection-per-server=$(get_config 'aria2-max-connection-per-server' 5)"
-    #         "--min-split-size=$(get_config 'aria2-min-split-size' '5M')"
-    #         '--console-log-level=warn'
-    #         '--enable-color=false'
-    #         '--no-conf=true'
-    #         '--follow-metalink=true'
-    #         '--metalink-preferred-protocol=https'
-    #         '--min-tls-version=TLSv1.2'
-    #         "--stop-with-process=$PID"
-    #         '--continue'
-    #         '--summary-interval=0'
-    #         '--auto-save-interval=1'
-    #     )
+        # aria2 input file
+        $urlstxt = Join-Path $cachedir "$app.txt"
+        $urlstxt_content = ''
+        $download_finished = $true
 
-    #     if ($cookies) {
-    #         $options += "--header='Cookie: $(cookie_header $cookies)'"
-    #     }
+        # aria2 options
+        $options = @(
+            "--input-file='$urlstxt'"
+            "--user-agent='$(Get-UserAgent)'"
+            '--allow-overwrite=true'
+            '--auto-file-renaming=false'
+            "--retry-wait=$(get_config 'aria2-retry-wait' 2)"
+            "--split=$(get_config 'aria2-split' 5)"
+            "--max-connection-per-server=$(get_config 'aria2-max-connection-per-server' 5)"
+            "--min-split-size=$(get_config 'aria2-min-split-size' '5M')"
+            '--console-log-level=warn'
+            '--enable-color=false'
+            '--no-conf=true'
+            '--follow-metalink=true'
+            '--metalink-preferred-protocol=https'
+            '--min-tls-version=TLSv1.2'
+            "--stop-with-process=$PID"
+            '--continue'
+            '--summary-interval=0'
+            '--auto-save-interval=1'
+        )
 
-    #     $proxy = get_config PROXY
-    #     if ($proxy -ne 'none') {
-    #         if ([Net.Webrequest]::DefaultWebProxy.Address) {
-    #             $options += "--all-proxy='$([Net.Webrequest]::DefaultWebProxy.Address.Authority)'"
-    #         }
-    #         if ([Net.Webrequest]::DefaultWebProxy.Credentials.UserName) {
-    #             $options += "--all-proxy-user='$([Net.Webrequest]::DefaultWebProxy.Credentials.UserName)'"
-    #         }
-    #         if ([Net.Webrequest]::DefaultWebProxy.Credentials.Password) {
-    #             $options += "--all-proxy-passwd='$([Net.Webrequest]::DefaultWebProxy.Credentials.Password)'"
-    #         }
-    #     }
+        if ($cookies) {
+            $options += "--header='Cookie: $(cookie_header $cookies)'"
+        }
 
-    #     $more_options = get_config 'aria2-options'
-    #     if ($more_options) {
-    #         $options += $more_options
-    #     }
+        $proxy = get_config PROXY
+        if ($proxy -ne 'none') {
+            if ([Net.Webrequest]::DefaultWebProxy.Address) {
+                $options += "--all-proxy='$([Net.Webrequest]::DefaultWebProxy.Address.Authority)'"
+            }
+            if ([Net.Webrequest]::DefaultWebProxy.Credentials.UserName) {
+                $options += "--all-proxy-user='$([Net.Webrequest]::DefaultWebProxy.Credentials.UserName)'"
+            }
+            if ([Net.Webrequest]::DefaultWebProxy.Credentials.Password) {
+                $options += "--all-proxy-passwd='$([Net.Webrequest]::DefaultWebProxy.Credentials.Password)'"
+            }
+        }
 
-    #     foreach ($url in $urls) {
-    #         $data.$url = @{
-    #             'target'    = Join-Path $dir (url_filename $url)
-    #             'cachename' = fname (cache_path $app $version $url)
-    #             'source'    = cache_path $app $version $url
-    #         }
+        $more_options = get_config 'aria2-options'
+        if ($more_options) {
+            $options += $more_options
+        }
 
-    #         if ((Test-Path $data.$url.source) -and -not((Test-Path "$($data.$url.source).aria2") -or (Test-Path $urlstxt)) -and $use_cache) {
-    #             Write-Host '从缓存中加载 ' -NoNewline
-    #             Write-Host $(url_remote_filename $url) -f Cyan
-    #         }
-    #         else {
-    #             $download_finished = $false
-    #             # create aria2 input file content
-    #             try {
-    #                 $try_url = handle_special_urls $url
-    #             }
-    #             catch {
-    #                 if ($_.Exception.Response.StatusCode -eq 'Unauthorized') {
-    #                     warn '令牌可能会被错误配置。'
-    #                 }
-    #             }
-    #             $urlstxt_content += "$try_url`n"
-    #             if (!$url.Contains('sourceforge.net')) {
-    #                 $urlstxt_content += "    referer=$(strip_filename $url)`n"
-    #             }
-    #             $urlstxt_content += "    dir=$cachedir`n"
-    #             $urlstxt_content += "    out=$($data.$url.cachename)`n"
-    #         }
-    #     }
+        foreach ($url in $urls) {
+            $data.$url = @{
+                'target'    = Join-Path $dir (url_filename $url)
+                'cachename' = fname (cache_path $app $version $url)
+                'source'    = cache_path $app $version $url
+            }
 
-    #     if (-not($download_finished)) {
-    #         # write aria2 input file
-    #         if ($urlstxt_content -ne '') {
-    #             ensure $cachedir | Out-Null
-    #             # Write aria2 input-file with UTF8NoBOM encoding
-    #             $urlstxt_content | Out-UTF8File -FilePath $urlstxt
-    #         }
+            if ((Test-Path $data.$url.source) -and -not((Test-Path "$($data.$url.source).aria2") -or (Test-Path $urlstxt)) -and $use_cache) {
+                Write-Host '从缓存中加载 ' -NoNewline
+                Write-Host $(url_remote_filename $url) -f Cyan
+            }
+            else {
+                $download_finished = $false
+                # create aria2 input file content
+                try {
+                    $try_url = handle_special_urls $url
+                }
+                catch {
+                    if ($_.Exception.Response.StatusCode -eq 'Unauthorized') {
+                        warn '令牌可能会被错误配置。'
+                    }
+                }
+                $urlstxt_content += "$try_url`n"
+                if (!$url.Contains('sourceforge.net')) {
+                    $urlstxt_content += "    referer=$(strip_filename $url)`n"
+                }
+                $urlstxt_content += "    dir=$cachedir`n"
+                $urlstxt_content += "    out=$($data.$url.cachename)`n"
+            }
+        }
 
-    #         # build aria2 command
-    #         $aria2 = "& '$(Get-HelperPath -Helper Aria2)' $($options -join ' ')"
+        if (-not($download_finished)) {
+            # write aria2 input file
+            if ($urlstxt_content -ne '') {
+                ensure $cachedir | Out-Null
+                # Write aria2 input-file with UTF8NoBOM encoding
+                $urlstxt_content | Out-UTF8File -FilePath $urlstxt
+            }
 
-    #         # handle aria2 console output
-    #         Write-Host '正在使用 aria2 下载...'
+            # build aria2 command
+            $aria2 = "& '$(Get-HelperPath -Helper Aria2)' $($options -join ' ')"
 
-    #         # Set console output encoding to UTF8 for non-ASCII characters printing
-    #         $oriConsoleEncoding = [Console]::OutputEncoding
-    #         [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding
+            # handle aria2 console output
+            Write-Host '正在使用 aria2 下载...'
 
-    #         Invoke-Command ([scriptblock]::Create($aria2)) | ForEach-Object {
-    #             # Skip blank lines
-    #             if ([String]::IsNullOrWhiteSpace($_)) { return }
+            # Set console output encoding to UTF8 for non-ASCII characters printing
+            $oriConsoleEncoding = [Console]::OutputEncoding
+            [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
-    #             # Prevent potential overlaping of text when one line is shorter
-    #             $len = $Host.UI.RawUI.WindowSize.Width - $_.Length - 20
-    #             $blank = if ($len -gt 0) { ' ' * $len } else { '' }
-    #             $color = 'Gray'
+            Invoke-Command ([scriptblock]::Create($aria2)) | ForEach-Object {
+                # Skip blank lines
+                if ([String]::IsNullOrWhiteSpace($_)) { return }
 
-    #             if ($_.StartsWith('(OK):')) {
-    #                 $noNewLine = $true
-    #                 $color = 'Green'
-    #             }
-    #             elseif ($_.StartsWith('[') -and $_.EndsWith(']')) {
-    #                 $noNewLine = $true
-    #                 $color = 'Cyan'
-    #             }
-    #             elseif ($_.StartsWith('Download Results:')) {
-    #                 $noNewLine = $false
-    #             }
+                # Prevent potential overlaping of text when one line is shorter
+                $len = $Host.UI.RawUI.WindowSize.Width - $_.Length - 20
+                $blank = if ($len -gt 0) { ' ' * $len } else { '' }
+                $color = 'Gray'
 
-    #             Write-Host "`r下载: $_$blank" -ForegroundColor $color -NoNewline:$noNewLine
-    #         }
-    #         Write-Host ''
+                if ($_.StartsWith('(OK):')) {
+                    $noNewLine = $true
+                    $color = 'Green'
+                }
+                elseif ($_.StartsWith('[') -and $_.EndsWith(']')) {
+                    $noNewLine = $true
+                    $color = 'Cyan'
+                }
+                elseif ($_.StartsWith('Download Results:')) {
+                    $noNewLine = $false
+                }
 
-    #         if ($lastexitcode -gt 0) {
-    #             error "下载失败! (Error $lastexitcode) $(aria_exit_code $lastexitcode)"
-    #             error $urlstxt_content
-    #             error $aria2
-    #             abort $(new_issue_msg $app $bucket 'download via aria2 failed')
-    #         }
+                Write-Host "`r下载: $_$blank" -ForegroundColor $color -NoNewline:$noNewLine
+            }
+            Write-Host ''
 
-    #         # remove aria2 input file when done
-    #         if (Test-Path $urlstxt, "$($data.$url.source).aria2*") {
-    #             Remove-Item $urlstxt -Force -ErrorAction SilentlyContinue
-    #             Remove-Item "$($data.$url.source).aria2*" -Force -ErrorAction SilentlyContinue
-    #         }
+            if ($lastexitcode -gt 0) {
+                error "下载失败! (Error $lastexitcode) $(aria_exit_code $lastexitcode)"
+                error $urlstxt_content
+                error $aria2
+                abort $(new_issue_msg $app $bucket 'download via aria2 failed')
+            }
 
-    #         # Revert console encoding
-    #         [Console]::OutputEncoding = $oriConsoleEncoding
-    #     }
+            # remove aria2 input file when done
+            if (Test-Path $urlstxt, "$($data.$url.source).aria2*") {
+                Remove-Item $urlstxt -Force -ErrorAction SilentlyContinue
+                Remove-Item "$($data.$url.source).aria2*" -Force -ErrorAction SilentlyContinue
+            }
 
-    #     foreach ($url in $urls) {
+            # Revert console encoding
+            [Console]::OutputEncoding = $oriConsoleEncoding
+        }
 
-    #         $metalink_filename = get_filename_from_metalink $data.$url.source
-    #         if ($metalink_filename) {
-    #             Remove-Item $data.$url.source -Force
-    #             Rename-Item -Force (Join-Path -Path $cachedir -ChildPath $metalink_filename) $data.$url.source
-    #         }
+        foreach ($url in $urls) {
 
-    #         # run hash checks
-    #         if ($check_hash) {
-    #             $manifest_hash = hash_for_url $manifest $url $architecture
-    #             $ok, $err = check_hash $data.$url.source $manifest_hash $(show_app $app $bucket)
-    #             if (!$ok) {
-    #                 error $err
-    #                 if (Test-Path $data.$url.source) {
-    #                     # rm cached file
-    #                     Remove-Item $data.$url.source -Force -ErrorAction SilentlyContinue
-    #                     Remove-Item "$($data.$url.source).aria2*" -Force -ErrorAction SilentlyContinue
-    #                 }
-    #                 if ($url.Contains('sourceforge.net')) {
-    #                     Write-Host -f yellow 'SourceForge.net 经常导致哈希验证失败。请在提交工单前重试。'
-    #                 }
-    #                 abort $(new_issue_msg $app $bucket 'hash 检查失败')
-    #             }
-    #         }
+            $metalink_filename = get_filename_from_metalink $data.$url.source
+            if ($metalink_filename) {
+                Remove-Item $data.$url.source -Force
+                Rename-Item -Force (Join-Path -Path $cachedir -ChildPath $metalink_filename) $data.$url.source
+            }
 
-    #         # copy or move file to target location
-    #         if (!(Test-Path $data.$url.source) ) {
-    #             abort $(new_issue_msg $app $bucket '缓存文件不存在')
-    #         }
+            # run hash checks
+            if ($check_hash) {
+                $manifest_hash = hash_for_url $manifest $url $architecture
+                $ok, $err = check_hash $data.$url.source $manifest_hash $(show_app $app $bucket)
+                if (!$ok) {
+                    error $err
+                    if (Test-Path $data.$url.source) {
+                        # rm cached file
+                        Remove-Item $data.$url.source -Force -ErrorAction SilentlyContinue
+                        Remove-Item "$($data.$url.source).aria2*" -Force -ErrorAction SilentlyContinue
+                    }
+                    if ($url.Contains('sourceforge.net')) {
+                        Write-Host -f yellow 'SourceForge.net 经常导致哈希验证失败。请在提交工单前重试。'
+                    }
+                    abort $(new_issue_msg $app $bucket 'hash 检查失败')
+                }
+            }
 
-    #         if (!($dir -eq $cachedir)) {
-    #             if ($use_cache) {
-    #                 Copy-Item $data.$url.source $data.$url.target
-    #             }
-    #             else {
-    #                 Move-Item $data.$url.source $data.$url.target -Force
-    #             }
-    #         }
-    #     }
-    # }
+            # copy or move file to target location
+            if (!(Test-Path $data.$url.source) ) {
+                abort $(new_issue_msg $app $bucket '缓存文件不存在')
+            }
+
+            if (!($dir -eq $cachedir)) {
+                if ($use_cache) {
+                    Copy-Item $data.$url.source $data.$url.target
+                }
+                else {
+                    Move-Item $data.$url.source $data.$url.target -Force
+                }
+            }
+        }
+    }
     #endregion
 
-    #region Invoke-CachedDownload
-    # function Invoke-CachedDownload: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L84
+    #region function Invoke-CachedDownload: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L84
     # Set-Item -Path Function:\Invoke-CachedDownload -Value {
     #     param($app, $version, $url, $to, $cookies = $null, $use_cache = $true)
     #     $cached = cache_path $app $version $url
@@ -2255,74 +2270,72 @@ if ($ShowCN) {
     # }
     #endregion
 
-    #region Invoke-Extraction
-    # function Invoke-Extraction: https://github.com/ScoopInstaller/Scoop/blob/master/lib/decompress.ps1#L3
-    # Set-Item -Path Function:\Invoke-Extraction -Value {
-    #     param (
-    #         [string]
-    #         $Path,
-    #         [string[]]
-    #         $Name,
-    #         [psobject]
-    #         $Manifest,
-    #         [Alias('Arch', 'Architecture')]
-    #         [string]
-    #         $ProcessorArchitecture
-    #     )
+    #region function Invoke-Extraction: https://github.com/ScoopInstaller/Scoop/blob/master/lib/decompress.ps1#L3
+    Set-Item -Path Function:\Invoke-Extraction -Value {
+        param (
+            [string]
+            $Path,
+            [string[]]
+            $Name,
+            [psobject]
+            $Manifest,
+            [Alias('Arch', 'Architecture')]
+            [string]
+            $ProcessorArchitecture
+        )
 
-    #     $uri = @(url $Manifest $ProcessorArchitecture)
-    #     # 'extract_dir' and 'extract_to' are paired
-    #     $extractDir = @(extract_dir $Manifest $ProcessorArchitecture)
-    #     $extractTo = @(extract_to $Manifest $ProcessorArchitecture)
-    #     $extracted = 0
+        $uri = @(url $Manifest $ProcessorArchitecture)
+        # 'extract_dir' and 'extract_to' are paired
+        $extractDir = @(extract_dir $Manifest $ProcessorArchitecture)
+        $extractTo = @(extract_to $Manifest $ProcessorArchitecture)
+        $extracted = 0
 
-    #     for ($i = 0; $i -lt $Name.Length; $i++) {
-    #         # work out extraction method, if applicable
-    #         $extractFn = $null
-    #         switch -regex ($Name[$i]) {
-    #             '\.zip$' {
-    #                 if ((Test-HelperInstalled -Helper 7zip) -or ((get_config 7ZIPEXTRACT_USE_EXTERNAL) -and (Test-CommandAvailable 7z))) {
-    #                     $extractFn = 'Expand-7zipArchive'
-    #                 }
-    #                 else {
-    #                     $extractFn = 'Expand-ZipArchive'
-    #                 }
-    #                 continue
-    #             }
-    #             '\.msi$' {
-    #                 $extractFn = 'Expand-MsiArchive'
-    #                 continue
-    #             }
-    #             '\.exe$' {
-    #                 if ($Manifest.innosetup) {
-    #                     $extractFn = 'Expand-InnoArchive'
-    #                 }
-    #                 continue
-    #             }
-    #             { Test-7zipRequirement -Uri $_ } {
-    #                 $extractFn = 'Expand-7zipArchive'
-    #                 continue
-    #             }
-    #         }
-    #         if ($extractFn) {
-    #             $fnArgs = @{
-    #                 Path            = Join-Path $Path $Name[$i]
-    #                 DestinationPath = Join-Path $Path $extractTo[$extracted]
-    #                 ExtractDir      = $extractDir[$extracted]
-    #             }
-    #             Write-Host '正在解压 ' -NoNewline
-    #             Write-Host $(url_remote_filename $uri[$i]) -ForegroundColor Cyan -NoNewline
-    #             Write-Host ' ... ' -NoNewline
-    #             & $extractFn @fnArgs -Removal
-    #             Write-Host '完成。' -ForegroundColor Green
-    #             $extracted++
-    #         }
-    #     }
-    # }
+        for ($i = 0; $i -lt $Name.Length; $i++) {
+            # work out extraction method, if applicable
+            $extractFn = $null
+            switch -regex ($Name[$i]) {
+                '\.zip$' {
+                    if ((Test-HelperInstalled -Helper 7zip) -or ((get_config 7ZIPEXTRACT_USE_EXTERNAL) -and (Test-CommandAvailable 7z))) {
+                        $extractFn = 'Expand-7zipArchive'
+                    }
+                    else {
+                        $extractFn = 'Expand-ZipArchive'
+                    }
+                    continue
+                }
+                '\.msi$' {
+                    $extractFn = 'Expand-MsiArchive'
+                    continue
+                }
+                '\.exe$' {
+                    if ($Manifest.innosetup) {
+                        $extractFn = 'Expand-InnoArchive'
+                    }
+                    continue
+                }
+                { Test-7zipRequirement -Uri $_ } {
+                    $extractFn = 'Expand-7zipArchive'
+                    continue
+                }
+            }
+            if ($extractFn) {
+                $fnArgs = @{
+                    Path            = Join-Path $Path $Name[$i]
+                    DestinationPath = Join-Path $Path $extractTo[$extracted]
+                    ExtractDir      = $extractDir[$extracted]
+                }
+                Write-Host '正在解压 ' -NoNewline
+                Write-Host $(url_remote_filename $uri[$i]) -ForegroundColor Cyan -NoNewline
+                Write-Host ' ... ' -NoNewline
+                & $extractFn @fnArgs -Removal
+                Write-Host '完成。' -ForegroundColor Green
+                $extracted++
+            }
+        }
+    }
     #endregion
 
-    #region Confirm-InstallationStatus
-    # function Confirm-InstallationStatus: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L1142
+    #region function Confirm-InstallationStatus: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L1142
     # Set-Item -Path Function:\Confirm-InstallationStatus -Value {
     #     [CmdletBinding()]
     #     [OutputType([Object[]])]
@@ -2366,8 +2379,6 @@ if ($ShowCN) {
     #     }
     #     return , $Installed
     # }
-    #endregion
-
     #endregion
 }
 #endregion
