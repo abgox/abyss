@@ -976,6 +976,48 @@ function A-Remove-LinkDirectory {
 
 #region 重写部分 scoop 内置函数，添加本地化输出
 
+#region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
+Set-Item -Path Function:\env_set {
+    param($manifest, $global, $arch)
+    $env_set = arch_specific 'env_set' $manifest $arch
+
+    if ($env_set) {
+        $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            $val = $ExecutionContext.InvokeCommand.ExpandString($env_set.$($name))
+            if ($PSUICulture -like "zh*" -and $cmd) {
+                Write-Output "正在设置环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name = $val"
+            }
+            else {
+                Write-Output "Setting environment variable$(if($global){'(system)'}else{'(for current user)'}): $name = $val"
+            }
+            Set-EnvVar -Name $name -Value $val -Global:$global
+            Set-Content env:\$name $val
+        }
+    }
+}
+#endregion
+
+#region function env_rm: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L912
+Set-Item -Path Function:\env_rm {
+    param($manifest, $global, $arch)
+    $env_set = arch_specific 'env_set' $manifest $arch
+    if ($env_set) {
+        $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            if ($PSUICulture -like "zh*" -and $cmd) {
+                Write-Output "正在移除环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name"
+            }
+            else {
+                Write-Output "Removing environment variable$(if($global){'(system)'}else{'(for current user)'}): $name"
+            }
+            Set-EnvVar -Name $name -Value $null -Global:$global
+            if (Test-Path env:\$name) { Remove-Item env:\$name }
+        }
+    }
+}
+#endregion
+
 if ($ShowCN) {
 
     #region 用于打印的函数
@@ -1806,39 +1848,6 @@ if ($ShowCN) {
             Write-Host "正在移除快捷方式: $(friendly_path $shortcut)"
             if (Test-Path -Path $shortcut) {
                 Remove-Item $shortcut
-            }
-        }
-    }
-    #endregion
-
-    #region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
-    Set-Item -Path Function:\env_set {
-        param($manifest, $global, $arch)
-        $env_set = arch_specific 'env_set' $manifest $arch
-
-        if ($env_set) {
-            $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
-                $name = $_.Name
-                $val = $ExecutionContext.InvokeCommand.ExpandString($env_set.$($name))
-                Write-Output "正在设置环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name = $val"
-
-                Set-EnvVar -Name $name -Value $val -Global:$global
-                Set-Content env:\$name $val
-            }
-        }
-    }
-    #endregion
-
-    #region function env_rm: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L912
-    Set-Item -Path Function:\env_rm {
-        param($manifest, $global, $arch)
-        $env_set = arch_specific 'env_set' $manifest $arch
-        if ($env_set) {
-            $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
-                $name = $_.Name
-                Write-Output "正在移除环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name"
-                Set-EnvVar -Name $name -Value $null -Global:$global
-                if (Test-Path env:\$name) { Remove-Item env:\$name }
             }
         }
     }
