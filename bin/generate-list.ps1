@@ -88,10 +88,10 @@ foreach ($_ in $manifests) {
     }
     if ($isLink) {
         if ($isCN) {
-            $label = '<code title="' + $app + ' 使用 Link 进行数据持久化">`Link`</code>'
+            $label = '<code title="' + $app + ' 使用 Link 进行数据持久化">Link</code>'
         }
         else {
-            $label = '<code title="' + $app + ' uses Link for data persistence">`Link`</code>'
+            $label = '<code title="' + $app + ' uses Link for data persistence">Link</code>'
         }
 
         $info += $label
@@ -99,19 +99,19 @@ foreach ($_ in $manifests) {
     else {
         if ($isPersist) {
             if ($isCN) {
-                $label = '<code title="' + $app + ' 使用 Scoop 官方的 persist 实现">`✔️`</code>'
+                $label = '<code title="' + $app + ' 使用 Scoop 官方的 persist 实现">✔️</code>'
             }
             else {
-                $label = '<code title="' + $app + ' uses Scoop official persist implementation">`✔️`</code>'
+                $label = '<code title="' + $app + ' uses Scoop official persist implementation">✔️</code>'
             }
             $info += $label
         }
         else {
             if ($isCN) {
-                $label = '<code title="' + $app + ' 未实现 persist，因为不存在数据或者没有实现的必要">`➖`</code>'
+                $label = '<code title="' + $app + ' 未实现 persist，因为不存在数据或者没有实现的必要">➖</code>'
             }
             else {
-                $label = '<code title="' + $app + ' does not implement persist because there is no data or no need for persist">`➖`</code>'
+                $label = '<code title="' + $app + ' does not implement persist because there is no data or no need for persist">➖</code>'
             }
             $info += $label
         }
@@ -123,43 +123,43 @@ foreach ($_ in $manifests) {
     ## Msix
     $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
     if ($isCN) {
-        $label = '<code title="' + $app + ' 通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据、安装、卸载、更新">`Msix`</code>'
+        $label = '<code title="' + $app + ' 通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据、安装、卸载、更新">Msix</code>'
     }
     else {
-        $label = '<code title="' + $app + ' installs using Msix, installation directory is not in Scoop, Scoop only manages data, installation, uninstallation, and updates">`Msix`</code>'
+        $label = '<code title="' + $app + ' installs using Msix, installation directory is not in Scoop, Scoop only manages data, installation, uninstallation, and updates">Msix</code>'
     }
     $tag += if ($isMsix) { $label }
 
     ## NeedAdminToInstall
     $NeedAdminToInstall = A-Test-ScriptPattern $json '.*A-New-LinkFile.*'
 
-    $label = if ($isCN) { '<code title=" ' + $app + ' 需要管理员权限才能安装">`AdminToInstall`</code>' } else { '<code title="' + $app + ' needs admin permission to install">`AdminToInstall`</code>' }
+    $label = if ($isCN) { '<code title=" ' + $app + ' 需要管理员权限才能安装">AdminToInstall</code>' } else { '<code title="' + $app + ' needs admin permission to install">AdminToInstall</code>' }
     $tag += if ($NeedAdminToInstall) { $label }
 
     ## font
     if ($isCN) {
-        $label = '<code title="' + $app + ' 是一个字体">`Font`</code>'
+        $label = '<code title="' + $app + ' 是一个字体">Font</code>'
     }
     else {
-        $label = '<code title="' + $app + ' is a font">`Font`</code>'
+        $label = '<code title="' + $app + ' is a font">Font</code>'
     }
     $tag += if ($app -like "Font-*") { $label }
 
     ## NoUpdate
     if ($isCN) {
-        $label = '<code title="Scoop 不会检查它的版本更新，因为 ' + $app + ' 没有配置 autoupdate">`NoUpdate`</code>'
+        $label = '<code title="Scoop 不会检查它的版本更新，因为 ' + $app + ' 没有配置 autoupdate">NoUpdate</code>'
     }
     else {
-        $label = '<code title="Scoop will not check for its version updates, because autoupdate is not configured">`NoUpdate`</code>'
+        $label = '<code title="Scoop will not check for its version updates, because autoupdate is not configured">NoUpdate</code>'
     }
     $tag += if (!$json.autoupdate) { $label }
 
     ## PSModule
     if ($isCN) {
-        $label = '<code title="' + $app + ' 是一个 Powershell 模块">`PSModule`</code>'
+        $label = '<code title="' + $app + ' 是一个 Powershell 模块">PSModule</code>'
     }
     else {
-        $label = $label = '<code title="' + $app + ' is a Powershell module">`PSModule`</code>'
+        $label = $label = '<code title="' + $app + ' is a Powershell module">PSModule</code>'
     }
     $tag += if ($json.psmodule) { $label }
 
