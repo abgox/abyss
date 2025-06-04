@@ -37,7 +37,9 @@
 
 - For apps that cannot use [persist](#persist), [Link](#link) will be used as a fallback.
 - When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
-- Improved information output during installation and uninstallation, displaying messages in the appropriate language (Chinese or English) based on the system locale.
+- Improved information output during installation and uninstallation.
+  - Localized output. (Chinese/English)
+  - Shows notifications for environment variable modifications.
 
 ---
 
