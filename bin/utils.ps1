@@ -6,8 +6,8 @@
         - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包
         - A-Ensure-Directory: 确保指定目录路径存在
         - A-New-PersistFile: 创建文件，可选择设置内容
-        - A-New-LinkFile: 创建文件链接(SymbolicLink)
-        - A-New-LinkDirectory: 创建目录链接(Junction)
+        - A-New-LinkFile: 为文件创建 SymbolicLink
+        - A-New-LinkDirectory: 为目录创建 Junction
         - A-Add-Font: 安装字体
         - A-Add-MsixPackage: 安装 AppX/Msix 包
         - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
@@ -17,7 +17,7 @@
 
         - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
         - A-Stop-Service: 尝试停止指定的应用服务，以确保能正常卸载
-        - A-Remove-Link: 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的链接
+        - A-Remove-Link: 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction
         - A-Remove-Font: 移除字体
         - A-Remove-MsixPackage: 卸载 AppX/Msix 包
         - A-Remove-PowerToysRunPlugin: 移除 PowerToys Run 插件
@@ -27,7 +27,7 @@
     3. 特别的:
 
         - A-Test-Admin: 检查是否以管理员权限运行
-        - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件 autoupdate 更新
+        - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
     #>
 
 
@@ -63,7 +63,7 @@ if ($ShowCN) {
         "Failed to $cmd $app."                                                                          = "无法$($cmdMap_zh[$cmd]) $app"
         "Please stop the relevant processes and try to $cmd $app again."                                = "请停止相关进程并再次尝试$($cmdMap_zh[$cmd]) $app。"
         "Failed to remove:"                                                                             = "无法删除:"
-        "Linking"                                                                                       = "正在链接:"
+        "Linking"                                                                                       = "正在创建链接:"
         "Successfully terminated the process:"                                                          = "成功终止进程:"
         "Failed to terminate the process:"                                                              = "无法终止进程:"
         "You may need to try $cmd $app again or use administrator permissions."                         = "可能需要再次尝试$($cmdMap_zh[$cmd]) $app 或者使用管理员权限。"
@@ -185,7 +185,7 @@ function A-New-PersistFile {
 function A-New-LinkFile {
     <#
     .SYNOPSIS
-        创建文件链接 (SymbolicLink)
+        为文件创建 SymbolicLink
 
     .PARAMETER LinkPaths
         要创建链接的路径数组 (将被替换为链接)
@@ -195,7 +195,7 @@ function A-New-LinkFile {
 
     .EXAMPLE
         A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml") -LinkTargets @("$persist_dir\starship.toml")
-        创建文件链接: "$env:UserProfile\.config\starship.toml" => "$persist_dir\starship.toml"
+        为文件创建 SymbolicLink: "$env:UserProfile\.config\starship.toml" => "$persist_dir\starship.toml"
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -215,14 +215,14 @@ function A-New-LinkFile {
     $isAdmin = A-Test-Admin
     if (!$isAdmin) {
         if ($ShowCN) {
-            Write-Host "$app 需要去链接以下数据文件:" -ForegroundColor Yellow
+            Write-Host "$app 需要为以下文件创建 SymbolicLink:" -ForegroundColor Yellow
             for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
                 Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
             }
-            Write-Host "这个文件链接操作需要管理员权限。`n请使用管理员身份再次尝试。" -ForegroundColor Red
+            Write-Host "创建 SymbolicLink 需要管理员权限。`n请使用管理员身份再次尝试。" -ForegroundColor Red
         }
         else {
-            Write-Host "$app needs to link the following data file:"
+            Write-Host "$app needs to create symbolic links the following data file:"
             for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
                 Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
             }
@@ -238,7 +238,7 @@ function A-New-LinkFile {
 function A-New-LinkDirectory {
     <#
     .SYNOPSIS
-        创建目录链接 (Junction)
+        为目录创建 Junction
 
     .PARAMETER LinkPaths
         要创建链接的路径数组 (将被替换为链接)
@@ -248,8 +248,8 @@ function A-New-LinkDirectory {
 
     .EXAMPLE
         A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data") -LinkTargets @("$persist_dir\nvim","$persist_dir\nvim-data")
-        创建目录链接: "$env:LocalAppData\nvim" => "$persist_dir\nvim"
-        创建目录链接: "$env:LocalAppData\nvim-data" => "$persist_dir\nvim-data"
+        为目录创建 Junction: "$env:LocalAppData\nvim" => "$persist_dir\nvim"
+        为目录创建 Junction: "$env:LocalAppData\nvim-data" => "$persist_dir\nvim-data"
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -267,10 +267,10 @@ function A-New-LinkDirectory {
 function A-Remove-Link {
     <#
     .SYNOPSIS
-        删除符号链接
+        删除链接: SymbolicLink、Junction
 
     .DESCRIPTION
-        该函数用于删除在应用安装过程中创建的链接
+        该函数用于删除在应用安装过程中创建的 SymbolicLink 和 Junction
     #>
 
     if (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") {
@@ -796,10 +796,10 @@ function A-Get-InstallerInfoFromWinget {
 function A-New-Link {
     <#
     .SYNOPSIS
-        创建符号链接
+        创建链接: SymbolicLink 或 Junction
 
     .DESCRIPTION
-        该函数用于将现有文件替换为指向目标文件的符号链接。
+        该函数用于将现有文件替换为指向目标文件的链接。
         如果源文件存在且不是链接，会先将其内容复制到目标文件，然后删除源文件并创建链接。
 
     .PARAMETER linkPaths
@@ -978,6 +978,8 @@ function A-Remove-LinkDirectory {
 
 if ($ShowCN) {
 
+    #region 用于打印的函数
+
     #region function abort: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L334
     # Set-Item -Path Function:\abort -Value {
     #     param($msg, [int] $exit_code = 1)
@@ -1102,27 +1104,9 @@ if ($ShowCN) {
     }
     #endregion
 
-    #region function show_notes: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L923
-    Set-Item -Path Function:\show_notes -Value {
-        param($manifest, $dir, $original_dir, $persist_dir)
-
-        $label = 'Notes'
-        $note = $manifest.notes
-        $noteCN = $manifest.'notes-cn'
-
-        if ($noteCN) {
-            $label = '说明'
-            $note = $noteCN
-        }
-
-        if ($note) {
-            Write-Host
-            Write-Output $label
-            Write-Output '-----'
-            Write-Output (wraptext (substitute $note @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir }))
-        }
-    }
     #endregion
+
+    #region 安装前的准备，下载安装包
 
     #region function Invoke-HookScript: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L713
     Set-Item -Path Function:\Invoke-HookScript -Value {
@@ -1170,839 +1154,6 @@ if ($ShowCN) {
                 $removed | ForEach-Object { warn "安装程序在系统环境变量 Path 中添加了 $_，你可能需要手动删除 (需要管理员权限)。" }
             }
         }
-    }
-    #endregion
-
-    #region function link_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L804
-    Set-Item -Path Function:\link_current -Value {
-        param($versiondir)
-        if (get_config NO_JUNCTION) { return $versiondir.ToString() }
-
-        $currentdir = "$(Split-Path $versiondir)\current"
-
-        Write-Host "正在链接: $(friendly_path $currentdir) => $(friendly_path $versiondir)"
-
-        if ($currentdir -eq $versiondir) {
-            abort "错误：不允许使用 current 作为版本!"
-        }
-
-        if (Test-Path $currentdir) {
-            # remove the junction
-            attrib -R /L $currentdir
-            Remove-Item $currentdir -Recurse -Force -ErrorAction Stop
-        }
-
-        New-DirectoryJunction $currentdir $versiondir | Out-Null
-        attrib $currentdir +R /L
-        return $currentdir
-    }
-    #endregion
-
-    #region function create_shims: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L746
-    Set-Item -Path Function:\create_shims -Value {
-        param($manifest, $dir, $global, $arch)
-        $shims = @(arch_specific 'bin' $manifest $arch)
-        $shims | Where-Object { $_ -ne $null } | ForEach-Object {
-            $target, $name, $arg = shim_def $_
-            Write-Output "正在为 $name 创建 shim"
-
-            if (Test-Path "$dir\$target" -PathType leaf) {
-                $bin = "$dir\$target"
-            }
-            elseif (Test-Path $target -PathType leaf) {
-                $bin = $target
-            }
-            else {
-                $bin = (Get-Command $target).Source
-            }
-            if (!$bin) { abort "不能创建 shim '$target': 文件不存在。" }
-
-            shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
-        }
-    }
-    #endregion
-
-    #region function shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L952
-    Set-Item -Path Function:\shim -Value {
-        param($path, $global, $name, $arg)
-        if (!(Test-Path $path)) { abort "不能 shim '$(fname $path)': 不能找到 $path" }
-        $abs_shimdir = ensure (shimdir $global)
-        Add-Path -Path $abs_shimdir -Global:$global
-        if (!$name) { $name = strip_ext (fname $path) }
-
-        $shim = "$abs_shimdir\$($name.tolower())"
-
-        # convert to relative path
-        $resolved_path = Convert-Path $path
-        Push-Location $abs_shimdir
-        $relative_path = Resolve-Path -Relative $resolved_path
-        Pop-Location
-
-        if ($path -match '\.(exe|com)$') {
-            # for programs with no awareness of any shell
-            warn_on_overwrite "$shim.shim" $path
-            Copy-Item (get_shim_path) "$shim.exe" -Force
-            Write-Output "path = `"$resolved_path`"" | Out-UTF8File "$shim.shim"
-            if ($arg) {
-                Write-Output "args = $arg" | Out-UTF8File "$shim.shim" -Append
-            }
-
-            $target_subsystem = Get-PESubsystem $resolved_path
-            if ($target_subsystem -eq 2) {
-                # we only want to make shims GUI
-                Write-Output "$shim.exe 是一个 GUI 二进制文件"
-                Set-PESubsystem "$shim.exe" $target_subsystem | Out-Null
-            }
-        }
-        elseif ($path -match '\.(bat|cmd)$') {
-            # shim .bat, .cmd so they can be used by programs with no awareness of PSH
-            warn_on_overwrite "$shim.cmd" $path
-            @(
-                "@rem $resolved_path",
-                "@`"$resolved_path`" $arg %*"
-            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
-
-            warn_on_overwrite $shim $path
-            @(
-                "#!/bin/sh",
-                "# $resolved_path",
-                "MSYS2_ARG_CONV_EXCL=/C cmd.exe /C `"$resolved_path`" $arg `"$@`""
-            ) -join "`n" | Out-UTF8File $shim -NoNewLine
-        }
-        elseif ($path -match '\.ps1$') {
-            # if $path points to another drive resolve-path prepends .\ which could break shims
-            warn_on_overwrite "$shim.ps1" $path
-            $ps1text = if ($relative_path -match '^(\.\\)?\w:.*$') {
-                @(
-                    "# $resolved_path",
-                    "`$path = `"$path`"",
-                    "if (`$MyInvocation.ExpectingInput) { `$input | & `$path $arg @args } else { & `$path $arg @args }",
-                    "exit `$LASTEXITCODE"
-                )
-            }
-            else {
-                @(
-                    "# $resolved_path",
-                    "`$path = Join-Path `$PSScriptRoot `"$relative_path`"",
-                    "if (`$MyInvocation.ExpectingInput) { `$input | & `$path $arg @args } else { & `$path $arg @args }",
-                    "exit `$LASTEXITCODE"
-                )
-            }
-            $ps1text -join "`r`n" | Out-UTF8File "$shim.ps1"
-
-            # make ps1 accessible from cmd.exe
-            warn_on_overwrite "$shim.cmd" $path
-            @(
-                "@rem $resolved_path",
-                "@echo off",
-                "where /q pwsh.exe",
-                "if %errorlevel% equ 0 (",
-                "    pwsh -noprofile -ex unrestricted -file `"$resolved_path`" $arg %*",
-                ") else (",
-                "    powershell -noprofile -ex unrestricted -file `"$resolved_path`" $arg %*",
-                ")"
-            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
-
-            warn_on_overwrite $shim $path
-            @(
-                "#!/bin/sh",
-                "# $resolved_path",
-                "if command -v pwsh.exe > /dev/null 2>&1; then",
-                "    pwsh.exe -noprofile -ex unrestricted -file `"$resolved_path`" $arg `"$@`"",
-                "else",
-                "    powershell.exe -noprofile -ex unrestricted -file `"$resolved_path`" $arg `"$@`"",
-                "fi"
-            ) -join "`n" | Out-UTF8File $shim -NoNewLine
-        }
-        elseif ($path -match '\.jar$') {
-            warn_on_overwrite "$shim.cmd" $path
-            @(
-                "@rem $resolved_path",
-                "@pushd $(Split-Path $resolved_path -Parent)",
-                "@java -jar `"$resolved_path`" $arg %*",
-                "@popd"
-            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
-
-            warn_on_overwrite $shim $path
-            @(
-                "#!/bin/sh",
-                "# $resolved_path",
-                "if [ `$WSL_INTEROP ]",
-                'then',
-                "  cd `$(wslpath -u '$(Split-Path $resolved_path -Parent)')",
-                'else',
-                "  cd `$(cygpath -u '$(Split-Path $resolved_path -Parent)')",
-                'fi',
-                "java.exe -jar `"$resolved_path`" $arg `"$@`""
-            ) -join "`n" | Out-UTF8File $shim -NoNewLine
-        }
-        elseif ($path -match '\.py$') {
-            warn_on_overwrite "$shim.cmd" $path
-            @(
-                "@rem $resolved_path",
-                "@python `"$resolved_path`" $arg %*"
-            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
-
-            warn_on_overwrite $shim $path
-            @(
-                '#!/bin/sh',
-                "# $resolved_path",
-                "python.exe `"$resolved_path`" $arg `"$@`""
-            ) -join "`n" | Out-UTF8File $shim -NoNewLine
-        }
-        else {
-            warn_on_overwrite "$shim.cmd" $path
-            @(
-                "@rem $resolved_path",
-                "@bash `"`$(wslpath -u '$resolved_path')`" $arg %* 2>nul",
-                '@if %errorlevel% neq 0 (',
-                "  @bash `"`$(cygpath -u '$resolved_path')`" $arg %* 2>nul",
-                ')'
-            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
-
-            warn_on_overwrite $shim $path
-            @(
-                '#!/bin/sh',
-                "# $resolved_path",
-                "if [ `$WSL_INTEROP ]",
-                'then',
-                "  `"`$(wslpath -u '$resolved_path')`" $arg `"$@`"",
-                'else',
-                "  `"`$(cygpath -u '$resolved_path')`" $arg `"$@`"",
-                'fi'
-            ) -join "`n" | Out-UTF8File $shim -NoNewLine
-        }
-    }
-    #endregion
-
-    #region function warn_on_overwrite: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L933
-    Set-Item -Path Function:\warn_on_overwrite -Value {
-        param($shim, $path)
-        if (!(Test-Path $shim)) {
-            return
-        }
-        $shim_app = get_app_name_from_shim $shim
-        $path_app = get_app_name $path
-        if ($shim_app -eq $path_app) {
-            return
-        }
-        else {
-            if (Test-Path -Path "$shim.$path_app" -PathType Leaf) {
-                Remove-Item -Path "$shim.$path_app" -Force -ErrorAction SilentlyContinue
-            }
-            Rename-Item -Path $shim -NewName "$shim.$shim_app" -ErrorAction SilentlyContinue
-        }
-        $shimname = (fname $shim) -replace '\.shim$', '.exe'
-        $filename = (fname $path) -replace '\.shim$', '.exe'
-        warn "正在覆盖$(if ($shim_app) { "从应用程序 $shim_app 安装的" }) shim ('$shimname' -> '$filename')"
-    }
-    #endregion
-
-    #region function startmenu_shortcut: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L31
-    Set-Item -Path Function:\startmenu_shortcut -Value {
-        param([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global)
-        if (!$target.Exists) {
-            Write-Host -f DarkRed "为 $(fname $target) 创建快捷方式 $shortcutName 失败了: 没有找到 $target"
-            return
-        }
-        if ($icon -and !$icon.Exists) {
-            Write-Host -f DarkRed "为 $(fname $target) 创建快捷方式 $shortcutName 失败了: 没有找到 icon 图标 $icon"
-            return
-        }
-
-        $scoop_startmenu_folder = shortcut_folder $global
-        $subdirectory = [System.IO.Path]::GetDirectoryName($shortcutName)
-        if ($subdirectory) {
-            $subdirectory = ensure $([System.IO.Path]::Combine($scoop_startmenu_folder, $subdirectory))
-        }
-
-        $wsShell = New-Object -ComObject WScript.Shell
-        $wsShell = $wsShell.CreateShortcut("$scoop_startmenu_folder\$shortcutName.lnk")
-        $wsShell.TargetPath = $target.FullName
-        $wsShell.WorkingDirectory = $target.DirectoryName
-        if ($arguments) {
-            $wsShell.Arguments = $arguments
-        }
-        if ($icon -and $icon.Exists) {
-            $wsShell.IconLocation = $icon.FullName
-        }
-        $wsShell.Save()
-        Write-Host "为 $(fname $target) 创建了快捷方式 $shortcutName"
-    }
-    #endregion
-
-    #region function install_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L1
-    Set-Item -Path Function:\install_psmodule -Value {
-        param($manifest, $dir, $global)
-
-        $psmodule = $manifest.psmodule
-        if (!$psmodule) { return }
-
-        $targetdir = ensure (modulesdir $global)
-
-        ensure_in_psmodulepath $targetdir $global
-
-        $module_name = $psmodule.name
-        if (!$module_name) {
-            abort “无效的应用清单(manifest)：psmodule 中缺少 name 属性。”
-        }
-
-        $linkfrom = "$targetdir\$module_name"
-        Write-Host "正在安装 PowerShell 模块: $module_name"
-
-        Write-Host "正在链接: $(friendly_path $linkfrom) => $(friendly_path $dir)"
-
-        if (Test-Path $linkfrom) {
-            warn "$(friendly_path $linkfrom) 已经存在，它将被替换。"
-            Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
-        }
-
-        New-DirectoryJunction $linkfrom $dir | Out-Null
-    }
-    #endregion
-
-    #region function ensure_in_psmodulepath: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L44
-    Set-Item -Path Function:\ensure_in_psmodulepath -Value {
-        param($dir, $global)
-        $path = Get-EnvVar -Name 'PSModulePath' -Global:$global
-        if (!$global -and $null -eq $path) {
-            $path = "$env:USERPROFILE\Documents\WindowsPowerShell\Modules"
-        }
-        if ($path -notmatch [Regex]::Escape($dir)) {
-            Write-Output "正在添加 $(friendly_path $dir) 到 $(if($global){'全局(global)'}else{''}) PowerShell 模块 Path 中。"
-
-            Set-EnvVar -Name 'PSModulePath' -Value "$dir;$path" -Global:$global
-        }
-    }
-    #endregion
-
-    #region function Add-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L96
-    Set-Item -Path Function:\Add-Path -Value {
-        param(
-            [string[]]$Path,
-            [string]$TargetEnvVar = 'PATH',
-            [switch]$Global,
-            [switch]$Force,
-            [switch]$Quiet
-        )
-
-        # future sessions
-        $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
-        if (!$inPath -or $Force) {
-            if (!$Quiet) {
-                $Path | ForEach-Object {
-                    Write-Host "正在添加 $(friendly_path $_) 到$(if ($Global) {'全局(global)'} else { '' }) 环境变量 Path 中。"
-                }
-            }
-            Set-EnvVar -Name $TargetEnvVar -Value ((@($Path) + $strippedPath) -join ';') -Global:$Global
-        }
-        # current session
-        $inPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
-        if (!$inPath -or $Force) {
-            $env:PATH = (@($Path) + $strippedPath) -join ';'
-        }
-    }
-    #endregion
-
-    #region function persist_data: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1011
-    Set-Item -Path Function:\persist_data -Value {
-        param($manifest, $original_dir, $persist_dir)
-        $persist = $manifest.persist
-        if ($persist) {
-            $persist_dir = ensure $persist_dir
-
-            if ($persist -is [String]) {
-                $persist = @($persist)
-            }
-
-            $persist | ForEach-Object {
-                $source, $target = persist_def $_
-
-                Write-Host "正在持久化数据(Persisting): $source"
-
-                $source = $source.TrimEnd('/').TrimEnd('\\')
-
-                $source = "$dir\$source"
-                $target = "$persist_dir\$target"
-
-                # if we have had persist data in the store, just create link and go
-                if (Test-Path $target) {
-                    # if there is also a source data, rename it (to keep a original backup)
-                    if (Test-Path $source) {
-                        Move-Item -Force $source "$source.original"
-                    }
-                    # we don't have persist data in the store, move the source to target, then create link
-                }
-                elseif (Test-Path $source) {
-                    # ensure target parent folder exist
-                    ensure (Split-Path -Path $target) | Out-Null
-                    Move-Item $source $target
-                    # we don't have neither source nor target data! we need to create an empty target,
-                    # but we can't make a judgement that the data should be a file or directory...
-                    # so we create a directory by default. to avoid this, use pre_install
-                    # to create the source file before persisting (DON'T use post_install)
-                }
-                else {
-                    $target = New-Object System.IO.DirectoryInfo($target)
-                    ensure $target | Out-Null
-                }
-
-                # create link
-                if (is_directory $target) {
-                    # target is a directory, create junction
-                    New-DirectoryJunction $source $target | Out-Null
-                    attrib $source +R /L
-                }
-                else {
-                    # target is a file, create hard link
-                    New-Item -Path $source -ItemType HardLink -Value $target | Out-Null
-                }
-            }
-        }
-    }
-    #endregion
-
-    #region function test_running_process: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1100
-    Set-Item -Path Function:\test_running_process -Value {
-        param($app, $global)
-        $processdir = appdir $app $global | Convert-Path
-        $running_processes = Get-Process | Where-Object { $_.Path -like "$processdir\*" } | Out-String
-
-        if ($running_processes) {
-            if (get_config IGNORE_RUNNING_PROCESSES) {
-                warn "$app 的以下实例仍在运行。Scoop 被配置为忽略此情况。"
-                Write-Host $running_processes
-                return $false
-            }
-            else {
-                error "$app 的以下实例仍在运行。请关闭它们然后重试。"
-                Write-Host $running_processes
-                return $true
-            }
-        }
-        else {
-            return $false
-        }
-    }
-    #endregion
-
-    #region function rm_shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L765
-    Set-Item -Path Function:\rm_shim -Value {
-        param($name, $shimdir, $app)
-        '', '.shim', '.cmd', '.ps1' | ForEach-Object {
-            $shimPath = "$shimdir\$name$_"
-            $altShimPath = "$shimPath.$app"
-            if ($app -and (Test-Path -Path $altShimPath -PathType Leaf)) {
-                Write-Output "正在移除 shim: $name$_.$app"
-                Remove-Item $altShimPath
-            }
-            elseif (Test-Path -Path $shimPath -PathType Leaf) {
-                Write-Output "正在移除 shim: $name$_"
-                Remove-Item $shimPath
-                $oldShims = Get-Item -Path "$shimPath.*" -Exclude '*.shim', '*.cmd', '*.ps1'
-                if ($null -eq $oldShims) {
-                    if ($_ -eq '.shim') {
-                        Write-Output "正在移除 shim: $name.exe"
-                        Remove-Item -Path "$shimdir\$name.exe"
-                    }
-                }
-                else {
-                (@($oldShims) | Sort-Object -Property LastWriteTimeUtc)[-1] | Rename-Item -NewName { $_.Name -replace '\.[^.]*$', '' }
-                }
-            }
-        }
-    }
-    #endregion
-
-    #region function unlink_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L831
-    Set-Item -Path Function:\unlink_current -Value {
-        param($versiondir)
-        if (get_config NO_JUNCTION) { return $versiondir.ToString() }
-        $currentdir = "$(Split-Path $versiondir)\current"
-
-        if (Test-Path $currentdir) {
-            Write-Host "正在解除链接 $(friendly_path $currentdir)"
-
-            # remove read-only attribute on link
-            attrib $currentdir -R /L
-
-            # remove the junction
-            Remove-Item $currentdir -Recurse -Force -ErrorAction Stop
-            return $currentdir
-        }
-        return $versiondir
-    }
-    #endregion
-
-    #region function rm_startmenu_shortcuts: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L62
-    Set-Item -Path Function:\rm_startmenu_shortcuts -Value {
-        param($manifest, $global, $arch)
-        $shortcuts = @(arch_specific 'shortcuts' $manifest $arch)
-        $shortcuts | Where-Object { $_ -ne $null } | ForEach-Object {
-            $name = $_.item(1)
-            $shortcut = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath("$(shortcut_folder $global)\$name.lnk")
-            Write-Host "正在移除快捷方式: $(friendly_path $shortcut)"
-            if (Test-Path -Path $shortcut) {
-                Remove-Item $shortcut
-            }
-        }
-    }
-    #endregion
-
-    #region function uninstall_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L27
-    Set-Item -Path Function:\uninstall_psmodule -Value {
-        param($manifest, $dir, $global)
-        $psmodule = $manifest.psmodule
-        if (!$psmodule) { return }
-
-        $module_name = $psmodule.name
-        Write-Host "正在卸载 PowerShell 模块: $module_name"
-
-        $targetdir = modulesdir $global
-
-        $linkfrom = "$targetdir\$module_name"
-        if (Test-Path $linkfrom) {
-            Write-Host "正在移除: $(friendly_path $linkfrom)"
-            $linkfrom = Convert-Path $linkfrom
-            Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
-        }
-    }
-    #endregion
-
-    #region function Remove-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L122
-    Set-Item -Path Function:\Remove-Path -Value {
-        param(
-            [string[]]$Path,
-            [string]$TargetEnvVar = 'PATH',
-            [switch]$Global,
-            [switch]$Quiet,
-            [switch]$PassThru
-        )
-
-        # future sessions
-        $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
-        if ($inPath) {
-            if (!$Quiet) {
-                $Path | ForEach-Object {
-                    Write-Host "正在从$(if ($Global) {'全局(global)'} else {''}) 环境变量 Path 中移除 $(friendly_path $_)"
-                }
-            }
-            Set-EnvVar -Name $TargetEnvVar -Value $strippedPath -Global:$Global
-        }
-        # current session
-        $inSessionPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
-        if ($inSessionPath) {
-            $env:PATH = $strippedPath
-        }
-        if ($PassThru) {
-            return $inPath
-        }
-    }
-    #endregion
-
-    #region function ensure_none_failed: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L947
-    Set-Item -Path Function:\ensure_none_failed -Value {
-        param($apps)
-        foreach ($app in $apps) {
-            $app = ($app -split '/|\\')[-1] -replace '\.json$', ''
-            foreach ($global in $true, $false) {
-                if ($global) {
-                    $instArgs = @('--global')
-                }
-                else {
-                    $instArgs = @()
-                }
-                if (failed $app $global) {
-                    if (installed $app $global) {
-
-                        info "修复 $app 先前失败的安装。"
-                        & "$PSScriptRoot\..\libexec\scoop-reset.ps1" $app @instArgs
-                    }
-                    else {
-                        warn "正在清除 $app 之前安装失败的残留。"
-                        & "$PSScriptRoot\..\libexec\scoop-uninstall.ps1" $app @instArgs
-                    }
-                }
-            }
-        }
-    }
-    #endregion
-
-    #region function Invoke-Installer: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L654
-    Set-Item -Path Function:\Invoke-Installer -Value {
-        [CmdletBinding()]
-        param (
-            [string]
-            $Path,
-            [string[]]
-            $Name,
-            [psobject]
-            $Manifest,
-            [Alias('Arch', 'Architecture')]
-            [ValidateSet('32bit', '64bit', 'arm64')]
-            [string]
-            $ProcessorArchitecture,
-            [string]
-            $AppName,
-            [switch]
-            $Global,
-            [switch]
-            $Uninstall
-        )
-        $type = if ($Uninstall) { 'uninstaller' } else { 'installer' }
-        $installer = arch_specific $type $Manifest $ProcessorArchitecture
-        if ($installer.file -or $installer.args) {
-            # Installer filename is either explicit defined ('installer.file') or file name in the first URL
-            if (!$Name) {
-                $Name = url_filename @(url $manifest $architecture)
-            }
-            $progName = "$Path\$(coalesce $installer.file $Name[0])"
-            if (!(is_in_dir $Path $progName)) {
-                abort "应用清单(manifest)错误: $((Get-Culture).TextInfo.ToTitleCase($type)) $progName 在应用程序目录之外。"
-            }
-            elseif (!(Test-Path $progName)) {
-                abort "$((Get-Culture).TextInfo.ToTitleCase($type)) $progName 不存在。"
-            }
-            $substitutions = @{
-                '$dir'     = $Path
-                '$global'  = $Global
-                '$version' = $Manifest.version
-            }
-            $fnArgs = substitute $installer.args $substitutions
-            if ($progName.EndsWith('.ps1')) {
-                & $progName @fnArgs
-            }
-            else {
-                $status = Invoke-ExternalCommand $progName -ArgumentList $fnArgs -Activity "正在运行 $type ..."
-                if (!$status) {
-                    if ($Uninstall) {
-                        abort '卸载已中止。'
-                    }
-                    else {
-                        abort "安装已中止。在再次尝试之前，您可能需要运行 scoop uninstall $appName"
-                    }
-                }
-                # Don't remove installer if "keep" flag is set to true
-                if (!$installer.keep) {
-                    Remove-Item $progName
-                }
-            }
-        }
-        Invoke-HookScript -HookType $type -Manifest $Manifest -ProcessorArchitecture $ProcessorArchitecture
-    }
-    #endregion
-
-    #region function Invoke-ExternalCommand: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L720
-    # Set-Item -Path Function:\Invoke-ExternalCommand -Value {
-    #     [CmdletBinding(DefaultParameterSetName = "Default")]
-    #     [OutputType([Boolean])]
-    #     param (
-    #         [Parameter(Mandatory = $true, Position = 0)]
-    #         [Alias("Path")]
-    #         [ValidateNotNullOrEmpty()]
-    #         [String]
-    #         $FilePath,
-    #         [Parameter(Position = 1)]
-    #         [Alias("Args")]
-    #         [String[]]
-    #         $ArgumentList,
-    #         [Parameter(ParameterSetName = "UseShellExecute")]
-    #         [Switch]
-    #         $RunAs,
-    #         [Parameter(ParameterSetName = "UseShellExecute")]
-    #         [Switch]
-    #         $Quiet,
-    #         [Alias("Msg")]
-    #         [String]
-    #         $Activity,
-    #         [Alias("cec")]
-    #         [Hashtable]
-    #         $ContinueExitCodes,
-    #         [Parameter(ParameterSetName = "Default")]
-    #         [Alias("Log")]
-    #         [String]
-    #         $LogPath
-    #     )
-    #     if ($Activity) {
-    #         Write-Host "$Activity " -NoNewline
-    #     }
-    #     $Process = New-Object System.Diagnostics.Process
-    #     $Process.StartInfo.FileName = $FilePath
-    #     $Process.StartInfo.UseShellExecute = $false
-    #     if ($LogPath) {
-    #         if ($FilePath -match '^msiexec(.exe)?$') {
-    #             $ArgumentList += "/lwe `"$LogPath`""
-    #         }
-    #         else {
-    #             $redirectToLogFile = $true
-    #             $Process.StartInfo.RedirectStandardOutput = $true
-    #             $Process.StartInfo.RedirectStandardError = $true
-    #         }
-    #     }
-    #     if ($RunAs) {
-    #         $Process.StartInfo.UseShellExecute = $true
-    #         $Process.StartInfo.Verb = 'RunAs'
-    #     }
-    #     if ($Quiet) {
-    #         $Process.StartInfo.UseShellExecute = $true
-    #         $Process.StartInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
-    #     }
-    #     if ($ArgumentList.Length -gt 0) {
-    #         # Remove existing double quotes and split arguments
-    #         # '(?<=(?<![:\w])[/-]\w+) ' matches a space after a command line switch starting with a slash ('/') or a hyphen ('-')
-    #         # The inner item '(?<![:\w])[/-]' matches a slash ('/') or a hyphen ('-') not preceded by a colon (':') or a word character ('\w')
-    #         # so that it must be a command line switch, otherwise, it would be a path (e.g. 'C:/Program Files') or other word (e.g. 'some-arg')
-    #         # ' (?=[/-])' matches a space followed by a slash ('/') or a hyphen ('-'), i.e. the space before a command line switch
-    #         $ArgumentList = $ArgumentList.ForEach({ $_ -replace '"' -split '(?<=(?<![:\w])[/-]\w+) | (?=[/-])' })
-    #         # Use legacy argument escaping for commands having non-standard behavior with regard to argument passing.
-    #         # `msiexec` requires some args like `TARGETDIR="C:\Program Files"`, which is non-standard, therefore we treat it as a legacy command.
-    #         # NSIS installer's '/D' param may not work with the ArgumentList property, so we need to escape arguments manually.
-    #         # ref-1: https://learn.microsoft.com/en-us/powershell/scripting/learn/experimental-features?view=powershell-7.4#psnativecommandargumentpassing
-    #         # ref-2: https://nsis.sourceforge.io/Docs/Chapter3.html
-    #         $LegacyCommand = $FilePath -match '^((cmd|cscript|find|sqlcmd|wscript|msiexec)(\.exe)?|.*\.(bat|cmd|js|vbs|wsf))$' -or
-    #         ($ArgumentList -match '^/S$|^/D=[A-Z]:[\\/].*$').Length -eq 2
-    #         $SupportArgumentList = $Process.StartInfo.PSObject.Properties.Name -contains 'ArgumentList'
-    #         if ((-not $LegacyCommand) -and $SupportArgumentList) {
-    #             # ArgumentList is supported in PowerShell 6.1 and later (built on .NET Core 2.1+)
-    #             # ref-1: https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo.argumentlist?view=net-6.0
-    #             # ref-2: https://docs.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell?view=powershell-7.2#net-framework-vs-net-core
-    #             $ArgumentList.ForEach({ $Process.StartInfo.ArgumentList.Add($_) })
-    #         }
-    #         else {
-    #             # Escape arguments manually in lower versions
-    #             $escapedArgs = switch -regex ($ArgumentList) {
-    #                 # Quote paths starting with a drive letter
-    #                 '(?<!/D=)[A-Z]:[\\/].*' { $_ -replace '([A-Z]:[\\/].*)', '"$1"'; continue }
-    #                 # Do not quote paths if it is NSIS's '/D' argument
-    #                 '/D=[A-Z]:[\\/].*' { $_; continue }
-    #                 # Quote args with spaces
-    #                 ' ' { "`"$_`""; continue }
-    #                 default { $_; continue }
-    #             }
-    #             $Process.StartInfo.Arguments = $escapedArgs -join ' '
-    #         }
-    #     }
-    #     try {
-    #         [void]$Process.Start()
-    #     }
-    #     catch {
-    #         if ($Activity) {
-    #             Write-Host "错误。" -ForegroundColor DarkRed
-    #         }
-    #         error $_.Exception.Message
-    #         return $false
-    #     }
-    #     if ($redirectToLogFile) {
-    #         # we do this to remove a deadlock potential
-    #         # ref: https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.standardoutput?view=netframework-4.5#remarks
-    #         $stdoutTask = $Process.StandardOutput.ReadToEndAsync()
-    #         $stderrTask = $Process.StandardError.ReadToEndAsync()
-    #     }
-    #     $Process.WaitForExit()
-    #     if ($redirectToLogFile) {
-    #         Out-UTF8File -FilePath $LogPath -Append -InputObject $stdoutTask.Result
-    #         Out-UTF8File -FilePath $LogPath -Append -InputObject $stderrTask.Result
-    #     }
-    #     if ($Process.ExitCode -ne 0) {
-    #         if ($ContinueExitCodes -and ($ContinueExitCodes.ContainsKey($Process.ExitCode))) {
-    #             if ($Activity) {
-    #                 Write-Host "完成。" -ForegroundColor DarkYellow
-    #             }
-    #             warn $ContinueExitCodes[$Process.ExitCode]
-    #             return $true
-    #         }
-    #         else {
-    #             if ($Activity) {
-    #                 Write-Host "错误" -ForegroundColor DarkRed
-    #             }
-    #             error "退出代码为: $($Process.ExitCode)!"
-    #             return $false
-    #         }
-    #     }
-    #     if ($Activity) {
-    #         Write-Host "完成。" -ForegroundColor Green
-    #     }
-    #     return $true
-    # }
-    #endregion
-
-    #region function install_app: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L8
-    Set-Item -Path Function:\install_app -Value {
-        param($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true)
-        $app, $manifest, $bucket, $url = Get-Manifest $app
-
-        if (!$manifest) {
-            abort "无法找到应用 $app 的清单文件(manifest) $(if ($bucket) { "(来自存储桶 $bucket)" } elseif ($url) { "(URL地址: $url)" })"
-        }
-
-        $version = $manifest.version
-        if (!$version) { abort "清单(manifest) 中没有指定一个版本号。" }
-        if ($version -match '[^\w\.\-\+_]') {
-            abort "清单(manifest) 中的版本具有不支持的字符: $($matches[0])"
-        }
-
-        $is_nightly = $version -eq 'nightly'
-        if ($is_nightly) {
-            $version = nightly_version
-            $check_hash = $false
-        }
-
-        $architecture = Get-SupportedArchitecture $manifest $architecture
-        if ($null -eq $architecture) {
-            error "$app 不支持当前的架构!"
-            return
-        }
-
-        if ((get_config SHOW_MANIFEST $false) -and ($MyInvocation.ScriptName -notlike '*scoop-update*')) {
-            Write-Host "应用清单(manifest): $app.json"
-            $style = get_config CAT_STYLE
-            if ($style) {
-                $manifest | ConvertToPrettyJson | bat --no-paging --style $style --language json
-            }
-            else {
-                $manifest | ConvertToPrettyJson
-            }
-            $answer = Read-Host -Prompt '继续安装? [Y/n]'
-            if (($answer -eq 'n') -or ($answer -eq 'N')) {
-                return
-            }
-        }
-        Write-Output "正在从 $(if ($bucket) { "$bucket bucket" } else { "$url" }) 中安装 $app ($version) [$architecture]"
-
-        $dir = ensure (versiondir $app $version $global)
-        $original_dir = $dir # keep reference to real (not linked) directory
-        $persist_dir = persistdir $app $global
-
-        $fname = Invoke-ScoopDownload $app $version $manifest $bucket $architecture $dir $use_cache $check_hash
-        Invoke-Extraction -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture
-        Invoke-HookScript -HookType 'pre_install' -Manifest $manifest -ProcessorArchitecture $architecture
-
-        Invoke-Installer -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture -AppName $app -Global:$global
-        ensure_install_dir_not_in_path $dir $global
-        $dir = link_current $dir
-        create_shims $manifest $dir $global $architecture
-        create_startmenu_shortcuts $manifest $dir $global $architecture
-        install_psmodule $manifest $dir $global
-        env_add_path $manifest $dir $global $architecture
-        env_set $manifest $global $architecture
-
-        # persist data
-        persist_data $manifest $original_dir $persist_dir
-        persist_permission $manifest $global
-
-        Invoke-HookScript -HookType 'post_install' -Manifest $manifest -ProcessorArchitecture $architecture
-
-        # save info for uninstall
-        save_installed_manifest $app $bucket $dir $url
-        save_install_info @{ 'architecture' = $architecture; 'url' = $url; 'bucket' = $bucket } $dir
-
-        if ($manifest.suggest) {
-            $suggested[$app] = $manifest.suggest
-        }
-
-        success "$app ($version) 已成功安装!"
-
-        show_notes $manifest $dir $original_dir $persist_dir
     }
     #endregion
 
@@ -2335,6 +1486,936 @@ if ($ShowCN) {
     }
     #endregion
 
+    #endregion
+
+    #region 安装和卸载: 创建/移除 Link、shim、快捷方式、环境变量、persist，安装/卸载 PowerShell 模块，显示 notes，显示 suggest
+
+    #region function link_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L804
+    Set-Item -Path Function:\link_current -Value {
+        param($versiondir)
+        if (get_config NO_JUNCTION) { return $versiondir.ToString() }
+
+        $currentdir = "$(Split-Path $versiondir)\current"
+
+        Write-Host "正在创建链接: $(friendly_path $currentdir) => $(friendly_path $versiondir)"
+
+        if ($currentdir -eq $versiondir) {
+            abort "错误：不允许使用 current 作为版本！请联系 bucket 维护者。"
+        }
+
+        if (Test-Path $currentdir) {
+            # remove the junction
+            attrib -R /L $currentdir
+            Remove-Item $currentdir -Recurse -Force -ErrorAction Stop
+        }
+
+        New-DirectoryJunction $currentdir $versiondir | Out-Null
+        attrib $currentdir +R /L
+        return $currentdir
+    }
+    #endregion
+
+    #region function unlink_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L831
+    Set-Item -Path Function:\unlink_current -Value {
+        param($versiondir)
+        if (get_config NO_JUNCTION) { return $versiondir.ToString() }
+        $currentdir = "$(Split-Path $versiondir)\current"
+
+        if (Test-Path $currentdir) {
+            Write-Host "正在解除链接: $(friendly_path $currentdir)"
+
+            # remove read-only attribute on link
+            attrib $currentdir -R /L
+
+            # remove the junction
+            Remove-Item $currentdir -Recurse -Force -ErrorAction Stop
+            return $currentdir
+        }
+        return $versiondir
+    }
+    #endregion
+
+    #region function create_shims: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L746
+    Set-Item -Path Function:\create_shims -Value {
+        param($manifest, $dir, $global, $arch)
+        $shims = @(arch_specific 'bin' $manifest $arch)
+        $shims | Where-Object { $_ -ne $null } | ForEach-Object {
+            $target, $name, $arg = shim_def $_
+            Write-Output "正在为 $name 创建 shim"
+
+            if (Test-Path "$dir\$target" -PathType leaf) {
+                $bin = "$dir\$target"
+            }
+            elseif (Test-Path $target -PathType leaf) {
+                $bin = $target
+            }
+            else {
+                $bin = (Get-Command $target).Source
+            }
+            if (!$bin) { abort "不能创建 shim '$target': 文件不存在。" }
+
+            shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
+        }
+    }
+    #endregion
+
+    #region function rm_shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L765
+    Set-Item -Path Function:\rm_shim -Value {
+        param($name, $shimdir, $app)
+        '', '.shim', '.cmd', '.ps1' | ForEach-Object {
+            $shimPath = "$shimdir\$name$_"
+            $altShimPath = "$shimPath.$app"
+            if ($app -and (Test-Path -Path $altShimPath -PathType Leaf)) {
+                Write-Output "正在移除 shim: $name$_.$app"
+                Remove-Item $altShimPath
+            }
+            elseif (Test-Path -Path $shimPath -PathType Leaf) {
+                Write-Output "正在移除 shim: $name$_"
+                Remove-Item $shimPath
+                $oldShims = Get-Item -Path "$shimPath.*" -Exclude '*.shim', '*.cmd', '*.ps1'
+                if ($null -eq $oldShims) {
+                    if ($_ -eq '.shim') {
+                        Write-Output "正在移除 shim: $name.exe"
+                        Remove-Item -Path "$shimdir\$name.exe"
+                    }
+                }
+                else {
+                (@($oldShims) | Sort-Object -Property LastWriteTimeUtc)[-1] | Rename-Item -NewName { $_.Name -replace '\.[^.]*$', '' }
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region function shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L952
+    Set-Item -Path Function:\shim -Value {
+        param($path, $global, $name, $arg)
+        if (!(Test-Path $path)) { abort "不能 shim '$(fname $path)': 不能找到 $path" }
+        $abs_shimdir = ensure (shimdir $global)
+        Add-Path -Path $abs_shimdir -Global:$global
+        if (!$name) { $name = strip_ext (fname $path) }
+
+        $shim = "$abs_shimdir\$($name.tolower())"
+
+        # convert to relative path
+        $resolved_path = Convert-Path $path
+        Push-Location $abs_shimdir
+        $relative_path = Resolve-Path -Relative $resolved_path
+        Pop-Location
+
+        if ($path -match '\.(exe|com)$') {
+            # for programs with no awareness of any shell
+            warn_on_overwrite "$shim.shim" $path
+            Copy-Item (get_shim_path) "$shim.exe" -Force
+            Write-Output "path = `"$resolved_path`"" | Out-UTF8File "$shim.shim"
+            if ($arg) {
+                Write-Output "args = $arg" | Out-UTF8File "$shim.shim" -Append
+            }
+
+            $target_subsystem = Get-PESubsystem $resolved_path
+            if ($target_subsystem -eq 2) {
+                # we only want to make shims GUI
+                Write-Output "$shim.exe 是一个 GUI 二进制文件"
+                Set-PESubsystem "$shim.exe" $target_subsystem | Out-Null
+            }
+        }
+        elseif ($path -match '\.(bat|cmd)$') {
+            # shim .bat, .cmd so they can be used by programs with no awareness of PSH
+            warn_on_overwrite "$shim.cmd" $path
+            @(
+                "@rem $resolved_path",
+                "@`"$resolved_path`" $arg %*"
+            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
+
+            warn_on_overwrite $shim $path
+            @(
+                "#!/bin/sh",
+                "# $resolved_path",
+                "MSYS2_ARG_CONV_EXCL=/C cmd.exe /C `"$resolved_path`" $arg `"$@`""
+            ) -join "`n" | Out-UTF8File $shim -NoNewLine
+        }
+        elseif ($path -match '\.ps1$') {
+            # if $path points to another drive resolve-path prepends .\ which could break shims
+            warn_on_overwrite "$shim.ps1" $path
+            $ps1text = if ($relative_path -match '^(\.\\)?\w:.*$') {
+                @(
+                    "# $resolved_path",
+                    "`$path = `"$path`"",
+                    "if (`$MyInvocation.ExpectingInput) { `$input | & `$path $arg @args } else { & `$path $arg @args }",
+                    "exit `$LASTEXITCODE"
+                )
+            }
+            else {
+                @(
+                    "# $resolved_path",
+                    "`$path = Join-Path `$PSScriptRoot `"$relative_path`"",
+                    "if (`$MyInvocation.ExpectingInput) { `$input | & `$path $arg @args } else { & `$path $arg @args }",
+                    "exit `$LASTEXITCODE"
+                )
+            }
+            $ps1text -join "`r`n" | Out-UTF8File "$shim.ps1"
+
+            # make ps1 accessible from cmd.exe
+            warn_on_overwrite "$shim.cmd" $path
+            @(
+                "@rem $resolved_path",
+                "@echo off",
+                "where /q pwsh.exe",
+                "if %errorlevel% equ 0 (",
+                "    pwsh -noprofile -ex unrestricted -file `"$resolved_path`" $arg %*",
+                ") else (",
+                "    powershell -noprofile -ex unrestricted -file `"$resolved_path`" $arg %*",
+                ")"
+            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
+
+            warn_on_overwrite $shim $path
+            @(
+                "#!/bin/sh",
+                "# $resolved_path",
+                "if command -v pwsh.exe > /dev/null 2>&1; then",
+                "    pwsh.exe -noprofile -ex unrestricted -file `"$resolved_path`" $arg `"$@`"",
+                "else",
+                "    powershell.exe -noprofile -ex unrestricted -file `"$resolved_path`" $arg `"$@`"",
+                "fi"
+            ) -join "`n" | Out-UTF8File $shim -NoNewLine
+        }
+        elseif ($path -match '\.jar$') {
+            warn_on_overwrite "$shim.cmd" $path
+            @(
+                "@rem $resolved_path",
+                "@pushd $(Split-Path $resolved_path -Parent)",
+                "@java -jar `"$resolved_path`" $arg %*",
+                "@popd"
+            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
+
+            warn_on_overwrite $shim $path
+            @(
+                "#!/bin/sh",
+                "# $resolved_path",
+                "if [ `$WSL_INTEROP ]",
+                'then',
+                "  cd `$(wslpath -u '$(Split-Path $resolved_path -Parent)')",
+                'else',
+                "  cd `$(cygpath -u '$(Split-Path $resolved_path -Parent)')",
+                'fi',
+                "java.exe -jar `"$resolved_path`" $arg `"$@`""
+            ) -join "`n" | Out-UTF8File $shim -NoNewLine
+        }
+        elseif ($path -match '\.py$') {
+            warn_on_overwrite "$shim.cmd" $path
+            @(
+                "@rem $resolved_path",
+                "@python `"$resolved_path`" $arg %*"
+            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
+
+            warn_on_overwrite $shim $path
+            @(
+                '#!/bin/sh',
+                "# $resolved_path",
+                "python.exe `"$resolved_path`" $arg `"$@`""
+            ) -join "`n" | Out-UTF8File $shim -NoNewLine
+        }
+        else {
+            warn_on_overwrite "$shim.cmd" $path
+            @(
+                "@rem $resolved_path",
+                "@bash `"`$(wslpath -u '$resolved_path')`" $arg %* 2>nul",
+                '@if %errorlevel% neq 0 (',
+                "  @bash `"`$(cygpath -u '$resolved_path')`" $arg %* 2>nul",
+                ')'
+            ) -join "`r`n" | Out-UTF8File "$shim.cmd"
+
+            warn_on_overwrite $shim $path
+            @(
+                '#!/bin/sh',
+                "# $resolved_path",
+                "if [ `$WSL_INTEROP ]",
+                'then',
+                "  `"`$(wslpath -u '$resolved_path')`" $arg `"$@`"",
+                'else',
+                "  `"`$(cygpath -u '$resolved_path')`" $arg `"$@`"",
+                'fi'
+            ) -join "`n" | Out-UTF8File $shim -NoNewLine
+        }
+    }
+    #endregion
+
+    #region function warn_on_overwrite: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L933
+    Set-Item -Path Function:\warn_on_overwrite -Value {
+        param($shim, $path)
+        if (!(Test-Path $shim)) {
+            return
+        }
+        $shim_app = get_app_name_from_shim $shim
+        $path_app = get_app_name $path
+        if ($shim_app -eq $path_app) {
+            return
+        }
+        else {
+            if (Test-Path -Path "$shim.$path_app" -PathType Leaf) {
+                Remove-Item -Path "$shim.$path_app" -Force -ErrorAction SilentlyContinue
+            }
+            Rename-Item -Path $shim -NewName "$shim.$shim_app" -ErrorAction SilentlyContinue
+        }
+        $shimname = (fname $shim) -replace '\.shim$', '.exe'
+        $filename = (fname $path) -replace '\.shim$', '.exe'
+        warn "正在覆盖$(if ($shim_app) { "安装 $shim_app 时创建的" }) shim ('$shimname' -> '$filename')"
+    }
+    #endregion
+
+    #region function startmenu_shortcut: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L31
+    Set-Item -Path Function:\startmenu_shortcut -Value {
+        param([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global)
+        if (!$target.Exists) {
+            Write-Host -f DarkRed "为 $(fname $target) 创建快捷方式 $shortcutName 失败了: 没有找到 $target"
+            return
+        }
+        if ($icon -and !$icon.Exists) {
+            Write-Host -f DarkRed "为 $(fname $target) 创建快捷方式 $shortcutName 失败了: 没有找到 icon 图标 $icon"
+            return
+        }
+
+        $scoop_startmenu_folder = shortcut_folder $global
+        $subdirectory = [System.IO.Path]::GetDirectoryName($shortcutName)
+        if ($subdirectory) {
+            $subdirectory = ensure $([System.IO.Path]::Combine($scoop_startmenu_folder, $subdirectory))
+        }
+
+        $wsShell = New-Object -ComObject WScript.Shell
+        $wsShell = $wsShell.CreateShortcut("$scoop_startmenu_folder\$shortcutName.lnk")
+        $wsShell.TargetPath = $target.FullName
+        $wsShell.WorkingDirectory = $target.DirectoryName
+        if ($arguments) {
+            $wsShell.Arguments = $arguments
+        }
+        if ($icon -and $icon.Exists) {
+            $wsShell.IconLocation = $icon.FullName
+        }
+        $wsShell.Save()
+        Write-Host "为 $(fname $target) 创建了快捷方式: $shortcutName"
+    }
+    #endregion
+
+    #region function rm_startmenu_shortcuts: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L62
+    Set-Item -Path Function:\rm_startmenu_shortcuts -Value {
+        param($manifest, $global, $arch)
+        $shortcuts = @(arch_specific 'shortcuts' $manifest $arch)
+        $shortcuts | Where-Object { $_ -ne $null } | ForEach-Object {
+            $name = $_.item(1)
+            $shortcut = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath("$(shortcut_folder $global)\$name.lnk")
+            Write-Host "正在移除快捷方式: $(friendly_path $shortcut)"
+            if (Test-Path -Path $shortcut) {
+                Remove-Item $shortcut
+            }
+        }
+    }
+    #endregion
+
+    #region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
+    Set-Item -Path Function:\env_set {
+        param($manifest, $global, $arch)
+        $env_set = arch_specific 'env_set' $manifest $arch
+
+        if ($env_set) {
+            $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
+                $name = $_.Name
+                $val = $ExecutionContext.InvokeCommand.ExpandString($env_set.$($name))
+                Write-Output "正在设置环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name = $val"
+
+                Set-EnvVar -Name $name -Value $val -Global:$global
+                Set-Content env:\$name $val
+            }
+        }
+    }
+    #endregion
+
+    #region function env_rm: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L912
+    Set-Item -Path Function:\env_rm {
+        param($manifest, $global, $arch)
+        $env_set = arch_specific 'env_set' $manifest $arch
+        if ($env_set) {
+            $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
+                $name = $_.Name
+                Write-Output "正在移除环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name"
+                Set-EnvVar -Name $name -Value $null -Global:$global
+                if (Test-Path env:\$name) { Remove-Item env:\$name }
+            }
+        }
+    }
+    #endregion
+
+    #region function Add-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L96
+    Set-Item -Path Function:\Add-Path -Value {
+        param(
+            [string[]]$Path,
+            [string]$TargetEnvVar = 'PATH',
+            [switch]$Global,
+            [switch]$Force,
+            [switch]$Quiet
+        )
+
+        # future sessions
+        $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
+        if (!$inPath -or $Force) {
+            if (!$Quiet) {
+                $Path | ForEach-Object {
+                    Write-Host "正在添加 $(friendly_path $_) 到环境变量$(if($global){'(系统级)'}else{'(当前用户)'}) $TargetEnvVar 中。"
+                }
+            }
+            Set-EnvVar -Name $TargetEnvVar -Value ((@($Path) + $strippedPath) -join ';') -Global:$Global
+        }
+        # current session
+        $inPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
+        if (!$inPath -or $Force) {
+            $env:PATH = (@($Path) + $strippedPath) -join ';'
+        }
+    }
+    #endregion
+
+    #region function Remove-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L122
+    Set-Item -Path Function:\Remove-Path -Value {
+        param(
+            [string[]]$Path,
+            [string]$TargetEnvVar = 'PATH',
+            [switch]$Global,
+            [switch]$Quiet,
+            [switch]$PassThru
+        )
+
+        # future sessions
+        $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
+        if ($inPath) {
+            if (!$Quiet) {
+                $Path | ForEach-Object {
+                    if ($PSCulture -like "zh*") {
+                        Write-Host "正在从环境变量$(if ($Global) {'(系统级)'} else {'(当前用户)'}) $TargetEnvVar 中移除 $(friendly_path $_)"
+                    }
+                    else {
+                        Write-Host "Removing $(friendly_path $_) from $(if ($Global) {'global'} else {'your'}) path."
+                    }
+                }
+            }
+            Set-EnvVar -Name $TargetEnvVar -Value $strippedPath -Global:$Global
+        }
+        # current session
+        $inSessionPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
+        if ($inSessionPath) {
+            $env:PATH = $strippedPath
+        }
+        if ($PassThru) {
+            return $inPath
+        }
+    }
+    #endregion
+
+    #region function install_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L1
+    Set-Item -Path Function:\install_psmodule -Value {
+        param($manifest, $dir, $global)
+
+        $psmodule = $manifest.psmodule
+        if (!$psmodule) { return }
+
+        $targetdir = ensure (modulesdir $global)
+
+        ensure_in_psmodulepath $targetdir $global
+
+        $module_name = $psmodule.name
+        if (!$module_name) {
+            abort “无效的应用清单(manifest)：psmodule 中缺少 name 属性。”
+        }
+
+        $linkfrom = "$targetdir\$module_name"
+        Write-Host "正在安装 PowerShell 模块: $module_name"
+
+        Write-Host "正在创建链接: $(friendly_path $linkfrom) => $(friendly_path $dir)"
+
+        if (Test-Path $linkfrom) {
+            warn "$(friendly_path $linkfrom) 已经存在，它将被替换。"
+            Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
+        }
+
+        New-DirectoryJunction $linkfrom $dir | Out-Null
+    }
+    #endregion
+
+    #region function uninstall_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L27
+    Set-Item -Path Function:\uninstall_psmodule -Value {
+        param($manifest, $dir, $global)
+        $psmodule = $manifest.psmodule
+        if (!$psmodule) { return }
+
+        $module_name = $psmodule.name
+        Write-Host "正在卸载 PowerShell 模块: $module_name"
+
+        $targetdir = modulesdir $global
+
+        $linkfrom = "$targetdir\$module_name"
+        if (Test-Path $linkfrom) {
+            Write-Host "正在移除链接: $(friendly_path $linkfrom)"
+            $linkfrom = Convert-Path $linkfrom
+            Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
+        }
+    }
+    #endregion
+
+    #region function ensure_in_psmodulepath: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L44
+    Set-Item -Path Function:\ensure_in_psmodulepath -Value {
+        param($dir, $global)
+        $path = Get-EnvVar -Name 'PSModulePath' -Global:$global
+        if (!$global -and $null -eq $path) {
+            $path = "$env:USERPROFILE\Documents\WindowsPowerShell\Modules"
+        }
+        if ($path -notmatch [Regex]::Escape($dir)) {
+            Write-Output "正在添加 $(friendly_path $dir) 到环境变量$(if($global){'(系统级)'}else{'(当前用户)'}) PSModulePath 中。"
+
+            Set-EnvVar -Name 'PSModulePath' -Value "$dir;$path" -Global:$global
+        }
+    }
+    #endregion
+
+    #region function persist_data: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1011
+    Set-Item -Path Function:\persist_data -Value {
+        param($manifest, $original_dir, $persist_dir)
+        $persist = $manifest.persist
+        if ($persist) {
+            $persist_dir = ensure $persist_dir
+
+            if ($persist -is [String]) {
+                $persist = @($persist)
+            }
+
+            $persist | ForEach-Object {
+                $source, $target = persist_def $_
+
+                $source = $source.TrimEnd('/').TrimEnd('\\')
+
+                $source = "$dir\$source"
+                $target = "$persist_dir\$target"
+
+                Write-Host "正在持久化数据(Persisting): $source => $target"
+
+                # if we have had persist data in the store, just create link and go
+                if (Test-Path $target) {
+                    # if there is also a source data, rename it (to keep a original backup)
+                    if (Test-Path $source) {
+                        Move-Item -Force $source "$source.original"
+                    }
+                    # we don't have persist data in the store, move the source to target, then create link
+                }
+                elseif (Test-Path $source) {
+                    # ensure target parent folder exist
+                    ensure (Split-Path -Path $target) | Out-Null
+                    Move-Item $source $target
+                    # we don't have neither source nor target data! we need to create an empty target,
+                    # but we can't make a judgement that the data should be a file or directory...
+                    # so we create a directory by default. to avoid this, use pre_install
+                    # to create the source file before persisting (DON'T use post_install)
+                }
+                else {
+                    $target = New-Object System.IO.DirectoryInfo($target)
+                    ensure $target | Out-Null
+                }
+
+                # create link
+                if (is_directory $target) {
+                    # target is a directory, create junction
+                    New-DirectoryJunction $source $target | Out-Null
+                    attrib $source +R /L
+                }
+                else {
+                    # target is a file, create hard link
+                    New-Item -Path $source -ItemType HardLink -Value $target | Out-Null
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region function show_notes: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L923
+    Set-Item -Path Function:\show_notes -Value {
+        param($manifest, $dir, $original_dir, $persist_dir)
+
+        $label = 'Notes'
+        $note = $manifest.notes
+        $noteCN = $manifest.'notes-cn'
+
+        if ($noteCN) {
+            $label = '说明'
+            $note = $noteCN
+        }
+
+        if ($note) {
+            Write-Host
+            Write-Output $label
+            Write-Output '-----'
+            Write-Output (wraptext (substitute $note @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir }))
+        }
+    }
+    #endregion
+
+    #region function show_suggestions: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L969
+    Set-Item -Path Function:\show_suggestions {
+        param($suggested)
+        $installed_apps = (installed_apps $true) + (installed_apps $false)
+
+        foreach ($app in $suggested.keys) {
+            $features = $suggested[$app] | Get-Member -type noteproperty | ForEach-Object { $_.name }
+            foreach ($feature in $features) {
+                $feature_suggestions = $suggested[$app].$feature
+
+                $fulfilled = $false
+                foreach ($suggestion in $feature_suggestions) {
+                    $suggested_app, $bucket, $null = parse_app $suggestion
+
+                    if ($installed_apps -contains $suggested_app) {
+                        $fulfilled = $true
+                        break
+                    }
+                }
+
+                if (!$fulfilled) {
+                    Write-Host
+                    Write-Host "$app 建议你安装 '$([string]::join("' or '", $feature_suggestions))'."
+                }
+            }
+        }
+    }
+    #endregion
+
+    #endregion
+
+    #region 其他函数
+
+    #region function test_running_process: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1100
+    Set-Item -Path Function:\test_running_process -Value {
+        param($app, $global)
+        $processdir = appdir $app $global | Convert-Path
+        $running_processes = Get-Process | Where-Object { $_.Path -like "$processdir\*" } | Out-String
+
+        if ($running_processes) {
+            if (get_config IGNORE_RUNNING_PROCESSES) {
+                warn "$app 的以下实例仍在运行。Scoop 被配置为忽略此情况。"
+                Write-Host $running_processes
+                return $false
+            }
+            else {
+                error "$app 的以下实例仍在运行。请关闭它们然后重试。"
+                Write-Host $running_processes
+                return $true
+            }
+        }
+        else {
+            return $false
+        }
+    }
+    #endregion
+
+    #region function ensure_none_failed: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L947
+    Set-Item -Path Function:\ensure_none_failed -Value {
+        param($apps)
+        foreach ($app in $apps) {
+            $app = ($app -split '/|\\')[-1] -replace '\.json$', ''
+            foreach ($global in $true, $false) {
+                if ($global) {
+                    $instArgs = @('--global')
+                }
+                else {
+                    $instArgs = @()
+                }
+                if (failed $app $global) {
+                    if (installed $app $global) {
+
+                        info "修复 $app 先前失败的安装。"
+                        & "$PSScriptRoot\..\libexec\scoop-reset.ps1" $app @instArgs
+                    }
+                    else {
+                        warn "正在清除 $app 之前安装失败的残留。"
+                        & "$PSScriptRoot\..\libexec\scoop-uninstall.ps1" $app @instArgs
+                    }
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region function Invoke-Installer: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L654
+    Set-Item -Path Function:\Invoke-Installer -Value {
+        [CmdletBinding()]
+        param (
+            [string]
+            $Path,
+            [string[]]
+            $Name,
+            [psobject]
+            $Manifest,
+            [Alias('Arch', 'Architecture')]
+            [ValidateSet('32bit', '64bit', 'arm64')]
+            [string]
+            $ProcessorArchitecture,
+            [string]
+            $AppName,
+            [switch]
+            $Global,
+            [switch]
+            $Uninstall
+        )
+        $type = if ($Uninstall) { 'uninstaller' } else { 'installer' }
+        $installer = arch_specific $type $Manifest $ProcessorArchitecture
+        if ($installer.file -or $installer.args) {
+            # Installer filename is either explicit defined ('installer.file') or file name in the first URL
+            if (!$Name) {
+                $Name = url_filename @(url $manifest $architecture)
+            }
+            $progName = "$Path\$(coalesce $installer.file $Name[0])"
+            if (!(is_in_dir $Path $progName)) {
+                abort "应用清单(manifest)错误: $((Get-Culture).TextInfo.ToTitleCase($type)) $progName 在应用程序目录之外。"
+            }
+            elseif (!(Test-Path $progName)) {
+                abort "$((Get-Culture).TextInfo.ToTitleCase($type)) $progName 不存在。"
+            }
+            $substitutions = @{
+                '$dir'     = $Path
+                '$global'  = $Global
+                '$version' = $Manifest.version
+            }
+            $fnArgs = substitute $installer.args $substitutions
+            if ($progName.EndsWith('.ps1')) {
+                & $progName @fnArgs
+            }
+            else {
+                $status = Invoke-ExternalCommand $progName -ArgumentList $fnArgs -Activity "正在运行 $type ..."
+                if (!$status) {
+                    if ($Uninstall) {
+                        abort '卸载已中止。'
+                    }
+                    else {
+                        abort "安装已中止。在再次尝试之前，你可能需要运行 scoop uninstall $appName"
+                    }
+                }
+                # Don't remove installer if "keep" flag is set to true
+                if (!$installer.keep) {
+                    Remove-Item $progName
+                }
+            }
+        }
+        Invoke-HookScript -HookType $type -Manifest $Manifest -ProcessorArchitecture $ProcessorArchitecture
+    }
+    #endregion
+
+    #region function Invoke-ExternalCommand: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L720
+    # Set-Item -Path Function:\Invoke-ExternalCommand -Value {
+    #     [CmdletBinding(DefaultParameterSetName = "Default")]
+    #     [OutputType([Boolean])]
+    #     param (
+    #         [Parameter(Mandatory = $true, Position = 0)]
+    #         [Alias("Path")]
+    #         [ValidateNotNullOrEmpty()]
+    #         [String]
+    #         $FilePath,
+    #         [Parameter(Position = 1)]
+    #         [Alias("Args")]
+    #         [String[]]
+    #         $ArgumentList,
+    #         [Parameter(ParameterSetName = "UseShellExecute")]
+    #         [Switch]
+    #         $RunAs,
+    #         [Parameter(ParameterSetName = "UseShellExecute")]
+    #         [Switch]
+    #         $Quiet,
+    #         [Alias("Msg")]
+    #         [String]
+    #         $Activity,
+    #         [Alias("cec")]
+    #         [Hashtable]
+    #         $ContinueExitCodes,
+    #         [Parameter(ParameterSetName = "Default")]
+    #         [Alias("Log")]
+    #         [String]
+    #         $LogPath
+    #     )
+    #     if ($Activity) {
+    #         Write-Host "$Activity " -NoNewline
+    #     }
+    #     $Process = New-Object System.Diagnostics.Process
+    #     $Process.StartInfo.FileName = $FilePath
+    #     $Process.StartInfo.UseShellExecute = $false
+    #     if ($LogPath) {
+    #         if ($FilePath -match '^msiexec(.exe)?$') {
+    #             $ArgumentList += "/lwe `"$LogPath`""
+    #         }
+    #         else {
+    #             $redirectToLogFile = $true
+    #             $Process.StartInfo.RedirectStandardOutput = $true
+    #             $Process.StartInfo.RedirectStandardError = $true
+    #         }
+    #     }
+    #     if ($RunAs) {
+    #         $Process.StartInfo.UseShellExecute = $true
+    #         $Process.StartInfo.Verb = 'RunAs'
+    #     }
+    #     if ($Quiet) {
+    #         $Process.StartInfo.UseShellExecute = $true
+    #         $Process.StartInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
+    #     }
+    #     if ($ArgumentList.Length -gt 0) {
+    #         # Remove existing double quotes and split arguments
+    #         # '(?<=(?<![:\w])[/-]\w+) ' matches a space after a command line switch starting with a slash ('/') or a hyphen ('-')
+    #         # The inner item '(?<![:\w])[/-]' matches a slash ('/') or a hyphen ('-') not preceded by a colon (':') or a word character ('\w')
+    #         # so that it must be a command line switch, otherwise, it would be a path (e.g. 'C:/Program Files') or other word (e.g. 'some-arg')
+    #         # ' (?=[/-])' matches a space followed by a slash ('/') or a hyphen ('-'), i.e. the space before a command line switch
+    #         $ArgumentList = $ArgumentList.ForEach({ $_ -replace '"' -split '(?<=(?<![:\w])[/-]\w+) | (?=[/-])' })
+    #         # Use legacy argument escaping for commands having non-standard behavior with regard to argument passing.
+    #         # `msiexec` requires some args like `TARGETDIR="C:\Program Files"`, which is non-standard, therefore we treat it as a legacy command.
+    #         # NSIS installer's '/D' param may not work with the ArgumentList property, so we need to escape arguments manually.
+    #         # ref-1: https://learn.microsoft.com/en-us/powershell/scripting/learn/experimental-features?view=powershell-7.4#psnativecommandargumentpassing
+    #         # ref-2: https://nsis.sourceforge.io/Docs/Chapter3.html
+    #         $LegacyCommand = $FilePath -match '^((cmd|cscript|find|sqlcmd|wscript|msiexec)(\.exe)?|.*\.(bat|cmd|js|vbs|wsf))$' -or
+    #         ($ArgumentList -match '^/S$|^/D=[A-Z]:[\\/].*$').Length -eq 2
+    #         $SupportArgumentList = $Process.StartInfo.PSObject.Properties.Name -contains 'ArgumentList'
+    #         if ((-not $LegacyCommand) -and $SupportArgumentList) {
+    #             # ArgumentList is supported in PowerShell 6.1 and later (built on .NET Core 2.1+)
+    #             # ref-1: https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo.argumentlist?view=net-6.0
+    #             # ref-2: https://docs.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell?view=powershell-7.2#net-framework-vs-net-core
+    #             $ArgumentList.ForEach({ $Process.StartInfo.ArgumentList.Add($_) })
+    #         }
+    #         else {
+    #             # Escape arguments manually in lower versions
+    #             $escapedArgs = switch -regex ($ArgumentList) {
+    #                 # Quote paths starting with a drive letter
+    #                 '(?<!/D=)[A-Z]:[\\/].*' { $_ -replace '([A-Z]:[\\/].*)', '"$1"'; continue }
+    #                 # Do not quote paths if it is NSIS's '/D' argument
+    #                 '/D=[A-Z]:[\\/].*' { $_; continue }
+    #                 # Quote args with spaces
+    #                 ' ' { "`"$_`""; continue }
+    #                 default { $_; continue }
+    #             }
+    #             $Process.StartInfo.Arguments = $escapedArgs -join ' '
+    #         }
+    #     }
+    #     try {
+    #         [void]$Process.Start()
+    #     }
+    #     catch {
+    #         if ($Activity) {
+    #             Write-Host "错误。" -ForegroundColor DarkRed
+    #         }
+    #         error $_.Exception.Message
+    #         return $false
+    #     }
+    #     if ($redirectToLogFile) {
+    #         # we do this to remove a deadlock potential
+    #         # ref: https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.standardoutput?view=netframework-4.5#remarks
+    #         $stdoutTask = $Process.StandardOutput.ReadToEndAsync()
+    #         $stderrTask = $Process.StandardError.ReadToEndAsync()
+    #     }
+    #     $Process.WaitForExit()
+    #     if ($redirectToLogFile) {
+    #         Out-UTF8File -FilePath $LogPath -Append -InputObject $stdoutTask.Result
+    #         Out-UTF8File -FilePath $LogPath -Append -InputObject $stderrTask.Result
+    #     }
+    #     if ($Process.ExitCode -ne 0) {
+    #         if ($ContinueExitCodes -and ($ContinueExitCodes.ContainsKey($Process.ExitCode))) {
+    #             if ($Activity) {
+    #                 Write-Host "完成。" -ForegroundColor DarkYellow
+    #             }
+    #             warn $ContinueExitCodes[$Process.ExitCode]
+    #             return $true
+    #         }
+    #         else {
+    #             if ($Activity) {
+    #                 Write-Host "错误" -ForegroundColor DarkRed
+    #             }
+    #             error "退出代码为: $($Process.ExitCode)!"
+    #             return $false
+    #         }
+    #     }
+    #     if ($Activity) {
+    #         Write-Host "完成。" -ForegroundColor Green
+    #     }
+    #     return $true
+    # }
+    #endregion
+
+    #region function install_app: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L8
+    Set-Item -Path Function:\install_app -Value {
+        param($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true)
+        $app, $manifest, $bucket, $url = Get-Manifest $app
+
+        if (!$manifest) {
+            abort "无法从 $(if ($bucket) { "$bucket (bucket)" } elseif ($url) { $url }) 中找到应用 $app 的清单(manifest)"
+        }
+
+        $version = $manifest.version
+        if (!$version) { abort "清单(manifest) 中没有指定一个版本号。" }
+        if ($version -match '[^\w\.\-\+_]') {
+            abort "清单(manifest) 中的版本具有不支持的字符: $($matches[0])"
+        }
+
+        $is_nightly = $version -eq 'nightly'
+        if ($is_nightly) {
+            $version = nightly_version
+            $check_hash = $false
+        }
+
+        $architecture = Get-SupportedArchitecture $manifest $architecture
+        if ($null -eq $architecture) {
+            error "$app 不支持当前的架构!"
+            return
+        }
+
+        if ((get_config SHOW_MANIFEST $false) -and ($MyInvocation.ScriptName -notlike '*scoop-update*')) {
+            Write-Host "清单(manifest): $app.json"
+            $style = get_config CAT_STYLE
+            if ($style) {
+                $manifest | ConvertToPrettyJson | bat --no-paging --style $style --language json
+            }
+            else {
+                $manifest | ConvertToPrettyJson
+            }
+            $answer = Read-Host -Prompt '继续安装? [Y/n]'
+            if (($answer -eq 'n') -or ($answer -eq 'N')) {
+                return
+            }
+        }
+        Write-Output "正在从 $(if ($bucket) { "$bucket (bucket)" } else { $url }) 中安装 $app ($version) [$architecture]"
+
+        $dir = ensure (versiondir $app $version $global)
+        $original_dir = $dir # keep reference to real (not linked) directory
+        $persist_dir = persistdir $app $global
+
+        $fname = Invoke-ScoopDownload $app $version $manifest $bucket $architecture $dir $use_cache $check_hash
+        Invoke-Extraction -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture
+        Invoke-HookScript -HookType 'pre_install' -Manifest $manifest -ProcessorArchitecture $architecture
+
+        Invoke-Installer -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture -AppName $app -Global:$global
+        ensure_install_dir_not_in_path $dir $global
+        $dir = link_current $dir
+        create_shims $manifest $dir $global $architecture
+        create_startmenu_shortcuts $manifest $dir $global $architecture
+        install_psmodule $manifest $dir $global
+        env_add_path $manifest $dir $global $architecture
+        env_set $manifest $global $architecture
+
+        # persist data
+        persist_data $manifest $original_dir $persist_dir
+        persist_permission $manifest $global
+
+        Invoke-HookScript -HookType 'post_install' -Manifest $manifest -ProcessorArchitecture $architecture
+
+        # save info for uninstall
+        save_installed_manifest $app $bucket $dir $url
+        save_install_info @{ 'architecture' = $architecture; 'url' = $url; 'bucket' = $bucket } $dir
+
+        if ($manifest.suggest) {
+            $suggested[$app] = $manifest.suggest
+        }
+
+        success "$app ($version) 已成功安装!"
+
+        show_notes $manifest $dir $original_dir $persist_dir
+    }
+    #endregion
+
     #region function Confirm-InstallationStatus: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L1142
     # Set-Item -Path Function:\Confirm-InstallationStatus -Value {
     #     [CmdletBinding()]
@@ -2379,6 +2460,8 @@ if ($ShowCN) {
     #     }
     #     return , $Installed
     # }
+    #endregion
+
     #endregion
 }
 #endregion
