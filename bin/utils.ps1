@@ -16,12 +16,12 @@
     2. 在 pre_uninstall 和 post_uninstall 中
 
         - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
-        - A-Stop-Service: 尝试停止指定的应用服务，以确保能正常卸载
+        - A-Stop-Service: 尝试停止并移除指定的应用服务，以确保能正常卸载
         - A-Remove-Link: 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction
         - A-Remove-Font: 移除字体
         - A-Remove-MsixPackage: 卸载 AppX/Msix 包
         - A-Remove-PowerToysRunPlugin: 移除 PowerToys Run 插件
-        - A-Remove-TempData: 移除一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
+        - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
         - A-Complete-Uninstall: Uninstall 脚本的最后一步，进行一些收尾工作
 
     3. 特别的:
@@ -1960,7 +1960,7 @@ if ($ShowCN) {
 
         $linkfrom = "$targetdir\$module_name"
         if (Test-Path $linkfrom) {
-            Write-Host "正在移除链接: $(friendly_path $linkfrom)"
+            Write-Host "正在移除: $(friendly_path $linkfrom)"
             $linkfrom = Convert-Path $linkfrom
             Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
         }
@@ -2084,7 +2084,7 @@ if ($ShowCN) {
 
                 if (!$fulfilled) {
                     Write-Host
-                    Write-Host "$app 建议你安装 '$([string]::join("' or '", $feature_suggestions))'."
+                    Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))"
                 }
             }
         }
