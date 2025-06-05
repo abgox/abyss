@@ -1,55 +1,58 @@
 {
-    "version": "14.8.0",
-    "description": "截屏 离线OCR 搜索翻译 以图搜图 贴图 录屏 万向滚动截屏 屏幕翻译。Screenshot OCR search translate search for picture paste the picture on the screen screen recorder.",
-    "homepage": "https://esearch-app.netlify.app/",
-    "license": {
-        "identifier": "GNU General Public License v3.0",
-        "url": "https://github.com/xushengfeng/eSearch/blob/master/LICENSE"
+  "version": "14.8.0",
+  "description": "截屏 离线OCR 搜索翻译 以图搜图 贴图 录屏 万向滚动截屏 屏幕翻译。Screenshot OCR search translate search for picture paste the picture on the screen screen recorder.",
+  "homepage": "https://esearch-app.netlify.app/",
+  "license": {
+    "identifier": "GNU General Public License v3.0",
+    "url": "https://github.com/xushengfeng/eSearch/blob/master/LICENSE"
+  },
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/xushengfeng/eSearch/releases/download/14.8.0/eSearch-14.8.0-win32-x64.zip",
+      "hash": "5e96d87479e37db1e4f74cc5bd15d10132fe7d8c2a752aea6d96765a06b0365f"
     },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/xushengfeng/eSearch/releases/download/14.8.0/eSearch-14.8.0-win32-x64.zip",
-            "hash": "5e96d87479e37db1e4f74cc5bd15d10132fe7d8c2a752aea6d96765a06b0365f"
-        },
-        "arm64": {
-            "url": "https://github.com/xushengfeng/eSearch/releases/download/14.8.0/eSearch-14.8.0-win32-arm64.zip",
-            "hash": "1ff949be8bea57184227193fa0fd66a6e7f4de5f7c01607e601e8c08797bf8ab"
-        }
-    },
-    "bin": "e-search.exe",
-    "shortcuts": [
-        [
-            "e-search.exe",
-            "eSearch"
-        ]
-    ],
-    "pre_install": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "$LinkPaths = @(\"$env:AppData\\eSearch\")",
-        "$LinkTargets = @(\"$persist_dir\\eSearch\")",
-        "A-New-LinkDirectory $LinkPaths $LinkTargets",
-        "A-Complete-Install"
-    ],
-    "pre_uninstall": [
-        "$bucket = $install.bucket",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Remove-TempData",
-        "A-Complete-Uninstall"
-    ],
-    "checkver": {
-        "github": "https://github.com/xushengfeng/eSearch"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/xushengfeng/eSearch/releases/download/$version/eSearch-$version-win32-x64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/xushengfeng/eSearch/releases/download/$version/eSearch-$version-win32-arm64.zip"
-            }
-        }
+    "arm64": {
+      "url": "https://github.com/xushengfeng/eSearch/releases/download/14.8.0/eSearch-14.8.0-win32-arm64.zip",
+      "hash": "1ff949be8bea57184227193fa0fd66a6e7f4de5f7c01607e601e8c08797bf8ab"
     }
+  },
+  "bin": "e-search.exe",
+  "shortcuts": [
+    [
+      "e-search.exe",
+      "eSearch"
+    ]
+  ],
+  "pre_install": [
+    "# utils.ps1",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "$LinkPaths = @(\"$env:AppData\\eSearch\")",
+    "$LinkTargets = @(\"$persist_dir\\eSearch\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Stop-Process",
+    "A-Remove-Link",
+    "A-Remove-TempData",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "github": "https://github.com/xushengfeng/eSearch"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/xushengfeng/eSearch/releases/download/$version/eSearch-$version-win32-x64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/xushengfeng/eSearch/releases/download/$version/eSearch-$version-win32-arm64.zip"
+      }
+    }
+  }
 }
