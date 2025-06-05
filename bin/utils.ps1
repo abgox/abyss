@@ -3,6 +3,8 @@
 
     1. 在 pre_install 和 post_install 中
 
+        - A-Start-PreInstall: 此函数运行之后，开始执行 pre_install
+        - A-Start-PostInstall: 此函数运行之后，开始执行 post_install
         - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包
         - A-Ensure-Directory: 确保指定目录路径存在
         - A-New-PersistFile: 创建文件，可选择设置内容
@@ -11,10 +13,11 @@
         - A-Add-Font: 安装字体
         - A-Add-MsixPackage: 安装 AppX/Msix 包
         - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
-        - A-Complete-Install: Install 脚本的最后一步，进行一些收尾工作
 
     2. 在 pre_uninstall 和 post_uninstall 中
 
+        - A-Start-PreUninstall: 此函数运行之后，开始执行 pre_uninstall
+        - A-Start-PostUninstall: 此函数运行之后，开始执行 post_uninstall
         - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
         - A-Stop-Service: 尝试停止并移除指定的应用服务，以确保能正常卸载
         - A-Remove-Link: 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction
@@ -22,7 +25,6 @@
         - A-Remove-MsixPackage: 卸载 AppX/Msix 包
         - A-Remove-PowerToysRunPlugin: 移除 PowerToys Run 插件
         - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
-        - A-Complete-Uninstall: Uninstall 脚本的最后一步，进行一些收尾工作
 
     3. 特别的:
 
@@ -427,17 +429,31 @@ function A-Stop-Service {
     }
 }
 
-function A-Complete-Install {
+function A-Start-PreInstall {
     <#
     .SYNOPSIS
-        处理安装完成后的操作
+        此函数运行之后，开始执行 pre_install
     #>
 }
 
-Function A-Complete-Uninstall {
+function A-Start-PostInstall {
     <#
     .SYNOPSIS
-        处理卸载完成后的操作
+        此函数运行之后，开始执行 post_install
+    #>
+}
+
+Function A-Start-PreUninstall {
+    <#
+    .SYNOPSIS
+        此函数运行之后，开始执行 pre_uninstall
+    #>
+}
+
+Function A-Start-PostUninstall {
+    <#
+    .SYNOPSIS
+        此函数运行之后，开始执行 post_uninstall
     #>
 }
 
@@ -953,7 +969,20 @@ function A-Remove-AppxPackage {
 #endregion
 
 
-#region 废弃函数，不要在清单中使用。在文件的开头有列出可用的函数。
+#region 废弃函数，不要在清单中使用。你应该使用在文件的开头列出的可用的函数。
+function A-Complete-Install {
+    <#
+    .SYNOPSIS
+        处理安装完成后的操作
+    #>
+}
+
+Function A-Complete-Uninstall {
+    <#
+    .SYNOPSIS
+        处理卸载完成后的操作
+    #>
+}
 function A-Remove-LinkFile {
     <#
     .SYNOPSIS
