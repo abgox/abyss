@@ -8,10 +8,13 @@
     "version",
     "description",
     "homepage",
-    "license"
+    "license",
+    "pre_install",
+    "post_install",
+    "pre_uninstall"
   ],
   "additionalProperties": false,
-  "$comment": "markdownDescription 字段是 vscode 扩展属性，用于在 vscode 中显示 markdown 格式的描述。",
+  "$comment": "markdownDescription 字段是 vscode 扩展属性，用于在 vscode 中显示 markdown 格式的描述",
   "dependentRequired": {
     "autoupdate": [
       "checkver"
@@ -23,85 +26,80 @@
   "definitions": {
     "bool": {
       "type": "boolean",
-      "title": "类型: 布尔值",
-      "examples": [
+      "enum": [
         true,
         false
       ]
     },
     "str": {
       "type": "string",
-      "title": "类型: 字符串",
       "examples": [
         ""
-      ]
+      ],
+      "minLength": 1
     },
-    "arr_or_str": {
+    "string_or_string_array": {
       "examples": [
         "",
         []
       ],
-      "type": [
-        "string",
-        "array"
-      ],
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       },
       "minLength": 1,
       "minItems": 1,
-      "errorMessage": "它只能是一个字符串或者数组"
+      "if": {
+        "allOf": [
+          {
+            "not": {
+              "type": "string"
+            }
+          },
+          {
+            "not": {
+              "type": "array"
+            }
+          }
+        ]
+      },
+      "then": {
+        "$comment": "这是一个通用的，让验证器使用自定义的 errorMessage 的方式",
+        "not": true,
+        "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
+      }
     },
     "license_identifier": {
-      "anyOf": [
-        {
-          "markdownDescription": "使用 `Unknown`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示无法确定许可证(unable to determine the license)",
-          "description": "使用 Unknown，这是 Scoop 官方定义的字段，表示无法确定许可证(unable to determine the license)\n详情参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties",
-          "enum": [
-            "Unknown"
-          ]
-        },
-        {
-          "markdownDescription": "使用 `Freeware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费软件(free to use forever)",
-          "description": "使用 Freeware，这是 Scoop 官方定义的字段，表示这是一个免费软件(free to use forever)\n详情参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties",
-          "enum": [
-            "Freeware"
-          ]
-        },
-        {
-          "markdownDescription": "使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)",
-          "description": "使用 Proprietary，这是 Scoop 官方定义的字段，表示这是一个付费软件(must pay to use)\n详情参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties",
-          "enum": [
-            "Proprietary"
-          ]
-        },
-        {
-          "markdownDescription": "使用 `Public Domain`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个属于公有领域的软件(Public Domain)",
-          "description": "使用 Public Domain，这是 Scoop 官方定义的字段，表示这是一个属于公有领域的软件(Public Domain)\n详情参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties",
-          "enum": [
-            "Public Domain"
-          ]
-        },
-        {
-          "markdownDescription": "使用 `Shareware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)",
-          "description": "使用 Shareware，这是 Scoop 官方定义的字段，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)\n详情参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties",
-          "enum": [
-            "Shareware"
-          ]
-        },
-        {
-          "markdownDescription": "使用 `Freemium`，这是由 [abyss bucket](https://github.com/abgox/abyss) 定义的特殊字段，表示这是一个免费增值软件，基础功能永久免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)",
-          "description": "使用 Freemium，这是由 [abyss bucket](https://github.com/abgox/abyss) 定义的特殊字段，表示这是一个免费增值软件，基础功能永久免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)",
-          "enum": [
-            "Freemium"
-          ]
-        }
+      "enum": [
+        "Unknown",
+        "Freeware",
+        "Proprietary",
+        "Public Domain",
+        "Shareware",
+        "Freemium"
+      ],
+      "markdownEnumDescriptions": [
+        "使用 `Unknown`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示无法确定许可证(unable to determine the license)",
+        "使用 `Freeware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费软件(free to use forever)",
+        "使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)",
+        "使用 `Public Domain`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个属于公有领域的软件(Public Domain)",
+        "使用 `Shareware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)",
+        "使用 `Freemium`，这是由 [abyss bucket](https://github.com/abgox/abyss) 定义的特殊字段，表示这是一个免费增值软件，基础功能永久免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
       ]
     },
     "license": {
       "title": "软件许可证",
-      "markdownDescription": "- 软件的许可证。\n- 属性:\n  - `identifier`: 必填\n  - `url`: 可选",
-      "description": "- 软件的许可证。\n- 属性:\n  - identifier: 必填\n  - url: 可选",
+      "markdownDescription": "指定软件的许可证或类型字段\n- 如果没有许可证的相关说明和 url 地址，且符合 `Freeware`、`Proprietary`、`Public Domain`、`Shareware`、`Freemium`、`Unknown` 之一，必须使用字符串\n- 如果是其他情况，必须使用对象，然后指定 `identifier` 和 `url`，`url` 不是必须的\n- https://opensource.org/license\n- https://spdx.org/licenses",
+      "description": "指定软件的许可证或类型字段\n- 如果没有许可证的相关说明和 url 地址，且符合 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 之一，必须使用字符串\n- 如果是其他情况，必须使用对象，然后指定 identifier 和 url，url 不是必须的\n- https://opensource.org/license\n- https://spdx.org/licenses",
+      "type": [
+        "string",
+        "object"
+      ],
+      "errorMessage": "license 只能是一个字符串 (string) 或者对象 (object)",
+      "examples": [
+        "Freeware",
+        {}
+      ],
       "oneOf": [
         {
           "type": "string",
@@ -116,11 +114,13 @@
           "additionalProperties": false,
           "properties": {
             "identifier": {
-              "title": "许可证标识符 (如果符合 Freeware、Proprietary、Public Domain、Shareware、Freemium 之一，应该优先使用它们)\n前往 https://opensource.org/license 或 https://spdx.org/licenses/ 查看详情。",
-              "description": "软件的许可证标识符",
+              "title": "许可证标识符",
+              "markdownDescription": "- 软件的许可证标识符\n- 如果没有许可证的相关说明，且符合 `Freeware`、`Proprietary`、`Public Domain`、`Shareware`、`Freemium`、`Unknown` 之一，可以使用它们\n- https://opensource.org/license\n- https://spdx.org/licenses",
+              "description": "- 软件的许可证标识符\n- 如果没有许可证的相关说明，且符合 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 之一，可以使用它们\n- https://opensource.org/license\n- https://spdx.org/licenses",
               "type": "string",
               "$comment": "这里写 examples 只是为了 vscode 能触发补全菜单，不需要和下方的 enum 对应",
               "examples": [
+                "",
                 "MIT",
                 "Apache-2.0"
               ],
@@ -130,27 +130,20 @@
                   "minLength": 1
                 },
                 {
-                  "markdownDescription": "使用 The MIT License ([基于 OSI 标准模板](https://opensource.org/license/MIT))",
-                  "enum": [
-                    "MIT"
-                  ]
+                  "$ref": "#/definitions/license_identifier"
                 },
                 {
-                  "markdownDescription": "使用 Apache License, Version 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/Apache-2.0))",
                   "enum": [
-                    "Apache-2.0"
-                  ]
-                },
-                {
-                  "markdownDescription": "使用 Mozilla Public License 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/MPL-2.0))",
-                  "enum": [
-                    "MPL-2.0"
-                  ]
-                },
-                {
-                  "markdownDescription": "使用 GNU General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-3.0))",
-                  "enum": [
+                    "MIT",
+                    "Apache-2.0",
+                    "MPL-2.0",
                     "GPL-3.0-only"
+                  ],
+                  "markdownEnumDescriptions": [
+                    "使用 The MIT License ([基于 OSI 标准模板](https://opensource.org/license/MIT))",
+                    "使用 Apache License, Version 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/Apache-2.0))",
+                    "使用 Mozilla Public License 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/MPL-2.0))",
+                    "使用 GNU General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-3.0))"
                   ]
                 }
               ]
@@ -161,7 +154,38 @@
               "markdownDescription": "软件许可证的 URL 地址。",
               "description": "软件许可证的 URL 地址。",
               "pattern": "^https?://",
-              "errorMessage": "url 必须是一个有效的 http/https URL。"
+              "errorMessage": "url 必须是一个有效的 http/https URL"
+            }
+          }
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "identifier"
+            ]
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "identifier": {
+                  "pattern": "^(Freeware|Proprietary|Public Domain|Shareware|Freemium|Unknown)$"
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "identifier"
+                ],
+                "not": {
+                  "required": [
+                    "url"
+                  ]
+                }
+              },
+              "errorMessage": "当 license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个时，必须提供 url，否则请使用字符串"
             }
           }
         }
@@ -169,32 +193,49 @@
     },
     "url": {
       "title": "软件下载地址",
-      "markdownDescription": "- 要下载的文件的 URL。\n- 如果有多个 URL，可以使用数组，例如:\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/dl.7z`，例如:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取。\n    - 它通常用于 Scoop 清单中，以绕过可能具有不良副作用的可执行安装程序，如注册表更改，放置在安装目录外的文件或管理员提升提示。",
-      "description": "- 要下载的文件的 URL。\n- 如果有多个 URL，可以使用数组。\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 #/dl.7z 这样的字段。\n- 如：\"http://example.org/program.exe\" => \"http://example.org/program.exe#/dl.7z\"\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取。\n- 此技术通常用于 Scoop 清单中，以绕过可能具有不良副作用的可执行安装程序，如注册表更改，放置在安装目录外的文件或管理员提升提示。",
+      "markdownDescription": "- 要下载的文件的 URL\n- 如果有多个 URL，可以使用数组，例如:\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/dl.7z`，例如:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取\n    - 它通常用于 Scoop 清单中，以绕过可能具有不良副作用的可执行安装程序，如注册表更改，放置在安装目录外的文件或管理员提升提示",
+      "description": "- 要下载的文件的 URL\n- 如果有多个 URL，可以使用数组\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 #/dl.7z 这样的字段\n- 如：\"http://example.org/program.exe\" => \"http://example.org/program.exe#/dl.7z\"\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取\n- 此技术通常用于 Scoop 清单中，以绕过可能具有不良副作用的可执行安装程序，如注册表更改，放置在安装目录外的文件或管理员提升提示",
       "examples": [
         "",
         []
       ],
+      "if": {
+        "type": "string"
+      },
+      "then": {
+        "minLength": 1
+      },
+      "else": {
+        "if": {
+          "type": "array"
+        },
+        "then": {
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "else": {
+          "not": true,
+          "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
+        }
+      }
+    },
+    "hash": {
+      "title": "软件安装包的 hash 值",
+      "description": "软件安装包的 hash 值，用于校验下载的软件是否完整",
       "type": [
         "string",
         "array"
       ],
       "items": {
         "type": "string",
-        "pattern": "^https?://",
-        "errorMessage": "url 必须是一个有效的 http/https URL。"
+        "pattern": "^([a-fA-F0-9]{64}|(sha1|sha256|sha512|md5):([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}))$",
+        "errorMessage": "当前的 hash 值格式错误，请参考 https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#optional-properties"
       },
-      "minLength": 1,
-      "minItems": 1,
-      "errorMessage": "它只能是一个字符串或者数组"
-    },
-    "hash": {
-      "title": "软件哈希值",
-      "description": "软件的哈希值，用于校验下载的软件是否完整。",
-      "type": "string",
-      "$comment": "这里为了实现 hash 和 url 字段的联动，就去掉了 hash 值的验证，因为 hash 值是通过 autoupdate 自动获取的，校验它的重要性不大。但这里将 pattern 和 errorMessage 更名为 _pattern 和 _errorMessage，以作为保留，以便后续扩展。",
-      "_pattern": "^([a-fA-F0-9]{64}|(sha1|sha256|sha512|md5):([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}))$",
-      "_errorMessage": "当前的 hash 值格式错误，请参考 https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#optional-properties"
+      "pattern": "^([a-fA-F0-9]{64}|(sha1|sha256|sha512|md5):([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}))$",
+      "errorMessage": "当前的 hash 值格式错误，请参考 https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#optional-properties"
     },
     "architecture_property": {
       "properties": {
@@ -208,8 +249,7 @@
           "$ref": "#/definitions/extract_dir"
         },
         "hash": {
-          "title": "软件哈希值",
-          "description": "软件的哈希值，用于校验下载的软件是否完整。"
+          "$ref": "#/definitions/hash"
         },
         "installer": {
           "$ref": "#/definitions/installer"
@@ -278,28 +318,43 @@
       "title": "架构信息",
       "description": "程序的架构信息。\n如果应用程序不是32位的，架构可以用来包装差异。",
       "type": "object",
-      "propertyNames": {
-        "enum": [
-          "64bit",
-          "32bit",
-          "arm64"
-        ],
-        "errorMessage": "architecture 中至少包含 64bit、32bit 或 arm64 其中一个。"
+      "if": {
+        "type": "object",
+        "anyOf": [
+          {
+            "required": [
+              "64bit"
+            ]
+          },
+          {
+            "required": [
+              "32bit"
+            ]
+          },
+          {
+            "required": [
+              "arm64"
+            ]
+          }
+        ]
       },
-      "minProperties": 1,
+      "else": {
+        "not": true,
+        "errorMessage": "architecture 中至少包含 64bit、32bit 或 arm64 其中一个"
+      },
       "additionalProperties": false,
       "$ref": "#/definitions/architecture_examples",
       "properties": {
         "64bit": {
-          "description": "64位架构\n对象可用属性: url,hash,bin,extract_dir,installer,uninstaller,pre_install,post_install,shortcuts,checkver",
+          "description": "64位架构",
           "$ref": "#/definitions/architecture_property"
         },
         "32bit": {
-          "description": "32位架构\n对象可用属性: url,hash,bin,extract_dir,installer,uninstaller,pre_install,post_install,shortcuts,checkver",
+          "description": "32位架构",
           "$ref": "#/definitions/architecture_property"
         },
         "arm64": {
-          "description": "arm64架构\n对象可用属性: url,hash,bin,extract_dir,installer,uninstaller,pre_install,post_install,shortcuts,checkver",
+          "description": "arm64架构",
           "$ref": "#/definitions/architecture_property"
         }
       }
@@ -310,17 +365,46 @@
         "array"
       ],
       "items": {
-        "type": [
-          "string",
-          "array"
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "allOf": [
+              {
+                "if": {
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "then": {
+                  "not": true,
+                  "errorMessage": "缺少第二个必需值: 别名"
+                }
+              },
+              {
+                "if": {
+                  "maxItems": 0
+                },
+                "then": {
+                  "not": true,
+                  "errorMessage": "缺少两个必需值: 程序名、别名"
+                }
+              }
+            ],
+            "minItems": 1,
+            "maxItems": 3
+          },
+          {
+            "type": "string"
+          }
         ],
-        "minLength": 1,
-        "minItems": 1,
-        "errorMessage": "它只能是一个字符串或者数组"
+        "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
       },
       "minLength": 1,
       "minItems": 1,
-      "errorMessage": "它只能是一个字符串或者数组",
+      "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)",
       "examples": [
         "",
         [],
@@ -329,29 +413,25 @@
         ]
       ],
       "title": "一个程序(可执行文件或脚本)的字符串或字符串数组",
-      "markdownDescription": "- 一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用。\n- 可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件。\n- 二维数组应该包含最多三个字符串：程序名,别名,参数(可选)\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
+      "markdownDescription": "- 一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用\n- 可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件\n- 二维数组应该包含最多三个字符串：程序名,别名,参数(可选)\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
       "description": "一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用。\n可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件。\n二维数组应该包含最多三个字符串：程序名,别名,参数(可选)"
     },
     "checkver": {
       "title": "版本检查配置",
-      "description": "应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本。\n字符串：在主页上查找版本的 RegEx\n对象：更丰富的配置",
+      "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置",
+      "type": [
+        "string",
+        "object"
+      ],
       "examples": [
         "",
         "github",
-        {
-          "url": "",
-          "regex": ""
-        },
-        {
-          "script": [
-            ""
-          ],
-          "regex": ""
-        }
+        {}
       ],
       "oneOf": [
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "url": {
               "description": "版本所在页面",
@@ -395,110 +475,88 @@
             },
             "script": {
               "description": "可包含 PowerShell 命令的字符串或字符串数组，用于跟踪多个链接",
-              "$ref": "#/definitions/arr_or_str"
+              "$ref": "#/definitions/string_or_string_array"
             }
           },
           "minProperties": 1
         },
         {
-          "type": "string"
+          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "enum": [
+                "github"
+              ],
+              "markdownEnumDescriptions": [
+                "如果 homepage 是 github 仓库主页，就可以直接使用 \"github\" 字符串作为 checkver 配置"
+              ]
+            }
+          ]
         }
       ]
     },
     "extract_dir": {
-      "title": "解压目录",
-      "description": "如果 url 指向一个压缩文件(支持.zip、.7z、.tar、.gz、.lzma和.lzh)，Scoop 将只提取其中指定的目录",
-      "$ref": "#/definitions/arr_or_str"
+      "title": "仅提取指定目录",
+      "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 默认会提取所有内容\n    - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果存在 `extract_dir` 属性，Scoop 将只提取 `extract_dir` 定义的指定目录",
+      "description": "- 如果 url 属性的值指向一个压缩包(.zip/.7z/.tar/.gz/.lzma/.lzh)，Scoop 默认会提取所有内容\n- 如果存在 extract_dir 属性，Scoop 将只提取 extract_dir 定义的指定目录",
+      "$ref": "#/definitions/string_or_string_array"
     },
     "installer": {
-      "description": "运行非 MSI 安装程序的说明。\n在 scoop install 和 scoop update 期间调用。\n可用属性: file,script,args,keep",
+      "title": "安装程序配置",
+      "markdownDescription": "- 运行非 MSI 安装程序的配置\n- 在 scoop install 和 scoop update 期间调用\n- 执行顺序: `pre_install` -> `installer` -> `post_install`",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
       "examples": [
-        {
-          "file": ""
-        },
-        {
-          "script": [
-            ""
-          ]
-        },
-        {
-          "file": "",
-          "script": [
-            ""
-          ]
-        },
-        {
-          "file": "",
-          "script": [
-            ""
-          ],
-          "args": [
-            ""
-          ]
-        }
+        {}
       ],
       "properties": {
         "file": {
-          "description": "安装程序可执行文件。对于 installer ，默认为最后下载的URL。必须为 uninstaller 指定。",
+          "markdownDescription": "- 安装程序可执行文件\n- 对于 installer，默认为最后下载的 URL\n- 如果指定了它， uninstaller 中也需要指定",
           "$ref": "#/definitions/str"
         },
         "script": {
-          "description": "一行字符串或字符串数组，作为安装程序而不是 file 执行。\n可用变量：$fname(上次下载的文件)、 $manifest(已验证的清单引用)、 $architecture(64bit 或 32bit)、 $dir(安装目录)",
-          "$ref": "#/definitions/arr_or_str"
+          "markdownDescription": "- 作为安装程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 上次下载的文件\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
+          "$ref": "#/definitions/string_or_string_array"
         },
         "args": {
           "type": "array",
-          "description": "传递给安装程序的参数数组。可选的.",
+          "markdownDescription": "- 传递给安装程序的参数数组\n- 它是一个可选的属性",
           "items": {
             "$ref": "#/definitions/str"
           },
           "minItems": 1
         },
         "keep": {
-          "description": "如果安装程序在运行后应该保留(例如，用于将来的卸载)，则设置为 true。\n如果忽略或设置为任何其他值，安装程序将在运行后被删除。",
+          "markdownDescription": "- 如果安装程序在运行后应该保留(例如，用于将来的卸载)，则设置为 true\n- 如果忽略或设置为任何其他值，安装程序将在运行后被删除",
           "$ref": "#/definitions/bool"
         }
       }
     },
     "uninstaller": {
-      "description": "运行非 MSI 卸载程序的说明。\n在 scoop uninstall 和 scoop update 期间调用。\n可用属性: file,script,args",
+      "title": "卸载程序配置",
+      "markdownDescription": "- 运行非 MSI 卸载程序的配置\n- 在 scoop uninstall 和 scoop update 期间调用\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
       "examples": [
-        {
-          "file": ""
-        },
-        {
-          "script": [
-            ""
-          ]
-        },
-        {
-          "file": "",
-          "script": [
-            ""
-          ]
-        },
-        {
-          "file": "",
-          "script": [
-            ""
-          ],
-          "args": [
-            ""
-          ]
-        }
+        {}
       ],
       "properties": {
         "file": {
-          "description": "卸载程序可执行文件。",
+          "description": "卸载程序可执行文件",
           "$ref": "#/definitions/str"
         },
         "script": {
-          "description": "一行字符串或字符串数组，作为卸载程序而不是 file 执行。\n可用变量：$fname(上次下载的文件)、 $manifest(已验证的清单引用)、 $architecture(64bit 或 32bit)、 $dir(安装目录)",
-          "$ref": "#/definitions/arr_or_str"
+          "markdownDescription": "- 作为卸载程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 上次下载的文件\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
+          "$ref": "#/definitions/string_or_string_array"
         },
         "args": {
           "type": "array",
-          "description": "传递给卸载程序的参数数组。可选的",
+          "markdownDescription": "- 传递给卸载程序的参数数组\n- 它是一个可选的属性",
           "items": {
             "$ref": "#/definitions/str"
           },
@@ -507,118 +565,158 @@
       }
     },
     "pre_install": {
-      "description": "一行字符串或字符串数组，用于在安装应用程序之前执行命令\n可以使用的函数:\nappdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n可以使用的变量：\n$app: 应用程序名称(应用清单名称)\n$architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n$cmd: 当前正在运行的子命令，如 uninstall/update/install\n$cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n$global: 如果值为$true，则全局安装\n$manifest: 反序列化清单(PowerShell 对象)，如 @{homepage=https://xxx.com/; description=xxx;...}\n$version: 正在安装的版本，如 1.2.3\n$dir: 应用程序安装目录(实际版本号目录)\n$persist_dir: 数据持久化目录\n$bucketsdir: Scoop buckets 目录，如 C:\\Users\\username\\scoop\\buckets\n$bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n$cachedir: Scoop cache 目录\n$cfgpath: Scoop 配置的路径\n$globaldir: 全局安装目录\n$modulesdir: Scoop modules 目录\n$original_dir: 应用程序安装目录(实际版本号目录)\n$scoopdir: Scoop 所在目录\n$oldscoopdir: 旧的 Scoop 目录",
-      "$ref": "#/definitions/arr_or_str"
+      "title": "预安装脚本",
+      "markdownDescription": "- 用于在安装应用程序之前执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+      "$ref": "#/definitions/string_or_string_array"
     },
     "post_install": {
-      "description": "一行字符串或字符串数组，用于在安装应用程序之后执行命令\n可以使用的函数:\nappdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n可以使用的变量：\n$app: 应用程序名称(应用清单名称)\n$architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n$cmd: 当前正在运行的子命令，如 uninstall/update/install\n$cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n$global: 如果值为$true，则全局安装\n$manifest: 反序列化清单(PowerShell 对象)，如 @{homepage=https://xxx.com/; description=xxx;...}\n$version: 正在安装的版本，如 1.2.3\n$dir: 应用程序安装目录(current 目录)\n$persist_dir: 数据持久化目录\n$bucketsdir: Scoop buckets 目录，如 C:\\Users\\username\\scoop\\buckets\n$bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n$cachedir: Scoop cache 目录\n$cfgpath: Scoop 配置的路径\n$globaldir: 全局安装目录\n$modulesdir: Scoop modules 目录\n$original_dir: 应用程序安装目录(实际版本号目录)\n$scoopdir: Scoop 所在目录\n$oldscoopdir: 旧的 Scoop 目录",
-      "$ref": "#/definitions/arr_or_str"
+      "title": "后安装脚本",
+      "markdownDescription": "- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+      "$ref": "#/definitions/string_or_string_array"
     },
     "extract_to": {
-      "description": "如果 url 指向压缩文件(支持.zip、.7z、.tar、.gz、.lzma和.lzh)，Scoop 会将所有内容提取到指定的目录",
-      "$ref": "#/definitions/arr_or_str"
+      "title": "提取内容到指定目录",
+      "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 会将所有内容提取到 `extract_to` 定义的指定目录中\n    - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`",
+      "description": "如果 url 属性的值指向一个压缩包(.zip/.7z/.tar/.gz/.lzma/.lzh)，Scoop 会将所有内容提取到 extract_to 定义的指定目录中",
+      "$ref": "#/definitions/string_or_string_array"
     },
     "shortcuts": {
       "type": "array",
-      "title": "类型: 二维数组",
-      "description": "指定要在开始菜单中可用的快捷方式值。\n二维数组中包含四个值：\n1.目标文件的路径(必需值)\n2.快捷方式的名称(支持子目录:<AppsSubDir>\\<AppShortcut>，必需值)\n3.启动参数(可选值)\n4.图标文件的路径(可选值)",
+      "title": "添加到开始菜单的快捷方式",
+      "markdownDescription": "- 指定添加到开始菜单的快捷方式，它们会被放在 `Scoop Apps` 目录中\n- 每个数组中可以包含四个值\n    1. 必需值: 目标文件的路径\n    2. 必需值: 快捷方式的名称，支持子目录: `aaa\\bbb`\n    3. 可选值: 启动参数\n    4. 可选值: 图标文件的路径",
+      "description": "- 指定添加到开始菜单的快捷方式，它们会被放在 Scoop Apps 目录中\n- 每个数组中可以包含四个值\n1. 必需值: 目标文件的路径\n2. 必需值: 快捷方式的名称，支持子目录: `aaa\\bbb`\n3. 可选值: 启动参数\n4. 可选值: 图标文件的路径",
       "examples": [
         [
-          [
-            "",
-            ""
-          ]
-        ],
-        [
-          [
-            "",
-            ""
-          ],
-          [
-            "",
-            ""
-          ]
-        ],
-        [
-          [
-            "",
-            "",
-            "",
-            ""
-          ]
+          []
         ]
       ],
       "items": {
         "type": "array",
         "items": {
           "type": "string",
+          "minLength": 1,
           "examples": [
             ""
           ]
         },
-        "minItems": 2,
+        "allOf": [
+          {
+            "if": {
+              "minItems": 1,
+              "maxItems": 1
+            },
+            "then": {
+              "not": true,
+              "errorMessage": "缺少第二个必需值: 快捷方式名称"
+            }
+          },
+          {
+            "if": {
+              "maxItems": 0
+            },
+            "then": {
+              "not": true,
+              "errorMessage": "缺少两个必需值: 目标文件路径、快捷方式名称"
+            }
+          }
+        ],
+        "minItems": 1,
         "maxItems": 4
       },
       "minItems": 1
     },
     "env_add_path": {
-      "title": "环境变量 PATH",
-      "description": "添加到环境变量 PATH 中的路径。",
+      "title": "添加到环境变量 PATH 中的路径",
+      "markdownDescription": "- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中",
+      "description": "- 添加到环境变量 PATH 中的路径\n- 如果安装时使用了 --global 或 -g 参数，则会添加到环境变量(系统级) PATH 中",
       "type": "string",
       "minLength": 1
     },
     "env_set": {
-      "description": "为用户(或系统，如果使用 --global)设置一个或多个环境变量",
+      "title": "设置环境变量",
+      "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中",
+      "description": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中",
       "type": "object",
       "examples": [
-        {
-          "": ""
-        }
+        {}
       ],
-      "patternProperties": {
-        "": {
-          "type": "string",
-          "examples": [
-            ""
-          ]
-        }
+      "if": {
+        "type": "object"
       },
-      "minProperties": 1
-    },
-    "persist": {
-      "description": "目录和文件的字符串或数组(字符串数组或二维数组)，用于在应用程序的数据目录中持久化。",
-      "examples": [
-        "",
-        [
-          ""
-        ],
-        [
-          [
-            "",
-            ""
-          ]
-        ]
-      ],
-      "oneOf": [
-        {
-          "type": "array",
-          "items": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array"
-              }
-            ]
+      "then": {
+        "patternProperties": {
+          "^.+$": {
+            "$ref": "#/definitions/string_or_string_array"
           }
         },
-        {
-          "type": "string"
-        }
+        "minProperties": 1,
+        "additionalProperties": false,
+        "errorMessage": "不允许属性名为空字符串"
+      },
+      "else": {
+        "not": true,
+        "errorMessage": "它只能是一个对象 (object)"
+      }
+    },
+    "persist": {
+      "title": "持久化数据",
+      "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"data\", \"userData\"], \n    [\"config.json\", \"myApp/config.json\"]\n  ]\n  ```",
+      "type": [
+        "string",
+        "array"
+      ],
+      "items": {
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "allOf": [
+              {
+                "if": {
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "then": {
+                  "not": true,
+                  "errorMessage": "缺少第二个必需值: persist 的目标位置"
+                }
+              },
+              {
+                "if": {
+                  "maxItems": 0
+                },
+                "then": {
+                  "not": true,
+                  "errorMessage": "缺少两个必需值: 需要 persist 的原始文件或目录、persist 的目标位置"
+                }
+              }
+            ],
+            "minItems": 1,
+            "maxItems": 3
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
+      },
+      "minLength": 1,
+      "minItems": 1,
+      "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)",
+      "examples": [
+        "",
+        [],
+        [
+          []
+        ]
       ]
     },
     "psmodule": {
+      "title": "安装 PowerShell 模块",
+      "description": "作为 PowerShell 模块安装在 ~/scoop/modules 中",
       "type": "object",
       "required": [
         "name"
@@ -628,14 +726,14 @@
           "name": ""
         }
       ],
-      "title": "类型: 对象",
-      "description": "在 ~/scoop/modules 中作为PowerShell模块安装。",
       "properties": {
         "name": {
-          "description": "模块的名称，它应该与提取目录中的至少一个文件匹配，以便 PowerShell 将其识别为模块。",
+          "title": "模块名称",
+          "description": "模块的名称，它应该与提取目录中的至少一个文件匹配，以便 PowerShell 将其识别为模块",
           "$ref": "#/definitions/str"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "autoupdate_architecture": {
       "required": [
@@ -643,35 +741,61 @@
       ],
       "allOf": [
         {
-          "$ref": "#/definitions/architecture_property"
-        },
-        {
           "properties": {
+            "bin": {
+              "$ref": "#/definitions/bin"
+            },
+            "checkver": {
+              "$ref": "#/definitions/checkver"
+            },
+            "extract_dir": {
+              "$ref": "#/definitions/extract_dir"
+            },
             "hash": {
-              "$ref": "#/definitions/get_hash"
+              "$ref": "#/definitions/autoupdate_hash"
+            },
+            "installer": {
+              "$ref": "#/definitions/installer"
+            },
+            "pre_install": {
+              "$ref": "#/definitions/pre_install"
+            },
+            // "post_install": {
+            //   "$ref": "#/definitions/post_install"
+            // },
+            "shortcuts": {
+              "$ref": "#/definitions/shortcuts"
+            },
+            "uninstaller": {
+              "$ref": "#/definitions/uninstaller"
+            },
+            "url": {
+              "$ref": "#/definitions/url"
             }
-          }
+          },
+          "minProperties": 1,
+          "additionalProperties": false
         }
       ]
     },
-    "get_hash": {
-      "type": "object",
-      "title": "类型: 对象",
-      "description": "一个对象，定义哈希的获取\n对象可用属性: url,regex/find,mode,jp/jsonpath,xpath",
+    "autoupdate_hash": {
+      "description": "定义 hash 的获取",
       "required": [
         "url"
       ],
+      "type": "object",
+      "additionalProperties": false,
       "properties": {
         "url": {
-          "description": "用于下载RDF/JSON文件或提取哈希的URL模板",
+          "description": "用于下载RDF/JSON文件或提取 hash 的URL模板",
           "$ref": "#/definitions/str"
         },
         "regex": {
-          "description": "别名：find\nRegEx表达式来提取哈希",
+          "description": "别名：find\nRegEx表达式来提取 hash",
           "$ref": "#/definitions/str"
         },
         "find": {
-          "description": "别名：regex\nRegEx表达式来提取哈希",
+          "description": "别名：regex\nRegEx表达式来提取 hash",
           "$ref": "#/definitions/str"
         },
         "mode": {
@@ -695,15 +819,15 @@
           ]
         },
         "jp": {
-          "description": "别名：jsonpath\nJSONPath表达式提取哈希",
+          "description": "别名：jsonpath\nJSONPath表达式提取 hash",
           "$ref": "#/definitions/str"
         },
         "jsonpath": {
-          "description": "别名：jp\nJSONPath表达式提取哈希",
+          "description": "别名：jp\nJSONPath表达式提取 hash",
           "$ref": "#/definitions/str"
         },
         "xpath": {
-          "description": "XPath表达式来提取哈希值",
+          "description": "XPath表达式来提取 hash 值",
           "$ref": "#/definitions/str"
         }
       }
@@ -713,20 +837,34 @@
     "##": {
       "title": "注释",
       "description": "给此清单的读者或维护者的注释。",
-      "$ref": "#/definitions/arr_or_str"
+      "$ref": "#/definitions/string_or_string_array"
     },
     "version": {
       "title": "软件版本",
-      "description": "此应用清单安装的应用程序的版本。",
+      "description": "此应用清单安装的应用程序的版本",
       "type": "string",
       "examples": [
+        "",
         "0.0.0"
+      ],
+      "anyOf": [
+        {
+          "minLength": 1
+        },
+        {
+          "enum": [
+            "0.0.0"
+          ],
+          "markdownEnumDescriptions": [
+            "当前版本为 0.0.0"
+          ]
+        }
       ]
     },
     "description": {
       "title": "软件描述",
-      "markdownDescription": "软件的简短描述。",
-      "description": "软件的简短描述。",
+      "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n- 例如：\"一个 xxx 软件，用于 xxx 功能。A xxx software for xxx.\"",
+      "description": "- 软件的简短描述\n- 需要包含中文和英文描述\n- 例如：\"一个 xxx 软件，用于 xxx 功能。A xxx software for xxx.\"",
       "type": "string",
       "minLength": 1,
       "allOf": [
@@ -742,45 +880,60 @@
     },
     "homepage": {
       "title": "软件主页",
-      "markdownDescription": "软件的主页或仓库地址。",
-      "description": "软件的主页或仓库地址。",
+      "markdownDescription": "软件的主页或仓库地址",
+      "description": "软件的主页或仓库地址",
       "type": "string",
       "pattern": "^https?://",
-      "errorMessage": "homepage 必须是一个有效的 http/https URL。"
+      "errorMessage": "homepage 必须是一个有效的 http/https URL"
     },
     "license": {
       "$ref": "#/definitions/license"
     },
     "depends": {
-      "description": "应用程序的必要依赖项。\n未安装的依赖项将在应用程序安装前自动安装。\n对于可选的依赖项，请使用 suggests 作为替代方案。\n示例：\n\"ffmpeg\"\n[\"adb\", \"extras/vlc\"]",
-      "$ref": "#/definitions/arr_or_str"
+      "title": "依赖项",
+      "markdownDescription": "- 应用程序的必要依赖项\n- 未安装的依赖项将在应用程序安装前自动安装\n- 如果依赖项是可选的，请使用 `suggest` 属性",
+      "description": "- 应用程序的必要依赖项\n- 未安装的依赖项将在应用程序安装前自动安装\n- 如果依赖项是可选的，请使用 suggest",
+      "$ref": "#/definitions/string_or_string_array"
     },
     "suggest": {
       "type": "object",
-      "description": "显示一条消息，建议提供补充功能的可选应用程序。\n如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为“已实现”，用户不会看到任何建议。",
-      "patternProperties": {
-        "": {
-          "$ref": "#/definitions/arr_or_str"
-        }
+      "title": "建议的依赖项",
+      "markdownDescription": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为“已实现”，用户不会看到任何建议",
+      "description": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为“已实现”，用户不会看到任何建议",
+      "if": {
+        "type": "object"
+      },
+      "then": {
+        "patternProperties": {
+          "^.+$": {
+            "$ref": "#/definitions/string_or_string_array"
+          }
+        },
+        "minProperties": 1,
+        "additionalProperties": false,
+        "errorMessage": "不允许属性名为空字符串"
+      },
+      "else": {
+        "not": true,
+        "errorMessage": "它只能是一个对象 (object)"
       }
     },
     "notes": {
       "title": "软件提示信息",
       "description": "安装软件之后的英文提示信息。",
-      "$ref": "#/definitions/arr_or_str"
+      "$ref": "#/definitions/string_or_string_array"
     },
     "notes-cn": {
       "title": "软件提示信息",
       "markdownDescription": "- 安装软件之后的中文提示信息。\n- 它是 [abyss bucket](https://github.com/abgox/abyss) 的自定义属性，不是 Scoop 官方字段",
       "description": "- 安装软件之后的中文提示信息。\n- 它是 https://github.com/abgox/abyss 的自定义属性，不是 Scoop 官方字段",
-      "$ref": "#/definitions/arr_or_str"
+      "$ref": "#/definitions/string_or_string_array"
     },
     "url": {
       "$ref": "#/definitions/url"
     },
     "hash": {
-      "title": "软件哈希值",
-      "description": "软件的哈希值，用于校验下载的软件是否完整。"
+      "$ref": "#/definitions/hash"
     },
     "architecture": {
       "$ref": "#/definitions/architecture"
@@ -801,6 +954,9 @@
       "description": "如果安装程序基于 InnoSetup，则设置为 true",
       "$ref": "#/definitions/bool"
     },
+    "psmodule": {
+      "$ref": "#/definitions/psmodule"
+    },
     "bin": {
       "$ref": "#/definitions/bin"
     },
@@ -817,102 +973,30 @@
       "$ref": "#/definitions/post_install"
     },
     "pre_uninstall": {
-      "description": "一行字符串或字符串数组，用于在卸载应用程序之前执行命令\n可以使用的函数:\nappdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n可以使用的变量：\n$app: 应用程序名称(应用清单名称)\n$architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n$cmd: 当前正在运行的子命令，如 uninstall/update/install\n$cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n$global: 如果值为$true，则全局卸载\n$manifest: 反序列化清单(PowerShell 对象)，如 @{homepage=https://xxx.com/; description=xxx;...}\n$version: 正在安装的版本，如 1.2.3\n$dir: 应用程序安装目录(实际版本号目录)\n$persist_dir: 数据持久化目录\n$bucketsdir: Scoop buckets 目录，如 C:\\Users\\username\\scoop\\buckets\n$cachedir: Scoop cache 目录\n$cfgpath: Scoop 配置的路径\n$globaldir: 全局安装目录\n$modulesdir: Scoop modules 目录\n$original_dir: 应用程序安装目录(实际版本号目录)\n$scoopdir: Scoop 所在目录\n$oldscoopdir: 旧的 Scoop 目录",
-      "$ref": "#/definitions/arr_or_str"
+      "title": "预卸载脚本",
+      "markdownDescription": "- 用于在卸载应用程序之前执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+      "$ref": "#/definitions/string_or_string_array"
     },
     "uninstaller": {
       "$ref": "#/definitions/uninstaller"
     },
-    "post_uninstall": {
-      "description": "一行字符串或字符串数组，用于在卸载应用程序之后执行命令\n可以使用的函数:\nappdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n可以使用的变量：\n$app: 应用程序名称(应用清单名称)\n$architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n$cmd: 当前正在运行的子命令，如 uninstall/update/install\n$cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n$global: 如果值为$true，则全局卸载\n$manifest: 反序列化清单(PowerShell 对象)，如 @{homepage=https://xxx.com/; description=xxx;...}\n$version: 正在安装的版本，如 1.2.3\n$dir: 应用程序安装目录(实际版本号目录)\n$persist_dir: 数据持久化目录\n$bucketsdir: Scoop buckets 目录，如 C:\\Users\\username\\scoop\\buckets\n$cachedir: Scoop cache 目录\n$cfgpath: Scoop 配置的路径\n$globaldir: 全局安装目录\n$modulesdir: Scoop modules 目录\n$original_dir: 应用程序安装目录(实际版本号目录)\n$scoopdir: Scoop 所在目录\n$oldscoopdir: 旧的 Scoop 目录",
-      "$ref": "#/definitions/arr_or_str"
-    },
+    // "post_uninstall": {
+    //   "title": "后卸载脚本",
+    //   "markdownDescription": "- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+    //   "$ref": "#/definitions/string_or_string_array"
+    // },
     "persist": {
       "$ref": "#/definitions/persist"
-    },
-    "psmodule": {
-      "$ref": "#/definitions/psmodule"
     },
     "checkver": {
       "$ref": "#/definitions/checkver"
     },
     "autoupdate": {
-      "title": "类型: 对象",
-      "description": "定义如何自动更新清单。\n对象可用属性: note,architecture,url,hash,bin,extract_dir,extract_to,env_add_path,env_set,installer,license,persist,post_install,psmodule,shortcuts",
-      "examples": [
-        {
-          "note": "",
-          "url": ""
-        },
-        {
-          "architecture": {
-            "64bit": {
-              "url": ""
-            }
-          }
-        },
-        {
-          "architecture": {
-            "64bit": {
-              "url": "",
-              "hash": {}
-            }
-          }
-        },
-        {
-          "architecture": {
-            "64bit": {
-              "url": ""
-            },
-            "32bit": {
-              "url": ""
-            }
-          }
-        },
-        {
-          "architecture": {
-            "64bit": {
-              "url": ""
-            },
-            "32bit": {
-              "url": ""
-            },
-            "arm64": {
-              "url": ""
-            }
-          }
-        },
-        {
-          "architecture": {
-            "64bit": {
-              "url": ""
-            },
-            "32bit": {
-              "url": ""
-            }
-          },
-          "hash": {
-            "url": ""
-          }
-        },
-        {
-          "architecture": {
-            "64bit": {
-              "url": ""
-            },
-            "32bit": {
-              "url": ""
-            },
-            "arm64": {
-              "url": ""
-            }
-          },
-          "hash": {
-            "url": ""
-          }
-        }
-      ],
+      "title": "自动更新",
+      "description": "定义如何自动更新清单",
       "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
       "properties": {
         "note": {
           "description": "自动更新完成之后的提示信息",
@@ -920,67 +1004,22 @@
         },
         "architecture": {
           "type": "object",
-          "title": "类型: 对象",
-          "description": "程序的体系结构。\n如果应用程序不是32位的，架构可以用来包装差异\n对象可用属性: 64bit,32bit,arm64",
-          "examples": [
-            {
-              "url": "",
-              "hash": {
-                "url": ""
-              }
-            },
-            {
-              "64bit": {
-                "url": "",
-                "hash": {
-                  "url": "",
-                  "regex": ""
-                }
-              }
-            },
-            {
-              "64bit": {
-                "url": "",
-                "hash": {
-                  "url": "",
-                  "regex": ""
-                }
-              },
-              "32bit": {
-                "url": "",
-                "hash": {
-                  "url": "",
-                  "regex": ""
-                }
-              }
-            },
-            {
-              "64bit": {
-                "url": ""
-              },
-              "32bit": {
-                "url": ""
-              },
-              "hash": {
-                "url": "",
-                "regex": ""
-              }
-            }
-          ],
+          "title": "自动更新架构",
+          "markdownDescription": "- 定义自动更新的架构\n- 如果应用程序不是32位的，架构可以用来包装差异",
           "properties": {
             "64bit": {
-              "description": "64位架构\n对象可用属性: url,hash,bin,extract_dir,installer,uninstaller,pre_install,post_install,shortcuts",
+              "description": "64位架构",
               "$ref": "#/definitions/autoupdate_architecture"
             },
             "32bit": {
-              "description": "32位架构\n对象可用属性: url,hash,bin,extract_dir,installer,uninstaller,pre_install,post_install,shortcuts",
+              "description": "32位架构",
               "required": [
                 "url"
               ],
               "$ref": "#/definitions/autoupdate_architecture"
             },
             "arm64": {
-              "description": "arm64架构\n对象可用属性: url,hash,bin,extract_dir,installer,uninstaller,pre_install,post_install,shortcuts",
+              "description": "arm64架构",
               "required": [
                 "url"
               ],
@@ -992,7 +1031,7 @@
           "$ref": "#/definitions/url"
         },
         "hash": {
-          "$ref": "#/definitions/get_hash"
+          "$ref": "#/definitions/autoupdate_hash"
         },
         "bin": {
           "$ref": "#/definitions/bin"
@@ -1032,7 +1071,76 @@
   },
   "allOf": [
     {
-      "$comment": "如果存在 url，则需要 hash，且不能在 architecture 中继续定义 url。",
+      "$comment": "如果存在 license 是一个对象，则必须存在 identifier",
+      "if": {
+        "required": [
+          "license"
+        ]
+      },
+      "then": {
+        "if": {
+          "properties": {
+            "license": {
+              "type": "object"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "license": {
+              "required": [
+                "identifier"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "如果存在 license，但不存在 url 或 architecture 就触发警告",
+      "if": {
+        "required": [
+          "license"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "url"
+              ]
+            },
+            {
+              "required": [
+                "architecture"
+              ]
+            }
+          ]
+        }
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "not": {
+                "required": [
+                  "url"
+                ]
+              }
+            },
+            {
+              "not": {
+                "required": [
+                  "architecture"
+                ]
+              }
+            }
+          ]
+        },
+        "errorMessage": "缺少 url 或 architecture 属性"
+      }
+    },
+    {
+      "$comment": "如果存在 url，则需要 hash，且不能在 architecture 中继续定义 url",
       "if": {
         "required": [
           "url"
@@ -1053,7 +1161,7 @@
                         "url"
                       ]
                     },
-                    "errorMessage": "url 和 architecture.64bit.url 冲突，你只能选择其中一种方式。"
+                    "errorMessage": "url 和 architecture.64bit.url 冲突，你只能选择其中一种方式"
                   }
                 }
               }
@@ -1069,7 +1177,7 @@
                         "url"
                       ]
                     },
-                    "errorMessage": "url 和 architecture.32bit.url 冲突，你只能选择其中一种方式。"
+                    "errorMessage": "url 和 architecture.32bit.url 冲突，你只能选择其中一种方式"
                   }
                 }
               }
@@ -1085,7 +1193,7 @@
                         "url"
                       ]
                     },
-                    "errorMessage": "url 和 architecture.arm64.url 冲突，你只能选择其中一种方式。"
+                    "errorMessage": "url 和 architecture.arm64.url 冲突，你只能选择其中一种方式"
                   }
                 }
               }
@@ -1152,7 +1260,6 @@
         "then": {
           "allOf": [
             {
-              "description": "当不存在 url 时，禁止定义 hash",
               "properties": {
                 "hash": {
                   "not": true,
@@ -1169,57 +1276,71 @@
             ]
           },
           "then": {
-            "required": [
-              "url"
-            ]
+            "errorMessages": "缺少属性 url 或 architecture"
           }
         }
       }
     },
     {
-      "$comment": "如果存在 url，当 url 是字符串时，hash 必须是字符串，当 url 是数组时，hash 必须是数组。",
+      "$comment": "如果存在 url，当 url 是字符串时，hash 必须是字符串，当 url 是数组时，hash 必须是数组",
       "if": {
         "required": [
           "url"
-        ],
-        "properties": {
-          "url": {
-            "type": "string"
-          }
-        }
+        ]
       },
       "then": {
-        "properties": {
-          "hash": {
-            "type": "string",
-            "minLength": 1,
-            "errorMessage": "当 url 是字符串时，hash 也必须是一个字符串"
-          }
-        }
-      },
-      "else": {
         "if": {
           "properties": {
             "url": {
-              "type": "array"
+              "type": "string"
             }
           }
         },
         "then": {
           "properties": {
             "hash": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/hash"
-              },
-              "examples": [
-                []
-              ],
-              "minItems": 1,
-              "errorMessage": "当 url 是数组时，hash 也必须是一个数组"
+              "type": "string",
+              "minLength": 1,
+              "errorMessage": "当 url 是字符串 (string) 时，hash 也必须是一个字符串 (string)"
+            }
+          }
+        },
+        "else": {
+          "if": {
+            "properties": {
+              "url": {
+                "type": "array"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "hash": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/hash"
+                },
+                "examples": [
+                  []
+                ],
+                "minItems": 1,
+                "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
+              }
             }
           }
         }
+      },
+      "else": {
+        "allOf": [
+          {
+            "properties": {
+              "hash": {
+                "not": true,
+                "errorMessage": "当不存在 url 时，禁止定义 hash"
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -1265,7 +1386,7 @@
                         "hash": {
                           "type": "string",
                           "minLength": 1,
-                          "errorMessage": "当 architecture.64bit.url 是字符串时，architecture.64bit.hash 也必须是一个字符串"
+                          "errorMessage": "当 architecture.64bit.url 是字符串 (string) 时，architecture.64bit.hash 也必须是一个字符串 (string)"
                         }
                       }
                     }
@@ -1311,7 +1432,7 @@
                               "minLength": 1
                             },
                             "minItems": 1,
-                            "errorMessage": "当 architecture.64bit.url 是数组时，architecture.64bit.hash 也必须是一个数组"
+                            "errorMessage": "当 architecture.64bit.url 是数组 (array) 时，architecture.64bit.hash 也必须是一个数组 (array)"
                           }
                         }
                       }
@@ -1355,7 +1476,7 @@
                         "hash": {
                           "type": "string",
                           "minLength": 1,
-                          "errorMessage": "当 architecture.32bit.url 是字符串时，architecture.32bit.hash 也必须是一个字符串"
+                          "errorMessage": "当 architecture.32bit.url 是字符串 (string) 时，architecture.32bit.hash 也必须是一个字符串 (string)"
                         }
                       }
                     }
@@ -1401,7 +1522,7 @@
                               "minLength": 1
                             },
                             "minItems": 1,
-                            "errorMessage": "当 architecture.32bit.url 是数组时，architecture.32bit.hash 也必须是一个数组"
+                            "errorMessage": "当 architecture.32bit.url 是数组 (array) 时，architecture.32bit.hash 也必须是一个数组 (array)"
                           }
                         }
                       }
@@ -1445,7 +1566,7 @@
                         "hash": {
                           "type": "string",
                           "minLength": 1,
-                          "errorMessage": "当 architecture.arm64.url 是字符串时，architecture.arm64.hash 也必须是一个字符串"
+                          "errorMessage": "当 architecture.arm64.url 是字符串 (string) 时，architecture.arm64.hash 也必须是一个字符串 (string)"
                         }
                       }
                     }
@@ -1491,7 +1612,7 @@
                               "minLength": 1
                             },
                             "minItems": 1,
-                            "errorMessage": "当 architecture.arm64.url 是数组时，architecture.arm64.hash 也必须是一个数组"
+                            "errorMessage": "当 architecture.arm64.url 是数组 (array) 时，architecture.arm64.hash 也必须是一个数组 (array)"
                           }
                         }
                       }
@@ -1572,6 +1693,251 @@
           }
         }
       }
+    },
+    {
+      "$comment": "安装和卸载脚本中的特别内容",
+      "allOf": [
+        {
+          "properties": {
+            "pre_install": {
+              "examples": [
+                [
+                  "# utils.ps1",
+                  ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                ]
+              ],
+              "if": {
+                "type": "string"
+              },
+              "then": {
+                "not": true,
+                "errorMessage": "它只能是一个数组 (array)"
+              },
+              "else": {
+                "items": {
+                  "type": "string",
+                  "anyOf": [
+                    {},
+                    {
+                      "enum": [
+                        "# utils.ps1",
+                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                        "A-Expand-SetupExe",
+                        "A-Test-Admin"
+                      ],
+                      "markdownEnumDescriptions": [
+                        "注释\n- 一条简单的注释，应该放在脚本中的第一行\n- 在 `pre_install` 中，它是必要的",
+                        "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的\n- 所有安装逻辑都应该在写在它之后",
+                        "函数\n- 用来展开 Setup.exe 类型的安装包",
+                        "函数\n- 检查是否以管理员权限运行"
+                      ]
+                    }
+                  ]
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "contains": {
+                        "const": "# utils.ps1"
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须包含: \"# utils.ps1\","
+                    }
+                  },
+                  {
+                    "if": {
+                      "contains": {
+                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须包含: \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\","
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "post_install": {
+              "examples": [
+                [
+                  ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                  "A-Complete-Install"
+                ]
+              ],
+              "if": {
+                "type": "string"
+              },
+              "then": {
+                "not": true,
+                "errorMessage": "它只能是一个数组 (array)"
+              },
+              "else": {
+                "items": {
+                  "type": "string",
+                  "anyOf": [
+                    {},
+                    {
+                      "enum": [
+                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                        "A-Complete-Install",
+                        "A-Ensure-Directory",
+                        "A-New-PersistFile \"\"",
+                        "$LinkPaths = @(\"$env:AppData\\xxx\")",
+                        "$LinkTargets = @(\"$persist_dir\\xxx\")",
+                        "A-New-LinkFile $LinkPaths $LinkTargets",
+                        "A-New-LinkDirectory $LinkPaths $LinkTargets",
+                        "A-Add-Font",
+                        "$PackageFamilyName = \"\"",
+                        "A-Add-MsixPackage \"$dir\\dl.msixbundle\"",
+                        "A-Add-PowerToysRunPlugin ''",
+                        "A-Test-Admin"
+                      ],
+                      "markdownEnumDescriptions": [
+                        "脚本\n- 引入 `utils.ps1` 脚本，它需要放在第一行\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的\n- 所有安装逻辑都应该在写在它之后",
+                        "函数\n- 它应该放在最后，表示 `post_install` 脚本的结束",
+                        "函数\n- 确保指定目录路径存在",
+                        "函数\n- 创建文件，可选择设置内容\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
+                        "变量\n- 定义链接的目标路径\n- 例如: `$LinkPaths = @(\"$env:AppData\\xxx\")`",
+                        "变量\n- 定义链接的源路径\n- 例如: `$LinkTargets = @(\"$persist_dir\\xxx\")`",
+                        "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile $LinkPaths $LinkTargets`",
+                        "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths $LinkTargets`",
+                        "函数\n- 安装字体",
+                        "变量\n- 定义 AppX/Msix 包的 PackageFamilyName\n- 例如: `$PackageFamilyName = \"Microsoft.WindowsCalculator_8wekyb3d8bbwe\"`",
+                        "函数\n- 安装 AppX/Msix 包\n- 需要定义变量: `$PackageFamilyName`",
+                        "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`",
+                        "函数\n- 检查是否以管理员权限运行"
+                      ]
+                    }
+                  ]
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "contains": {
+                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须包含: \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\","
+                    }
+                  },
+                  {
+                    "if": {
+                      "contains": {
+                        "const": "A-Complete-Install"
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须包含: \"A-Complete-Install\","
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "pre_uninstall": {
+              "examples": [
+                [
+                  "$bucket = $install.bucket",
+                  ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                  "A-Stop-Process",
+                  "A-Remove-Link",
+                  "A-Remove-TempData",
+                  "A-Complete-Uninstall"
+                ]
+              ],
+              "if": {
+                "type": "string"
+              },
+              "then": {
+                "not": true,
+                "errorMessage": "它只能是一个数组 (array)"
+              },
+              "else": {
+                "items": {
+                  "type": "string",
+                  "anyOf": [
+                    {},
+                    {
+                      "enum": [
+                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                        "A-Complete-Uninstall",
+                        "A-Stop-Process",
+                        "A-Stop-Service",
+                        "A-Remove-Link",
+                        "A-Remove-Font",
+                        "A-Remove-MsixPackage",
+                        "A-Remove-PowerToysRunPlugin",
+                        "A-Remove-TempData",
+                        "A-Test-Admin"
+                      ],
+                      "markdownEnumDescriptions": [
+                        "脚本\n- 引入 `utils.ps1` 脚本，它需要放在第一行\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的\n- 所有安装逻辑都应该在写在它之后",
+                        "函数\n- 它应该放在最后，表示 `pre_uninstall` 脚本的结束",
+                        "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
+                        "函数\n- 尝试停止并移除指定的应用服务，以确保能正常卸载",
+                        "函数\n- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction",
+                        "函数\n- 移除字体",
+                        "函数\n- 卸载 AppX/Msix 包",
+                        "函数\n- 移除 PowerToys Run 插件",
+                        "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`",
+                        "函数\n- 检查是否以管理员权限运行"
+                      ]
+                    }
+                  ]
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "contains": {
+                        "const": "$bucket = $install.bucket"
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须包含 utils.ps1 脚本引入: \"$bucket = $install.bucket\","
+                    }
+                  },
+                  {
+                    "if": {
+                      "contains": {
+                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须包含 utils.ps1 脚本引入: \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\","
+                    }
+                  },
+                  {
+                    "if": {
+                      "contains": {
+                        "const": "A-Complete-Uninstall"
+                      }
+                    },
+                    "else": {
+                      "not": true,
+                      "errorMessage": "必须在脚本最后包含函数调用：\"A-Complete-Uninstall\","
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }
