@@ -11,7 +11,8 @@
     "license",
     "pre_install",
     "post_install",
-    "pre_uninstall"
+    "pre_uninstall",
+    "post_uninstall"
   ],
   "additionalProperties": false,
   "$comment": "markdownDescription 字段是 vscode 扩展属性，用于在 vscode 中显示 markdown 格式的描述",
@@ -43,33 +44,18 @@
         "",
         []
       ],
+      "type": [
+        "string",
+        "array"
+      ],
       "items": {
         "type": "string",
         "minLength": 1
       },
       "minLength": 1,
-      "minItems": 1,
-      "if": {
-        "allOf": [
-          {
-            "not": {
-              "type": "string"
-            }
-          },
-          {
-            "not": {
-              "type": "array"
-            }
-          }
-        ]
-      },
-      "then": {
-        "$comment": "这是一个通用的，让验证器使用自定义的 errorMessage 的方式",
-        "not": true,
-        "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
-      }
+      "minItems": 1
     },
-    "license_identifier": {
+    "license_field": {
       "enum": [
         "Unknown",
         "Freeware",
@@ -87,6 +73,21 @@
         "使用 `Freemium`，这是由 [abyss bucket](https://github.com/abgox/abyss) 定义的特殊字段，表示这是一个免费增值软件，基础功能永久免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
       ]
     },
+    "license_identifier": {
+      "$comment": "在此处添加已知的许可证，以便验证器可以提供更好的错误信息",
+      "enum": [
+        "MIT",
+        "Apache-2.0",
+        "MPL-2.0",
+        "GPL-3.0-only"
+      ],
+      "markdownEnumDescriptions": [
+        "使用 The MIT License ([基于 OSI 标准模板](https://opensource.org/license/MIT))",
+        "使用 Apache License, Version 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/Apache-2.0))",
+        "使用 Mozilla Public License 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/MPL-2.0))",
+        "使用 GNU General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-3.0))"
+      ]
+    },
     "license": {
       "title": "软件许可证",
       "markdownDescription": "指定软件的许可证或类型字段\n- 如果没有许可证的相关说明和 url 地址，且符合 `Freeware`、`Proprietary`、`Public Domain`、`Shareware`、`Freemium`、`Unknown` 之一，必须使用字符串\n- 如果是其他情况，必须使用对象，然后指定 `identifier` 和 `url`，`url` 不是必须的\n- https://opensource.org/license\n- https://spdx.org/licenses",
@@ -95,7 +96,6 @@
         "string",
         "object"
       ],
-      "errorMessage": "license 只能是一个字符串 (string) 或者对象 (object)",
       "examples": [
         "Freeware",
         {}
@@ -104,7 +104,7 @@
         {
           "type": "string",
           "minLength": 1,
-          "$ref": "#/definitions/license_identifier"
+          "$ref": "#/definitions/license_field"
         },
         {
           "type": "object",
@@ -130,21 +130,10 @@
                   "minLength": 1
                 },
                 {
-                  "$ref": "#/definitions/license_identifier"
+                  "$ref": "#/definitions/license_field"
                 },
                 {
-                  "enum": [
-                    "MIT",
-                    "Apache-2.0",
-                    "MPL-2.0",
-                    "GPL-3.0-only"
-                  ],
-                  "markdownEnumDescriptions": [
-                    "使用 The MIT License ([基于 OSI 标准模板](https://opensource.org/license/MIT))",
-                    "使用 Apache License, Version 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/Apache-2.0))",
-                    "使用 Mozilla Public License 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/MPL-2.0))",
-                    "使用 GNU General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-3.0))"
-                  ]
+                  "$ref": "#/definitions/license_identifier"
                 }
               ]
             },
@@ -199,26 +188,35 @@
         "",
         []
       ],
+      "type": [
+        "string",
+        "array"
+      ],
+      "minLength": 1,
       "if": {
-        "type": "string"
+        "pattern": "^https?://.*/.*setup.*\\.exe$"
       },
       "then": {
-        "minLength": 1
-      },
-      "else": {
         "if": {
-          "type": "array"
-        },
-        "then": {
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
+          "pattern": "^https?://.*/.*setup.*\\.exe#/dl\\.7z$"
         },
         "else": {
           "not": true,
-          "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
+          "errorMessage": "Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀，例如: https://example.com/app.Setup.exe#/dl.7z"
+        }
+      },
+      "items": {
+        "if": {
+          "pattern": "^https?://.*/.*setup.*\\.exe$"
+        },
+        "then": {
+          "if": {
+            "pattern": "^https?://.*/.*setup.*\\.exe#/dl\\.7z$"
+          },
+          "else": {
+            "not": true,
+            "errorMessage": "Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀，例如: https://example.com/app.Setup.exe#/dl.7z"
+          }
         }
       }
     },
@@ -365,6 +363,11 @@
         "array"
       ],
       "items": {
+        "type": [
+          "string",
+          "array"
+        ],
+        "minLength": 1,
         "anyOf": [
           {
             "type": "array",
@@ -399,12 +402,10 @@
           {
             "type": "string"
           }
-        ],
-        "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
+        ]
       },
       "minLength": 1,
       "minItems": 1,
-      "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)",
       "examples": [
         "",
         [],
@@ -652,10 +653,6 @@
         "minProperties": 1,
         "additionalProperties": false,
         "errorMessage": "不允许属性名为空字符串"
-      },
-      "else": {
-        "not": true,
-        "errorMessage": "它只能是一个对象 (object)"
       }
     },
     "persist": {
@@ -666,6 +663,11 @@
         "array"
       ],
       "items": {
+        "type": [
+          "string",
+          "array"
+        ],
+        "minLength": 1,
         "anyOf": [
           {
             "type": "array",
@@ -700,12 +702,10 @@
           {
             "type": "string"
           }
-        ],
-        "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)"
+        ]
       },
       "minLength": 1,
       "minItems": 1,
-      "errorMessage": "它只能是一个字符串 (string) 或者数组 (array)",
       "examples": [
         "",
         [],
@@ -760,9 +760,9 @@
             "pre_install": {
               "$ref": "#/definitions/pre_install"
             },
-            // "post_install": {
-            //   "$ref": "#/definitions/post_install"
-            // },
+            "post_install": {
+              "$ref": "#/definitions/post_install"
+            },
             "shortcuts": {
               "$ref": "#/definitions/shortcuts"
             },
@@ -896,10 +896,10 @@
       "$ref": "#/definitions/string_or_string_array"
     },
     "suggest": {
-      "type": "object",
       "title": "建议的依赖项",
       "markdownDescription": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为“已实现”，用户不会看到任何建议",
       "description": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为“已实现”，用户不会看到任何建议",
+      "type": "object",
       "if": {
         "type": "object"
       },
@@ -912,10 +912,6 @@
         "minProperties": 1,
         "additionalProperties": false,
         "errorMessage": "不允许属性名为空字符串"
-      },
-      "else": {
-        "not": true,
-        "errorMessage": "它只能是一个对象 (object)"
       }
     },
     "notes": {
@@ -980,11 +976,11 @@
     "uninstaller": {
       "$ref": "#/definitions/uninstaller"
     },
-    // "post_uninstall": {
-    //   "title": "后卸载脚本",
-    //   "markdownDescription": "- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
-    //   "$ref": "#/definitions/string_or_string_array"
-    // },
+    "post_uninstall": {
+      "title": "后卸载脚本",
+      "markdownDescription": "- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+      "$ref": "#/definitions/string_or_string_array"
+    },
     "persist": {
       "$ref": "#/definitions/persist"
     },
@@ -1071,32 +1067,6 @@
   },
   "allOf": [
     {
-      "$comment": "如果存在 license 是一个对象，则必须存在 identifier",
-      "if": {
-        "required": [
-          "license"
-        ]
-      },
-      "then": {
-        "if": {
-          "properties": {
-            "license": {
-              "type": "object"
-            }
-          }
-        },
-        "then": {
-          "properties": {
-            "license": {
-              "required": [
-                "identifier"
-              ]
-            }
-          }
-        }
-      }
-    },
-    {
       "$comment": "如果存在 license，但不存在 url 或 architecture 就触发警告",
       "if": {
         "required": [
@@ -1147,21 +1117,35 @@
         ]
       },
       "then": {
-        "required": [
-          "hash"
-        ],
         "allOf": [
+          {
+            "required": [
+              "hash"
+            ]
+          },
           {
             "properties": {
               "architecture": {
                 "properties": {
                   "64bit": {
-                    "not": {
-                      "required": [
-                        "url"
-                      ]
-                    },
-                    "errorMessage": "url 和 architecture.64bit.url 冲突，你只能选择其中一种方式"
+                    "allOf": [
+                      {
+                        "not": {
+                          "required": [
+                            "url"
+                          ]
+                        },
+                        "errorMessage": "architecture.64bit.url 和顶层的 url 冲突，你只能选择其中一种方式"
+                      },
+                      {
+                        "not": {
+                          "required": [
+                            "hash"
+                          ]
+                        },
+                        "errorMessage": "当存在顶层 url 时，禁止定义 architecture.64bit.hash"
+                      }
+                    ]
                   }
                 }
               }
@@ -1172,12 +1156,24 @@
               "architecture": {
                 "properties": {
                   "32bit": {
-                    "not": {
-                      "required": [
-                        "url"
-                      ]
-                    },
-                    "errorMessage": "url 和 architecture.32bit.url 冲突，你只能选择其中一种方式"
+                    "allOf": [
+                      {
+                        "not": {
+                          "required": [
+                            "url"
+                          ]
+                        },
+                        "errorMessage": "architecture.32bit.url 和顶层的 url 冲突，你只能选择其中一种方式"
+                      },
+                      {
+                        "not": {
+                          "required": [
+                            "hash"
+                          ]
+                        },
+                        "errorMessage": "当存在顶层 url 时，禁止定义 architecture.32bit.hash"
+                      }
+                    ]
                   }
                 }
               }
@@ -1188,12 +1184,24 @@
               "architecture": {
                 "properties": {
                   "arm64": {
-                    "not": {
-                      "required": [
-                        "url"
-                      ]
-                    },
-                    "errorMessage": "url 和 architecture.arm64.url 冲突，你只能选择其中一种方式"
+                    "allOf": [
+                      {
+                        "not": {
+                          "required": [
+                            "url"
+                          ]
+                        },
+                        "errorMessage": "architecture.arm64.url 和顶层的 url 冲突，你只能选择其中一种方式"
+                      },
+                      {
+                        "not": {
+                          "required": [
+                            "hash"
+                          ]
+                        },
+                        "errorMessage": "当存在顶层 url 时，禁止定义 architecture.arm64.hash"
+                      }
+                    ]
                   }
                 }
               }
@@ -1205,14 +1213,13 @@
         "if": {
           "required": [
             "architecture"
-          ],
-          "anyOf": [
+          ]
+        },
+        "then": {
+          "allOf": [
             {
               "properties": {
                 "architecture": {
-                  "required": [
-                    "64bit"
-                  ],
                   "properties": {
                     "64bit": {
                       "required": [
@@ -1226,9 +1233,6 @@
             {
               "properties": {
                 "architecture": {
-                  "required": [
-                    "32bit"
-                  ],
                   "properties": {
                     "32bit": {
                       "required": [
@@ -1242,9 +1246,6 @@
             {
               "properties": {
                 "architecture": {
-                  "required": [
-                    "arm64"
-                  ],
                   "properties": {
                     "arm64": {
                       "required": [
@@ -1252,18 +1253,6 @@
                       ]
                     }
                   }
-                }
-              }
-            }
-          ]
-        },
-        "then": {
-          "allOf": [
-            {
-              "properties": {
-                "hash": {
-                  "not": true,
-                  "errorMessage": "当不存在 url 时，禁止定义 hash"
                 }
               }
             }
@@ -1283,416 +1272,383 @@
     },
     {
       "$comment": "如果存在 url，当 url 是字符串时，hash 必须是字符串，当 url 是数组时，hash 必须是数组",
-      "if": {
-        "required": [
-          "url"
-        ]
-      },
-      "then": {
-        "if": {
-          "properties": {
-            "url": {
-              "type": "string"
-            }
-          }
-        },
-        "then": {
-          "properties": {
-            "hash": {
-              "type": "string",
-              "minLength": 1,
-              "errorMessage": "当 url 是字符串 (string) 时，hash 也必须是一个字符串 (string)"
-            }
-          }
-        },
-        "else": {
+      "allOf": [
+        {
           "if": {
-            "properties": {
-              "url": {
-                "type": "array"
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "hash": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/hash"
-                },
-                "examples": [
-                  []
-                ],
-                "minItems": 1,
-                "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
-              }
-            }
-          }
-        }
-      },
-      "else": {
-        "allOf": [
-          {
-            "properties": {
-              "hash": {
-                "not": true,
-                "errorMessage": "当不存在 url 时，禁止定义 hash"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      "if": {
-        "$comment": "如果存在 architecture",
-        "required": [
-          "architecture"
-        ]
-      },
-      "then": {
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "architecture": {
-                  "required": [
-                    "64bit"
-                  ],
-                  "properties": {
-                    "64bit": {
-                      "required": [
-                        "url"
-                      ],
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "then": {
-              "properties": {
-                "architecture": {
-                  "properties": {
-                    "64bit": {
-                      "required": [
-                        "hash"
-                      ],
-                      "properties": {
-                        "hash": {
-                          "type": "string",
-                          "minLength": 1,
-                          "errorMessage": "当 architecture.64bit.url 是字符串 (string) 时，architecture.64bit.hash 也必须是一个字符串 (string)"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "else": {
-              "if": {
-                "properties": {
-                  "architecture": {
-                    "required": [
-                      "64bit"
-                    ],
-                    "properties": {
-                      "64bit": {
-                        "required": [
-                          "url"
-                        ],
-                        "properties": {
-                          "url": {
-                            "type": "array"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "then": {
-                "properties": {
-                  "architecture": {
-                    "properties": {
-                      "64bit": {
-                        "required": [
-                          "hash"
-                        ],
-                        "properties": {
-                          "hash": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "minItems": 1,
-                            "errorMessage": "当 architecture.64bit.url 是数组 (array) 时，architecture.64bit.hash 也必须是一个数组 (array)"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "architecture": {
-                  "required": [
-                    "32bit"
-                  ],
-                  "properties": {
-                    "32bit": {
-                      "required": [
-                        "url"
-                      ],
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "then": {
-              "properties": {
-                "architecture": {
-                  "properties": {
-                    "32bit": {
-                      "required": [
-                        "hash"
-                      ],
-                      "properties": {
-                        "hash": {
-                          "type": "string",
-                          "minLength": 1,
-                          "errorMessage": "当 architecture.32bit.url 是字符串 (string) 时，architecture.32bit.hash 也必须是一个字符串 (string)"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "else": {
-              "if": {
-                "properties": {
-                  "architecture": {
-                    "required": [
-                      "32bit"
-                    ],
-                    "properties": {
-                      "32bit": {
-                        "required": [
-                          "url"
-                        ],
-                        "properties": {
-                          "url": {
-                            "type": "array"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "then": {
-                "properties": {
-                  "architecture": {
-                    "properties": {
-                      "32bit": {
-                        "required": [
-                          "hash"
-                        ],
-                        "properties": {
-                          "hash": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "minItems": 1,
-                            "errorMessage": "当 architecture.32bit.url 是数组 (array) 时，architecture.32bit.hash 也必须是一个数组 (array)"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "architecture": {
-                  "required": [
-                    "arm64"
-                  ],
-                  "properties": {
-                    "arm64": {
-                      "required": [
-                        "url"
-                      ],
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "then": {
-              "properties": {
-                "architecture": {
-                  "properties": {
-                    "arm64": {
-                      "required": [
-                        "hash"
-                      ],
-                      "properties": {
-                        "hash": {
-                          "type": "string",
-                          "minLength": 1,
-                          "errorMessage": "当 architecture.arm64.url 是字符串 (string) 时，architecture.arm64.hash 也必须是一个字符串 (string)"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "else": {
-              "if": {
-                "properties": {
-                  "architecture": {
-                    "required": [
-                      "arm64"
-                    ],
-                    "properties": {
-                      "arm64": {
-                        "required": [
-                          "url"
-                        ],
-                        "properties": {
-                          "url": {
-                            "type": "array"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "then": {
-                "properties": {
-                  "architecture": {
-                    "properties": {
-                      "arm64": {
-                        "required": [
-                          "hash"
-                        ],
-                        "properties": {
-                          "hash": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "minItems": 1,
-                            "errorMessage": "当 architecture.arm64.url 是数组 (array) 时，architecture.arm64.hash 也必须是一个数组 (array)"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ]
-      },
-      "else": {
-        "if": {
-          "required": [
-            "architecture"
-          ],
-          "anyOf": [
-            {
-              "properties": {
-                "architecture": {
-                  "required": [
-                    "64bit"
-                  ],
-                  "properties": {
-                    "64bit": {
-                      "required": [
-                        "url"
-                      ]
-                    }
-                  }
-                }
-              }
-            },
-            {
-              "properties": {
-                "architecture": {
-                  "required": [
-                    "32bit"
-                  ],
-                  "properties": {
-                    "32bit": {
-                      "required": [
-                        "url"
-                      ]
-                    }
-                  }
-                }
-              }
-            },
-            {
-              "properties": {
-                "architecture": {
-                  "required": [
-                    "arm64"
-                  ],
-                  "properties": {
-                    "arm64": {
-                      "required": [
-                        "url"
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "else": {
-          "if": {
-            "required": [
-              "license"
-            ]
-          },
-          "then": {
             "required": [
               "url"
             ]
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "url": {
+                  "type": "string"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "hash": {
+                  "type": "string",
+                  "minLength": 1,
+                  "errorMessage": "当 url 是字符串 (string) 时，hash 也必须是一个字符串 (string)"
+                }
+              }
+            },
+            "else": {
+              "if": {
+                "properties": {
+                  "url": {
+                    "type": "array"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "hash": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/hash"
+                    },
+                    "examples": [
+                      []
+                    ],
+                    "minItems": 1,
+                    "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "allOf": [
+              {
+                "properties": {
+                  "hash": {
+                    "not": true,
+                    "errorMessage": "当不存在 url 时，禁止定义 hash"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "architecture"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "architecture": {
+                      "properties": {
+                        "64bit": {
+                          "properties": {
+                            "url": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "architecture": {
+                      "properties": {
+                        "64bit": {
+                          "required": [
+                            "hash"
+                          ],
+                          "properties": {
+                            "hash": {
+                              "type": "string",
+                              "minLength": 1,
+                              "errorMessage": "当 architecture.64bit.url 是字符串 (string) 时，architecture.64bit.hash 也必须是一个字符串 (string)"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "if": {
+                    "properties": {
+                      "architecture": {
+                        "properties": {
+                          "64bit": {
+                            "properties": {
+                              "url": {
+                                "type": "array"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "architecture": {
+                        "properties": {
+                          "64bit": {
+                            "required": [
+                              "hash"
+                            ],
+                            "properties": {
+                              "hash": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "minItems": 1,
+                                "errorMessage": "当 architecture.64bit.url 是数组 (array) 时，architecture.64bit.hash 也必须是一个数组 (array)"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "architecture": {
+                      "properties": {
+                        "32bit": {
+                          "properties": {
+                            "url": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "architecture": {
+                      "properties": {
+                        "32bit": {
+                          "required": [
+                            "hash"
+                          ],
+                          "properties": {
+                            "hash": {
+                              "type": "string",
+                              "minLength": 1,
+                              "errorMessage": "当 architecture.32bit.url 是字符串 (string) 时，architecture.32bit.hash 也必须是一个字符串 (string)"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "if": {
+                    "properties": {
+                      "architecture": {
+                        "properties": {
+                          "32bit": {
+                            "properties": {
+                              "url": {
+                                "type": "array"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "architecture": {
+                        "properties": {
+                          "32bit": {
+                            "required": [
+                              "hash"
+                            ],
+                            "properties": {
+                              "hash": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "minItems": 1,
+                                "errorMessage": "当 architecture.32bit.url 是数组 (array) 时，architecture.32bit.hash 也必须是一个数组 (array)"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "architecture": {
+                      "properties": {
+                        "arm64": {
+                          "properties": {
+                            "url": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "architecture": {
+                      "properties": {
+                        "arm64": {
+                          "required": [
+                            "hash"
+                          ],
+                          "properties": {
+                            "hash": {
+                              "type": "string",
+                              "minLength": 1,
+                              "errorMessage": "当 architecture.arm64.url 是字符串 (string) 时，architecture.arm64.hash 也必须是一个字符串 (string)"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "else": {
+                  "if": {
+                    "properties": {
+                      "architecture": {
+                        "properties": {
+                          "arm64": {
+                            "properties": {
+                              "url": {
+                                "type": "array"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "architecture": {
+                        "properties": {
+                          "arm64": {
+                            "required": [
+                              "hash"
+                            ],
+                            "properties": {
+                              "hash": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "minItems": 1,
+                                "errorMessage": "当 architecture.arm64.url 是数组 (array) 时，architecture.arm64.hash 也必须是一个数组 (array)"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "else": {
+            "if": {
+              "required": [
+                "architecture"
+              ],
+              "anyOf": [
+                {
+                  "properties": {
+                    "architecture": {
+                      "required": [
+                        "64bit"
+                      ],
+                      "properties": {
+                        "64bit": {
+                          "required": [
+                            "url"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "architecture": {
+                      "required": [
+                        "32bit"
+                      ],
+                      "properties": {
+                        "32bit": {
+                          "required": [
+                            "url"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "architecture": {
+                      "required": [
+                        "arm64"
+                      ],
+                      "properties": {
+                        "arm64": {
+                          "required": [
+                            "url"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "else": {
+              "if": {
+                "required": [
+                  "license"
+                ]
+              },
+              "then": {
+                "required": [
+                  "url"
+                ]
+              }
+            }
           }
         }
-      }
+      ]
     },
     {
       "$comment": "安装和卸载脚本中的特别内容",
@@ -1702,60 +1658,37 @@
             "pre_install": {
               "examples": [
                 [
-                  "# utils.ps1",
-                  ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                  ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                  "A-Start-PreInstall"
                 ]
               ],
-              "if": {
-                "type": "string"
-              },
-              "then": {
-                "not": true,
-                "errorMessage": "它只能是一个数组 (array)"
-              },
-              "else": {
-                "items": {
-                  "type": "string",
-                  "anyOf": [
-                    {},
-                    {
-                      "enum": [
-                        "# utils.ps1",
-                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                        "A-Expand-SetupExe",
-                        "A-Test-Admin"
-                      ],
-                      "markdownEnumDescriptions": [
-                        "注释\n- 一条简单的注释，应该放在脚本中的第一行\n- 在 `pre_install` 中，它是必要的",
-                        "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的\n- 所有安装逻辑都应该在写在它之后",
-                        "函数\n- 用来展开 Setup.exe 类型的安装包",
-                        "函数\n- 检查是否以管理员权限运行"
-                      ]
-                    }
-                  ]
+              "type": "array",
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
                 },
-                "allOf": [
+                {
+                  "const": "A-Start-PreInstall"
+                }
+              ],
+              "items": {
+                "type": "string",
+                "anyOf": [
+                  {},
                   {
-                    "if": {
-                      "contains": {
-                        "const": "# utils.ps1"
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须包含: \"# utils.ps1\","
-                    }
-                  },
-                  {
-                    "if": {
-                      "contains": {
-                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须包含: \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\","
-                    }
+                    "enum": [
+                      ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                      "A-Start-PreInstall",
+                      "A-Expand-SetupExe",
+                      "A-Test-Admin"
+                    ],
+                    "markdownEnumDescriptions": [
+                      "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                      "函数\n- 表示 `pre_install` 的开始",
+                      "函数\n- 用来展开 Setup.exe 类型的安装包",
+                      "函数\n- 检查是否以管理员权限运行"
+                    ]
                   }
                 ]
               }
@@ -1768,77 +1701,54 @@
               "examples": [
                 [
                   ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                  "A-Complete-Install"
+                  "A-Start-PostInstall"
                 ]
               ],
-              "if": {
-                "type": "string"
-              },
-              "then": {
-                "not": true,
-                "errorMessage": "它只能是一个数组 (array)"
-              },
-              "else": {
-                "items": {
-                  "type": "string",
-                  "anyOf": [
-                    {},
-                    {
-                      "enum": [
-                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                        "A-Complete-Install",
-                        "A-Ensure-Directory",
-                        "A-New-PersistFile \"\"",
-                        "$LinkPaths = @(\"$env:AppData\\xxx\")",
-                        "$LinkTargets = @(\"$persist_dir\\xxx\")",
-                        "A-New-LinkFile $LinkPaths $LinkTargets",
-                        "A-New-LinkDirectory $LinkPaths $LinkTargets",
-                        "A-Add-Font",
-                        "$PackageFamilyName = \"\"",
-                        "A-Add-MsixPackage \"$dir\\dl.msixbundle\"",
-                        "A-Add-PowerToysRunPlugin ''",
-                        "A-Test-Admin"
-                      ],
-                      "markdownEnumDescriptions": [
-                        "脚本\n- 引入 `utils.ps1` 脚本，它需要放在第一行\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的\n- 所有安装逻辑都应该在写在它之后",
-                        "函数\n- 它应该放在最后，表示 `post_install` 脚本的结束",
-                        "函数\n- 确保指定目录路径存在",
-                        "函数\n- 创建文件，可选择设置内容\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
-                        "变量\n- 定义链接的目标路径\n- 例如: `$LinkPaths = @(\"$env:AppData\\xxx\")`",
-                        "变量\n- 定义链接的源路径\n- 例如: `$LinkTargets = @(\"$persist_dir\\xxx\")`",
-                        "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile $LinkPaths $LinkTargets`",
-                        "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths $LinkTargets`",
-                        "函数\n- 安装字体",
-                        "变量\n- 定义 AppX/Msix 包的 PackageFamilyName\n- 例如: `$PackageFamilyName = \"Microsoft.WindowsCalculator_8wekyb3d8bbwe\"`",
-                        "函数\n- 安装 AppX/Msix 包\n- 需要定义变量: `$PackageFamilyName`",
-                        "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`",
-                        "函数\n- 检查是否以管理员权限运行"
-                      ]
-                    }
-                  ]
+              "type": "array",
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
                 },
-                "allOf": [
+                {
+                  "const": "A-Start-PostInstall"
+                }
+              ],
+              "items": {
+                "type": "string",
+                "anyOf": [
+                  {},
                   {
-                    "if": {
-                      "contains": {
-                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须包含: \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\","
-                    }
-                  },
-                  {
-                    "if": {
-                      "contains": {
-                        "const": "A-Complete-Install"
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须包含: \"A-Complete-Install\","
-                    }
+                    "enum": [
+                      ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                      "A-Start-PostInstall",
+                      "A-Ensure-Directory",
+                      "A-New-PersistFile \"\"",
+                      "$LinkPaths = @(\"$env:AppData\\xxx\")",
+                      "$LinkTargets = @(\"$persist_dir\\xxx\")",
+                      "A-New-LinkFile $LinkPaths $LinkTargets",
+                      "A-New-LinkDirectory $LinkPaths $LinkTargets",
+                      "A-Add-Font",
+                      "$PackageFamilyName = \"\"",
+                      "A-Add-MsixPackage \"$dir\\dl.msixbundle\"",
+                      "A-Add-PowerToysRunPlugin ''",
+                      "A-Test-Admin"
+                    ],
+                    "markdownEnumDescriptions": [
+                      "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                      "函数\n- 表示 `post_install` 的开始",
+                      "函数\n- 确保指定目录路径存在",
+                      "函数\n- 创建文件，可选择设置内容\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
+                      "变量\n- 定义链接的目标路径\n- 例如: `$LinkPaths = @(\"$env:AppData\\xxx\")`",
+                      "变量\n- 定义链接的源路径\n- 例如: `$LinkTargets = @(\"$persist_dir\\xxx\")`",
+                      "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile $LinkPaths $LinkTargets`",
+                      "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths $LinkTargets`",
+                      "函数\n- 安装字体",
+                      "变量\n- 定义 AppX/Msix 包的 PackageFamilyName\n- 例如: `$PackageFamilyName = \"Microsoft.WindowsCalculator_8wekyb3d8bbwe\"`",
+                      "函数\n- 安装 AppX/Msix 包\n- 需要定义变量: `$PackageFamilyName`",
+                      "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`",
+                      "函数\n- 检查是否以管理员权限运行"
+                    ]
                   }
                 ]
               }
@@ -1852,85 +1762,104 @@
                 [
                   "$bucket = $install.bucket",
                   ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                  "A-Start-PreUninstall",
                   "A-Stop-Process",
                   "A-Remove-Link",
-                  "A-Remove-TempData",
-                  "A-Complete-Uninstall"
+                  "A-Remove-TempData"
                 ]
               ],
-              "if": {
-                "type": "string"
-              },
-              "then": {
-                "not": true,
-                "errorMessage": "它只能是一个数组 (array)"
-              },
-              "else": {
-                "items": {
-                  "type": "string",
-                  "anyOf": [
-                    {},
-                    {
-                      "enum": [
-                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                        "A-Complete-Uninstall",
-                        "A-Stop-Process",
-                        "A-Stop-Service",
-                        "A-Remove-Link",
-                        "A-Remove-Font",
-                        "A-Remove-MsixPackage",
-                        "A-Remove-PowerToysRunPlugin",
-                        "A-Remove-TempData",
-                        "A-Test-Admin"
-                      ],
-                      "markdownEnumDescriptions": [
-                        "脚本\n- 引入 `utils.ps1` 脚本，它需要放在第一行\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的\n- 所有安装逻辑都应该在写在它之后",
-                        "函数\n- 它应该放在最后，表示 `pre_uninstall` 脚本的结束",
-                        "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
-                        "函数\n- 尝试停止并移除指定的应用服务，以确保能正常卸载",
-                        "函数\n- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction",
-                        "函数\n- 移除字体",
-                        "函数\n- 卸载 AppX/Msix 包",
-                        "函数\n- 移除 PowerToys Run 插件",
-                        "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`",
-                        "函数\n- 检查是否以管理员权限运行"
-                      ]
-                    }
-                  ]
+              "type": "array",
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "const": "$bucket = $install.bucket"
                 },
-                "allOf": [
+                {
+                  "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                },
+                {
+                  "const": "A-Start-PreUninstall"
+                }
+              ],
+              "items": {
+                "type": "string",
+                "anyOf": [
+                  {},
                   {
-                    "if": {
-                      "contains": {
-                        "const": "$bucket = $install.bucket"
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须包含 utils.ps1 脚本引入: \"$bucket = $install.bucket\","
-                    }
-                  },
+                    "enum": [
+                      "$bucket = $install.bucket",
+                      ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                      "A-Start-PreUninstall",
+                      "A-Stop-Process",
+                      "A-Stop-Service",
+                      "A-Remove-Link",
+                      "A-Remove-Font",
+                      "A-Remove-MsixPackage",
+                      "A-Remove-PowerToysRunPlugin",
+                      "A-Remove-TempData",
+                      "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
+                      "A-Test-Admin"
+                    ],
+                    "markdownEnumDescriptions": [
+                      "脚本\n- 获取 $bucket 变量",
+                      "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                      "函数\n- 表示 `pre_uninstall` 的开始",
+                      "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
+                      "函数\n- 尝试停止并移除指定的应用服务，以确保能正常卸载",
+                      "函数\n- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction",
+                      "函数\n- 移除字体",
+                      "函数\n- 卸载 AppX/Msix 包",
+                      "函数\n- 移除 PowerToys Run 插件",
+                      "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`",
+                      "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
+                      "函数\n- 检查是否以管理员权限运行"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "post_uninstall": {
+              "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，它只能是以下的固定数组，不允许有其他定义，如果需要，请在 `pre_uninstall` 中定义\n```json\n  \"post_uninstall\": [\n    \"$bucket = $install.bucket\", \n    \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\",\n    \"A-Start-PostUninstall\"\n  ]\n```",
+              "type": "array",
+              "examples": [
+                [
+                  "$bucket = $install.bucket",
+                  ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                  "A-Start-PostUninstall"
+                ]
+              ],
+              "minItems": 3,
+              "maxItems": 3,
+              "prefixItems": [
+                {
+                  "const": "$bucket = $install.bucket"
+                },
+                {
+                  "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                },
+                {
+                  "const": "A-Start-PostUninstall"
+                }
+              ],
+              "items": {
+                "type": "string",
+                "anyOf": [
+                  {},
                   {
-                    "if": {
-                      "contains": {
-                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须包含 utils.ps1 脚本引入: \". \\\"$bucketsdir\\\\$bucket\\\\bin\\\\utils.ps1\\\"\","
-                    }
-                  },
-                  {
-                    "if": {
-                      "contains": {
-                        "const": "A-Complete-Uninstall"
-                      }
-                    },
-                    "else": {
-                      "not": true,
-                      "errorMessage": "必须在脚本最后包含函数调用：\"A-Complete-Uninstall\","
-                    }
+                    "enum": [
+                      "$bucket = $install.bucket",
+                      ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                      "A-Start-PostUninstall"
+                    ],
+                    "markdownEnumDescriptions": [
+                      "脚本\n- 获取 $bucket 变量",
+                      "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                      "函数\n- 表示 `post_uninstall` 的开始"
+                    ]
                   }
                 ]
               }
