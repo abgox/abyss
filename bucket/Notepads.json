@@ -9,26 +9,31 @@
   "url": "https://github.com/0x7c13/Notepads/releases/download/v1.5.6.0/Notepads_1.5.6.0_x86_x64_arm64.msixbundle#/dl.msixbundle",
   "hash": "64e48c47ee39aa63616946e4d9f3d287d96b4650fc119eb8cbc73a1d58b36540",
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
     "$PackageFamilyName = \"19282JackieLiu.Notepads-Beta_echhpq9pdbte8\"",
     "A-Add-MsixPackage \"$dir\\dl.msixbundle\"",
     "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")",
     "$LinkTargets = @(\"$persist_dir\\$PackageFamilyName\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets",
-    "A-Complete-Install"
+    "A-New-LinkDirectory $LinkPaths $LinkTargets"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
     "A-Remove-MsixPackage",
-    "A-Remove-TempData",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": {
     "github": "https://github.com/0x7c13/Notepads"

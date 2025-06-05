@@ -40,10 +40,15 @@
     ]
   ],
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
+    "$LinkPaths = @(\"$env:AppData\\Code\",\"$env:USERPROFILE\\.vscode\")",
+    "$LinkTargets = @(\"$persist_dir\\Code\",\"$persist_dir\\.vscode\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets",
     "$dirpath = \"$dir\".Replace('\\', '\\\\')",
     "$exepath = \"$dir\\Code.exe\".Replace('\\', '\\\\')",
     "'install-associations', 'uninstall-associations', 'install-context', 'uninstall-context', 'install-github-integration', 'uninstall-github-integration' | ForEach-Object {",
@@ -56,20 +61,20 @@
     "    }",
     "    $content | Set-Content -Path \"$dir\\$_.reg\"",
     "  }",
-    "}",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "$LinkPaths = @(\"$env:AppData\\Code\",\"$env:USERPROFILE\\.vscode\")",
-    "$LinkTargets = @(\"$persist_dir\\Code\",\"$persist_dir\\.vscode\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets",
-    "A-Complete-Install"
+    "}"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
-    "A-Remove-TempData @(\"$env:UserProfile\\.vscode\",\"$env:AppData\\Code\")",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData @(\"$env:UserProfile\\.vscode\",\"$env:AppData\\Code\")"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "uninstaller": {
     "script": [

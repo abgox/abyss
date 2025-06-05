@@ -22,23 +22,28 @@
   },
   "bin": "starship.exe",
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
     "$LinkPaths = @(\"$env:UserProfile\\.config\\starship.toml\")",
     "$LinkTargets = @(\"$persist_dir\\starship.toml\")",
-    "A-New-LinkFile $LinkPaths $LinkTargets",
-    "A-Complete-Install"
+    "A-New-LinkFile $LinkPaths $LinkTargets"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
-    "A-Remove-TempData",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": {
     "github": "https://github.com/starship/starship"

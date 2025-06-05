@@ -15,23 +15,28 @@
     ]
   ],
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
     "$LinkPaths = @(\"$env:AppData\\Seanime\")",
     "$LinkTargets = @(\"$persist_dir\\Seanime\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets",
-    "A-Complete-Install"
+    "A-New-LinkDirectory $LinkPaths $LinkTargets"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
-    "A-Remove-TempData @(\"$env:LocalAppData\\app.seanime.desktop\")",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData @(\"$env:LocalAppData\\app.seanime.desktop\")"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": {
     "github": "https://github.com/5rahim/seanime"

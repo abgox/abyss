@@ -17,23 +17,28 @@
     ]
   ],
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
     "$LinkPaths = @(\"$env:AppData\\HBuilder X\")",
     "$LinkTargets = @(\"$persist_dir\\HBuilder X\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets",
-    "A-Complete-Install"
+    "A-New-LinkDirectory $LinkPaths $LinkTargets"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
-    "A-Remove-TempData @(\"$env:LocalAppData\\HBuilder X\")",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData @(\"$env:LocalAppData\\HBuilder X\")"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": {
     "url": "https://download1.dcloud.net.cn/hbuilderx/release.json",

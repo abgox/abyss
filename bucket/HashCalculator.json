@@ -16,21 +16,26 @@
     ]
   ],
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-New-PersistFile \"$persist_dir\\settings.json\" -Content '{}'",
-    "A-Complete-Install"
+    "A-Start-PostInstall",
+    "A-New-PersistFile \"$persist_dir\\settings.json\" -Content '{}'"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
-    "A-Remove-TempData",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "persist": "settings.json",
   "checkver": "github",

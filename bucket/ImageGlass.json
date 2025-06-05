@@ -26,21 +26,26 @@
     ]
   ],
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-New-PersistFile \"$persist_dir\\igconfig.json\" -Content '{\"AutoUpdate\":0}'",
-    "A-Complete-Install"
+    "A-Start-PostInstall",
+    "A-New-PersistFile \"$persist_dir\\igconfig.json\" -Content '{\"AutoUpdate\":0}'"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
-    "A-Remove-TempData @(\"$env:LocalAppData\\ImageGlass\")",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData @(\"$env:LocalAppData\\ImageGlass\")"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "persist": [
     "Themes",

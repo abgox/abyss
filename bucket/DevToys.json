@@ -9,26 +9,31 @@
   "url": "https://github.com/veler/DevToys/releases/download/v1.0.13.0/64360VelerSoftware.DevToys_1.0.13.0_neutral_._j80j2txgjg9dj.msixbundle#/dl.msixbundle",
   "hash": "020dd37d165ce2568405a32cdbcb93bfbe0a79864df9eb8c742a6a771c785ae3",
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
     "$PackageFamilyName = \"64360VelerSoftware.DevToys_j80j2txgjg9dj\"",
     "A-Add-MsixPackage \"$dir\\dl.msixbundle\"",
     "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")",
     "$LinkTargets = @(\"$persist_dir\\$PackageFamilyName\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets",
-    "A-Complete-Install"
+    "A-New-LinkDirectory $LinkPaths $LinkTargets"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
     "A-Stop-Process",
     "A-Remove-Link",
     "A-Remove-MsixPackage",
-    "A-Remove-TempData",
-    "A-Complete-Uninstall"
+    "A-Remove-TempData"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": {
     "github": "https://github.com/veler/DevToys"

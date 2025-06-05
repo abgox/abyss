@@ -9,19 +9,24 @@
   "url": "https://github.com/be5invis/Sarasa-Gothic/releases/download/v1.0.30/SarasaFixedSC-TTF-1.0.30.7z",
   "hash": "3a9cd785fe8bf623113f9e6205ac2619d1a164112cf6a397d537cd7d076b03da",
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Add-Font",
-    "A-Complete-Install"
+    "A-Start-PostInstall",
+    "A-Add-Font"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Remove-Font",
-    "A-Complete-Uninstall"
+    "A-Start-PreUninstall",
+    "A-Remove-Font"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": "github",
   "autoupdate": {

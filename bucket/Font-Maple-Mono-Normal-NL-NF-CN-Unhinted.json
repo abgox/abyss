@@ -9,19 +9,24 @@
   "url": "https://github.com/subframe7536/Maple-font/releases/download/v7.3/MapleMonoNormalNL-NF-CN-unhinted.zip",
   "hash": "778b609fd4b188c5490b1668216cc98aa189341db111f8454bab897467f22693",
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Add-Font",
-    "A-Complete-Install"
+    "A-Start-PostInstall",
+    "A-Add-Font"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Remove-Font",
-    "A-Complete-Uninstall"
+    "A-Start-PreUninstall",
+    "A-Remove-Font"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": "github",
   "autoupdate": {

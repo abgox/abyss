@@ -17,19 +17,24 @@
     }
   },
   "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
   ],
   "post_install": [
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Add-PowerToysRunPlugin 'HttpStatusCodes'",
-    "A-Complete-Install"
+    "A-Start-PostInstall",
+    "A-Add-PowerToysRunPlugin 'HttpStatusCodes'"
   ],
   "pre_uninstall": [
     "$bucket = $install.bucket",
     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Remove-PowerToysRunPlugin",
-    "A-Complete-Uninstall"
+    "A-Start-PreUninstall",
+    "A-Remove-PowerToysRunPlugin"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": "github",
   "autoupdate": {

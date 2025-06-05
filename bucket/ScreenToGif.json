@@ -23,31 +23,36 @@
       "hash": "c07eda8e27bc8d3f517ec7b548d10556f63c85cc05a5f02e8b70d8692a136b5b"
     }
   },
-  "pre_install": [
-    "# utils.ps1",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-  ],
-  "post_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "$LinkPaths = @(\"$env:AppData\\ScreenToGif\")",
-    "$LinkTargets = @(\"$persist_dir\\ScreenToGif\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets",
-    "A-Complete-Install"
-  ],
-  "pre_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Stop-Process",
-    "A-Remove-Link",
-    "A-Remove-TempData",
-    "A-Complete-Uninstall"
-  ],
   "bin": "ScreenToGif.exe",
   "shortcuts": [
     [
       "ScreenToGif.exe",
       "ScreenToGif"
     ]
+  ],
+  "pre_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreInstall"
+  ],
+  "post_install": [
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostInstall",
+    "$LinkPaths = @(\"$env:AppData\\ScreenToGif\")",
+    "$LinkTargets = @(\"$persist_dir\\ScreenToGif\")",
+    "A-New-LinkDirectory $LinkPaths $LinkTargets"
+  ],
+  "pre_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PreUninstall",
+    "A-Stop-Process",
+    "A-Remove-Link",
+    "A-Remove-TempData"
+  ],
+  "post_uninstall": [
+    "$bucket = $install.bucket",
+    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+    "A-Start-PostUninstall"
   ],
   "checkver": {
     "github": "https://github.com/NickeManarin/ScreenToGif"
