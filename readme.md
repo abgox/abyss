@@ -161,7 +161,7 @@
 > [!Warning]
 >
 > - Some apps store data as files instead of directories, requiring SymbolicLink to link.
-> - SymbolicLink requires administrator permission, so these apps will be added with the `Admin` tag.
+> - SymbolicLink requires administrator permission, so these apps will be added with the `AdminToInstall` tag.
 
 ---
 

@@ -165,7 +165,7 @@
 > [!Warning]
 >
 > - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
-> - SymbolicLink 需要管理员权限，因此这些应用会被添加 `Admin` 标签
+> - SymbolicLink 需要管理员权限，因此这些应用会被添加 `AdminToInstall` 标签
 
 ---
 
