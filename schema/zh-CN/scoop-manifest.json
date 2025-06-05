@@ -53,7 +53,8 @@
         "minLength": 1
       },
       "minLength": 1,
-      "minItems": 1
+      "minItems": 1,
+      "uniqueItems": true
     },
     "license_field": {
       "enum": [
@@ -193,13 +194,16 @@
         "array"
       ],
       "minLength": 1,
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "setup_exe_url_base": {
+      "examples": [
+        "",
+        []
+      ],
       "if": {
-        "pattern": "^https?://.*/.*setup.*\\.exe$",
-        "not": {
-          "required": [
-            "innosetup"
-          ]
-        }
+        "pattern": "^https?://.*/.*setup.*\\.exe$"
       },
       "then": {
         "if": {
@@ -225,6 +229,80 @@
         }
       }
     },
+    "setup_exe_url": {
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "url"
+            ]
+          },
+          "then": {
+            "properties": {
+              "url": {
+                "$ref": "#/definitions/setup_exe_url_base"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "architecture"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "properties": {
+                  "architecture": {
+                    "properties": {
+                      "64bit": {
+                        "properties": {
+                          "url": {
+                            "$ref": "#/definitions/setup_exe_url_base"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "architecture": {
+                    "properties": {
+                      "32bit": {
+                        "properties": {
+                          "url": {
+                            "$ref": "#/definitions/setup_exe_url_base"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "architecture": {
+                    "properties": {
+                      "arm64": {
+                        "properties": {
+                          "url": {
+                            "$ref": "#/definitions/setup_exe_url_base"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
     "hash": {
       "title": "软件安装包的 hash 值",
       "description": "软件安装包的 hash 值，用于校验下载的软件是否完整",
@@ -232,6 +310,9 @@
         "string",
         "array"
       ],
+      "minLength": 1,
+      "minItems": 1,
+      "uniqueItems": true,
       "items": {
         "type": "string",
         "pattern": "^([a-fA-F0-9]{64}|(sha1|sha256|sha512|md5):([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}))$",
@@ -411,6 +492,7 @@
       },
       "minLength": 1,
       "minItems": 1,
+      "uniqueItems": true,
       "examples": [
         "",
         [],
@@ -445,7 +527,18 @@
             },
             "github": {
               "description": "应用的 github 仓库地址",
-              "$ref": "#/definitions/str"
+              "$ref": "#/definitions/str",
+              "if": {
+                "type": "string"
+              },
+              "then": {
+                "minLength": 1,
+                "pattern": "^https?://github\\.com/[^/]+/[^/]+/?$",
+                "not": {
+                  "pattern": "\\.git(\\/|$)"
+                },
+                "errorMessage": "github 仓库地址格式错误，请使用正确格式，如: https://github.com/abgox/abyss"
+              }
             },
             "re": {
               "description": "re 是 regex 的别名\n查找版本的 RegEx(正则表达式)",
@@ -629,7 +722,8 @@
         "minItems": 1,
         "maxItems": 4
       },
-      "minItems": 1
+      "minItems": 1,
+      "uniqueItems": true
     },
     "env_add_path": {
       "title": "添加到环境变量 PATH 中的路径",
@@ -711,6 +805,7 @@
       },
       "minLength": 1,
       "minItems": 1,
+      "uniqueItems": true,
       "examples": [
         "",
         [],
@@ -744,44 +839,40 @@
       "required": [
         "url"
       ],
-      "allOf": [
-        {
-          "properties": {
-            "bin": {
-              "$ref": "#/definitions/bin"
-            },
-            "checkver": {
-              "$ref": "#/definitions/checkver"
-            },
-            "extract_dir": {
-              "$ref": "#/definitions/extract_dir"
-            },
-            "hash": {
-              "$ref": "#/definitions/autoupdate_hash"
-            },
-            "installer": {
-              "$ref": "#/definitions/installer"
-            },
-            "pre_install": {
-              "$ref": "#/definitions/pre_install"
-            },
-            "post_install": {
-              "$ref": "#/definitions/post_install"
-            },
-            "shortcuts": {
-              "$ref": "#/definitions/shortcuts"
-            },
-            "uninstaller": {
-              "$ref": "#/definitions/uninstaller"
-            },
-            "url": {
-              "$ref": "#/definitions/url"
-            }
-          },
-          "minProperties": 1,
-          "additionalProperties": false
+      "properties": {
+        "bin": {
+          "$ref": "#/definitions/bin"
+        },
+        "checkver": {
+          "$ref": "#/definitions/checkver"
+        },
+        "extract_dir": {
+          "$ref": "#/definitions/extract_dir"
+        },
+        "hash": {
+          "$ref": "#/definitions/autoupdate_hash"
+        },
+        "installer": {
+          "$ref": "#/definitions/installer"
+        },
+        "pre_install": {
+          "$ref": "#/definitions/pre_install"
+        },
+        "post_install": {
+          "$ref": "#/definitions/post_install"
+        },
+        "shortcuts": {
+          "$ref": "#/definitions/shortcuts"
+        },
+        "uninstaller": {
+          "$ref": "#/definitions/uninstaller"
+        },
+        "url": {
+          "$ref": "#/definitions/url"
         }
-      ]
+      },
+      "minProperties": 1,
+      "additionalProperties": false
     },
     "autoupdate_hash": {
       "description": "定义 hash 的获取",
@@ -1014,19 +1105,15 @@
             },
             "32bit": {
               "description": "32位架构",
-              "required": [
-                "url"
-              ],
               "$ref": "#/definitions/autoupdate_architecture"
             },
             "arm64": {
               "description": "arm64架构",
-              "required": [
-                "url"
-              ],
               "$ref": "#/definitions/autoupdate_architecture"
             }
-          }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
         },
         "url": {
           "$ref": "#/definitions/url"
@@ -1071,6 +1158,14 @@
     }
   },
   "allOf": [
+    {
+      "$comment": "如果存在 notes，则 notes-cn 也必须存在",
+      "dependentRequired": {
+        "notes": [
+          "notes-cn"
+        ]
+      }
+    },
     {
       "$comment": "如果存在 license，但不存在 url 或 architecture 就触发警告",
       "if": {
@@ -1656,6 +1751,30 @@
       ]
     },
     {
+      "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀",
+      "if": {
+        "not": {
+          "required": [
+            "innosetup"
+          ]
+        }
+      },
+      "then": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/setup_exe_url"
+          },
+          {
+            "properties": {
+              "autoupdate": {
+                "$ref": "#/definitions/setup_exe_url"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "$comment": "安装和卸载脚本中的特别内容",
       "allOf": [
         {
@@ -1669,6 +1788,7 @@
               ],
               "type": "array",
               "minItems": 2,
+              "uniqueItems": true,
               "prefixItems": [
                 {
                   "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
@@ -1706,11 +1826,15 @@
               "examples": [
                 [
                   ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                  "A-Start-PostInstall"
+                  "A-Start-PostInstall",
+                  "$LinkPaths = @(\"$env:AppData\\xxx\")",
+                  "$LinkTargets = @(\"$persist_dir\\xxx\")",
+                  "A-New-LinkDirectory $LinkPaths $LinkTargets"
                 ]
               ],
               "type": "array",
               "minItems": 2,
+              "uniqueItems": true,
               "prefixItems": [
                 {
                   "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
@@ -1775,6 +1899,7 @@
               ],
               "type": "array",
               "minItems": 3,
+              "uniqueItems": true,
               "prefixItems": [
                 {
                   "const": "$bucket = $install.bucket"
@@ -1839,6 +1964,7 @@
               ],
               "minItems": 3,
               "maxItems": 3,
+              "uniqueItems": true,
               "prefixItems": [
                 {
                   "const": "$bucket = $install.bucket"
