@@ -1,0 +1,54 @@
+{
+    "version": "6.28.0.6294",
+    "description": "一个强大的下载管理器。A powerful download manager.",
+    "homepage": "https://www.freedownloadmanager.org",
+    "license": "Freeware",
+    "url": "https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe",
+    "hash": "9f59595d7d79650e1fd9ee86c3e115e4ae336e14596f11f6e3a7807135a55170",
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "fdm.exe",
+            "Free Download Manager"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:LocalAppData\\Softdeluxe\\Free Download Manager\")",
+        "$LinkTargets = @(\"$persist_dir\\Free Download Manager\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'SoftDeluxe/FreeDownloadManager' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]+))?(?:; x86:(?<x86>[^;]+))?(?:; arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "url": "$matchX64",
+        "hash": {
+            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+            "jsonpath": "$.x64_user.InstallerSha256"
+        }
+    }
+}
