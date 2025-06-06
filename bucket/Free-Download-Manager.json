@@ -38,11 +38,13 @@
     "checkver": {
         "script": [
             ". \"$pwd\\bin\\utils.ps1\"",
-            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'SoftDeluxe/FreeDownloadManager' 'exe'",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'SoftDeluxe.FreeDownloadManager' 'exe'",
             "\"ver:$($InstallerInfo.PackageVersion);\"",
-            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\""
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
         ],
-        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]+))?(?:; x86:(?<x86>[^;]+))?(?:; arm64:(?<arm64>[^;]+))?"
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
         "url": "$matchX64",
