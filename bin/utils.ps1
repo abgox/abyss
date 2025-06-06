@@ -855,29 +855,43 @@ function A-Get-InstallerInfoFromWinget {
     .DESCRIPTION
         该函数使用 winget 获取应用程序安装信息，并返回一个包含安装信息的对象。
 
-    .PARAMETER PackageName
-        要获取安装信息的包名。
-        格式为 'Microsoft/VisualStudioCode'
+    .PARAMETER Package
+        软件包。格式: 'Publisher.AppName' 或 'Publisher/AppName'
+        如: 'Microsoft.VisualStudioCode' 或 'Microsoft/VisualStudioCode'
 
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
     #>
     param(
-        [string]$PackageName,
+        [string]$Package,
         [string]$InstallerType
     )
 
-    $rootDir = $PackageName.ToLower()[0]
-    $parts = $PackageName -split '/'
-    $id = $parts -join '.'
+    $rootDir = $Package.ToLower()[0]
 
-    $latestVersion = (Invoke-WebRequest -Uri "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackageName").Content |
+    $parts = $Package -split '\.|/'
+    $Publisher = $parts[0]
+    $AppName = $parts[1]
+
+    $PackageIdentifier = "$Publisher.$AppName"
+    $PackagePath = "$Publisher/$AppName"
+
+
+    $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
+
+    Write-Host $url
+
+    $latestVersion = (Invoke-WebRequest -Uri $url).Content |
     ConvertFrom-Json |
     ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } |
     Sort-Object { try { [version]$_ } catch {} } -Descending |
     Select-Object -First 1
 
-    $installerYaml = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackageName/$latestVersion/$id.installer.yaml"
+    $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
+
+    Write-Host $url
+
+    $installerYaml = Invoke-WebRequest -Uri $url
 
     $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
     if (!$hasCommand) {
@@ -907,6 +921,8 @@ function A-Get-InstallerInfoFromWinget {
 
     # 写入到 bin/scoop-auto-check-update-temp-data.jsonc，用于后续读取
     $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
+
+    Write-Host '--------------------------------------------------------------------------------------'
 
     $installerInfo
 }
