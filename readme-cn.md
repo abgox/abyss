@@ -55,7 +55,7 @@
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
-2. 安装应用(以 `InputTip-zip` 举例)
+2. 安装应用
 
    ```pwsh
    scoop install abyss/InputTip-zip
@@ -165,7 +165,7 @@
 > [!Warning]
 >
 > - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
-> - SymbolicLink 需要管理员权限，因此这些应用会被添加 `AdminToInstall` 标签
+> - SymbolicLink 需要管理员权限，因此这些应用会被添加 `RequireAdmin` 标签
 
 ---
 
@@ -185,16 +185,13 @@
     - **`➖`**：没有必要或者没有数据文件
     - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
   - **`Tag`**：应用标签
-
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
+    - `RequireAdmin`: 在安装、更新或卸载时需要管理员权限
     - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
     - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
       - 它的安装目录不在 Scoop 中
       - Scoop 只管理 [persist](#persist)，应用的安装、更新以及卸载操作。
-    - `AdminToInstall`: 需要使用管理员权限才能安装的应用
-      - 因为应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接，而 SymbolicLink 需要管理员权限
-
   - **`Description`**：应用描述
 
 ---

@@ -161,7 +161,7 @@
 > [!Warning]
 >
 > - Some apps store data as files instead of directories, requiring SymbolicLink to link.
-> - SymbolicLink requires administrator permission, so these apps will be added with the `AdminToInstall` tag.
+> - SymbolicLink requires administrator permission, so these apps will be added with the `RequireAdmin` tag.
 
 ---
 
@@ -183,12 +183,11 @@
   - **`Tag`**
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
+    - `RequireAdmin`: An App that require administrator permission to install, update, or uninstall.
     - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
-    - `Msix`: Apps packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
+    - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
       - The installation directory is not in Scoop.
       - Scoop only manages the [persist](#persist) and operations for installing, updating, and uninstalling.
-    - `AdminToInstall`: Apps that require administrator permission to install.
-      - Because The App store data as files instead of directories, requiring SymbolicLink to link, and SymbolicLink requires administrator permission.
   - **`Description`** : App Description.
 
 ---
