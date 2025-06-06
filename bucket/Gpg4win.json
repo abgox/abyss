@@ -1,0 +1,58 @@
+{
+    "version": "4.4.1",
+    "description": "GNU Privacy Guard 是一款用于文件和电子邮件的加密软件，适用于 Windows 系统。GNU Privacy Guard for Windows is encryption software for files and emails.",
+    "homepage": "https://www.gpg4win.org",
+    "license": {
+        "identifier": "GPL-2.0",
+        "url": "https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpg4win.git;a=blob_plain;f=COPYING;hb=HEAD"
+    },
+    "url": "https://files.gpg4win.org/gpg4win-4.4.1.exe",
+    "hash": "de25e1d2b08c12506ac5dcc62dcd849f6ce973237837a1cc367e51f25ef517d8",
+    "env_add_path": [
+        "GnuPG\\bin",
+        "Gpg4win\\bin"
+    ],
+    "shortcuts": [
+        [
+            "Gpg4win\\bin\\kleopatra.exe",
+            "GnuPG (Kleopatra)"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\\Gpg4win\")"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\gnupg\",\"$env:AppData\\kleopatra\")",
+        "$LinkTargets = @(\"$persist_dir\\gnupg\",\"$persist_dir\\kleopatra\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Exe -Uninstaller 'Gpg4win\\gpg4win-uninstall.exe' -ArgumentList @('/S')",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "url": "https://www.gpg4win.org/get-gpg4win.html",
+        "regex": "Download Gpg4win ([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://files.gpg4win.org/gpg4win-$version.exe",
+        "hash": {
+            "url": "https://gpg4win.org/package-integrity.html"
+        }
+    }
+}
