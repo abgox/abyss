@@ -915,6 +915,9 @@ function A-Get-InstallerInfoFromWinget {
             elseif ($_.Scope) {
                 $res += '_' + $_.Scope.ToLower()
             }
+            else {
+                $res += '_machine'
+            }
             $installerInfo.$res = $_
         }
     }
