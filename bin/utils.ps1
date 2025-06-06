@@ -13,6 +13,7 @@
         - A-Add-Font: 安装字体
         - A-Add-MsixPackage: 安装 AppX/Msix 包
         - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
+        - A-Install-Exe
 
     2. 在 pre_uninstall 和 post_uninstall 中
 
@@ -25,9 +26,10 @@
         - A-Remove-MsixPackage: 卸载 AppX/Msix 包
         - A-Remove-PowerToysRunPlugin: 移除 PowerToys Run 插件
         - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
+        - A-Uninstall-Exe
 
     3. 特别的:
-
+        - A-Require-Admin: 要求以管理员权限运行
         - A-Test-Admin: 检查是否以管理员权限运行
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
     #>
@@ -118,7 +120,6 @@ function A-Ensure-Directory {
         A-Ensure-Directory "D:\scoop\persist\VSCode"
     #>
     param (
-        [Parameter(Position = 0, ValueFromPipeline)]
         [string]$Path = $persist_dir
     )
     if (!(Test-Path $Path)) {
@@ -153,7 +154,6 @@ function A-New-PersistFile {
         创建空文件
     #>
     param (
-        [Parameter(Position = 0, ValueFromPipeline)]
         [string]$Path,
 
         [string]$Content,
@@ -221,7 +221,7 @@ function A-New-LinkFile {
             for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
                 Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
             }
-            Write-Host "创建 SymbolicLink 需要管理员权限。`n请使用管理员身份再次尝试。" -ForegroundColor Red
+            Write-Host "创建 SymbolicLink 需要管理员权限。`n请使用管理员权限再次尝试。" -ForegroundColor Red
         }
         else {
             Write-Host "$app needs to create symbolic links the following data file:"
@@ -311,13 +311,8 @@ function A-Remove-TempData {
     .EXAMPLE
         A-Remove-TempData -Paths @("C:\Temp\Logs", "D:\Cache")
         删除指定的两个临时数据目录
-
-    .EXAMPLE
-        "C:\Windows\Temp" | A-Remove-TempData
-        通过管道传入单个临时目录路径
     #>
     param (
-        [Parameter(Position = 0, ValueFromPipeline)]
         [array]$Paths
     )
 
@@ -343,15 +338,33 @@ function A-Stop-Process {
 
     .PARAMETER ExtraPaths
         要搜索运行中可执行文件的额外目录路径数组。
+
+    .PARAMETER ExtraProcessNames
+        要搜索的额外进程名称数组。
     #>
     param(
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [string[]]$ExtraPaths
+        [string[]]$ExtraPaths,
+
+        [string[]]$ExtraProcessNames
     )
 
     $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
     $Paths += $ExtraPaths
 
+    if ($ExtraProcessNames) {
+        foreach ($processName in $ExtraProcessNames) {
+            $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
+            if ($p) {
+                try {
+                    Stop-Process -Id $p.Id -Force -ErrorAction Stop
+                    Write-Host "$($words["Successfully terminated the process:"]) $($p.Id) $($p.Name) ($($p.MainModule.FileName))" -ForegroundColor Green
+                }
+                catch {
+                    Write-Host "$($words["Failed to terminate the process:"]) $($p.Id) $($p.Name)`n$($words["You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Red
+                }
+            }
+        }
+    }
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止
     if ($uninstallActionLevel -notlike "*1*" -or (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc")) {
@@ -397,12 +410,8 @@ function A-Stop-Service {
 
     .EXAMPLE
         A-Stop-Service -ServiceName "Everything"
-
-    .EXAMPLE
-        "Everything" | A-Stop-Service
     #>
     param(
-        [Parameter(Position = 0, ValueFromPipeline)]
         [string]$ServiceName
     )
 
@@ -470,7 +479,6 @@ function A-Add-Font {
         默认为 ttf
     #>
     param(
-        [Parameter(Position = 0, ValueFromPipeline)]
         [ValidateSet("ttf", "otf", "ttc")]
         [string]$FontType = "ttf"
     )
@@ -547,7 +555,6 @@ function A-Remove-Font {
         默认为 ttf
     #>
     param(
-        [Parameter(Position = 0, ValueFromPipeline)]
         [ValidateSet("ttf", "otf", "ttc")]
         [string]$FontType = "ttf"
     )
@@ -622,11 +629,17 @@ function A-Remove-Font {
 
 function A-Add-MsixPackage {
     param(
-        [Parameter(Position = 0, ValueFromPipeline)]
-        [string]$Path
+        [string]$FileName
     )
+    if ($PSBoundParameters.ContainsKey('FileName')) {
+        $path = "$dir\$FileName"
+    }
+    else {
+        # $fname 由 Scoop 提供，即下载的文件名
+        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+    }
 
-    A-Add-AppxPackage -Path $Path
+    A-Add-AppxPackage -Path $path
 }
 
 function A-Remove-MsixPackage {
@@ -706,6 +719,81 @@ function A-Remove-PowerToysRunPlugin {
     }
 }
 
+function A-Install-Exe {
+    param(
+        [string]$Installer,
+        [array]$ArgumentList
+    )
+
+    if ($PSBoundParameters.ContainsKey('Installer')) {
+        $path = "$dir\$Installer"
+    }
+    else {
+        # $fname 由 Scoop 提供，即下载的文件名
+        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+    }
+    $fileName = Split-Path $path -Leaf
+
+    if ($ShowCN) {
+        Write-Host "正在运行安装程序 ($fileName) 安装 $app`n安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "Installing '$app' using installer ($fileName) with arguments: $ArgumentList" -ForegroundColor Yellow
+    }
+
+    if (Test-Path $path) {
+        try {
+            Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait
+        }
+        catch {
+            Write-Host $_.Exception.Message -ForegroundColor Red
+            exit 1
+        }
+    }
+    else {
+        if ($ShowCN) {
+            Write-Host "未找到安装程序: $path" -ForegroundColor Red
+        }
+        else {
+            Write-Host "Installer not found: $path" -ForegroundColor Red
+        }
+        exit 1
+    }
+}
+
+function A-Uninstall-Exe {
+    param(
+        [string]$Uninstaller,
+        [array]$ArgumentList
+    )
+
+    if ([System.IO.Path]::IsPathRooted($Uninstaller)) {
+        $path = $Uninstaller
+    }
+    else {
+        $path = "$dir\$Uninstaller"
+    }
+
+    $fileName = Split-Path $path -Leaf
+
+    if ($ShowCN) {
+        Write-Host "正在运行卸载程序 ($fileName) 卸载 $app`n卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "Uninstalling '$app' using installer ($fileName) with arguments: $ArgumentList" -ForegroundColor Yellow
+    }
+
+    if (Test-Path $path) {
+        try {
+            Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait
+        }
+        catch {
+            Write-Host $_.Exception.Message -ForegroundColor Red
+            exit 1
+        }
+    }
+}
+
 
 function A-Expand-SetupExe {
 
@@ -727,6 +815,23 @@ function A-Expand-SetupExe {
     Expand-7zipArchive $7z $dir
 
     Remove-Item "$dir\`$*" -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+function A-Require-Admin {
+    <#
+    .SYNOPSIS
+        要求以管理员权限运行
+    #>
+    $isAdmin = A-Test-Admin
+    if (!$isAdmin) {
+        if ($ShowCN) {
+            Write-Host "这个操作需要管理员权限。`n请使用管理员权限再次尝试。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "It requires administrator permission.`nPlease try again with administrator permission." -ForegroundColor Red
+        }
+        exit 1
+    }
 }
 
 function A-Test-Admin {
@@ -917,12 +1022,8 @@ function A-Add-AppxPackage {
 
     .EXAMPLE
         A-Add-AppxPackage -Path "D:\dl.msixbundle"
-
-    .EXAMPLE
-        "D:\dl.msixbundle" | A-Add-AppxPackage
     #>
     param(
-        [Parameter(Position = 0, ValueFromPipeline)]
         [string]$Path
     )
 

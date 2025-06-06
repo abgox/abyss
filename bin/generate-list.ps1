@@ -130,11 +130,11 @@ foreach ($_ in $manifests) {
     }
     $tag += if ($isMsix) { $label }
 
-    ## NeedAdminToInstall
-    $NeedAdminToInstall = A-Test-ScriptPattern $json '.*A-New-LinkFile.*'
+    ## RequireAdmin
+    $RequireAdmin = A-Test-ScriptPattern $json '.*(A-Require-Admin)|(A-New-LinkFile).*'
 
-    $label = if ($isCN) { '<code title=" ' + $app + ' 需要管理员权限才能安装">AdminToInstall</code>' } else { '<code title="' + $app + ' needs admin permission to install">AdminToInstall</code>' }
-    $tag += if ($NeedAdminToInstall) { $label }
+    $label = if ($isCN) { '<code title=" 在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires administrator permission to install, update, or uninstall">RequireAdmin</code>' }
+    $tag += if ($RequireAdmin) { $label }
 
     ## font
     if ($isCN) {
