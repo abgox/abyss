@@ -80,12 +80,14 @@
         "MIT",
         "Apache-2.0",
         "MPL-2.0",
+        "GPL-2.0",
         "GPL-3.0-only"
       ],
       "markdownEnumDescriptions": [
         "使用 The MIT License ([基于 OSI 标准模板](https://opensource.org/license/MIT))",
         "使用 Apache License, Version 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/Apache-2.0))",
         "使用 Mozilla Public License 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/MPL-2.0))",
+        "使用 GNU General Public License version 2 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-2.0))",
         "使用 GNU General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-3.0))"
       ]
     },
@@ -618,7 +620,7 @@
           "$ref": "#/definitions/str"
         },
         "script": {
-          "markdownDescription": "- 作为安装程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 上次下载的文件\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
+          "markdownDescription": "- 作为安装程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 下载的文件(可能是多个文件，需要当做数组处理)\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
           "$ref": "#/definitions/string_or_string_array"
         },
         "args": {
@@ -650,7 +652,7 @@
           "$ref": "#/definitions/str"
         },
         "script": {
-          "markdownDescription": "- 作为卸载程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 上次下载的文件\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
+          "markdownDescription": "- 作为卸载程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 下载的文件(可能是多个文件，需要当做数组处理)\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
           "$ref": "#/definitions/string_or_string_array"
         },
         "args": {
@@ -665,12 +667,12 @@
     },
     "pre_install": {
       "title": "预安装脚本",
-      "markdownDescription": "- 用于在安装应用程序之前执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+      "markdownDescription": "- 用于在安装应用程序之前执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
       "$ref": "#/definitions/string_or_string_array"
     },
     "post_install": {
       "title": "后安装脚本",
-      "markdownDescription": "- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
+      "markdownDescription": "- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称(pre_uninstall,post_uninstall 中不存在此变量，可通过 $install.bucket 获取)\n    - $cachedir: Scoop cache 目录\n    - $cfgpath: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录\n    - $oldscoopdir: 旧的 Scoop 目录",
       "$ref": "#/definitions/string_or_string_array"
     },
     "extract_to": {
@@ -729,8 +731,21 @@
       "title": "添加到环境变量 PATH 中的路径",
       "markdownDescription": "- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中",
       "description": "- 添加到环境变量 PATH 中的路径\n- 如果安装时使用了 --global 或 -g 参数，则会添加到环境变量(系统级) PATH 中",
-      "type": "string",
-      "minLength": 1
+      "type": [
+        "string",
+        "array"
+      ],
+      "examples": [
+        "",
+        []
+      ],
+      "minLength": 1,
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "env_set": {
       "title": "设置环境变量",
@@ -1089,6 +1104,18 @@
       "type": "object",
       "additionalProperties": false,
       "minProperties": 1,
+      "examples": [
+        {
+          "url": ""
+        },
+        {
+          "architecture": {
+            "64bit": {
+              "url": ""
+            }
+          }
+        }
+      ],
       "properties": {
         "note": {
           "description": "自动更新完成之后的提示信息",
@@ -1806,12 +1833,18 @@
                       ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                       "A-Start-PreInstall",
                       "A-Expand-SetupExe",
+                      "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\\$app\")",
+                      "A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S', \"/D=$dir\\$app\")",
+                      "A-Require-Admin",
                       "A-Test-Admin"
                     ],
                     "markdownEnumDescriptions": [
                       "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
                       "函数\n- 表示 `pre_install` 的开始",
                       "函数\n- 用来展开 Setup.exe 类型的安装包",
+                      "函数\n- 使用安装程序安装应用\n- 它需要两个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
+                      "函数\n- 使用安装程序安装应用\n- 它需要两个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
+                      "函数\n- 要求以管理员权限运行",
                       "函数\n- 检查是否以管理员权限运行"
                     ]
                   }
@@ -1859,7 +1892,7 @@
                       "A-New-LinkDirectory $LinkPaths $LinkTargets",
                       "A-Add-Font",
                       "$PackageFamilyName = \"\"",
-                      "A-Add-MsixPackage \"$dir\\dl.msixbundle\"",
+                      "A-Add-MsixPackage",
                       "A-Add-PowerToysRunPlugin ''",
                       "A-Test-Admin"
                     ],
@@ -1874,7 +1907,7 @@
                       "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths $LinkTargets`",
                       "函数\n- 安装字体",
                       "变量\n- 定义 AppX/Msix 包的 PackageFamilyName\n- 例如: `$PackageFamilyName = \"Microsoft.WindowsCalculator_8wekyb3d8bbwe\"`",
-                      "函数\n- 安装 AppX/Msix 包\n- 需要定义变量: `$PackageFamilyName`",
+                      "函数\n- 安装 AppX/Msix 包\n- 需要提前定义变量: `$PackageFamilyName`\n- 示例: \n    - `A-Add-MsixPackage`: 使用 Scoop 上下文的 $fname，添加所有下载的后缀为 .msixbundle 的应用包\n    - `A-Add-MsixPackage @(\"dl.msixbundle\")`: 添加指定的文件名的应用包",
                       "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`",
                       "函数\n- 检查是否以管理员权限运行"
                     ]
@@ -1928,7 +1961,9 @@
                       "A-Remove-PowerToysRunPlugin",
                       "A-Remove-TempData",
                       "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                      "A-Test-Admin"
+                      "A-Require-Admin",
+                      "A-Test-Admin",
+                      "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S')"
                     ],
                     "markdownEnumDescriptions": [
                       "脚本\n- 获取 $bucket 变量",
@@ -1942,7 +1977,9 @@
                       "函数\n- 移除 PowerToys Run 插件",
                       "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`",
                       "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
-                      "函数\n- 检查是否以管理员权限运行"
+                      "函数\n- 要求以管理员权限运行",
+                      "函数\n- 检查是否以管理员权限运行",
+                      "函数\n- 使用卸载程序卸载应用\n- 它需要两个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递卸载参数"
                     ]
                   }
                 ]
@@ -1994,6 +2031,68 @@
                   }
                 ]
               }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "$comment": "一些示例",
+      "allOf": [
+        {
+          "properties": {
+            "checkver": {
+              "examples": [
+                "",
+                "github",
+                {},
+                {
+                  "script": [
+                    ". \"$pwd\\bin\\utils.ps1\"",
+                    "$InstallerInfo = A-Get-InstallerInfoFromWinget 'xxx/xxx' 'exe'",
+                    "\"ver:$($InstallerInfo.PackageVersion);\"",
+                    "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                    "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+                  ],
+                  "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]+))?(?:; x86:(?<x86>[^;]+))?(?:; arm64:(?<arm64>[^;]+))?"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "autoupdate": {
+              "examples": [
+                {
+                  "url": ""
+                },
+                {
+                  "architecture": {
+                    "64bit": {
+                      "url": ""
+                    }
+                  }
+                },
+                {
+                  "architecture": {
+                    "64bit": {
+                      "url": "$matchX64#/dl.7z",
+                      "hash": {
+                        "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                        "jsonpath": "$.x64_user.InstallerSha256"
+                      }
+                    },
+                    "arm64": {
+                      "url": "$matchArm64#/dl.7z",
+                      "hash": {
+                        "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                        "jsonpath": "$.arm64_user.InstallerSha256"
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         }
