@@ -1,0 +1,59 @@
+{
+    "version": "1.58.6",
+    "description": "豆包，字节跳动的 AI 聊天智能对话问答助手，写作文案翻译情感陪伴编程全能工具。DouBao is a chatbot AI assistant under ByteDance. It can answer questions, write essays, translate text, and provide programming support.",
+    "homepage": "https://www.doubao.com/",
+    "license": "Unknown",
+    "url": "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao_pc/1.58.6/Doubao_installer_1.58.6.exe",
+    "hash": "1dd71e11d871f9a78327640d03fd3409720854df73cea6688265992857740b4a",
+    "shortcuts": [
+        [
+            "Doubao\\Doubao.exe",
+            "豆包"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$InstallLocation = '\"' + \"$dir\" + '\"'",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:LocalAppData\\Doubao\")",
+        "$LinkTargets = @(\"$persist_dir\\Doubao\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Exe -Uninstaller 'Doubao\\uninstall.exe' -NoSilent",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'ByteDance.Doubao' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "url": "$matchX64",
+        "hash": {
+            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+            "jsonpath": "$.x64_user.InstallerSha256"
+        }
+    }
+}
