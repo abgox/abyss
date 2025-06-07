@@ -1,0 +1,56 @@
+{
+    "version": "4.1.7",
+    "description": "语雀，阿里巴巴的笔记与文档知识库。A knowledge base and note-taking tool under Alibaba.",
+    "homepage": "https://www.yuque.com/",
+    "license": "Freemium",
+    "url": "https://app.nlark.com/yuque-desktop/4.1.7.1320/BJf30853eb74f6492ab1da0a91edf5d71e/Yuque-4.1.7.1320.exe#/dl.7z",
+    "hash": "2e5f7aad1b07ecedd71b4a06effa3544046e0922f20bae9115a3deec8f49249d",
+    "shortcuts": [
+        [
+            "语雀.exe",
+            "语雀"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Expand-SetupExe"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\yuque-desktop\")",
+        "$LinkTargets = @(\"$persist_dir\\yuque-desktop\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Alibaba.Yuque' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "url": "$matchX64#/dl.7z",
+        "hash": {
+            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+            "jsonpath": "$.x64_user.InstallerSha256"
+        }
+    }
+}
