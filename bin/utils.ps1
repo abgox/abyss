@@ -724,8 +724,11 @@ function A-Install-Exe {
         [string]$Installer,
         [array]$ArgumentList,
         # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
-        # 如果此时安装进程还未停止，将强行停止
-        [string]$SuccessFile
+        [string]$SuccessFile,
+        # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
+        [switch]$NoSilent,
+        # 超时时间（秒）
+        [string]$Timeout = 60
     )
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
@@ -746,33 +749,51 @@ function A-Install-Exe {
     }
     $fileName = Split-Path $path -Leaf
 
-    if ($ShowCN) {
-        Write-Host "正在运行安装程序 ($fileName) 安装 $app`n安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
-    }
-    else {
-        Write-Host "Installing '$app' using installer ($fileName) with arguments: $ArgumentList" -ForegroundColor Yellow
-    }
-
     if (Test-Path $path) {
         try {
-            $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+    if ($ShowCN) {
+                Write-Host "正在运行安装程序 ($fileName) 安装 $app" -ForegroundColor Yellow
+                if ($ArgumentList) {
+                    Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
+                }
+                if ($NoSilent) {
+                    Write-Host "安装程序可能需要你手动进行一些交互操作，如果安装超时($Timeout 秒)，将强行终止安装进程" -ForegroundColor Yellow
+                }
+    }
+    else {
+                Write-Host "Installing '$app' using installer ($fileName)" -ForegroundColor Yellow
+                if ($ArgumentList) {
+                    Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
+                }
+
+                if ($NoSilent) {
+                    Write-Host "The installer may require you to perform some manual operations, if installation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                }
+            }
 
             if (!$SuccessFile) {
-                $SuccessFile = $manifest.shortcuts[0][0]
-                if (!$SuccessFile) {
+                if (!$manifest.shortcuts) {
                     Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
                     exit 1
                 }
+                $SuccessFile = $manifest.shortcuts[0][0]
             }
                 if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
                     $SuccessFile = Join-Path $dir $SuccessFile
                 }
 
+            # 在后台作业中运行安装程序，强制停止进程的时机更晚
+            $job = Start-Job -ScriptBlock {
+                param($path, $ArgumentList)
+
+                Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+
+            } -ArgumentList $path, $ArgumentList
+
                 $startTime = Get-Date
-                $timeout = 60 # 超时时间（秒）
                 $fileExists = $false
 
-                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $timeout) {
+            while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
                     if (Test-Path $SuccessFile) {
                         $fileExists = $true
                         break
@@ -780,15 +801,6 @@ function A-Install-Exe {
                 Start-Sleep -Seconds 5
                 }
 
-                # 如果文件已存在但进程还在运行，则终止进程
-                $process | Stop-Process -Force -ErrorAction SilentlyContinue
-                $job = Start-Job -ScriptBlock {
-                    param($installerPath, $successFile)
-                    Start-Sleep -Seconds 10
-                    if (Test-Path $successFile) {
-                        Remove-Item $installerPath -Force -ErrorAction SilentlyContinue
-                    }
-                } -ArgumentList $path, $SuccessFile
 
                 if ($fileExists) {
                     if ($ShowCN) {
@@ -799,11 +811,13 @@ function A-Install-Exe {
                     }
                 }
                 else {
+                $job | Stop-Job -Force -ErrorAction SilentlyContinue
+
                     if ($ShowCN) {
-                        Write-Host "安装超时，已终止安装进程" -ForegroundColor Red
+                    Write-Host "安装超时($Timeout 秒)，已终止安装进程" -ForegroundColor Red
                     }
                     else {
-                        Write-Host "Installation timeout, process terminated." -ForegroundColor Red
+                    Write-Host "Installation timeout ($Timeout seconds), process terminated." -ForegroundColor Red
                     }
                     exit 1
             }
@@ -827,7 +841,11 @@ function A-Install-Exe {
 function A-Uninstall-Exe {
     param(
         [string]$Uninstaller,
-        [array]$ArgumentList
+        [array]$ArgumentList,
+        # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
+        [switch]$NoSilent,
+                # 超时时间（秒）
+        [string]$Timeout = 60
     )
 
     if ([System.IO.Path]::IsPathRooted($Uninstaller)) {
@@ -840,15 +858,54 @@ function A-Uninstall-Exe {
     $fileName = Split-Path $path -Leaf
 
     if ($ShowCN) {
-        Write-Host "正在运行卸载程序 ($fileName) 卸载 $app`n卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
+        Write-Host "正在运行卸载程序 ($fileName) 卸载 $app" -ForegroundColor Yellow
+        if ($ArgumentList) {
+            Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
+        }
+        if ($NoSilent) {
+            Write-Host "卸载程序可能需要你手动进行一些交互操作，如果卸载超时($Timeout 秒)，将强行终止卸载进程" -ForegroundColor Yellow
+        }
     }
     else {
-        Write-Host "Uninstalling '$app' using installer ($fileName) with arguments: $ArgumentList" -ForegroundColor Yellow
+        Write-Host "Uninstalling '$app' using uninstaller ($fileName)" -ForegroundColor Yellow
+        if ($ArgumentList) {
+            Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
+        }
+        if ($NoSilent) {
+            Write-Host "The uninstaller may require you to perform some manual operations. If uninstallation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+        }
     }
 
     if (Test-Path $path) {
         try {
-            Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait
+            if($NoSilent){
+                $process = Start-Process $path -ArgumentList $ArgumentList  -PassThru
+            }else{
+            $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+            }
+
+            $startTime = Get-Date
+            $isTimedOut = $false
+
+            while (!$process.HasExited) {
+                $elapsed = (Get-Date) - $startTime
+                if ($elapsed.TotalSeconds -ge $Timeout) {
+                    $isTimedOut = $true
+                    break
+                }
+                Start-Sleep -Seconds 5
+            }
+
+            if ($isTimedOut) {
+                $process | Stop-Process -Force -ErrorAction SilentlyContinue
+                if ($ShowCN) {
+                    Write-Host "卸载程序运行超时($Timeout 秒)，强行终止" -ForegroundColor Red
+                }
+                else {
+                    Write-Host "Uninstaller timeout ($Timeout seconds), process terminated." -ForegroundColor Red
+                }
+                exit 1
+            }
         }
         catch {
             Write-Host $_.Exception.Message -ForegroundColor Red
@@ -919,8 +976,9 @@ function A-Get-InstallerInfoFromWinget {
         该函数使用 winget 获取应用程序安装信息，并返回一个包含安装信息的对象。
 
     .PARAMETER Package
-        软件包。格式: 'Publisher.AppName' 或 'Publisher/AppName'
-        如: 'Microsoft.VisualStudioCode' 或 'Microsoft/VisualStudioCode'
+        软件包。
+        格式: 'Publisher.AppName'
+        比如: 'Microsoft.VisualStudioCode'
 
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
@@ -932,12 +990,8 @@ function A-Get-InstallerInfoFromWinget {
 
     $rootDir = $Package.ToLower()[0]
 
-    $parts = $Package -split '\.|/'
-    $Publisher = $parts[0]
-    $AppName = $parts[1]
-
-    $PackageIdentifier = "$Publisher.$AppName"
-    $PackagePath = "$Publisher/$AppName"
+    $PackageIdentifier = $Package
+    $PackagePath = $Package -replace '\.', '/'
 
 
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
@@ -947,8 +1001,21 @@ function A-Get-InstallerInfoFromWinget {
     $latestVersion = (Invoke-WebRequest -Uri $url).Content |
     ConvertFrom-Json |
     ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } |
-    Sort-Object { try { [version]$_ } catch {} } -Descending |
+    Sort-Object -Property @{
+        Expression = {
+            # 提取第一个连续的数字版本号部分（如 "7.6.10"）
+            if ($_ -match '^(\d+(?:\.\d+)*)') {
+                $matchedVersion = $matches[1]
+                try { [version]$matchedVersion } catch { [version]::new(0, 0) }
+            }
+            else {
+                [version]::new(0, 0) # 无数字版本号的项排最后
+            }
+        }
+        Descending = $true
+    } |
     Select-Object -First 1
+
 
     $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
@@ -1308,7 +1375,7 @@ if ($ShowCN) {
         }
 
         $translated = Translate-Message $msg
-        Write-Host "错误 $translated" -f darkred
+        Write-Host "错误: $translated" -f darkred
     }
     #endregion
 
