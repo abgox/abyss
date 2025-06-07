@@ -391,7 +391,7 @@ function A-Stop-Process {
     }
 
     if ($NoFound) {
-        Write-Host "$($words["No running processes found."])`n$($words["If failed to uninstall, You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Yellow
+        Write-Host "$($words["No running processes found."]) $($words["If failed to uninstall, You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Yellow
     }
 
     Start-Sleep -Seconds 1
@@ -756,7 +756,14 @@ function A-Install-Exe {
     if (Test-Path $path) {
         try {
             $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
-            if ($SuccessFile) {
+
+            if (!$SuccessFile) {
+                $SuccessFile = $manifest.shortcuts[0][0]
+                if (!$SuccessFile) {
+                    Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
+                    exit 1
+                }
+            }
                 if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
                     $SuccessFile = Join-Path $dir $SuccessFile
                 }
@@ -770,7 +777,7 @@ function A-Install-Exe {
                         $fileExists = $true
                         break
                     }
-                    Start-Sleep -Seconds 3
+                Start-Sleep -Seconds 5
                 }
 
                 # 如果文件已存在但进程还在运行，则终止进程
@@ -799,15 +806,6 @@ function A-Install-Exe {
                         Write-Host "Installation timeout, process terminated." -ForegroundColor Red
                     }
                     exit 1
-                }
-            }
-            else {
-                Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
-                $job = Start-Job -ScriptBlock {
-                    param($installerPath)
-                    Start-Sleep -Seconds 10
-                    Remove-Item $installerPath -Force -ErrorAction SilentlyContinue
-                } -ArgumentList $path
             }
         }
         catch {
