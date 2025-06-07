@@ -204,11 +204,11 @@
         []
       ],
       "if": {
-        "pattern": "^https?://.*/.*setup.*\\.exe$"
+        "pattern": "^https?://.*/.*[sS]etup.*\\.exe$"
       },
       "then": {
         "if": {
-          "pattern": "^https?://.*/.*setup.*\\.exe#/dl\\.7z$"
+          "pattern": "^https?://.*/.*[sS]etup.*\\.exe#/dl\\.7z$"
         },
         "else": {
           "not": true,
@@ -217,11 +217,11 @@
       },
       "items": {
         "if": {
-          "pattern": "^https?://.*/.*setup.*\\.exe$"
+          "pattern": "^https?://.*/.*[sS]etup.*\\.exe$"
         },
         "then": {
           "if": {
-            "pattern": "^https?://.*/.*setup.*\\.exe#/dl\\.7z$"
+            "pattern": "^https?://.*/.*[sS]etup.*\\.exe#/dl\\.7z$"
           },
           "else": {
             "not": true,
@@ -1841,8 +1841,8 @@
                       "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
                       "函数\n- 表示 `pre_install` 的开始",
                       "函数\n- 用来展开 Setup.exe 类型的安装包",
-                      "函数\n- 使用安装程序安装应用\n- 它需要两个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
-                      "函数\n- 使用安装程序安装应用\n- 它需要两个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
+                      "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
+                      "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
                       "函数\n- 要求以管理员权限运行",
                       "函数\n- 检查是否以管理员权限运行"
                     ]
@@ -1978,7 +1978,7 @@
                       "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
                       "函数\n- 要求以管理员权限运行",
                       "函数\n- 检查是否以管理员权限运行",
-                      "函数\n- 使用卸载程序卸载应用\n- 它需要两个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递卸载参数"
+                      "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递卸载参数"
                     ]
                   }
                 ]
