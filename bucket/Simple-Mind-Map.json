@@ -1,0 +1,45 @@
+{
+    "version": "0.15.0",
+    "description": "一个还算强大的Web思维导图。A relatively powerful web mind map.",
+    "homepage": "https://github.com/wanglin2/mind-map",
+    "license": {
+        "identifier": "Freemium",
+        "url": "https://github.com/wanglin2/mind-map/blob/main/LICENSE"
+    },
+    "url": "https://github.com/wanglin2/mind-map/releases/download/0.15.0/Setup.0.15.0.exe#/dl.7z",
+    "hash": "9609e256f088333fa6471df64da535af41bed9e51010fba74637e2ff8bca918c",
+    "shortcuts": [
+        [
+            "思绪思维导图.exe",
+            "Simple Mind Map (思绪思维导图)"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Expand-SetupExe"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\thoughts\")",
+        "$LinkTargets = @(\"$persist_dir\\thoughts\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/wanglin2/mind-map/releases/download/$version/Setup.$version.exe#/dl.7z"
+    }
+}
