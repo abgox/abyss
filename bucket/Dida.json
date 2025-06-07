@@ -1,0 +1,75 @@
+{
+    "version": "6.3.1.2",
+    "description": "滴答清单，一款轻便的待办事项 (Todo)、日程管理 (GTD) 应用。Dida is a powerful to-do & task management app.",
+    "homepage": "https://www.dida365.com/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.dida365.cn/download/win64/dida_win_setup_release_x64_6312.exe",
+            "hash": "7b6f91f25d473bcb09ab1db1624c7fdb9de0e101d6e4d1772c1a0f0ecb7631fc"
+        },
+        "32bit": {
+            "url": "https://cdn.dida365.cn/download/win/dida_win_setup_release_x86_6312.exe",
+            "hash": "29ede7cc878c520ef56f329a50a2e473e9012219dd85ea7d9b236ddc71b095c3"
+        }
+    },
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "TickTick.exe",
+            "滴答清单"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\Tick_Tick\")",
+        "$LinkTargets = @(\"$persist_dir\\Tick_Tick\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Appest.Dida' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
