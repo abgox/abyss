@@ -188,6 +188,8 @@
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
     - `RequireAdmin`: 在安装、更新或卸载时需要管理员权限
+    - `NoSilentInstall`: 在安装过程中可能需要用户交互
+    - `NoSilentUninstall`: 在卸载过程中可能需要用户交互
     - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
     - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
       - 它的安装目录不在 Scoop 中

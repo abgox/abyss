@@ -183,6 +183,8 @@
   - **`Tag`**
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
+    - `NoSilentInstall`: May require user interaction during installation.
+    - `NoSilentUninstall`: May require user interaction during uninstallation.
     - `RequireAdmin`: An App that require administrator permission to install, update, or uninstall.
     - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
     - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
