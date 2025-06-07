@@ -275,8 +275,8 @@ function A-Remove-Link {
         该函数用于删除在应用安装过程中创建的 SymbolicLink 和 Junction
     #>
 
-    if (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") {
-        # 通过 Msix 打包的程序，在卸载时会删除所有数据文件，因此必须先删除链接目录
+    if ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc")) {
+        # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
     elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
         return
@@ -722,8 +722,20 @@ function A-Remove-PowerToysRunPlugin {
 function A-Install-Exe {
     param(
         [string]$Installer,
-        [array]$ArgumentList
+        [array]$ArgumentList,
+        # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
+        # 如果此时安装进程还未停止，将强行停止
+        [string]$SuccessFile
     )
+
+    $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
+
+    @{
+        Installer    = $Installer
+        ArgumentList = $ArgumentList
+        SuccessFile  = $SuccessFile
+    } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+
 
     if ($PSBoundParameters.ContainsKey('Installer')) {
         $path = "$dir\$Installer"
@@ -743,7 +755,60 @@ function A-Install-Exe {
 
     if (Test-Path $path) {
         try {
-            Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait
+            $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+            if ($SuccessFile) {
+                if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
+                    $SuccessFile = Join-Path $dir $SuccessFile
+                }
+
+                $startTime = Get-Date
+                $timeout = 60 # 超时时间（秒）
+                $fileExists = $false
+
+                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $timeout) {
+                    if (Test-Path $SuccessFile) {
+                        $fileExists = $true
+                        break
+                    }
+                    Start-Sleep -Seconds 3
+                }
+
+                # 如果文件已存在但进程还在运行，则终止进程
+                $process | Stop-Process -Force -ErrorAction SilentlyContinue
+                $job = Start-Job -ScriptBlock {
+                    param($installerPath, $successFile)
+                    Start-Sleep -Seconds 10
+                    if (Test-Path $successFile) {
+                        Remove-Item $installerPath -Force -ErrorAction SilentlyContinue
+                    }
+                } -ArgumentList $path, $SuccessFile
+
+                if ($fileExists) {
+                    if ($ShowCN) {
+                    Write-Host "安装成功，已终止安装进程" -ForegroundColor Green
+                }
+                    else {
+                        Write-Host "Installation successful, process terminated." -ForegroundColor Green
+                    }
+                }
+                else {
+                    if ($ShowCN) {
+                        Write-Host "安装超时，已终止安装进程" -ForegroundColor Red
+                    }
+                    else {
+                        Write-Host "Installation timeout, process terminated." -ForegroundColor Red
+                    }
+                    exit 1
+                }
+            }
+            else {
+                Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
+                $job = Start-Job -ScriptBlock {
+                    param($installerPath)
+                    Start-Sleep -Seconds 10
+                    Remove-Item $installerPath -Force -ErrorAction SilentlyContinue
+                } -ArgumentList $path
+            }
         }
         catch {
             Write-Host $_.Exception.Message -ForegroundColor Red
@@ -929,7 +994,6 @@ function A-Get-InstallerInfoFromWinget {
 
     $installerInfo
 }
-
 
 
 #region 以下的函数不建议直接使用。在文件的开头有列出可用的函数。
