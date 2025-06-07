@@ -1,0 +1,76 @@
+{
+    "version": "2.4.1",
+    "description": "抖音官方出品音乐 App。DouYin's official music App.",
+    "homepage": "https://music.douyin.com/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://lf-luna-release.qishui.com/obj/luna-release/2.4.1/152921443/SodaMusic-v2.4.1-official-win32_x64.exe",
+            "hash": "7327a2c2b06446cecb2f1117e04f11b83c7a594ec3f700bfe249eec7bd27432a"
+        },
+        "32bit": {
+            "url": "https://lf-luna-release.qishui.com/obj/luna-release/2.4.1/152921443/SodaMusic-v2.4.1-official-win32_ia32.exe",
+            "hash": "16c16f7c0b47b67970b64c3c9f8d07bcce58c8c42356bf70f161e14c198b884d"
+        }
+    },
+    "shortcuts": [
+        [
+            "Soda Music\\SodaMusicLauncher.exe",
+            "Soda Music (汽水音乐)"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\SodaMusic\")",
+        "$LinkTargets = @(\"$persist_dir\\SodaMusic\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Soda Music\\unins000.exe' -ArgumentList @('/S')"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'ByteDance.SodaMusic' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
