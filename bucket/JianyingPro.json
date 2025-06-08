@@ -1,0 +1,58 @@
+{
+    "version": "8.3.0.13094",
+    "description": "剪映专业版，一款全能易用的桌面端剪辑软件，让创作更简单。A powerful desktop video editor with a simple interface, making it easy to create videos.",
+    "homepage": "https://www.capcut.cn/",
+    "license": "Freemium",
+    "url": "https://lf3-package.vlabstatic.com/obj/faceu-packages/Jianying_8_3_0_13094_jianyingpro_0_creatortool.exe",
+    "hash": "53b4fd97d299b34b7d54b88f506d93285b13b7d9507ea32a9722f716456fdc55",
+    "shortcuts": [
+        [
+            "JianyingPro.exe",
+            "剪映专业版"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$InstallLocation = '\"' + \"$dir\" + '\"'",
+        "A-Install-Exe -ArgumentList @('/silent_install=1', \"/install_path=$InstallLocation\") -Timeout 180"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:LocalAppData\\JianyingPro\")",
+        "$LinkTargets = @(\"$persist_dir\\JianyingPro\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'uninst.exe' -NoSilent"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'ByteDance.JianyingPro' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "url": "$matchX64",
+        "hash": {
+            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+            "jsonpath": "$.x64_user.InstallerSha256"
+        }
+    }
+}
