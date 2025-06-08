@@ -1776,30 +1776,30 @@
         }
       ]
     },
-    {
-      "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀",
-      "if": {
-        "not": {
-          "required": [
-            "innosetup"
-          ]
-        }
-      },
-      "then": {
-        "allOf": [
-          {
-            "$ref": "#/definitions/setup_exe_url"
-          },
-          {
-            "properties": {
-              "autoupdate": {
-                "$ref": "#/definitions/setup_exe_url"
-              }
-            }
-          }
-        ]
-      }
-    },
+    // {
+    //   "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀。有些会通过 A-Install-Exe 安装，但 schema 无法检测到，会存在误判",
+    //   "if": {
+    //     "not": {
+    //       "required": [
+    //         "innosetup"
+    //       ]
+    //     }
+    //   },
+    //   "then": {
+    //     "allOf": [
+    //       {
+    //         "$ref": "#/definitions/setup_exe_url"
+    //       },
+    //       {
+    //         "properties": {
+    //           "autoupdate": {
+    //             "$ref": "#/definitions/setup_exe_url"
+    //           }
+    //         }
+    //       }
+    //     ]
+    //   }
+    // },
     {
       "$comment": "安装和卸载脚本中的特别内容",
       "allOf": [
