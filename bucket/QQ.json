@@ -1,0 +1,92 @@
+{
+    "version": "9.9.19.35469",
+    "description": "(NT 版本) QQ，腾讯的一款聊天通讯工具。(NT version) A chat communication tool under Tencent.",
+    "homepage": "https://im.qq.com/",
+    "license": "Unknown",
+    "notes": [
+        "QQ will not be installed in Scoop directory, the installation directory: C:\\Program Files\\Tencent\\QQNT",
+        "Scoop only manages QQ's data persist, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "QQ 不会安装在 Scoop 目录下，QQ 的实际安装目录: C:\\Program Files\\Tencent\\QQNT",
+        "Scoop 只管理 QQ 的数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.19_250523_x64_01.exe",
+            "hash": "0174f703d02d8389f3228e6aa39aacf9688b5ac31a7d8aa2ebb1afd1a7c3ade7"
+        },
+        "32bit": {
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.19_250523_x86_01.exe",
+            "hash": "bd31a48c294579e77cae54488b5d6424e72ac45c95e4c78e0cc65fce0e254db5"
+        }
+    },
+    "shortcuts": [
+        [
+            "C:\\Program Files\\Tencent\\QQNT\\QQ.exe",
+            "QQ"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/S')"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$DataFile = \"$env:UserProfile\\Documents\\Tencent Files\"",
+        "$SubDir1 = Get-ChildItem $DataFile -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataFile\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
+        "$SubDir2 = Get-ChildItem $persist_dir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$persist_dir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
+        "$SubDir = [array]$SubDir1 + [array]$SubDir2 | Select-Object -Unique",
+        "$LinkPaths = $SubDir | ForEach-Object { Join-Path $DataFile \"$_\\nt_qq\" }",
+        "$LinkPaths += Join-Path $DataFile \"nt_qq\"",
+        "$LinkTargets = $SubDir | ForEach-Object { Join-Path $persist_dir \"$_\\nt_qq\" }",
+        "$LinkTargets += Join-Path $persist_dir \"nt_qq\"",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process @(\"C:\\Program Files\\Tencent\\QQNT\")",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Tencent\\QQNT\\Uninstall.exe' -NoSilent",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Tencent.QQ.NT' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
