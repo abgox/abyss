@@ -1,0 +1,89 @@
+{
+    "version": "1.22.0",
+    "description": "一个 Bash CLI 框架，也是 Bash Command Runner。A Bash CLI framework, also a Bash command runner.",
+    "homepage": "https://github.com/sigoden/argc",
+    "notes": [
+        "It needs to be used with abyss/Argc-completions.",
+        "When both Argc and Argc-completions are installed, you need to configure the following:",
+        " ",
+        "- For PowerShell, add the following to your $Profile:",
+        " ",
+        "    # If you don't want to load everything, you can directly specify: $argc_scripts = @(\"aaa\",\"bbb\")",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression",
+        "  ",
+        "- If you're also using PSCompletions:",
+        " ",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    $PSCompletions.argc_completions($argc_scripts)"
+    ],
+    "notes-cn": [
+        "它需要配合 abyss/Argc-completions 一起使用。",
+        "当 Argc 和 Argc-completions 都安装后，你需要进行以下配置:",
+        " ",
+        "- 对于 PowerShell，将以下内容添加到 $Profile 即可:",
+        " ",
+        "    # 如果你不希望全部加载，可以直接指定: $argc_scripts = @(\"aaa\",\"bbb\")",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression",
+        "  ",
+        "- 如果你同时使用 PSCompletions:",
+        " ",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    $PSCompletions.argc_completions($argc_scripts)"
+    ],
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "suggest": {
+        "abyss/Argc-completions": "abyss/Argc-completions",
+        "abyss/PSCompletions": "abyss/PSCompletions"
+    },
+    "architecture": {
+        "arm64": {
+            "url": "https://github.com/sigoden/argc/releases/download/v1.22.0/argc-v1.22.0-aarch64-pc-windows-msvc.zip",
+            "hash": "6337076048148e77a89d36a38128aae58caae252b2bb39a665a606c57495ff0b"
+        },
+        "64bit": {
+            "url": "https://github.com/sigoden/argc/releases/download/v1.22.0/argc-v1.22.0-x86_64-pc-windows-msvc.zip",
+            "hash": "1fcb7979fdd40c182f21e92879b2513d12e032c5575cc0731a7f67b08e99ae9a"
+        },
+        "32bit": {
+            "url": "https://github.com/sigoden/argc/releases/download/v1.22.0/argc-v1.22.0-i686-pc-windows-msvc.zip",
+            "hash": "a646f7142ce7c10bcfdfdc4b48e4734ced18a9dae4fbdca9f8969bd473a72ea8"
+        }
+    },
+    "bin": "argc.exe",
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "arm64": {
+                "url": "https://github.com/sigoden/argc/releases/download/v$version/argc-v$version-aarch64-pc-windows-msvc.zip"
+            },
+            "64bit": {
+                "url": "https://github.com/sigoden/argc/releases/download/v$version/argc-v$version-x86_64-pc-windows-msvc.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/sigoden/argc/releases/download/v$version/argc-v$version-i686-pc-windows-msvc.zip"
+            }
+        }
+    }
+}
