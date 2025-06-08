@@ -7,7 +7,7 @@
         - A-Start-PostInstall: 此函数运行之后，开始执行 post_install
         - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包
         - A-Ensure-Directory: 确保指定目录路径存在
-        - A-New-PersistFile: 创建文件，可选择设置内容
+        - A-New-PersistFile: 创建文件，可选择设置内容(不能在 post_install 中使用)
         - A-New-LinkFile: 为文件创建 SymbolicLink
         - A-New-LinkDirectory: 为目录创建 Junction
         - A-Add-Font: 安装字体
@@ -150,13 +150,17 @@ function A-New-PersistFile {
         创建文件并指定内容
 
     .EXAMPLE
+        A-New-PersistFile -path "$persist_dir\data.ini" -content @('[Settings]', 'AutoUpdate=0')
+        创建文件并指定内容，传入数组会被写入多行
+
+    .EXAMPLE
         A-New-PersistFile -path "$persist_dir\data.ini"
         创建空文件
     #>
     param (
         [string]$Path,
 
-        [string]$Content,
+        [array]$Content,
 
         [ValidateSet("utf8", "utf8Bom", "utf8NoBom", "unicode", "ansi", "ascii", "bigendianunicode", "bigendianutf32", "oem", "utf7", "utf32")]
         [string]$Encoding = "utf8",
@@ -2279,7 +2283,7 @@ if ($ShowCN) {
                 $source = "$dir\$source"
                 $target = "$persist_dir\$target"
 
-                Write-Host "正在持久化数据(Persisting): $source => $target"
+                Write-Host "正在持久化数据(Persist): $source => $target"
 
                 # if we have had persist data in the store, just create link and go
                 if (Test-Path $target) {
