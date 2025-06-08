@@ -143,7 +143,7 @@
 
 - This is the most powerful feature of Scoop, which can quickly restore your app environment.
   - Some apps use [Link](#link), which cannot be reset correctly by `scoop reset`.
-  - It is recommended to uninstall and reinstall it.
+  - It is recommended to force update the app by `scoop update --force <app>`.
 
 ### Link
 

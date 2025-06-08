@@ -147,7 +147,7 @@
 
 - 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
   - 一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
-  - 建议通过 `scoop uninstall` 卸载应用，然后再重新安装
+  - 建议通过 `scoop update --force <app>` 强制更新应用
 
 ### Link
 
