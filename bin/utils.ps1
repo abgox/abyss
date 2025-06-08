@@ -2336,6 +2336,7 @@ if ($ShowCN) {
             Write-Output $label
             Write-Output '-----'
             Write-Output (wraptext (substitute $note @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir }))
+            Write-Output '-----'
         }
     }
     #endregion
