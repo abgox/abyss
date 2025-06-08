@@ -1,0 +1,67 @@
+{
+    "version": "4.0.5.23",
+    "description": "微信，腾讯的一款聊天通讯工具。A chat communication tool under Tencent.",
+    "homepage": "https://www.wechat.com/",
+    "license": "Unknown",
+    "notes": [
+        "WeChat will not be installed in Scoop directory, the installation directory: C:\\Program Files\\Tencent\\Weixin",
+        "Scoop only manages WeChat's data persist, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "微信不会安装在 Scoop 目录下，微信的实际安装目录: C:\\Program Files\\Tencent\\Weixin",
+        "Scoop 只管理微信的数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe",
+    "hash": "c597442ff939d42763ba251db8204c4ceb2f7abf0f10ba3296b8b66e1ec7462d",
+    "shortcuts": [
+        [
+            "C:\\Program Files\\Tencent\\Weixin\\Weixin.exe",
+            "微信"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\Tencent\\xwechat\", \"$env:UserProfile\\Documents\\xwechat_files\")",
+        "$LinkTargets = @(\"$persist_dir\\xwechat\", \"$persist_dir\\xwechat_files\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"C:\\Program Files\\Tencent\\Weixin\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Tencent\\Weixin\\Uninstall.exe' -NoSilent"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Tencent.WeChat.Universal' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "url": "$matchX64",
+        "hash": {
+            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+            "jsonpath": "$.x64_machine.InstallerSha256"
+        }
+    }
+}
