@@ -1,0 +1,78 @@
+{
+    "version": "2024.11.27.07.19.06",
+    "description": "适用于 1000 多个命令的 bash、zsh、fish、powershell、nushell 自动补全功能。{bash,zsh,fish,powershell,nushell}-completions for 1000+ commands.",
+    "homepage": "https://github.com/sigoden/argc-completions",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/sigoden/argc-completions/blob/main/LICENSE"
+    },
+    "url": "https://github.com/sigoden/argc-completions/archive/refs/heads/main.zip",
+    "hash": "2de9ca98eba1a8c4e0087874ca12388aed39a9d416d3138e277e295a9e5419d3",
+    "notes": [
+        "It needs to be used with abyss/Argc.",
+        "When both Argc and Argc-completions are installed, you need to configure the following:",
+        " ",
+        "- For PowerShell, add the following to your $Profile:",
+        " ",
+        "    # If you don't want to load everything, you can directly specify: $argc_scripts = @(\"aaa\",\"bbb\")",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression",
+        "  ",
+        "- If you're also using PSCompletions:",
+        " ",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    $PSCompletions.argc_completions($argc_scripts)"
+    ],
+    "notes-cn": [
+        "它需要配合 abyss/Argc 一起使用。",
+        "当 Argc 和 Argc-completions 都安装后，你需要进行以下配置:",
+        " ",
+        "- 对于 PowerShell，将以下内容添加到 $Profile 即可:",
+        " ",
+        "    # 如果你不希望全部加载，可以直接指定: $argc_scripts = @(\"aaa\",\"bbb\")",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression",
+        "  ",
+        "- 如果你同时使用 PSCompletions:",
+        " ",
+        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
+        "    $PSCompletions.argc_completions($argc_scripts)"
+    ],
+    "depends": [
+        "yq",
+        "abyss/argc"
+    ],
+    "suggest": {
+        "abyss/PSCompletions": "abyss/PSCompletions"
+    },
+    "env_set": {
+        "ARGC_COMPLETIONS_ROOT": "$dir\\argc-completions-main",
+        "ARGC_COMPLETIONS_PATH": "$dir\\argc-completions-main\\completions\\windows;$dir\\argc-completions-main\\completions"
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/sigoden/argc-completions/commits?per_page=1",
+        "regex": "sha\":\\s*\"(?<sha>[^\"]+).*\"date\":\\s*\"(\\d+)-(\\d+)-(\\d+)T(\\d+):(\\d+):(\\d+)",
+        "replace": "${1}.${2}.${3}.${4}.${5}.${6}"
+    },
+    "autoupdate": {
+        "url": "https://github.com/sigoden/argc-completions/archive/refs/heads/main.zip"
+    }
+}
