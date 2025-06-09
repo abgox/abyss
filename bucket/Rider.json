@@ -1,0 +1,99 @@
+{
+    "version": "2025.1.2",
+    "description": "JetBrains 的 IDE 产品，用于 .NET 开发。A IDE by JetBrains for .NET development.",
+    "homepage": "https://www.jetbrains.com/rider/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.jetbrains.com/store/license.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.jetbrains.com/rider/JetBrains.Rider-2025.1.2.exe",
+            "hash": "3de6fd4a6ad8dcdea123a16bb7fed95495ef7267383240b49d2c3271506e7112"
+        },
+        "arm64": {
+            "url": "https://download.jetbrains.com/rider/JetBrains.Rider-2025.1.2-aarch64.exe",
+            "hash": "bb42e6cf8e41421e44e4719db1e322488688278771c0f62145ea89693b6bc95c"
+        }
+    },
+    "bin": [
+        [
+            "App\\bin\\rider64.exe",
+            "Rider"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "App\\bin\\rider64.exe",
+            "Rider 2025.1.2"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -SuccessFile 'App\\bin\\Uninstall.exe'"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$versionPart = $version -split '\\.'",
+        "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
+        "$DataDir = \"Rider$versionShort\"",
+        "$LinkPaths = @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LinkTargets = @(\"$persist_dir\\JetBrains\\$DataDir\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S')",
+        "A-Remove-Link",
+        "$versionPart = $version -split '\\.'",
+        "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
+        "$DataDir = \"Rider$versionShort\"",
+        "A-Remove-TempData @(\"$env:LocalAppData\\JetBrains\\$DataDir\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'JetBrains.Rider' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        },
+        "shortcuts": [
+            [
+                "App\\bin\\rider64.exe",
+                "Rider $version"
+            ]
+        ]
+    }
+}
