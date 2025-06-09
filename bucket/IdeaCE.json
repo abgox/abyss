@@ -1,0 +1,99 @@
+{
+    "version": "2025.1.2",
+    "description": "(社区版本) JetBrains 的 IDE 产品，用于 Java 和 Kotlin 开发。(Community Edition) A IDE by JetBrains for Java and Kotlin development.",
+    "homepage": "https://www.jetbrains.com/idea/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.jetbrains.com/store/license.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.jetbrains.com/idea/ideaIC-2025.1.2.exe",
+            "hash": "f562b190deea6d6603555329d48caed37f553a17e38d2a5bbb1911d390c8bcbd"
+        },
+        "arm64": {
+            "url": "https://download.jetbrains.com/idea/ideaIC-2025.1.2-aarch64.exe",
+            "hash": "6a21502ccd88ae8d792ab91412f7b19d476a0fed23c0d8b242ba39db3e8ac654"
+        }
+    },
+    "bin": [
+        [
+            "App\\bin\\idea64.exe",
+            "Idea"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "App\\bin\\idea64.exe",
+            "IntelliJ IDEA Community Edition 2025.1.2"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -SuccessFile 'App\\bin\\Uninstall.exe'"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$versionPart = $version -split '\\.'",
+        "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
+        "$DataDir = \"IdeaIC$versionShort\"",
+        "$LinkPaths = @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LinkTargets = @(\"$persist_dir\\JetBrains\\$DataDir\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S')",
+        "A-Remove-Link",
+        "$versionPart = $version -split '\\.'",
+        "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
+        "$DataDir = \"IdeaIC$versionShort\"",
+        "A-Remove-TempData @(\"$env:LocalAppData\\JetBrains\\$DataDir\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'JetBrains.IntelliJIDEA.Community' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        },
+        "shortcuts": [
+            [
+                "App\\bin\\idea64.exe",
+                "IntelliJ IDEA Community Edition $version"
+            ]
+        ]
+    }
+}
