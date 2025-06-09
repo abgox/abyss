@@ -76,7 +76,7 @@ foreach ($_ in $manifests) {
 
     # version
     # $info += "[v$($json.version)](./bucket/$($_.Name))"
-    $title = if ($isCN) { "v$($json.version) - 点击查看 $app 的 manifest json 文件" } else { "v$($json.version) - Click to view the manifest json file of $app" }
+    $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
     $info += '<a href="./bucket/' + $_.Name + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
 
     # persist
