@@ -1,68 +1,68 @@
 {
-  "version": "1.4.1.1027",
-  "description": "(Lite 版本，不包含 IPC 和 ETP/FTP/HTTP 服务器) 文件搜索工具，基于名称快速定位文件和文件夹。(lite version, does not contain IPC and ETP/FTP/HTTP servers) Locate files and folders by name instantly.",
-  "homepage": "https://www.voidtools.com",
-  "license": {
-    "identifier": "Freeware",
-    "url": "https://www.voidtools.com/License.txt"
-  },
-  "architecture": {
-    "64bit": {
-      "url": "https://www.voidtools.com/Everything-1.4.1.1027.x64.Lite.msi",
-      "hash": "075464362fa2b4cb1b81adc8b7ba7dcde9ed7fcf0a29bb8fdf979c0600f15b4e"
+    "version": "1.4.1.1027",
+    "description": "(Lite 版本，不包含 IPC 和 ETP/FTP/HTTP 服务器) 文件搜索工具，基于名称快速定位文件和文件夹。(lite version, does not contain IPC and ETP/FTP/HTTP servers) Locate files and folders by name instantly.",
+    "homepage": "https://www.voidtools.com",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.voidtools.com/License.txt"
     },
-    "32bit": {
-      "url": "https://www.voidtools.com/Everything-1.4.1.1027.x86.Lite.msi",
-      "hash": "e2b38b9b91e890b14b30b7a98369e8403b152abc5133505a9a3d080582812d28"
-    }
-  },
-  "extract_dir": "Everything",
-  "bin": [
-    [
-      "Everything.exe",
-      "Everything-lite"
-    ]
-  ],
-  "shortcuts": [
-    [
-      "Everything.exe",
-      "Everything Lite"
-    ]
-  ],
-  "pre_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PreInstall"
-  ],
-  "post_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PostInstall",
-    "$LinkPaths = @(\"$env:AppData\\Everything\")",
-    "$LinkTargets = @(\"$persist_dir\\Everything\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets"
-  ],
-  "pre_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PreUninstall",
-    "A-Stop-Service Everything",
-    "A-Stop-Process",
-    "A-Remove-Link",
-    "A-Remove-TempData @(\"$env:LocalAppData\\Everything\")"
-  ],
-  "post_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PostUninstall"
-  ],
-  "checkver": "Download Everything ([\\d\\.]+)",
-  "autoupdate": {
     "architecture": {
-      "64bit": {
-        "url": "https://www.voidtools.com/Everything-$version.x64.Lite.msi"
-      },
-      "32bit": {
-        "url": "https://www.voidtools.com/Everything-$version.x86.Lite.msi"
-      }
+        "64bit": {
+            "url": "https://www.voidtools.com/Everything-1.4.1.1027.x64.Lite.msi",
+            "hash": "075464362fa2b4cb1b81adc8b7ba7dcde9ed7fcf0a29bb8fdf979c0600f15b4e"
+        },
+        "32bit": {
+            "url": "https://www.voidtools.com/Everything-1.4.1.1027.x86.Lite.msi",
+            "hash": "e2b38b9b91e890b14b30b7a98369e8403b152abc5133505a9a3d080582812d28"
+        }
+    },
+    "extract_dir": "Everything",
+    "bin": [
+        [
+            "Everything.exe",
+            "Everything-lite"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "Everything.exe",
+            "Everything Lite"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\Everything\")",
+        "$LinkTargets = @(\"$persist_dir\\Everything\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Service Everything",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\Everything\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "Download Everything ([\\d\\.]+)",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.voidtools.com/Everything-$version.x64.Lite.msi"
+            },
+            "32bit": {
+                "url": "https://www.voidtools.com/Everything-$version.x86.Lite.msi"
+            }
+        }
     }
-  }
 }

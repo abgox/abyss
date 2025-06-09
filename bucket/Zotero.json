@@ -1,69 +1,69 @@
 {
-  "version": "7.0.15",
-  "description": "一个免费，易于使用的工具，可帮助您收集，组织，注释，引用和共享研究。A free, easy-to-use tool to help you collect, organize, annotate, cite, and share research.",
-  "homepage": "https://www.zotero.org/",
-  "license": "Unknown",
-  "architecture": {
-    "64bit": {
-      "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_x64_setup.exe#/dl.7z",
-      "hash": "2943a3b6b5bc55e9bdc7d52c5b22b213a0137ec4559d0c177e79e47b444202ff"
-    },
-    "32bit": {
-      "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_win32_setup.exe#/dl.7z",
-      "hash": "3ca2b4bfac05f611f1dfd43f5a7e8217290f6a8c4d49b5f2b4286cb4e1c44bc5"
-    },
-    "arm64": {
-      "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_arm64_setup.exe#/dl.7z",
-      "hash": "2ccc9b93ed8f2c2a45fb9a5f5dc6c9db97970a47764c97950278bc318013eeb1"
-    }
-  },
-  "extract_dir": "core",
-  "bin": "zotero.exe",
-  "shortcuts": [
-    [
-      "zotero.exe",
-      "Zotero"
-    ]
-  ],
-  "pre_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PreInstall"
-  ],
-  "post_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PostInstall",
-    "$LinkPaths = @(\"$env:AppData\\Zotero\",\"$env:UserProfile\\Zotero\")",
-    "$LinkTargets = @(\"$persist_dir\\Zotero\",\"$persist_dir\\Zotero-UserProfile\")",
-    "A-New-LinkDirectory $LinkPaths $LinkTargets"
-  ],
-  "pre_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PreUninstall",
-    "A-Stop-Process",
-    "A-Remove-Link",
-    "A-Remove-TempData @(\"C:\\ProgramData\\Zotero\")"
-  ],
-  "post_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PostUninstall"
-  ],
-  "checkver": {
-    "url": "https://www.zotero.org/support/changelog",
-    "regex": "Changes in ([\\d\\.]+)"
-  },
-  "autoupdate": {
+    "version": "7.0.15",
+    "description": "一个免费，易于使用的工具，可帮助您收集，组织，注释，引用和共享研究。A free, easy-to-use tool to help you collect, organize, annotate, cite, and share research.",
+    "homepage": "https://www.zotero.org/",
+    "license": "Unknown",
     "architecture": {
-      "64bit": {
-        "url": "https://download.zotero.org/client/release/$version/Zotero-$version_x64_setup.exe#/dl.7z"
-      },
-      "32bit": {
-        "url": "https://download.zotero.org/client/release/$version/Zotero-$version_win32_setup.exe#/dl.7z"
-      },
-      "arm64": {
-        "url": "https://download.zotero.org/client/release/$version/Zotero-$version_arm64_setup.exe#/dl.7z"
-      }
+        "64bit": {
+            "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_x64_setup.exe#/dl.7z",
+            "hash": "2943a3b6b5bc55e9bdc7d52c5b22b213a0137ec4559d0c177e79e47b444202ff"
+        },
+        "32bit": {
+            "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_win32_setup.exe#/dl.7z",
+            "hash": "3ca2b4bfac05f611f1dfd43f5a7e8217290f6a8c4d49b5f2b4286cb4e1c44bc5"
+        },
+        "arm64": {
+            "url": "https://download.zotero.org/client/release/7.0.15/Zotero-7.0.15_arm64_setup.exe#/dl.7z",
+            "hash": "2ccc9b93ed8f2c2a45fb9a5f5dc6c9db97970a47764c97950278bc318013eeb1"
+        }
+    },
+    "extract_dir": "core",
+    "bin": "zotero.exe",
+    "shortcuts": [
+        [
+            "zotero.exe",
+            "Zotero"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\Zotero\",\"$env:UserProfile\\Zotero\")",
+        "$LinkTargets = @(\"$persist_dir\\Zotero\",\"$persist_dir\\Zotero-UserProfile\")",
+        "A-New-LinkDirectory $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"C:\\ProgramData\\Zotero\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "url": "https://www.zotero.org/support/changelog",
+        "regex": "Changes in ([\\d\\.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://download.zotero.org/client/release/$version/Zotero-$version_x64_setup.exe#/dl.7z"
+            },
+            "32bit": {
+                "url": "https://download.zotero.org/client/release/$version/Zotero-$version_win32_setup.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://download.zotero.org/client/release/$version/Zotero-$version_arm64_setup.exe#/dl.7z"
+            }
+        }
     }
-  }
 }

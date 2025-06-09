@@ -1,49 +1,49 @@
 {
-  "version": "5.2.1.18061",
-  "description": "一个用于管理 Git 仓库的独立用户界面工具。A standalone UI tool for managing git repositories.",
-  "homepage": "https://gitextensions.github.io/",
-  "license": {
-    "identifier": "GNU GENERAL PUBLIC LICENSE",
-    "url": "https://github.com/gitextensions/gitextensions/blob/master/LICENSE.md"
-  },
-  "url": "https://github.com/gitextensions/gitextensions/releases/download/v5.2.1/GitExtensions-Portable-x64-5.2.1.18061-0d74cfdc3.zip",
-  "hash": "f57d76851b9b7f313a0f3425602e458520019905bb98e8314b3e7f0840221ef8",
-  "shortcuts": [
-    [
-      "GitExtensions.exe",
-      "GitExtensions"
-    ]
-  ],
-  "pre_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PreInstall",
-    "$path_persist = \"$persist_dir\\GitExtensions.settings\"",
-    "# ------------------------------------------------------------------",
-    "ensure $persist_dir | Out-Null",
-    "if (!(Test-Path $path_persist)) { New-Item -ItemType File -Path $path_persist -Force | Out-Null }"
-  ],
-  "post_install": [
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PostInstall"
-  ],
-  "pre_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PreUninstall",
-    "A-Stop-Process"
-  ],
-  "post_uninstall": [
-    "$bucket = $install.bucket",
-    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-    "A-Start-PostUninstall"
-  ],
-  "persist": "GitExtensions.settings",
-  "checkver": {
-    "url": "https://api.github.com/repositories/85953/releases",
-    "jsonpath": "$..browser_download_url",
-    "regex": "/v(?<tag>[\\d.]+)/GitExtensions-Portable-(?:x[\\d.]+)-(?<version>[\\d.]+)-(?<commit>[\\w]+).zip"
-  },
-  "autoupdate": {
-    "url": "https://github.com/gitextensions/gitextensions/releases/download/v$matchTag/GitExtensions-Portable-x64-$version-$matchCommit.zip"
-  }
+    "version": "5.2.1.18061",
+    "description": "一个用于管理 Git 仓库的独立用户界面工具。A standalone UI tool for managing git repositories.",
+    "homepage": "https://gitextensions.github.io/",
+    "license": {
+        "identifier": "GNU GENERAL PUBLIC LICENSE",
+        "url": "https://github.com/gitextensions/gitextensions/blob/master/LICENSE.md"
+    },
+    "url": "https://github.com/gitextensions/gitextensions/releases/download/v5.2.1/GitExtensions-Portable-x64-5.2.1.18061-0d74cfdc3.zip",
+    "hash": "f57d76851b9b7f313a0f3425602e458520019905bb98e8314b3e7f0840221ef8",
+    "shortcuts": [
+        [
+            "GitExtensions.exe",
+            "GitExtensions"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$path_persist = \"$persist_dir\\GitExtensions.settings\"",
+        "# ------------------------------------------------------------------",
+        "ensure $persist_dir | Out-Null",
+        "if (!(Test-Path $path_persist)) { New-Item -ItemType File -Path $path_persist -Force | Out-Null }"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": "GitExtensions.settings",
+    "checkver": {
+        "url": "https://api.github.com/repositories/85953/releases",
+        "jsonpath": "$..browser_download_url",
+        "regex": "/v(?<tag>[\\d.]+)/GitExtensions-Portable-(?:x[\\d.]+)-(?<version>[\\d.]+)-(?<commit>[\\w]+).zip"
+    },
+    "autoupdate": {
+        "url": "https://github.com/gitextensions/gitextensions/releases/download/v$matchTag/GitExtensions-Portable-x64-$version-$matchCommit.zip"
+    }
 }
