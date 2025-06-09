@@ -31,7 +31,7 @@
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
-> - 如果其他 bucket 想要合并它们，请谨慎检查
+> - 如果其他 bucket 想要合并它们，请谨慎检查可用性
 
 ### 一些特别的功能
 
@@ -178,13 +178,12 @@
   - **`App`**：应用包的名称
     - 点击查看官网或仓库
     - 按照数字字母排序(0-9,a-z)
-  - **`Version`**：应用版本
-    - 点击查看应用清单 json 文件
   - **`Persist`**：持久化应用数据, 详情参考 [Persist](#persist)
     - **`✔️`**：已实现
     - **`➖`**：没有必要或者没有数据文件
     - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
   - **`Tag`**：应用标签
+    - 第一个标签是一个徽章，显示应用版本。可以点击它查看 manifest json 文件
     - `Font`：一种字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
     - `RequireAdmin`: 在安装、更新或卸载时需要管理员权限

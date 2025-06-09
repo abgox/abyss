@@ -31,7 +31,7 @@
 > [!Warning]
 >
 > - Manifests in `abyss` is based on [bin/utils.ps1](./bin/utils.ps1).
-> - Other buckets should be careful when considering merging them.
+> - If other buckets want to merge them, be careful to check availability.
 
 ### Features
 
@@ -174,13 +174,12 @@
   - **`App`** : App package name.
     - Click to view the homepage or repository.
     - Sort by first letter(0-9,a-z).
-  - **`Version`** : App version.
-    - Click to view the manifest json file.
   - **`Persist`** : Persist data. Refer to [Persist](#persist) for details.
     - **✔️** : It has been done.
     - **➖** : It is not necessary, or there are no data files.
     - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](#link) for details.
   - **`Tag`**
+    - The first tag is a badge label to show version. Click it to view the manifest json file.
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
     - `NoSilentInstall`: May require user interaction during installation.
