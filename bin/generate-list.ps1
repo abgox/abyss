@@ -2,7 +2,7 @@ param($path)
 
 $manifests = Get-ChildItem "$PSScriptRoot\..\bucket"
 
-$content = @("|App ($($manifests.Length))|Version|Persist|Tag|Description|", "|:-:|:-:|:-:|:-:|-|")
+$content = @("|App ($($manifests.Length))|Persist|Tag|Description|", "|:-:|:-:|:-:|-|")
 
 function A-Test-ScriptPattern {
     param(
@@ -74,11 +74,6 @@ foreach ($_ in $manifests) {
         $info += "[$app]($($json.homepage) `"Click to view the homepage or repository of $($app)`")"
     }
 
-    # version
-    # $info += "[v$($json.version)](./bucket/$($_.Name))"
-    $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
-    $info += '<a href="./bucket/' + $_.Name + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
-
     # persist
     $isPersist = $json.persist
     $isLink = $false
@@ -119,6 +114,11 @@ foreach ($_ in $manifests) {
 
     # Tag
     $tag = @()
+
+    ## version
+    # $info += "[v$($json.version)](./bucket/$($_.Name))"
+    $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
+    $tag += '<a href="./bucket/' + $_.Name + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $_.Name + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
 
     ## Msix
     $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
@@ -173,7 +173,7 @@ foreach ($_ in $manifests) {
     }
     $tag += if ($json.psmodule) { $label }
 
-    $info += $tag -join ' '
+    $info += $tag -join '<br />'
 
     ## description
     $description = $json.description -split '(?<=。)(?=[^。]+$)'

@@ -1212,10 +1212,10 @@ function A-Add-AppxPackage {
     $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-AppxPackage.jsonc" -Force -Encoding utf8
 
     if ($ShowCN) {
-        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据的 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
+        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理可能的数据 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
     }
     else {
-        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the persistence of data and operations for installing, updating, and uninstalling." -ForegroundColor Yellow
+        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the possible persistence of data, and the installation, update, uninstallation." -ForegroundColor Yellow
     }
 }
 
