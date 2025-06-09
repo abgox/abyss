@@ -345,6 +345,9 @@ function A-Stop-Process {
 
     .PARAMETER ExtraProcessNames
         要搜索的额外进程名称数组。
+
+    .NOTES
+        Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
     #>
     param(
         [string[]]$ExtraPaths,
@@ -370,8 +373,8 @@ function A-Stop-Process {
         }
     }
 
-    # Msix/Appx 在移除包时会自动终止进程，不需要手动终止
-    if ($uninstallActionLevel -notlike "*1*" -or (Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc")) {
+    # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
+    if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
 
@@ -1196,7 +1199,7 @@ function A-Add-AppxPackage {
     )
 
     try {
-        Add-AppxPackage -Path $Path -ErrorAction Stop
+        Add-AppxPackage -Path $Path -AllowUnsigned -ForceApplicationShutdown -ForceUpdateFromAnyVersion -ErrorAction Stop
     }
     catch {
         Write-Host $_.Exception.Message -ForegroundColor Red
