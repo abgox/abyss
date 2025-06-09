@@ -13,7 +13,7 @@
         - A-Add-Font: 安装字体
         - A-Add-MsixPackage: 安装 AppX/Msix 包
         - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
-        - A-Install-Exe
+        - A-Install-Exe: 运行安装程序
 
     2. 在 pre_uninstall 和 post_uninstall 中
 
@@ -25,8 +25,8 @@
         - A-Remove-Font: 移除字体
         - A-Remove-MsixPackage: 卸载 AppX/Msix 包
         - A-Remove-PowerToysRunPlugin: 移除 PowerToys Run 插件
+        - A-Uninstall-Exe: 运行卸载程序
         - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
-        - A-Uninstall-Exe
 
     3. 特别的:
         - A-Require-Admin: 要求以管理员权限运行
@@ -755,21 +755,20 @@ function A-Install-Exe {
 
     if (Test-Path $path) {
         try {
-    if ($ShowCN) {
+            if ($ShowCN) {
                 Write-Host "正在运行安装程序 ($fileName) 安装 $app" -ForegroundColor Yellow
-                if ($ArgumentList) {
-                    Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
-                }
+                # if ($ArgumentList) {
+                #     Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
+                # }
                 if ($NoSilent) {
                     Write-Host "安装程序可能需要你手动进行一些交互操作，如果安装超时($Timeout 秒)，将强行终止安装进程" -ForegroundColor Yellow
                 }
-    }
-    else {
+            }
+            else {
                 Write-Host "Installing '$app' using installer ($fileName)" -ForegroundColor Yellow
-                if ($ArgumentList) {
-                    Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
-                }
-
+                # if ($ArgumentList) {
+                #     Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
+                # }
                 if ($NoSilent) {
                     Write-Host "The installer may require you to perform some manual operations, if installation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
                 }
@@ -782,9 +781,9 @@ function A-Install-Exe {
                 }
                 $SuccessFile = $manifest.shortcuts[0][0]
             }
-                if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
-                    $SuccessFile = Join-Path $dir $SuccessFile
-                }
+            if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
+                $SuccessFile = Join-Path $dir $SuccessFile
+            }
 
             # 在后台作业中运行安装程序，强制停止进程的时机更晚
             $job = Start-Job -ScriptBlock {
@@ -794,36 +793,36 @@ function A-Install-Exe {
 
             } -ArgumentList $path, $ArgumentList
 
-                $startTime = Get-Date
-                $fileExists = $false
+            $startTime = Get-Date
+            $fileExists = $false
 
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    if (Test-Path $SuccessFile) {
-                        $fileExists = $true
-                        break
-                    }
-                Start-Sleep -Seconds 5
+                if (Test-Path $SuccessFile) {
+                    $fileExists = $true
+                    break
                 }
+                Start-Sleep -Seconds 5
+            }
 
 
-                if ($fileExists) {
-                    if ($ShowCN) {
+            if ($fileExists) {
+                if ($ShowCN) {
                     Write-Host "安装成功，已终止安装进程" -ForegroundColor Green
                 }
-                    else {
-                        Write-Host "Installation successful, process terminated." -ForegroundColor Green
-                    }
-                }
                 else {
+                    Write-Host "Installation successful, process terminated." -ForegroundColor Green
+                }
+            }
+            else {
                 $job | Stop-Job -Force -ErrorAction SilentlyContinue
 
-                    if ($ShowCN) {
+                if ($ShowCN) {
                     Write-Host "安装超时($Timeout 秒)，已终止安装进程" -ForegroundColor Red
-                    }
-                    else {
+                }
+                else {
                     Write-Host "Installation timeout ($Timeout seconds), process terminated." -ForegroundColor Red
-                    }
-                    exit 1
+                }
+                exit 1
             }
         }
         catch {
@@ -848,7 +847,7 @@ function A-Uninstall-Exe {
         [array]$ArgumentList,
         # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
         [switch]$NoSilent,
-                # 超时时间（秒）
+        # 超时时间（秒）
         [string]$Timeout = 60
     )
 
@@ -882,10 +881,11 @@ function A-Uninstall-Exe {
 
     if (Test-Path $path) {
         try {
-            if($NoSilent){
+            if ($NoSilent) {
                 $process = Start-Process $path -ArgumentList $ArgumentList  -PassThru
-            }else{
-            $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+            }
+            else {
+                $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
             }
 
             $startTime = Get-Date
