@@ -995,6 +995,7 @@ function A-Get-InstallerInfoFromWinget {
 
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
+        可以指定为空，表示任意类型。
     #>
     param(
         [string]$Package,
@@ -1050,7 +1051,13 @@ function A-Get-InstallerInfoFromWinget {
     foreach ($_ in $installerInfo.Installers) {
         $arch = $_.Architecture
         $type = [regex]::Match($_.InstallerUrl, '\.(\w+)$').Groups[1].Value.ToLower()
-        if ($arch -and $type -eq $InstallerType) {
+
+        $matchType = $true
+        if ($InstallerType) {
+            $matchType = $type -eq $InstallerType
+        }
+
+        if ($arch -and $matchType) {
             $res = $arch
             if ($scope) {
                 $res += '_' + $scope.ToLower()
