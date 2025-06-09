@@ -732,7 +732,7 @@ function A-Install-Exe {
         # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
         [switch]$NoSilent,
         # 超时时间（秒）
-        [string]$Timeout = 60
+        [string]$Timeout = 300
     )
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
@@ -756,7 +756,7 @@ function A-Install-Exe {
     if (Test-Path $path) {
         try {
             if ($ShowCN) {
-                Write-Host "正在运行安装程序 ($fileName) 安装 $app" -ForegroundColor Yellow
+                Write-Host "正在运行安装程序 ($fileName) 安装 $app，请耐心等待..." -ForegroundColor Yellow
                 # if ($ArgumentList) {
                 #     Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
                 # }
@@ -765,7 +765,7 @@ function A-Install-Exe {
                 }
             }
             else {
-                Write-Host "Installing '$app' using installer ($fileName)" -ForegroundColor Yellow
+                Write-Host "Installing '$app' using installer ($fileName), please wait..." -ForegroundColor Yellow
                 # if ($ArgumentList) {
                 #     Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
                 # }
@@ -804,23 +804,32 @@ function A-Install-Exe {
                 Start-Sleep -Seconds 5
             }
 
+            $null = Start-Job -ScriptBlock {
+                param($path, $job)
+                Start-Sleep -Seconds 30
+
+                $job | Stop-Job -ErrorAction SilentlyContinue
+
+                Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
+
+                Remove-Item $path -Force -ErrorAction SilentlyContinue
+
+            } -ArgumentList $path, $job
 
             if ($fileExists) {
                 if ($ShowCN) {
-                    Write-Host "安装成功，已终止安装进程" -ForegroundColor Green
+                    Write-Host "安装成功" -ForegroundColor Green
                 }
                 else {
                     Write-Host "Installation successful, process terminated." -ForegroundColor Green
                 }
             }
             else {
-                $job | Stop-Job -Force -ErrorAction SilentlyContinue
-
                 if ($ShowCN) {
-                    Write-Host "安装超时($Timeout 秒)，已终止安装进程" -ForegroundColor Red
+                    Write-Host "安装超时($Timeout 秒)" -ForegroundColor Red
                 }
                 else {
-                    Write-Host "Installation timeout ($Timeout seconds), process terminated." -ForegroundColor Red
+                    Write-Host "Installation timeout ($Timeout seconds)." -ForegroundColor Red
                 }
                 exit 1
             }
@@ -848,7 +857,7 @@ function A-Uninstall-Exe {
         # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
         [switch]$NoSilent,
         # 超时时间（秒）
-        [string]$Timeout = 60
+        [string]$Timeout = 300
     )
 
     if ([System.IO.Path]::IsPathRooted($Uninstaller)) {
@@ -861,19 +870,19 @@ function A-Uninstall-Exe {
     $fileName = Split-Path $path -Leaf
 
     if ($ShowCN) {
-        Write-Host "正在运行卸载程序 ($fileName) 卸载 $app" -ForegroundColor Yellow
-        if ($ArgumentList) {
-            Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
-        }
+        Write-Host "正在运行卸载程序 ($fileName) 卸载 $app，请耐心等待..." -ForegroundColor Yellow
+        # if ($ArgumentList) {
+        #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
+        # }
         if ($NoSilent) {
             Write-Host "卸载程序可能需要你手动进行一些交互操作，如果卸载超时($Timeout 秒)，将强行终止卸载进程" -ForegroundColor Yellow
         }
     }
     else {
-        Write-Host "Uninstalling '$app' using uninstaller ($fileName)" -ForegroundColor Yellow
-        if ($ArgumentList) {
-            Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
-        }
+        Write-Host "Uninstalling '$app' using uninstaller ($fileName), please wait..." -ForegroundColor Yellow
+        # if ($ArgumentList) {
+        #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
+        # }
         if ($NoSilent) {
             Write-Host "The uninstaller may require you to perform some manual operations. If uninstallation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
         }
