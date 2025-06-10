@@ -973,8 +973,7 @@
                                             "A-Start-PreInstall",
                                             "A-New-PersistFile \"\"",
                                             "A-Expand-SetupExe",
-                                            "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")",
-                                            "A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S', \"/D=$dir\")",
+                                            "A-Install-Exe",
                                             "A-Require-Admin",
                                             "A-Test-Admin"
                                         ],
@@ -983,8 +982,7 @@
                                             "函数\n- 表示 `pre_install` 的开始",
                                             "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
                                             "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)",
-                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
-                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
+                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 $fname 中的第一个文件名拼接 $dir\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\")`\n    - NoSilent: 是否静默安装，它仅用于标识\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n        - 默认使用 shortcuts 中第一个快捷方式的目标路径\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/D=$dir\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/D=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/D=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
                                             "函数\n- 要求以管理员权限运行",
                                             "函数\n- 检查是否以管理员权限运行"
                                         ]
@@ -1097,7 +1095,7 @@
                                             "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
                                             "A-Require-Admin",
                                             "A-Test-Admin",
-                                            "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S')"
+                                            "A-Uninstall-Exe -Uninstaller 'uninstall.exe'"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
@@ -1113,7 +1111,7 @@
                                             "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
                                             "函数\n- 要求以管理员权限运行",
                                             "函数\n- 检查是否以管理员权限运行",
-                                            "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/S')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递卸载参数"
+                                            "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n    - NoSilent: 是否静默安装，它仅用于标识\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                         ]
                                     }
                                 ]
