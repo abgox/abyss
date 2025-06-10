@@ -973,8 +973,8 @@
                                             "A-Start-PreInstall",
                                             "A-New-PersistFile \"\"",
                                             "A-Expand-SetupExe",
-                                            "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\\$app\")",
-                                            "A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S', \"/D=$dir\\$app\")",
+                                            "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")",
+                                            "A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S', \"/D=$dir\")",
                                             "A-Require-Admin",
                                             "A-Test-Admin"
                                         ],
@@ -982,9 +982,9 @@
                                             "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
                                             "函数\n- 表示 `pre_install` 的开始",
                                             "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
-                                            "函数\n- 用来展开 Setup.exe 类型的安装包",
-                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
-                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\\$app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
+                                            "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)",
+                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
+                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n    - ArgumentList: 安装程序的命令行参数\n    - NoSilent: 是否静默安装，它仅用于标识\n    - Timeout: 超时时间\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 $fname 中的第一个文件名拼接 $dir 作为安装程序，并传递安装参数\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/S',\"/D=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
                                             "函数\n- 要求以管理员权限运行",
                                             "函数\n- 检查是否以管理员权限运行"
                                         ]
