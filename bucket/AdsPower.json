@@ -1,0 +1,78 @@
+{
+    "version": "7.6.3",
+    "description": "一个指纹浏览器。A No anti-detection browser.",
+    "homepage": "https://www.adspower.net/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://version.adspower.net/software/win64-global/AdsPower-Global-7.6.3-x64.exe",
+            "hash": "5cdba9789faf60a4a0f3690aac9de54c0abaa51356fa50ba13adc6c9a34a51a7"
+        },
+        "32bit": {
+            "url": "https://version.adspower.net/software/win32-global/AdsPower-Global-7.6.3-x86.exe",
+            "hash": "d04adedfeaeab9555638dff49ccb89b53a641d0a3c1df9e8e7eab9b29d3562fa"
+        }
+    },
+    "shortcuts": [
+        [
+            "AdsPower Global.exe",
+            "AdsPower Browser"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\adspower_global\")",
+        "A-New-LinkDirectory $LinkPaths"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall AdsPower Global.exe'",
+        "A-Remove-TempData @(\"$env:LocalAppData\\adspower_global-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'AdsPower.AdsPower' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
