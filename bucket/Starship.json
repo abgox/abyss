@@ -23,14 +23,14 @@
     "bin": "starship.exe",
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall"
+        "A-Start-PreInstall",
+        "A-New-PersistFile \"$env:UserProfile\\.config\\starship.toml\""
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
         "$LinkPaths = @(\"$env:UserProfile\\.config\\starship.toml\")",
-        "$LinkTargets = @(\"$persist_dir\\starship.toml\")",
-        "A-New-LinkFile $LinkPaths $LinkTargets"
+        "A-New-LinkFile $LinkPaths"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",

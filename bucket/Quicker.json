@@ -1,0 +1,60 @@
+{
+    "version": "1.44.18.0",
+    "description": "指尖工具箱, Windows 效率工具。A toolbox to improve efficiency on Windows.",
+    "homepage": "https://getquicker.net/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://getquicker.net/Download/DownloadVersion?version=1.44.18.0&isX64=true#/dl.msi",
+            "hash": "4ce2ad5e9d67291dd2f875318f30b2f4437e1e798af2262f71f1bab1739985fd"
+        },
+        "32bit": {
+            "url": "https://getquicker.net/Download/DownloadVersion?version=1.44.18.0&isX64=false#/dl.msi",
+            "hash": "e671e5872a47b83ebe48aaa9abc09ae14aefe920e89f3c2bb762aa0d01a2674c"
+        }
+    },
+    "extract_dir": "Quicker",
+    "shortcuts": [
+        [
+            "Quicker.exe",
+            "Quicker"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:LocalAppData\\Quicker\")",
+        "A-New-LinkDirectory $LinkPaths"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "url": "https://getquicker.net/Help/Versions",
+        "regex": "version=([\\d\\.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://getquicker.net/Download/DownloadVersion?version=$version&isX64=true#/dl.msi"
+            },
+            "32bit": {
+                "url": "https://getquicker.net/Download/DownloadVersion?version=$version&isX64=false#/dl.msi"
+            }
+        }
+    }
+}
