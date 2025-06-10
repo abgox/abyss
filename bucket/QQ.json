@@ -36,12 +36,14 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$DataFile = \"$env:UserProfile\\Documents\\Tencent Files\"",
-        "$SubDir1 = Get-ChildItem $DataFile -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataFile\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
-        "$SubDir2 = Get-ChildItem $persist_dir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$persist_dir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
+        "$DataDir = \"$env:UserProfile\\Documents\\Tencent Files\"",
+        "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
+        "$PersistDir = $DataDir.Replace($env:UserProfile, $persist_dir)",
+        "$SubDir2 = Get-ChildItem $PersistDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$PersistDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
         "$SubDir = [array]$SubDir1 + [array]$SubDir2 | Select-Object -Unique",
-        "$LinkPaths = $SubDir | ForEach-Object { Join-Path $DataFile \"$_\\nt_qq\" }",
-        "$LinkPaths += Join-Path $DataFile \"nt_qq\"",
+        "$LinkPaths = @()",
+        "$SubDir | ForEach-Object { $LinkPaths += Join-Path $DataDir \"$_\\nt_qq\" }",
+        "$LinkPaths += Join-Path $DataDir \"nt_qq\"",
         "A-New-LinkDirectory $LinkPaths"
     ],
     "pre_uninstall": [
