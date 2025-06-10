@@ -1,0 +1,58 @@
+{
+    "version": "2.3.9.0",
+    "description": "123 云盘，一款云存储服务产品。A cloud storage service product.",
+    "homepage": "https://www.123pan.com/",
+    "license": "Freemium",
+    "url": "https://app.123957.com/pc-pro/windows/239/123pan_2.3.9.exe",
+    "hash": "9fb45c3ca6432c983aee9e6342002c77a9bc4b5704c6c387dcc2abd1eb353d1b",
+    "shortcuts": [
+        [
+            "123pan\\123pan.exe",
+            "123云盘"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "$LinkPaths = @(\"$env:AppData\\123pan\")",
+        "A-New-LinkDirectory $LinkPaths",
+        "A-Install-Exe -SuccessFile '123pan\\uninst.exe'"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller '123pan\\uninst.exe'"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget '123.123pan' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "url": "$matchX64",
+        "hash": {
+            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+            "jsonpath": "$.x64_machine.InstallerSha256"
+        }
+    }
+}
