@@ -1136,6 +1136,7 @@ function A-New-Link {
         $installData.LinkPaths += $linkPath
         if ($cmd -ne "update" -and (Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
             if (!(Test-Path $linkTarget)) {
+                A-Ensure-Directory (Split-Path $linkTarget -Parent)
                 Write-Host "$($words["Copying"]) $linkPath => $linkTarget" -ForegroundColor Yellow
                 try {
                     Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
