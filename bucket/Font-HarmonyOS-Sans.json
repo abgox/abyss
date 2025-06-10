@@ -1,0 +1,32 @@
+{
+    "version": "2.0",
+    "description": "一款无衬线体字体，是华为为鸿蒙系统设计的官方字体。A sans-serif font designed by Huawei as the official typeface for the HarmonyOS system.",
+    "homepage": "https://developer.huawei.com/consumer/cn/design/resource/",
+    "license": "Unknown",
+    "url": "https://developer.huawei.com/images/download/next/HarmonyOS-Sans-v2.zip",
+    "hash": "ba7ddf71fc4dee33a7170869564ad76d421a2ed5c58e5aac9a573c39945ef654",
+    "extract_dir": "HarmonyOS Sans",
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "Get-ChildItem $dir -Recurse -Include *.ttf | ForEach-Object {",
+        "    Move-Item -Path $_.FullName -Destination $dir -Force -ErrorAction SilentlyContinue",
+        "}"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "A-Add-Font"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Remove-Font"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ]
+}
