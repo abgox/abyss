@@ -3,7 +3,7 @@
     "description": "语雀，阿里巴巴的笔记与文档知识库。A knowledge base and note-taking tool by Alibaba.",
     "homepage": "https://www.yuque.com/",
     "license": "Freemium",
-    "url": "https://app.nlark.com/yuque-desktop/4.1.7.1320/BJf30853eb74f6492ab1da0a91edf5d71e/Yuque-4.1.7.1320.exe#/dl.7z",
+    "url": "https://app.nlark.com/yuque-desktop/4.1.7.1320/BJf30853eb74f6492ab1da0a91edf5d71e/Yuque-4.1.7.1320.exe",
     "hash": "2e5f7aad1b07ecedd71b4a06effa3544046e0922f20bae9115a3deec8f49249d",
     "shortcuts": [
         [
@@ -14,7 +14,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Expand-SetupExe"
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -28,7 +28,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall 语雀.exe' -ArgumentList @('/S')"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
@@ -47,7 +48,7 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64#/dl.7z",
+        "url": "$matchX64",
         "hash": {
             "url": "bin/scoop-auto-check-update-temp-data.jsonc",
             "jsonpath": "$.x64_user.InstallerSha256"

@@ -6,7 +6,7 @@
         "identifier": "MIT",
         "url": "https://github.com/4gray/iptvnator/blob/master/LICENSE.md"
     },
-    "url": "https://github.com/4gray/iptvnator/releases/download/v0.16.0/iptvnator-Setup-0.16.0.exe#/dl.7z",
+    "url": "https://github.com/4gray/iptvnator/releases/download/v0.16.0/iptvnator-Setup-0.16.0.exe",
     "hash": "e4344ffa5beae9583b7e1bfb29cf45e90a0360e3ecbf4fbbc957d9631c837e11",
     "shortcuts": [
         [
@@ -17,7 +17,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Expand-SetupExe"
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -31,7 +31,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall IPTVnator.exe' -ArgumentList @('/S')"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
@@ -40,6 +41,6 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/4gray/iptvnator/releases/download/v$version/iptvnator-Setup-$version.exe#/dl.7z"
+        "url": "https://github.com/4gray/iptvnator/releases/download/v$version/iptvnator-Setup-$version.exe"
     }
 }

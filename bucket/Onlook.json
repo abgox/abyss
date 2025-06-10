@@ -6,7 +6,7 @@
         "identifier": "Apache-2.0",
         "url": "https://github.com/onlook-dev/onlook/blob/main/LICENSE.md"
     },
-    "url": "https://github.com/onlook-dev/onlook/releases/download/v0.2.30/Onlook-setup.exe#/dl.7z",
+    "url": "https://github.com/onlook-dev/onlook/releases/download/v0.2.30/Onlook-setup.exe",
     "hash": "0fb80b75490a6a019c3ee38b273312f6fd72c9443d6470f9c92453472f1ed946",
     "bin": "Onlook.exe",
     "shortcuts": [
@@ -18,7 +18,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Expand-SetupExe"
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -33,7 +33,7 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-TempData"
+        "A-Uninstall-Exe -Uninstaller 'Uninstall Onlook.exe' -ArgumentList @('/S')"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
@@ -44,6 +44,6 @@
         "github": "https://github.com/onlook-dev/onlook/"
     },
     "autoupdate": {
-        "url": "https://github.com/onlook-dev/onlook/releases/download/v$version/Onlook-setup.exe#/dl.7z"
+        "url": "https://github.com/onlook-dev/onlook/releases/download/v$version/Onlook-setup.exe"
     }
 }

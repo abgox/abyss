@@ -6,7 +6,7 @@
         "identifier": "MIT",
         "url": "https://github.com/heyman/heynote/blob/main/LICENSE"
     },
-    "url": "https://github.com/heyman/heynote/releases/download/v2.2.2/Heynote_2.2.2.exe#/dl.7z",
+    "url": "https://github.com/heyman/heynote/releases/download/v2.2.2/Heynote_2.2.2.exe",
     "hash": "sha512:2dd63adee0c800ba49c58938f9f20ad76a8ab3b0d2e6b843bd053835721475a40af70f2c15d917b2293f8bd189a3e3ea4c97a7aa8e30473fa2d90081f92b23fb",
     "shortcuts": [
         [
@@ -17,7 +17,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Expand-SetupExe"
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -31,7 +31,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall Heynote.exe' -ArgumentList @('/S')"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
@@ -42,6 +43,6 @@
         "github": "https://github.com/heyman/heynote"
     },
     "autoupdate": {
-        "url": "https://github.com/heyman/heynote/releases/download/v$version/Heynote_$version.exe#/dl.7z"
+        "url": "https://github.com/heyman/heynote/releases/download/v$version/Heynote_$version.exe"
     }
 }

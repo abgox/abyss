@@ -6,7 +6,7 @@
         "identifier": "Unknown",
         "url": "https://obsidian.md/eula"
     },
-    "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.8.10/Obsidian-1.8.10.exe#/dl.7z",
+    "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.8.10/Obsidian-1.8.10.exe",
     "hash": "1fae2688513ca33a7b85eef53dc433e056487ac94c7fe95e5d33aa38b4cf7bd4",
     "bin": "obsidian.exe",
     "shortcuts": [
@@ -18,7 +18,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Expand-SetupExe"
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -32,7 +32,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall Obsidian.exe' -ArgumentList @('/S')"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
@@ -43,6 +44,6 @@
         "github": "https://github.com/obsidianmd/obsidian-releases"
     },
     "autoupdate": {
-        "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/Obsidian-$version.exe#/dl.7z"
+        "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/Obsidian-$version.exe"
     }
 }

@@ -6,7 +6,7 @@
         "identifier": "Unknown",
         "url": "https://github.com/beekeeper-studio/beekeeper-studio/blob/master/LICENSE.md"
     },
-    "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v5.2.12/Beekeeper-Studio-Setup-5.2.12.exe#/dl.7z",
+    "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v5.2.12/Beekeeper-Studio-Setup-5.2.12.exe",
     "hash": "c9de6fbaab29f63ba535156c6e5f2e139525dc2294879df7ed5436d162599c61",
     "shortcuts": [
         [
@@ -17,7 +17,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Expand-SetupExe"
+        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\")"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -31,7 +31,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall Beekeeper Studio.exe' -ArgumentList @('/S')",
+        "A-Remove-TempData @(\"$env:LocalAppData\\beekeeper-studio-updater\")"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
@@ -42,6 +44,6 @@
         "github": "https://github.com/beekeeper-studio/beekeeper-studio"
     },
     "autoupdate": {
-        "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v$version/Beekeeper-Studio-Setup-$version.exe#/dl.7z"
+        "url": "https://github.com/beekeeper-studio/beekeeper-studio/releases/download/v$version/Beekeeper-Studio-Setup-$version.exe"
     }
 }
