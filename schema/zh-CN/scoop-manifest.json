@@ -1002,8 +1002,7 @@
                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                     "A-Start-PostInstall",
                                     "$LinkPaths = @(\"$env:AppData\\xxx\")",
-                                    "$LinkTargets = @(\"$persist_dir\\xxx\")",
-                                    "A-New-LinkDirectory $LinkPaths $LinkTargets"
+                                    "A-New-LinkDirectory $LinkPaths"
                                 ]
                             ],
                             "type": "array",
@@ -1026,9 +1025,8 @@
                                             "A-Start-PostInstall",
                                             "A-Ensure-Directory",
                                             "$LinkPaths = @(\"$env:AppData\\xxx\")",
-                                            "$LinkTargets = @(\"$persist_dir\\xxx\")",
-                                            "A-New-LinkFile $LinkPaths $LinkTargets",
-                                            "A-New-LinkDirectory $LinkPaths $LinkTargets",
+                                            "A-New-LinkFile $LinkPaths",
+                                            "A-New-LinkDirectory $LinkPaths",
                                             "A-Add-Font",
                                             "$PackageFamilyName = \"\"",
                                             "A-Add-MsixPackage",
@@ -1040,9 +1038,8 @@
                                             "函数\n- 表示 `post_install` 的开始",
                                             "函数\n- 确保指定目录路径存在",
                                             "变量\n- 定义链接的目标路径\n- 例如: `$LinkPaths = @(\"$env:AppData\\xxx\")`",
-                                            "变量\n- 定义链接的源路径\n- 例如: `$LinkTargets = @(\"$persist_dir\\xxx\")`",
-                                            "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile $LinkPaths $LinkTargets`",
-                                            "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths $LinkTargets`",
+                                            "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile $LinkPaths`",
+                                            "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths`",
                                             "函数\n- 安装字体",
                                             "变量\n- 定义 AppX/Msix 包的 PackageFamilyName\n- 例如: `$PackageFamilyName = \"Microsoft.WindowsCalculator_8wekyb3d8bbwe\"`",
                                             "函数\n- 安装 AppX/Msix 包\n- 需要提前定义变量: `$PackageFamilyName`\n- 示例: \n    - `A-Add-MsixPackage`: 使用 Scoop 上下文的 $fname，添加所有下载的后缀为 .msixbundle 的应用包\n    - `A-Add-MsixPackage @(\"dl.msixbundle\")`: 添加指定的文件名的应用包",
