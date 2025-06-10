@@ -1,11 +1,13 @@
-﻿<#
+﻿#Requires -Version 5.1
+
+<#
 一些能在清单中使用的函数:
 
     1. 在 pre_install 和 post_install 中
 
         - A-Start-PreInstall: 此函数运行之后，开始执行 pre_install
         - A-Start-PostInstall: 此函数运行之后，开始执行 post_install
-        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包
+        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包，优先使用 A-Install-Exe
         - A-Ensure-Directory: 确保指定目录路径存在
         - A-New-PersistFile: 创建文件，可选择设置内容(不能在 post_install 中使用)
         - A-New-LinkFile: 为文件创建 SymbolicLink
@@ -28,13 +30,11 @@
         - A-Uninstall-Exe: 运行卸载程序
         - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
 
-    3. 特别的:
+    3. 其他:
         - A-Require-Admin: 要求以管理员权限运行
         - A-Test-Admin: 检查是否以管理员权限运行
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
-    #>
-
-
+#>
 
 # -------------------------------------------------
 
@@ -61,7 +61,7 @@ if ($ShowCN) {
 
     $words = @{
         "Creating directory:"                                                                           = "正在创建目录:"
-        "The script in this manifest is incorrectly defined."                                           = "这个清单中的脚本定义有误。"
+        "The number of links is wrong"                                                                  = "这个清单中的脚本定义有误。`n定义的链接数量不一致。"
         "Copying"                                                                                       = "正在复制:"
         "Moving"                                                                                        = "正在移动:"
         "Removing"                                                                                      = "正在删除:"
@@ -80,12 +80,11 @@ if ($ShowCN) {
         "Removing link:"                                                                                = "正在删除链接:"
         "Removing Temp data:"                                                                           = "正在删除临时数据:"
     }
-
 }
 else {
     $words = @{
         "Creating directory:"                                                                           = "Creating directory:"
-        "The script in this manifest is incorrectly defined."                                           = "The script in this manifest is incorrectly defined."
+        "The number of links is wrong"                                                                  = "The script in this manifest is incorrectly defined.`nThe number of links defined in the manifest is inconsistent."
         "Copying"                                                                                       = "Copying"
         "Moving"                                                                                        = "Moving"
         "Removing"                                                                                      = "Removing"
@@ -203,8 +202,7 @@ function A-New-LinkFile {
         可忽略，将根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml") -LinkTargets @("$persist_dir\starship.toml")
-        为文件创建 SymbolicLink: "$env:UserProfile\.config\starship.toml" => "$persist_dir\starship.toml"
+        A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml")
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -221,6 +219,10 @@ function A-New-LinkFile {
         $LinkTarget = $LinkTargets[$i]
 
         if (!$LinkTargets[$i]) {
+            if ($LinkPath -notlike "*$env:UserProfile*") {
+                Write-Host $words["The number of links is wrong"] -ForegroundColor Red
+                exit 1
+            }
             $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
         }
     }
@@ -261,9 +263,7 @@ function A-New-LinkDirectory {
         可忽略，将根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data") -LinkTargets @("$persist_dir\nvim","$persist_dir\nvim-data")
-        为目录创建 Junction: "$env:LocalAppData\nvim" => "$persist_dir\nvim"
-        为目录创建 Junction: "$env:LocalAppData\nvim-data" => "$persist_dir\nvim-data"
+        A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data")
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -275,7 +275,7 @@ function A-New-LinkDirectory {
         [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
-    # 更改 persist 或 Link 的目录结构
+    # 迁移旧的不合理的目录结构
     for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
         $LinkPath = $LinkPaths[$i]
         $LinkTarget = $LinkTargets[$i]
@@ -318,8 +318,10 @@ function A-New-LinkDirectory {
             }
         }
         elseif ($LinkPath -eq "$env:UserProfile\Zotero") {
-            if (Test-Path "$persist_dir\Zotero-UserProfile") {
-                Rename-Item "$persist_dir\Zotero-UserProfile" -NewName "Zotero" -Force -ErrorAction SilentlyContinue
+            if (!(Test-Path "$persist_dir\Zotero")) {
+                if (Test-Path "$persist_dir\Zotero-UserProfile") {
+                    Rename-Item "$persist_dir\Zotero-UserProfile" -NewName "Zotero" -Force -ErrorAction SilentlyContinue
+                }
             }
         }
         elseif ($LinkPath -like "$env:UserProfile\*\*") {
@@ -328,12 +330,14 @@ function A-New-LinkDirectory {
                 if ($LinkPath -like "*Documents\Tencent Files\nt_qq") {
                     $old = "$persist_dir\nt_qq"
                     if (Test-Path $old) {
+                        Write-Host "$($words["Moving"]) $old => $parentTarget" -ForegroundColor Yellow
                         Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
                     }
                 }
                 else {
                     $old = "$persist_dir\$(Split-Path (Split-Path $LinkPath -Parent) -Leaf)"
                     if (Test-Path $old) {
+                        Write-Host "$($words["Moving"]) $old => $(Split-Path $parentTarget -Parent)" -ForegroundColor Yellow
                         Move-Item -Path $old -Destination (Split-Path $parentTarget -Parent) -Force -ErrorAction SilentlyContinue
                     }
                 }
@@ -351,6 +355,10 @@ function A-New-LinkDirectory {
         }
 
         if (!$LinkTargets[$i]) {
+            if ($LinkPath -notlike "*$env:UserProfile*") {
+                Write-Host $words["The number of links is wrong"] -ForegroundColor Red
+                exit 1
+            }
             $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
         }
     }
@@ -826,8 +834,12 @@ function A-Install-Exe {
         [string]$Timeout = 300
     )
 
-    $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
+    # 如果没有传递安装参数，则使用默认参数
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $ArgumentList = @('/S', "/D=$dir")
+    }
 
+    $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
     @{
         Installer    = $Installer
         ArgumentList = $ArgumentList
@@ -868,7 +880,12 @@ function A-Install-Exe {
             if (!$SuccessFile) {
                 $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
                 if (!$SuccessFile) {
-                    Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
+                    if ($ShowCN) {
+                        Write-Host "清单中需要定义 shortcuts 字段，或在 A-Install-Exe 中指定 SuccessFile 参数。" -ForegroundColor Red
+                    }
+                    else {
+                        Write-Host "Manifest needs to define shortcuts field, or SuccessFile parameter needs to be specified in A-Install-Exe." -ForegroundColor Red
+                    }
                     exit 1
                 }
             }
@@ -952,13 +969,17 @@ function A-Uninstall-Exe {
         [string]$Timeout = 300
     )
 
+    # 如果没有传递卸载参数，则使用默认参数
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $ArgumentList = @('/S')
+    }
+
     if ([System.IO.Path]::IsPathRooted($Uninstaller)) {
         $path = $Uninstaller
     }
     else {
         $path = "$dir\$Uninstaller"
     }
-
     $fileName = Split-Path $path -Leaf
 
     if ($ShowCN) {
@@ -1202,7 +1223,7 @@ function A-New-Link {
     )
 
     if ($LinkPaths.Count -ne $LinkTargets.Count) {
-        Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
+        Write-Host $words["The number of links is wrong"] -ForegroundColor Red
         exit 1
     }
 
@@ -1359,7 +1380,7 @@ function A-Remove-LinkDirectory {
 #region 重写部分 scoop 内置函数，添加本地化输出
 
 #region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
-Set-Item -Path Function:\env_set {
+Set-Item -Path Function:\env_set -Value {
     param($manifest, $global, $arch)
     $env_set = arch_specific 'env_set' $manifest $arch
 
@@ -1381,7 +1402,7 @@ Set-Item -Path Function:\env_set {
 #endregion
 
 #region function env_rm: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L912
-Set-Item -Path Function:\env_rm {
+Set-Item -Path Function:\env_rm -Value {
     param($manifest, $global, $arch)
     $env_set = arch_specific 'env_set' $manifest $arch
     if ($env_set) {
@@ -2446,7 +2467,7 @@ if ($ShowCN) {
     #endregion
 
     #region function show_suggestions: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L969
-    Set-Item -Path Function:\show_suggestions {
+    Set-Item -Path Function:\show_suggestions -Value {
         param($suggested)
         $installed_apps = (installed_apps $true) + (installed_apps $false)
 
