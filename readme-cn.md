@@ -160,7 +160,9 @@
 - 像这样的应用，`abyss` 选择使用 `New-Item -ItemType Junction` 进行链接
 - 以 [Helix](./bucket/Helix.json) 为例
   - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
-  - 它会进行链接: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
+  - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
+  - `$persist_dir` = `D:\Scoop\persist\Helix`
+  - 它会进行链接: `$env:UserProfile\AppData\Roaming\helix` => `$persist_dir\AppData\Roaming\helix`
 
 > [!Warning]
 >

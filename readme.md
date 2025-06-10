@@ -156,7 +156,9 @@
 - For such apps, they will use `New-Item -ItemType Junction` to link.
 - Taking [Helix](./bucket/Helix.json) as an example:
   - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`
-  - It will link: `$env:AppData\helix` => `D:\Scoop\persist\Helix\helix`
+  - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
+  - `$persist_dir` = `D:\Scoop\persist\Helix`
+  - It will link: `$env:UserProfile\AppData\Roaming\helix` => `$persist_dir\AppData\Roaming\helix`
 
 > [!Warning]
 >
