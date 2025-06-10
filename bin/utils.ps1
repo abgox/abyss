@@ -63,6 +63,7 @@ if ($ShowCN) {
         "Creating directory:"                                                                           = "正在创建目录:"
         "The script in this manifest is incorrectly defined."                                           = "这个清单中的脚本定义有误。"
         "Copying"                                                                                       = "正在复制:"
+        "Moving"                                                                                        = "正在移动:"
         "Removing"                                                                                      = "正在删除:"
         "Failed to $cmd $app."                                                                          = "无法$($cmdMap_zh[$cmd]) $app"
         "Please stop the relevant processes and try to $cmd $app again."                                = "请停止相关进程并再次尝试$($cmdMap_zh[$cmd]) $app。"
@@ -86,6 +87,7 @@ else {
         "Creating directory:"                                                                           = "Creating directory:"
         "The script in this manifest is incorrectly defined."                                           = "The script in this manifest is incorrectly defined."
         "Copying"                                                                                       = "Copying"
+        "Moving"                                                                                        = "Moving"
         "Removing"                                                                                      = "Removing"
         "Failed to $cmd $app."                                                                          = "Failed to $cmd $app."
         "Please stop the relevant processes and try to $cmd $app again."                                = "Please stop the relevant processes and try to $cmd $app again."
@@ -123,7 +125,7 @@ function A-Ensure-Directory {
         [string]$Path = $persist_dir
     )
     if (!(Test-Path $Path)) {
-        Write-Host "$($words["Creating directory:"]) $Path" -ForegroundColor Yellow
+        # Write-Host "$($words["Creating directory:"]) $Path" -ForegroundColor Yellow
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
     }
 }
@@ -198,6 +200,7 @@ function A-New-LinkFile {
 
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
+        可忽略，将根据 LinkPaths 自动生成
 
     .EXAMPLE
         A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml") -LinkTargets @("$persist_dir\starship.toml")
@@ -210,12 +213,16 @@ function A-New-LinkFile {
     param (
         [array]$LinkPaths,
 
-        [array]$LinkTargets
+        [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
-    if ($LinkPaths.Count -ne $LinkTargets.Count) {
-        Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
-        exit 1
+    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+        $LinkPath = $LinkPaths[$i]
+        $LinkTarget = $LinkTargets[$i]
+
+        if (!$LinkTargets[$i]) {
+            $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
+        }
     }
 
     $isAdmin = A-Test-Admin
@@ -251,6 +258,7 @@ function A-New-LinkDirectory {
 
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
+        可忽略，将根据 LinkPaths 自动生成
 
     .EXAMPLE
         A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data") -LinkTargets @("$persist_dir\nvim","$persist_dir\nvim-data")
@@ -264,8 +272,88 @@ function A-New-LinkDirectory {
     param (
         [array]$LinkPaths,
 
-        [array]$LinkTargets
+        [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
+
+    # 更改 persist 或 Link 的目录结构
+    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+        $LinkPath = $LinkPaths[$i]
+        $LinkTarget = $LinkTargets[$i]
+
+        $parentTarget = Split-Path $LinkPath.Replace($env:UserProfile, $persist_dir) -Parent
+        if ($LinkPath -like "$env:AppData\*" -or $LinkPath -like "$env:LocalAppData\*") {
+            if (!(Test-Path $parentTarget)) {
+                A-Ensure-Directory $parentTarget
+                $removePath = $null
+                if ($LinkPath -like "*JetBrains\*") {
+                    $old = "$persist_dir\JetBrains\$(Split-Path $LinkPath -Leaf)"
+                    $removePath = "$persist_dir\JetBrains"
+                }
+                elseif ($LinkPath -like "*Files_1y0xx7n9077q4\LocalState" ) {
+                    $old = "$persist_dir\Files_1y0xx7n9077q4\LocalState"
+                    $removePath = "$persist_dir\Files_1y0xx7n9077q4"
+                }
+                elseif ($LinkPath -like "*com.example\keyviz" ) {
+                    $old = "$persist_dir\com.example\keyviz"
+                    $removePath = "$persist_dir\com.example"
+                }
+                elseif ($LinkPath -like "*40174MouriNaruto.NanaZip_gnj4mf6z9tkrc\SystemAppData\Helium" ) {
+                    $old = "$persist_dir\40174MouriNaruto.NanaZip_gnj4mf6z9tkrc\SystemAppData\Helium"
+                    $removePath = "$persist_dir\40174MouriNaruto.NanaZip_gnj4mf6z9tkrc"
+                }
+                elseif ($LinkPath -like "*Netease\CloudMusic" ) {
+                    $old = "$persist_dir\Netease\CloudMusic"
+                    $removePath = "$persist_dir\Netease"
+                }
+                else {
+                    $old = "$persist_dir\$(Split-Path $LinkPath -Leaf)"
+                }
+                if (Test-Path $old) {
+                    Write-Host "$($words["Moving"]) $old => $parentTarget" -ForegroundColor Yellow
+                    Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
+                    if ($removePath) {
+                        Remove-Item $removePath -Force -Recurse -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+        }
+        elseif ($LinkPath -eq "$env:UserProfile\Zotero") {
+            if (Test-Path "$persist_dir\Zotero-UserProfile") {
+                Rename-Item "$persist_dir\Zotero-UserProfile" -NewName "Zotero" -Force -ErrorAction SilentlyContinue
+            }
+        }
+        elseif ($LinkPath -like "$env:UserProfile\*\*") {
+            A-Ensure-Directory (Split-Path $parentTarget -Parent)
+            if ($LinkPath -like "*Documents\Tencent Files\*") {
+                if ($LinkPath -like "*Documents\Tencent Files\nt_qq") {
+                    $old = "$persist_dir\nt_qq"
+                    if (Test-Path $old) {
+                        Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
+                    }
+                }
+                else {
+                    $old = "$persist_dir\$(Split-Path (Split-Path $LinkPath -Parent) -Leaf)"
+                    if (Test-Path $old) {
+                        Move-Item -Path $old -Destination (Split-Path $parentTarget -Parent) -Force -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+            else {
+                if (!(Test-Path $parentTarget)) {
+                    A-Ensure-Directory $parentTarget
+                    $old = "$persist_dir\$(Split-Path $LinkPath -Leaf)"
+                    if (Test-Path $old) {
+                        Write-Host "$($words["Moving"]) $old => $parentTarget" -ForegroundColor Yellow
+                        Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+        }
+
+        if (!$LinkTargets[$i]) {
+            $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
+        }
+    }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
 }
@@ -898,22 +986,13 @@ function A-Uninstall-Exe {
                 $process = Start-Process $path -ArgumentList $ArgumentList  -PassThru
             }
             else {
-                $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+                $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
             }
 
-            $startTime = Get-Date
-            $isTimedOut = $false
-
-            while (!$process.HasExited) {
-                $elapsed = (Get-Date) - $startTime
-                if ($elapsed.TotalSeconds -ge $Timeout) {
-                    $isTimedOut = $true
-                    break
-                }
-                Start-Sleep -Seconds 5
+            try {
+                $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
             }
-
-            if ($isTimedOut) {
+            catch {
                 $process | Stop-Process -Force -ErrorAction SilentlyContinue
                 if ($ShowCN) {
                     Write-Host "卸载程序运行超时($Timeout 秒)，强行终止" -ForegroundColor Red
@@ -1135,7 +1214,7 @@ function A-New-Link {
         $linkPath = $LinkPaths[$i]
         $linkTarget = $LinkTargets[$i]
         $installData.LinkPaths += $linkPath
-        if ($cmd -ne "update" -and (Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
+        if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
             if (!(Test-Path $linkTarget)) {
                 A-Ensure-Directory (Split-Path $linkTarget -Parent)
                 Write-Host "$($words["Copying"]) $linkPath => $linkTarget" -ForegroundColor Yellow
