@@ -1,0 +1,89 @@
+{
+    "version": "2.49.0",
+    "description": "一个分布式版本控制系统。A distributed version control system.",
+    "homepage": "https://gitforwindows.org/",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://github.com/git-for-windows/git/blob/main/COPYING"
+    },
+    "notes": [
+        "abyss/Git is different from main/git.",
+        "It follows WinGet's approach to Git installation, using the standard installer for silent installation rather than a portable setup.",
+        "It automatically integrates Git into Windows Terminal and configures Git environment variables.",
+        "Git is installed to C:\\Program Files\\Git, not the Scoop directory."
+    ],
+    "notes-cn": [
+        "abyss/Git 与 main/git 的安装方式完全不同。",
+        "它参考 WinGet 安装 Git 的方式，使用正常的安装程序进行静默安装，而非便捷式。",
+        "它会自动将 Git 注入到 Windows 终端(Windows Terminal)，并设置 Git 环境变量。",
+        "Git 安装目录会保留在 C:\\Program Files\\Git，而不是 Scoop 目录中。"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.49.0.windows.1/Git-2.49.0-64-bit.exe",
+            "hash": "726056328967f242fe6e9afbfe7823903a928aff577dcf6f517f2fb6da6ce83c"
+        },
+        "arm64": {
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.49.0.windows.1/Git-2.49.0-arm64.exe",
+            "hash": "490ea5c2a1cb3ca4071079e262d1cba9331252cad1b76f9df1e89f04a09e761b"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile 'C:\\Program Files\\Git\\unins000.exe'",
+        "A-New-PersistFile \"$env:UserProfile\\.gitconfig\"",
+        "A-New-PersistFile \"$env:UserProfile\\.gitmessage\""
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")",
+        "$LinkTargets = @(\"$persist_dir\\.gitconfig\",\"$persist_dir\\.gitmessage\")",
+        "A-New-LinkFile $LinkPaths $LinkTargets"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process 'C:\\Program Files\\Git'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Git\\unins000.exe' -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Git.Git' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
