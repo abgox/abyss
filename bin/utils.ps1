@@ -778,12 +778,13 @@ function A-Install-Exe {
             }
 
             if (!$SuccessFile) {
-                if (!$manifest.shortcuts) {
+                $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
+                if (!$SuccessFile) {
                     Write-Host $words["The script in this manifest is incorrectly defined."] -ForegroundColor Red
                     exit 1
                 }
-                $SuccessFile = $manifest.shortcuts[0][0]
             }
+
             if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
                 $SuccessFile = Join-Path $dir $SuccessFile
             }
