@@ -1,0 +1,63 @@
+{
+    "version": "2.3.1",
+    "description": "由 vue-cli-electron-builder 构建的简洁美观的图片上传工具。A simple & beautiful tool for pictures uploading built by vue-cli-electron-builder.",
+    "homepage": "https://molunerfinn.com/PicGo/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/Molunerfinn/PicGo/blob/dev/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Molunerfinn/PicGo/releases/download/v2.3.1/PicGo-Setup-2.3.1-x64.exe",
+            "hash": "3f9a6dbfd51bcea8782e2ee1a1600ba526755649b1f5f541d3fd64f83446972a"
+        },
+        "32bit": {
+            "url": "https://github.com/Molunerfinn/PicGo/releases/download/v2.3.1/PicGo-Setup-2.3.1-ia32.exe",
+            "hash": "8d9a7a070e3de0a9ef733fefdac3942545b4ef97dc205411692a38862fdd9b85"
+        }
+    },
+    "shortcuts": [
+        [
+            "PicGo.exe",
+            "PicGo"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\picgo\")",
+        "A-New-LinkDirectory $LinkPaths"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall PicGo.exe'",
+        "A-Remove-TempData @(\"$env:LocalAppData\\picgo-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/Molunerfinn/PicGo"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Molunerfinn/PicGo/releases/download/v$version/PicGo-Setup-$version-x64.exe"
+            },
+            "32bit": {
+                "url": "https://github.com/Molunerfinn/PicGo/releases/download/v$version/PicGo-Setup-$version-ia32.exe"
+            }
+        }
+    }
+}
