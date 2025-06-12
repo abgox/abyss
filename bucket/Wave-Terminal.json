@@ -1,0 +1,48 @@
+{
+    "version": "0.11.3",
+    "description": "具有超能力的开源终端，集成文件预览、文件编辑、人工智能、网页浏览和工作区组织。An open-source terminal with superpowers, integrating file previews, file editing, AI, web browsing, and workspace organization.",
+    "homepage": "https://www.waveterm.dev",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/wavetermdev/waveterm/blob/main/LICENSE"
+    },
+    "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi",
+    "hash": "51858b912557f7cfbbcd864f2450eb1fc8e022ba77994079a1b6d3b68dd570de",
+    "extract_dir": "waveterm",
+    "bin": "Wave.exe",
+    "shortcuts": [
+        [
+            "Wave.exe",
+            "Wave"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:UserProfile\\.config\\waveterm\")",
+        "A-New-LinkDirectory $LinkPaths"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:AppData\\Wave\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/wavetermdev/waveterm"
+    },
+    "autoupdate": {
+        "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi"
+    }
+}
