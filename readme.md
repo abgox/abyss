@@ -142,7 +142,7 @@
   - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\PSCompletions` directory will be removed.
 
 - This is the most powerful feature of Scoop, which can quickly restore your app environment.
-  - Some apps use [Link](#link), which cannot be reset correctly by `scoop reset`.
+  - Some apps in `abyss` use [Link](#link), which cannot be reset correctly by `scoop reset`.
   - It is recommended to force update the app by `scoop update --force <app>`.
 
 ### Link
@@ -154,11 +154,13 @@
 - Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the app data resides within the installation directory.
 - However, some apps store their data outside the installation directory, commonly in `$env:AppData`.
 - For such apps, they will use `New-Item -ItemType Junction` to link.
-- Taking [Helix](./bucket/Helix.json) as an example:
-  - [Helix](./bucket/Helix.json) stores its data in `$env:AppData\helix`
+- Taking [VSCode](./bucket/VSCode.json) as an example:
+  - [VSCode](./bucket/VSCode.json) stores its data in `$env:AppData\Code` and `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
-  - `$persist_dir` = `D:\Scoop\persist\Helix`
-  - It will link: `$env:UserProfile\AppData\Roaming\helix` => `$persist_dir\AppData\Roaming\helix`
+  - `$persist_dir` = `D:\Scoop\persist\VSCode`
+  - It will link:
+    - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
+    - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
 
 > [!Warning]
 >

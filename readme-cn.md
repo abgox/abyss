@@ -146,7 +146,7 @@
   - 如果卸载时使用了 `-p/--purge` 参数，`D:\Scoop\persist\PSCompletions` 目录才会被删除
 
 - 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
-  - 一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
+  - `abyss` 中的一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
   - 建议通过 `scoop update --force <app>` 强制更新应用
 
 ### Link
@@ -158,11 +158,13 @@
 - Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
 - 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
 - 像这样的应用，`abyss` 选择使用 `New-Item -ItemType Junction` 进行链接
-- 以 [Helix](./bucket/Helix.json) 为例
-  - [Helix](./bucket/Helix.json) 的数据目录是 `$env:AppData\helix`
+- 以 [VSCode](./bucket/VSCode.json) 为例
+  - [VSCode](./bucket/VSCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
-  - `$persist_dir` = `D:\Scoop\persist\Helix`
-  - 它会进行链接: `$env:UserProfile\AppData\Roaming\helix` => `$persist_dir\AppData\Roaming\helix`
+  - `$persist_dir` = `D:\Scoop\persist\VSCode`
+  - 它会进行链接:
+    - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
+    - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
 
 > [!Warning]
 >
