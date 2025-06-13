@@ -1,0 +1,27 @@
+name: PR Validation
+
+# 自动校验 PR 中提交的 manifest 文件是否符合规范
+
+on:
+  # 触发条件 1：PR 被打开时
+  pull_request_target:
+    types: [opened]
+  # 触发条件 2：PR 收到 `/verify` 评论时
+  issue_comment:
+    types: [created]
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Validation
+        uses: ScoopInstaller/GithubActions@main
+        if: |
+          github.event_name == 'pull_request_target' || 
+          (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/verify'))
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
