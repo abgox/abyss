@@ -1,0 +1,72 @@
+{
+    "version": "21.0.7.6",
+    "description": "OpenJDK 的微软版本是一个免费的长期支持发行版，也是微软为 Java 生态系统提供协作和做出贡献的方式。The Microsoft Build of OpenJDK is a no-cost long-term supported distribution and Microsoft's way to collaborate and contribute to the Java ecosystem.",
+    "homepage": "https://www.microsoft.com/openjdk/",
+    "license": {
+        "identifier": "GNU General Public License, version 2, with the Classpath Exception",
+        "url": "https://openjdk.org/legal/gplv2+ce.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://aka.ms/download-jdk/microsoft-jdk-21.0.7-windows-x64.msi#winget#/dl.msi",
+            "hash": "d166a7049b24c53aaa51f0669cf446bc9ce9f9edb4079366a1c3ef795d44d594"
+        },
+        "arm64": {
+            "url": "https://aka.ms/download-jdk/microsoft-jdk-21.0.7-windows-aarch64.msi#winget#/dl.msi",
+            "hash": "908aa09e376c55d44832f3faa1990e00c4558d464ba2fe490b89eaa0cdeaa19f"
+        }
+    },
+    "extract_dir": "PFiles64\\Microsoft\\jdk-21.0.7.6-hotspot",
+    "env_add_path": "bin",
+    "env_set": {
+        "JAVA_HOME": "$dir"
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.OpenJDK.21' 'msi'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.msi",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64#/dl.msi",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        },
+        "extract_dir": "PFiles64\\Microsoft\\jdk-$version-hotspot"
+    }
+}
