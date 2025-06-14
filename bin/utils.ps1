@@ -1154,7 +1154,10 @@ function A-Get-InstallerInfoFromWinget {
 
     foreach ($_ in $installerInfo.Installers) {
         $arch = $_.Architecture
-        $type = [regex]::Match($_.InstallerUrl, '\.(\w+)$').Groups[1].Value.ToLower()
+
+        $fileName = [System.IO.Path]::GetFileName($_.InstallerUrl.Split('?')[0].Split('#')[0])
+        $extension = [System.IO.Path]::GetExtension($fileName).TrimStart('.')
+        $type = $extension.ToLower()
 
         $matchType = $true
         if ($InstallerType) {
@@ -1377,7 +1380,7 @@ function A-Remove-LinkDirectory {
 #endregion
 
 
-#region 重写部分 scoop 内置函数，添加本地化输出
+#region 重写部分 scoop (v0.5.2) 内置函数，添加本地化输出
 
 #region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
 Set-Item -Path Function:\env_set -Value {
