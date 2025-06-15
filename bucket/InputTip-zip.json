@@ -26,7 +26,18 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''"
+        "A-Ensure-Directory",
+        "try {",
+        "    if (Test-Path \"$persist_dir\\InputTip.ini\") {",
+        "        return",
+        "    }",
+        "    $ini = \"'$persist_dir\\InputTip.ini'\"",
+        "    $init_ahk = \"$env:Temp\\InputTip-init-ini-from-Scoop.ahk\"",
+        "    \"IniWrite('Scoop', $ini, 'Installer', 'from')\" | Out-File $init_ahk -Force",
+        "    Start-Process \"$dir\\InputTip-main\\src\\AutoHotkey\\AutoHotkey64.exe\" -ArgumentList @($init_ahk) | Wait-Process -Timeout 10 -ErrorAction Stop",
+        "} catch {",
+        "    A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''",
+        "}"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -36,7 +47,7 @@
         "$bucket = $install.bucket",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
-        "A-Stop-Process"
+        "A-Stop-Process 'InputTip-main\\src\\AutoHotkey'"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
