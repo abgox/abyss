@@ -48,6 +48,20 @@ if ($uninstallActionLevel -eq $null) {
     $uninstallActionLevel = "1"
 }
 
+function A-Test-Admin {
+    <#
+    .SYNOPSIS
+        检查当前用户是否具有管理员权限
+
+    .DESCRIPTION
+        该函数检查当前用户是否具有管理员权限，并返回一个布尔值。
+    #>
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and ($identity.Groups -contains "S-1-5-32-544")
+}
+
+$isAdmin = A-Test-Admin
 
 # 如果没有 $cmd，表示在自动化执行更新检查，此时中文内容可能导致错误。
 $ShowCN = $PSUICulture -like "zh*" -and $cmd
@@ -59,49 +73,53 @@ if ($ShowCN) {
         "update"    = "更新"
     }
 
+    $adminText = if ($isAdmin) { "。" } else { " 或使用管理员权限。" }
+
     $words = @{
-        "Creating directory:"                                                                           = "正在创建目录:"
-        "The number of links is wrong"                                                                  = "这个清单中的脚本定义有误。`n定义的链接数量不一致。"
-        "Copying"                                                                                       = "正在复制:"
-        "Moving"                                                                                        = "正在移动:"
-        "Removing"                                                                                      = "正在删除:"
-        "Failed to $cmd $app."                                                                          = "无法$($cmdMap_zh[$cmd]) $app"
-        "Please stop the relevant processes and try to $cmd $app again."                                = "请停止相关进程并再次尝试$($cmdMap_zh[$cmd]) $app。"
-        "Failed to remove:"                                                                             = "无法删除:"
-        "Linking"                                                                                       = "正在创建链接:"
-        "Successfully terminated the process:"                                                          = "成功终止进程:"
-        "Failed to terminate the process:"                                                              = "无法终止进程:"
-        "You may need to try $cmd $app again or use administrator permissions."                         = "可能需要再次尝试$($cmdMap_zh[$cmd]) $app 或者使用管理员权限。"
-        "No running processes found."                                                                   = "未找到正在运行的相关进程。"
-        "If failed to uninstall, You may need to try $cmd $app again or use administrator permissions." = "如果卸载失败，可能需要再次尝试$($cmdMap_zh[$cmd]) $app 或者使用管理员权限。"
-        "Successfully terminated the service:"                                                          = "成功终止服务:"
-        "Failed to terminate the service:"                                                              = "无法终止服务:"
-        "Failed to remove the service:"                                                                 = "无法删除服务:"
-        "Removing link:"                                                                                = "正在删除链接:"
-        "Removing Temp data:"                                                                           = "正在删除临时数据:"
+        "Creating directory:"                                            = "正在创建目录:"
+        "The number of links is wrong"                                   = "这个清单中的脚本定义有误。`n定义的链接数量不一致。"
+        "Copying"                                                        = "正在复制:"
+        "Moving"                                                         = "正在移动:"
+        "Removing"                                                       = "正在删除:"
+        "Failed to $cmd $app."                                           = "无法$($cmdMap_zh[$cmd]) $app"
+        "Please stop the relevant processes and try to $cmd $app again." = "请停止相关进程并再次尝试$($cmdMap_zh[$cmd]) $app。"
+        "Failed to remove:"                                              = "无法删除:"
+        "Linking"                                                        = "正在创建链接:"
+        "Successfully terminated the process:"                           = "成功终止进程:"
+        "Failed to terminate the process:"                               = "无法终止进程:"
+        "Maybe try again"                                                = "可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
+        "No running processes found."                                    = "未找到正在运行的相关进程。"
+        "If failed to uninstall, You may need to try again"              = "如果卸载失败，可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
+        "Successfully terminated the service:"                           = "成功终止服务:"
+        "Failed to terminate the service:"                               = "无法终止服务:"
+        "Failed to remove the service:"                                  = "无法删除服务:"
+        "Removing link:"                                                 = "正在删除链接:"
+        "Removing Temp data:"                                            = "正在删除临时数据:"
     }
 }
 else {
+    $adminText = if ($isAdmin) { "." } else { " or use administrator permissions." }
+
     $words = @{
-        "Creating directory:"                                                                           = "Creating directory:"
-        "The number of links is wrong"                                                                  = "The script in this manifest is incorrectly defined.`nThe number of links defined in the manifest is inconsistent."
-        "Copying"                                                                                       = "Copying"
-        "Moving"                                                                                        = "Moving"
-        "Removing"                                                                                      = "Removing"
-        "Failed to $cmd $app."                                                                          = "Failed to $cmd $app."
-        "Please stop the relevant processes and try to $cmd $app again."                                = "Please stop the relevant processes and try to $cmd $app again."
-        "Failed to remove:"                                                                             = "Failed to remove:"
-        "Linking"                                                                                       = "Linking"
-        "Successfully terminated the process:"                                                          = "Successfully terminated the process:"
-        "Failed to terminate the process:"                                                              = "Failed to terminate the process:"
-        "You may need to try $cmd $app again or use administrator permissions."                         = "You may need to try $cmd $app again or use administrator permissions."
-        "No running processes found."                                                                   = "No running processes found."
-        "If failed to uninstall, You may need to try $cmd $app again or use administrator permissions." = "If failed to uninstall, You may need to try $cmd $app again or use administrator permissions."
-        "Successfully terminated the service:"                                                          = "Successfully terminated the service:"
-        "Failed to terminate the service:"                                                              = "Failed to terminate the service:"
-        "Failed to remove the service:"                                                                 = "Failed to remove the service:"
-        "Removing link:"                                                                                = "Removing link:"
-        "Removing Temp data:"                                                                           = "Removing Temp data:"
+        "Creating directory:"                                            = "Creating directory:"
+        "The number of links is wrong"                                   = "The script in this manifest is incorrectly defined.`nThe number of links defined in the manifest is inconsistent."
+        "Copying"                                                        = "Copying"
+        "Moving"                                                         = "Moving"
+        "Removing"                                                       = "Removing"
+        "Failed to $cmd $app."                                           = "Failed to $cmd $app."
+        "Please stop the relevant processes and try to $cmd $app again." = "Please stop the relevant processes and try to $cmd $app again."
+        "Failed to remove:"                                              = "Failed to remove:"
+        "Linking"                                                        = "Linking"
+        "Successfully terminated the process:"                           = "Successfully terminated the process:"
+        "Failed to terminate the process:"                               = "Failed to terminate the process:"
+        "Maybe try again"                                                = "You may need to try $cmd $app again$adminText"
+        "No running processes found."                                    = "No running processes found. "
+        "If failed to uninstall, You may need to try again"              = "If failed to uninstall, You may need to try $cmd $app again$adminText"
+        "Successfully terminated the service:"                           = "Successfully terminated the service:"
+        "Failed to terminate the service:"                               = "Failed to terminate the service:"
+        "Failed to remove the service:"                                  = "Failed to remove the service:"
+        "Removing link:"                                                 = "Removing link:"
+        "Removing Temp data:"                                            = "Removing Temp data:"
     }
 }
 
@@ -170,7 +188,9 @@ function A-New-PersistFile {
     )
 
     if (Test-Path $Path) {
-        if ($Force) {
+        # 如果是一个错误的目录，也要删除重建
+        $isDir = (Get-Item $Path).PSIsContainer
+        if ($Force -or $isDir) {
             Remove-Item $Path -Force -ErrorAction SilentlyContinue
         }
         else {
@@ -227,7 +247,6 @@ function A-New-LinkFile {
         }
     }
 
-    $isAdmin = A-Test-Admin
     if (!$isAdmin) {
         if ($ShowCN) {
             Write-Host "$app 需要为以下文件创建 SymbolicLink:" -ForegroundColor Yellow
@@ -463,7 +482,7 @@ function A-Stop-Process {
                     Write-Host "$($words["Successfully terminated the process:"]) $($p.Id) $($p.Name) ($($p.MainModule.FileName))" -ForegroundColor Green
                 }
                 catch {
-                    Write-Host "$($words["Failed to terminate the process:"]) $($p.Id) $($p.Name)`n$($words["You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Red
+                    Write-Host "$($words["Failed to terminate the process:"]) $($p.Id) $($p.Name)`n$($words["Maybe try again"])" -ForegroundColor Red
                 }
             }
         }
@@ -487,14 +506,14 @@ function A-Stop-Process {
                 Write-Host "$($words["Successfully terminated the process:"]) $($m.Id) $($m.Name) ($($m.MainModule.FileName))" -ForegroundColor Green
             }
             catch {
-                Write-Host "$($words["Failed to terminate the process:"]) $($m.Id) $($m.Name)`n$($words["You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Red
+                Write-Host "$($words["Failed to terminate the process:"]) $($m.Id) $($m.Name)`n$($words["Maybe try again"])" -ForegroundColor Red
                 exit 1
             }
         }
     }
 
     if ($NoFound) {
-        Write-Host "$($words["No running processes found."]) $($words["If failed to uninstall, You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Yellow
+        Write-Host "$($words["No running processes found."])$($words["If failed to uninstall, You may need to try again"])" -ForegroundColor Yellow
     }
 
     Start-Sleep -Seconds 1
@@ -528,7 +547,7 @@ function A-Stop-Service {
         Write-Host "$($words["Successfully terminated the service:"]) $ServiceName" -ForegroundColor Green
     }
     catch {
-        Write-Host "$($words["Failed to terminate the service:"]) $ServiceName `n$($words["You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Red
+        Write-Host "$($words["Failed to terminate the service:"]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
         exit 1
     }
 
@@ -536,7 +555,7 @@ function A-Stop-Service {
         Remove-Service -Name $ServiceName -ErrorAction Stop
     }
     catch {
-        Write-Host "$($words["Failed to remove the service:" ]) $ServiceName `n$($words["You may need to try $cmd $app again or use administrator permissions."])" -ForegroundColor Red
+        Write-Host "$($words["Failed to remove the service:" ]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
         exit 1
     }
 }
@@ -567,259 +586,6 @@ Function A-Start-PostUninstall {
     .SYNOPSIS
         此函数运行之后，开始执行 post_uninstall
     #>
-}
-
-function A-Add-Font {
-    <#
-    .SYNOPSIS
-        安装字体
-
-    .DESCRIPTION
-        安装字体
-
-    .PARAMETER FontType
-        字体类型，支持 ttf, otf, ttc
-        默认为 ttf
-    #>
-    param(
-        [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType = "ttf"
-    )
-
-    $filter = "*.$($FontType)"
-
-    $ExtMap = @{
-        ".ttf" = "TrueType"
-        ".otf" = "OpenType"
-        ".ttc" = "TrueType"
-    }
-
-    $currentBuildNumber = [int] (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuildNumber
-    $windows10Version1809BuildNumber = 17763
-    $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
-    if (!$isPerUserFontInstallationSupported -and !$global) {
-        scoop uninstall $app
-
-        if ($ShowCN) {
-            Write-Host
-            Write-Host "对于 Windows 版本低于 Windows 10 版本 1809 (OS Build 17763)，" -Foreground DarkRed
-            Write-Host "字体只能安装为所有用户。" -Foreground DarkRed
-            Write-Host
-            Write-Host "请使用以下命令为所有用户安装 $app 字体。" -Foreground DarkRed
-            Write-Host
-            Write-Host "        scoop install sudo"
-            Write-Host "        sudo scoop install -g $app"
-            Write-Host
-        }
-        else {
-            Write-Host
-            Write-Host "For Windows version before Windows 10 Version 1809 (OS Build 17763)," -Foreground DarkRed
-            Write-Host "Font can only be installed for all users." -Foreground DarkRed
-            Write-Host
-            Write-Host "Please use following commands to install '$app' Font for all users." -Foreground DarkRed
-            Write-Host
-            Write-Host "        scoop install sudo"
-            Write-Host "        sudo scoop install -g $app"
-            Write-Host
-        }
-        exit 1
-    }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
-    if (!$global) {
-        # Ensure user font install directory exists and has correct permission settings
-        # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
-        New-Item $fontInstallDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-        $accessControlList = Get-Acl $fontInstallDir
-        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new("S-1-15-2-1"), "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
-        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new("S-1-15-2-2"), "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
-        $accessControlList.SetAccessRule($allApplicationPackagesAccessRule)
-        $accessControlList.SetAccessRule($allRestrictedApplicationPackagesAccessRule)
-        Set-Acl -AclObject $accessControlList $fontInstallDir
-    }
-    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
-    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
-        $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
-        New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
-        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir
-    }
-}
-
-function A-Remove-Font {
-    <#
-    .SYNOPSIS
-        卸载字体
-
-    .DESCRIPTION
-        卸载字体
-
-    .PARAMETER FontType
-        字体类型，支持 ttf, otf, ttc
-        默认为 ttf
-    #>
-    param(
-        [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType = "ttf"
-    )
-
-    $filter = "*.$($FontType)"
-
-    $ExtMap = @{
-        ".ttf" = "TrueType"
-        ".otf" = "OpenType"
-        ".ttc" = "TrueType"
-    }
-
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
-        Get-ChildItem $fontInstallDir -Filter $_.Name | ForEach-Object {
-            try {
-                Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
-            }
-            catch {
-                if ($ShowCN) {
-                    Write-Host
-                    Write-Host " 错误 " -Background DarkRed -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " 无法卸载 $app 字体。" -Foreground DarkRed
-                    Write-Host
-                    Write-Host " 原因 " -Background DarkCyan -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " $app 字体当前被其他应用程序使用，所以无法删除。" -Foreground DarkCyan
-                    Write-Host
-                    Write-Host " 建议 " -Background Magenta -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " 关闭所有使用 $app 字体的应用程序 (例如 vscode) 后，然后再次尝试。" -Foreground Magenta
-                    Write-Host
-                }
-                else {
-                    Write-Host
-                    Write-Host " Error " -Background DarkRed -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " Cannot uninstall '$app' font." -Foreground DarkRed
-                    Write-Host
-                    Write-Host " Reason " -Background DarkCyan -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " The '$app' font is currently being used by another application," -Foreground DarkCyan
-                    Write-Host " so it cannot be deleted." -Foreground DarkCyan
-                    Write-Host
-                    Write-Host " Suggestion " -Background Magenta -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " Close all applications that are using '$app' font (e.g. vscode)," -Foreground Magenta
-                    Write-Host " and then try again." -Foreground Magenta
-                    Write-Host
-                }
-                exit 1
-            }
-        }
-    }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
-    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
-    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
-        Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
-        Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
-    }
-    if ($cmd -eq "uninstall") {
-        if ($ShowCN) {
-            Write-Host "$app 字体已经成功卸载，重启电脑后将不会再显示。" -Foreground Magenta
-        }
-        else {
-            Write-Host "The '$app' Font family has been uninstalled and will not be present after restarting your computer." -Foreground Magenta
-        }
-    }
-}
-
-function A-Add-MsixPackage {
-    param(
-        [string]$FileName
-    )
-    if ($PSBoundParameters.ContainsKey('FileName')) {
-        $path = "$dir\$FileName"
-    }
-    else {
-        # $fname 由 Scoop 提供，即下载的文件名
-        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
-    }
-
-    A-Add-AppxPackage -Path $path
-}
-
-function A-Remove-MsixPackage {
-    A-Remove-AppxPackage
-}
-
-function A-Add-PowerToysRunPlugin {
-    param(
-        [string]$PluginName
-    )
-
-    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
-    $PluginPath = "$PluginsDir\$PluginName"
-    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
-
-    try {
-        if (Test-Path -Path $PluginPath) {
-            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
-            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
-        }
-        $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
-        Write-Host "$($words["Copying"]) $CopyingPath => $PluginPath" -ForegroundColor Yellow
-        Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
-
-        if ($ShowCN) {
-            Write-Host "请重启 PowerToys 以加载插件。" -ForegroundColor Green
-        }
-        else {
-            Write-Host "Please restart PowerToys to load the plugin." -ForegroundColor Green
-        }
-
-        @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
-    }
-    catch {
-        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
-        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-        if ($ShowCN) {
-            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
-        }
-        exit 1
-    }
-
-}
-
-function A-Remove-PowerToysRunPlugin {
-    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
-
-    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
-
-    try {
-        if (Test-Path -Path $OutFile) {
-            $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
-            $PluginPath = "$PluginsDir\$PluginName"
-        }
-        else {
-            return
-        }
-
-        if (Test-Path -Path $PluginPath) {
-            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
-            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
-        }
-    }
-    catch {
-        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
-        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-        if ($ShowCN) {
-            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
-        }
-        exit 1
-    }
 }
 
 function A-Install-Exe {
@@ -1031,6 +797,258 @@ function A-Uninstall-Exe {
     }
 }
 
+function A-Add-MsixPackage {
+    param(
+        [string]$FileName
+    )
+    if ($PSBoundParameters.ContainsKey('FileName')) {
+        $path = "$dir\$FileName"
+    }
+    else {
+        # $fname 由 Scoop 提供，即下载的文件名
+        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+    }
+
+    A-Add-AppxPackage -Path $path
+}
+
+function A-Remove-MsixPackage {
+    A-Remove-AppxPackage
+}
+
+function A-Add-Font {
+    <#
+    .SYNOPSIS
+        安装字体
+
+    .DESCRIPTION
+        安装字体
+
+    .PARAMETER FontType
+        字体类型，支持 ttf, otf, ttc
+        默认为 ttf
+    #>
+    param(
+        [ValidateSet("ttf", "otf", "ttc")]
+        [string]$FontType = "ttf"
+    )
+
+    $filter = "*.$($FontType)"
+
+    $ExtMap = @{
+        ".ttf" = "TrueType"
+        ".otf" = "OpenType"
+        ".ttc" = "TrueType"
+    }
+
+    $currentBuildNumber = [int] (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuildNumber
+    $windows10Version1809BuildNumber = 17763
+    $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
+    if (!$isPerUserFontInstallationSupported -and !$global) {
+        scoop uninstall $app
+
+        if ($ShowCN) {
+            Write-Host
+            Write-Host "对于 Windows 版本低于 Windows 10 版本 1809 (OS Build 17763)，" -Foreground DarkRed
+            Write-Host "字体只能安装为所有用户。" -Foreground DarkRed
+            Write-Host
+            Write-Host "请使用以下命令为所有用户安装 $app 字体。" -Foreground DarkRed
+            Write-Host
+            Write-Host "        scoop install sudo"
+            Write-Host "        sudo scoop install -g $app"
+            Write-Host
+        }
+        else {
+            Write-Host
+            Write-Host "For Windows version before Windows 10 Version 1809 (OS Build 17763)," -Foreground DarkRed
+            Write-Host "Font can only be installed for all users." -Foreground DarkRed
+            Write-Host
+            Write-Host "Please use following commands to install '$app' Font for all users." -Foreground DarkRed
+            Write-Host
+            Write-Host "        scoop install sudo"
+            Write-Host "        sudo scoop install -g $app"
+            Write-Host
+        }
+        exit 1
+    }
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
+    if (!$global) {
+        # Ensure user font install directory exists and has correct permission settings
+        # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
+        New-Item $fontInstallDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+        $accessControlList = Get-Acl $fontInstallDir
+        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new("S-1-15-2-1"), "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
+        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new("S-1-15-2-2"), "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
+        $accessControlList.SetAccessRule($allApplicationPackagesAccessRule)
+        $accessControlList.SetAccessRule($allRestrictedApplicationPackagesAccessRule)
+        Set-Acl -AclObject $accessControlList $fontInstallDir
+    }
+    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
+    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+        $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
+        New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
+        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir
+    }
+}
+
+function A-Remove-Font {
+    <#
+    .SYNOPSIS
+        卸载字体
+
+    .DESCRIPTION
+        卸载字体
+
+    .PARAMETER FontType
+        字体类型，支持 ttf, otf, ttc
+        默认为 ttf
+    #>
+    param(
+        [ValidateSet("ttf", "otf", "ttc")]
+        [string]$FontType = "ttf"
+    )
+
+    $filter = "*.$($FontType)"
+
+    $ExtMap = @{
+        ".ttf" = "TrueType"
+        ".otf" = "OpenType"
+        ".ttc" = "TrueType"
+    }
+
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
+    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+        Get-ChildItem $fontInstallDir -Filter $_.Name | ForEach-Object {
+            try {
+                Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
+            }
+            catch {
+                if ($ShowCN) {
+                    Write-Host
+                    Write-Host " 错误 " -Background DarkRed -Foreground White -NoNewline
+                    Write-Host
+                    Write-Host " 无法卸载 $app 字体。" -Foreground DarkRed
+                    Write-Host
+                    Write-Host " 原因 " -Background DarkCyan -Foreground White -NoNewline
+                    Write-Host
+                    Write-Host " $app 字体当前被其他应用程序使用，所以无法删除。" -Foreground DarkCyan
+                    Write-Host
+                    Write-Host " 建议 " -Background Magenta -Foreground White -NoNewline
+                    Write-Host
+                    Write-Host " 关闭所有使用 $app 字体的应用程序 (例如 vscode) 后，然后再次尝试。" -Foreground Magenta
+                    Write-Host
+                }
+                else {
+                    Write-Host
+                    Write-Host " Error " -Background DarkRed -Foreground White -NoNewline
+                    Write-Host
+                    Write-Host " Cannot uninstall '$app' font." -Foreground DarkRed
+                    Write-Host
+                    Write-Host " Reason " -Background DarkCyan -Foreground White -NoNewline
+                    Write-Host
+                    Write-Host " The '$app' font is currently being used by another application," -Foreground DarkCyan
+                    Write-Host " so it cannot be deleted." -Foreground DarkCyan
+                    Write-Host
+                    Write-Host " Suggestion " -Background Magenta -Foreground White -NoNewline
+                    Write-Host
+                    Write-Host " Close all applications that are using '$app' font (e.g. vscode)," -Foreground Magenta
+                    Write-Host " and then try again." -Foreground Magenta
+                    Write-Host
+                }
+                exit 1
+            }
+        }
+    }
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
+    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
+    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+        Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
+        Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
+    }
+    if ($cmd -eq "uninstall") {
+        if ($ShowCN) {
+            Write-Host "$app 字体已经成功卸载，重启电脑后将不会再显示。" -Foreground Magenta
+        }
+        else {
+            Write-Host "The '$app' Font family has been uninstalled and will not be present after restarting your computer." -Foreground Magenta
+        }
+    }
+}
+
+function A-Add-PowerToysRunPlugin {
+    param(
+        [string]$PluginName
+    )
+
+    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+    $PluginPath = "$PluginsDir\$PluginName"
+    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
+
+    try {
+        if (Test-Path -Path $PluginPath) {
+            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
+            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
+        }
+        $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
+        Write-Host "$($words["Copying"]) $CopyingPath => $PluginPath" -ForegroundColor Yellow
+        Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
+
+        if ($ShowCN) {
+            Write-Host "请重启 PowerToys 以加载插件。" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Please restart PowerToys to load the plugin." -ForegroundColor Green
+        }
+
+        @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+    }
+    catch {
+        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
+        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
+        if ($ShowCN) {
+            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
+        }
+        exit 1
+    }
+
+}
+
+function A-Remove-PowerToysRunPlugin {
+    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+
+    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
+
+    try {
+        if (Test-Path -Path $OutFile) {
+            $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
+            $PluginPath = "$PluginsDir\$PluginName"
+        }
+        else {
+            return
+        }
+
+        if (Test-Path -Path $PluginPath) {
+            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
+            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
+        }
+    }
+    catch {
+        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
+        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
+        if ($ShowCN) {
+            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
+        }
+        exit 1
+    }
+}
 
 function A-Expand-SetupExe {
 
@@ -1059,7 +1077,7 @@ function A-Require-Admin {
     .SYNOPSIS
         要求以管理员权限运行
     #>
-    $isAdmin = A-Test-Admin
+
     if (!$isAdmin) {
         if ($ShowCN) {
             Write-Host "这个操作需要管理员权限。`n请使用管理员权限再次尝试。" -ForegroundColor Red
@@ -1069,19 +1087,6 @@ function A-Require-Admin {
         }
         exit 1
     }
-}
-
-function A-Test-Admin {
-    <#
-    .SYNOPSIS
-        检查当前用户是否具有管理员权限
-
-    .DESCRIPTION
-        该函数检查当前用户是否具有管理员权限，并返回一个布尔值。
-    #>
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
-    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and ($identity.Groups -contains "S-1-5-32-544")
 }
 
 function A-Get-InstallerInfoFromWinget {
@@ -1179,7 +1184,7 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    # 写入到 bin/scoop-auto-check-update-temp-data.jsonc，用于后续读取
+    # 写入到 bin\scoop-auto-check-update-temp-data.jsonc，用于后续读取
     $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
 
     Write-Host '--------------------------------------------------------------------------------------'
