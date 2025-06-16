@@ -13,14 +13,13 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Generate list and update README content
+        shell: pwsh
         run: |
-          .\bin\generate-list.ps1 "./readme.md"
-          .\bin\generate-list.ps1 "./readme-cn.md"
+          .\bin\generate-list.ps1
 
       - name: Commit and push changes
         run: |
