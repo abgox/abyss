@@ -1111,6 +1111,18 @@ function A-Get-InstallerInfoFromWinget {
         [string]$InstallerType
     )
 
+    $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
+    if (!$hasCommand) {
+        try {
+            Install-Module powershell-yaml -Repository PSGallery -Force
+            Import-Module -Name powershell-yaml -Force
+            Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "::error::安装并导入 powershell-yaml 模块失败" -ForegroundColor Red
+        }
+    }
+
     Write-Host
     Write-Host "正在从 winget-pkgs 中获取 $Package 安装信息" -ForegroundColor Green
 
@@ -1161,21 +1173,10 @@ function A-Get-InstallerInfoFromWinget {
         return
     }
 
-    $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
-    if (!$hasCommand) {
-        try {
-            Install-Module powershell-yaml -Repository PSGallery -Force
-            Import-Module -Name powershell-yaml -Force
-            Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
-        }
-        catch {
-            Write-Host "::error::安装并导入 powershell-yaml 模块失败" -ForegroundColor Red
-        }
-    }
-
     $installerInfo = ConvertFrom-Yaml $installerYaml.Content
 
     $scope = $installerInfo.Scope
+    $InstallerLocale = $installerInfo.InstallerLocale
 
     foreach ($_ in $installerInfo.Installers) {
         $arch = $_.Architecture
@@ -1190,17 +1191,27 @@ function A-Get-InstallerInfoFromWinget {
         }
 
         if ($arch -and $matchType) {
-            $res = $arch
+            $key = $arch
+            $installerInfo.$key = $_
+
             if ($scope) {
-                $res += '_' + $scope.ToLower()
+                $key += '_' + $scope.ToLower()
             }
             elseif ($_.Scope) {
-                $res += '_' + $_.Scope.ToLower()
+                $key += '_' + $_.Scope.ToLower()
             }
             else {
-                $res += '_machine'
+                $key += '_machine'
             }
-            $installerInfo.$res = $_
+            $installerInfo.$key = $_
+
+            if ($InstallerLocale) {
+                $key += '_' + $InstallerLocale
+            }
+            elseif ($_.InstallerLocale) {
+                $key += '_' + $_.InstallerLocale
+            }
+            $installerInfo.$key = $_
         }
     }
 
