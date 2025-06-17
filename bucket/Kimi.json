@@ -1,0 +1,66 @@
+{
+    "version": "1.2.0",
+    "description": "一个 AI 助手。An AI assistant.",
+    "homepage": "https://www.kimi.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://kimi.moonshot.cn/user/agreement/modeluse"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://kimi-img.moonshot.cn/app/download/windows/1.2.0_kimi_setup_1.2.0.exe",
+            "hash": "e2b32f4b02031dceb989d7d3dfea46e7fa565cf7e8a977d3adbb43c4a0268307"
+        }
+    },
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "Kimi 智能助手.exe",
+            "Kimi 智能助手"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$LinkPaths = @(\"$env:AppData\\kimi\", \"$env:LocalAppData\\KimiAppCache\")",
+        "A-New-LinkDirectory $LinkPaths"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'MoonshotAI.Kimi' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
