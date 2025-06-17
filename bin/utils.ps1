@@ -1111,7 +1111,7 @@ function A-Get-InstallerInfoFromWinget {
         [string]$InstallerType
     )
 
-    Write-Host '--------------------------------------------------------------------------------------' -ForegroundColor Yellow
+    Write-Host
     Write-Host "正在从 winget-pkgs 中获取 $Package 安装信息" -ForegroundColor Green
 
     $rootDir = $Package.ToLower()[0]
@@ -1122,11 +1122,12 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     try {
-        $versionList = Invoke-WebRequest -Uri $url -ConnectionTimeoutSeconds 30 -OperationTimeoutSeconds 30
+        $versionList = Invoke-WebRequest -Uri $url -ConnectionTimeoutSeconds 5 -OperationTimeoutSeconds 10
         Write-Host "正在访问: $url" -ForegroundColor Green
     }
     catch {
-        Write-Host "访问 $url 失败" -ForegroundColor Red
+        Write-Host "::error::访问 $url 失败" -ForegroundColor Red
+        Write-Host
         return
     }
 
@@ -1151,11 +1152,12 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        $installerYaml = Invoke-WebRequest -Uri $url -ConnectionTimeoutSeconds 30 -OperationTimeoutSeconds 30
+        $installerYaml = Invoke-WebRequest -Uri $url -ConnectionTimeoutSeconds 5 -OperationTimeoutSeconds 10
         Write-Host "正在访问: $url" -ForegroundColor Green
     }
     catch {
-        Write-Host "访问 $url 失败" -ForegroundColor Red
+        Write-Host "::error::访问 $url 失败" -ForegroundColor Red
+        Write-Host
         return
     }
 
@@ -1164,10 +1166,10 @@ function A-Get-InstallerInfoFromWinget {
         try {
             Install-Module powershell-yaml -Repository PSGallery -Force
             Import-Module -Name powershell-yaml -Force
-            Write-Host "安装并导入 powershell-yaml 模块" -ForegroundColor Green
+            Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
         }
         catch {
-            Write-Host "安装 powershell-yaml 模块失败" -ForegroundColor Red
+            Write-Host "::error::安装并导入 powershell-yaml 模块失败" -ForegroundColor Red
         }
     }
 
@@ -1204,6 +1206,9 @@ function A-Get-InstallerInfoFromWinget {
 
     # 写入到 bin\scoop-auto-check-update-temp-data.jsonc，用于后续读取
     $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
+
+    Write-Host "$Package 安装信息获取成功，进行版本比对" -ForegroundColor Green
+    Write-Host
 
     $installerInfo
 }
