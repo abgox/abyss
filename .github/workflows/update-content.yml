@@ -1,4 +1,5 @@
-name: Update README
+name: Update Content
+
 on:
   workflow_dispatch:
   workflow_run:
@@ -7,8 +8,10 @@ on:
   push:
     branches:
       - main
+
 permissions:
   contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -16,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate list and update README content
+      - name: Generate list and update content
         shell: pwsh
         run: |
           .\bin\generate-list.ps1
@@ -26,5 +29,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Automatically update README"
+          git commit -m "Automatically update some content"
           git push
