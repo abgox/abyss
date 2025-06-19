@@ -162,13 +162,15 @@ foreach ($path in $PathList) {
         $tag += if ($NoSilentUninstall) { $label }
 
         ## font
-        if ($isCN) {
-            $label = '<code title="' + $app + ' 是一个字体">Font</code>'
+        if (A-Test-ScriptPattern $json '.*A-Add-Font.*') {
+            if ($isCN) {
+                $label = '<code title="' + $app + ' 是一个字体">Font</code>'
+            }
+            else {
+                $label = '<code title="' + $app + ' is a font">Font</code>'
+            }
+            $tag += $label
         }
-        else {
-            $label = '<code title="' + $app + ' is a font">Font</code>'
-        }
-        $tag += if ($app -like "Font-*") { $label }
 
         ## NoUpdate
         if ($isCN) {

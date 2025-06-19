@@ -294,86 +294,11 @@ function A-New-LinkDirectory {
         [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
-    # 迁移旧的不合理的目录结构
     for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
         $LinkPath = $LinkPaths[$i]
         $LinkTarget = $LinkTargets[$i]
 
-        $parentTarget = Split-Path $LinkPath.Replace($env:UserProfile, $persist_dir) -Parent
-        if ($LinkPath -like "$env:AppData\*" -or $LinkPath -like "$env:LocalAppData\*") {
-            if (!(Test-Path $parentTarget)) {
-                A-Ensure-Directory $parentTarget
-                $removePath = $null
-                if ($LinkPath -like "*JetBrains\*") {
-                    $old = "$persist_dir\JetBrains\$(Split-Path $LinkPath -Leaf)"
-                    $removePath = "$persist_dir\JetBrains"
-                }
-                elseif ($LinkPath -like "*Files_1y0xx7n9077q4\LocalState" ) {
-                    $old = "$persist_dir\Files_1y0xx7n9077q4\LocalState"
-                    $removePath = "$persist_dir\Files_1y0xx7n9077q4"
-                }
-                elseif ($LinkPath -like "*com.example\keyviz" ) {
-                    $old = "$persist_dir\com.example\keyviz"
-                    $removePath = "$persist_dir\com.example"
-                }
-                elseif ($LinkPath -like "*40174MouriNaruto.NanaZip_gnj4mf6z9tkrc\SystemAppData\Helium" ) {
-                    $old = "$persist_dir\40174MouriNaruto.NanaZip_gnj4mf6z9tkrc\SystemAppData\Helium"
-                    $removePath = "$persist_dir\40174MouriNaruto.NanaZip_gnj4mf6z9tkrc"
-                }
-                elseif ($LinkPath -like "*Netease\CloudMusic" ) {
-                    $old = "$persist_dir\Netease\CloudMusic"
-                    $removePath = "$persist_dir\Netease"
-                }
-                else {
-                    $old = "$persist_dir\$(Split-Path $LinkPath -Leaf)"
-                }
-                if (Test-Path $old) {
-                    Write-Host "$($words["Moving"]) $old => $parentTarget" -ForegroundColor Yellow
-                    Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
-                    if ($removePath) {
-                        Remove-Item $removePath -Force -Recurse -ErrorAction SilentlyContinue
-                    }
-                }
-            }
-        }
-        elseif ($LinkPath -eq "$env:UserProfile\Zotero") {
-            if (!(Test-Path "$persist_dir\Zotero")) {
-                if (Test-Path "$persist_dir\Zotero-UserProfile") {
-                    Rename-Item "$persist_dir\Zotero-UserProfile" -NewName "Zotero" -Force -ErrorAction SilentlyContinue
-                }
-            }
-        }
-        elseif ($LinkPath -like "$env:UserProfile\*\*") {
-            A-Ensure-Directory (Split-Path $parentTarget -Parent)
-            if ($LinkPath -like "*Documents\Tencent Files\*") {
-                if ($LinkPath -like "*Documents\Tencent Files\nt_qq") {
-                    $old = "$persist_dir\nt_qq"
-                    if (Test-Path $old) {
-                        Write-Host "$($words["Moving"]) $old => $parentTarget" -ForegroundColor Yellow
-                        Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
-                    }
-                }
-                else {
-                    $old = "$persist_dir\$(Split-Path (Split-Path $LinkPath -Parent) -Leaf)"
-                    if (Test-Path $old) {
-                        Write-Host "$($words["Moving"]) $old => $(Split-Path $parentTarget -Parent)" -ForegroundColor Yellow
-                        Move-Item -Path $old -Destination (Split-Path $parentTarget -Parent) -Force -ErrorAction SilentlyContinue
-                    }
-                }
-            }
-            else {
-                if (!(Test-Path $parentTarget)) {
-                    A-Ensure-Directory $parentTarget
-                    $old = "$persist_dir\$(Split-Path $LinkPath -Leaf)"
-                    if (Test-Path $old) {
-                        Write-Host "$($words["Moving"]) $old => $parentTarget" -ForegroundColor Yellow
-                        Move-Item -Path $old -Destination $parentTarget -Force -ErrorAction SilentlyContinue
-                    }
-                }
-            }
-        }
-
-        if (!$LinkTargets[$i]) {
+        if (!$LinkTarget) {
             if ($LinkPath -notlike "*$env:UserProfile*") {
                 Write-Host $words["The number of links is wrong"] -ForegroundColor Red
                 exit 1
