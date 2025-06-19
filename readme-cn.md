@@ -37,7 +37,7 @@
 
 #### Bucket
 
-- `abyss` 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 的命名格式: `Publisher.PackageIdentifier`
+- `abyss` 参考并使用了 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 的命名格式: `Publisher.PackageIdentifier`
 
 #### Manifest
 
@@ -64,7 +64,7 @@
 2. 安装应用
 
    ```pwsh
-   scoop install abyss/InputTip-zip
+   scoop install abyss/abgox.InputTip-zip
    ```
 
 ### 如果你没有使用 Scoop
@@ -92,7 +92,7 @@
 2. 安装 [scoop-install](https://gitee.com/abgox/scoop-install)
 
    ```pwsh
-   scoop install abyss/scoop-install
+   scoop install abyss/abgox.scoop-install
    ```
 
 3. 设置 url 替换配置
@@ -105,7 +105,7 @@
 4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
 
    ```pwsh
-   scoop-install abyss/InputTip-zip
+   scoop-install abyss/abgox.InputTip-zip
    ```
 
 5. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)
@@ -140,16 +140,16 @@
 
 - Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录中的数据文件
 
-  - 以 [PSCompletions](./bucket/PSCompletions.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\PSCompletions` 目录中
+  - 以 [abgox.PSCompletions](./bucket/abgox.PSCompletions.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\abgox.PSCompletions` 目录中
   - 然后会持久化(persist)数据目录和配置文件:
 
-    - `D:\Scoop\apps\PSCompletions\completions` => `D:\Scoop\persist\PSCompletions\completions`
-    - `D:\Scoop\apps\PSCompletions\data.json` => `D:\Scoop\persist\PSCompletions\data.json`
+    - `D:\Scoop\apps\abgox.PSCompletions\completions` => `D:\Scoop\persist\abgox.PSCompletions\completions`
+    - `D:\Scoop\apps\abgox.PSCompletions\data.json` => `D:\Scoop\persist\abgox.PSCompletions\data.json`
 
-  - 当卸载 [PSCompletions](./bucket/PSCompletions.json) 时，Scoop 只会删除 `D:\Scoop\apps\PSCompletions` 目录，而不会删除 `D:\Scoop\persist\PSCompletions` 目录
-    - 因此，它的设置、补全数据仍然会保存在 `D:\Scoop\persist\PSCompletions` 目录中
+  - 当卸载 [abgox.PSCompletions](./bucket/abgox.PSCompletions.json) 时，Scoop 只会删除 `D:\Scoop\apps\abgox.PSCompletions` 目录，而不会删除 `D:\Scoop\persist\abgox.PSCompletions` 目录
+    - 因此，它的设置、补全数据仍然会保存在 `D:\Scoop\persist\abgox.PSCompletions` 目录中
     - 重新安装后，又会继续使用这些数据
-  - 如果卸载时使用了 `-p/--purge` 参数，`D:\Scoop\persist\PSCompletions` 目录才会被删除
+  - 如果卸载时使用了 `-p/--purge` 参数，`D:\Scoop\persist\abgox.PSCompletions` 目录才会被删除
 
 - 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
   - `abyss` 中的一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
@@ -164,10 +164,10 @@
 - Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
 - 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
 - 像这样的应用，`abyss` 选择使用 `New-Item -ItemType Junction` 进行链接
-- 以 [VSCode](./bucket/VSCode.json) 为例
-  - [VSCode](./bucket/VSCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
+- 以 [Microsoft.VisualStudioCode](./bucket/Microsoft.VisualStudioCode.json) 为例
+  - [Microsoft.VisualStudioCode](./bucket/Microsoft.VisualStudioCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
-  - `$persist_dir` = `D:\Scoop\persist\VSCode`
+  - `$persist_dir` = `D:\Scoop\persist\Microsoft.VisualStudioCode`
   - 它会进行链接:
     - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
     - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
