@@ -33,7 +33,13 @@
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
 > - 如果其他 bucket 想要合并它们，请谨慎检查可用性
 
-### 一些特别的功能
+### 特性
+
+#### Bucket
+
+- `abyss` 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 的命名格式: `Publisher.PackageIdentifier`
+
+#### Manifest
 
 - 无法使用 [persist](#persist) 的应用，会使用 [Link](#link) 实现
 - 当卸载和更新应用时，会先尝试终止进程，详情参考 [Config](#config)
@@ -108,7 +114,7 @@
 
 ### Config
 
-- `abyss` 中的应用会包含 [一些特别的功能](#一些特别的功能)，由配置项 `app-uninstall-action-level` 控制
+- `abyss` 中的应用会包含一些 [特性](#特性)，由配置项 `app-uninstall-action-level` 控制
 - 你可以通过以下命令去设置
 
   ```pwsh

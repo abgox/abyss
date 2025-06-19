@@ -35,6 +35,12 @@
 
 ### Features
 
+#### Bucket
+
+- `abyss` draws on the naming format of [winget-pkgs](https://github.com/microsoft/winget-pkgs): `Publisher.PackageIdentifier`
+
+#### Manifest
+
 - For apps that cannot use [persist](#persist), [Link](#link) will be used as a fallback.
 - When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
 - Improved information output during installation and uninstallation.
@@ -104,7 +110,7 @@
 
 ### Config
 
-- Apps in `abyss` include [some features](#features) controlled by `app-uninstall-action-level`.
+- Apps in `abyss` have some [features](#features) controlled by `app-uninstall-action-level`.
 - You can set it using the following command:
 
   ```pwsh
