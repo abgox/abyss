@@ -322,6 +322,9 @@
             "errorMessage": "当前的 hash 值格式错误，请参考 https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#optional-properties"
         },
         "architecture_property": {
+            "examples": [
+                {}
+            ],
             "properties": {
                 "bin": {
                     "$ref": "#/definitions/bin"
@@ -999,8 +1002,7 @@
                                 [
                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                     "A-Start-PostInstall",
-                                    "$LinkPaths = @(\"$env:AppData\\xxx\")",
-                                    "A-New-LinkDirectory $LinkPaths"
+                                    "A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
                                 ]
                             ],
                             "type": "array",
@@ -1022,9 +1024,8 @@
                                             ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                             "A-Start-PostInstall",
                                             "A-Ensure-Directory",
-                                            "$LinkPaths = @(\"$env:AppData\\xxx\")",
-                                            "A-New-LinkFile $LinkPaths",
-                                            "A-New-LinkDirectory $LinkPaths",
+                                            "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
+                                            "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
                                             "A-Add-Font",
                                             "$PackageFamilyName = \"\"",
                                             "A-Add-MsixPackage",
@@ -1035,9 +1036,8 @@
                                             "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
                                             "函数\n- 表示 `post_install` 的开始",
                                             "函数\n- 确保指定目录路径存在",
-                                            "变量\n- 定义链接的目标路径\n- 例如: `$LinkPaths = @(\"$env:AppData\\xxx\")`",
-                                            "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile $LinkPaths`",
-                                            "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory $LinkPaths`",
+                                            "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`",
+                                            "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`",
                                             "函数\n- 安装字体",
                                             "变量\n- 定义 AppX/Msix 包的 PackageFamilyName\n- 例如: `$PackageFamilyName = \"Microsoft.WindowsCalculator_8wekyb3d8bbwe\"`",
                                             "函数\n- 安装 AppX/Msix 包\n- 需要提前定义变量: `$PackageFamilyName`\n- 示例: \n    - `A-Add-MsixPackage`: 使用 Scoop 上下文的 $fname，添加所有下载的后缀为 .msixbundle 的应用包\n    - `A-Add-MsixPackage @(\"dl.msixbundle\")`: 添加指定的文件名的应用包",
@@ -1059,8 +1059,7 @@
                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                     "A-Start-PreUninstall",
                                     "A-Stop-Process",
-                                    "A-Remove-Link",
-                                    "A-Remove-TempData"
+                                    "A-Remove-Link"
                                 ]
                             ],
                             "type": "array",
@@ -2005,6 +2004,22 @@
                     }
                 }
             ]
+        },
+        {
+            "$comment": "abyss bucket 必须使用 architecture 明确指定架构",
+            "if": {
+                "required": [
+                    "url"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "url": {
+                        "not": true,
+                        "errorMessage": "abyss bucket 不允许使用 url 字段，请使用 architecture"
+                    }
+                }
+            }
         },
         // {
         //   "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀。有些会通过 A-Install-Exe 安装，但 schema 无法检测到，会存在误判",
