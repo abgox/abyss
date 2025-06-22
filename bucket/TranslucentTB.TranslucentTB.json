@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/TranslucentTB/TranslucentTB/blob/release/LICENSE.md"
     },
-    "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/2025.1/bundle.msixbundle",
-    "hash": "56f7bf19d76cdad029c1a5d5edca7b3d9855f200df976f6e2628bf5caee1ac49",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/2025.1/bundle.msixbundle",
+            "hash": "56f7bf19d76cdad029c1a5d5edca7b3d9855f200df976f6e2628bf5caee1ac49"
+        }
+    },
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall"
@@ -15,10 +19,9 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$PackageFamilyName = \"28017CharlesMilette.TranslucentTB_v826wp6bftszj\"",
+        "$PackageFamilyName = '28017CharlesMilette.TranslucentTB_v826wp6bftszj'",
         "A-Add-MsixPackage",
-        "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -35,6 +38,10 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/$version/bundle.msixbundle"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/$version/bundle.msixbundle"
+            }
+        }
     }
 }

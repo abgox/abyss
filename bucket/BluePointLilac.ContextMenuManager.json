@@ -6,8 +6,16 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/BluePointLilac/ContextMenuManager/blob/master/LICENSE"
     },
-    "url": "https://github.com/BluePointLilac/ContextMenuManager/releases/download/3.3.3.1/ContextMenuManager.NET.4.0.exe",
-    "hash": "1352c2222d2d28dd1a8824334f16c0676dfe88cd7211de873ec9b125f6782ec7",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/BluePointLilac/ContextMenuManager/releases/download/3.3.3.1/ContextMenuManager.NET.4.0.exe",
+            "hash": "1352c2222d2d28dd1a8824334f16c0676dfe88cd7211de873ec9b125f6782ec7"
+        },
+        "32bit": {
+            "url": "https://github.com/BluePointLilac/ContextMenuManager/releases/download/3.3.3.1/ContextMenuManager.NET.4.0.exe",
+            "hash": "1352c2222d2d28dd1a8824334f16c0676dfe88cd7211de873ec9b125f6782ec7"
+        }
+    },
     "shortcuts": [
         [
             "ContextMenuManager.NET.4.0.exe",
@@ -21,8 +29,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\ContextMenuManager\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\ContextMenuManager\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -38,6 +45,13 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/BluePointLilac/ContextMenuManager/releases/download/$version/ContextMenuManager.NET.4.0.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/BluePointLilac/ContextMenuManager/releases/download/$version/ContextMenuManager.NET.4.0.exe"
+            },
+            "32bit": {
+                "url": "https://github.com/BluePointLilac/ContextMenuManager/releases/download/$version/ContextMenuManager.NET.4.0.exe"
+            }
+        }
     }
 }

@@ -6,8 +6,12 @@
         "identifier": "Apache License 2.0",
         "url": "https://github.com/jgraph/drawio-desktop/blob/dev/LICENSE"
     },
-    "url": "https://github.com/jgraph/drawio-desktop/releases/download/v27.0.9/draw.io-27.0.9-windows.zip",
-    "hash": "f1ba1ab1fd60e6daf7fe51ac5aedae7c8ec393e391048fe432cfc4c00781c408",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jgraph/drawio-desktop/releases/download/v27.0.9/draw.io-27.0.9-windows.zip",
+            "hash": "f1ba1ab1fd60e6daf7fe51ac5aedae7c8ec393e391048fe432cfc4c00781c408"
+        }
+    },
     "bin": "draw.io.exe",
     "shortcuts": [
         [
@@ -22,8 +26,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\draw.io\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\draw.io\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -41,6 +44,10 @@
         "github": "https://github.com/jgraph/drawio-desktop"
     },
     "autoupdate": {
-        "url": "https://github.com/jgraph/drawio-desktop/releases/download/v$version/draw.io-$version-windows.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jgraph/drawio-desktop/releases/download/v$version/draw.io-$version-windows.zip"
+            }
+        }
     }
 }

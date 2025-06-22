@@ -6,8 +6,16 @@
         "identifier": "Apache-2.0",
         "url": "https://github.com/wavetermdev/waveterm/blob/main/LICENSE"
     },
-    "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi",
-    "hash": "51858b912557f7cfbbcd864f2450eb1fc8e022ba77994079a1b6d3b68dd570de",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi",
+            "hash": "51858b912557f7cfbbcd864f2450eb1fc8e022ba77994079a1b6d3b68dd570de"
+        },
+        "32bit": {
+            "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi",
+            "hash": "51858b912557f7cfbbcd864f2450eb1fc8e022ba77994079a1b6d3b68dd570de"
+        }
+    },
     "extract_dir": "waveterm",
     "bin": "Wave.exe",
     "shortcuts": [
@@ -23,8 +31,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:UserProfile\\.config\\waveterm\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\waveterm\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -43,6 +50,13 @@
         "github": "https://github.com/wavetermdev/waveterm"
     },
     "autoupdate": {
-        "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi"
+            },
+            "32bit": {
+                "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi"
+            }
+        }
     }
 }

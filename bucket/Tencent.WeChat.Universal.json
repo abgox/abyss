@@ -11,8 +11,12 @@
         "微信不会安装在 Scoop 目录下，微信的实际安装目录: C:\\Program Files\\Tencent\\Weixin",
         "Scoop 只管理微信的数据(通过 Link)，安装、更新、卸载操作"
     ],
-    "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe",
-    "hash": "22f906689292009e98276eac17044443e7041516e9d5224bae91bd2d842f9288",
+    "architecture": {
+        "64bit": {
+            "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin.exe",
+            "hash": "22f906689292009e98276eac17044443e7041516e9d5224bae91bd2d842f9288"
+        }
+    },
     "shortcuts": [
         [
             "C:\\Program Files\\Tencent\\Weixin\\Weixin.exe",
@@ -28,8 +32,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Tencent\\xwechat\", \"$env:UserProfile\\Documents\\xwechat_files\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\xwechat\", \"$env:UserProfile\\Documents\\xwechat_files\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -57,10 +60,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_machine.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
         }
     }
 }

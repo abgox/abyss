@@ -6,8 +6,16 @@
         "identifier": "GNU Affero General Public License v3.0",
         "url": "https://github.com/AppFlowy-IO/AppFlowy/blob/main/LICENSE"
     },
-    "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/0.9.3/AppFlowy-0.9.3-windows-x86_64.zip",
-    "hash": "dcb54101cd59cabf8194b3292b8eb96aa117009bec7087fe4d4c13a54f2f7698",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/0.9.3/AppFlowy-0.9.3-windows-x86_64.zip",
+            "hash": "dcb54101cd59cabf8194b3292b8eb96aa117009bec7087fe4d4c13a54f2f7698"
+        },
+        "32bit": {
+            "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/0.9.3/AppFlowy-0.9.3-windows-x86_64.zip",
+            "hash": "dcb54101cd59cabf8194b3292b8eb96aa117009bec7087fe4d4c13a54f2f7698"
+        }
+    },
     "extract_dir": "AppFlowy",
     "shortcuts": [
         [
@@ -22,8 +30,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\io.appflowy\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\io.appflowy\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -41,6 +48,13 @@
         "github": "https://github.com/AppFlowy-IO/AppFlowy"
     },
     "autoupdate": {
-        "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/$version/AppFlowy-$version-windows-x86_64.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/$version/AppFlowy-$version-windows-x86_64.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/AppFlowy-IO/AppFlowy/releases/download/$version/AppFlowy-$version-windows-x86_64.zip"
+            }
+        }
     }
 }

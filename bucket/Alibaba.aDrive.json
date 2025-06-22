@@ -3,8 +3,12 @@
     "description": "阿里云盘，一款速度快、不打扰、够安全、易于分享的网盘。A cloud drive that is fast, non-intrusive, secure, and easy to share.",
     "homepage": "https://www.alipan.com/",
     "license": "Freemium",
-    "url": "https://cdn.aliyundrive.net/downloads/apps/desktop/update/6.8.7/win32/x64/aDrive-6.8.7.exe",
-    "hash": "6e920e9f6e9ef087cca41bd0339ca70ccc9c01473c7b2b72b2bd74e7706b524c",
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.aliyundrive.net/downloads/apps/desktop/update/6.8.7/win32/x64/aDrive-6.8.7.exe",
+            "hash": "6e920e9f6e9ef087cca41bd0339ca70ccc9c01473c7b2b72b2bd74e7706b524c"
+        }
+    },
     "shortcuts": [
         [
             "aDrive.exe",
@@ -19,8 +23,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\aDrive\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\aDrive\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -47,10 +50,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_user.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
         }
     }
 }

@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/mulaRahul/keyviz/blob/main/LICENSE"
     },
-    "url": "https://github.com/mulaRahul/keyviz/releases/download/v1.0.6/keyviz-v1.0.6-portable.zip",
-    "hash": "5dcebe08768ecd7e86d453f6be36346b2cc744183598195fee4c7b4931a8b4b3",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mulaRahul/keyviz/releases/download/v1.0.6/keyviz-v1.0.6-portable.zip",
+            "hash": "5dcebe08768ecd7e86d453f6be36346b2cc744183598195fee4c7b4931a8b4b3"
+        }
+    },
     "shortcuts": [
         [
             "keyviz-v1.0.6-portable.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\com.example\\keyviz\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\com.example\\keyviz\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -40,7 +43,11 @@
         "github": "https://github.com/mulaRahul/keyviz"
     },
     "autoupdate": {
-        "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz-v$version-portable.zip",
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz-v$version-portable.zip"
+            }
+        },
         "shortcuts": [
             [
                 "keyviz-v$version-portable.exe",

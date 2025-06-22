@@ -3,8 +3,12 @@
     "description": "一个强大的下载管理器。A powerful download manager.",
     "homepage": "https://www.freedownloadmanager.org",
     "license": "Freeware",
-    "url": "https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe",
-    "hash": "f8aba6e3757660a625674dc8512f510944763f387f9db3c4119d0d49d8558f07",
+    "architecture": {
+        "64bit": {
+            "url": "https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe",
+            "hash": "f8aba6e3757660a625674dc8512f510944763f387f9db3c4119d0d49d8558f07"
+        }
+    },
     "innosetup": true,
     "shortcuts": [
         [
@@ -19,8 +23,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:LocalAppData\\Softdeluxe\\Free Download Manager\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Softdeluxe\\Free Download Manager\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -46,10 +49,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_user.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
         }
     }
 }

@@ -6,8 +6,12 @@
         "identifier": "Apache License 2.0",
         "url": "https://github.com/oldj/SwitchHosts/blob/master/LICENSE"
     },
-    "url": "https://github.com/oldj/SwitchHosts/releases/download/v4.2.0/SwitchHosts-4.2.0-win.zip",
-    "hash": "4a36b2e6f65dbf35045c28ed19a50d736fe24139967931bcc293108ca3a0d3ac",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/oldj/SwitchHosts/releases/download/v4.2.0/SwitchHosts-4.2.0-win.zip",
+            "hash": "4a36b2e6f65dbf35045c28ed19a50d736fe24139967931bcc293108ca3a0d3ac"
+        }
+    },
     "shortcuts": [
         [
             "SwitchHosts.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:UserProfile\\.SwitchHosts\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.SwitchHosts\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -41,6 +44,10 @@
         "github": "https://github.com/oldj/SwitchHosts"
     },
     "autoupdate": {
-        "url": "https://github.com/oldj/SwitchHosts/releases/download/v$version/SwitchHosts-$version-win.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/oldj/SwitchHosts/releases/download/v$version/SwitchHosts-$version-win.zip"
+            }
+        }
     }
 }

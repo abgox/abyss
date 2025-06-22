@@ -6,8 +6,12 @@
         "identifier": "MIT",
         "url": "https://github.com/agalwood/Motrix/blob/master/LICENSE"
     },
-    "url": "https://github.com/agalwood/Motrix/releases/download/v1.8.19/Motrix-1.8.19-win.zip",
-    "hash": "5238865630e99dc4981bcc6082ba2b8221c4a543f35b41c0205a34984fd8f3b5",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/agalwood/Motrix/releases/download/v1.8.19/Motrix-1.8.19-win.zip",
+            "hash": "5238865630e99dc4981bcc6082ba2b8221c4a543f35b41c0205a34984fd8f3b5"
+        }
+    },
     "shortcuts": [
         [
             "Motrix.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Motrix\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Motrix\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -40,6 +43,10 @@
         "github": "https://github.com/agalwood/Motrix"
     },
     "autoupdate": {
-        "url": "https://github.com/agalwood/Motrix/releases/download/v$version/Motrix-$version-win.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/agalwood/Motrix/releases/download/v$version/Motrix-$version-win.zip"
+            }
+        }
     }
 }

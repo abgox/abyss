@@ -3,8 +3,12 @@
     "description": "简单便捷的免费卸载程序。The good free uninstaller.",
     "homepage": "https://geekuninstaller.com/",
     "license": "Unknown",
-    "url": "https://geekuninstaller.com/geek.7z",
-    "hash": "c7592de79d2cd5fa6039c61443e46962738256c4c256351c11a06af5ff1f7bc8",
+    "architecture": {
+        "64bit": {
+            "url": "https://geekuninstaller.com/geek.7z",
+            "hash": "c7592de79d2cd5fa6039c61443e46962738256c4c256351c11a06af5ff1f7bc8"
+        }
+    },
     "bin": "geek.exe",
     "shortcuts": [
         [
@@ -19,8 +23,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Geek Uninstaller\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Geek Uninstaller\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -39,6 +42,10 @@
         "regex": "<b>([\\d\\.]+)"
     },
     "autoupdate": {
-        "url": "https://geekuninstaller.com/geek.7z"
+        "architecture": {
+            "64bit": {
+                "url": "https://geekuninstaller.com/geek.7z"
+            }
+        }
     }
 }

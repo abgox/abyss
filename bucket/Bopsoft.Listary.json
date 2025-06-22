@@ -3,8 +3,12 @@
     "description": "一个革命性的 Windows 搜索工具。A revolutionary search utility for Windows.",
     "homepage": "https://www.listary.com",
     "license": "Shareware",
-    "url": "https://www.listary.com/download/Listary.exe?version=6.3.2.88#/dl.exe",
-    "hash": "3a23a01c8fcc70298e9f6f9d7c070c88d1da5eb441bcb422ef97f86a5710eb71",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.listary.com/download/Listary.exe?version=6.3.2.88#/dl.exe",
+            "hash": "3a23a01c8fcc70298e9f6f9d7c070c88d1da5eb441bcb422ef97f86a5710eb71"
+        }
+    },
     "innosetup": true,
     "shortcuts": [
         [
@@ -19,8 +23,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Listary\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Listary\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -39,6 +42,10 @@
         "regex": "<h3[^>]+>([\\d\\.]+)"
     },
     "autoupdate": {
-        "url": "https://www.listary.com/download/Listary.exe?version=$version#/dl.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://www.listary.com/download/Listary.exe?version=$version#/dl.exe"
+            }
+        }
     }
 }

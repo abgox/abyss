@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/GopeedLab/gopeed/blob/main/LICENSE"
     },
-    "url": "https://github.com/GopeedLab/gopeed/releases/download/v1.7.0/Gopeed-v1.7.0-windows-amd64-portable.zip",
-    "hash": "5e0672f43db97e2faee8bfd48782fc5b0e29e97ae695af2158f3a9686a3b7087",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/GopeedLab/gopeed/releases/download/v1.7.0/Gopeed-v1.7.0-windows-amd64-portable.zip",
+            "hash": "5e0672f43db97e2faee8bfd48782fc5b0e29e97ae695af2158f3a9686a3b7087"
+        }
+    },
     "bin": "gopeed.exe",
     "shortcuts": [
         [
@@ -18,10 +22,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "$path_persist = \"$persist_dir\\gopeed.db\"",
-        "# ------------------------------------------------------------------",
-        "ensure $persist_dir | Out-Null",
-        "if (!(Test-Path $path_persist)) { New-Item -ItemType File -Path $path_persist -Force | Out-Null }"
+        "A-New-PersistFile \"$persist_dir\\gopeed.db\""
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -43,6 +44,10 @@
         "github": "https://github.com/GopeedLab/gopeed"
     },
     "autoupdate": {
-        "url": "https://github.com/GopeedLab/gopeed/releases/download/v$version/Gopeed-v$version-windows-amd64-portable.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/GopeedLab/gopeed/releases/download/v$version/Gopeed-v$version-windows-amd64-portable.zip"
+            }
+        }
     }
 }

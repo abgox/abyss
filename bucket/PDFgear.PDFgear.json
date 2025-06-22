@@ -3,8 +3,12 @@
     "description": "一款功能齐全的 PDF 管理软件。A piece of full-featured PDF management software.",
     "homepage": "https://www.pdfgear.com/",
     "license": "Freeware",
-    "url": "https://downloadfiles.pdfgear.com/releases/windows/pdfgear_setup_v2.1.12.exe",
-    "hash": "c8a19a4a06fb8d28812916ff1735cd4dc0f82bf16fbc5100bbeb71a44f32ccf9",
+    "architecture": {
+        "64bit": {
+            "url": "https://downloadfiles.pdfgear.com/releases/windows/pdfgear_setup_v2.1.12.exe",
+            "hash": "c8a19a4a06fb8d28812916ff1735cd4dc0f82bf16fbc5100bbeb71a44f32ccf9"
+        }
+    },
     "innosetup": true,
     "shortcuts": [
         [
@@ -19,8 +23,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:LocalAppData\\PDFgear\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\PDFgear\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -46,10 +49,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_user.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
         }
     }
 }

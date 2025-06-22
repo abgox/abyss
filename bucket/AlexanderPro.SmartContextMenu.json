@@ -6,8 +6,16 @@
         "identifier": "MIT",
         "url": "https://github.com/AlexanderPro/SmartContextMenu/blob/main/LICENSE"
     },
-    "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v1.7.0/SmartContextMenu_v1.7.0.zip",
-    "hash": "911eef51ba148b6b3b15b2b970aea18fd34d4afc2e6f63447feb9e8b8f13bd17",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v1.7.0/SmartContextMenu_v1.7.0.zip",
+            "hash": "911eef51ba148b6b3b15b2b970aea18fd34d4afc2e6f63447feb9e8b8f13bd17"
+        },
+        "32bit": {
+            "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v1.7.0/SmartContextMenu_v1.7.0.zip",
+            "hash": "911eef51ba148b6b3b15b2b970aea18fd34d4afc2e6f63447feb9e8b8f13bd17"
+        }
+    },
     "shortcuts": [
         [
             "SmartContextMenu.exe",
@@ -21,8 +29,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\SmartContextMenu\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\SmartContextMenu\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -38,6 +45,13 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v$version/SmartContextMenu_v$version.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v$version/SmartContextMenu_v$version.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/AlexanderPro/SmartContextMenu/releases/download/v$version/SmartContextMenu_v$version.zip"
+            }
+        }
     }
 }

@@ -6,8 +6,12 @@
         "identifier": "Unknown",
         "url": "https://github.com/InkTimeRecord/TTime/blob/main/LICENSE.txt"
     },
-    "url": "https://github.com/InkTimeRecord/TTime/releases/download/v0.9.15/TTime-0.9.15-setup.exe#dl.7z",
-    "hash": "fd40f6ed0e91ac785d3f1e46868a9c5db72202d93d88b58cf91fcc1fdaabfe09",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/InkTimeRecord/TTime/releases/download/v0.9.15/TTime-0.9.15-setup.exe#dl.7z",
+            "hash": "fd40f6ed0e91ac785d3f1e46868a9c5db72202d93d88b58cf91fcc1fdaabfe09"
+        }
+    },
     "shortcuts": [
         [
             "TTime.exe",
@@ -22,8 +26,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\time-translate\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\time-translate\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -41,6 +44,10 @@
         "github": "https://github.com/InkTimeRecord/TTime"
     },
     "autoupdate": {
-        "url": "https://github.com/InkTimeRecord/TTime/releases/download/v$version/TTime-$version-setup.exe#dl.7z"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/InkTimeRecord/TTime/releases/download/v$version/TTime-$version-setup.exe#dl.7z"
+            }
+        }
     }
 }

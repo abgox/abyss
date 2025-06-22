@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/Ferry-200/coriander_player/blob/main/LICENSE"
     },
-    "url": "https://github.com/Ferry-200/coriander_player/releases/download/v1.5.1/Coriander.Player.1.5.1.zip",
-    "hash": "d7f0430e5deec3461fba465b20ecf91ff85a92bd782a8f280fc09cc1f0418ed2",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Ferry-200/coriander_player/releases/download/v1.5.1/Coriander.Player.1.5.1.zip",
+            "hash": "d7f0430e5deec3461fba465b20ecf91ff85a92bd782a8f280fc09cc1f0418ed2"
+        }
+    },
     "shortcuts": [
         [
             "coriander_player.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:UserProfile\\Documents\\coriander_player\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:UserProfile\\Documents\\coriander_player\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -38,6 +41,10 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/Ferry-200/coriander_player/releases/download/v$version/Coriander.Player.$version.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Ferry-200/coriander_player/releases/download/v$version/Coriander.Player.$version.zip"
+            }
+        }
     }
 }

@@ -6,8 +6,12 @@
         "identifier": "MIT",
         "url": "https://github.com/usebruno/bruno/blob/main/license.md"
     },
-    "url": "https://github.com/usebruno/bruno/releases/download/v2.6.1/bruno_2.6.1_x64_win.zip",
-    "hash": "e85cf0c85bc1a39b505241747d4acbf6547adb00ac7851fe73666e07aa90b573",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/usebruno/bruno/releases/download/v2.6.1/bruno_2.6.1_x64_win.zip",
+            "hash": "e85cf0c85bc1a39b505241747d4acbf6547adb00ac7851fe73666e07aa90b573"
+        }
+    },
     "shortcuts": [
         [
             "Bruno.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\bruno\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\bruno\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -40,6 +43,10 @@
         "github": "https://github.com/usebruno/bruno"
     },
     "autoupdate": {
-        "url": "https://github.com/usebruno/bruno/releases/download/v$version/bruno_$version_x64_win.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/usebruno/bruno/releases/download/v$version/bruno_$version_x64_win.zip"
+            }
+        }
     }
 }

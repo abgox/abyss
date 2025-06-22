@@ -6,8 +6,20 @@
         "identifier": "MIT",
         "url": "https://github.com/0x7c13/Notepads/blob/master/LICENSE.txt"
     },
-    "url": "https://github.com/0x7c13/Notepads/releases/download/v1.5.6.0/Notepads_1.5.6.0_x86_x64_arm64.msixbundle",
-    "hash": "64e48c47ee39aa63616946e4d9f3d287d96b4650fc119eb8cbc73a1d58b36540",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/0x7c13/Notepads/releases/download/v1.5.6.0/Notepads_1.5.6.0_x86_x64_arm64.msixbundle",
+            "hash": "64e48c47ee39aa63616946e4d9f3d287d96b4650fc119eb8cbc73a1d58b36540"
+        },
+        "32bit": {
+            "url": "https://github.com/0x7c13/Notepads/releases/download/v1.5.6.0/Notepads_1.5.6.0_x86_x64_arm64.msixbundle",
+            "hash": "64e48c47ee39aa63616946e4d9f3d287d96b4650fc119eb8cbc73a1d58b36540"
+        },
+        "arm64": {
+            "url": "https://github.com/0x7c13/Notepads/releases/download/v1.5.6.0/Notepads_1.5.6.0_x86_x64_arm64.msixbundle",
+            "hash": "64e48c47ee39aa63616946e4d9f3d287d96b4650fc119eb8cbc73a1d58b36540"
+        }
+    },
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall"
@@ -15,10 +27,9 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$PackageFamilyName = \"19282JackieLiu.Notepads-Beta_echhpq9pdbte8\"",
+        "$PackageFamilyName = '19282JackieLiu.Notepads-Beta_echhpq9pdbte8'",
         "A-Add-MsixPackage",
-        "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -37,6 +48,16 @@
         "github": "https://github.com/0x7c13/Notepads"
     },
     "autoupdate": {
-        "url": "https://github.com/0x7c13/Notepads/releases/download/v$version/Notepads_$version_x86_x64_arm64.msixbundle"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/0x7c13/Notepads/releases/download/v$version/Notepads_$version_x86_x64_arm64.msixbundle"
+            },
+            "32bit": {
+                "url": "https://github.com/0x7c13/Notepads/releases/download/v$version/Notepads_$version_x86_x64_arm64.msixbundle"
+            },
+            "arm64": {
+                "url": "https://github.com/0x7c13/Notepads/releases/download/v$version/Notepads_$version_x86_x64_arm64.msixbundle"
+            }
+        }
     }
 }

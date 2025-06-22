@@ -6,8 +6,12 @@
         "identifier": "Unknown",
         "url": "https://dcloud.io/license/hbuilder.html"
     },
-    "url": "https://download1.dcloud.net.cn/download/HBuilderX.4.66.2025051912.zip",
-    "hash": "4b52581a5288b4e8c05bbed186eb4aaec743772794edc797536fe6d0026b6ac2",
+    "architecture": {
+        "64bit": {
+            "url": "https://download1.dcloud.net.cn/download/HBuilderX.4.66.2025051912.zip",
+            "hash": "4b52581a5288b4e8c05bbed186eb4aaec743772794edc797536fe6d0026b6ac2"
+        }
+    },
     "extract_dir": "HBuilderX",
     "bin": "HBuilderX.exe",
     "shortcuts": [
@@ -23,8 +27,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\HBuilder X\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\HBuilder X\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -44,6 +47,10 @@
         "jsonpath": "$.version"
     },
     "autoupdate": {
-        "url": "https://download1.dcloud.net.cn/download/HBuilderX.$version.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://download1.dcloud.net.cn/download/HBuilderX.$version.zip"
+            }
+        }
     }
 }

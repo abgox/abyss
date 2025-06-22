@@ -3,8 +3,12 @@
     "description": "豆包，字节跳动的 AI 聊天智能对话问答助手，写作文案翻译情感陪伴编程全能工具。DouBao is a chatbot AI assistant by ByteDance. It can answer questions, write essays, translate text, and provide programming support.",
     "homepage": "https://www.doubao.com/",
     "license": "Unknown",
-    "url": "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao_pc/1.60.6/Doubao_installer_1.60.6.exe",
-    "hash": "2c1d45c7b6e04b70055b0c46c3edb363c549a168e05a9ccbe38fdaff3871658f",
+    "architecture": {
+        "64bit": {
+            "url": "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao_pc/1.60.6/Doubao_installer_1.60.6.exe",
+            "hash": "2c1d45c7b6e04b70055b0c46c3edb363c549a168e05a9ccbe38fdaff3871658f"
+        }
+    },
     "shortcuts": [
         [
             "Doubao\\Doubao.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:LocalAppData\\Doubao\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Doubao\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -49,10 +52,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_user.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
         }
     }
 }

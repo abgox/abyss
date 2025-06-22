@@ -6,8 +6,12 @@
         "identifier": "Apache License 2.0,Vim",
         "url": "https://github.com/neovim/neovim/blob/master/LICENSE.txt"
     },
-    "url": "https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-win64.zip",
-    "hash": "dfa66afc95422b7c4a0f8ae330f30a00dbb8e9848993d7bfde8e2e85be30de13",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-win64.zip",
+            "hash": "dfa66afc95422b7c4a0f8ae330f30a00dbb8e9848993d7bfde8e2e85be30de13"
+        }
+    },
     "extract_dir": "nvim-win64",
     "bin": "bin\\nvim.exe",
     "shortcuts": [
@@ -23,8 +27,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:LocalAppData\\nvim\",\"$env:LocalAppData\\nvim-data\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\nvim\",\"$env:LocalAppData\\nvim-data\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -42,9 +45,13 @@
         "github": "https://github.com/neovim/neovim"
     },
     "autoupdate": {
-        "url": "https://github.com/neovim/neovim/releases/download/v$version/nvim-win64.zip",
-        "hash": {
-            "url": "$url.sha256sum"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/neovim/neovim/releases/download/v$version/nvim-win64.zip",
+                "hash": {
+                    "url": "$url.sha256sum"
+                }
+            }
         }
     }
 }

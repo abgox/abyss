@@ -3,8 +3,12 @@
     "description": "剪映专业版，一款全能易用的桌面端剪辑软件，让创作更简单。A powerful desktop video editor with a simple interface, making it easy to create videos.",
     "homepage": "https://www.capcut.cn/",
     "license": "Freemium",
-    "url": "https://lf3-package.vlabstatic.com/obj/faceu-packages/Jianying_8_5_0_13163_jianyingpro_0_creatortool.exe",
-    "hash": "68037ffcd0771ca7d0122e839d8bec4ec675a2576a0f736b5e54b398a43bbe25",
+    "architecture": {
+        "64bit": {
+            "url": "https://lf3-package.vlabstatic.com/obj/faceu-packages/Jianying_8_5_0_13163_jianyingpro_0_creatortool.exe",
+            "hash": "68037ffcd0771ca7d0122e839d8bec4ec675a2576a0f736b5e54b398a43bbe25"
+        }
+    },
     "shortcuts": [
         [
             "JianyingPro.exe",
@@ -20,8 +24,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:LocalAppData\\JianyingPro\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\JianyingPro\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -48,10 +51,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_user.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
         }
     }
 }

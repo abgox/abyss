@@ -12,13 +12,13 @@
             "hash": "17facedf44e08d328cb8bc8b71e2b936dd8b5ce1c105e42b279cdd8c40f06b15"
         }
     },
-    "extract_dir": "{code_GetDestDir}",
     "innosetup": true,
+    "extract_dir": "{code_GetDestDir}",
     "bin": "bin/trae.cmd",
     "shortcuts": [
         [
             "Trae CN.exe",
-            "Trae"
+            "Trae CN"
         ]
     ],
     "pre_install": [
@@ -28,8 +28,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Trae CN\",\"$env:UserProfile\\.trae-cn\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Trae CN\",\"$env:UserProfile\\.trae-cn\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",

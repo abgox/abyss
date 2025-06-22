@@ -46,8 +46,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Code\",\"$env:UserProfile\\.vscode\")",
-        "A-New-LinkDirectory $LinkPaths",
+        "A-New-LinkDirectory @(\"$env:AppData\\Code\",\"$env:UserProfile\\.vscode\")",
         "$dirpath = \"$dir\".Replace('\\', '\\\\')",
         "$exepath = \"$dir\\Code.exe\".Replace('\\', '\\\\')",
         "'install-associations', 'uninstall-associations', 'install-context', 'uninstall-context', 'install-github-integration', 'uninstall-github-integration' | ForEach-Object {",
@@ -68,22 +67,18 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-TempData @(\"$env:UserProfile\\.vscode\",\"$env:AppData\\Code\")"
+        "A-Remove-TempData @(\"$env:UserProfile\\.vscode\",\"$env:AppData\\Code\")",
+        "if ($cmd -eq 'uninstall') {",
+        "   reg import \"$dir\\uninstall-context.reg\"",
+        "   reg import \"$dir\\uninstall-associations.reg\"",
+        "   reg import \"$dir\\uninstall-github-integration.reg\"",
+        "}"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],
-    "uninstaller": {
-        "script": [
-            "if ($cmd -eq 'uninstall')",
-            "{",
-            "   reg import \"$dir\\uninstall-context.reg\" ",
-            "   reg import \"$dir\\uninstall-github-integration.reg\" ",
-            "}"
-        ]
-    },
     "checkver": {
         "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
         "jsonpath": "$.name"

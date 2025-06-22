@@ -3,8 +3,12 @@
     "description": "123 云盘，一款云存储服务产品。A cloud storage service product.",
     "homepage": "https://www.123pan.com/",
     "license": "Freemium",
-    "url": "https://app.123957.com/pc-pro/windows/240/123pan_2.4.0.exe",
-    "hash": "1c8f1fb3e484ffc4205211ec885028db68d2acc031183aa3ac54de64208a2a25",
+    "architecture": {
+        "64bit": {
+            "url": "https://app.123957.com/pc-pro/windows/240/123pan_2.4.0.exe",
+            "hash": "1c8f1fb3e484ffc4205211ec885028db68d2acc031183aa3ac54de64208a2a25"
+        }
+    },
     "shortcuts": [
         [
             "123pan\\123pan.exe",
@@ -15,8 +19,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "$LinkPaths = @(\"$env:AppData\\123pan\")",
-        "A-New-LinkDirectory $LinkPaths",
+        "A-New-LinkDirectory @(\"$env:AppData\\123pan\")",
         "A-Install-Exe -SuccessFile '123pan\\uninst.exe'"
     ],
     "post_install": [
@@ -49,10 +52,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_machine.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
         }
     }
 }

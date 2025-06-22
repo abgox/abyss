@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/manuelernestog/weektodo/blob/main/LICENSE"
     },
-    "url": "https://github.com/manuelernestog/weektodo/releases/download/v2.2.0/WeekToDo.Setup.2.2.0.exe",
-    "hash": "c214f85207e4d0e377b573f8d3b25d5badcc06e5cfb4315187f1ca77a001ace0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/manuelernestog/weektodo/releases/download/v2.2.0/WeekToDo.Setup.2.2.0.exe",
+            "hash": "c214f85207e4d0e377b573f8d3b25d5badcc06e5cfb4315187f1ca77a001ace0"
+        }
+    },
     "shortcuts": [
         [
             "WeekToDo.exe",
@@ -22,8 +26,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\WeekToDo\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\WeekToDo\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -43,6 +46,10 @@
         "github": "https://github.com/manuelernestog/weektodo"
     },
     "autoupdate": {
-        "url": "https://github.com/manuelernestog/weektodo/releases/download/v$version/WeekToDo.Setup.$version.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/manuelernestog/weektodo/releases/download/v$version/WeekToDo.Setup.$version.exe"
+            }
+        }
     }
 }

@@ -2,9 +2,13 @@
     "version": "7.6.10-Release.82010807",
     "description": "钉钉，阿里巴巴的智能移动办公平台。A smart mobile office platform by Alibaba.",
     "homepage": "https://www.dingtalk.com/",
-    "license": "Unknown",
-    "url": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_installer/Release/DingTalk_v7.6.10.82010807.exe",
-    "hash": "38d295b4043318a467bcfa569a80d9d4fcb477c2bb524398f724a0a218bc52d0",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_installer/Release/DingTalk_v7.6.10.82010807.exe",
+            "hash": "38d295b4043318a467bcfa569a80d9d4fcb477c2bb524398f724a0a218bc52d0"
+        }
+    },
     "shortcuts": [
         [
             "DingtalkLauncher.exe",
@@ -15,8 +19,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "$LinkPaths = @(\"$env:AppData\\DingTalk\")",
-        "A-New-LinkDirectory $LinkPaths",
+        "A-New-LinkDirectory @(\"$env:AppData\\DingTalk\")",
         "A-Install-Exe"
     ],
     "post_install": [
@@ -50,10 +53,14 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "$matchX64",
-        "hash": {
-            "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-            "jsonpath": "$.x64_machine.InstallerSha256"
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
         }
     }
 }

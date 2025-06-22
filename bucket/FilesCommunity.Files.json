@@ -6,8 +6,16 @@
         "identifier": "MIT",
         "url": "https://github.com/files-community/Files/blob/main/LICENSE"
     },
-    "url": "https://cdn.files.community/files/stable/Files.Package_3.9.1.0_Test/Files.Package_3.9.1.0_x64_arm64.msixbundle",
-    "hash": "f7080a54255254f2b99815f91c84b1af57a7599eafa60a4ae0a0ca79f1271cbf",
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.files.community/files/stable/Files.Package_3.9.1.0_Test/Files.Package_3.9.1.0_x64_arm64.msixbundle",
+            "hash": "f7080a54255254f2b99815f91c84b1af57a7599eafa60a4ae0a0ca79f1271cbf"
+        },
+        "arm64": {
+            "url": "https://cdn.files.community/files/stable/Files.Package_3.9.1.0_Test/Files.Package_3.9.1.0_x64_arm64.msixbundle",
+            "hash": "f7080a54255254f2b99815f91c84b1af57a7599eafa60a4ae0a0ca79f1271cbf"
+        }
+    },
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall"
@@ -17,8 +25,7 @@
         "A-Start-PostInstall",
         "$PackageFamilyName = 'Files_1y0xx7n9077q4'",
         "A-Add-MsixPackage",
-        "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\\LocalState\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\\LocalState\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -37,6 +44,13 @@
         "github": "https://github.com/files-community/Files"
     },
     "autoupdate": {
-        "url": "https://cdn.files.community/files/stable/Files.Package_$version.0_Test/Files.Package_$version.0_x64_arm64.msixbundle"
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.files.community/files/stable/Files.Package_$version.0_Test/Files.Package_$version.0_x64_arm64.msixbundle"
+            },
+            "arm64": {
+                "url": "https://cdn.files.community/files/stable/Files.Package_$version.0_Test/Files.Package_$version.0_x64_arm64.msixbundle"
+            }
+        }
     }
 }

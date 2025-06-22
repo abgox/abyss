@@ -3,10 +3,10 @@
     "description": "适用于 Windows 和 DOS 的全面硬件分析、监测与报告。Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS.",
     "homepage": "https://www.hwinfo.com",
     "license": "Freeware",
-    "url": "https://www.hwinfo.com/files/hwi_826.zip",
-    "hash": "60c9580fbbeb0e76158498730394258caade62b269f0536eb1947950b5e83491",
     "architecture": {
         "64bit": {
+            "url": "https://www.hwinfo.com/files/hwi_826.zip",
+            "hash": "60c9580fbbeb0e76158498730394258caade62b269f0536eb1947950b5e83491",
             "bin": [
                 [
                     "HWiNFO64.exe",
@@ -21,6 +21,8 @@
             ]
         },
         "32bit": {
+            "url": "https://www.hwinfo.com/files/hwi_826.zip",
+            "hash": "60c9580fbbeb0e76158498730394258caade62b269f0536eb1947950b5e83491",
             "bin": [
                 [
                     "HWiNFO32.exe",
@@ -35,6 +37,8 @@
             ]
         },
         "arm64": {
+            "url": "https://www.hwinfo.com/files/hwi_826.zip",
+            "hash": "60c9580fbbeb0e76158498730394258caade62b269f0536eb1947950b5e83491",
             "bin": [
                 [
                     "HWiNFO_ARM64.exe",
@@ -53,7 +57,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "foreach ($arch in @('64','32','_ARM64')) {",
-        "    A-New-PersistFile \"$dir\\HWiNFO$arch.INI\" -Content @('[Settings]', 'AutoUpdate=0') -Encoding ascii",
+        "    A-New-PersistFile \"$persist_dir\\HWiNFO$arch.INI\" -Content @('[Settings]', 'AutoUpdate=0') -Encoding ascii",
         "    if (Test-PATH \"$persist_dir\\HWiNFO$arch_KEY.txt\" -PathType Leaf) {",
         "        Copy-Item \"$persist_dir\\HWiNFO$arch_KEY.txt\" \"$dir\"",
         "    }",
@@ -99,6 +103,16 @@
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
-        "url": "https://www.hwinfo.com/files/hwi_$majorVersion$minorVersion.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://www.hwinfo.com/files/hwi_$majorVersion$minorVersion.zip"
+            },
+            "32bit": {
+                "url": "https://www.hwinfo.com/files/hwi_$majorVersion$minorVersion.zip"
+            },
+            "arm64": {
+                "url": "https://www.hwinfo.com/files/hwi_$majorVersion$minorVersion.zip"
+            }
+        }
     }
 }

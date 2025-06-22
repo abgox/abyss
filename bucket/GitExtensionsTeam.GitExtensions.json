@@ -6,8 +6,12 @@
         "identifier": "GNU GENERAL PUBLIC LICENSE",
         "url": "https://github.com/gitextensions/gitextensions/blob/master/LICENSE.md"
     },
-    "url": "https://github.com/gitextensions/gitextensions/releases/download/v6.0/GitExtensions-Portable-x64-6.0.0.18195-2121cd76b.zip",
-    "hash": "6f1ff0c28e0aa37437405314e13857d6398418bb02ec3fa670879ecd729e34ba",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gitextensions/gitextensions/releases/download/v6.0/GitExtensions-Portable-x64-6.0.0.18195-2121cd76b.zip",
+            "hash": "6f1ff0c28e0aa37437405314e13857d6398418bb02ec3fa670879ecd729e34ba"
+        }
+    },
     "shortcuts": [
         [
             "GitExtensions.exe",
@@ -17,10 +21,7 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "$path_persist = \"$persist_dir\\GitExtensions.settings\"",
-        "# ------------------------------------------------------------------",
-        "ensure $persist_dir | Out-Null",
-        "if (!(Test-Path $path_persist)) { New-Item -ItemType File -Path $path_persist -Force | Out-Null }"
+        "A-New-PersistFile \"$persist_dir\\GitExtensions.settings\""
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -44,6 +45,10 @@
         "regex": "/v(?<tag>[\\d.]+)/GitExtensions-Portable-(?:x[\\d.]+)-(?<version>[\\d.]+)-(?<commit>[\\w]+).zip"
     },
     "autoupdate": {
-        "url": "https://github.com/gitextensions/gitextensions/releases/download/v$matchTag/GitExtensions-Portable-x64-$version-$matchCommit.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gitextensions/gitextensions/releases/download/v$matchTag/GitExtensions-Portable-x64-$version-$matchCommit.zip"
+            }
+        }
     }
 }

@@ -6,8 +6,12 @@
         "identifier": "GPL-2.0",
         "url": "https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpg4win.git;a=blob_plain;f=COPYING;hb=HEAD"
     },
-    "url": "https://files.gpg4win.org/gpg4win-4.4.1.exe",
-    "hash": "de25e1d2b08c12506ac5dcc62dcd849f6ce973237837a1cc367e51f25ef517d8",
+    "architecture": {
+        "64bit": {
+            "url": "https://files.gpg4win.org/gpg4win-4.4.1.exe",
+            "hash": "de25e1d2b08c12506ac5dcc62dcd849f6ce973237837a1cc367e51f25ef517d8"
+        }
+    },
     "env_add_path": [
         "GnuPG\\bin",
         "Gpg4win\\bin"
@@ -15,7 +19,7 @@
     "shortcuts": [
         [
             "Gpg4win\\bin\\kleopatra.exe",
-            "GnuPG (Kleopatra)"
+            "Kleopatra (GnuPG)"
         ]
     ],
     "pre_install": [
@@ -27,8 +31,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\gnupg\",\"$env:AppData\\kleopatra\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\gnupg\",\"$env:AppData\\kleopatra\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -49,9 +52,13 @@
         "regex": "Download Gpg4win ([\\d.]+)"
     },
     "autoupdate": {
-        "url": "https://files.gpg4win.org/gpg4win-$version.exe",
-        "hash": {
-            "url": "https://gpg4win.org/package-integrity.html"
+        "architecture": {
+            "64bit": {
+                "url": "https://files.gpg4win.org/gpg4win-$version.exe",
+                "hash": {
+                    "url": "https://gpg4win.org/package-integrity.html"
+                }
+            }
         }
     }
 }

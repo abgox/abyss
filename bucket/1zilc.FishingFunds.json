@@ -6,8 +6,16 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/1zilc/fishing-funds/blob/main/LICENSE"
     },
-    "url": "https://github.com/1zilc/fishing-funds/releases/download/v8.5.0/Fishing-Funds-Setup-8.5.0.exe",
-    "hash": "e52fc0b4f9dbe5dc5783e98ce23a9b916039531c43b66aa16c97823cebe73b53",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/1zilc/fishing-funds/releases/download/v8.5.0/Fishing-Funds-Setup-8.5.0.exe",
+            "hash": "e52fc0b4f9dbe5dc5783e98ce23a9b916039531c43b66aa16c97823cebe73b53"
+        },
+        "arm64": {
+            "url": "https://github.com/1zilc/fishing-funds/releases/download/v8.5.0/Fishing-Funds-Setup-8.5.0.exe",
+            "hash": "e52fc0b4f9dbe5dc5783e98ce23a9b916039531c43b66aa16c97823cebe73b53"
+        }
+    },
     "shortcuts": [
         [
             "Fishing Funds.exe",
@@ -22,8 +30,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Fishing Funds\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Fishing Funds\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -43,6 +50,13 @@
         "github": "https://github.com/1zilc/fishing-funds"
     },
     "autoupdate": {
-        "url": "https://github.com/1zilc/fishing-funds/releases/download/v$version/Fishing-Funds-Setup-$version.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/1zilc/fishing-funds/releases/download/v$version/Fishing-Funds-Setup-$version.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/1zilc/fishing-funds/releases/download/v$version/Fishing-Funds-Setup-$version.exe"
+            }
+        }
     }
 }

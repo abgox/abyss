@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/cxasm/notepad--/blob/main/LICENSE"
     },
-    "url": "https://github.com/cxasm/notepad--/releases/download/notepad-v3.3/Notepad--v3.3-win10-portable.zip",
-    "hash": "f896b87e4be42769ff80795972bac07cc5d3e63ecb5df11f31ed8eded9928862",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cxasm/notepad--/releases/download/notepad-v3.3/Notepad--v3.3-win10-portable.zip",
+            "hash": "f896b87e4be42769ff80795972bac07cc5d3e63ecb5df11f31ed8eded9928862"
+        }
+    },
     "extract_dir": "Notepad--v3.3-win10-portable",
     "bin": "Notepad--.exe",
     "shortcuts": [
@@ -23,8 +27,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\notepad\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\notepad\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -43,7 +46,11 @@
         "regex": "Notepad--v([\\d\\.]+)-win10-portable.zip"
     },
     "autoupdate": {
-        "url": "https://github.com/cxasm/notepad--/releases/download/notepad-v$majorVersion.$minorVersion/Notepad--v$version-win10-portable.zip",
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cxasm/notepad--/releases/download/notepad-v$majorVersion.$minorVersion/Notepad--v$version-win10-portable.zip"
+            }
+        },
         "extract_dir": "Notepad--v$version-win10-portable"
     }
 }

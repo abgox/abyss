@@ -7,10 +7,14 @@
         "url": "https://github.com/neovide/neovide/blob/main/LICENSE"
     },
     "suggest": {
-        "neovim": "abyss/neovim"
+        "neovim": "abyss/Neovim.Neovim"
     },
-    "url": "https://github.com/neovide/neovide/releases/download/0.15.0/neovide.exe.zip",
-    "hash": "bec596a700acb4e88333404d91503669201bc269e1c7d40ebd4f0332a7b5bfaa",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/neovide/neovide/releases/download/0.15.0/neovide.exe.zip",
+            "hash": "bec596a700acb4e88333404d91503669201bc269e1c7d40ebd4f0332a7b5bfaa"
+        }
+    },
     "bin": "neovide.exe",
     "shortcuts": [
         [
@@ -25,8 +29,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\neovide\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\neovide\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -45,6 +48,10 @@
         "github": "https://github.com/neovide/neovide"
     },
     "autoupdate": {
-        "url": "https://github.com/neovide/neovide/releases/download/$version/neovide.exe.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/neovide/neovide/releases/download/$version/neovide.exe.zip"
+            }
+        }
     }
 }

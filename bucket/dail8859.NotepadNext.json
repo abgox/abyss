@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v3.0",
         "url": "https://github.com/dail8859/NotepadNext/blob/master/LICENSE"
     },
-    "url": "https://github.com/dail8859/NotepadNext/releases/download/v0.12/NotepadNext-v0.12-win64.zip",
-    "hash": "f1b15378a249ab73f36a0e44486f75029dce6506c6ab3f96885de9bfe9adeb62",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dail8859/NotepadNext/releases/download/v0.12/NotepadNext-v0.12-win64.zip",
+            "hash": "f1b15378a249ab73f36a0e44486f75029dce6506c6ab3f96885de9bfe9adeb62"
+        }
+    },
     "bin": "NotepadNext.exe",
     "shortcuts": [
         [
@@ -22,8 +26,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\NotepadNext\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\NotepadNext\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -39,6 +42,10 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/dail8859/NotepadNext/releases/download/v$version/NotepadNext-v$version-win64.zip"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dail8859/NotepadNext/releases/download/v$version/NotepadNext-v$version-win64.zip"
+            }
+        }
     }
 }

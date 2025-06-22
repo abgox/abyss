@@ -6,8 +6,12 @@
         "identifier": "GNU General Public License v2.0",
         "url": "https://github.com/obsproject/obs-studio/blob/master/COPYING"
     },
-    "url": "https://github.com/obsproject/obs-studio/releases/download/31.0.3/OBS-Studio-31.0.3-Windows.zip",
-    "hash": "b7086a6b6162d5122eedf7773e96c723e455ad1a931b59d1097f020ee7ff145e",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/obsproject/obs-studio/releases/download/31.0.3/OBS-Studio-31.0.3-Windows.zip",
+            "hash": "b7086a6b6162d5122eedf7773e96c723e455ad1a931b59d1097f020ee7ff145e"
+        }
+    },
     "shortcuts": [
         [
             "bin\\64bit\\obs64.exe",
@@ -21,8 +25,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\obs-studio\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\obs-studio\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -40,10 +43,14 @@
         "github": "https://github.com/obsproject/obs-studio"
     },
     "autoupdate": {
-        "url": "https://github.com/obsproject/obs-studio/releases/download/$version/OBS-Studio-$version-Windows.zip",
-        "hash": {
-            "url": "https://github.com/obsproject/obs-studio/releases/$version",
-            "regex": "(?sm)$basename.*?$sha256"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/obsproject/obs-studio/releases/download/$version/OBS-Studio-$version-Windows.zip",
+                "hash": {
+                    "url": "https://github.com/obsproject/obs-studio/releases/$version",
+                    "regex": "(?sm)$basename.*?$sha256"
+                }
+            }
         }
     }
 }

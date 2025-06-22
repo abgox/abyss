@@ -6,8 +6,12 @@
         "identifier": "Apache License 2.0",
         "url": "https://github.com/Kong/insomnia/blob/develop/LICENSE"
     },
-    "url": "https://github.com/Kong/insomnia/releases/download/core%4011.2.0/insomnia-11.2.0-full.nupkg",
-    "hash": "sha1:2a3749b6fd0dc99510cd393b600b2700758e9fe4",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Kong/insomnia/releases/download/core%4011.2.0/insomnia-11.2.0-full.nupkg",
+            "hash": "sha1:2a3749b6fd0dc99510cd393b600b2700758e9fe4"
+        }
+    },
     "extract_dir": "lib\\net45",
     "shortcuts": [
         [
@@ -22,8 +26,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Insomnia\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Insomnia\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -43,9 +46,13 @@
         "regex": "\"core@([\\d.]+)\""
     },
     "autoupdate": {
-        "url": "https://github.com/Kong/insomnia/releases/download/core%40$version/insomnia-$version-full.nupkg",
-        "hash": {
-            "url": "$baseurl/RELEASES"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Kong/insomnia/releases/download/core%40$version/insomnia-$version-full.nupkg",
+                "hash": {
+                    "url": "$baseurl/RELEASES"
+                }
+            }
         }
     }
 }

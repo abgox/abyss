@@ -6,8 +6,12 @@
         "identifier": "Freemium",
         "url": "https://github.com/wanglin2/mind-map/blob/main/LICENSE"
     },
-    "url": "https://github.com/wanglin2/mind-map/releases/download/0.15.0/Setup.0.15.0.exe#/dl.7z",
-    "hash": "9609e256f088333fa6471df64da535af41bed9e51010fba74637e2ff8bca918c",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/wanglin2/mind-map/releases/download/0.15.0/Setup.0.15.0.exe#/dl.7z",
+            "hash": "9609e256f088333fa6471df64da535af41bed9e51010fba74637e2ff8bca918c"
+        }
+    },
     "shortcuts": [
         [
             "思绪思维导图.exe",
@@ -22,8 +26,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\thoughts\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\thoughts\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -39,6 +42,10 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/wanglin2/mind-map/releases/download/$version/Setup.$version.exe#/dl.7z"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/wanglin2/mind-map/releases/download/$version/Setup.$version.exe#/dl.7z"
+            }
+        }
     }
 }

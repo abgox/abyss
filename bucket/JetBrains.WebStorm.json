@@ -31,18 +31,17 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
+        "A-Require-Admin",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
         "A-Install-Exe -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -SuccessFile 'App\\bin\\Uninstall.exe'"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "A-Require-Admin",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"WebStorm$versionShort\"",
-        "$LinkPaths = @(\"$env:AppData\\JetBrains\\$DataDir\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",

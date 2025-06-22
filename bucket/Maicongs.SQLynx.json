@@ -3,8 +3,12 @@
     "description": "本地基于 Web 的 SQL IDE，支持企业桌面和网络管理。它是一款跨平台数据库工具，适用于所有数据处理人员。Native Web-Based SQL IDE, support desktop and web management for enterprise. It's a cross-platform database tool for everyone working with data.",
     "homepage": "https://www.sqlynx.com/",
     "license": "Unknown",
-    "url": "https://maicong-software-1302946156.cos.ap-beijing.myqcloud.com/software/sqlynx_win_3.7.0.zip",
-    "hash": "5b3ada155a90ae2e58fb1ca9ddebcc1f7981d7b6a7a063b9b75fbac020a613dc",
+    "architecture": {
+        "64bit": {
+            "url": "https://maicong-software-1302946156.cos.ap-beijing.myqcloud.com/software/sqlynx_win_3.7.0.zip",
+            "hash": "5b3ada155a90ae2e58fb1ca9ddebcc1f7981d7b6a7a063b9b75fbac020a613dc"
+        }
+    },
     "extract_dir": "sqlynx_win_3.7.0",
     "bin": "SQLynx.exe",
     "shortcuts": [
@@ -20,8 +24,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\SQLynx\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\SQLynx\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -40,7 +43,11 @@
         "jsonpath": "$.data[0].productVersionName"
     },
     "autoupdate": {
-        "url": "https://maicong-software-1302946156.cos.ap-beijing.myqcloud.com/software/sqlynx_win_$version.zip",
+        "architecture": {
+            "64bit": {
+                "url": "https://maicong-software-1302946156.cos.ap-beijing.myqcloud.com/software/sqlynx_win_$version.zip"
+            }
+        },
         "extract_dir": "sqlynx_win_$version"
     }
 }

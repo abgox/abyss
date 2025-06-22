@@ -1,8 +1,8 @@
 {
     "version": "1.1.3",
     "description": "一个 AI 代码编辑器。The AI Code Editor.",
-    "homepage": "https://cursor.sh/",
-    "license": "Unknown",
+    "homepage": "https://www.cursor.com/",
+    "license": "Freemium",
     "architecture": {
         "64bit": {
             "url": "https://downloads.cursor.com/production/979ba33804ac150108481c14e0b5cb970bda3266/win32/x64/user-setup/CursorUserSetup-x64-1.1.3.exe",
@@ -14,6 +14,7 @@
         }
     },
     "innosetup": true,
+    "extract_dir": "{code_GetDestDir}",
     "bin": [
         [
             "resources\\app\\bin\\cursor.cmd",
@@ -26,7 +27,6 @@
             "Cursor"
         ]
     ],
-    "extract_dir": "{code_GetDestDir}",
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall"
@@ -34,8 +34,7 @@
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:AppData\\Cursor\", \"$env:UserProfile\\.cursor\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory @(\"$env:AppData\\Cursor\",\"$env:UserProfile\\.cursor\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
