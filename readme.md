@@ -64,8 +64,26 @@
 2.  Install apps.
 
     ```pwsh
-    scoop install abyss/abgox.InputTip-zip
+    scoop install abyss/abgox.PSCompletions
     ```
+
+3.  Use [PSCompletions](https://github.com/abgox/PSCompletions).
+
+    ```pwsh
+    scoop install abyss/abgox.PSCompletions
+    ```
+
+    ```pwsh
+    Import-Module PSCompletions
+    ```
+
+    ```
+    psc add scoop
+    ```
+
+### Demo
+
+![Demo](https://abyss.abgox.com/demo.gif)
 
 ---
 
@@ -101,7 +119,7 @@
 4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install apps.
 
    ```pwsh
-   scoop-install abyss/abgox.InputTip-zip
+   scoop-install abyss/abgox.PSCompletions
    ```
 
 5. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.

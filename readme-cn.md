@@ -64,8 +64,26 @@
 2. 安装应用
 
    ```pwsh
-   scoop install abyss/abgox.InputTip-zip
+   scoop install abyss/abgox.PSCompletions
    ```
+
+3. 使用补全 [PSCompletions](https://gitee.com/abgox/PSCompletions)
+
+   ```pwsh
+   scoop install abyss/abgox.PSCompletions
+   ```
+
+   ```pwsh
+   Import-Module PSCompletions
+   ```
+
+   ```
+   psc add scoop
+   ```
+
+### 演示
+
+![演示](https://abyss.abgox.com/demo-cn.gif)
 
 ### 如果你没有使用 Scoop
 
@@ -105,7 +123,7 @@
 4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
 
    ```pwsh
-   scoop-install abyss/abgox.InputTip-zip
+   scoop-install abyss/abgox.PSCompletions
    ```
 
 5. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)
