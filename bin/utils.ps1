@@ -34,6 +34,11 @@
         - A-Require-Admin: 要求以管理员权限运行
         - A-Test-Admin: 检查是否以管理员权限运行
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
+
+    4. TODO:
+        - A-Rename-Manifest: 重命名清单文件，用于迁移旧的清单名到新的清单名(只能在 pre_install 中使用)
+            - 当清单文件更名后，需要使用它，并传入旧的清单名称
+            - 当用新的清单名称安装时，它会将 persist 中的旧目录用新的清单名称重命名，以实现 persist 的迁移
 #>
 
 # -------------------------------------------------
@@ -142,7 +147,6 @@ function A-Ensure-Directory {
         [string]$Path = $persist_dir
     )
     if (!(Test-Path $Path)) {
-        # Write-Host "$($words["Creating directory:"]) $Path" -ForegroundColor Yellow
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
     }
 }
@@ -241,7 +245,7 @@ function A-New-LinkFile {
         if (!$LinkTargets[$i]) {
             if ($LinkPath -notlike "*$env:UserProfile*") {
                 Write-Host $words["The number of links is wrong"] -ForegroundColor Red
-                exit 1
+                A-Exit
             }
             $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
         }
@@ -250,20 +254,26 @@ function A-New-LinkFile {
     if (!$isAdmin) {
         if ($ShowCN) {
             Write-Host "$app 需要为以下文件创建 SymbolicLink:" -ForegroundColor Yellow
-            for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-                Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
-            }
-            Write-Host "创建 SymbolicLink 需要管理员权限。`n请使用管理员权限再次尝试。" -ForegroundColor Red
         }
         else {
             Write-Host "$app needs to create symbolic links the following data file:"
-            for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-                Write-Host "$($LinkPaths[$i]) => $($LinkTargets[$i])" -ForegroundColor Yellow
-            }
-            Write-Host "It requires administrator permission for $app.`nPlease Try again with administrator permission." -ForegroundColor Red
         }
-        scoop uninstall $app
-        exit 1
+
+        Write-Host "-----"
+        for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+            Write-Host $LinkPaths[$i] -ForegroundColor Cyan -NoNewline
+            Write-Host " => " -NoNewline
+            Write-Host $LinkTargets[$i] -ForegroundColor Cyan
+        }
+        Write-Host "-----"
+
+        if ($ShowCN) {
+            Write-Host "创建 SymbolicLink 需要管理员权限。请使用管理员权限再次尝试。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "It requires administrator permission. Please Try again with administrator permission." -ForegroundColor Red
+        }
+        A-Exit
     }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
@@ -301,7 +311,7 @@ function A-New-LinkDirectory {
         if (!$LinkTarget) {
             if ($LinkPath -notlike "*$env:UserProfile*") {
                 Write-Host $words["The number of links is wrong"] -ForegroundColor Red
-                exit 1
+                A-Exit
             }
             $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
         }
@@ -329,11 +339,17 @@ function A-Remove-Link {
     @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
         if (Test-Path $_) {
             $LinkPaths = Get-Content $_ -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
-            foreach ($p in $LinkPaths) {
-                if (Test-Path $p) {
-                    Write-Host "$($words["Removing link:"]) $p" -ForegroundColor Yellow
-                    Remove-Item $p -Force -Recurse -ErrorAction SilentlyContinue
+
+            if ($LinkPaths) {
+                Write-Host "`n$($words["Removing link:"])" -ForegroundColor Yellow
+                Write-Host "-----"
+                foreach ($p in $LinkPaths) {
+                    if (Test-Path $p) {
+                        Write-Host $p -ForegroundColor Cyan
+                        Remove-Item $p -Force -Recurse -ErrorAction SilentlyContinue
+                    }
                 }
+                Write-Host "-----`n"
             }
         }
     }
@@ -363,11 +379,16 @@ function A-Remove-TempData {
     if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
         return
     }
-    foreach ($_ in $Paths) {
-        if (Test-Path $_ ) {
-            Write-Host "$($words["Removing Temp data:" ]) $_" -ForegroundColor Yellow
-            Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
+    if ($Paths) {
+        Write-Host "`n$($words["Removing Temp data:" ])" -ForegroundColor Yellow
+        Write-Host "-----"
+        foreach ($_ in $Paths) {
+            if (Test-Path $_ ) {
+                Write-Host $_ -ForegroundColor Cyan
+                Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
+            }
         }
+        Write-Host "-----`n"
     }
 }
 
@@ -577,7 +598,7 @@ function A-Install-Exe {
                     else {
                         Write-Host "Manifest needs to define shortcuts field, or SuccessFile parameter needs to be specified in A-Install-Exe." -ForegroundColor Red
                     }
-                    exit 1
+                    A-Exit
                 }
             }
 
@@ -631,12 +652,12 @@ function A-Install-Exe {
                 else {
                     Write-Host "Installation timeout ($Timeout seconds)." -ForegroundColor Red
                 }
-                exit 1
+                A-Exit
             }
         }
         catch {
             Write-Host $_.Exception.Message -ForegroundColor Red
-            exit 1
+            A-Exit
         }
     }
     else {
@@ -646,7 +667,7 @@ function A-Install-Exe {
         else {
             Write-Host "Installer not found: $path" -ForegroundColor Red
         }
-        exit 1
+        A-Exit
     }
 }
 
@@ -657,7 +678,9 @@ function A-Uninstall-Exe {
         # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
         [switch]$NoSilent,
         # 超时时间（秒）
-        [string]$Timeout = 300
+        [string]$Timeout = 300,
+        # 如果存在这个 FailureFile 指定的文件，则认定为卸载失败
+        [string]$FailureFile
     )
 
     # 如果没有传递卸载参数，则使用默认参数
@@ -695,7 +718,7 @@ function A-Uninstall-Exe {
     if (Test-Path $path) {
         try {
             if ($NoSilent) {
-                $process = Start-Process $path -ArgumentList $ArgumentList  -PassThru
+                $process = Start-Process $path -ArgumentList $ArgumentList -PassThru
             }
             else {
                 $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
@@ -711,6 +734,16 @@ function A-Uninstall-Exe {
                 }
                 else {
                     Write-Host "Uninstaller timeout ($Timeout seconds), process terminated." -ForegroundColor Red
+                }
+                exit 1
+            }
+
+            if ($PSBoundParameters.ContainsKey('FailureFile') -and (Test-Path $FailureFile)) {
+                if ($ShowCN) {
+                    Write-Host "应用程序未被卸载程序移除: $FailureFile`n$app 卸载失败" -ForegroundColor Red
+                }
+                else {
+                    Write-Host "The application not removed by uninstaller: $FailureFile`nFailed to uninstall $app." -ForegroundColor Red
                 }
                 exit 1
             }
@@ -894,10 +927,10 @@ function A-Remove-Font {
     }
     if ($cmd -eq "uninstall") {
         if ($ShowCN) {
-            Write-Host "$app 字体已经成功卸载，重启电脑后将不会再显示。" -Foreground Magenta
+            Write-Host "$app 字体已经成功卸载，但可能有系统缓存，需要重启系统后才能完全删除。" -Foreground Magenta
         }
         else {
-            Write-Host "The '$app' Font family has been uninstalled and will not be present after restarting your computer." -Foreground Magenta
+            Write-Host "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove." -Foreground Magenta
         }
     }
 }
@@ -938,7 +971,7 @@ function A-Add-PowerToysRunPlugin {
         else {
             Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
         }
-        exit 1
+        A-Exit
     }
 
 }
@@ -1010,7 +1043,7 @@ function A-Require-Admin {
         else {
             Write-Host "It requires administrator permission.`nPlease try again with administrator permission." -ForegroundColor Red
         }
-        exit 1
+        A-Exit
     }
 }
 
@@ -1189,59 +1222,70 @@ function A-New-Link {
 
     if ($LinkPaths.Count -ne $LinkTargets.Count) {
         Write-Host $words["The number of links is wrong"] -ForegroundColor Red
-        exit 1
+        A-Exit
     }
 
     $installData = @{
         "LinkPaths" = @()
     }
 
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $linkPath = $LinkPaths[$i]
-        $linkTarget = $LinkTargets[$i]
-        $installData.LinkPaths += $linkPath
-        if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
-            if (!(Test-Path $linkTarget)) {
-                A-Ensure-Directory (Split-Path $linkTarget -Parent)
-                Write-Host "$($words["Copying"]) $linkPath => $linkTarget" -ForegroundColor Yellow
+    if ($LinkPaths.Count) {
+        Write-Host "`n$($words["Linking"])" -ForegroundColor Yellow
+        Write-Host "-----"
+
+        for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+            $linkPath = $LinkPaths[$i]
+            $linkTarget = $LinkTargets[$i]
+            $installData.LinkPaths += $linkPath
+            if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
+                if (!(Test-Path $linkTarget)) {
+                    A-Ensure-Directory (Split-Path $linkTarget -Parent)
+                    Write-Host $words["Copying"] -ForegroundColor Yellow -NoNewline
+                    Write-Host $linkPath -ForegroundColor Cyan -NoNewline
+                    Write-Host " => " -NoNewline
+                    Write-Host $linkTarget -ForegroundColor Cyan
+                    try {
+                        Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
+                    }
+                    catch {
+                        Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
+                        Write-Host $_.Exception.Message -ForegroundColor Red
+                        A-Exit
+                    }
+                }
                 try {
-                    Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
+                    Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
+                    Write-Host $linkPath -ForegroundColor Cyan
+                    Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
                 }
                 catch {
-                    Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-                    Write-Host $_.Exception.Message -ForegroundColor Red
-                    exit 1
+                    Write-Host "$($words["Failed to remove:"]) $linkPath" -ForegroundColor Red
+                    Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
+                    Write-Host $words["Please stop the relevant processes and try to $cmd $app again."] -ForegroundColor Red
+                    A-Exit
                 }
             }
-            try {
-                Write-Host "$($words["Removing"]) $linkPath" -ForegroundColor Yellow
-                Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
-            }
-            catch {
-                Write-Host "$($words["Failed to remove:"]) $linkPath" -ForegroundColor Red
-                Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-                Write-Host $words["Please stop the relevant processes and try to $cmd $app again."] -ForegroundColor Red
-                exit 1
-            }
-        }
-        A-Ensure-Directory $linkTarget
+            A-Ensure-Directory $linkTarget
 
-        if ((Get-Service -Name cexecsvc -ErrorAction SilentlyContinue)) {
-            # test if this script is being executed inside a docker container
-            if ($ItemType -eq "Junction") {
-                cmd.exe /d /c "mklink /j `"$linkPath`" `"$linkTarget`""
+            if ((Get-Service -Name cexecsvc -ErrorAction SilentlyContinue)) {
+                # test if this script is being executed inside a docker container
+                if ($ItemType -eq "Junction") {
+                    cmd.exe /d /c "mklink /j `"$linkPath`" `"$linkTarget`""
+                }
+                else {
+                    # SymbolicLink
+                    cmd.exe /d /c "mklink `"$linkPath`" `"$linkTarget`""
+                }
             }
             else {
-                # SymbolicLink
-                cmd.exe /d /c "mklink `"$linkPath`" `"$linkTarget`""
+                New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
             }
+            Write-Host "$linkPath" -ForegroundColor Cyan -NoNewline
+            Write-Host " => " -NoNewline
+            Write-Host "$linkTarget" -ForegroundColor Cyan
         }
-        else {
-            New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
-        }
-        Write-Host "$($words["Linking"]) $linkPath => $linkTarget" -ForegroundColor Yellow
-    }
-    if ($LinkPaths.Count) {
+        Write-Host "-----`n"
+
         $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
 }
@@ -1270,8 +1314,7 @@ function A-Add-AppxPackage {
     }
     catch {
         Write-Host $_.Exception.Message -ForegroundColor Red
-        scoop uninstall $app
-        exit 1
+        A-Exit
     }
 
     $installData = @{
@@ -1304,6 +1347,14 @@ function A-Remove-AppxPackage {
         $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
         Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
     }
+}
+
+function A-Exit {
+    if ($cmd -eq 'install') {
+        Write-Host
+        scoop uninstall $app
+    }
+    exit 1
 }
 #endregion
 
