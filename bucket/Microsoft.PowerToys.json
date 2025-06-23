@@ -1,0 +1,82 @@
+{
+    "version": "0.91.1",
+    "description": "一组实用程序，供高级用户调整和简化他们的 Windows 体验以提高生产力。A set of utilities for power users to tune and streamline their Windows experience for greater productivity.",
+    "homepage": "https://github.com/microsoft/PowerToys",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/microsoft/PowerToys/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.91.1/PowerToysUserSetup-0.91.1-x64.exe",
+            "hash": "42ea4a3e8c79a5456476d19e72b3e2ab9393a89c4dc7442eb7ee5a1e3490d38a"
+        },
+        "arm64": {
+            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.91.1/PowerToysUserSetup-0.91.1-arm64.exe",
+            "hash": "f3f433fe04049f9197411d792aadebf34e3be7fe16327bd8b73d2a046ed8baf6"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "if ($cmd -ne 'update') {",
+        "    $r = \"$env:LocalAppData\\Microsoft\\PowerToys\"",
+        "    $LinkPath = @(\"$r\\settings.json\")",
+        "    'AdvancedPaste', 'AlwaysOnTop', 'Awake', 'ColorPicker', 'CropAndLock', 'EnvironmentVariables', 'FancyZones', 'File Explorer', 'File Locksmith', 'FindMyMouse', 'Hosts', 'Image Resizer', 'Keyboard Manager', 'Measure Tool', 'MouseHighlighter', 'MouseJump', 'MousePointerCrosshairs', 'MouseWithoutBorders', 'NewPlus', 'Peek', 'PowerToys Run', 'QuickAccent', 'RegistryPreview', 'Shortcut Guide', 'TextExtractor', 'Workspaces' | ForEach-Object { $LinkPath += \"$r\\$_\\settings.json\" }",
+        "    $LinkPath += \"$r\\File Locksmith\\file-locksmith-settings.json\"",
+        "    $LinkPath += \"$r\\PowerRename\\power-rename-settings.json\"",
+        "    A-New-LinkFile $LinkPath",
+        "    A-New-LinkDirectory @(\"$r\\PowerToys Run\\Settings\",\"$r\\PowerToys Run\\Plugins\")",
+        "}",
+        "A-Install-Exe -ArgumentList @('/quiet','/norestart') -SuccessFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\""
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "if ($cmd -eq 'update') { return }",
+        "$uninstaller = Get-ChildItem \"$env:LocalAppData\\Package Cache\" -Depth 2 | Where-Object {",
+        "    $_.Name -eq \"PowerToysUserSetup-$version-x64.exe\"",
+        "} | Select-Object -First 1",
+        "A-Uninstall-Exe -Uninstaller $uninstaller.FullName -ArgumentList @() -NoSilent -FailureFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\"",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.PowerToys' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
