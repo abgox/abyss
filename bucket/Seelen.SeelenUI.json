@@ -1,0 +1,62 @@
+{
+    "version": "2.3.8.0",
+    "description": "适用于 Windows 的完全可定制的桌面环境。Fully Customizable Desktop Environment for Windows.",
+    "homepage": "https://github.com/eythaann/Seelen-UI",
+    "license": {
+        "identifier": "GNU Affero General Public License v3.0",
+        "url": "https://github.com/eythaann/Seelen-UI/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/eythaann/Seelen-UI/releases/download/v2.3.8/Seelen.SeelenUI_2.3.8.0_x64__p6yyn03m1894e.Msix",
+            "hash": "2850aa466e92ec51752ad0be58fc2d9e0a96a3922607daa71bb5637f2887a11f"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$PackageFamilyName = 'Seelen.SeelenUI_p6yyn03m1894e'",
+        "A-Add-MsixPackage",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.seelen.seelen-ui\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-MsixPackage",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.seelen.seelen-ui\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Seelen.SeelenUI' 'msix'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                }
+            }
+        }
+    }
+}
