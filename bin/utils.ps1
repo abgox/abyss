@@ -551,14 +551,6 @@ function A-Install-Exe {
         $ArgumentList = @('/S', "/D=$dir")
     }
 
-    $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
-    @{
-        Installer    = $Installer
-        ArgumentList = $ArgumentList
-        SuccessFile  = $SuccessFile
-    } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
-
-
     if ($PSBoundParameters.ContainsKey('Installer')) {
         $path = "$dir\$Installer"
     }
@@ -567,6 +559,14 @@ function A-Install-Exe {
         $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
     }
     $fileName = Split-Path $path -Leaf
+
+
+    $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
+    @{
+        Installer    = $path
+        ArgumentList = $ArgumentList
+        SuccessFile  = $SuccessFile
+    } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
     if (Test-Path $path) {
         try {
