@@ -1,0 +1,83 @@
+{
+    "version": "25153.1010.3727.5483",
+    "description": "使用更快、更简单、更智能和更灵活的 Teams，更有效地进行协作。Collaborate more effectively with a faster, simpler, smarter, and more flexible Teams.",
+    "homepage": "https://www.microsoft.com/microsoft-teams",
+    "license": {
+        "identifier": "Freemium",
+        "url": "https://www.microsoft.com/legal/terms-of-use"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://installer.teams.static.microsoft/production-windows-x64/25153.1010.3727.5483/MSTeams-x64.msix",
+            "hash": "50f996503b6db5e25ca60214d4b7b90d2b67e9a76cd3bee5f09c25cb15f064e8"
+        },
+        "32bit": {
+            "url": "https://installer.teams.static.microsoft/production-windows-x86/25153.1010.3727.5483/MSTeams-x86.msix",
+            "hash": "6843f695b4b8a746674742df944a5775b93a5a29a3a93971ee4f2de31380b7de"
+        },
+        "arm64": {
+            "url": "https://installer.teams.static.microsoft/production-windows-arm64/25153.1010.3727.5483/MSTeams-arm64.msix",
+            "hash": "23bcb7ea4b1014ca8ce7c195afaaf0d970e4816ebab56969437ea8454ef53ed0"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$PackageFamilyName = 'MSTeams_8wekyb3d8bbwe'",
+        "A-Add-MsixPackage",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\\LocalCache\\Microsoft\\MSTeams\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-MsixPackage"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.Teams' 'msix'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
