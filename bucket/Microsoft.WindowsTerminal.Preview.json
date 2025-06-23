@@ -1,0 +1,105 @@
+{
+    "version": "1.23.11132.0",
+    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验。The new Windows Terminal, a tabbed command line experience for Windows.",
+    "homepage": "https://github.com/microsoft/terminal",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/microsoft/terminal/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.11132.0/Microsoft.WindowsTerminalPreview_1.23.11132.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "97164a79d5fd7107c84ae554a28f9dd9e938f824cae7579a524bab76b403a969"
+        },
+        "32bit": {
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.11132.0/Microsoft.WindowsTerminalPreview_1.23.11132.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "97164a79d5fd7107c84ae554a28f9dd9e938f824cae7579a524bab76b403a969"
+        },
+        "arm64": {
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.11132.0/Microsoft.WindowsTerminalPreview_1.23.11132.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "97164a79d5fd7107c84ae554a28f9dd9e938f824cae7579a524bab76b403a969"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
+        "$processName = (Get-Process | Where-Object { $_.Id -eq $parentId }).ProcessName",
+        "if ($processName -eq 'WindowsTerminal') {",
+        "    if ($PSUICulture -like 'zh*') {",
+        "       Write-Host \"不能在 WindowsTerminal 中安装、更新、卸载 WindowsTerminal\" -ForegroundColor Red",
+        "    }",
+        "    else {",
+        "       Write-Host \"You cannot $cmd WindowsTerminal in WindowsTerminal.\" -ForegroundColor Red",
+        "    }",
+        "   exit 1",
+        "}"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$PackageFamilyName = 'Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe'",
+        "A-Add-MsixPackage",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\\LocalState\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
+        "$processName = (Get-Process | Where-Object { $_.Id -eq $parentId }).ProcessName",
+        "if ($processName -eq 'WindowsTerminal') {",
+        "    if ($PSUICulture -like 'zh*') {",
+        "       Write-Host \"不能在 WindowsTerminal 中安装、更新、卸载 WindowsTerminal\" -ForegroundColor Red",
+        "    }",
+        "    else {",
+        "       Write-Host \"You cannot $cmd WindowsTerminal in WindowsTerminal.\" -ForegroundColor Red",
+        "    }",
+        "   exit 1",
+        "}",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-MsixPackage"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.WindowsTerminal.Preview' 'msixbundle'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                }
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64.InstallerSha256"
+                }
+            }
+        }
+    }
+}
