@@ -1230,8 +1230,7 @@ function A-New-Link {
     }
 
     if ($LinkPaths.Count) {
-        Write-Host "`n$($words["Linking"])" -ForegroundColor Yellow
-        Write-Host "-----"
+        Write-Host
 
         for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
             $linkPath = $LinkPaths[$i]
@@ -1241,7 +1240,7 @@ function A-New-Link {
                 if (!(Test-Path $linkTarget)) {
                     A-Ensure-Directory (Split-Path $linkTarget -Parent)
                     Write-Host $words["Copying"] -ForegroundColor Yellow -NoNewline
-                    Write-Host $linkPath -ForegroundColor Cyan -NoNewline
+                    Write-Host " $linkPath" -ForegroundColor Cyan -NoNewline
                     Write-Host " => " -NoNewline
                     Write-Host $linkTarget -ForegroundColor Cyan
                     try {
@@ -1255,7 +1254,7 @@ function A-New-Link {
                 }
                 try {
                     Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
-                    Write-Host $linkPath -ForegroundColor Cyan
+                    Write-Host " $linkPath" -ForegroundColor Cyan
                     Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
                 }
                 catch {
@@ -1280,11 +1279,12 @@ function A-New-Link {
             else {
                 New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
             }
-            Write-Host "$linkPath" -ForegroundColor Cyan -NoNewline
+            Write-Host $words["Linking"] -ForegroundColor Yellow -NoNewline
+            Write-Host " $linkPath" -ForegroundColor Cyan -NoNewline
             Write-Host " => " -NoNewline
-            Write-Host "$linkTarget" -ForegroundColor Cyan
+            Write-Host $linkTarget -ForegroundColor Cyan
         }
-        Write-Host "-----`n"
+        Write-Host
 
         $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
