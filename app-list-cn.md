@@ -4,24 +4,24 @@
 
 - 说明
 
-  - **`App`**：应用包的名称
+  - **`App`**：应用包的名称 `Publisher.PackageIdentifier`
     - 点击查看官网或仓库
     - 按照数字字母排序(0-9,a-z)
-  - **`Persist`**：持久化应用数据, 详情参考 [Persist](#persist)
+  - **`Persist`**：持久化应用数据，详情参考 [Persist](./readme-cn.md#persist)
     - **`✔️`**：已实现
-    - **`➖`**：没有必要或者没有数据文件
-    - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](#link)
-  - **`Tag`**：应用标签
-    - 第一个标签是一个徽章，显示应用版本。可以点击它查看 manifest json 文件
-    - `Font`：一种字体
+    - **`➖`**：没有必要或者没有发现相关数据文件
+    - **`Link`** : 使用 `New-Item -ItemType Junction` 实现, 详情参考 [Link](./readme-cn.md#link)
+  - **`Tag`**：标签
+    - 第一个标签是一个 [徽章](https://shields.io/)，显示清单中的应用版本。点击它查看 json 清单文件
+    - `Font`：字体
     - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
     - `RequireAdmin`: 在安装、更新或卸载时需要管理员权限
     - `NoSilentInstall`: 在安装过程中可能需要用户交互
     - `NoSilentUninstall`: 在卸载过程中可能需要用户交互
-    - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法自动检测更新
+    - `NoUpdate`：没有配置 `json.autoupdate`，Scoop 无法通过 [Github Actions](./.github/workflows/excavator.yml) 自动更新清单
     - `Msix`: 通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
       - 它的安装目录不在 Scoop 中
-      - Scoop 只管理 [persist](#persist)，应用的安装、更新以及卸载操作。
+      - Scoop 只管理 [Persist](./readme-cn.md#persist)，应用的安装、更新以及卸载操作。
   - **`Description`**：应用描述
 
 ---

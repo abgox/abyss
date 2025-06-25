@@ -4,24 +4,24 @@
 
 - Guide
 
-  - **`App`** : App package name.
+  - **`App`** : App package name. `Publisher.PackageIdentifier`
     - Click to view the homepage or repository.
     - Sort by first letter(0-9,a-z).
-  - **`Persist`** : Persist data. Refer to [Persist](#persist) for details.
+  - **`Persist`** : Persist data. Refer to [Persist](./readme.md#persist) for details.
     - **✔️** : It has been done.
-    - **➖** : It is not necessary, or there are no data files.
-    - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](#link) for details.
+    - **➖** : It is not necessary, or data is not found.
+    - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
   - **`Tag`**
-    - The first tag is a badge label to show version. Click it to view the manifest json file.
+    - The first tag is a [badge](https://shields.io/) to show version. Click it to view the manifest json file.
     - `Font` : A font.
     - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
     - `NoSilentInstall`: May require user interaction during installation.
     - `NoSilentUninstall`: May require user interaction during uninstallation.
     - `RequireAdmin`: An App that require administrator permission to install, update, or uninstall.
-    - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically detect updates.
+    - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
     - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
       - The installation directory is not in Scoop.
-      - Scoop only manages the [persist](#persist) and operations for installing, updating, and uninstalling.
+      - Scoop only manages the [Persist](./readme.md#persist) and operations for installing, updating, and uninstalling.
   - **`Description`** : App Description.
 
 ---
