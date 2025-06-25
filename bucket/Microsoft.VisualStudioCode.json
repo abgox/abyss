@@ -1,6 +1,6 @@
 {
     "version": "1.101.1",
-    "description": "一个轻量级、功能强大，插件生态丰富的文件编辑器。Lightweight but powerful source code editor.",
+    "description": "vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器。vscode - A lightweight but powerful source code editor.",
     "homepage": "https://code.visualstudio.com/",
     "license": {
         "identifier": "Freeware",
@@ -50,8 +50,8 @@
         "$dirpath = \"$dir\".Replace('\\', '\\\\')",
         "$exepath = \"$dir\\Code.exe\".Replace('\\', '\\\\')",
         "'install-associations', 'uninstall-associations', 'install-context', 'uninstall-context', 'install-github-integration', 'uninstall-github-integration' | ForEach-Object {",
-        "  if (Test-Path \"$bucketsdir\\$bucket\\scripts\\vscode\\$_.reg\") {",
-        "    $content = Get-Content \"$bucketsdir\\$bucket\\scripts\\vscode\\$_.reg\"",
+        "  if (Test-Path \"$bucketsdir\\$bucket\\scripts\\Microsoft.VisualStudioCode\\$_.reg\") {",
+        "    $content = Get-Content \"$bucketsdir\\$bucket\\scripts\\Microsoft.VisualStudioCode\\$_.reg\"",
         "    $content = $content.Replace('$codedir', $dirpath)",
         "    $content = $content.Replace('$code', $exepath)",
         "    if ($global) {",
@@ -67,11 +67,10 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-TempData @(\"$env:UserProfile\\.vscode\",\"$env:AppData\\Code\")",
         "if ($cmd -eq 'uninstall') {",
-        "   reg import \"$dir\\uninstall-context.reg\" >nul 2>&1",
-        "   reg import \"$dir\\uninstall-associations.reg\" >nul 2>&1",
-        "   reg import \"$dir\\uninstall-github-integration.reg\" >nul 2>&1",
+        "    'uninstall-associations', 'uninstall-context', 'uninstall-github-integration' | ForEach-Object {",
+        "        reg import \"$dir\\$_.reg\" >nul 2>&1",
+        "    }",
         "}"
     ],
     "post_uninstall": [
