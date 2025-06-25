@@ -151,6 +151,36 @@ function A-Ensure-Directory {
     }
 }
 
+function A-Copy-Item {
+    <#
+    .SYNOPSIS
+        复制文件或目录
+
+    .DESCRIPTION
+        通常用来将 bucket/scripts 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
+        因为部分配置文件，如果直接使用 New-Item 或 Set-Content，会出现编码错误
+
+    .EXAMPLE
+        A-Copy-Item "$bucketsdir\$bucket\scripts\$app\InputTip.ini" "$persist_dir\InputTip.ini"
+    #>
+    param (
+        [string]$From,
+
+        [string]$To
+    )
+
+    if (Test-Path $To) {
+        # 如果是错误的文件类型，需要删除重建
+        if ((Get-Item $From).PSIsContainer -ne (Get-Item $To).PSIsContainer) {
+            Remove-Item $To -Recurse -Force
+            Copy-Item -Path $From -Destination $To -Recurse -Force
+        }
+    }
+    else {
+        Copy-Item -Path $From -Destination $To -Recurse -Force
+    }
+}
+
 function A-New-PersistFile {
     <#
     .SYNOPSIS
@@ -182,6 +212,8 @@ function A-New-PersistFile {
     #>
     param (
         [string]$Path,
+
+        [string]$Copy,
 
         [array]$Content,
 
