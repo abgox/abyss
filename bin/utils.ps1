@@ -1089,8 +1089,8 @@ function A-Get-InstallerInfoFromWinget {
 
     .PARAMETER Package
         软件包。
-        格式: 'Publisher.AppName'
-        比如: 'Microsoft.VisualStudioCode'
+        格式: Publisher.PackageIdentifier
+        比如: Microsoft.VisualStudioCode
 
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
@@ -1104,6 +1104,7 @@ function A-Get-InstallerInfoFromWinget {
     $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
     if (!$hasCommand) {
         try {
+            Write-Host "正在安装并导入 powershell-yaml 模块" -ForegroundColor Green
             Install-Module powershell-yaml -Repository PSGallery -Force
             Import-Module -Name powershell-yaml -Force
             Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
@@ -1124,8 +1125,16 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     try {
-        $versionList = Invoke-WebRequest -Uri $url -ConnectionTimeoutSeconds 5 -OperationTimeoutSeconds 10
         Write-Host "正在访问: $url" -ForegroundColor Green
+        $parameters = @{
+            'Uri'                      = $url
+            'ConnectionTimeoutSeconds' = 10
+            'OperationTimeoutSeconds'  = 15
+        }
+        if ($env:GITHUB_TOKEN) {
+            $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
+        }
+        $versionList = Invoke-WebRequest @parameters
     }
     catch {
         Write-Host "::error::访问 $url 失败" -ForegroundColor Red
@@ -1135,21 +1144,28 @@ function A-Get-InstallerInfoFromWinget {
 
     $latestVersion = ""
 
-    $versionList.Content |
-    ConvertFrom-Json |
-    ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } |
-    ForEach-Object {
+    $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } | ForEach-Object {
         $compare = A-Compare-Version $_ $latestVersion
         if ($compare -gt 0) {
             $latestVersion = $_
         }
     }
 
+    Write-Host "$app 的最新版本: $latestVersion" -ForegroundColor Green
+
     $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        $installerYaml = Invoke-WebRequest -Uri $url -ConnectionTimeoutSeconds 5 -OperationTimeoutSeconds 10
         Write-Host "正在访问: $url" -ForegroundColor Green
+        $parameters = @{
+            'Uri'                      = $url
+            'ConnectionTimeoutSeconds' = 10
+            'OperationTimeoutSeconds'  = 15
+        }
+        if ($env:GITHUB_TOKEN) {
+            $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
+        }
+        $installerYaml = Invoke-WebRequest @parameters
     }
     catch {
         Write-Host "::error::访问 $url 失败" -ForegroundColor Red
@@ -1158,6 +1174,10 @@ function A-Get-InstallerInfoFromWinget {
     }
 
     $installerInfo = ConvertFrom-Yaml $installerYaml.Content
+
+    if (!$installerInfo) {
+        return
+    }
 
     $scope = $installerInfo.Scope
     $InstallerLocale = $installerInfo.InstallerLocale
