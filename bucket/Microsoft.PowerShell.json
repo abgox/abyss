@@ -1,0 +1,81 @@
+{
+    "version": "7.5.2",
+    "description": "pwsh - 一个 跨平台的 PowerShell Core。pwsh - A cross-platform PowerShell Core.",
+    "homepage": "https://github.com/PowerShell/PowerShell",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/PowerShell/PowerShell/blob/master/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2.msixbundle",
+            "hash": "099397e29aea685db1022590e4b50833d19498592f8920d4d6e64bf66c221ef2"
+        },
+        "32bit": {
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2.msixbundle",
+            "hash": "099397e29aea685db1022590e4b50833d19498592f8920d4d6e64bf66c221ef2"
+        },
+        "arm64": {
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.2/PowerShell-7.5.2.msixbundle",
+            "hash": "099397e29aea685db1022590e4b50833d19498592f8920d4d6e64bf66c221ef2"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "if ($PSVersionTable.PSEdition -eq 'Core' -and $PSVersionTable.PSVersion -match '^[\\d\\.]+$') {",
+        "    if ($PSUICulture -like 'zh*') {",
+        "       Write-Host \"不能在 PowerShell 中安装、更新、卸载 PowerShell\" -ForegroundColor Red",
+        "    }",
+        "    else {",
+        "       Write-Host \"You cannot $cmd PowerShell in PowerShell.\" -ForegroundColor Red",
+        "    }",
+        "   exit 1",
+        "}"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "$PackageFamilyName = \"Microsoft.PowerShell_8wekyb3d8bbwe\"",
+        "A-Add-MsixPackage",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\Documents\\PowerShell\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "if ($PSVersionTable.PSEdition -eq 'Core' -and $PSVersionTable.PSVersion -match '^[\\d\\.]+$') {",
+        "    if ($PSUICulture -like 'zh*') {",
+        "       Write-Host \"不能在 PowerShell 中安装、更新、卸载 PowerShell\" -ForegroundColor Red",
+        "    }",
+        "    else {",
+        "       Write-Host \"You cannot $cmd PowerShell in PowerShell.\" -ForegroundColor Red",
+        "    }",
+        "   exit 1",
+        "}",
+        "A-Remove-MsixPackage",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/PowerShell/PowerShell/releases/download/v$version/PowerShell-$version.msixbundle"
+            },
+            "32bit": {
+                "url": "https://github.com/PowerShell/PowerShell/releases/download/v$version/PowerShell-$version.msixbundle"
+            },
+            "arm64": {
+                "url": "https://github.com/PowerShell/PowerShell/releases/download/v$version/PowerShell-$version.msixbundle"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/hashes.sha256"
+        }
+    }
+}
