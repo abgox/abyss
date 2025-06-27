@@ -1,0 +1,64 @@
+{
+    "version": "5.0.97",
+    "description": "Any.do - 一款简洁的待办事项应用。Any.do - A clean and simple to-do list app.",
+    "homepage": "https://www.any.do/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://electron-app.any.do/_windows/Anydo%20Setup%205.0.97.exe",
+            "hash": "7764bbe9667e6e08845ec65361f9148dfc8a4f631d9bad01f28bd3a514e42761"
+        }
+    },
+    "shortcuts": [
+        [
+            "Anydo.exe",
+            "Anydo"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "A-New-LinkDirectory @(\"$env:AppData\\@anydo\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall Anydo.exe'",
+        "A-Remove-TempData @(\"$env:LocalAppData\\@anydoelectron-app-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Anydo.Anydo' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
