@@ -169,6 +169,8 @@ function A-Copy-Item {
         [string]$To
     )
 
+    A-Ensure-Directory (Split-Path $To -Parent)
+
     if (Test-Path $To) {
         # 如果是错误的文件类型，需要删除重建
         if ((Get-Item $From).PSIsContainer -ne (Get-Item $To).PSIsContainer) {
@@ -983,6 +985,7 @@ function A-Add-PowerToysRunPlugin {
         }
         $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
         Write-Host "$($words["Copying"]) $CopyingPath => $PluginPath" -ForegroundColor Yellow
+        A-Ensure-Directory (Split-Path $PluginPath -Parent)
         Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
 
         if ($ShowCN) {
