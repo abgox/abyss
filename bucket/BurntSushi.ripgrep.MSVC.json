@@ -1,0 +1,77 @@
+{
+    "version": "14.1.1",
+    "description": "一种面向行的搜索工具，可递归地在当前目录中搜索正则表达式模式。A line-oriented search tool that recursively searches the current directory for a regex pattern.",
+    "homepage": "https://github.com/BurntSushi/ripgrep",
+    "license": {
+        "identifier": "MIT,Unlicense",
+        "url": "https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip",
+            "hash": "d0f534024c42afd6cb4d38907c25cd2b249b79bbe6cc1dbee8e3e37c2b6e25a1",
+            "extract_dir": "ripgrep-14.1.1-x86_64-pc-windows-msvc"
+        },
+        "32bit": {
+            "url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip",
+            "hash": "1e5c99e4851c964152db07c79151982c7fa7a549b645b6b47daae07a9c185f8e",
+            "extract_dir": "ripgrep-14.1.1-i686-pc-windows-msvc"
+        }
+    },
+    "env_set": {
+        "RIPGREP_CONFIG_PATH": "$dir\\.ripgreprc"
+    },
+    "bin": "rg.exe",
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-New-PersistFile \"$persist_dir\\.ripgreprc\""
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": ".ripgreprc",
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'BurntSushi.ripgrep.MSVC' 'zip'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                },
+                "extract_dir": "ripgrep-$version-x86_64-pc-windows-msvc"
+            },
+            "32bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86.InstallerSha256"
+                },
+                "extract_dir": "ripgrep-$version-i686-pc-windows-msvc"
+            }
+        }
+    }
+}
