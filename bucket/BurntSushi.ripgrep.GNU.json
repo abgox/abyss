@@ -1,0 +1,64 @@
+{
+    "version": "14.1.1",
+    "description": "一种面向行的搜索工具，可递归地在当前目录中搜索正则表达式模式。A line-oriented search tool that recursively searches the current directory for a regex pattern.",
+    "homepage": "https://github.com/BurntSushi/ripgrep",
+    "license": {
+        "identifier": "MIT,Unlicense",
+        "url": "https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-gnu.zip",
+            "hash": "01469c43c3fffdb4baff80469a75a7bf1dc3d0bf4ef63cda72a22f885f27465a",
+            "extract_dir": "ripgrep-14.1.1-x86_64-pc-windows-gnu"
+        }
+    },
+    "env_set": {
+        "RIPGREP_CONFIG_PATH": "$dir\\.ripgreprc"
+    },
+    "bin": "rg.exe",
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-New-PersistFile \"$persist_dir\\.ripgreprc\""
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": ".ripgreprc",
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'BurntSushi.ripgrep.GNU' 'zip'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                },
+                "extract_dir": "ripgrep-$version-x86_64-pc-windows-gnu"
+            }
+        }
+    }
+}
