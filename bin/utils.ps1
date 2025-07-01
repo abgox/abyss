@@ -1501,7 +1501,12 @@ function A-Remove-LinkDirectory {
 #endregion
 
 
-#region 重写部分 scoop (v0.5.2) 内置函数，添加本地化输出
+
+# 重写的函数是基于这个 Scoop 版本的。
+# 如果 Scoop 最新版本大于它，需要检查重写的函数，如果新版本中这些函数有变动，需要立即修正，然后更新此处的 Scoop 版本号
+$ScoopVersion = "0.5.2"
+
+#region 重写部分 Scoop 内置函数，添加本地化输出
 
 #region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
 Set-Item -Path Function:\env_set -Value {
