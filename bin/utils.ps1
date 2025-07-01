@@ -48,7 +48,11 @@ Write-Host
 # 卸载时的操作行为。
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
-$uninstallActionLevel = (scoop config).'app-uninstall-action-level'
+try {
+    $uninstallActionLevel = (scoop config).'app-uninstall-action-level'
+}
+catch {}
+
 if ($uninstallActionLevel -eq $null) {
     $uninstallActionLevel = "1"
 }
