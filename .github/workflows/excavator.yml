@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
@@ -28,3 +26,43 @@ jobs:
       actions: write
     steps:
       - uses: abgox/gh-workflow-keepalive@main
+
+  check-scoop-version:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Scoop Version
+        shell: pwsh
+        run: |
+          .\bin\check-scoop-version.ps1
+
+      - name: Reopen Issue
+        if: env.ScoopNewVersion != ''
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const issue = await github.rest.issues.get({
+                issue_number: 8,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+
+              if (issue.data.state === 'closed') {
+                await github.rest.issues.update({
+                  issue_number: 8,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open'
+                });
+                console.log('Issue #8 已重新打开');
+              } else {
+                console.log('Issue #8 已是打开状态');
+              }
+            } catch (error) {
+              console.error('重新打开 Issue 失败:', error);
+              throw error;
+            }
