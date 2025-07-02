@@ -19,12 +19,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:AppData\\123pan\")",
         "A-Install-Exe -SuccessFile '123pan\\uninst.exe'"
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Start-PostInstall",
+        "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
@@ -33,7 +33,8 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller '123pan\\uninst.exe'"
+        "A-Uninstall-Exe -Uninstaller '123pan\\uninst.exe' -ArgumentList @() -NoSilent",
+        "A-Remove-TempData @(\"$env:AppData\\123pan\")"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
