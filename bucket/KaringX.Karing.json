@@ -1,6 +1,6 @@
 {
     "version": "1.1.5.748",
-    "description": "简单且强大的代理工具，一个基于 Flutter 的 Singbox 图形用户界面。Simple & Powerful proxy utility. A singbox GUI based on flutter.",
+    "description": "简单且强大的代理工具，支持 clash/sing-box 的路由规则。Simple & Powerful proxy utility, Support routing rules for clash/sing-box",
     "homepage": "https://github.com/KaringX/karing",
     "license": {
         "identifier": "Unknown",
@@ -25,21 +25,21 @@
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
-        "A-New-LinkDirectory @(\"$env:AppData\\karing\")"
+        "A-Start-PostInstall"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-TempData @(\"$env:AppData\\karing\")"
     ],
     "post_uninstall": [
         "$bucket = $install.bucket",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],
+    "persist": "profiles",
     "checkver": {
         "script": [
             ". \"$pwd\\bin\\utils.ps1\"",
