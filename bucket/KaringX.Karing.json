@@ -1,0 +1,65 @@
+{
+    "version": "1.1.5.748",
+    "description": "简单且强大的代理工具，一个基于 Flutter 的 Singbox 图形用户界面。Simple & Powerful proxy utility. A singbox GUI based on flutter.",
+    "homepage": "https://github.com/KaringX/karing",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/KaringX/karing/blob/main/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/KaringX/karing/releases/download/v1.1.5.748/karing_1.1.5.748_windows_x64.exe",
+            "hash": "c1bdcf1f605d8995d00d70d9009bb95fec1dc619dd79e0cdbe64df834fecd5ad"
+        }
+    },
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "karing.exe",
+            "Karing"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "A-New-LinkDirectory @(\"$env:AppData\\karing\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'KaringX.Karing' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
