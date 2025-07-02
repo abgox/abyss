@@ -35,11 +35,11 @@
         - A-Test-Admin: 检查是否以管理员权限运行
         - A-Deny-Update: 禁止通过 Scoop 更新(在 pre_uninstall 中使用)
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
-
-    4. TODO:
-        - A-Rename-Manifest: 重命名清单文件，用于迁移旧的清单名到新的清单名(只能在 pre_install 中使用)
+        - A-Move-PersistDirectory: 用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
+            - 它用于未来可能存在的清单文件更名
             - 当清单文件更名后，需要使用它，并传入旧的清单名称
             - 当用新的清单名称安装时，它会将 persist 中的旧目录用新的清单名称重命名，以实现 persist 的迁移
+            - 由于只有 abyss 使用了 Publisher.PackageIdentifier 这样的命名格式，迁移不会与官方或其他第三方仓库冲突
 #>
 
 # -------------------------------------------------
@@ -748,7 +748,7 @@ function A-Uninstall-Exe {
         #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
         # }
         if ($NoSilent) {
-            Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，将强行终止卸载进程" -ForegroundColor Yellow
+            Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
         }
     }
     else {
@@ -1113,6 +1113,47 @@ function A-Deny-Update {
             Write-Host "$app does not allow update by Scoop." -ForegroundColor Red
         }
         A-Exit
+    }
+}
+
+function A-Move-PersistDirectory {
+    param(
+        # 旧的清单名称(不包含 .json 后缀)
+        [array]$OldNames
+    )
+
+    if (Test-Path $persist_dir) {
+        return
+    }
+
+    $dir = Split-Path $persist_dir -Parent
+
+    foreach ($oldName in $OldNames) {
+        $old = "$dir\$oldName"
+
+        if (Test-Path $old) {
+            try {
+                Rename-Item -Path $old -NewName $app -Force -ErrorAction Stop
+                if ($ShowCN) {
+                    Write-Host "persist 迁移成功: " -ForegroundColor Yellow -NoNewline
+                }
+                else {
+                    Write-Host "Successfully migrate persist: " -ForegroundColor Yellow -NoNewline
+                }
+                Write-Host $old -ForegroundColor Cyan -NoNewline
+                Write-Host " => " -NoNewline
+                Write-Host "$dir\$app" -ForegroundColor Cyan
+                break
+            }
+            catch {
+                if ($ShowCN) {
+                    Write-Host "persist 迁移失败: $old" -ForegroundColor Red
+                }
+                else {
+                    Write-Host "Failed to migrate persist: $old" -ForegroundColor Red
+                }
+            }
+        }
     }
 }
 
