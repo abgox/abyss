@@ -39,7 +39,7 @@
 <!-- prettier-ignore-start -->
 |App (177)|Tag|Description|
 |:-:|:-:|-|
-|[123.123pan](https://www.123pan.com/ "点击查看 123.123pan 的仓库或主页")|[v2.4.0.0](./bucket/123.123pan.json "点击查看 123.123pan 的 manifest json 文件")<br /><code title="123.123pan 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品。|
+|[123.123pan](https://www.123pan.com/ "点击查看 123.123pan 的仓库或主页")|[v2.4.0.0](./bucket/123.123pan.json "点击查看 123.123pan 的 manifest json 文件")<br /><code title="123.123pan 使用 Link 进行数据持久化">Link</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击查看 1zilc.FishingFunds 的仓库或主页")|[v8.5.0](./bucket/1zilc.FishingFunds.json "点击查看 1zilc.FishingFunds 的 manifest json 文件")<br /><code title="1zilc.FishingFunds 使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
 |[2dust.v2rayN](https://github.com/2dust/v2rayN "点击查看 2dust.v2rayN 的仓库或主页")|[v7.12.7](./bucket/2dust.v2rayN.json "点击查看 2dust.v2rayN 的 manifest json 文件")<br /><code title="2dust.v2rayN 使用 Scoop 官方的 persist">persist</code>|一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心。|
 |[4gray.iptvnator](https://github.com/4gray/iptvnator "点击查看 4gray.iptvnator 的仓库或主页")|[v0.16.0](./bucket/4gray.iptvnator.json "点击查看 4gray.iptvnator 的 manifest json 文件")<br /><code title="4gray.iptvnator 使用 Link 进行数据持久化">Link</code>|一个支持 IPTV 播放列表播放 (m3u、m3u8) 的视频播放器应用程序。|
