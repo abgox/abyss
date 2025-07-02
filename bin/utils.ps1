@@ -742,26 +742,26 @@ function A-Uninstall-Exe {
     }
     $fileName = Split-Path $path -Leaf
 
-    if ($ShowCN) {
-        Write-Host "正在运行卸载程序 ($fileName) 卸载 $app，请耐心等待..." -ForegroundColor Yellow
-        # if ($ArgumentList) {
-        #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
-        # }
-        if ($NoSilent) {
-            Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
-        }
-    }
-    else {
-        Write-Host "Uninstalling '$app' using uninstaller ($fileName), please wait..." -ForegroundColor Yellow
-        # if ($ArgumentList) {
-        #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
-        # }
-        if ($NoSilent) {
-            Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
-        }
-    }
-
     if (Test-Path $path) {
+        if ($ShowCN) {
+            Write-Host "正在运行卸载程序 ($fileName) 卸载 $app，请耐心等待..." -ForegroundColor Yellow
+            # if ($ArgumentList) {
+            #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
+            # }
+            if ($NoSilent) {
+                Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
+            }
+        }
+        else {
+            Write-Host "Uninstalling '$app' using uninstaller ($fileName), please wait..." -ForegroundColor Yellow
+            # if ($ArgumentList) {
+            #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
+            # }
+            if ($NoSilent) {
+                Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+            }
+        }
+
         if (!$PSBoundParameters.ContainsKey('FailureFile')) {
             $FailureFile = $path
         }
