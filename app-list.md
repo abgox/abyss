@@ -5,23 +5,33 @@
 - Guide
 
   - **`App`** : App package name. `Publisher.PackageIdentifier`
-    - Click to view the homepage or repository.
-    - Sort by first letter(0-9,a-z).
-  - **`Persist`** : Persist data. Refer to [Persist](./readme.md#persist) for details.
-    - **✔️** : It has been done.
-    - **➖** : It is not necessary, or data is not found.
-    - **`Link`** : Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
+
+    - Click to view the repository or homepage.
+    - Sort by first letter: 0-9,a-z
+
   - **`Tag`**
-    - The first tag is a [badge](https://shields.io/) to show version. Click it to view the manifest json file.
-    - `Font` : A font.
-    - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
-    - `NoSilentInstall`: May require user interaction during installation.
-    - `NoSilentUninstall`: May require user interaction during uninstallation.
-    - `RequireAdmin`: An App that require administrator permission to install, update, or uninstall.
-    - `NoUpdate` : `json.autoupdate` are not configured, and Scoop cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
-    - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
-      - The installation directory is not in Scoop.
-      - Scoop only manages the [Persist](./readme.md#persist) and operations for installing, updating, and uninstalling.
+
+    - Basic Tags
+
+      - [v1.0.0](./): The app version. Click it to view the manifest json file.
+      - `Persist`: Uses Scoop's official [Persist](./readme-cn.md#persist).
+      - `Link`: Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
+
+    - Notes
+
+      - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
+      - `NoSilentInstall`: May require user interaction during installation.
+      - `NoSilentUninstall`: May require user interaction during uninstallation.
+      - `NoUpdate` : `json.autoupdate` are not configured, and it cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
+
+    - App Types
+
+      - `Font` : A font.
+      - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
+      - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
+        - The installation directory is not in Scoop.
+        - Scoop only manages the data that may exist and installation, uninstallation, and update.
+
   - **`Description`** : App Description.
 
 ---
