@@ -33,6 +33,7 @@
     3. 其他:
         - A-Require-Admin: 要求以管理员权限运行
         - A-Test-Admin: 检查是否以管理员权限运行
+        - A-Deny-Update: 禁止通过 Scoop 更新(在 pre_uninstall 中使用)
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
 
     4. TODO:
@@ -378,16 +379,18 @@ function A-Remove-Link {
         if (Test-Path $_) {
             $LinkPaths = Get-Content $_ -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
 
-            if ($LinkPaths) {
-                Write-Host "`n$($words["Removing link:"])" -ForegroundColor Yellow
-                Write-Host "-----"
-                foreach ($p in $LinkPaths) {
-                    if (Test-Path $p) {
-                        Write-Host $p -ForegroundColor Cyan
-                        Remove-Item $p -Force -Recurse -ErrorAction SilentlyContinue
+            foreach ($p in $LinkPaths) {
+                if (Test-Path $p) {
+                    try {
+                        Write-Host $words["Removing link:"] -ForegroundColor Yellow -NoNewline
+                        Write-Host " $p" -ForegroundColor Cyan
+                        Remove-Item $p -Force -Recurse -ErrorAction Stop
+                    }
+                    catch {
+                        Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
+                        Write-Host " $p" -ForegroundColor Cyan
                     }
                 }
-                Write-Host "-----`n"
             }
         }
     }
@@ -417,16 +420,18 @@ function A-Remove-TempData {
     if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
         return
     }
-    if ($Paths) {
-        Write-Host "`n$($words["Removing Temp data:" ])" -ForegroundColor Yellow
-        Write-Host "-----"
-        foreach ($_ in $Paths) {
-            if (Test-Path $_ ) {
-                Write-Host $_ -ForegroundColor Cyan
-                Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue
+    foreach ($p in $Paths) {
+        if (Test-Path $p) {
+            try {
+                Write-Host $words["Removing Temp data:" ] -ForegroundColor Yellow -NoNewline
+                Write-Host " $p" -ForegroundColor Cyan
+                Remove-Item $p -Force -Recurse -ErrorAction Stop
+            }
+            catch {
+                Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
+                Write-Host " $p" -ForegroundColor Cyan
             }
         }
-        Write-Host "-----`n"
     }
 }
 
@@ -578,7 +583,7 @@ function A-Install-Exe {
         [array]$ArgumentList,
         # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
         [string]$SuccessFile,
-        # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
+        # 仅用于标识，表示可能需要用户交互
         [switch]$NoSilent,
         # 超时时间（秒）
         [string]$Timeout = 300
@@ -665,6 +670,7 @@ function A-Install-Exe {
 
             $null = Start-Job -ScriptBlock {
                 param($path, $job)
+                # 30 秒后再删除安装程序
                 Start-Sleep -Seconds 30
 
                 $job | Stop-Job -ErrorAction SilentlyContinue
@@ -713,12 +719,14 @@ function A-Uninstall-Exe {
     param(
         [string]$Uninstaller,
         [array]$ArgumentList,
-        # 仅用于标识，如果可能需要用户交互，则 $NoSilent 为 $true
+        # 仅用于标识，表示可能需要用户交互
         [switch]$NoSilent,
         # 超时时间（秒）
         [string]$Timeout = 300,
-        # 如果存在这个 FailureFile 指定的文件，则认定为卸载失败
-        [string]$FailureFile
+        # 如果存在这个 FailureFile 指定的文件或路径，则认定为卸载失败
+        [string]$FailureFile,
+        # 是否需要隐藏卸载程序窗口
+        [switch]$Hidden
     )
 
     # 如果没有传递卸载参数，则使用默认参数
@@ -740,7 +748,7 @@ function A-Uninstall-Exe {
         #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
         # }
         if ($NoSilent) {
-            Write-Host "卸载程序可能需要你手动进行一些交互操作，如果卸载超时($Timeout 秒)，将强行终止卸载进程" -ForegroundColor Yellow
+            Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，将强行终止卸载进程" -ForegroundColor Yellow
         }
     }
     else {
@@ -749,18 +757,24 @@ function A-Uninstall-Exe {
         #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
         # }
         if ($NoSilent) {
-            Write-Host "The uninstaller may require you to perform some manual operations. If uninstallation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+            Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
         }
     }
 
     if (Test-Path $path) {
+        if (!$PSBoundParameters.ContainsKey('FailureFile')) {
+            $FailureFile = $path
+        }
+
         try {
-            if ($NoSilent) {
-                $process = Start-Process $path -ArgumentList $ArgumentList -PassThru
+            $paramList = @{
+                FilePath     = $path
+                ArgumentList = $ArgumentList
+                WindowStyle  = if ($Hidden) { "Hidden" }else { "Normal" }
+                PassThru     = $true
             }
-            else {
-                $process = Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
-            }
+
+            $process = Start-Process @paramList
 
             try {
                 $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
@@ -776,12 +790,12 @@ function A-Uninstall-Exe {
                 exit 1
             }
 
-            if ($PSBoundParameters.ContainsKey('FailureFile') -and (Test-Path $FailureFile)) {
+            if (Test-Path $FailureFile) {
                 if ($ShowCN) {
-                    Write-Host "应用程序未被卸载程序移除: $FailureFile`n$app 卸载失败" -ForegroundColor Red
+                    Write-Host "$app 卸载失败，卸载过程被强行终止`n如果卸载程序还在运行，你可以继续和它交互，当卸载完成后，再次运行卸载命令即可" -ForegroundColor Red
                 }
                 else {
-                    Write-Host "The application not removed by uninstaller: $FailureFile`nFailed to uninstall $app." -ForegroundColor Red
+                    Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
                 }
                 exit 1
             }
@@ -984,7 +998,8 @@ function A-Add-PowerToysRunPlugin {
 
     try {
         if (Test-Path -Path $PluginPath) {
-            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
+            Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
+            Write-Host " $PluginPath" -ForegroundColor Cyan
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
         $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
@@ -1002,7 +1017,8 @@ function A-Add-PowerToysRunPlugin {
         @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
     catch {
-        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
+        Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
+        Write-Host " $PluginPath" -ForegroundColor Cyan
         Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
         if ($ShowCN) {
             Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
@@ -1030,12 +1046,14 @@ function A-Remove-PowerToysRunPlugin {
         }
 
         if (Test-Path -Path $PluginPath) {
-            Write-Host "$($words["Removing"]) $PluginPath" -ForegroundColor Yellow
+            Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
+            Write-Host " $PluginPath" -ForegroundColor Cyan
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
     }
     catch {
-        Write-Host "$($words["Failed to remove:"]) $PluginPath" -ForegroundColor Red
+        Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
+        Write-Host " $PluginPath" -ForegroundColor Cyan
         Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
         if ($ShowCN) {
             Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
@@ -1085,6 +1103,19 @@ function A-Require-Admin {
         A-Exit
     }
 }
+
+function A-Deny-Update {
+    if ($cmd -eq "update") {
+        if ($ShowCN) {
+            Write-Host "$app 不允许通过 Scoop 更新。" -ForegroundColor Red
+        }
+        else {
+            Write-Host "$app does not allow update by Scoop." -ForegroundColor Red
+        }
+        A-Exit
+    }
+}
+
 
 function A-Get-InstallerInfoFromWinget {
     <#
@@ -1370,7 +1401,8 @@ function A-New-Link {
                     Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
                 }
                 catch {
-                    Write-Host "$($words["Failed to remove:"]) $linkPath" -ForegroundColor Red
+                    Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
+                    Write-Host " $linkPath" -ForegroundColor Cyan
                     Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
                     Write-Host $words["Please stop the relevant processes and try to $cmd $app again."] -ForegroundColor Red
                     A-Exit
@@ -2158,7 +2190,7 @@ if ($ShowCN) {
                     }
                 }
                 else {
-                (@($oldShims) | Sort-Object -Property LastWriteTimeUtc)[-1] | Rename-Item -NewName { $_.Name -replace '\.[^.]*$', '' }
+                    (@($oldShims) | Sort-Object -Property LastWriteTimeUtc)[-1] | Rename-Item -NewName { $_.Name -replace '\.[^.]*$', '' }
                 }
             }
         }
