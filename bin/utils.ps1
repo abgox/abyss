@@ -497,7 +497,7 @@ function A-Stop-Process {
             }
             catch {
                 Write-Host "$($words["Failed to terminate the process:"]) $($m.Id) $($m.Name)`n$($words["Maybe try again"])" -ForegroundColor Red
-                exit 1
+                A-Exit
             }
         }
     }
@@ -538,7 +538,7 @@ function A-Stop-Service {
     }
     catch {
         Write-Host "$($words["Failed to terminate the service:"]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
-        exit 1
+        A-Exit
     }
 
     try {
@@ -546,7 +546,7 @@ function A-Stop-Service {
     }
     catch {
         Write-Host "$($words["Failed to remove the service:" ]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
-        exit 1
+        A-Exit
     }
 }
 
@@ -664,11 +664,11 @@ function A-Install-Exe {
             } -ArgumentList $path, $ArgumentList
 
             $startTime = Get-Date
-            $fileExists = $false
+            $fileExists = Test-Path $SuccessFile
 
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                if (Test-Path $SuccessFile) {
-                    $fileExists = $true
+                $fileExists = Test-Path $SuccessFile
+                if ($fileExists) {
                     break
                 }
                 Start-Sleep -Seconds 5
@@ -796,6 +796,7 @@ function A-Uninstall-Exe {
                 PassThru     = $true
             }
 
+            $startTime = Get-Date
             $process = Start-Process @paramList
 
             try {
@@ -809,22 +810,31 @@ function A-Uninstall-Exe {
                 else {
                     Write-Host "Uninstaller timeout ($Timeout seconds), process terminated." -ForegroundColor Red
                 }
-                exit 1
+                A-Exit
             }
 
-            if (Test-Path $FailureFile) {
+            $fileExists = Test-Path $FailureFile
+            while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
+                $fileExists = Test-Path $FailureFile
+                if (!$fileExists) {
+                    break
+                }
+                Start-Sleep -Seconds 5
+            }
+
+            if ($fileExists) {
                 if ($ShowCN) {
                     Write-Host "$app 卸载失败，卸载过程被强行终止`n如果卸载程序还在运行，你可以继续和它交互，当卸载完成后，再次运行卸载命令即可" -ForegroundColor Red
                 }
                 else {
                     Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
                 }
-                exit 1
+                A-Exit
             }
         }
         catch {
             Write-Host $_.Exception.Message -ForegroundColor Red
-            exit 1
+            A-Exit
         }
     }
 }
@@ -901,7 +911,7 @@ function A-Add-Font {
             Write-Host "        sudo scoop install -g $app"
             Write-Host
         }
-        exit 1
+        A-Exit
     }
     $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
     if (!$global) {
@@ -988,7 +998,7 @@ function A-Remove-Font {
                     Write-Host " and then try again." -Foreground Magenta
                     Write-Host
                 }
-                exit 1
+                A-Exit
             }
         }
     }
@@ -1083,7 +1093,7 @@ function A-Remove-PowerToysRunPlugin {
         else {
             Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
         }
-        exit 1
+        A-Exit
     }
 }
 
@@ -1232,10 +1242,14 @@ function A-Get-InstallerInfoFromWinget {
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
         可以指定为空，表示任意类型。
+    .PARAMETER MaxExclusiveVersion
+        限制安装包的最新版本，不包含该版本。
+        如: 25.0.0 表示获取到的最新版本不能高于 25.0.0
     #>
     param(
         [string]$Package,
-        [string]$InstallerType
+        [string]$InstallerType,
+        [string]$MaxExclusiveVersion
     )
 
     $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
@@ -1264,9 +1278,9 @@ function A-Get-InstallerInfoFromWinget {
     try {
         Write-Host "正在访问: $url" -ForegroundColor Green
         $parameters = @{
-            'Uri'                      = $url
-            'ConnectionTimeoutSeconds' = 10
-            'OperationTimeoutSeconds'  = 15
+            Uri                      = $url
+            ConnectionTimeoutSeconds = 10
+            OperationTimeoutSeconds  = 15
         }
         if ($env:GITHUB_TOKEN) {
             $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
@@ -1281,10 +1295,19 @@ function A-Get-InstallerInfoFromWinget {
 
     $latestVersion = ""
 
-    $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } | ForEach-Object {
-        $compare = A-Compare-Version $_ $latestVersion
+    $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+
+    foreach ($v in $versions) {
+        if ($MaxExclusiveVersion) {
+            # 如果大于或等于最高版本限制，则跳过
+            $isExclusive = A-Compare-Version $v $MaxExclusiveVersion
+            if ($isExclusive -ge 0) {
+                continue
+            }
+        }
+        $compare = A-Compare-Version $v $latestVersion
         if ($compare -gt 0) {
-            $latestVersion = $_
+            $latestVersion = $v
         }
     }
 
@@ -1295,9 +1318,9 @@ function A-Get-InstallerInfoFromWinget {
     try {
         Write-Host "正在访问: $url" -ForegroundColor Green
         $parameters = @{
-            'Uri'                      = $url
-            'ConnectionTimeoutSeconds' = 10
-            'OperationTimeoutSeconds'  = 15
+            Uri                      = $url
+            ConnectionTimeoutSeconds = 10
+            OperationTimeoutSeconds  = 15
         }
         if ($env:GITHUB_TOKEN) {
             $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
