@@ -162,13 +162,13 @@
 
 - Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录中的数据文件
 
-  - 以 [abgox.PSCompletions](./bucket/abgox.PSCompletions.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\abgox.PSCompletions` 目录中
+  - 以 [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\abgox.PSCompletions` 目录中
   - 然后会持久化(persist)数据目录和配置文件:
 
     - `D:\Scoop\apps\abgox.PSCompletions\completions` => `D:\Scoop\persist\abgox.PSCompletions\completions`
     - `D:\Scoop\apps\abgox.PSCompletions\data.json` => `D:\Scoop\persist\abgox.PSCompletions\data.json`
 
-  - 当卸载 [abgox.PSCompletions](./bucket/abgox.PSCompletions.json) 时，Scoop 只会删除 `D:\Scoop\apps\abgox.PSCompletions` 目录，而不会删除 `D:\Scoop\persist\abgox.PSCompletions` 目录
+  - 当卸载 [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) 时，Scoop 只会删除 `D:\Scoop\apps\abgox.PSCompletions` 目录，而不会删除 `D:\Scoop\persist\abgox.PSCompletions` 目录
     - 因此，它的设置、补全数据仍然会保存在 `D:\Scoop\persist\abgox.PSCompletions` 目录中
     - 重新安装后，又会继续使用这些数据
   - 如果卸载时使用了 `-p/--purge` 参数，`D:\Scoop\persist\abgox.PSCompletions` 目录才会被删除
@@ -186,8 +186,8 @@
 - Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
 - 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
 - 像这样的应用，`abyss` 选择使用 `New-Item -ItemType Junction` 进行链接
-- 以 [Microsoft.VisualStudioCode](./bucket/Microsoft.VisualStudioCode.json) 为例
-  - [Microsoft.VisualStudioCode](./bucket/Microsoft.VisualStudioCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
+- 以 [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) 为例
+  - [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
   - `$persist_dir` = `D:\Scoop\persist\Microsoft.VisualStudioCode`
   - 它会进行链接:

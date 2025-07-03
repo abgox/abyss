@@ -161,11 +161,11 @@
 
 - Scoop provides a `persist` configuration in the manifest files, which can persist data files in the app directory.
 
-  - Taking [abgox.PSCompletions](./bucket/abgox.PSCompletions.json) as an example, Scoop will install it to `D:\Scoop\apps\abgox.PSCompletions`.
+  - Taking [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) as an example, Scoop will install it to `D:\Scoop\apps\abgox.PSCompletions`.
   - It will persist data directory and file:
     - `D:\Scoop\apps\abgox.PSCompletions\completions` => `D:\Scoop\persist\abgox.PSCompletions\completions`
     - `D:\Scoop\apps\abgox.PSCompletions\data.json` => `D:\Scoop\persist\abgox.PSCompletions\data.json`
-  - When uninstalling [abgox.PSCompletions](./bucket/abgox.PSCompletions.json), Scoop only removes the `D:\Scoop\apps\abgox.PSCompletions` directory, not the `D:\Scoop\persist\abgox.PSCompletions` directory.
+  - When uninstalling [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json), Scoop only removes the `D:\Scoop\apps\abgox.PSCompletions` directory, not the `D:\Scoop\persist\abgox.PSCompletions` directory.
     - So, its settings and completion data will still be saved in the `D:\Scoop\persist\abgox.PSCompletions` directory.
     - After reinstalling, the data will continue to be used again.
   - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\abgox.PSCompletions` directory will be removed.
@@ -183,8 +183,8 @@
 - Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the app data resides within the installation directory.
 - However, some apps store their data outside the installation directory, commonly in `$env:AppData`.
 - For such apps, they will use `New-Item -ItemType Junction` to link.
-- Taking [Microsoft.VisualStudioCode](./bucket/Microsoft.VisualStudioCode.json) as an example:
-  - [Microsoft.VisualStudioCode](./bucket/Microsoft.VisualStudioCode.json) stores its data in `$env:AppData\Code` and `$env:UserProfile\.vscode`
+- Taking [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) as an example:
+  - [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) stores its data in `$env:AppData\Code` and `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
   - `$persist_dir` = `D:\Scoop\persist\Microsoft.VisualStudioCode`
   - It will link:
