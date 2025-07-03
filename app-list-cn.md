@@ -37,7 +37,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (177)|Tag|Description|
+|App (178)|Tag|Description|
 |:-:|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击查看 123.123pan 的仓库或主页")|[v2.4.0.0](./bucket/123.123pan.json "点击查看 123.123pan 的 manifest json 文件")<br /><code title="123.123pan 使用 Link 进行数据持久化">Link</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击查看 1zilc.FishingFunds 的仓库或主页")|[v8.5.0](./bucket/1zilc.FishingFunds.json "点击查看 1zilc.FishingFunds 的 manifest json 文件")<br /><code title="1zilc.FishingFunds 使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -112,6 +112,7 @@
 |[Git.Git](https://gitforwindows.org/ "点击查看 Git.Git 的仓库或主页")|[v2.50.0.2](./bucket/Git.Git.json "点击查看 Git.Git 的 manifest json 文件")<br /><code title="Git.Git 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个分布式版本控制系统。|
 |[GitExtensionsTeam.GitExtensions](https://gitextensions.github.io/ "点击查看 GitExtensionsTeam.GitExtensions 的仓库或主页")|[v6.0.0.18195](./bucket/GitExtensionsTeam.GitExtensions.json "点击查看 GitExtensionsTeam.GitExtensions 的 manifest json 文件")<br /><code title="GitExtensionsTeam.GitExtensions 使用 Scoop 官方的 persist">persist</code>|一个用于管理 Git 仓库的独立用户界面工具。|
 |[GnuPG.Gpg4win](https://www.gpg4win.org "点击查看 GnuPG.Gpg4win 的仓库或主页")|[v4.4.1](./bucket/GnuPG.Gpg4win.json "点击查看 GnuPG.Gpg4win 的 manifest json 文件")<br /><code title="GnuPG.Gpg4win 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|GNU Privacy Guard 是一款用于文件和电子邮件的加密软件，适用于 Windows 系统。|
+|[Google.Chrome.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击查看 Google.Chrome.EXE 的仓库或主页")|[v138.0.7204.97](./bucket/Google.Chrome.EXE.json "点击查看 Google.Chrome.EXE 的 manifest json 文件")<br /><code title="Google.Chrome.EXE 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。|
 |[GopeedLab.Gopeed](https://gopeed.com "点击查看 GopeedLab.Gopeed 的仓库或主页")|[v1.7.0](./bucket/GopeedLab.Gopeed.json "点击查看 GopeedLab.Gopeed 的 manifest json 文件")<br /><code title="GopeedLab.Gopeed 使用 Scoop 官方的 persist">persist</code>|一款现代下载管理器，使用 Golang 和 Flutter 构建。|
 |[grzhan.PowerToysRun-HttpStatusCodes](https://github.com/grzhan/HttpStatusCodePowerToys "点击查看 grzhan.PowerToysRun-HttpStatusCodes 的仓库或主页")|[v0.1.3](./bucket/grzhan.PowerToysRun-HttpStatusCodes.json "点击查看 grzhan.PowerToysRun-HttpStatusCodes 的 manifest json 文件")|一个 PowerToys Run 插件，用于搜索 HTTP 状态代码。|
 |[Helix.Helix](https://helix-editor.com "点击查看 Helix.Helix 的仓库或主页")|[v25.01.1](./bucket/Helix.Helix.json "点击查看 Helix.Helix 的 manifest json 文件")<br /><code title="Helix.Helix 使用 Link 进行数据持久化">Link</code>|后现代文本编辑器。|
