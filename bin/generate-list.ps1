@@ -116,7 +116,7 @@ foreach ($path in $PathList) {
                 $label = '<code title="' + $app + ' 使用 Link 进行数据持久化">Link</code>'
             }
             else {
-                $label = '<code title="' + $app + ' uses Link for data persistence">Link</code>'
+                $label = '<code title="' + $app + ' uses Link to persist data">Link</code>'
             }
 
             $tag += $label
@@ -176,7 +176,7 @@ foreach ($path in $PathList) {
         }
         $tag += if ($isMsix) { $label }
 
-        $info += ($tag | Sort-Object -Unique) -join '<br />'
+        $info += $tag -join '<br />'
 
         ## description
         $description = $json.description -split '(?<=。)(?=[^。]+$)'
