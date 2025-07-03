@@ -620,23 +620,26 @@ function A-Install-Exe {
     if (Test-Path $path) {
         try {
             if ($ShowCN) {
-                Write-Host "正在运行安装程序 ($fileName) 安装 $app，请耐心等待..." -ForegroundColor Yellow
+                Write-Host "正在运行安装程序 ($fileName) 安装 $app" -ForegroundColor Yellow
                 # if ($ArgumentList) {
                 #     Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
                 # }
+                $msg = "如果安装超时($Timeout 秒)，安装过程将被强行终止"
                 if ($NoSilent) {
-                    Write-Host "安装程序可能需要你手动进行一些交互操作，如果安装超时($Timeout 秒)，将强行终止安装进程" -ForegroundColor Yellow
+                    $msg = "安装程序可能需要你手动进行交互操作，" + $msg
                 }
             }
             else {
-                Write-Host "Installing '$app' using installer ($fileName), please wait..." -ForegroundColor Yellow
+                Write-Host "Installing '$app' using installer ($fileName)" -ForegroundColor Yellow
                 # if ($ArgumentList) {
                 #     Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
                 # }
+                $msg = "If installation timeout ($Timeout seconds), the process will be terminated."
                 if ($NoSilent) {
-                    Write-Host "The installer may require you to perform some manual operations, if installation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                    $msg = "The installer may require you to perform some manual operations, " + $msg
                 }
             }
+            Write-Host $msg -ForegroundColor Yellow
 
             if (!$SuccessFile) {
                 $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
@@ -664,6 +667,7 @@ function A-Install-Exe {
             } -ArgumentList $path, $ArgumentList
 
             $startTime = Get-Date
+            $seconds = 1
             $fileExists = Test-Path $SuccessFile
 
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
@@ -671,8 +675,17 @@ function A-Install-Exe {
                 if ($fileExists) {
                     break
                 }
-                Start-Sleep -Seconds 5
+                if ($ShowCN) {
+                    Write-Host -NoNewline "`r等待应用安装完成: $seconds 秒" -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
+                }
+                Start-Sleep -Seconds 1
+                $seconds += 1
             }
+            Write-Host
+
             if ($path -notmatch "^C:\\Windows\\System32\\") {
                 $null = Start-Job -ScriptBlock {
                     param($path, $job)
@@ -693,7 +706,7 @@ function A-Install-Exe {
                     Write-Host "安装成功" -ForegroundColor Green
                 }
                 else {
-                    Write-Host "Installation successful, process terminated." -ForegroundColor Green
+                    Write-Host "Install successfully." -ForegroundColor Green
                 }
             }
             else {
@@ -755,33 +768,36 @@ function A-Uninstall-Exe {
 
     if (Test-Path $path) {
         if ($ShowCN) {
-            Write-Host "正在运行卸载程序 ($fileName) 卸载 $app，请耐心等待..." -ForegroundColor Yellow
+            Write-Host "正在运行卸载程序 ($fileName) 卸载 $app" -ForegroundColor Yellow
             # if ($ArgumentList) {
             #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
             # }
+            $msg = "如果卸载超时($Timeout 秒)，卸载过程将被强行终止"
             if ($NoSilent) {
                 if ($Wait) {
-                    Write-Host "卸载程序可能需要你手动进行一些交互操作，如果卸载程序不结束，卸载过程将一直陷入等待" -ForegroundColor Yellow
+                    $msg = "卸载程序可能需要你手动进行交互操作，如果卸载程序不结束，卸载过程将一直陷入等待"
                 }
                 else {
-                    Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
+                    $msg = "卸载程序可能需要你手动进行交互操作，" + $msg
                 }
             }
         }
         else {
-            Write-Host "Uninstalling '$app' using uninstaller ($fileName), please wait..." -ForegroundColor Yellow
+            Write-Host "Uninstalling '$app' using uninstaller ($fileName)" -ForegroundColor Yellow
             # if ($ArgumentList) {
             #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
             # }
+            $msg = "If the uninstallation times out ($Timeout seconds), the process will be terminated."
             if ($NoSilent) {
                 if ($Wait) {
-                    Write-Host "The uninstaller may require you to perform some manual operations. If the uninstaller does not end, the uninstallation process will be indefinitely waiting." -ForegroundColor Yellow
+                    $msg = "The uninstaller may require you to perform some manual operations. If the uninstaller does not end, the uninstallation process will be indefinitely waiting."
                 }
                 else {
-                    Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                    $msg = "The uninstaller may require you to perform some manual operations. " + $msg
                 }
             }
         }
+        Write-Host $msg -ForegroundColor Yellow
 
         if (!$PSBoundParameters.ContainsKey('FailureFile')) {
             $FailureFile = $path
@@ -814,13 +830,22 @@ function A-Uninstall-Exe {
             }
 
             $fileExists = Test-Path $FailureFile
+            $seconds = 1
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
                 $fileExists = Test-Path $FailureFile
                 if (!$fileExists) {
                     break
                 }
-                Start-Sleep -Seconds 5
+                if ($ShowCN) {
+                    Write-Host -NoNewline "`r等待卸载程序完成: $seconds 秒" -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host -NoNewline "`rWaiting for uninstaller to complete: $seconds seconds" -ForegroundColor Yellow
+                }
+                Start-Sleep -Seconds 1
+                $seconds += 1
             }
+            Write-Host
 
             if ($fileExists) {
                 if ($ShowCN) {
@@ -830,6 +855,14 @@ function A-Uninstall-Exe {
                     Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
                 }
                 A-Exit
+            }
+            else {
+                if ($ShowCN) {
+                    Write-Host "卸载成功" -ForegroundColor Green
+                }
+                else {
+                    Write-Host "Uninstall successfully." -ForegroundColor Green
+                }
             }
         }
         catch {
