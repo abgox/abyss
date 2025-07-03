@@ -19,20 +19,14 @@
     "pre_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "if ($cmd -ne 'update') {",
-        "    $r = \"$env:LocalAppData\\Microsoft\\PowerToys\"",
-        "    $LinkPath = @(\"$r\\settings.json\")",
-        "    'AdvancedPaste', 'AlwaysOnTop', 'Awake', 'ColorPicker', 'CropAndLock', 'EnvironmentVariables', 'FancyZones', 'File Explorer', 'File Locksmith', 'FindMyMouse', 'Hosts', 'Image Resizer', 'Keyboard Manager', 'Measure Tool', 'MouseHighlighter', 'MouseJump', 'MousePointerCrosshairs', 'MouseWithoutBorders', 'NewPlus', 'Peek', 'PowerToys Run', 'QuickAccent', 'RegistryPreview', 'Shortcut Guide', 'TextExtractor', 'Workspaces' | ForEach-Object { $LinkPath += \"$r\\$_\\settings.json\" }",
-        "    $LinkPath += \"$r\\File Locksmith\\file-locksmith-settings.json\"",
-        "    $LinkPath += \"$r\\PowerRename\\power-rename-settings.json\"",
-        "    A-New-LinkFile $LinkPath",
-        "    A-New-LinkDirectory @(\"$r\\PowerToys Run\\Settings\",\"$r\\PowerToys Run\\Plugins\")",
-        "}",
         "A-Install-Exe -ArgumentList @('/quiet','/norestart') -SuccessFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\""
     ],
     "post_install": [
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Start-PostInstall",
+        "if ($cmd -ne 'update') {",
+        "    A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\PowerToys\")",
+        "}"
     ],
     "pre_uninstall": [
         "$bucket = $install.bucket",
