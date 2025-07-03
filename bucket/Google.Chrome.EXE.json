@@ -1,0 +1,86 @@
+{
+    "version": "138.0.7204.97",
+    "description": "谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。Chrome Browser - Fast, secure, and free web browser, built for the modern web.",
+    "homepage": "https://www.google.com/intl/zh-CN/chrome/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.google.com/intl/zh-CN/chrome/terms/"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files\\Google\\Chrome",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "Google Chrome 的实际安装目录: C:\\Program Files\\Google\\Chrome",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://dl.google.com/release2/chrome/acfputsgwfhpt46zcvjobof6evfq_138.0.7204.97/138.0.7204.97_chrome_installer_uncompressed.exe",
+            "hash": "271c504759f4935adc506b95377f4d9c25f9b19ba815fdbf7de92532889c5137"
+        },
+        "arm64": {
+            "url": "https://dl.google.com/release2/chrome/aclti4ao6bjj7bdrj35nez64a7qq_138.0.7204.97/138.0.7204.97_chrome_installer_uncompressed.exe",
+            "hash": "eed972a858d21ff0088433a153d43dbdad48f0a83d329e29a28e445335bcb490"
+        }
+    },
+    "shortcuts": [
+        [
+            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "Google Chrome"
+        ]
+    ],
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('--system-level','--do-not-launch-chrome')"
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome\\User Data\")"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Uninstall-Exe -Uninstaller \"C:\\Program Files\\Google\\Chrome\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--chrome','--uninstall','--system-level','--multi-install','--force-uninstall')",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Google.Chrome.EXE' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
