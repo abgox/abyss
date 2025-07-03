@@ -1,0 +1,79 @@
+{
+    "version": "1.4.0.30",
+    "description": "微信输入法，由腾讯的微信团队开发。An input method developed by the WeChat team of Tencent.",
+    "homepage": "https://z.weixin.qq.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://wetype.wxqcloud.qq.com/page/article/index/14.html"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files\\Tencent\\WeType",
+        "Scoop only manages installation and uninstallation, and cannot update via Scoop."
+    ],
+    "notes-cn": [
+        "微信输入法的实际安装目录: C:\\Program Files\\Tencent\\WeType",
+        "Scoop 只管理它的安装和卸载操作，无法通过 Scoop 更新"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://download.z.weixin.qq.com/app/win/WeTypeSetup_1.4.0.30_3.exe",
+            "hash": "fc1dd0a61eb86bd1831777e244c69cec0cf53c74ab2d98decdbd4319ada8c276"
+        },
+        "arm64": {
+            "url": "https://download.z.weixin.qq.com/app/win/WeTypeSetup_1.4.0.30_3.exe",
+            "hash": "fc1dd0a61eb86bd1831777e244c69cec0cf53c74ab2d98decdbd4319ada8c276"
+        }
+    },
+    "pre_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/s') -SuccessFile \"C:\\Program Files\\Tencent\\WeType\\$version\\Uninstall.exe\""
+    ],
+    "post_install": [
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Deny-Update",
+        "A-Require-Admin",
+        "A-Uninstall-Exe -Uninstaller \"C:\\Program Files\\Tencent\\WeType\\$version\\Uninstall.exe\" -ArgumentList @() -NoSilent"
+    ],
+    "post_uninstall": [
+        "$bucket = $install.bucket",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Tencent.WeType' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
