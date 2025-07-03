@@ -34,6 +34,7 @@
         - A-Require-Admin: 要求以管理员权限运行
         - A-Test-Admin: 检查是否以管理员权限运行
         - A-Deny-Update: 禁止通过 Scoop 更新(在 pre_uninstall 中使用)
+        - A-Get-ProductCode: 获取应用的产品代码
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
         - A-Move-PersistDirectory: 用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
             - 它用于未来可能存在的清单文件更名
@@ -74,7 +75,7 @@ function A-Test-Admin {
 $isAdmin = A-Test-Admin
 
 # 如果没有 $cmd，表示在自动化执行更新检查，此时中文内容可能导致错误。
-$ShowCN = $PSUICulture -like "zh*" -and $cmd
+$ShowCN = $PSUICulture -like 'zh*' -and $cmd
 
 if ($ShowCN) {
     $cmdMap_zh = @{
@@ -99,12 +100,11 @@ if ($ShowCN) {
         "Failed to terminate the process:"                               = "无法终止进程:"
         "Maybe try again"                                                = "可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
         "No running processes found."                                    = "未找到正在运行的相关进程。"
-        "If failed to uninstall, You may need to try again"              = "如果卸载失败，可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
+        "If failed, You may need to try again"                           = "如果$($cmdMap_zh[$cmd])失败，可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
         "Successfully terminated the service:"                           = "成功终止服务:"
         "Failed to terminate the service:"                               = "无法终止服务:"
         "Failed to remove the service:"                                  = "无法删除服务:"
         "Removing link:"                                                 = "正在删除链接:"
-        "Removing Temp data:"                                            = "正在删除临时数据:"
     }
 }
 else {
@@ -124,12 +124,11 @@ else {
         "Failed to terminate the process:"                               = "Failed to terminate the process:"
         "Maybe try again"                                                = "You may need to try $cmd $app again$adminText"
         "No running processes found."                                    = "No running processes found. "
-        "If failed to uninstall, You may need to try again"              = "If failed to uninstall, You may need to try $cmd $app again$adminText"
+        "If failed, You may need to try again"                           = "If failed to $cmd, You may need to try $cmd $app again$adminText"
         "Successfully terminated the service:"                           = "Successfully terminated the service:"
         "Failed to terminate the service:"                               = "Failed to terminate the service:"
         "Failed to remove the service:"                                  = "Failed to remove the service:"
         "Removing link:"                                                 = "Removing link:"
-        "Removing Temp data:"                                            = "Removing Temp data:"
     }
 }
 
@@ -282,11 +281,12 @@ function A-New-LinkFile {
         $LinkTarget = $LinkTargets[$i]
 
         if (!$LinkTargets[$i]) {
-            if ($LinkPath -notlike "*$env:UserProfile*") {
-                Write-Host $words["The number of links is wrong"] -ForegroundColor Red
-                A-Exit
+            $path = $LinkPath.replace($env:UserProfile, $persist_dir)
+            # 如果不在 $env:UserProfile 目录下，则去掉盘符
+            if ($path -notlike "$persist_dir*") {
+                $path = $path -replace '^[a-zA-Z]:', $persist_dir
             }
-            $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
+            $LinkTargets.Add($path)
         }
     }
 
@@ -348,11 +348,12 @@ function A-New-LinkDirectory {
         $LinkTarget = $LinkTargets[$i]
 
         if (!$LinkTarget) {
-            if ($LinkPath -notlike "*$env:UserProfile*") {
-                Write-Host $words["The number of links is wrong"] -ForegroundColor Red
-                A-Exit
+            $path = $LinkPath.replace($env:UserProfile, $persist_dir)
+            # 如果不在 $env:UserProfile 目录下，则去掉盘符
+            if ($path -notlike "$persist_dir*") {
+                $path = $path -replace '^[a-zA-Z]:', $persist_dir
             }
-            $LinkTargets.Add($LinkPath.replace($env:UserProfile, $persist_dir))
+            $LinkTargets.Add($path)
         }
     }
 
@@ -423,7 +424,7 @@ function A-Remove-TempData {
     foreach ($p in $Paths) {
         if (Test-Path $p) {
             try {
-                Write-Host $words["Removing Temp data:" ] -ForegroundColor Yellow -NoNewline
+                Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
                 Write-Host " $p" -ForegroundColor Cyan
                 Remove-Item $p -Force -Recurse -ErrorAction Stop
             }
@@ -502,7 +503,7 @@ function A-Stop-Process {
     }
 
     if ($NoFound) {
-        Write-Host "$($words["No running processes found."])$($words["If failed to uninstall, You may need to try again"])" -ForegroundColor Yellow
+        Write-Host "$($words["No running processes found."])$($words["If failed, You may need to try again"])" -ForegroundColor Yellow
     }
 
     Start-Sleep -Seconds 1
@@ -595,7 +596,12 @@ function A-Install-Exe {
     }
 
     if ($PSBoundParameters.ContainsKey('Installer')) {
-        $path = "$dir\$Installer"
+        if ([System.IO.Path]::IsPathRooted($Installer)) {
+            $path = $Installer
+        }
+        else {
+            $path = "$dir\$Installer"
+        }
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
@@ -667,19 +673,20 @@ function A-Install-Exe {
                 }
                 Start-Sleep -Seconds 5
             }
+            if ($path -notmatch "^C:\\Windows\\System32\\") {
+                $null = Start-Job -ScriptBlock {
+                    param($path, $job)
+                    # 30 秒后再删除安装程序
+                    Start-Sleep -Seconds 30
 
-            $null = Start-Job -ScriptBlock {
-                param($path, $job)
-                # 30 秒后再删除安装程序
-                Start-Sleep -Seconds 30
+                    $job | Stop-Job -ErrorAction SilentlyContinue
 
-                $job | Stop-Job -ErrorAction SilentlyContinue
+                    Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
 
-                Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
+                    Remove-Item $path -Force -ErrorAction SilentlyContinue
 
-                Remove-Item $path -Force -ErrorAction SilentlyContinue
-
-            } -ArgumentList $path, $job
+                } -ArgumentList $path, $job
+            }
 
             if ($fileExists) {
                 if ($ShowCN) {
@@ -725,6 +732,10 @@ function A-Uninstall-Exe {
         [string]$Timeout = 300,
         # 如果存在这个 FailureFile 指定的文件或路径，则认定为卸载失败
         [string]$FailureFile,
+        # 是否等待卸载程序完成
+        # 它会忽略超时时间，一直等待卸载程序结束
+        # 除非确定卸载程序会自动结束，否则不要使用
+        [switch]$Wait,
         # 是否需要隐藏卸载程序窗口
         [switch]$Hidden
     )
@@ -749,7 +760,12 @@ function A-Uninstall-Exe {
             #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
             # }
             if ($NoSilent) {
-                Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
+                if ($Wait) {
+                    Write-Host "卸载程序可能需要你手动进行一些交互操作，如果卸载程序不结束，卸载过程将一直陷入等待" -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
+                }
             }
         }
         else {
@@ -758,7 +774,12 @@ function A-Uninstall-Exe {
             #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
             # }
             if ($NoSilent) {
-                Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                if ($Wait) {
+                    Write-Host "The uninstaller may require you to perform some manual operations. If the uninstaller does not end, the uninstallation process will be indefinitely waiting." -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                }
             }
         }
 
@@ -771,6 +792,7 @@ function A-Uninstall-Exe {
                 FilePath     = $path
                 ArgumentList = $ArgumentList
                 WindowStyle  = if ($Hidden) { "Hidden" }else { "Normal" }
+                Wait         = $Wait
                 PassThru     = $true
             }
 
@@ -1158,6 +1180,42 @@ function A-Move-PersistDirectory {
 }
 
 
+function A-Get-ProductCode {
+    param (
+        [string]$AppNamePattern
+    )
+
+    # 搜索注册表位置
+    $registryPaths = @(
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+
+    foreach ($path in $registryPaths) {
+        # 获取所有卸载项
+        $uninstallItems = Get-ChildItem $path -ErrorAction SilentlyContinue | Get-ItemProperty
+
+        foreach ($item in $uninstallItems) {
+            if ($null -ne $item.DisplayName -and $item.DisplayName -match $AppNamePattern) {
+                if ($item.UninstallString -match '\{[0-9A-Fa-f\-]{36}\}') {
+                    # 返回匹配到的第一个 ProductCode GUID
+                    return $Matches[0]
+                }
+            }
+        }
+    }
+
+    if ($ShowCN) {
+        Write-Host "没有找到 $app 的生产代码，可能在安装过程中存在问题" -ForegroundColor Red
+    }
+    else {
+        Write-Host "Cannot find product code of $app，maybe there is a problem during installation" -ForegroundColor Red
+    }
+
+    return $null
+}
+
+
 function A-Get-InstallerInfoFromWinget {
     <#
     .SYNOPSIS
@@ -1414,8 +1472,6 @@ function A-New-Link {
     }
 
     if ($LinkPaths.Count) {
-        Write-Host
-
         for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
             $linkPath = $LinkPaths[$i]
             $linkTarget = $LinkTargets[$i]
@@ -1469,8 +1525,6 @@ function A-New-Link {
             Write-Host " => " -NoNewline
             Write-Host $linkTarget -ForegroundColor Cyan
         }
-        Write-Host
-
         $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
 }
@@ -1510,7 +1564,7 @@ function A-Add-AppxPackage {
     $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-AppxPackage.jsonc" -Force -Encoding utf8
 
     if ($ShowCN) {
-        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理可能的数据 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
+        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理可能存在的数据 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
     }
     else {
         Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the possible persistence of data, and the installation, update, uninstallation." -ForegroundColor Yellow
@@ -2417,6 +2471,14 @@ if ($ShowCN) {
     #region function startmenu_shortcut: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L31
     Set-Item -Path Function:\startmenu_shortcut -Value {
         param([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global)
+
+        # 支持 shortcuts 中包含 env:xxx 环境变量
+        $filename = $target.FullName
+        if ($filename -match '\$env:[a-zA-Z_].*') {
+            $filename = $filename.Replace("$dir\", '')
+            $target = [System.IO.FileInfo]::new((Invoke-Expression "`"$filename`""))
+        }
+
         if (!$target.Exists) {
             Write-Host -f DarkRed "为 $(fname $target) 创建快捷方式 $shortcutName 失败了: 没有找到 $target"
             return
