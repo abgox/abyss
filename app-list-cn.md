@@ -7,13 +7,13 @@
   - **`App`**：应用包的名称 `Publisher.PackageIdentifier`
 
     - 点击查看仓库或官网
-    - 按照数字字母排序：0-9,a-z
+    - 按照首字母(数字)排序：0-9a-z
 
   - **`Tag`**：标签
 
     - 基础标签
 
-      - [v1.0.0](#应用清单-manifests)：应用版本，点击它查看 json 清单文件
+      - `v1.0.0`：应用版本，点击它查看 json 清单文件
       - `Persist`：使用 Scoop 官方的 [Persist](./readme-cn.md#persist) 实现数据持久化
       - `Link`：使用 `New-Item -ItemType Junction` 实现数据持久化, 详情参考 [Link](./readme-cn.md#link)
 

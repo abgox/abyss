@@ -31,13 +31,17 @@
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
-> - 如果其他 bucket 想要合并它们，请谨慎检查可用性
+>   - 带有不同于 Scoop 官方 bucket 的风格
+>   - 包含部分 [特性](#特性)，它们不在 Scoop 官方规范内
+> - 如果其他 bucket 想要合并它们，可能需要仔细检查其兼容性和可用性。
 
 ### 特性
 
 #### Bucket
 
-- `abyss` 参考并使用了 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 的命名格式: `Publisher.PackageIdentifier`
+- `abyss` 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
+  - 清单命名格式: `Publisher.PackageIdentifier`
+  - 目录结构: `bucket/a/abgox/abgox.PSCompletions.json`
 
 #### Manifest
 
@@ -123,7 +127,7 @@
 4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
 
    ```pwsh
-   scoop-install abyss/abgox.PSCompletions
+   scoop-install abyss/Microsoft.PowerShell
    ```
 
 5. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)

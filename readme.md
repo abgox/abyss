@@ -30,14 +30,19 @@
 
 > [!Warning]
 >
-> - Manifests in `abyss` is based on [bin/utils.ps1](./bin/utils.ps1).
-> - If other buckets want to merge them, be careful to check availability.
+> - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
+>   - They follow a custom style that differs from the official Scoop buckets.
+>   - Some [features](#features) are included that are **not** part of the official Scoop specification.
+> - If other buckets intend to incorporate these manifests, please carefully verify their compatibility and availability.
 
 ### Features
 
 #### Bucket
 
-- `abyss` uses the naming format of [winget-pkgs](https://github.com/microsoft/winget-pkgs): `Publisher.PackageIdentifier`
+- Inspired by [winget-pkgs](https://github.com/microsoft/winget-pkgs).
+
+  - Manifest naming format: `Publisher.PackageIdentifier`
+  - Directory structure: `bucket/a/abgox/abgox.PSCompletions.json`
 
 #### Manifest
 
@@ -119,7 +124,7 @@
 4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install apps.
 
    ```pwsh
-   scoop-install abyss/abgox.PSCompletions
+   scoop-install abyss/Microsoft.PowerShell
    ```
 
 5. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.
