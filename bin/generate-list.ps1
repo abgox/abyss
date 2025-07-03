@@ -2,7 +2,7 @@ param(
     [array]$PathList = @("app-list.md", "app-list-cn.md")
 )
 
-$manifests = Get-ChildItem "$PSScriptRoot\..\bucket"
+$manifests = Get-ChildItem "$PSScriptRoot\..\bucket" -Recurse -Filter *.json | Sort-Object { $_.BaseName }
 
 function A-Test-ScriptPattern {
     param(
@@ -94,7 +94,8 @@ foreach ($path in $PathList) {
 
         ## version
         $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
-        $tag += "[v$($json.version)](./bucket/$($_.Name) `"$title`")"
+        $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
+        $tag += "[v$($json.version)](./bucket/$p `"$title`")"
 
         ## persist
         $isPersist = $json.persist

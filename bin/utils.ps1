@@ -497,7 +497,7 @@ function A-Stop-Process {
             }
             catch {
                 Write-Host "$($words["Failed to terminate the process:"]) $($m.Id) $($m.Name)`n$($words["Maybe try again"])" -ForegroundColor Red
-                exit 1
+                A-Exit
             }
         }
     }
@@ -538,7 +538,7 @@ function A-Stop-Service {
     }
     catch {
         Write-Host "$($words["Failed to terminate the service:"]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
-        exit 1
+        A-Exit
     }
 
     try {
@@ -546,7 +546,7 @@ function A-Stop-Service {
     }
     catch {
         Write-Host "$($words["Failed to remove the service:" ]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
-        exit 1
+        A-Exit
     }
 }
 
@@ -620,23 +620,26 @@ function A-Install-Exe {
     if (Test-Path $path) {
         try {
             if ($ShowCN) {
-                Write-Host "正在运行安装程序 ($fileName) 安装 $app，请耐心等待..." -ForegroundColor Yellow
+                Write-Host "正在运行安装程序 ($fileName) 安装 $app" -ForegroundColor Yellow
                 # if ($ArgumentList) {
                 #     Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
                 # }
+                $msg = "如果安装超时($Timeout 秒)，安装过程将被强行终止"
                 if ($NoSilent) {
-                    Write-Host "安装程序可能需要你手动进行一些交互操作，如果安装超时($Timeout 秒)，将强行终止安装进程" -ForegroundColor Yellow
+                    $msg = "安装程序可能需要你手动进行交互操作，" + $msg
                 }
             }
             else {
-                Write-Host "Installing '$app' using installer ($fileName), please wait..." -ForegroundColor Yellow
+                Write-Host "Installing '$app' using installer ($fileName)" -ForegroundColor Yellow
                 # if ($ArgumentList) {
                 #     Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
                 # }
+                $msg = "If installation timeout ($Timeout seconds), the process will be terminated."
                 if ($NoSilent) {
-                    Write-Host "The installer may require you to perform some manual operations, if installation timeout ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                    $msg = "The installer may require you to perform some manual operations, " + $msg
                 }
             }
+            Write-Host $msg -ForegroundColor Yellow
 
             if (!$SuccessFile) {
                 $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
@@ -664,15 +667,25 @@ function A-Install-Exe {
             } -ArgumentList $path, $ArgumentList
 
             $startTime = Get-Date
-            $fileExists = $false
+            $seconds = 1
+            $fileExists = Test-Path $SuccessFile
 
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                if (Test-Path $SuccessFile) {
-                    $fileExists = $true
+                $fileExists = Test-Path $SuccessFile
+                if ($fileExists) {
                     break
                 }
-                Start-Sleep -Seconds 5
+                if ($ShowCN) {
+                    Write-Host -NoNewline "`r等待应用安装完成: $seconds 秒" -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
+                }
+                Start-Sleep -Seconds 1
+                $seconds += 1
             }
+            Write-Host
+
             if ($path -notmatch "^C:\\Windows\\System32\\") {
                 $null = Start-Job -ScriptBlock {
                     param($path, $job)
@@ -693,7 +706,7 @@ function A-Install-Exe {
                     Write-Host "安装成功" -ForegroundColor Green
                 }
                 else {
-                    Write-Host "Installation successful, process terminated." -ForegroundColor Green
+                    Write-Host "Install successfully." -ForegroundColor Green
                 }
             }
             else {
@@ -755,33 +768,36 @@ function A-Uninstall-Exe {
 
     if (Test-Path $path) {
         if ($ShowCN) {
-            Write-Host "正在运行卸载程序 ($fileName) 卸载 $app，请耐心等待..." -ForegroundColor Yellow
+            Write-Host "正在运行卸载程序 ($fileName) 卸载 $app" -ForegroundColor Yellow
             # if ($ArgumentList) {
             #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
             # }
+            $msg = "如果卸载超时($Timeout 秒)，卸载过程将被强行终止"
             if ($NoSilent) {
                 if ($Wait) {
-                    Write-Host "卸载程序可能需要你手动进行一些交互操作，如果卸载程序不结束，卸载过程将一直陷入等待" -ForegroundColor Yellow
+                    $msg = "卸载程序可能需要你手动进行交互操作，如果卸载程序不结束，卸载过程将一直陷入等待"
                 }
                 else {
-                    Write-Host "卸载程序可能需要你手动进行一些交互操作，如果等待卸载程序失败或者卸载超时($Timeout 秒)，卸载过程将被强行终止" -ForegroundColor Yellow
+                    $msg = "卸载程序可能需要你手动进行交互操作，" + $msg
                 }
             }
         }
         else {
-            Write-Host "Uninstalling '$app' using uninstaller ($fileName), please wait..." -ForegroundColor Yellow
+            Write-Host "Uninstalling '$app' using uninstaller ($fileName)" -ForegroundColor Yellow
             # if ($ArgumentList) {
             #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
             # }
+            $msg = "If the uninstallation times out ($Timeout seconds), the process will be terminated."
             if ($NoSilent) {
                 if ($Wait) {
-                    Write-Host "The uninstaller may require you to perform some manual operations. If the uninstaller does not end, the uninstallation process will be indefinitely waiting." -ForegroundColor Yellow
+                    $msg = "The uninstaller may require you to perform some manual operations. If the uninstaller does not end, the uninstallation process will be indefinitely waiting."
                 }
                 else {
-                    Write-Host "The uninstaller may require you to perform some manual operations. If waiting for the uninstaller fails or the uninstallation times out ($Timeout seconds), the process will be terminated." -ForegroundColor Yellow
+                    $msg = "The uninstaller may require you to perform some manual operations. " + $msg
                 }
             }
         }
+        Write-Host $msg -ForegroundColor Yellow
 
         if (!$PSBoundParameters.ContainsKey('FailureFile')) {
             $FailureFile = $path
@@ -796,6 +812,7 @@ function A-Uninstall-Exe {
                 PassThru     = $true
             }
 
+            $startTime = Get-Date
             $process = Start-Process @paramList
 
             try {
@@ -809,22 +826,48 @@ function A-Uninstall-Exe {
                 else {
                     Write-Host "Uninstaller timeout ($Timeout seconds), process terminated." -ForegroundColor Red
                 }
-                exit 1
+                A-Exit
             }
 
-            if (Test-Path $FailureFile) {
+            $fileExists = Test-Path $FailureFile
+            $seconds = 1
+            while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
+                $fileExists = Test-Path $FailureFile
+                if (!$fileExists) {
+                    break
+                }
+                if ($ShowCN) {
+                    Write-Host -NoNewline "`r等待卸载程序完成: $seconds 秒" -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host -NoNewline "`rWaiting for uninstaller to complete: $seconds seconds" -ForegroundColor Yellow
+                }
+                Start-Sleep -Seconds 1
+                $seconds += 1
+            }
+            Write-Host
+
+            if ($fileExists) {
                 if ($ShowCN) {
                     Write-Host "$app 卸载失败，卸载过程被强行终止`n如果卸载程序还在运行，你可以继续和它交互，当卸载完成后，再次运行卸载命令即可" -ForegroundColor Red
                 }
                 else {
                     Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
                 }
-                exit 1
+                A-Exit
+            }
+            else {
+                if ($ShowCN) {
+                    Write-Host "卸载成功" -ForegroundColor Green
+                }
+                else {
+                    Write-Host "Uninstall successfully." -ForegroundColor Green
+                }
             }
         }
         catch {
             Write-Host $_.Exception.Message -ForegroundColor Red
-            exit 1
+            A-Exit
         }
     }
 }
@@ -901,7 +944,7 @@ function A-Add-Font {
             Write-Host "        sudo scoop install -g $app"
             Write-Host
         }
-        exit 1
+        A-Exit
     }
     $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
     if (!$global) {
@@ -988,7 +1031,7 @@ function A-Remove-Font {
                     Write-Host " and then try again." -Foreground Magenta
                     Write-Host
                 }
-                exit 1
+                A-Exit
             }
         }
     }
@@ -1083,7 +1126,7 @@ function A-Remove-PowerToysRunPlugin {
         else {
             Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
         }
-        exit 1
+        A-Exit
     }
 }
 
@@ -1232,10 +1275,14 @@ function A-Get-InstallerInfoFromWinget {
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
         可以指定为空，表示任意类型。
+    .PARAMETER MaxExclusiveVersion
+        限制安装包的最新版本，不包含该版本。
+        如: 25.0.0 表示获取到的最新版本不能高于 25.0.0
     #>
     param(
         [string]$Package,
-        [string]$InstallerType
+        [string]$InstallerType,
+        [string]$MaxExclusiveVersion
     )
 
     $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
@@ -1264,9 +1311,9 @@ function A-Get-InstallerInfoFromWinget {
     try {
         Write-Host "正在访问: $url" -ForegroundColor Green
         $parameters = @{
-            'Uri'                      = $url
-            'ConnectionTimeoutSeconds' = 10
-            'OperationTimeoutSeconds'  = 15
+            Uri                      = $url
+            ConnectionTimeoutSeconds = 10
+            OperationTimeoutSeconds  = 15
         }
         if ($env:GITHUB_TOKEN) {
             $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
@@ -1281,10 +1328,19 @@ function A-Get-InstallerInfoFromWinget {
 
     $latestVersion = ""
 
-    $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } | ForEach-Object {
-        $compare = A-Compare-Version $_ $latestVersion
+    $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+
+    foreach ($v in $versions) {
+        if ($MaxExclusiveVersion) {
+            # 如果大于或等于最高版本限制，则跳过
+            $isExclusive = A-Compare-Version $v $MaxExclusiveVersion
+            if ($isExclusive -ge 0) {
+                continue
+            }
+        }
+        $compare = A-Compare-Version $v $latestVersion
         if ($compare -gt 0) {
-            $latestVersion = $_
+            $latestVersion = $v
         }
     }
 
@@ -1295,9 +1351,9 @@ function A-Get-InstallerInfoFromWinget {
     try {
         Write-Host "正在访问: $url" -ForegroundColor Green
         $parameters = @{
-            'Uri'                      = $url
-            'ConnectionTimeoutSeconds' = 10
-            'OperationTimeoutSeconds'  = 15
+            Uri                      = $url
+            ConnectionTimeoutSeconds = 10
+            OperationTimeoutSeconds  = 15
         }
         if ($env:GITHUB_TOKEN) {
             $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
