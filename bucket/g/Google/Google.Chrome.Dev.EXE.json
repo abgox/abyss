@@ -1,0 +1,88 @@
+{
+    "version": "140.0.7259.2",
+    "description": "(Dev 版本) 谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。(Dev version) Chrome Browser - Fast, secure, and free web browser, built for the modern web.",
+    "homepage": "https://www.google.com/intl/zh-CN/chrome/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.google.com/intl/zh-CN/chrome/terms/"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files\\Google\\Chrome Dev",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: C:\\Program Files\\Google\\Chrome Dev",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://dl.google.com/release2/chrome/ac27bzmqackapvk2po6ewxf4wdiq_140.0.7259.2/140.0.7259.2_chrome_installer_uncompressed.exe",
+            "hash": "eb232ae16347fe4385af43a1c7c8c46829e85ab4b61809a9043052443c9b910d"
+        },
+        "arm64": {
+            "url": "https://dl.google.com/release2/chrome/acdde4low67brgf6sa23fyc6ehyq_140.0.7259.2/140.0.7259.2_chrome_installer_uncompressed.exe",
+            "hash": "3ee381f39f8e0c6f7ca7f04d1af9de0d5448b6d0c4bbedd972f602f538f9c799"
+        }
+    },
+    "shortcuts": [
+        [
+            "C:\\Program Files\\Google\\Chrome Dev\\Application\\chrome.exe",
+            "Google Chrome Dev"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('--chrome-dev','--do-not-launch-chrome','--system-level')",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome Dev\\User Data\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Uninstall-Exe -Uninstaller \"C:\\Program Files\\Google\\Chrome Dev\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--chrome-dev','--uninstall','--system-level','--multi-install','--force-uninstall')",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Google.Chrome.Dev.EXE' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
