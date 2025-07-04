@@ -2,14 +2,17 @@
     "version": "9.9.20.36580",
     "description": "(NT 版本) QQ，腾讯的一款聊天通讯工具。(NT version) A chat communication tool by Tencent.",
     "homepage": "https://im.qq.com/",
-    "license": "Unknown",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://rule.tencent.com/rule/46a15f24-e42c-4cb6-a308-2347139b1201"
+    },
     "notes": [
-        "QQ will not be installed in Scoop directory, the installation directory: C:\\Program Files\\Tencent\\QQNT",
-        "Scoop only manages QQ's data persist, installation, update, and uninstallation operations."
+        "The installation directory: C:\\Program Files\\Tencent\\QQNT",
+        "Scoop only manages data, installation, update, and uninstallation operations."
     ],
     "notes-cn": [
-        "QQ 不会安装在 Scoop 目录下，QQ 的实际安装目录: C:\\Program Files\\Tencent\\QQNT",
-        "Scoop 只管理 QQ 的数据(通过 Link)，安装、更新、卸载操作"
+        "实际安装目录: C:\\Program Files\\Tencent\\QQNT",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
     ],
     "architecture": {
         "64bit": {
@@ -28,14 +31,11 @@
         ]
     ],
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/S')"
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
+        "A-Install-Exe -ArgumentList @('/S')",
         "$DataDir = \"$env:UserProfile\\Documents\\Tencent Files\"",
         "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
         "$PersistDir = $DataDir.Replace($env:UserProfile, $persist_dir)",
@@ -46,8 +46,13 @@
         "$LinkPaths += Join-Path $DataDir \"nt_qq\"",
         "A-New-LinkDirectory $LinkPaths"
     ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
@@ -56,7 +61,7 @@
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],

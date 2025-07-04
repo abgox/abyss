@@ -2,14 +2,17 @@
     "version": "4.0.6.17",
     "description": "微信，腾讯的一款聊天通讯工具。A chat communication tool by Tencent.",
     "homepage": "https://www.wechat.com/",
-    "license": "Unknown",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.wechat.com/zh_CN/service_terms.html"
+    },
     "notes": [
-        "WeChat will not be installed in Scoop directory, the installation directory: C:\\Program Files\\Tencent\\Weixin",
-        "Scoop only manages WeChat's data persist, installation, update, and uninstallation operations."
+        "The installation directory: C:\\Program Files\\Tencent\\Weixin",
+        "Scoop only manages data, installation, update, and uninstallation operations."
     ],
     "notes-cn": [
-        "微信不会安装在 Scoop 目录下，微信的实际安装目录: C:\\Program Files\\Tencent\\Weixin",
-        "Scoop 只管理微信的数据(通过 Link)，安装、更新、卸载操作"
+        "实际安装目录: C:\\Program Files\\Tencent\\Weixin",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
     ],
     "architecture": {
         "64bit": {
@@ -24,18 +27,20 @@
         ]
     ],
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/S')"
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
+        "A-Install-Exe -ArgumentList @('/S')",
         "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\xwechat\", \"$env:UserProfile\\Documents\\xwechat_files\")"
     ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
@@ -44,7 +49,7 @@
         "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Tencent\\Weixin\\Uninstall.exe' -NoSilent"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],

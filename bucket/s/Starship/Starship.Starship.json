@@ -22,25 +22,26 @@
     },
     "bin": "starship.exe",
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-New-PersistFile \"$persist_dir\\.config\\starship.toml\""
+        "A-New-PersistFile \"$persist_dir\\.config\\starship.toml\"",
+        "A-New-LinkFile @(\"$env:UserProfile\\.config\\starship.toml\")"
     ],
     "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:UserProfile\\.config\\starship.toml\")",
-        "A-New-LinkFile $LinkPaths"
+        "A-Start-PostInstall"
     ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],

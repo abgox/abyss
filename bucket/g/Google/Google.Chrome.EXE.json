@@ -11,7 +11,7 @@
         "Scoop only manages data, installation, update, and uninstallation operations."
     ],
     "notes-cn": [
-        "Google Chrome 的实际安装目录: C:\\Program Files\\Google\\Chrome",
+        "实际安装目录: C:\\Program Files\\Google\\Chrome",
         "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
     ],
     "architecture": {
@@ -31,18 +31,20 @@
         ]
     ],
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('--system-level','--do-not-launch-chrome')"
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
+        "A-Install-Exe -ArgumentList @('--system-level','--do-not-launch-chrome')",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome\\User Data\")"
     ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
@@ -50,7 +52,7 @@
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],

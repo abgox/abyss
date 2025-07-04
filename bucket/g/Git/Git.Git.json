@@ -29,21 +29,22 @@
         }
     },
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
         "A-Install-Exe -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile 'C:\\Program Files\\Git\\unins000.exe'",
         "A-New-PersistFile \"$persist_dir\\.gitconfig\"",
-        "A-New-PersistFile \"$persist_dir\\.gitmessage\""
+        "A-New-PersistFile \"$persist_dir\\.gitmessage\"",
+        "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")"
     ],
     "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
-        "$LinkPaths = @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")",
-        "A-New-LinkFile $LinkPaths"
+        "A-Start-PostInstall"
     ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
@@ -52,7 +53,7 @@
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],

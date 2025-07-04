@@ -13,19 +13,19 @@
         }
     },
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall"
+        "A-Start-PreInstall",
+        "$PackageFamilyName = A-Add-MsixPackage '64360VelerSoftware.DevToys_j80j2txgjg9dj'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")"
     ],
     "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
-        "$PackageFamilyName = \"64360VelerSoftware.DevToys_j80j2txgjg9dj\"",
-        "A-Add-MsixPackage",
-        "$LinkPaths = @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-Start-PostInstall"
     ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
@@ -33,7 +33,7 @@
         "A-Remove-MsixPackage"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ]

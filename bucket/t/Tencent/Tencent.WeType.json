@@ -11,7 +11,7 @@
         "Scoop only manages installation and uninstallation, and cannot update via Scoop."
     ],
     "notes-cn": [
-        "微信输入法的实际安装目录: C:\\Program Files\\Tencent\\WeType",
+        "实际安装目录: C:\\Program Files\\Tencent\\WeType",
         "Scoop 只管理它的安装和卸载操作，无法通过 Scoop 更新"
     ],
     "architecture": {
@@ -25,17 +25,19 @@
         }
     },
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
         "A-Install-Exe -ArgumentList @('/s') -SuccessFile \"C:\\Program Files\\Tencent\\WeType\\$version\\Uninstall.exe\""
     ],
     "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostInstall"
     ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Deny-Update",
@@ -43,7 +45,7 @@
         "A-Uninstall-Exe -Uninstaller \"C:\\Program Files\\Tencent\\WeType\\$version\\Uninstall.exe\" -ArgumentList @() -NoSilent"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],

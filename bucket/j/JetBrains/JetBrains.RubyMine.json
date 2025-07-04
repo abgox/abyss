@@ -29,22 +29,24 @@
         ]
     ],
     "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -SuccessFile 'App\\bin\\Uninstall.exe'"
-    ],
-    "post_install": [
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall",
+        "A-Install-Exe -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -SuccessFile 'App\\bin\\Uninstall.exe'",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"RubyMine$versionShort\"",
         "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
     ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
     "pre_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
@@ -57,7 +59,7 @@
         "A-Remove-TempData @(\"$env:LocalAppData\\JetBrains\\$DataDir\")"
     ],
     "post_uninstall": [
-        "$bucket = $install.bucket",
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],
