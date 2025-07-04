@@ -3,24 +3,25 @@
 <#
 一些能在清单中使用的函数:
 
-    1. 在 pre_install 和 post_install 中
+    1. 在 pre_install
 
         - A-Start-PreInstall: 此函数运行之后，开始执行 pre_install
-        - A-Start-PostInstall: 此函数运行之后，开始执行 post_install
-        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包，优先使用 A-Install-Exe
+        - A-Require-Admin: 要求以管理员权限运行
         - A-Ensure-Directory: 确保指定目录路径存在
+        - A-Copy-Item: 复制文件或目录
         - A-New-PersistFile: 创建文件，可选择设置内容(不能在 post_install 中使用)
-        - A-New-LinkFile: 为文件创建 SymbolicLink
         - A-New-LinkDirectory: 为目录创建 Junction
+        - A-New-LinkFile: 为文件创建 SymbolicLink
         - A-Add-Font: 安装字体
         - A-Add-MsixPackage: 安装 AppX/Msix 包
         - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
         - A-Install-Exe: 运行安装程序
+        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包，优先使用 A-Install-Exe
 
-    2. 在 pre_uninstall 和 post_uninstall 中
+    2. 在 pre_uninstall
 
         - A-Start-PreUninstall: 此函数运行之后，开始执行 pre_uninstall
-        - A-Start-PostUninstall: 此函数运行之后，开始执行 post_uninstall
+        - A-Deny-Update: 禁止通过 Scoop 更新
         - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
         - A-Stop-Service: 尝试停止并移除指定的应用服务，以确保能正常卸载
         - A-Remove-Link: 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction
@@ -31,9 +32,7 @@
         - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
 
     3. 其他:
-        - A-Require-Admin: 要求以管理员权限运行
         - A-Test-Admin: 检查是否以管理员权限运行
-        - A-Deny-Update: 禁止通过 Scoop 更新(在 pre_uninstall 中使用)
         - A-Get-ProductCode: 获取应用的产品代码
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
         - A-Move-PersistDirectory: 用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
@@ -51,11 +50,16 @@ Write-Host
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
 try {
-    $uninstallActionLevel = (scoop config).'app-uninstall-action-level'
+    $ScoopConfig = scoop config
+    $uninstallActionLevel = $ScoopConfig.'app-uninstall-action-level'
+
+    if ($bucket -and $ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
+        scoop config 'abgox-abyss-bucket-name' $bucket
+    }
 }
 catch {}
 
-if ($uninstallActionLevel -eq $null) {
+if ($null -eq $uninstallActionLevel) {
     $uninstallActionLevel = "1"
 }
 
@@ -130,6 +134,36 @@ else {
         "Failed to remove the service:"                                  = "Failed to remove the service:"
         "Removing link:"                                                 = "Removing link:"
     }
+}
+
+function A-Start-PreInstall {
+    <#
+    .SYNOPSIS
+        此函数运行之后，开始执行 pre_install
+    #>
+}
+
+function A-Start-PostInstall {
+    <#
+    .SYNOPSIS
+        此函数运行之后，开始执行 post_install
+        由于 abyss 中的应用会在 pre_install 阶段完成安装，所以此函数可以当做安装阶段的最后一步
+    #>
+}
+
+function A-Start-PreUninstall {
+    <#
+    .SYNOPSIS
+        此函数运行之后，开始执行 pre_uninstall
+    #>
+}
+
+function A-Start-PostUninstall {
+    <#
+    .SYNOPSIS
+        此函数运行之后，开始执行 post_uninstall
+        由于 abyss 中的应用会在 pre_uninstall 阶段完成卸载，所以此函数可以当做卸载阶段的最后一步
+    #>
 }
 
 function A-Ensure-Directory {
@@ -550,34 +584,6 @@ function A-Stop-Service {
     }
 }
 
-function A-Start-PreInstall {
-    <#
-    .SYNOPSIS
-        此函数运行之后，开始执行 pre_install
-    #>
-}
-
-function A-Start-PostInstall {
-    <#
-    .SYNOPSIS
-        此函数运行之后，开始执行 post_install
-    #>
-}
-
-Function A-Start-PreUninstall {
-    <#
-    .SYNOPSIS
-        此函数运行之后，开始执行 pre_uninstall
-    #>
-}
-
-Function A-Start-PostUninstall {
-    <#
-    .SYNOPSIS
-        此函数运行之后，开始执行 post_uninstall
-    #>
-}
-
 function A-Install-Exe {
     param(
         [string]$Installer,
@@ -671,15 +677,16 @@ function A-Install-Exe {
             $fileExists = Test-Path $SuccessFile
 
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                $fileExists = Test-Path $SuccessFile
-                if ($fileExists) {
-                    break
-                }
                 if ($ShowCN) {
                     Write-Host -NoNewline "`r等待应用安装完成: $seconds 秒" -ForegroundColor Yellow
                 }
                 else {
                     Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
+                }
+
+                $fileExists = Test-Path $SuccessFile
+                if ($fileExists) {
+                    break
                 }
                 Start-Sleep -Seconds 1
                 $seconds += 1
@@ -832,15 +839,16 @@ function A-Uninstall-Exe {
             $fileExists = Test-Path $FailureFile
             $seconds = 1
             while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                $fileExists = Test-Path $FailureFile
-                if (!$fileExists) {
-                    break
-                }
                 if ($ShowCN) {
                     Write-Host -NoNewline "`r等待卸载程序完成: $seconds 秒" -ForegroundColor Yellow
                 }
                 else {
                     Write-Host -NoNewline "`rWaiting for uninstaller to complete: $seconds seconds" -ForegroundColor Yellow
+                }
+
+                $fileExists = Test-Path $FailureFile
+                if (!$fileExists) {
+                    break
                 }
                 Start-Sleep -Seconds 1
                 $seconds += 1
@@ -874,17 +882,25 @@ function A-Uninstall-Exe {
 
 function A-Add-MsixPackage {
     param(
+        [string]$PackageFamilyName,
         [string]$FileName
     )
     if ($PSBoundParameters.ContainsKey('FileName')) {
-        $path = "$dir\$FileName"
+        if ([System.IO.Path]::IsPathRooted($FileName)) {
+            $path = $FileName
+        }
+        else {
+            $path = "$dir\$FileName"
+        }
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
         $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
     }
 
-    A-Add-AppxPackage -Path $path
+    A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
+
+    return $PackageFamilyName
 }
 
 function A-Remove-MsixPackage {
@@ -1222,7 +1238,6 @@ function A-Move-PersistDirectory {
     }
 }
 
-
 function A-Get-ProductCode {
     param (
         [string]$AppNamePattern
@@ -1257,7 +1272,6 @@ function A-Get-ProductCode {
 
     return $null
 }
-
 
 function A-Get-InstallerInfoFromWinget {
     <#
@@ -1481,7 +1495,7 @@ function A-Compare-Version {
 }
 
 
-#region 以下的函数不建议直接使用。在文件的开头有列出可用的函数。
+#region 以下的函数不应该被直接使用。请使用文件开头列出的可用函数。
 function A-New-Link {
     <#
     .SYNOPSIS
@@ -1594,6 +1608,9 @@ function A-Add-AppxPackage {
         该函数使用 Add-AppxPackage 命令安装应用程序包 (.appx 或 .msix)，
         然后创建一个 JSON 文件用于 Scoop 管理安装信息。
 
+    .PARAMETER PackageFamilyName
+        应用程序包的 PackageFamilyName
+
     .PARAMETER Path
         要安装的 AppX/Msix 包的文件路径。支持管道输入。
 
@@ -1601,6 +1618,7 @@ function A-Add-AppxPackage {
         A-Add-AppxPackage -Path "D:\dl.msixbundle"
     #>
     param(
+        [string]$PackageFamilyName,
         [string]$Path
     )
 
@@ -1620,10 +1638,10 @@ function A-Add-AppxPackage {
     $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-AppxPackage.jsonc" -Force -Encoding utf8
 
     if ($ShowCN) {
-        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理可能存在的数据 persist，应用的安装、更新以及卸载操作。" -ForegroundColor Yellow
+        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据(如果存在)、安装、卸载、更新。" -ForegroundColor Yellow
     }
     else {
-        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the possible persistence of data, and the installation, update, uninstallation." -ForegroundColor Yellow
+        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the data that may exist and installation, uninstallation, and update." -ForegroundColor Yellow
     }
 }
 
@@ -1650,40 +1668,6 @@ function A-Exit {
         scoop uninstall $app
     }
     exit 1
-}
-#endregion
-
-
-#region 废弃函数，不要在清单中使用。你应该使用在文件的开头列出的可用的函数。
-function A-Complete-Install {
-    <#
-    .SYNOPSIS
-        处理安装完成后的操作
-    #>
-}
-
-Function A-Complete-Uninstall {
-    <#
-    .SYNOPSIS
-        处理卸载完成后的操作
-    #>
-}
-function A-Remove-LinkFile {
-    <#
-    .SYNOPSIS
-        删除在应用安装过程中创建的链接文件
-    #>
-
-    A-Remove-Link
-}
-
-function A-Remove-LinkDirectory {
-    <#
-    .SYNOPSIS
-        删除在应用安装过程中创建的链接目录
-    #>
-
-    A-Remove-Link
 }
 #endregion
 
