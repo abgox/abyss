@@ -1,0 +1,95 @@
+{
+    "version": "138.0.3351.65",
+    "description": "微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器。Microsoft Edge - A cross-platform web browser created and developed by Microsoft.",
+    "homepage": "https://www.microsoft.com/edge",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.microsoft.com/servicesagreement"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files (x86)\\Microsoft\\Edge",
+        "Scoop only manages data, installation and update operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: C:\\Program Files (x86)\\Microsoft\\Edge",
+        "Scoop 只管理数据(通过 Link)，安装、更新操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/bfe41b4a-0110-4788-b5ea-f0ccf2a73c4e/MicrosoftEdgeEnterpriseX64.msi#/dl.exe",
+            "hash": "1879f5645c1c3b01ef088b204a863140f6566efd117b75b5c628fcc7d0dcec24"
+        },
+        "arm64": {
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/1529fac3-5d94-49b9-9484-fabb25a1f0a2/MicrosoftEdgeEnterpriseARM64.msi#/dl.exe",
+            "hash": "23cbfabbe27591bc29b9983c5de5968c6d5224f4093069d3aee9a97a87fa1007"
+        }
+    },
+    "shortcuts": [
+        [
+            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+            "Microsoft Edge"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Stop-Process 'C:\\Program Files (x86)\\Microsoft\\Edge'",
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\Edge\\User Data\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "if ($cmd -eq 'uninstall') {",
+        "    if($PSUICulture -like 'zh*') {",
+        "        Write-Host \"Microsoft Edge 是特殊的，在 Windows 系统中，它不允许被卸载，因此只会删除 Scoop 下的 $app 目录\" -ForegroundColor Yellow",
+        "    }",
+        "    else {",
+        "        Write-Host \"Microsoft Edge is special, it cannot be uninstalled in Windows system, so only the Scoop directory of $app will be deleted.\" -ForegroundColor Yellow",
+        "    }",
+        "}",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64#/dl.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
