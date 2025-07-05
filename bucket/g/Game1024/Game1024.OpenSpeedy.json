@@ -1,0 +1,50 @@
+{
+    "version": "1.7.5",
+    "description": "一款开源免费的游戏变速工具，助您突破帧率限制，带来更流畅丝滑的游戏加速体验。An open-source and free game speed tool that helps you break frame rate limitations and provides a smoother, silkier gaming acceleration experience.",
+    "homepage": "https://github.com/game1024/OpenSpeedy",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/game1024/OpenSpeedy/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/game1024/OpenSpeedy/releases/download/v1.7.5/OpenSpeedy-v1.7.5.zip",
+            "hash": "cbceb40fa174fbbfeac768dd3afa850826f99c797ddb4f1eb06cd5eac3a6f7ce"
+        }
+    },
+    "shortcuts": [
+        [
+            "OpenSpeedy.exe",
+            "OpenSpeedy"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/game1024/OpenSpeedy/releases/download/v$version/OpenSpeedy-v$version.zip"
+            }
+        }
+    }
+}
