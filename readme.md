@@ -26,7 +26,7 @@
 
 > [!Tip]
 >
-> [scoop and scoop-install completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
+> [scoop/scoop-install/scoop-update completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
 > [!Warning]
 >
@@ -109,13 +109,21 @@
 > If you cannot access Github resources quickly due to network issues, you can try the following solutions.
 
 1. Use the Gitee repository.
+
    ```powershell
    scoop bucket add abyss https://gitee.com/abgox/abyss.git
    ```
-2. Install [scoop-install](https://gitee.com/abgox/scoop-install).
+
+2. Install [scoop-install](https://gitee.com/abgox/scoop-tools) and [scoop-update](https://gitee.com/abgox/scoop-tools).
+
    ```powershell
    scoop install abyss/abgox.scoop-install
    ```
+
+   ```powershell
+   scoop install abyss/abgox.scoop-update
+   ```
+
 3. Configure URL replacement.
 
    ```powershell
@@ -123,19 +131,28 @@
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
    ```
 
-4. Use [PSCompletions](https://github.com/abgox/PSCompletions) to add `scoop-install` completion.
+4. Use [PSCompletions](https://github.com/abgox/PSCompletions) to add command completion.
 
    ```powershell
-   psc add scoop-install
+   psc add scoop-install scoop-update
    ```
 
-5. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install apps.
+5. Use [scoop-install](https://gitee.com/abgox/scoop-tools) to install apps.
 
    ```powershell
    scoop-install abyss/Microsoft.PowerShell
    ```
 
-6. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.
+6. Use [scoop-update](https://gitee.com/abgox/scoop-tools) to update apps.
+
+   ```powershell
+   scoop-update abyss/Microsoft.PowerShell
+   ```
+
+7. For more details, please visit:
+
+   - https://github.com/abgox/scoop-tools
+   - https://gitee.com/abgox/scoop-tools
 
 ---
 

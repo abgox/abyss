@@ -26,7 +26,7 @@
 
 > [!Tip]
 >
-> 推荐使用 [PSCompletions 中的 scoop 和 scoop-install 命令补全](https://gitee.com/abgox/PSCompletions)
+> 推荐使用 [PSCompletions 中的 scoop/scoop-install/scoop-update 命令补全](https://gitee.com/abgox/PSCompletions)
 
 > [!Warning]
 >
@@ -111,10 +111,14 @@
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
-2. 安装 [scoop-install](https://gitee.com/abgox/scoop-install)
+2. 安装 [scoop-install](https://gitee.com/abgox/scoop-tools) 和 [scoop-update](https://gitee.com/abgox/scoop-tools)
 
    ```powershell
    scoop install abyss/abgox.scoop-install
+   ```
+
+   ```powershell
+   scoop install abyss/abgox.scoop-update
    ```
 
 3. 设置 url 替换
@@ -124,19 +128,28 @@
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
    ```
 
-4. 使用 [PSCompletions](https://github.com/abgox/PSCompletions) 添加 `scoop-install` 命令补全
+4. 使用 [PSCompletions](https://github.com/abgox/PSCompletions) 添加命令补全
 
    ```powershell
-   psc add scoop-install
+   psc add scoop-install scoop-update
    ```
 
-5. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
+5. 使用 [scoop-install](https://gitee.com/abgox/scoop-tools) 安装应用
 
    ```powershell
    scoop-install abyss/Microsoft.PowerShell
    ```
 
-6. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)
+6. 使用 [scoop-update](https://gitee.com/abgox/scoop-tools) 更新应用
+
+   ```powershell
+   scoop-update abyss/Microsoft.PowerShell
+   ```
+
+7. 更多详情请查看:
+
+   - https://github.com/abgox/scoop-tools
+   - https://gitee.com/abgox/scoop-tools
 
 ---
 
