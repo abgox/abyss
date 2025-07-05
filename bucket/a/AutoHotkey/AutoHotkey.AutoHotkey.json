@@ -1,0 +1,58 @@
+{
+    "version": "2.0.19",
+    "description": "AutoHotkey(AHK) - 一款免费的开源宏创建和自动化软件工具，允许用户自动执行重复性任务。AutoHotkey(AHK) - A free, open source macro-creation and automation software utility that allows users to automate repetitive tasks.",
+    "homepage": "https://github.com/AutoHotkey/AutoHotkey",
+    "license": {
+        "identifier": "GPL-2.0",
+        "url": "https://github.com/AutoHotkey/AutoHotkey/blob/alpha/license.txt"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files\\AutoHotkey",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: C:\\Program Files\\AutoHotkey",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AutoHotkey/AutoHotkey/releases/download/v2.0.19/AutoHotkey_2.0.19_setup.exe",
+            "hash": "fd55129cbd356f49d2151e0a8b9662d90d2dbbb9579cc2410fde38df94787a3a"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/silent') -SuccessFile 'C:\\Program Files\\AutoHotkey\\UX\\ui-dash.ahk'",
+        "A-New-LinkDirectory @('C:\\Program Files\\AutoHotkey\\Compiler',\"$env:UserProfile\\Documents\\AutoHotkey\")",
+        "A-Ensure-Directory \"$persist_dir\\Documents\\AutoHotkey\\lib\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process 'C:\\Program Files\\AutoHotkey'",
+        "A-Remove-Link",
+        "A-Remove-TempData @('C:\\Program Files\\AutoHotkey', 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Dash.lnk','C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Window Spy.lnk')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AutoHotkey/AutoHotkey/releases/download/v$version/AutoHotkey_$version_setup.exe"
+            }
+        }
+    }
+}
