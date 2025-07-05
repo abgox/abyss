@@ -1,0 +1,89 @@
+{
+    "version": "140.0.2",
+    "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发。Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries.",
+    "homepage": "https://www.mozilla.org/firefox",
+    "license": {
+        "identifier": "MPL-2.0",
+        "url": "https://www.mozilla.org/MPL/2.0"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files\\Mozilla Firefox",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: C:\\Program Files\\Mozilla Firefox",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/140.0.2/win64/en-US/Firefox%20Setup%20140.0.2.exe",
+            "hash": "f7e9d9f30c0e96c502a53b25797f69b7d64fa9dbb5416d94d2a5ac6c51689142"
+        },
+        "arm64": {
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/140.0.2/win64-aarch64/en-US/Firefox%20Setup%20140.0.2.exe",
+            "hash": "a643a329796a2c112fe0faea4595f020b7e2041629a2938deb1a5c04393418f7"
+        }
+    },
+    "shortcuts": [
+        [
+            "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+            "Mozilla Firefox"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -ArgumentList @('/S','/PreventRebootRequired=true')",
+        "A-New-LinkDirectory @(\"$env:AppData\\Mozilla\\Firefox\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process 'C:\\Program Files\\Mozilla Firefox'",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Mozilla Firefox\\uninstall\\helper.exe'"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Mozilla.Firefox' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
