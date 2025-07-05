@@ -31,9 +31,9 @@
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
->   - 带有不同于 Scoop 官方 bucket 的风格
+>   - 带有不同于 Scoop 官方 bucket 的特殊风格
 >   - 包含部分 [特性](#特性)，它们不在 Scoop 官方规范内
-> - 如果其他 bucket 想要合并它们，可能需要仔细检查其兼容性和可用性。
+> - 其他 bucket 不应该合并它们，否则需要仔细检查其兼容性和可用性
 
 ### 特性
 
@@ -57,32 +57,32 @@
 
 1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
 
-   ```pwsh
+   ```powershell
    scoop bucket add abyss https://github.com/abgox/abyss
    ```
 
-   ```pwsh
+   ```powershell
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
-2. 安装应用
+2. 使用 [PSCompletions](https://gitee.com/abgox/PSCompletions) 添加 `scoop` 命令补全
 
-   ```pwsh
+   ```powershell
    scoop install abyss/abgox.PSCompletions
    ```
 
-3. 使用补全 [PSCompletions](https://gitee.com/abgox/PSCompletions)
-
-   ```pwsh
-   scoop install abyss/abgox.PSCompletions
-   ```
-
-   ```pwsh
+   ```powershell
    Import-Module PSCompletions
    ```
 
-   ```
+   ```powershell
    psc add scoop
+   ```
+
+3. 安装应用
+
+   ```powershell
+   scoop install abyss/Microsoft.PowerShell
    ```
 
 ### 演示
@@ -99,47 +99,55 @@
 
 ---
 
-### 如果你无法访问 Github
+### 如果你访问 Github 存在问题
 
 > [!Tip]
 >
-> 如果因为网络问题无法访问 Github 资源，可以尝试以下方案
+> 如果因为网络问题无法快速访问 Github 资源，可以尝试以下方案
 
 1. 使用 Gitee 仓库
 
-   ```pwsh
+   ```powershell
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
 2. 安装 [scoop-install](https://gitee.com/abgox/scoop-install)
 
-   ```pwsh
+   ```powershell
    scoop install abyss/abgox.scoop-install
    ```
 
-3. 设置 url 替换配置
+3. 设置 url 替换
 
-   ```pwsh
-   scoop config scoop-install-url-replace-from "https://github.com"
-   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
+   ```powershell
+   scoop config scoop-install-url-replace-from "^https://github.com|||^https://raw.githubusercontent.com"
+   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
    ```
 
-4. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
+4. 使用 [PSCompletions](https://github.com/abgox/PSCompletions) 添加 `scoop-install` 命令补全
 
-   ```pwsh
+   ```powershell
+   psc add scoop-install
+   ```
+
+5. 使用 [scoop-install](https://gitee.com/abgox/scoop-install) 安装应用
+
+   ```powershell
    scoop-install abyss/Microsoft.PowerShell
    ```
 
-5. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)
+6. 更多详情请查看 [scoop-install](https://gitee.com/abgox/scoop-install)
 
 ---
 
 ### Config
 
-- `abyss` 中的应用会包含一些 [特性](#特性)，由配置项 `app-uninstall-action-level` 控制
+#### app-uninstall-action-level
+
+- 使用此配置项控制应用卸载时的额外操作
 - 你可以通过以下命令去设置
 
-  ```pwsh
+  ```powershell
   scoop config app-uninstall-action-level 123
   ```
 
@@ -149,10 +157,18 @@
 
   | 可选的值 | 行为                                                |
   | :------: | --------------------------------------------------- |
-  |   `0`    | 无额外操作                                          |
   |   `1`    | 卸载/更新时先尝试终止进程，然后进行卸载操作         |
   |   `2`    | 卸载时删除 Link 目录(通过 [Link](#link) 创建的目录) |
   |   `3`    | 卸载时删除临时数据                                  |
+
+#### abgox-abyss-bucket-name
+
+- 此配置项用于记录添加到本地的 `abyss` 的名称，然后在部分特殊情况中使用
+- 它不需要手动修改，当安装/更新/卸载 `abyss` 中的应用时，会自动更新此配置项
+- 举个例子：
+  - 如果你使用了 `scoop install abyss/Microsoft.PowerShell@7.5.2` 指定 `7.5.2` 版本
+  - 安装时会用到这个配置项的值，避免安装错误
+- 参考: https://github.com/abgox/abyss/issues/10
 
 ### Persist
 

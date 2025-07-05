@@ -31,9 +31,9 @@
 > [!Warning]
 >
 > - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
->   - They follow a custom style that differs from the official Scoop buckets.
->   - Some [features](#features) are included that are **not** part of the official Scoop specification.
-> - If other buckets intend to incorporate these manifests, please carefully verify their compatibility and availability.
+>   - They follow a special style that differs from the official Scoop buckets.
+> - Some [features](#features) are included that are **not** part of the official Scoop specification.
+> - Other buckets should not merge them. Otherwise, please verify their compatibility and availability.
 
 ### Features
 
@@ -58,32 +58,32 @@
 
 1.  Add `abyss` with Github or Gitee repository.
 
-    ```pwsh
+    ```powershell
     scoop bucket add abyss https://github.com/abgox/abyss.git
     ```
 
-    ```pwsh
+    ```powershell
     scoop bucket add abyss https://gitee.com/abgox/abyss.git
     ```
 
-2.  Install apps.
+2.  Use [PSCompletions](https://github.com/abgox/PSCompletions) to add `scoop` completion.
 
-    ```pwsh
+    ```powershell
     scoop install abyss/abgox.PSCompletions
     ```
 
-3.  Use [PSCompletions](https://github.com/abgox/PSCompletions).
-
-    ```pwsh
-    scoop install abyss/abgox.PSCompletions
-    ```
-
-    ```pwsh
+    ```powershell
     Import-Module PSCompletions
     ```
 
-    ```
+    ```powershell
     psc add scoop
+    ```
+
+3.  Install apps.
+
+    ```powershell
+    scoop install abyss/abgox.PSCompletions
     ```
 
 ### Demo
@@ -102,56 +102,72 @@
 
 ---
 
-### If you cannot access Github
+### If you have problems accessing Github
 
 > [!Tip]
 >
-> If you cannot access Github resources due to network issues, you can try the following solutions.
+> If you cannot access Github resources quickly due to network issues, you can try the following solutions.
 
 1. Use the Gitee repository.
-   ```pwsh
+   ```powershell
    scoop bucket add abyss https://gitee.com/abgox/abyss.git
    ```
 2. Install [scoop-install](https://gitee.com/abgox/scoop-install).
-   ```pwsh
+   ```powershell
    scoop install abyss/abgox.scoop-install
    ```
-3. Configure URL replacement settings.
-   ```pwsh
-   scoop config scoop-install-url-replace-from "https://github.com"
-   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com"
-   ```
-4. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install apps.
+3. Configure URL replacement.
 
-   ```pwsh
+   ```powershell
+   scoop config scoop-install-url-replace-from "^https://github.com|||^https://raw.githubusercontent.com"
+   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
+   ```
+
+4. Use [PSCompletions](https://github.com/abgox/PSCompletions) to add `scoop-install` completion.
+
+   ```powershell
+   psc add scoop-install
+   ```
+
+5. Use [scoop-install](https://gitee.com/abgox/scoop-install) to install apps.
+
+   ```powershell
    scoop-install abyss/Microsoft.PowerShell
    ```
 
-5. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.
+6. See [scoop-install](https://gitee.com/abgox/scoop-install) for more details.
 
 ---
 
 ### Config
 
-- Apps in `abyss` have some [features](#features) controlled by `app-uninstall-action-level`.
+#### app-uninstall-action-level
+
+- Apps in `abyss` have some [features](#features) controlled by it.
 - You can set it using the following command:
 
-  ```pwsh
+  ```powershell
   scoop config app-uninstall-action-level 123
   ```
 
 - If not configured, the default value is `1`.
-
+- Values can be combined, e.g. `12` means both `1` and `2` will execute.
 - Configuration values and their action:
-
-  - Values can be combined, e.g. `12` means both `1` and `2` will execute.
 
   | Value | Action                                                      |
   | ----- | ----------------------------------------------------------- |
-  | `0`   | No additional operations                                    |
   | `1`   | Attempt to terminate processes before uninstallation/update |
   | `2`   | Remove Link directories (those created by [Link](#link))    |
   | `3`   | Clean up temporary data during uninstallation               |
+
+#### abgox-abyss-bucket-name
+
+- It is used to record the name of `abyss` added locally, and then it is used in some special cases.
+- It doesn't need to be modified manually. When installing/updating/uninstalling an app in `abyss`, it will be automatically updated.
+- For example:
+  - If you use `scoop install abyss/Microsoft.PowerShell@7.5.2` to specify version `7.5.2`.
+  - It will be used during installation to avoid installation errors.
+- Reference: https://github.com/abgox/abyss/issues/10
 
 ### Persist
 
