@@ -1,0 +1,61 @@
+{
+    "version": "1.1.0",
+    "description": "一个 PowerShell 脚本，它允许你添加 Scoop 配置，在 Scoop 更新应用时使用替换后的 url 而不是原始的 url。A PowerShell script that allows you to add Scoop configurations to use a replaced url instead of the original url when updating the app in Scoop.",
+    "homepage": "https://gitee.com/abgox/scoop-tools",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://gitee.com/abgox/scoop-tools/blob/main/license"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://gitee.com/abgox/scoop-tools/releases/download/v1.1.0/scoop-update.ps1",
+            "hash": "a7da6f38ba5c4bf5603dfcbeaa56d5e725351acc1fab6830256aff1bba217c7f"
+        },
+        "32bit": {
+            "url": "https://gitee.com/abgox/scoop-tools/releases/download/v1.1.0/scoop-update.ps1",
+            "hash": "a7da6f38ba5c4bf5603dfcbeaa56d5e725351acc1fab6830256aff1bba217c7f"
+        },
+        "arm64": {
+            "url": "https://gitee.com/abgox/scoop-tools/releases/download/v1.1.0/scoop-update.ps1",
+            "hash": "a7da6f38ba5c4bf5603dfcbeaa56d5e725351acc1fab6830256aff1bba217c7f"
+        }
+    },
+    "bin": "scoop-update.ps1",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/abgox/scoop-tools"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://gitee.com/abgox/scoop-tools/releases/download/v$version/scoop-update.ps1"
+            },
+            "32bit": {
+                "url": "https://gitee.com/abgox/scoop-tools/releases/download/v$version/scoop-update.ps1"
+            },
+            "arm64": {
+                "url": "https://gitee.com/abgox/scoop-tools/releases/download/v$version/scoop-update.ps1"
+            }
+        }
+    }
+}
