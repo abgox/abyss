@@ -1,0 +1,89 @@
+{
+    "version": "138.0.3351.65",
+    "description": "(Beta 版本) 微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器。(Beta version) Microsoft Edge - A cross-platform web browser created and developed by Microsoft.",
+    "homepage": "https://www.microsoft.com/edge",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.microsoft.com/servicesagreement"
+    },
+    "notes": [
+        "The installation directory: C:\\Program Files (x86)\\Microsoft\\Edge Beta",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: C:\\Program Files (x86)\\Microsoft\\Edge Beta",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/b462f5f8-9b0d-4e59-9c60-b29f998d4934/MicrosoftEdgeBetaEnterpriseX64.msi#/dl.exe",
+            "hash": "7f96e6b8c6e864221c50f309d61e9d8f182c3f417b5ac854c0483fe2ab7df992"
+        },
+        "arm64": {
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/693b1835-800f-49ee-bf4c-4af3de484008/MicrosoftEdgeBetaEnterpriseARM64.msi#/dl.exe",
+            "hash": "601cee0f8a278617b785377aea56b36aa92effb6463b5d4f78cda666c8028040"
+        }
+    },
+    "shortcuts": [
+        [
+            "C:\\Program Files (x86)\\Microsoft\\Edge Beta\\Application\\msedge.exe",
+            "Microsoft Edge Beta"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\Edge Beta\\User Data\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "$ProductCode = A-Get-ProductCode '^Microsoft Edge Beta$'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile 'C:\\Program Files (x86)\\Microsoft\\Edge Beta\\Application\\msedge.exe'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.Edge.Beta' 'msi'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64#/dl.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
