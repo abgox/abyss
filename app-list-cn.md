@@ -37,7 +37,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (186)|Tag|Description|
+|App (187)|Tag|Description|
 |:-:|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击查看 123.123pan 的仓库或主页")|[v2.4.1.0](./bucket/1/123/123.123pan.json "点击查看 123.123pan 的 manifest json 文件")<br /><code title="123.123pan 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击查看 1zilc.FishingFunds 的仓库或主页")|[v8.5.0](./bucket/1/1zilc/1zilc.FishingFunds.json "点击查看 1zilc.FishingFunds 的 manifest json 文件")<br /><code title="1zilc.FishingFunds 使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -158,6 +158,7 @@
 |[manuelernestog.WeekToDo](https://weektodo.me/ "点击查看 manuelernestog.WeekToDo 的仓库或主页")|[v2.2.0](./bucket/m/manuelernestog/manuelernestog.WeekToDo.json "点击查看 manuelernestog.WeekToDo 的 manifest json 文件")<br /><code title="manuelernestog.WeekToDo 使用 Link 进行数据持久化">Link</code>|一个免费和开源的极简每周计划和待办事项应用程序，专注于隐私。|
 |[MarkText.MarkText](https://www.marktext.cc "点击查看 MarkText.MarkText 的仓库或主页")|[v0.17.1](./bucket/m/MarkText/MarkText.MarkText.json "点击查看 MarkText.MarkText 的 manifest json 文件")<br /><code title="MarkText.MarkText 使用 Link 进行数据持久化">Link</code>|一个简单优雅的 MarkDown 编辑器。|
 |[Microsoft.Edge](https://www.microsoft.com/edge "点击查看 Microsoft.Edge 的仓库或主页")|[v138.0.3351.65](./bucket/m/Microsoft/Microsoft.Edge.json "点击查看 Microsoft.Edge 的 manifest json 文件")<br /><code title="Microsoft.Edge 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器。|
+|[Microsoft.Edge.Beta](https://www.microsoft.com/edge "点击查看 Microsoft.Edge.Beta 的仓库或主页")|[v138.0.3351.65](./bucket/m/Microsoft/Microsoft.Edge.Beta.json "点击查看 Microsoft.Edge.Beta 的 manifest json 文件")<br /><code title="Microsoft.Edge.Beta 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|(Beta 版本) 微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器。|
 |[Microsoft.OpenJDK.21](https://www.microsoft.com/openjdk/ "点击查看 Microsoft.OpenJDK.21 的仓库或主页")|[v21.0.7.6](./bucket/m/Microsoft/Microsoft.OpenJDK.21.json "点击查看 Microsoft.OpenJDK.21 的 manifest json 文件")|OpenJDK 的微软版本是一个免费的长期支持发行版，也是微软为 Java 生态系统提供协作和做出贡献的方式。|
 |[Microsoft.PowerShell](https://github.com/PowerShell/PowerShell "点击查看 Microsoft.PowerShell 的仓库或主页")|[v7.5.2](./bucket/m/Microsoft/Microsoft.PowerShell.json "点击查看 Microsoft.PowerShell 的 manifest json 文件")<br /><code title="Microsoft.PowerShell 使用 Link 进行数据持久化">Link</code><br /><code title="Microsoft.PowerShell 通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|pwsh - 一个跨平台的 PowerShell Core。|
 |[Microsoft.PowerToys](https://github.com/microsoft/PowerToys "点击查看 Microsoft.PowerToys 的仓库或主页")|[v0.92.0](./bucket/m/Microsoft/Microsoft.PowerToys.json "点击查看 Microsoft.PowerToys 的 manifest json 文件")<br /><code title="Microsoft.PowerToys 使用 Link 进行数据持久化">Link</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|一组实用程序，供高级用户调整和简化他们的 Windows 体验以提高生产力。|
