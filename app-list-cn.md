@@ -37,7 +37,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (187)|Tag|Description|
+|App (188)|Tag|Description|
 |:-:|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击查看 123.123pan 的仓库或主页")|[v2.4.1.0](./bucket/1/123/123.123pan.json "点击查看 123.123pan 的 manifest json 文件")<br /><code title="123.123pan 使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击查看 1zilc.FishingFunds 的仓库或主页")|[v8.5.0](./bucket/1/1zilc/1zilc.FishingFunds.json "点击查看 1zilc.FishingFunds 的 manifest json 文件")<br /><code title="1zilc.FishingFunds 使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -189,6 +189,7 @@
 |[Quriz.PowerToysRun-Scoop](https://github.com/Quriz/PowerToysRunScoop "点击查看 Quriz.PowerToysRun-Scoop 的仓库或主页")|[v1.4.0](./bucket/q/Quriz/Quriz.PowerToysRun-Scoop.json "点击查看 Quriz.PowerToysRun-Scoop 的 manifest json 文件")|一个 PowerToys Run 插件，用于从 Scoop 包管理器中搜索、安装、更新和卸载软件包。|
 |[Readest.Readest](https://readest.com/ "点击查看 Readest.Readest 的仓库或主页")|[v0.9.62](./bucket/r/Readest/Readest.Readest.json "点击查看 Readest.Readest 的 manifest json 文件")<br /><code title="Readest.Readest 使用 Link 进行数据持久化">Link</code>|一款专为沉浸式深度阅读体验而设计的开源电子书阅读器。|
 |[REALiX.HWiNFO](https://github.com/microsoft/winget-pkgs/tree/master/manifests/r/REALiX/HWiNFO "点击查看 REALiX.HWiNFO 的仓库或主页")|[v8.26](./bucket/r/REALiX/REALiX.HWiNFO.json "点击查看 REALiX.HWiNFO 的 manifest json 文件")<br /><code title="REALiX.HWiNFO 使用 Scoop 官方的 persist">persist</code>|适用于 Windows 和 DOS 的全面硬件分析、监测与报告。|
+|[RealWorldGraphics.RWCursorEditor](https://www.rw-designer.com/cursor-maker "点击查看 RealWorldGraphics.RWCursorEditor 的仓库或主页")|[v2023.1](./bucket/r/RealWorldGraphics/RealWorldGraphics.RWCursorEditor.json "点击查看 RealWorldGraphics.RWCursorEditor 的 manifest json 文件")<br /><code title="RealWorldGraphics.RWCursorEditor 使用 Scoop 官方的 persist">persist</code>|一个鼠标光标样式编辑器。|
 |[Rizonesoft.Notepad3](https://github.com/rizonesoft/Notepad3 "点击查看 Rizonesoft.Notepad3 的仓库或主页")|[v6.24.1221.1](./bucket/r/Rizonesoft/Rizonesoft.Notepad3.json "点击查看 Rizonesoft.Notepad3 的 manifest json 文件")<br /><code title="Rizonesoft.Notepad3 使用 Scoop 官方的 persist">persist</code>|一个快速、轻量级的基于 Scintilla 的文本编辑器。|
 |[rubickCenter.Rubick](https://github.com/rubickCenter/rubick "点击查看 rubickCenter.Rubick 的仓库或主页")|[v4.3.2](./bucket/r/rubickCenter/rubickCenter.Rubick.json "点击查看 rubickCenter.Rubick 的 manifest json 文件")<br /><code title="rubickCenter.Rubick 使用 Link 进行数据持久化">Link</code>|基于 electron 的开源工具箱，自由集成丰富插件。|
 |[Ruihu.Apifox](https://apifox.com "点击查看 Ruihu.Apifox 的仓库或主页")|[v2.7.20](./bucket/r/Ruihu/Ruihu.Apifox.json "点击查看 Ruihu.Apifox 的 manifest json 文件")<br /><code title="Ruihu.Apifox 使用 Link 进行数据持久化">Link</code>|API 设计、开发、测试一体化协作平台。|
