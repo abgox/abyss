@@ -1,0 +1,54 @@
+{
+    "version": "2023.1",
+    "description": "一个鼠标光标样式编辑器。A cursor editor and maker.",
+    "homepage": "https://www.rw-designer.com/cursor-maker",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.rw-designer.com/cursor-license"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.rw-designer.com/2023.1/RWCursorEditor64.zip",
+            "hash": "11a57bdb6b138ce0b9b8275cae0a14940848f5e34205ab2233696855d8ca279a"
+        }
+    },
+    "shortcuts": [
+        [
+            "RWCursorEditor.exe",
+            "RealWorld Cursor Editor"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": "AppData",
+    "checkver": {
+        "url": "https://www.rw-designer.com/cursor-editor-versions",
+        "regex": "<h1>RealWorld Cursor Editor ([\\d\\.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://download.rw-designer.com/$version/RWCursorEditor64.zip"
+            }
+        }
+    }
+}
