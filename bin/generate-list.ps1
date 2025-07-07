@@ -95,7 +95,7 @@ foreach ($path in $PathList) {
         ## version
         $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
-        $tag += "[v$($json.version)](./bucket/$p `"$title`")"
+        $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20&logoSize=auto" alt="version" /></a>'
 
         ## persist
         $isPersist = $json.persist
