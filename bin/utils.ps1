@@ -195,11 +195,11 @@ function A-Copy-Item {
         复制文件或目录
 
     .DESCRIPTION
-        通常用来将 bucket/scripts 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
+        通常用来将 bucket\extras 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
         因为部分配置文件，如果直接使用 New-Item 或 Set-Content，会出现编码错误
 
     .EXAMPLE
-        A-Copy-Item "$bucketsdir\$bucket\scripts\$app\InputTip.ini" "$persist_dir\InputTip.ini"
+        A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" "$persist_dir\InputTip.ini"
     #>
     param (
         [string]$From,
@@ -676,54 +676,68 @@ function A-Install-Exe {
             $seconds = 1
             $fileExists = Test-Path $SuccessFile
 
-            while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                if ($ShowCN) {
-                    Write-Host -NoNewline "`r等待应用安装完成: $seconds 秒" -ForegroundColor Yellow
+            try {
+                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
+                    if ($ShowCN) {
+                        Write-Host -NoNewline "`r等待应用安装完成: $seconds 秒" -ForegroundColor Yellow
+                    }
+                    else {
+                        Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
+                    }
+
+                    $fileExists = Test-Path $SuccessFile
+                    if ($fileExists) {
+                        break
+                    }
+                    Start-Sleep -Seconds 1
+                    $seconds += 1
                 }
-                else {
-                    Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
+                Write-Host
+
+                if ($path -notmatch "^C:\\Windows\\System32\\") {
+                    $null = Start-Job -ScriptBlock {
+                        param($path, $job)
+                        # 30 秒后再删除安装程序
+                        Start-Sleep -Seconds 30
+
+                        $job | Stop-Job -ErrorAction SilentlyContinue
+
+                        Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
+
+                        Remove-Item $path -Force -ErrorAction SilentlyContinue
+
+                    } -ArgumentList $path, $job
                 }
 
-                $fileExists = Test-Path $SuccessFile
                 if ($fileExists) {
-                    break
-                }
-                Start-Sleep -Seconds 1
-                $seconds += 1
-            }
-            Write-Host
-
-            if ($path -notmatch "^C:\\Windows\\System32\\") {
-                $null = Start-Job -ScriptBlock {
-                    param($path, $job)
-                    # 30 秒后再删除安装程序
-                    Start-Sleep -Seconds 30
-
-                    $job | Stop-Job -ErrorAction SilentlyContinue
-
-                    Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
-
-                    Remove-Item $path -Force -ErrorAction SilentlyContinue
-
-                } -ArgumentList $path, $job
-            }
-
-            if ($fileExists) {
-                if ($ShowCN) {
-                    Write-Host "安装成功" -ForegroundColor Green
+                    if ($ShowCN) {
+                        Write-Host "安装成功" -ForegroundColor Green
+                    }
+                    else {
+                        Write-Host "Install successfully." -ForegroundColor Green
+                    }
                 }
                 else {
-                    Write-Host "Install successfully." -ForegroundColor Green
+                    if ($ShowCN) {
+                        Write-Host "安装超时($Timeout 秒)" -ForegroundColor Red
+                    }
+                    else {
+                        Write-Host "Installation timeout ($Timeout seconds)." -ForegroundColor Red
+                    }
+                    A-Exit
                 }
             }
-            else {
-                if ($ShowCN) {
-                    Write-Host "安装超时($Timeout 秒)" -ForegroundColor Red
+            finally {
+                if (!$fileExists) {
+                    Write-Host
+                    if ($ShowCN) {
+                        Write-Host "安装过程被终止" -ForegroundColor Red
+                    }
+                    else {
+                        Write-Host "Installation process terminated." -ForegroundColor Red
+                    }
+                    A-Exit
                 }
-                else {
-                    Write-Host "Installation timeout ($Timeout seconds)." -ForegroundColor Red
-                }
-                A-Exit
             }
         }
         catch {
@@ -838,38 +852,52 @@ function A-Uninstall-Exe {
 
             $fileExists = Test-Path $FailureFile
             $seconds = 1
-            while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                if ($ShowCN) {
-                    Write-Host -NoNewline "`r等待卸载程序完成: $seconds 秒" -ForegroundColor Yellow
-                }
-                else {
-                    Write-Host -NoNewline "`rWaiting for uninstaller to complete: $seconds seconds" -ForegroundColor Yellow
-                }
+            try {
+                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
+                    if ($ShowCN) {
+                        Write-Host -NoNewline "`r等待卸载程序完成: $seconds 秒" -ForegroundColor Yellow
+                    }
+                    else {
+                        Write-Host -NoNewline "`rWaiting for uninstaller to complete: $seconds seconds" -ForegroundColor Yellow
+                    }
 
-                $fileExists = Test-Path $FailureFile
-                if (!$fileExists) {
-                    break
+                    $fileExists = Test-Path $FailureFile
+                    if (!$fileExists) {
+                        break
+                    }
+                    Start-Sleep -Seconds 1
+                    $seconds += 1
                 }
-                Start-Sleep -Seconds 1
-                $seconds += 1
-            }
-            Write-Host
+                Write-Host
 
-            if ($fileExists) {
-                if ($ShowCN) {
-                    Write-Host "$app 卸载失败，卸载过程被强行终止`n如果卸载程序还在运行，你可以继续和它交互，当卸载完成后，再次运行卸载命令即可" -ForegroundColor Red
+                if ($fileExists) {
+                    if ($ShowCN) {
+                        Write-Host "$app 卸载失败，卸载过程被强行终止`n如果卸载程序还在运行，你可以继续和它交互，当卸载完成后，再次运行卸载命令即可" -ForegroundColor Red
+                    }
+                    else {
+                        Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
+                    }
+                    A-Exit
                 }
                 else {
-                    Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
+                    if ($ShowCN) {
+                        Write-Host "卸载成功" -ForegroundColor Green
+                    }
+                    else {
+                        Write-Host "Uninstall successfully." -ForegroundColor Green
+                    }
                 }
-                A-Exit
             }
-            else {
-                if ($ShowCN) {
-                    Write-Host "卸载成功" -ForegroundColor Green
-                }
-                else {
-                    Write-Host "Uninstall successfully." -ForegroundColor Green
+            finally {
+                if ($fileExists) {
+                    Write-Host
+                    if ($ShowCN) {
+                        Write-Host "卸载过程被终止" -ForegroundColor Red
+                    }
+                    else {
+                        Write-Host "Uninstallation process terminated." -ForegroundColor Red
+                    }
+                    A-Exit
                 }
             }
         }
