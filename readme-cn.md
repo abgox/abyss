@@ -179,7 +179,7 @@
 - 此配置项用于记录添加到本地的 `abyss` 的名称，然后在部分特殊情况中使用
 - 它不需要手动修改，当安装/更新/卸载 `abyss` 中的应用时，会自动更新此配置项
 - 举个例子：
-  - 如果你使用了 `scoop install abyss/Microsoft.PowerShell@7.5.2` 指定 `7.5.2` 版本
+  - 如果你使用了 `scoop install abyss/JetBrains.WebStorm@2025.1.2` 指定 `2025.1.2` 版本
   - 安装时会用到这个配置项的值，避免安装错误
 - 参考: https://github.com/abgox/abyss/issues/10
 

@@ -182,7 +182,7 @@
 - It is used to record the name of `abyss` added locally, and then it is used in some special cases.
 - It doesn't need to be modified manually. When installing/updating/uninstalling an app in `abyss`, it will be automatically updated.
 - For example:
-  - If you use `scoop install abyss/Microsoft.PowerShell@7.5.2` to specify version `7.5.2`.
+  - If you use `scoop install abyss/JetBrains.WebStorm@2025.1.2` to specify version `2025.1.2`.
   - It will be used during installation to avoid installation errors.
 - Reference: https://github.com/abgox/abyss/issues/10
 
