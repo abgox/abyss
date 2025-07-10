@@ -590,6 +590,9 @@ function A-Install-Exe {
         [array]$ArgumentList,
         # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
         [string]$SuccessFile,
+        # $Uninstaller 和 $SuccessFile 作用一致，不过它必须指定软件的卸载程序
+        # 当指定它后，A-Uninstall-Exe 会默认使用它作为卸载程序路径
+        [string]$Uninstaller,
         # 仅用于标识，表示可能需要用户交互
         [switch]$NoSilent,
         # 超时时间（秒）
@@ -602,12 +605,7 @@ function A-Install-Exe {
     }
 
     if ($PSBoundParameters.ContainsKey('Installer')) {
-        if ([System.IO.Path]::IsPathRooted($Installer)) {
-            $path = $Installer
-        }
-        else {
-            $path = "$dir\$Installer"
-        }
+        $path = A-Get-AbsolutePath $Installer
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
@@ -615,12 +613,16 @@ function A-Install-Exe {
     }
     $fileName = Split-Path $path -Leaf
 
+    if ($Uninstaller) {
+        $SuccessFile = $Uninstaller
+    }
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
     @{
         Installer    = $path
         ArgumentList = $ArgumentList
-        SuccessFile  = $SuccessFile
+        SuccessFile  = A-Get-AbsolutePath $SuccessFile
+        Uninstaller  = A-Get-AbsolutePath $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
     if (Test-Path $path) {
@@ -778,13 +780,11 @@ function A-Uninstall-Exe {
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $ArgumentList = @('/S')
     }
+    if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
+        $Uninstaller = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Uninstaller"
+    }
 
-    if ([System.IO.Path]::IsPathRooted($Uninstaller)) {
-        $path = $Uninstaller
-    }
-    else {
-        $path = "$dir\$Uninstaller"
-    }
+    $path = A-Get-AbsolutePath $Uninstaller
     $fileName = Split-Path $path -Leaf
 
     if (Test-Path $path) {
@@ -914,12 +914,7 @@ function A-Add-MsixPackage {
         [string]$FileName
     )
     if ($PSBoundParameters.ContainsKey('FileName')) {
-        if ([System.IO.Path]::IsPathRooted($FileName)) {
-            $path = $FileName
-        }
-        else {
-            $path = "$dir\$FileName"
-        }
+        $path = A-Get-AbsolutePath $FileName
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
@@ -1696,6 +1691,18 @@ function A-Exit {
         scoop uninstall $app
     }
     exit 1
+}
+
+function A-Get-AbsolutePath {
+    param(
+        [string]$path
+    )
+
+    if ([System.IO.Path]::IsPathRooted($path)) {
+        return $path
+    }
+
+    return Join-Path $dir $path
 }
 #endregion
 
