@@ -1,0 +1,56 @@
+{
+    "version": "1.100.8",
+    "description": "开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端。Open-sourced terminal/ssh/telnet/serialport/RDP/VNC/sftp/ftp client.",
+    "homepage": "https://github.com/electerm/electerm",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/electerm/electerm/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/electerm/electerm/releases/download/v1.100.8/electerm-1.100.8-win-x64-installer.exe",
+            "hash": "a1eadca423c0706298329bf4d14c19316d604ead05e026b9f9604d5eb65083bd"
+        }
+    },
+    "bin": "electerm.exe",
+    "shortcuts": [
+        [
+            "electerm.exe",
+            "electerm"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe -ArgumentList @('/S','/CURRENTUSER',\"/D=$dir\")",
+        "A-New-LinkDirectory @(\"$env:AppData\\electerm\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -Uninstaller 'Uninstall electerm.exe'",
+        "A-Remove-TempData @(\"$env:LocalAppData\\electerm-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/electerm/electerm/releases/download/v$version/electerm-$version-win-x64-installer.exe"
+            }
+        }
+    }
+}
