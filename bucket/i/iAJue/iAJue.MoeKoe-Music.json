@@ -1,0 +1,59 @@
+{
+    "version": "1.4.8",
+    "description": "一款开源、简洁、高颜值的酷狗音乐第三方客户端。An open-source, concise, and aesthetically pleasing third-party client for KuGou Music.",
+    "homepage": "https://music.moekoe.cn/",
+    "license": {
+        "identifier": "GPL-2.0",
+        "url": "https://github.com/iAJue/MoeKoeMusic/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/iAJue/MoeKoeMusic/releases/download/v1.4.8/MoeKoe_Music_Setup_v1.4.8.exe",
+            "hash": "45b7006129d4bca4a4ca12af306c5452c8c8a866f75979bbb5a0f81ab49c85fc"
+        }
+    },
+    "shortcuts": [
+        [
+            "MoeKoe Music.exe",
+            "MoeKoe Music"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -Uninstaller 'Uninstall MoeKoe Music.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\moekoemusic\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\moekoemusic-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/iAJue/MoeKoeMusic"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/iAJue/MoeKoeMusic/releases/download/v$version/MoeKoe_Music_Setup_v$version.exe"
+            }
+        }
+    }
+}
