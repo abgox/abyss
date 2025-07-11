@@ -5,7 +5,7 @@
 
     1. 在 pre_install
 
-        - A-Start-PreInstall: 此函数运行之后，开始执行 pre_install
+        - A-Start-PreInstall: pre_install 中的自定义脚本，需要放在此函数之后
         - A-Require-Admin: 要求以管理员权限运行
         - A-Ensure-Directory: 确保指定目录路径存在
         - A-Copy-Item: 复制文件或目录
@@ -16,11 +16,11 @@
         - A-Add-MsixPackage: 安装 AppX/Msix 包
         - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
         - A-Install-Exe: 运行安装程序
-        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包，优先使用 A-Install-Exe
+        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包，非特殊情况不使用，优先使用 A-Install-Exe
 
     2. 在 pre_uninstall
 
-        - A-Start-PreUninstall: 此函数运行之后，开始执行 pre_uninstall
+        - A-Start-PreUninstall: pre_uninstall 中的自定义脚本，需要放在此函数之后
         - A-Deny-Update: 禁止通过 Scoop 更新
         - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
         - A-Stop-Service: 尝试停止并移除指定的应用服务，以确保能正常卸载
@@ -46,13 +46,16 @@
 
 Write-Host
 
-# 卸载时的操作行为。
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
 try {
     $ScoopConfig = scoop config
+
+    # 卸载时的操作行为。
     $uninstallActionLevel = $ScoopConfig.'app-uninstall-action-level'
 
+    # 本地添加的 abyss 的实际名称
+    # https://github.com/abgox/abyss/issues/10
     if ($bucket -and $ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
         scoop config 'abgox-abyss-bucket-name' $bucket
     }
@@ -139,30 +142,28 @@ else {
 function A-Start-PreInstall {
     <#
     .SYNOPSIS
-        此函数运行之后，开始执行 pre_install
+        由于 abyss 中的应用会在此函数运行后执行自定义安装脚本，所以此函数可以当做安装阶段的开始
     #>
 }
 
 function A-Start-PostInstall {
     <#
     .SYNOPSIS
-        此函数运行之后，开始执行 post_install
-        由于 abyss 中的应用会在 pre_install 阶段完成安装，所以此函数可以当做安装阶段的最后一步
+        由于 abyss 中的应用会在 pre_install 阶段完成自定义安装脚本，所以此函数可以当做安装阶段的结束
     #>
 }
 
 function A-Start-PreUninstall {
     <#
     .SYNOPSIS
-        此函数运行之后，开始执行 pre_uninstall
+        由于 abyss 中的应用会在此函数运行后执行自定义卸载脚本，所以此函数可以当做安装阶段的开始
     #>
 }
 
 function A-Start-PostUninstall {
     <#
     .SYNOPSIS
-        此函数运行之后，开始执行 post_uninstall
-        由于 abyss 中的应用会在 pre_uninstall 阶段完成卸载，所以此函数可以当做卸载阶段的最后一步
+        由于 abyss 中的应用会在 pre_uninstall 阶段完成自定义卸载脚本，所以此函数可以当做卸载阶段的结束
     #>
 }
 
@@ -203,7 +204,6 @@ function A-Copy-Item {
     #>
     param (
         [string]$From,
-
         [string]$To
     )
 
@@ -252,14 +252,10 @@ function A-New-PersistFile {
     #>
     param (
         [string]$Path,
-
         [string]$Copy,
-
         [array]$Content,
-
         [ValidateSet("utf8", "utf8Bom", "utf8NoBom", "unicode", "ansi", "ascii", "bigendianunicode", "bigendianutf32", "oem", "utf7", "utf32")]
         [string]$Encoding = "utf8",
-
         [switch]$Force
     )
 
@@ -306,7 +302,6 @@ function A-New-LinkFile {
     #>
     param (
         [array]$LinkPaths,
-
         [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
@@ -373,7 +368,6 @@ function A-New-LinkDirectory {
     #>
     param (
         [array]$LinkPaths,
-
         [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
@@ -490,7 +484,6 @@ function A-Stop-Process {
     #>
     param(
         [string[]]$ExtraPaths,
-
         [string[]]$ExtraProcessNames
     )
 
@@ -554,11 +547,15 @@ function A-Stop-Service {
     .PARAMETER ServiceName
         要停止和删除的 Windows 服务名称
 
+    .PARAMETER NoRemove
+        不删除服务，仅停止服务。
+
     .EXAMPLE
         A-Stop-Service -ServiceName "Everything"
     #>
     param(
-        [string]$ServiceName
+        [string]$ServiceName,
+        [switch]$NoRemove
     )
 
     $isExist = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
@@ -573,6 +570,10 @@ function A-Stop-Service {
     catch {
         Write-Host "$($words["Failed to terminate the service:"]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
         A-Exit
+    }
+
+    if ($NoRemove) {
+        return
     }
 
     try {
@@ -767,6 +768,7 @@ function A-Uninstall-Exe {
         # 超时时间（秒）
         [string]$Timeout = 300,
         # 如果存在这个 FailureFile 指定的文件或路径，则认定为卸载失败
+        # 如果未指定，默认使用 $Uninstaller
         [string]$FailureFile,
         # 是否等待卸载程序完成
         # 它会忽略超时时间，一直等待卸载程序结束
@@ -1170,7 +1172,6 @@ function A-Remove-PowerToysRunPlugin {
 }
 
 function A-Expand-SetupExe {
-
     $archMap = @{
         '64bit' = '64'
         '32bit' = '32'
@@ -1546,12 +1547,9 @@ function A-New-Link {
     #>
     param (
         [array]$LinkPaths, # 源路径数组（将被替换为链接）
-
         [array]$LinkTargets, # 目标路径数组（链接指向的位置）
-
         [ValidateSet("SymbolicLink", "Junction")]
         [string]$ItemType,
-
         [string]$OutFile
     )
 
@@ -1561,7 +1559,8 @@ function A-New-Link {
     }
 
     $installData = @{
-        "LinkPaths" = @()
+        LinkPaths   = @()
+        LinkTargets = @()
     }
 
     if ($LinkPaths.Count) {
@@ -1569,6 +1568,7 @@ function A-New-Link {
             $linkPath = $LinkPaths[$i]
             $linkTarget = $LinkTargets[$i]
             $installData.LinkPaths += $linkPath
+            $installData.LinkTargets += $linkTarget
             if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
                 if (!(Test-Path $linkTarget)) {
                     A-Ensure-Directory (Split-Path $linkTarget -Parent)
