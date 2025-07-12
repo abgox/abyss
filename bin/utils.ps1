@@ -614,16 +614,27 @@ function A-Install-Exe {
     }
     $fileName = Split-Path $path -Leaf
 
-    if ($Uninstaller) {
-        $SuccessFile = $Uninstaller
+    if (!$PSBoundParameters.ContainsKey('SuccessFile')) {
+        $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
+        if (!$SuccessFile) {
+            if ($ShowCN) {
+                Write-Host "清单中需要定义 shortcuts 字段，或在 A-Install-Exe 中指定 SuccessFile 参数。" -ForegroundColor Red
+            }
+            else {
+                Write-Host "Manifest needs to define shortcuts field, or SuccessFile parameter needs to be specified in A-Install-Exe." -ForegroundColor Red
+            }
+            A-Exit
+        }
     }
+    $SuccessFile = A-Get-AbsolutePath $SuccessFile
+    $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
     @{
         Installer    = $path
         ArgumentList = $ArgumentList
-        SuccessFile  = A-Get-AbsolutePath $SuccessFile
-        Uninstaller  = A-Get-AbsolutePath $Uninstaller
+        SuccessFile  = $SuccessFile
+        Uninstaller  = $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
     if (Test-Path $path) {
@@ -650,23 +661,6 @@ function A-Install-Exe {
             }
             Write-Host $msg -ForegroundColor Yellow
 
-            if (!$SuccessFile) {
-                $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
-                if (!$SuccessFile) {
-                    if ($ShowCN) {
-                        Write-Host "清单中需要定义 shortcuts 字段，或在 A-Install-Exe 中指定 SuccessFile 参数。" -ForegroundColor Red
-                    }
-                    else {
-                        Write-Host "Manifest needs to define shortcuts field, or SuccessFile parameter needs to be specified in A-Install-Exe." -ForegroundColor Red
-                    }
-                    A-Exit
-                }
-            }
-
-            if (![System.IO.Path]::IsPathRooted($SuccessFile)) {
-                $SuccessFile = Join-Path $dir $SuccessFile
-            }
-
             # 在后台作业中运行安装程序，强制停止进程的时机更晚
             $job = Start-Job -ScriptBlock {
                 param($path, $ArgumentList)
@@ -677,7 +671,12 @@ function A-Install-Exe {
 
             $startTime = Get-Date
             $seconds = 1
-            $fileExists = Test-Path $SuccessFile
+            if ($Uninstaller) {
+                $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
+            }
+            else {
+                $fileExists = Test-Path $SuccessFile
+            }
 
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
@@ -688,7 +687,12 @@ function A-Install-Exe {
                         Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
                     }
 
-                    $fileExists = Test-Path $SuccessFile
+                    if ($Uninstaller) {
+                        $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
+                    }
+                    else {
+                        $fileExists = Test-Path $SuccessFile
+                    }
                     if ($fileExists) {
                         break
                     }
