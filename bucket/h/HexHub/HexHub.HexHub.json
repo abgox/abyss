@@ -1,0 +1,59 @@
+{
+    "version": "1.2.8",
+    "description": "为程序员和运维人员量身打造的一站式开发运维利器。A one-stop development and operation tool tailored for programmers and operations personnel.",
+    "homepage": "https://www.hexhub.cn/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://oss.hexhub.cn/plugin/HexHub-amd64-default-1.2.8.exe",
+            "hash": "7e2c570406380a91b74374cc49f0e8f2db85fdaced19e1bf4de05c3760f9f941"
+        }
+    },
+    "shortcuts": [
+        [
+            "HexHub.exe",
+            "HexHub"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "A-Install-Exe -Uninstaller 'Uninstall.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\HexHub\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            "$json = (Invoke-WebRequest -Uri 'https://api.hexhub.cn/client/plugin/master-latest-version-list' -Headers @{ Referer = 'https://www.hexhub.cn/' }).Content | ConvertFrom-Json",
+            "$json.data.'windows-amd64-default'.versionName"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://oss.hexhub.cn/plugin/HexHub-amd64-default-$version.exe"
+            }
+        }
+    }
+}
