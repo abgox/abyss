@@ -83,28 +83,29 @@ foreach ($path in $PathList) {
 
         # homepage
         if ($isCN) {
-            $info += "[$app]($($json.homepage) `"点击查看 $($app) 的仓库或主页`")"
+            $info += "[$app]($($json.homepage) `"点击访问仓库或主页`")"
         }
         else {
-            $info += "[$app]($($json.homepage) `"Click to view the repository or homepage of $($app)`")"
+            $info += "[$app]($($json.homepage) `"Click to access the repository or homepage`")"
         }
 
         # Tag
         $tag = @()
 
-        ## version
-        $title = if ($isCN) { "点击查看 $app 的 manifest json 文件" } else { "Click to view the manifest json file of $app" }
+        ## manifest
+        $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
+        # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
         $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
 
         ## persist
         $isPersist = $json.persist
         if ($isPersist) {
             if ($isCN) {
-                $label = '<code title="' + $app + ' 使用 Scoop 官方的 persist">persist</code>'
+                $label = '<code title="使用 Scoop 官方的 persist">persist</code>'
             }
             else {
-                $label = '<code title="' + $app + ' uses Scoop official persist">persist</code>'
+                $label = '<code title="Use Scoop official persist">persist</code>'
             }
             $tag += $label
         }
@@ -113,10 +114,10 @@ foreach ($path in $PathList) {
         $isLink = A-Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
         if ($isLink) {
             if ($isCN) {
-                $label = '<code title="' + $app + ' 使用 Link 进行数据持久化">Link</code>'
+                $label = '<code title="使用 Link 进行数据持久化">Link</code>'
             }
             else {
-                $label = '<code title="' + $app + ' uses Link to persist data">Link</code>'
+                $label = '<code title="Use Link to persist data">Link</code>'
             }
 
             $tag += $label
@@ -125,56 +126,56 @@ foreach ($path in $PathList) {
         ## RequireAdmin
         $RequireAdmin = A-Test-ScriptPattern $json '.*(A-Require-Admin)|(A-New-LinkFile).*'
         $label = if ($isCN) { '<code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires administrator permission to install, update, or uninstall">RequireAdmin</code>' }
-        $tag += if ($RequireAdmin) { $label }
+        if ($RequireAdmin) { $tag += $label }
 
         ## NoSilentInstall
         $NoSilentInstall = A-Test-ScriptPattern $json '.*A-Install-Exe.*-NoSilent.*'
         $label = if ($isCN) { '<code title="在安装时可能需要用户交互">NoSilentInstall</code>' } else { '<code title="May require user interaction during installation">NoSilentInstall</code>' }
-        $tag += if ($NoSilentInstall) { $label }
+        if ($NoSilentInstall) { $tag += $label }
 
         ## NoSilentUninstall
         $NoSilentUninstall = A-Test-ScriptPattern $json '.*A-Uninstall-Exe.*-NoSilent.*'
         $label = if ($isCN) { '<code title="在卸载时可能需要用户交互">NoSilentUninstall</code>' } else { '<code title="May require user interaction during uninstallation">NoSilentUninstall</code>' }
-        $tag += if ($NoSilentUninstall) { $label }
+        if ($NoSilentUninstall) { $tag += $label }
 
         ## NoUpdate
         if ($isCN) {
-            $label = '<code title="无法通过 Github Actions 去检查它的版本更新，因为 ' + $app + ' 没有配置 autoupdate">NoUpdate</code>'
+            $label = '<code title="无法通过 Github Actions 去检查它的版本更新，因为没有配置 autoupdate">NoUpdate</code>'
         }
         else {
             $label = '<code title="It cannot check for updates via Github Actions, because autoupdate is not configured">NoUpdate</code>'
         }
-        $tag += if (!$json.autoupdate) { $label }
+        if (!$json.autoupdate) { $tag += $label }
 
         ## font
         if (A-Test-ScriptPattern $json '.*A-Add-Font.*') {
             if ($isCN) {
-                $label = '<code title="' + $app + ' 是一个字体">Font</code>'
+                $label = '<code title="一种字体">Font</code>'
             }
             else {
-                $label = '<code title="' + $app + ' is a font">Font</code>'
+                $label = '<code title="A font">Font</code>'
             }
             $tag += $label
         }
 
         ## PSModule
         if ($isCN) {
-            $label = '<code title="' + $app + ' 是一个 Powershell 模块">PSModule</code>'
+            $label = '<code title="一个 Powershell 模块">PSModule</code>'
         }
         else {
-            $label = $label = '<code title="' + $app + ' is a Powershell module">PSModule</code>'
+            $label = $label = '<code title="A Powershell module">PSModule</code>'
         }
-        $tag += if ($json.psmodule) { $label }
+        if ($json.psmodule) { $tag += $label }
 
         ## Msix
         $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
         if ($isCN) {
-            $label = '<code title="' + $app + ' 通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>'
+            $label = '<code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>'
         }
         else {
-            $label = '<code title="' + $app + ' installs using Msix, installation directory is not in Scoop, Scoop only manages the data that may exist and installation, uninstallation, and update">Msix</code>'
+            $label = '<code title="Installs via Msix, installation directory is not in Scoop, Scoop only manages the data that may exist and installation, uninstallation, and update">Msix</code>'
         }
-        $tag += if ($isMsix) { $label }
+        if ($isMsix) { $tag += $label }
 
         $info += $tag -join '<br />'
 
