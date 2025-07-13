@@ -12,6 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Selenium
+        run: |
+          pip install selenium
+
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
         env:
@@ -19,13 +23,13 @@ jobs:
           SKIP_UPDATED: 1
           THROW_ERROR: 0
 
-  workflow-keepalive:
-    if: github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - uses: abgox/gh-workflow-keepalive@main
+  # workflow-keepalive:
+  #   if: github.event_name == 'schedule'
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     actions: write
+  #   steps:
+  #     - uses: abgox/gh-workflow-keepalive@main
 
   check-scoop-version:
     runs-on: windows-latest
