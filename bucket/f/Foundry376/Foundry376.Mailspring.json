@@ -1,0 +1,62 @@
+{
+    "version": "1.15.1",
+    "description": "一个漂亮，快速，完全开源的邮件客户端。A beautiful, fast and fully open source mail client.",
+    "homepage": "https://github.com/Foundry376/Mailspring",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/Foundry376/Mailspring/blob/master/LICENSE.md"
+    },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\Mailspring",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: $env:LocalAppData\\Mailspring",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Foundry376/Mailspring/releases/download/1.15.1/MailspringSetup.exe",
+            "hash": "b78befe43aa27914cbb86d0db430e8d639b6d469cd91907ee9d388e656f933b4"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:LocalAppData\\Mailspring\\mailspring.exe",
+            "Mailspring"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\Mailspring\\Update.exe\" -ArgumentList @('--silent')",
+        "A-New-LinkDirectory @(\"$env:AppData\\Mailspring\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Uninstall-Exe -ArgumentList @('--uninstall') -FailureFile \"$env:LocalAppData\\Mailspring\\mailspring.exe\"",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\Mailspring\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Foundry376/Mailspring/releases/download/$version/MailspringSetup.exe"
+            }
+        }
+    }
+}
