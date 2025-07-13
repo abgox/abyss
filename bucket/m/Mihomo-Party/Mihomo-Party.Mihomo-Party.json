@@ -1,0 +1,78 @@
+{
+    "version": "1.7.6",
+    "description": "一个易用的代理客户端。An easy-to-use proxy client.",
+    "homepage": "https://github.com/mihomo-party-org/mihomo-party",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/mihomo-party-org/mihomo-party/blob/main/LICENSE"
+    },
+    "notes": [
+        "$app will be automatically launched after installation."
+    ],
+    "notes-cn": [
+        "$app 会在安装成功后自动启动"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v1.7.6/mihomo-party-windows-1.7.6-x64-portable.7z",
+            "hash": "47f94650ef83153b9edd7fe57df56b20456002065e8ae97fbc95ae98b44eb244"
+        },
+        "arm64": {
+            "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v1.7.6/mihomo-party-windows-1.7.6-arm64-portable.7z",
+            "hash": "f8a29fb10f4ba53a9f320c8a1269797e09f9ca16dc8ef20c13b382f9ad8ee1d0"
+        }
+    },
+    "shortcuts": [
+        [
+            "Mihomo Party.exe",
+            "Mihomo Party"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "# 安装完成后自动启动一次，以解决首次启动必须使用管理员权限的问题",
+        "$null = Start-Job -ScriptBlock {",
+        "    param($dir)",
+        "    While (!(Test-Path \"$dir\\data\")) {",
+        "        Start-Sleep -Milliseconds 100",
+        "    }",
+        "    Start-Process \"$dir\\Mihomo Party.exe\"",
+        "} -ArgumentList $dir"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-TempData @(\"$env:AppData\\mihomo-party\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": "data",
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v$version/mihomo-party-windows-$version-x64-portable.7z"
+            },
+            "arm64": {
+                "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v$version/mihomo-party-windows-$version-arm64-portable.7z"
+            }
+        },
+        "hash": {
+            "url": "$url.sha256"
+        }
+    }
+}
