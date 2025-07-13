@@ -31,9 +31,7 @@
 > [!Warning]
 >
 > - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
->   - They follow a special style that differs from the official Scoop buckets.
-> - Some [features](#features) are included that are **not** part of the official Scoop specification.
-> - Other buckets should not merge them. Otherwise, please verify their compatibility and availability.
+> - They contain some [style and features](#features) outside of the official Scoop specification, and other buckets should not merge them.
 
 ### Features
 
@@ -49,7 +47,9 @@
 - For apps that cannot use [persist](#persist), [Link](#link) will be used as a fallback.
 - When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
 - Improved information output during installation and uninstallation.
-  - Localized output. (Chinese/English)
+  - Localized output.
+    - zh-CN: Simplified Chinese
+    - en-US: English
   - Shows notifications for environment variable modifications.
 
 ---
@@ -169,6 +169,7 @@
 
 - If not configured, the default value is `1`.
 - Values can be combined, e.g. `12` means both `1` and `2` will execute.
+- If you don't need them, you can set it to any value that does not include them.
 - Configuration values and their action:
 
   | Value | Action                                                      |
