@@ -1,0 +1,68 @@
+{
+    "version": "0.17.4",
+    "description": "小狼毫输入法 - 一个模块化、可扩展且可定制的输入法引擎。A modular, extensible, and customizable input method engine.",
+    "homepage": "https://rime.im/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/rime/weasel/blob/master/LICENSE.txt"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Rime",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: $env:ProgramFiles\\Rime",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/rime/weasel/releases/download/0.17.4/weasel-0.17.4.0-installer.exe",
+            "hash": "cf509534a8f5f8af9c98ed7cbb8f135439f145a8cbe7e50ede42bb5b5ab45c29"
+        },
+        "arm64": {
+            "url": "https://github.com/rime/weasel/releases/download/0.17.4/weasel-0.17.4.0-installer.exe",
+            "hash": "cf509534a8f5f8af9c98ed7cbb8f135439f145a8cbe7e50ede42bb5b5ab45c29"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "$Uninstaller = \"$env:ProgramFiles\\Rime\\weasel-$version\\uninstall.exe\"",
+        "if (Test-Path $Uninstaller) { A-Uninstall-Exe -Uninstaller $Uninstaller }",
+        "A-Install-Exe -Uninstaller $Uninstaller -SuccessFile \"$env:ProgramFiles\\Rime\\weasel-$version\\WeaselServer.exe\"",
+        "A-New-LinkDirectory @(\"$env:AppData\\Rime\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Uninstall-Exe",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/rime/weasel"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rime/weasel/releases/download/$version/weasel-$version.0-installer.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/rime/weasel/releases/download/$version/weasel-$version.0-installer.exe"
+            }
+        }
+    }
+}
