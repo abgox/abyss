@@ -1,0 +1,56 @@
+{
+    "version": "1.2.0",
+    "description": "一款满足简单需求的 TUI 文本编辑器，由微软开发。A simple TUI text editor for simple needs by Microsoft.",
+    "homepage": "https://github.com/microsoft/edit/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/microsoft/edit/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-x86_64-windows.zip",
+            "hash": "49f52065bf88f01928e2911b04705b34a0c20d9ec09eb6241452c9d5dd166fc4",
+            "extract_dir": "edit-1.2.0-x86_64-windows"
+        },
+        "arm64": {
+            "url": "https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-aarch64-windows.zip",
+            "hash": "ffac3e86ba77fea3fef0220942c5507f9a2a6778f873337e0c91b546df86a4fd",
+            "extract_dir": "edit-1.2.0-aarch64-windows"
+        }
+    },
+    "bin": "edit.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/microsoft/edit/releases/download/v$version/edit-$version-x86_64-windows.zip",
+                "extract_dir": "edit-$version-x86_64-windows"
+            },
+            "arm64": {
+                "url": "https://github.com/microsoft/edit/releases/download/v$version/edit-$version-aarch64-windows.zip",
+                "extract_dir": "edit-$version-aarch64-windows"
+            }
+        }
+    }
+}
