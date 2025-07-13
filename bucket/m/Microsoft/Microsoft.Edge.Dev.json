@@ -7,11 +7,11 @@
         "url": "https://www.microsoft.com/servicesagreement"
     },
     "notes": [
-        "The installation directory: C:\\Program Files (x86)\\Microsoft\\Edge Dev",
+        "The installation directory: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
         "Scoop only manages data, installation, update, and uninstallation operations."
     ],
     "notes-cn": [
-        "实际安装目录: C:\\Program Files (x86)\\Microsoft\\Edge Dev",
+        "实际安装目录: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
         "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
     ],
     "architecture": {
@@ -26,7 +26,7 @@
     },
     "shortcuts": [
         [
-            "C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe",
+            "${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev\\Application\\msedge.exe",
             "Microsoft Edge Dev"
         ]
     ],
@@ -49,7 +49,7 @@
         "A-Start-PreUninstall",
         "A-Require-Admin",
         "$ProductCode = A-Get-ProductCode '^Microsoft Edge Dev$'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile 'C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev\\Application\\msedge.exe\"",
         "A-Remove-Link"
     ],
     "post_uninstall": [

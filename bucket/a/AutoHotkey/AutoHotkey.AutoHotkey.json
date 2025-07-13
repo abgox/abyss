@@ -7,11 +7,11 @@
         "url": "https://github.com/AutoHotkey/AutoHotkey/blob/alpha/license.txt"
     },
     "notes": [
-        "The installation directory: C:\\Program Files\\AutoHotkey",
+        "The installation directory: $env:ProgramFiles\\AutoHotkey",
         "Scoop only manages data, installation, update, and uninstallation operations."
     ],
     "notes-cn": [
-        "实际安装目录: C:\\Program Files\\AutoHotkey",
+        "实际安装目录: $env:ProgramFiles\\AutoHotkey",
         "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
     ],
     "architecture": {
@@ -25,8 +25,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/silent') -SuccessFile 'C:\\Program Files\\AutoHotkey\\UX\\ui-dash.ahk'",
-        "A-New-LinkDirectory @('C:\\Program Files\\AutoHotkey\\Compiler',\"$env:UserProfile\\Documents\\AutoHotkey\")",
+        "A-Install-Exe -ArgumentList @('/silent') -SuccessFile \"$env:ProgramFiles\\AutoHotkey\\UX\\ui-dash.ahk\"",
+        "A-New-LinkDirectory @(\"$env:ProgramFiles\\AutoHotkey\\Compiler\",\"$env:UserProfile\\Documents\\AutoHotkey\")",
         "A-Ensure-Directory \"$persist_dir\\Documents\\AutoHotkey\\lib\""
     ],
     "post_install": [
@@ -38,9 +38,9 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
-        "A-Stop-Process 'C:\\Program Files\\AutoHotkey'",
+        "A-Stop-Process \"$env:ProgramFiles\\AutoHotkey\"",
         "A-Remove-Link",
-        "A-Remove-TempData @('C:\\Program Files\\AutoHotkey', 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Dash.lnk','C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Window Spy.lnk')"
+        "A-Remove-TempData @(\"$env:ProgramFiles\\AutoHotkey\", \"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Dash.lnk\",\"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Window Spy.lnk\")"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

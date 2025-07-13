@@ -7,11 +7,11 @@
         "url": "https://www.microsoft.com/servicesagreement"
     },
     "notes": [
-        "The installation directory: C:\\Program Files (x86)\\Microsoft\\Edge",
+        "The installation directory: ${env:ProgramFiles(x86)}\\Microsoft\\Edge",
         "Scoop only manages data, installation and update operations."
     ],
     "notes-cn": [
-        "实际安装目录: C:\\Program Files (x86)\\Microsoft\\Edge",
+        "实际安装目录: ${env:ProgramFiles(x86)}\\Microsoft\\Edge",
         "Scoop 只管理数据(通过 Link)，安装、更新操作"
     ],
     "architecture": {
@@ -26,7 +26,7 @@
     },
     "shortcuts": [
         [
-            "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+            "${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe",
             "Microsoft Edge"
         ]
     ],
@@ -35,7 +35,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Stop-Process 'C:\\Program Files (x86)\\Microsoft\\Edge'",
+        "A-Stop-Process \"${env:ProgramFiles(x86)}\\Microsoft\\Edge\"",
         "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\Edge\\User Data\")"
     ],

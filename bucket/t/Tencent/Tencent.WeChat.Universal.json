@@ -7,11 +7,11 @@
         "url": "https://www.wechat.com/zh_CN/service_terms.html"
     },
     "notes": [
-        "The installation directory: C:\\Program Files\\Tencent\\Weixin",
+        "The installation directory: $env:ProgramFiles\\Tencent\\Weixin",
         "Scoop only manages data, installation, update, and uninstallation operations."
     ],
     "notes-cn": [
-        "实际安装目录: C:\\Program Files\\Tencent\\Weixin",
+        "实际安装目录: $env:ProgramFiles\\Tencent\\Weixin",
         "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
     ],
     "architecture": {
@@ -22,7 +22,7 @@
     },
     "shortcuts": [
         [
-            "C:\\Program Files\\Tencent\\Weixin\\Weixin.exe",
+            "$env:ProgramFiles\\Tencent\\Weixin\\Weixin.exe",
             "微信"
         ]
     ],
@@ -44,9 +44,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"C:\\Program Files\\Tencent\\Weixin\"",
+        "A-Stop-Process \"$env:ProgramFiles\\Tencent\\Weixin\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Tencent\\Weixin\\Uninstall.exe' -NoSilent"
+        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\Weixin\\Uninstall.exe\" -NoSilent"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

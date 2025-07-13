@@ -10,13 +10,13 @@
         "abyss/Git.Git is different from main/git.",
         "It follows WinGet's approach to Git installation, using the standard installer for silent installation rather than a portable setup.",
         "It automatically integrates Git into Windows Terminal and configures Git environment variables.",
-        "Git is installed to C:\\Program Files\\Git, not the Scoop directory."
+        "Git is installed to $env:ProgramFiles\\Git, not the Scoop directory."
     ],
     "notes-cn": [
         "abyss/Git.Git 与 main/git 的安装方式完全不同。",
         "它参考 WinGet 安装 Git 的方式，使用正常的安装程序进行静默安装，而非便捷式。",
         "它会自动将 Git 注入到 Windows 终端(Windows Terminal)，并设置 Git 环境变量。",
-        "Git 安装目录会保留在 C:\\Program Files\\Git，而不是 Scoop 目录中。"
+        "Git 安装目录会保留在 $env:ProgramFiles\\Git，而不是 Scoop 目录中。"
     ],
     "architecture": {
         "64bit": {
@@ -33,7 +33,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile 'C:\\Program Files\\Git\\unins000.exe'",
+        "A-Install-Exe -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile \"$env:ProgramFiles\\Git\\unins000.exe\"",
         "A-New-PersistFile \"$persist_dir\\.gitconfig\"",
         "A-New-PersistFile \"$persist_dir\\.gitmessage\"",
         "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")"
@@ -48,8 +48,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
-        "A-Stop-Process 'C:\\Program Files\\Git'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Program Files\\Git\\unins000.exe' -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')",
+        "A-Stop-Process \"$env:ProgramFiles\\Git\"",
+        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')",
         "A-Remove-Link"
     ],
     "post_uninstall": [
