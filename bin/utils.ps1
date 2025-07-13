@@ -35,6 +35,7 @@
         - A-Test-Admin: 检查是否以管理员权限运行
         - A-Get-ProductCode: 获取应用的产品代码
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
+        - A-Get-Version: 获取最新的版本号(等待网页完全加载后，提取网页中的版本号)
         - A-Move-PersistDirectory: 用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
             - 它用于未来可能存在的清单文件更名
             - 当清单文件更名后，需要使用它，并传入旧的清单名称
@@ -616,6 +617,8 @@ function A-Install-Exe {
 
     if (!$PSBoundParameters.ContainsKey('SuccessFile')) {
         $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
+        $SuccessFile = Invoke-Expression "`"$SuccessFile`""
+
         if (!$SuccessFile) {
             if ($ShowCN) {
                 Write-Host "清单中需要定义 shortcuts 字段，或在 A-Install-Exe 中指定 SuccessFile 参数。" -ForegroundColor Red
@@ -1299,6 +1302,23 @@ function A-Get-ProductCode {
     }
 
     return $null
+}
+
+function A-Get-Version {
+    param(
+        [string]$Regex
+    )
+
+    if (!$PSBoundParameters.ContainsKey('Regex')) {
+        # 匹配 Github Releases 页面上的版本号
+        $Regex = "/tree/v?([^`"]+)"
+    }
+
+    # Scoop 会提供 $url 变量 manifest.checkver.github > manifest.checkver.url > manifest.url
+    $Page = python "$PSScriptRoot\get-page.py" $url
+    $matches = [regex]::Matches($Page, $Regex)
+
+    return $matches[0].Groups[1].Value
 }
 
 function A-Get-InstallerInfoFromWinget {
