@@ -1349,14 +1349,13 @@ function A-Get-Version {
     }
 
     # Scoop 会提供 $url 变量 manifest.checkver.github > manifest.checkver.url > manifest.url
+    # manifest.checkver.github 会被转换成 https://api.github.com/owner/repos/releases/latest
+    # 非必要，不要使用 manifest.checkver.github
     $Page = python "$PSScriptRoot\get-page.py" $url
-    $matches = [regex]::Matches($Page, $Regex)
+    $Matches = [regex]::Matches($Page, $Regex)
 
-    try {
-        return $matches[0].Groups[1].Value
-    }
-    catch {
-        A-Exit
+    if ($Matches) {
+        return $Matches[0].Groups[1].Value
     }
 }
 
