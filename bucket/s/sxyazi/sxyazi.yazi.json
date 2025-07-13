@@ -1,0 +1,63 @@
+{
+    "version": "25.5.31",
+    "description": "一个用 Rust 编写的终端文件管理器，基于非阻塞异步 I/O。A terminal file manager written in Rust, based on non-blocking async I/O.",
+    "homepage": "https://github.com/sxyazi/yazi",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/sxyazi/yazi/blob/main/LICENSE"
+    },
+    "depends": [
+        "abyss/sharkdp.fd",
+        "abyss/BurntSushi.ripgrep.MSVC"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sxyazi/yazi/releases/download/v25.5.31/yazi-x86_64-pc-windows-msvc.zip",
+            "hash": "79524a2b48bb7021078e0314d3c75aaf5ae9d69dee2947cd7a705cbaa95d3bb9",
+            "extract_dir": "yazi-x86_64-pc-windows-msvc"
+        },
+        "arm64": {
+            "url": "https://github.com/sxyazi/yazi/releases/download/v25.5.31/yazi-aarch64-pc-windows-msvc.zip",
+            "hash": "3620d45d638275be92566d0f081b6f2d3537575876a3a066e50cac5ebbd4c9a2",
+            "extract_dir": "yazi-aarch64-pc-windows-msvc"
+        }
+    },
+    "bin": [
+        "ya.exe",
+        "yazi.exe"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-New-LinkDirectory @(\"$env:AppData\\yazi\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sxyazi/yazi/releases/download/v$version/yazi-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/sxyazi/yazi/releases/download/v$version/yazi-aarch64-pc-windows-msvc.zip"
+            }
+        }
+    }
+}
