@@ -33,6 +33,7 @@
 
     3. 其他:
         - A-Test-Admin: 检查是否以管理员权限运行
+        - A-Hold-App: 它应该在 pre_install 中使用，和 A-Deny-Update 搭配
         - A-Get-ProductCode: 获取应用的产品代码
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
         - A-Get-Version: 获取最新的版本号(等待网页完全加载后，提取网页中的版本号)
@@ -202,6 +203,10 @@ function A-Copy-Item {
 
     .EXAMPLE
         A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" "$persist_dir\InputTip.ini"
+
+    .NOTES
+        文件名必须一一对应，不允许使用以下写法
+        A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" $persist_dir
     #>
     param (
         [string]$From,
@@ -1226,6 +1231,35 @@ function A-Deny-Update {
         }
         A-Exit
     }
+}
+
+function A-Hold-App {
+    param(
+        [string]$AppName = $app
+    )
+
+    $null = Start-Job -ScriptBlock {
+        param($app)
+
+        $startTime = Get-Date
+        $Timeout = 300
+        $can = $false
+
+        While ($true) {
+            if ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -ge $Timeout) {
+                break
+            }
+            if ((scoop list).Name | Where-Object { $_ -eq $app }) {
+                $can = $true
+                break
+            }
+            Start-Sleep -Milliseconds 100
+        }
+
+        if ($can) {
+            scoop hold $app
+        }
+    } -ArgumentList $AppName
 }
 
 function A-Move-PersistDirectory {
@@ -2816,11 +2850,10 @@ if ($ShowCN) {
 
         $label = 'Notes'
         $note = $manifest.notes
-        $noteCN = $manifest.'notes-cn'
 
-        if ($noteCN) {
+        if ($PSUICulture -like 'zh*') {
             $label = '说明'
-            $note = $noteCN
+            $note = $manifest.'notes-cn'
         }
 
         if ($note) {
