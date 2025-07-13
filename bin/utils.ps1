@@ -1352,7 +1352,12 @@ function A-Get-Version {
     $Page = python "$PSScriptRoot\get-page.py" $url
     $matches = [regex]::Matches($Page, $Regex)
 
-    return $matches[0].Groups[1].Value
+    try {
+        return $matches[0].Groups[1].Value
+    }
+    catch {
+        A-Exit
+    }
 }
 
 function A-Get-InstallerInfoFromWinget {
