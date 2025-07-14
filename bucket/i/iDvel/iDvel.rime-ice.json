@@ -1,6 +1,6 @@
 {
     "version": "2025.07.06.051013",
-    "description": "Rime 配置：雾凇拼音 - 长期维护的简体词库。Rime Configuration: ice-Pinyin - Long-term Maintained Simplified Chinese Lexicon.",
+    "description": "Rime 小狼毫配置：雾凇拼音 - 长期维护的简体词库。Rime Configuration: ice-Pinyin - Long-term Maintained Simplified Chinese Lexicon.",
     "homepage": "https://github.com/iDvel/rime-ice",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -30,7 +30,9 @@
         "else {",
         "    Write-Host \"Copying $app configuration file to Rime.Weasel configuration directory...\" -ForegroundColor Yellow",
         "}",
-        "Copy-Item \"$dir\\rime-ice\\*\" \"$env:AppData\\Rime\" -Recurse -Force"
+        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "Copy-Item \"$dir\\rime-ice\\*\" $RimeDataDir -Recurse -Force"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -47,7 +49,9 @@
         "else {",
         "    Write-Host \"Removing $app configuration file from Rime.Weasel configuration directory...\" -ForegroundColor Yellow",
         "}",
-        "(Get-ChildItem \"$dir\\rime-ice\" -Recurse).FullName.Replace(\"$dir\\rime-ice\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
+        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "(Get-ChildItem \"$dir\\rime-ice\" -Recurse).FullName.Replace(\"$dir\\rime-ice\", $RimeDataDir) | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
