@@ -1,0 +1,79 @@
+{
+    "version": "8.7.7",
+    "description": "Rime 小狼毫配置：万象拼音输入方案。Rime Configuration: Wanxiang-Pinyin",
+    "homepage": "https://github.com/amzxyz/rime_wanxiang",
+    "license": {
+        "identifier": "CC-BY-4.0",
+        "url": "https://github.com/amzxyz/rime_wanxiang/blob/main/LICENSE"
+    },
+    "depends": "abyss/Rime.Weasel",
+    "notes": "After installation, update, or uninstallation, you need to redeploy in Rime Weasel",
+    "notes-cn": "安装/更新/卸载后都需要在小狼毫中进行重新部署",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v8.7.7/rime-wanxiang-base.zip",
+            "hash": "1994b2e3013c14f32d0b9ba76b459cd00238b6d663db638e34ded9a96b489a76"
+        },
+        "arm64": {
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v8.7.7/rime-wanxiang-base.zip",
+            "hash": "1994b2e3013c14f32d0b9ba76b459cd00238b6d663db638e34ded9a96b489a76"
+        }
+    },
+    "extract_to": "rime_wanxiang",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "if($PSUICulture -like 'zh*') {",
+        "    Write-Host \"正在将 $app 配置文件复制到 Rime.Weasel 配置目录中...\" -ForegroundColor Yellow",
+        "}",
+        "else {",
+        "    Write-Host \"Copying $app configuration file to Rime.Weasel configuration directory...\" -ForegroundColor Yellow",
+        "}",
+        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "Copy-Item \"$dir\\rime_wanxiang\\*\" $RimeDataDir -Recurse -Force"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "if($PSUICulture -like 'zh*') {",
+        "    Write-Host \"正在从 Rime.Weasel 配置目录中移除 $app 配置文件...\" -ForegroundColor Yellow",
+        "}",
+        "else {",
+        "    Write-Host \"Removing $app configuration file from Rime.Weasel configuration directory...\" -ForegroundColor Yellow",
+        "}",
+        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "(Get-ChildItem \"$dir\\rime_wanxiang\" -Recurse).FullName.Replace(\"$dir\\rime_wanxiang\", $RimeDataDir) | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/amzxyz/rime_wanxiang/releases",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-Version"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v$version/rime-wanxiang-base.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v$version/rime-wanxiang-base.zip"
+            }
+        }
+    }
+}
