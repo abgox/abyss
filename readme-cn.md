@@ -33,6 +33,8 @@
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
 > - 它们包含 Scoop 官方规范之外的 [风格和特性](#特性)，其他 bucket 不应该合并它们
 
+> Just like the abyss — limitless, mysterious, and filled with treasures.
+
 ### 特性
 
 #### Bucket
@@ -54,6 +56,10 @@
 ---
 
 ### 如果你正在使用 Scoop
+
+> [!Warning]
+>
+> 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在处理 depends 时找不到 bucket
 
 1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
 

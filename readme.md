@@ -33,6 +33,8 @@
 > - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
 > - They contain some [style and features](#features) outside of the official Scoop specification, and other buckets should not merge them.
 
+> Just like the abyss — limitless, mysterious, and filled with treasures.
+
 ### Features
 
 #### Bucket
@@ -55,6 +57,10 @@
 ---
 
 ### If you are using Scoop
+
+> [!Warning]
+>
+> Please use `abyss` as the bucket name to avoid "bucket not found" errors when processing "depends" in some manifests.
 
 1.  Add `abyss` with Github or Gitee repository.
 
