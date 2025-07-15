@@ -78,6 +78,7 @@
                 "GPL-2.0",
                 "GPL-3.0-only",
                 "AGPL-3.0-only",
+                "LGPL-3.0-only",
                 "MS-PL",
                 "OFL-1.1",
                 "EPL-2.0",
@@ -93,6 +94,7 @@
                 "使用 GNU General Public License version 2 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-2.0))",
                 "使用 GNU General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/GPL-3.0))",
                 "使用 GNU Affero General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/AGPL-3.0))",
+                "使用 GNU Lesser General Public License version 3 ([基于 OSI 标准模板](https://opensource.org/licenses/LGPL-3.0))",
                 "使用 Microsoft Public License ([基于 OSI 标准模板](https://opensource.org/licenses/MS-PL))",
                 "使用 SIL Open Font License v1.1 ([基于 OSI 标准模板](https://opensource.org/licenses/OFL-1.1))",
                 "使用 Eclipse Public License 2.0 ([基于 OSI 标准模板](https://opensource.org/licenses/EPL-2.0))",
@@ -1213,6 +1215,12 @@
                 {
                     "pattern": "。.*[A-Za-z].*",
                     "errorMessage": "description 中必须包含英文描述。\n例如：这是一个中文描述。This is a English description."
+                },
+                {
+                    "not": {
+                        "pattern": "\\|"
+                    },
+                    "errorMessage": "description 中不允许使用 | 符号"
                 }
             ]
         },
@@ -2042,6 +2050,39 @@
                     }
                 }
             }
+        },
+        {
+            "$comment": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
+            "allOf": [
+                {
+                    "properties": {
+                        "architecture": {
+                            "not": {
+                                "required": [
+                                    "32bit"
+                                ]
+                            },
+                            "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "autoupdate": {
+                            "properties": {
+                                "architecture": {
+                                    "not": {
+                                        "required": [
+                                            "32bit"
+                                        ]
+                                    },
+                                    "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
         }
         // {
         //   "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀。有些会通过 A-Install-Exe 安装，但 schema 无法检测到，会存在误判",
