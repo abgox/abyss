@@ -1,0 +1,65 @@
+{
+    "notes-cn": [
+        "如果数据目录变成一个软链接，会出现运行问题"
+    ],
+    "version": "140.0.2",
+    "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发。Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries.",
+    "homepage": "https://www.mozilla.org/firefox",
+    "license": {
+        "identifier": "MPL-2.0",
+        "url": "https://www.mozilla.org/MPL/2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/140.0.2/win64/multi/Firefox%20Setup%20140.0.2.msix",
+            "hash": "a5133ff378c4e59462ba719b9cc9e4ece03eaff1f2056108ba8dce32fd540542"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "$PackageFamilyName = A-Add-MsixPackage 'Mozilla.MozillaFirefox_jag0gd4e3s9p2'",
+        "A-New-LinkDirectory @(\"$env:AppData\\Mozilla\\Firefox\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-MsixPackage"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Mozilla.Firefox.MSIX' 'msix'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                }
+            }
+        }
+    }
+}
