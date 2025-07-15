@@ -33,7 +33,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile \"$env:ProgramFiles\\Git\\unins000.exe\"",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile \"$env:ProgramFiles\\Git\\unins000.exe\"",
         "A-New-PersistFile \"$persist_dir\\.gitconfig\"",
         "A-New-PersistFile \"$persist_dir\\.gitmessage\"",
         "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")"
@@ -49,7 +49,7 @@
         "A-Start-PreUninstall",
         "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\Git\"",
-        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')",
+        "A-Uninstall-Exe -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART')",
         "A-Remove-Link"
     ],
     "post_uninstall": [

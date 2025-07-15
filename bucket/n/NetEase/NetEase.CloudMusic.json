@@ -21,7 +21,7 @@
         "A-Start-PreInstall",
         "A-Require-Admin",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\Netease\\CloudMusic\")",
-        "A-Install-Exe"
+        "A-Install-Exe -Uninstaller 'UnInstall.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +35,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'UnInstall.exe'"
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

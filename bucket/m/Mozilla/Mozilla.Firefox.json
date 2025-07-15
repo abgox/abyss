@@ -35,7 +35,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/S','/PreventRebootRequired=true')",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Mozilla Firefox\\uninstall\\helper.exe\" -ArgumentList @('/S','/PreventRebootRequired=true')",
         "A-New-LinkDirectory @(\"$env:AppData\\Mozilla\\Firefox\")"
     ],
     "post_install": [
@@ -50,7 +50,7 @@
         "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\Mozilla Firefox\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Mozilla Firefox\\uninstall\\helper.exe\""
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

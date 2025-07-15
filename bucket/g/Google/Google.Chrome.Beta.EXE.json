@@ -35,7 +35,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('--chrome-beta','--do-not-launch-chrome','--system-level')",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Google\\Chrome Beta\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--chrome-beta','--do-not-launch-chrome','--system-level')",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome Beta\\User Data\")"
     ],
     "post_install": [
@@ -48,7 +48,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
-        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Google\\Chrome Beta\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--chrome-beta','--uninstall','--system-level','--multi-install','--force-uninstall')",
+        "A-Uninstall-Exe -ArgumentList @('--chrome-beta','--uninstall','--system-level','--multi-install','--force-uninstall')",
         "A-Remove-Link"
     ],
     "post_uninstall": [

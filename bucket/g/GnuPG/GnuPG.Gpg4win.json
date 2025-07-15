@@ -27,7 +27,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/S', \"/D=$dir\\Gpg4win\")",
+        "A-Install-Exe -Uninstaller 'Gpg4win\\gpg4win-uninstall.exe' -ArgumentList @('/S', \"/D=$dir\\Gpg4win\")",
         "A-New-LinkDirectory @(\"$env:AppData\\gnupg\",\"$env:AppData\\kleopatra\")"
     ],
     "post_install": [
@@ -41,7 +41,7 @@
         "A-Start-PreUninstall",
         "A-Require-Admin",
         "A-Stop-Process",
-        "A-Uninstall-Exe -Uninstaller 'Gpg4win\\gpg4win-uninstall.exe' -ArgumentList @('/S')",
+        "A-Uninstall-Exe -ArgumentList @('/S')",
         "A-Remove-Link"
     ],
     "post_uninstall": [

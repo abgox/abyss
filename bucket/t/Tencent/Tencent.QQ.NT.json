@@ -31,7 +31,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/S')",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')",
         "$DataDir = \"$env:UserProfile\\Documents\\Tencent Files\"",
         "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
         "$PersistDir = $DataDir.Replace($env:UserProfile, $persist_dir)",
@@ -53,7 +53,7 @@
         "A-Start-PreUninstall",
         "A-Require-Admin",
         "A-Stop-Process @(\"$env:ProgramFiles\\Tencent\\QQNT\")",
-        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -NoSilent",
+        "A-Uninstall-Exe -NoSilent",
         "A-Remove-Link"
     ],
     "post_uninstall": [

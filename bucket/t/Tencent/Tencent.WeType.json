@@ -29,7 +29,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList @('/s') -SuccessFile \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\"",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\" -ArgumentList @('/s') -SuccessFile \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\"",
         "A-Hold-App"
     ],
     "post_install": [
@@ -43,7 +43,7 @@
         "A-Start-PreUninstall",
         "A-Deny-Update",
         "A-Require-Admin",
-        "A-Uninstall-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\" -ArgumentList @() -NoSilent"
+        "A-Uninstall-Exe -ArgumentList @() -NoSilent"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

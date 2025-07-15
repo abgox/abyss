@@ -19,7 +19,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Install-Exe",
+        "A-Install-Exe -Uninstaller 'uninstall.exe'",
         "A-New-LinkDirectory @(\"$env:UserProfile\\.lettura\")"
     ],
     "post_install": [
@@ -33,7 +33,7 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'uninstall.exe'",
+        "A-Uninstall-Exe",
         "A-Remove-TempData @(\"$env:AppData\\com.lettura.dev\",\"$env:LocalAppData\\com.lettura.dev\")"
     ],
     "post_uninstall": [
