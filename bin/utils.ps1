@@ -48,6 +48,9 @@
 
 Write-Host
 
+# 结合 $cmd，避免自动化执行更新检查时中文内容导致错误
+$ShowCN = $PSUICulture -like 'zh*' -and $cmd
+
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
 try {
@@ -58,8 +61,18 @@ try {
 
     # 本地添加的 abyss 的实际名称
     # https://github.com/abgox/abyss/issues/10
-    if ($bucket -and $ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
-        scoop config 'abgox-abyss-bucket-name' $bucket
+    if ($bucket) {
+        if ($ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
+            scoop config 'abgox-abyss-bucket-name' $bucket
+        }
+        if ($bucket -ne 'abyss') {
+            if ($ShowCN) {
+                Write-Host "你应该使用 abyss 作为 bucket 名称，但是目前使用的名称是 $bucket`n当安装的应用存在 depends 时，它可能出现问题，建议尽快修改" -ForegroundColor Red
+            }
+            else {
+                Write-Host "You should only use 'abyss' as the bucket name, but the current name is $bucket`nWhen installing applications with depends, it may cause problems, and modify it as soon as possible." -ForegroundColor Red
+            }
+        }
     }
 }
 catch {}
@@ -82,9 +95,6 @@ function A-Test-Admin {
 }
 
 $isAdmin = A-Test-Admin
-
-# 如果没有 $cmd，表示在自动化执行更新检查，此时中文内容可能导致错误。
-$ShowCN = $PSUICulture -like 'zh*' -and $cmd
 
 if ($ShowCN) {
     $cmdMap_zh = @{
