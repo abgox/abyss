@@ -1,0 +1,63 @@
+{
+    // 安装后，无法正常运行
+    "version": "4.5.12",
+    "description": "SSH 工具、服务器管理、开发运维工具。SSH tool, server management, remote desktop acceleration software.",
+    "homepage": "https://www.hostbuf.com/t/988.html",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://dl.hostbuf.com/finalshell3/finalshell_windows_x64.exe",
+            "hash": "e1c3742dfc7a13f6cd642699e3dc7ea9bed906ef65813a9e768558d0fde0ea1b"
+        }
+    },
+    "shortcuts": [
+        [
+            "finalshell.exe",
+            "FinalShell"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe -Uninstaller 'uninstaller.exe'",
+        "A-New-PersistFile \"$persist_dir\\config.json\"",
+        "A-New-PersistFile \"$persist_dir\\tconfig.json\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": [
+        "conn",
+        "sync",
+        "theme",
+        "config.json",
+        "tconfig.json"
+    ],
+    "checkver": {
+        "url": "https://www.hostbuf.com/downloads/update_config_win.json",
+        "jsonpath": "$.version_name"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dl.hostbuf.com/finalshell3/finalshell_windows_x64.exe"
+            }
+        }
+    }
+}
