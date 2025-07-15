@@ -20,7 +20,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "$InstallLocation = '\"' + \"$dir\" + '\"'",
-        "A-Install-Exe -ArgumentList @('/silent_install=1', \"/install_path=$InstallLocation\")",
+        "A-Install-Exe -Uninstaller 'uninst.exe' -ArgumentList @('/silent_install=1', \"/install_path=$InstallLocation\")",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\JianyingPro\")"
     ],
     "post_install": [
@@ -34,7 +34,7 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'uninst.exe' -NoSilent"
+        "A-Uninstall-Exe -NoSilent"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

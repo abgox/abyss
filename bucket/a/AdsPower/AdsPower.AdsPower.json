@@ -2,15 +2,14 @@
     "version": "7.6.3",
     "description": "一个指纹浏览器。A No anti-detection browser.",
     "homepage": "https://www.adspower.net/",
-    "license": "Freemium",
+    "license": {
+        "identifier": "Freemium",
+        "url": "https://www.adspower.net/terms-of-use"
+    },
     "architecture": {
         "64bit": {
             "url": "https://version.adspower.net/software/win64-global/AdsPower-Global-7.6.3-x64.exe",
             "hash": "5cdba9789faf60a4a0f3690aac9de54c0abaa51356fa50ba13adc6c9a34a51a7"
-        },
-        "32bit": {
-            "url": "https://version.adspower.net/software/win32-global/AdsPower-Global-7.6.3-x86.exe",
-            "hash": "d04adedfeaeab9555638dff49ccb89b53a641d0a3c1df9e8e7eab9b29d3562fa"
         }
     },
     "shortcuts": [
@@ -24,7 +23,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe",
+        "A-Install-Exe -Uninstaller 'Uninstall AdsPower Global.exe'",
         "A-New-LinkDirectory @(\"$env:AppData\\adspower_global\")"
     ],
     "post_install": [
@@ -39,7 +38,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'Uninstall AdsPower Global.exe'",
+        "A-Uninstall-Exe",
         "A-Remove-TempData @(\"$env:LocalAppData\\adspower_global-updater\")"
     ],
     "post_uninstall": [
@@ -65,13 +64,6 @@
                 "hash": {
                     "url": "bin/scoop-auto-check-update-temp-data.jsonc",
                     "jsonpath": "$.x64_machine.InstallerSha256"
-                }
-            },
-            "32bit": {
-                "url": "$matchX86",
-                "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-                    "jsonpath": "$.x86_machine.InstallerSha256"
                 }
             }
         }

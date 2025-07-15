@@ -2,7 +2,10 @@
     "version": "2.4.1.0",
     "description": "123 云盘，一款云存储服务产品。A cloud storage service product.",
     "homepage": "https://www.123pan.com/",
-    "license": "Freemium",
+    "license": {
+        "identifier": "Freemium",
+        "url": "https://www.123pan.com/UserAgreement"
+    },
     "architecture": {
         "64bit": {
             "url": "https://app.123957.com/pc-pro/windows/241/123pan_2.4.1.exe",
@@ -20,7 +23,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -SuccessFile '123pan\\uninst.exe'",
+        "A-Install-Exe -Uninstaller '123pan\\uninst.exe'",
         "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")"
     ],
     "post_install": [
@@ -35,7 +38,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller '123pan\\uninst.exe' -ArgumentList @() -NoSilent",
+        "A-Uninstall-Exe -ArgumentList @() -NoSilent",
         "A-Remove-TempData @(\"$env:AppData\\123pan\")"
     ],
     "post_uninstall": [

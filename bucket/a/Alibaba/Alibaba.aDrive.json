@@ -19,7 +19,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Install-Exe",
+        "A-Install-Exe -Uninstaller 'Uninstall.exe'",
         "A-New-LinkDirectory @(\"$env:AppData\\aDrive\")"
     ],
     "post_install": [
@@ -33,7 +33,7 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'Uninstall.exe'"
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -22,7 +22,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
-        "A-Install-Exe",
+        "A-Install-Exe -Uninstaller 'Uninstall Beekeeper Studio.exe'",
         "A-New-LinkDirectory @(\"$env:AppData\\beekeeper-studio\")"
     ],
     "post_install": [
@@ -36,7 +36,7 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'Uninstall Beekeeper Studio.exe'",
+        "A-Uninstall-Exe",
         "A-Remove-TempData @(\"$env:LocalAppData\\beekeeper-studio-updater\")"
     ],
     "post_uninstall": [

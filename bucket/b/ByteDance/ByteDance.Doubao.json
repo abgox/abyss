@@ -21,7 +21,7 @@
         "A-Start-PreInstall",
         "$InstallLocation = '\"' + \"$dir\" + '\"'",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
+        "A-Install-Exe -Uninstaller 'Doubao\\uninstall.exe' -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\Doubao\")"
     ],
     "post_install": [
@@ -34,7 +34,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Stop-Process",
-        "A-Uninstall-Exe -Uninstaller 'Doubao\\uninstall.exe' -NoSilent",
+        "A-Uninstall-Exe -NoSilent",
         "A-Remove-Link"
     ],
     "post_uninstall": [

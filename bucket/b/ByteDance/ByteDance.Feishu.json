@@ -7,10 +7,6 @@
         "64bit": {
             "url": "https://sf3-cn.feishucdn.com/obj/ee-appcenter/940cc58d/Feishu-win32_ia32-7.46.6-signed.exe",
             "hash": "52c08a373a89107f4a5eabc8c081ee2ee5e98590e4297097d0e61dd09881e4ed"
-        },
-        "32bit": {
-            "url": "https://sf3-cn.feishucdn.com/obj/ee-appcenter/940cc58d/Feishu-win32_ia32-7.46.6-signed.exe",
-            "hash": "52c08a373a89107f4a5eabc8c081ee2ee5e98590e4297097d0e61dd09881e4ed"
         }
     },
     "shortcuts": [
@@ -25,7 +21,7 @@
         "A-Start-PreInstall",
         "$InstallLocation = '\"' + \"$dir\" + '\"'",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
+        "A-Install-Exe -Uninstaller 'Feishu\\uninstall.exe' -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
         "A-New-LinkDirectory @(\"$env:AppData\\LarkShell\")"
     ],
     "post_install": [
@@ -39,7 +35,7 @@
         "A-Start-PreUninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'Feishu\\uninstall.exe' -NoSilent"
+        "A-Uninstall-Exe -NoSilent"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -60,13 +56,6 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX86",
-                "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-                    "jsonpath": "$.x86_user.InstallerSha256"
-                }
-            },
-            "32bit": {
                 "url": "$matchX86",
                 "hash": {
                     "url": "bin/scoop-auto-check-update-temp-data.jsonc",

@@ -7,10 +7,6 @@
         "64bit": {
             "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/179659341/6.3.0/win32-ia32/douyin-v6.3.0-win32-ia32-default.exe",
             "hash": "d214cbf5188ba0a9bb390f84f67866c9feda76d2cc36058455032cbe04d5ed48"
-        },
-        "32bit": {
-            "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/179659341/6.3.0/win32-ia32/douyin-v6.3.0-win32-ia32-default.exe",
-            "hash": "d214cbf5188ba0a9bb390f84f67866c9feda76d2cc36058455032cbe04d5ed48"
         }
     },
     "shortcuts": [
@@ -24,7 +20,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe",
+        "A-Install-Exe -Uninstaller 'douyin\\uninst.exe'",
         "A-New-LinkDirectory @(\"$env:AppData\\douyin\",\"$env:AppData\\douyin_widget\")"
     ],
     "post_install": [
@@ -39,7 +35,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller 'douyin\\uninst.exe'"
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -58,13 +54,6 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX86",
-                "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
-                    "jsonpath": "$.x86_machine.InstallerSha256"
-                }
-            },
-            "32bit": {
                 "url": "$matchX86",
                 "hash": {
                     "url": "bin/scoop-auto-check-update-temp-data.jsonc",
