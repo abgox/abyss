@@ -12,13 +12,14 @@
         }
     },
     "env_set": {
-        "UV_CACHE_DIR": "$dir\\cache",
-        "UV_PYTHON_INSTALL_DIR": "$dir\\python",
-        "UV_TOOL_DIR": "$dir\\tools"
+        "UV_CACHE_DIR": "$dir\\data\\cache",
+        "UV_PYTHON_INSTALL_DIR": "$dir\\data\\python",
+        "UV_TOOL_DIR": "$dir\\data\\tools"
     },
     "bin": [
         "uv.exe",
-        "uvx.exe"
+        "uvx.exe",
+        "uvw.exe"
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -42,11 +43,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PostUninstall"
     ],
-    "persist": [
-        "cache",
-        "python",
-        "tools"
-    ],
+    "persist": "data",
     "checkver": {
         "github": "https://github.com/astral-sh/uv"
     },
