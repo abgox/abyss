@@ -103,7 +103,7 @@ if ($ShowCN) {
         "update"    = "更新"
     }
 
-    $adminText = if ($isAdmin) { "。" } else { " 或使用管理员权限。" }
+    $adminText = if ($isAdmin) { "" } else { " 或使用管理员权限。" }
 
     $words = @{
         "Creating directory:"                                            = "正在创建目录:"
@@ -1641,7 +1641,7 @@ function A-New-Link {
             $linkTarget = $LinkTargets[$i]
             $installData.LinkPaths += $linkPath
             $installData.LinkTargets += $linkTarget
-            if ((Test-Path $linkPath) -and !(Get-Item $linkPath).LinkType) {
+            if ((Test-Path $linkPath) -and !(Get-Item $linkPath -ErrorAction SilentlyContinue).LinkType) {
                 if (!(Test-Path $linkTarget)) {
                     A-Ensure-Directory (Split-Path $linkTarget -Parent)
                     Write-Host $words["Copying"] -ForegroundColor Yellow -NoNewline
