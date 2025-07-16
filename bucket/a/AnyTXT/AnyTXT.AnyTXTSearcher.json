@@ -1,0 +1,56 @@
+{
+    "version": "1.3.2477",
+    "description": "一款拥有强大全文搜索引擎的桌面搜索工具。A Desktop Search Tool with A Powerful Full-Text Search Engine.",
+    "homepage": "https://anytxt.net/",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://sourceforge.net/projects/anytxt/files/Anytxt_1.3.2477_Windows_X86_64.exe/download#/dl.exe",
+            "hash": "152248bf85c88eb0b26160bb88ec9fabefb5af280a2bc5770ce86e1ee14be3fd"
+        }
+    },
+    "shortcuts": [
+        [
+            "ATGUI.exe",
+            "Anytxt Searcher"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Require-Admin",
+        "$InstallLocation = '\"' + \"$dir\" + '\"'",
+        "A-Install-Exe -Uninstaller 'unins000.exe' -ArgumentList @('/VerySilent',\"/Dir=$InstallLocation\")",
+        "A-New-LinkDirectory @(\"$env:ProgramData\\Anytxt\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "sourceforge": "anytxt"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://sourceforge.net/projects/anytxt/files/Anytxt_$version_Windows_X86_64.exe/download#/dl.exe"
+            }
+        }
+    }
+}
