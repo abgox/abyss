@@ -2619,6 +2619,93 @@ if ($ShowCN) {
     Set-Item -Path Function:\startmenu_shortcut -Value {
         param([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global)
 
+        function A-Test-ScriptPattern {
+            param(
+                [Parameter(Mandatory = $true)]
+                [PSObject]$InputObject,
+
+                [Parameter(Mandatory = $true)]
+                [string]$Pattern,
+
+                [string[]]$ScriptSections = @('pre_install', 'post_install', 'pre_uninstall', 'post_uninstall'),
+
+                [string[]]$ScriptProperties = @('installer', 'uninstaller')
+            )
+
+            function Test-ObjectForPattern {
+                param(
+                    [PSObject]$Object,
+                    [string]$SearchPattern
+                )
+
+                $found = $false
+
+                foreach ($section in $ScriptSections) {
+                    if (!$found -and $Object.$section) {
+                        $found = ($Object.$section -join "`n") -match $SearchPattern
+                    }
+                }
+
+                foreach ($property in $ScriptProperties) {
+                    if (!$found -and $Object.$property.script) {
+                        $found = ($Object.$property.script -join "`n") -match $SearchPattern
+                    }
+                }
+
+                return $found
+            }
+
+            $patternFound = Test-ObjectForPattern -Object $InputObject -SearchPattern $Pattern
+
+            if (!$patternFound -and $InputObject.architecture) {
+                if ($InputObject.architecture.'64bit') {
+                    $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.'64bit' -SearchPattern $Pattern
+                }
+                if (!$patternFound -and $InputObject.architecture.'32bit') {
+                    $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.'32bit' -SearchPattern $Pattern
+                }
+                if (!$patternFound -and $InputObject.architecture.arm64) {
+                    $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.arm64 -SearchPattern $Pattern
+                }
+            }
+
+            return $patternFound
+        }
+
+        try {
+            $ScoopConfig = scoop config
+
+            # 创建快捷方式的操作行为。
+            # 0: 不创建清单中定义的快捷方式
+            # 1: 创建清单中定义的快捷方式
+            # 2: 如果应用使用安装程序进行安装，不创建清单中定义的快捷方式
+            $shortcutsActionLevel = $ScoopConfig.'app-shortcuts-action-level'
+        }
+        catch {}
+
+        if ($null -eq $shortcutsActionLevel) {
+            $shortcutsActionLevel = "1"
+        }
+
+        if ($shortcutsActionLevel -eq '0') {
+            if ($PSUICulture -like 'zh*') {
+                Write-Host "配置 app-shortcuts-action-level 的值为 0，因此不会创建清单中定义的快捷方式。" -ForegroundColor Yellow
+            }
+            else {
+                Write-Host "The config 'app-shortcuts-action-level' is set to 0, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
+            }
+            return
+        }
+        if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '.*A-Install-Exe.*')) {
+            if ($PSUICulture -like 'zh*') {
+                Write-Host "$app 使用安装程序进行安装，且配置 app-shortcuts-action-level 的值为 2，因此不会创建清单中定义的快捷方式。" -ForegroundColor Yellow
+            }
+            else {
+                Write-Host "$app uses an installer and config 'app-shortcuts-action-level' is set to 2, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
+            }
+            return
+        }
+
         # 支持 shortcuts 中包含 env:xxx 环境变量
         $filename = $target.FullName
         if ($filename -match '\$env:[a-zA-Z_].*') {
