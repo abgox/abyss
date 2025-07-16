@@ -184,6 +184,25 @@
   | `2`   | Remove Link directories (those created by [Link](#link))    |
   | `3`   | Clean up temporary data during uninstallation               |
 
+#### app-shortcuts-action-level
+
+- Some apps in `abyss` are installed via installers, which automatically create shortcuts.
+- Scoop also creates shortcuts defined in the manifest, which may result in duplicate shortcuts.
+- So, you can use this config option to control whether to create shortcuts defined in the manifest.
+
+  ```powershell
+  scoop config app-shortcuts-action-level 2
+  ```
+
+- If not set, the default value is `1`.
+- Configuration values and their action:
+
+  | Value | Action                                                                                                        |
+  | :---: | ------------------------------------------------------------------------------------------------------------- |
+  |  `0`  | **Do not create** shortcuts defined in the manifest                                                           |
+  |  `1`  | **Create** shortcuts defined in the manifest                                                                  |
+  |  `2`  | If the app uses an installer, **do not create** shortcuts defined in the manifest; otherwise, **create** them |
+
 #### abgox-abyss-bucket-name
 
 - It is used to record the name of `abyss` added locally, and then it is used in some special cases.
