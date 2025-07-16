@@ -1,0 +1,63 @@
+{
+    "version": "3.22.2",
+    "description": "一个在线 SSH、SFTP 终端工具，支持文件在线编辑、状态监控等功能。An online SSH and SFTP terminal tool that supports online file editing, status monitoring and other functions.",
+    "homepage": "https://www.xterminal.cn/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn-office.xterminal.cn/downloads/XTerminal-3.22.2-win-x64-installer.exe",
+            "hash": "7085e4811a956d7ef3e8287771205a58168c7e5ca5734f4f7c256e787dda7cad"
+        }
+    },
+    "shortcuts": [
+        [
+            "Xterminal.exe",
+            "Xterminal"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe -Uninstaller 'Uninstall XTerminal.exe' -ArgumentList @('/S','/currentuser',\"/D=$dir\")",
+        "A-New-LinkDirectory @(\"$env:AppData\\xterminal\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\xterminal-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'JiLuo.Xterminal' 'exe'",
+            "$InstallerInfo.PackageVersion"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn-office.xterminal.cn/downloads/XTerminal-$version-win-x64-installer.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
