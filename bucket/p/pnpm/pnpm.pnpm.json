@@ -1,0 +1,63 @@
+{
+    "version": "10.13.1",
+    "description": "一款快速且节省磁盘空间的 Node 包管理器。A fast and disk space efficient Node package manager.",
+    "homepage": "https://pnpm.io/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/pnpm/pnpm/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pnpm/pnpm/releases/download/v10.13.1/pnpm-win-x64.exe#/pnpm.exe",
+            "hash": "dc342fd6a2d0a9701cc724e6972e8cbc73991de5fc3fff70c201b6433612f78b"
+        },
+        "arm64": {
+            "url": "https://github.com/pnpm/pnpm/releases/download/v10.13.1/pnpm-win-arm64.exe#/pnpm.exe",
+            "hash": "7b7db1a83f7af44cde0f0ca33be959ccf73fdab2d90d100970231376024de8b0"
+        }
+    },
+    "bin": [
+        "pnpm.exe",
+        [
+            "pnpm.exe",
+            "pnpx",
+            "dlx"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\pnpm\",\"$env:LocalAppData\\pnpm-state\",\"$env:LocalAppData\\pnpm-cache\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/pnpm/pnpm"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pnpm/pnpm/releases/download/v$version/pnpm-win-x64.exe#/pnpm.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/pnpm/pnpm/releases/download/v$version/pnpm-win-arm64.exe#/pnpm.exe"
+            }
+        }
+    }
+}
