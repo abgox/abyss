@@ -1,6 +1,6 @@
 {
     "version": "2025.07.15.155010",
-    "description": "Rime 小狼毫 - 万象语法模型。Rime Weasel - Wanxiang syntax model.",
+    "description": "Rime 小狼毫配置: 万象语法模型。Rime Weasel Configuration: Wanxiang syntax model.",
     "homepage": "https://github.com/amzxyz/RIME-LMDG",
     "license": {
         "identifier": "CC-BY-4.0",
@@ -36,7 +36,7 @@
         "    Write-Host \"正在将 $app 语法模型复制到 Rime.Weasel 用户文件夹中...\" -ForegroundColor Yellow",
         "}",
         "else {",
-        "    Write-Host \"Copying $app syntax model to Rime.Weasel configuration directory...\" -ForegroundColor Yellow",
+        "    Write-Host \"Copying $app syntax model to Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
         "}",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
         "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
@@ -56,12 +56,15 @@
         "    Write-Host \"正在从 Rime.Weasel 用户文件夹中移除 $app 语法模型...\" -ForegroundColor Yellow",
         "}",
         "else {",
-        "    Write-Host \"Removing $app syntax model from Rime.Weasel configuration directory...\" -ForegroundColor Yellow",
+        "    Write-Host \"Removing $app syntax model from Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
         "}",
-        "Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1 | Stop-Process -Force -ErrorAction SilentlyContinue",
+        "$p = Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1",
+        "$path = $p.Path",
+        "$p | Stop-Process -Force -ErrorAction SilentlyContinue",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
         "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
-        "Remove-Item \"$RimeDataDir\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue"
+        "Remove-Item \"$RimeDataDir\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue",
+        "Start-Process $path -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
