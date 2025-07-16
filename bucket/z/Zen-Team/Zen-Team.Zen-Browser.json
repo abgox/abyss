@@ -6,6 +6,14 @@
         "identifier": "MPL-2.0",
         "url": "https://github.com/zen-browser/desktop/blob/HEAD/LICENSE"
     },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Zen Browser",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: $env:ProgramFiles\\Zen Browser",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/zen-browser/desktop/releases/download/1.14.5b/zen.installer.exe",
@@ -18,7 +26,7 @@
     },
     "shortcuts": [
         [
-            "zen.exe",
+            "$env:ProgramFiles\\Zen Browser\\zen.exe",
             "Zen Browser"
         ]
     ],
@@ -27,7 +35,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreInstall",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller 'uninstall\\helper.exe'",
+        "# 不能使用 /D=$dir 安装到 Scoop 目录下，只能使用标准安装目录 $env:ProgramFiles\\Zen Browser",
+        "# 如果安装到 Scoop 目录下，每次重新安装/更新都会自动新建 Profile 用户配置，而不是使用旧的用户配置",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Zen Browser\\uninstall\\helper.exe\" -ArgumentList @('/S')",
         "A-New-LinkDirectory @(\"$env:AppData\\zen\")"
     ],
     "post_install": [
@@ -40,9 +50,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-PreUninstall",
         "A-Require-Admin",
-        "A-Stop-Process",
+        "A-Stop-Process \"$env:ProgramFiles\\Zen Browser\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe"
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:ProgramFiles\\Zen Browser\",\"$env:LocalAppData\\zen\")"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
