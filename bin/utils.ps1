@@ -57,7 +57,7 @@ try {
     $ScoopConfig = scoop config
 
     # 卸载时的操作行为。
-    $uninstallActionLevel = $ScoopConfig.'app-uninstall-action-level'
+    $uninstallActionLevel = $ScoopConfig.'abgox-abyss-app-uninstall-action'
 
     # 本地添加的 abyss 的实际名称
     # https://github.com/abgox/abyss/issues/10
@@ -2679,7 +2679,7 @@ if ($ShowCN) {
             # 0: 不创建清单中定义的快捷方式
             # 1: 创建清单中定义的快捷方式
             # 2: 如果应用使用安装程序进行安装，不创建清单中定义的快捷方式
-            $shortcutsActionLevel = $ScoopConfig.'app-shortcuts-action-level'
+            $shortcutsActionLevel = $ScoopConfig.'abgox-abyss-app-shortcuts-action'
         }
         catch {}
 
@@ -2689,19 +2689,19 @@ if ($ShowCN) {
 
         if ($shortcutsActionLevel -eq '0') {
             if ($PSUICulture -like 'zh*') {
-                Write-Host "配置 app-shortcuts-action-level 的值为 0，因此不会创建清单中定义的快捷方式。" -ForegroundColor Yellow
+                Write-Host "配置 abgox-abyss-app-shortcuts-action 的值为 0，因此不会创建清单中定义的快捷方式。" -ForegroundColor Yellow
             }
             else {
-                Write-Host "The config 'app-shortcuts-action-level' is set to 0, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
+                Write-Host "The config 'abgox-abyss-app-shortcuts-action' is set to 0, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
             }
             return
         }
         if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '.*A-Install-Exe.*')) {
             if ($PSUICulture -like 'zh*') {
-                Write-Host "$app 使用安装程序进行安装，且配置 app-shortcuts-action-level 的值为 2，因此不会创建清单中定义的快捷方式。" -ForegroundColor Yellow
+                Write-Host "$app 使用安装程序进行安装，且配置 abgox-abyss-app-shortcuts-action 的值为 2，因此不会创建清单中定义的快捷方式。" -ForegroundColor Yellow
             }
             else {
-                Write-Host "$app uses an installer and config 'app-shortcuts-action-level' is set to 2, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
+                Write-Host "$app uses an installer and config 'abgox-abyss-app-shortcuts-action' is set to 2, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
             }
             return
         }
