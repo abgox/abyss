@@ -2770,6 +2770,11 @@ if ($ShowCN) {
 
         # future sessions
         $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
+
+        $Path = $Path | ForEach-Object {
+            Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
+        }
+
         if (!$inPath -or $Force) {
             if (!$Quiet) {
                 $Path | ForEach-Object {
