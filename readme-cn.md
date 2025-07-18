@@ -31,7 +31,7 @@
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
-> - 它们包含 Scoop 官方规范之外的 [风格和特性](#特性)，其他 bucket 不应该合并它们
+> - 它们包含 Scoop 官方规范之外的 [风格特性](#特性)，其他 bucket 不应该合并它们
 
 > Just like the abyss — limitless, mysterious, and filled with treasures.
 
@@ -59,7 +59,7 @@
 
 > [!Warning]
 >
-> 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在处理 depends 时找不到 bucket
+> 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在解析 depends 时找不到 bucket
 
 1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
 
@@ -161,13 +161,13 @@
 
 ### Config
 
-#### app-uninstall-action-level
+#### abgox-abyss-app-uninstall-action
 
 - 使用此配置项控制应用卸载时的额外操作
 - 你可以通过以下命令去设置
 
   ```powershell
-  scoop config app-uninstall-action-level 123
+  scoop config abgox-abyss-app-uninstall-action 123
   ```
 
 - 如果没有设置，则默认为 `1`
@@ -181,14 +181,14 @@
   |   `2`    | 卸载时删除 Link 目录(通过 [Link](#link) 创建的目录) |
   |   `3`    | 卸载时删除临时数据                                  |
 
-#### app-shortcuts-action-level
+#### abgox-abyss-app-shortcuts-action
 
 - 由于 `abyss` 中的一些应用直接使用安装程序安装，安装程序会自动创建快捷方式
 - Scoop 也会创建清单中定义的快捷方式，这会导致存在多个重复的快捷方式
 - 因此，你可以使用此配置项控制是否创建清单中定义的快捷方式
 
   ```powershell
-  scoop config app-shortcuts-action-level 2
+  scoop config abgox-abyss-app-shortcuts-action 2
   ```
 
 - 如果没有设置，则默认为 `1`
@@ -252,7 +252,7 @@
 > [!Warning]
 >
 > - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
-> - SymbolicLink 需要管理员权限，因此这些应用会被添加 `RequireAdmin` 标签
+> - SymbolicLink 需要管理员权限，因此在 [应用清单](#应用清单) 中这些应用会被添加 `RequireAdmin` 标签
 
 ---
 

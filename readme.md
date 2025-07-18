@@ -60,7 +60,7 @@
 
 > [!Warning]
 >
-> Please use `abyss` as the bucket name to avoid "bucket not found" errors when processing "depends" in some manifests.
+> Please use `abyss` as the bucket name to avoid "bucket not found" errors when parsing "depends" in some manifests.
 
 1.  Add `abyss` with Github or Gitee repository.
 
@@ -164,13 +164,13 @@
 
 ### Config
 
-#### app-uninstall-action-level
+#### abgox-abyss-app-uninstall-action
 
 - Apps in `abyss` have some [features](#features) controlled by it.
 - You can set it using the following command:
 
   ```powershell
-  scoop config app-uninstall-action-level 123
+  scoop config abgox-abyss-app-uninstall-action 123
   ```
 
 - If not configured, the default value is `1`.
@@ -184,24 +184,24 @@
   | `2`   | Remove Link directories (those created by [Link](#link))    |
   | `3`   | Clean up temporary data during uninstallation               |
 
-#### app-shortcuts-action-level
+#### abgox-abyss-app-shortcuts-action
 
 - Some apps in `abyss` are installed via installers, which automatically create shortcuts.
 - Scoop also creates shortcuts defined in the manifest, which may result in duplicate shortcuts.
-- So, you can use this config option to control whether to create shortcuts defined in the manifest.
+- So, you can use this config to control whether to create shortcuts defined in the manifest.
 
   ```powershell
-  scoop config app-shortcuts-action-level 2
+  scoop config abgox-abyss-app-shortcuts-action 2
   ```
 
 - If not set, the default value is `1`.
 - Configuration values and their action:
 
-  | Value | Action                                                                                                        |
-  | :---: | ------------------------------------------------------------------------------------------------------------- |
-  |  `0`  | **Do not create** shortcuts defined in the manifest                                                           |
-  |  `1`  | **Create** shortcuts defined in the manifest                                                                  |
-  |  `2`  | If the app uses an installer, **do not create** shortcuts defined in the manifest; otherwise, **create** them |
+  | Value | Action                                                                                                                 |
+  | :---: | ---------------------------------------------------------------------------------------------------------------------- |
+  |  `0`  | **Do not create** shortcuts defined in the manifest                                                                    |
+  |  `1`  | **Create** shortcuts defined in the manifest                                                                           |
+  |  `2`  | If the app is installed via installer, **do not create** shortcuts defined in the manifest; otherwise, **create** them |
 
 #### abgox-abyss-bucket-name
 
@@ -253,7 +253,7 @@
 > [!Warning]
 >
 > - Some apps store data as files instead of directories, requiring SymbolicLink to link.
-> - SymbolicLink requires administrator permission, so these apps will be added with the `RequireAdmin` tag.
+> - SymbolicLink requires administrator permission, so these apps will be added with the `RequireAdmin` tag in the [App Manifests](#app-manifests).
 
 ---
 
