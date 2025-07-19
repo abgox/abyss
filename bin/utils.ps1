@@ -699,10 +699,10 @@ function A-Install-Exe {
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
                     if ($ShowCN) {
-                        Write-Host -NoNewline "`r等待应用安装完成: $seconds 秒" -ForegroundColor Yellow
+                        Write-Host -NoNewline "`r等待中: $seconds 秒" -ForegroundColor Yellow
                     }
                     else {
-                        Write-Host -NoNewline "`rWaiting for application installation: $seconds seconds" -ForegroundColor Yellow
+                        Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
                     }
 
                     if ($Uninstaller) {
@@ -879,14 +879,20 @@ function A-Uninstall-Exe {
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
                     if ($ShowCN) {
-                        Write-Host -NoNewline "`r等待卸载程序完成: $seconds 秒" -ForegroundColor Yellow
+                        Write-Host -NoNewline "`r等待中: $seconds 秒" -ForegroundColor Yellow
                     }
                     else {
-                        Write-Host -NoNewline "`rWaiting for uninstaller to complete: $seconds seconds" -ForegroundColor Yellow
+                        Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
                     }
 
                     $fileExists = Test-Path $FailureFile
-                    if (!$fileExists) {
+                    if ($fileExists) {
+                        try {
+                            Remove-Item $FailureFile -Force -Recurse -ErrorAction SilentlyContinue
+                        }
+                        catch {}
+                    }
+                    else {
                         break
                     }
                     Start-Sleep -Seconds 1
@@ -3005,7 +3011,7 @@ if ($ShowCN) {
 
                 if (!$fulfilled) {
                     Write-Host
-                    Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))"
+                    Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))" -ForegroundColor Yellow
                 }
             }
         }
