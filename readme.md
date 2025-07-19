@@ -1,6 +1,4 @@
-<p align="center">
-    <h1 align="center">✨ abyss ✨</h1>
-</p>
+<h1 align="center">✨ abyss ✨</h1>
 
 <p align="center">
     <a href="readme-cn.md">简体中文</a> |
@@ -50,11 +48,18 @@
 - When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
 - Improved information output during installation and uninstallation.
   - Localized output.
-    - zh-CN: Simplified Chinese
-    - en-US: English
+    - `zh-CN`: Simplified Chinese
+    - `en-US`: English
   - Shows notifications for environment variable modifications.
 
 ---
+
+### If you are not using Scoop
+
+- [Scoop](https://scoop.sh/)
+- [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
+- [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
+- [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
 ### If you are using Scoop
 
@@ -95,16 +100,6 @@
 ### Demo
 
 ![Demo](https://abyss.abgox.com/demo.gif)
-
----
-
-### If you are not using Scoop
-
-- [What is Scoop?](https://scoop.sh/)
-- [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
-- [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
-- [Scoop install](https://github.com/ScoopInstaller/Install)
-- [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ---
 

@@ -1,6 +1,4 @@
-<p align="center">
-    <h1 align="center">✨ abyss ✨</h1>
-</p>
+<h1 align="center">✨ abyss ✨</h1>
 
 <p align="center">
     <a href="readme.md">English</a> |
@@ -49,11 +47,18 @@
 - 当卸载和更新应用时，会先尝试终止进程，详情参考 [Config](#config)
 - 优化了在安装和卸载过程中的信息输出
   - 根据语言环境使用对应的输出
-    - zh-CN: 简体中文
-    - en-US: 英文
+    - `zh-CN`: 简体中文
+    - `en-US`: 英文
   - 如果安装和卸载过程中会修改环境变量，将显示环境变量的具体变化
 
 ---
+
+### 如果你没有使用 Scoop
+
+- [Scoop](https://scoop.sh/)
+- [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
+- [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
+- [什么是 Scoop 中的应用清单(App Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
 ### 如果你正在使用 Scoop
 
@@ -94,14 +99,6 @@
 ### 演示
 
 ![演示](https://abyss.abgox.com/demo-cn.gif)
-
-### 如果你没有使用 Scoop
-
-- [什么是 Scoop?](https://scoop.sh/)
-- [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
-- [什么是 Scoop 中的应用清单(App-Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
-- [安装 Scoop](https://github.com/ScoopInstaller/Install)
-- [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ---
 
@@ -175,11 +172,11 @@
 - 配置值的含义如下，你可以任意组合这些值，如 `12` 表示 `1` 和 `2` 都要执行
 - 如果不希望有这些额外行为，设置为不包含它们的任意值即可
 
-  | 可选的值 | 行为                                                |
-  | :------: | --------------------------------------------------- |
-  |   `1`    | 卸载/更新时先尝试终止进程，然后进行卸载操作         |
-  |   `2`    | 卸载时删除 Link 目录(通过 [Link](#link) 创建的目录) |
-  |   `3`    | 卸载时删除临时数据                                  |
+  | 配置值 | 行为                                                |
+  | :----: | --------------------------------------------------- |
+  |  `1`   | 卸载/更新时先尝试终止进程，然后进行卸载操作         |
+  |  `2`   | 卸载时删除 Link 目录(通过 [Link](#link) 创建的目录) |
+  |  `3`   | 卸载时删除临时数据                                  |
 
 #### abgox-abyss-app-shortcuts-action
 
@@ -194,11 +191,11 @@
 - 如果没有设置，则默认为 `1`
 - 配置值的含义如下
 
-  | 可选的值 | 行为                                                                       |
-  | :------: | -------------------------------------------------------------------------- |
-  |   `0`    | **不创建** 清单中定义的快捷方式                                            |
-  |   `1`    | **创建** 清单中定义的快捷方式                                              |
-  |   `2`    | 如果应用使用安装程序， 就 **不创建** 清单中定义的快捷方式，否则就 **创建** |
+  | 配置值 | 行为                                                                       |
+  | :----: | -------------------------------------------------------------------------- |
+  |  `0`   | **不创建** 清单中定义的快捷方式                                            |
+  |  `1`   | **创建** 清单中定义的快捷方式                                              |
+  |  `2`   | 如果应用使用安装程序， 就 **不创建** 清单中定义的快捷方式，否则就 **创建** |
 
 #### abgox-abyss-bucket-name
 
