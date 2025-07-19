@@ -1,4 +1,4 @@
-# App Manifests
+# App List
 
 [简体中文](./app-list-cn.md)
 

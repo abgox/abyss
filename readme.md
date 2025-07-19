@@ -248,11 +248,11 @@
 > [!Warning]
 >
 > - Some apps store data as files instead of directories, requiring SymbolicLink to link.
-> - SymbolicLink requires administrator permission, so these apps will be added with the `RequireAdmin` tag in the [App Manifests](#app-manifests).
+> - SymbolicLink requires administrator permission, so these apps will be added with the `RequireAdmin` tag in the [App List](#app-list).
 
 ---
 
-### App Manifests
+### App List
 
 [Gitee - abgox/abyss](https://gitee.com/abgox/abyss) may not display them normally, please use [Github - abgox/abyss](https://github.com/abgox/abyss).
 

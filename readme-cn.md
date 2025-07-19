@@ -249,13 +249,13 @@
 > [!Warning]
 >
 > - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
-> - SymbolicLink 需要管理员权限，因此在 [应用清单](#应用清单) 中这些应用会被添加 `RequireAdmin` 标签
+> - SymbolicLink 需要管理员权限，因此在 [应用列表](#应用列表) 中这些应用会被添加 `RequireAdmin` 标签
 
 ---
 
-### 应用清单
+### 应用列表
 
-[Gitee - abgox/abyss](https://gitee.com/abgox/abyss) 可能无法正常显示应用清单，请使用 [Github - abgox/abyss](https://github.com/abgox/abyss)
+[Gitee - abgox/abyss](https://gitee.com/abgox/abyss) 可能无法正常显示应用列表，请使用 [Github - abgox/abyss](https://github.com/abgox/abyss)
 
 - [简体中文](./app-list-cn.md)
 - [English](./app-list.md)

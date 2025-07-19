@@ -1,4 +1,4 @@
-# 应用清单 Manifests
+# 应用列表
 
 [English](./app-list.md)
 
