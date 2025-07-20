@@ -2972,18 +2972,19 @@ if ($ShowCN) {
             Write-Host
             Write-Output $label
             Write-Output '-----'
-            Write-Output (wraptext (substitute $note @{
-                        '$dir'                     = $dir
-                        '$original_dir'            = $original_dir
-                        '$persist_dir'             = $persist_dir
-                        '$app'                     = $app
-                        '$version'                 = $manifest.version
-                        '$env:ProgramFiles'        = $env:ProgramFiles
-                        '${env:ProgramFiles(x86)}' = ${env:ProgramFiles(x86)}
-                        '$env:ProgramData'         = $env:ProgramData
-                        '$env:AppData'             = $env:AppData
-                        '$env:LocalAppData'        = $env:LocalAppData
-                    }))
+
+            Write-Output (substitute $note @{
+                    '$dir'                     = $dir
+                    '$original_dir'            = $original_dir
+                    '$persist_dir'             = $persist_dir
+                    '$app'                     = $app
+                    '$version'                 = $manifest.version
+                    '$env:ProgramFiles'        = $env:ProgramFiles
+                    '${env:ProgramFiles(x86)}' = ${env:ProgramFiles(x86)}
+                    '$env:ProgramData'         = $env:ProgramData
+                    '$env:AppData'             = $env:AppData
+                    '$env:LocalAppData'        = $env:LocalAppData
+                })
             Write-Output '-----'
         }
     }
