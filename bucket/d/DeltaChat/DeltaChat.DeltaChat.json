@@ -1,0 +1,55 @@
+{
+    "version": "1.60.1",
+    "description": "适用于桌面端、带有聊天共享工具和游戏的去中心化私人即时通讯软件。Decentralized private messenger with chat-shared tools and games for Desktop.",
+    "homepage": "https://github.com/deltachat/deltachat-desktop",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/deltachat/deltachat-desktop/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/deltachat/deltachat-desktop/releases/download/v1.60.1/DeltaChat-1.60.1-Setup.x64.exe",
+            "hash": "6912e64d99b57b7db34dd9e99f783c57f1719e5d43a32072a0c3b35be60303fa"
+        }
+    },
+    "shortcuts": [
+        [
+            "DeltaChat.exe",
+            "DeltaChat"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-Install-Exe -Uninstaller 'Uninstall DeltaChat.exe'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\DeltaChat\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\deltachat-desktop-updater\",\"$env:AppData\\DeltaChat\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/deltachat/deltachat-desktop/releases/download/v$version/DeltaChat-$version-Setup.x64.exe"
+            }
+        }
+    }
+}
