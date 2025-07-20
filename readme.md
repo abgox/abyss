@@ -24,7 +24,7 @@
 
 > [!Tip]
 >
-> [scoop/scoop-install/scoop-update completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
+> [scoop completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
 > [!Warning]
 >
@@ -69,31 +69,31 @@
 
 1.  Add `abyss` with Github or Gitee repository.
 
-    ```powershell
+    ```shell
     scoop bucket add abyss https://github.com/abgox/abyss.git
     ```
 
-    ```powershell
+    ```shell
     scoop bucket add abyss https://gitee.com/abgox/abyss.git
     ```
 
 2.  Use [PSCompletions](https://github.com/abgox/PSCompletions) to add `scoop` completion.
 
-    ```powershell
+    ```shell
     scoop install abyss/abgox.PSCompletions
     ```
 
-    ```powershell
+    ```shell
     Import-Module PSCompletions
     ```
 
-    ```powershell
+    ```shell
     psc add scoop
     ```
 
 3.  Install apps.
 
-    ```powershell
+    ```shell
     scoop install abyss/abgox.PSCompletions
     ```
 
@@ -108,45 +108,50 @@
 > [!Tip]
 >
 > If you cannot access Github resources quickly due to network issues, you can try the following solutions.
+>
+> [scoop/scoop-install/scoop-update completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
 1. Use the Gitee repository.
 
-   ```powershell
+   ```shell
    scoop bucket add abyss https://gitee.com/abgox/abyss.git
    ```
 
 2. Install [scoop-install](https://gitee.com/abgox/scoop-tools) and [scoop-update](https://gitee.com/abgox/scoop-tools).
 
-   ```powershell
+   ```shell
    scoop install abyss/abgox.scoop-install
    ```
 
-   ```powershell
+   ```shell
    scoop install abyss/abgox.scoop-update
    ```
 
 3. Configure URL replacement.
 
-   ```powershell
+   ```shell
    scoop config scoop-install-url-replace-from "^https://github.com|||^https://raw.githubusercontent.com"
+   ```
+
+   ```shell
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
    ```
 
 4. Use [PSCompletions](https://github.com/abgox/PSCompletions) to add command completion.
 
-   ```powershell
+   ```shell
    psc add scoop-install scoop-update
    ```
 
 5. Use [scoop-install](https://gitee.com/abgox/scoop-tools) to install apps.
 
-   ```powershell
+   ```shell
    scoop-install abyss/Microsoft.PowerShell
    ```
 
 6. Use [scoop-update](https://gitee.com/abgox/scoop-tools) to update apps.
 
-   ```powershell
+   ```shell
    scoop-update abyss/Microsoft.PowerShell
    ```
 
@@ -164,7 +169,7 @@
 - Apps in `abyss` have some [features](#features) controlled by it.
 - You can set it using the following command:
 
-  ```powershell
+  ```shell
   scoop config abgox-abyss-app-uninstall-action 123
   ```
 
@@ -185,7 +190,7 @@
 - Scoop also creates shortcuts defined in the manifest, which may result in duplicate shortcuts.
 - So, you can use this config to control whether to create shortcuts defined in the manifest.
 
-  ```powershell
+  ```shell
   scoop config abgox-abyss-app-shortcuts-action 2
   ```
 

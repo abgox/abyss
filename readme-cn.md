@@ -24,7 +24,7 @@
 
 > [!Tip]
 >
-> 推荐使用 [PSCompletions 中的 scoop/scoop-install/scoop-update 命令补全](https://gitee.com/abgox/PSCompletions)
+> 推荐使用 [PSCompletions 中的 scoop 命令补全](https://gitee.com/abgox/PSCompletions)
 
 > [!Warning]
 >
@@ -68,31 +68,31 @@
 
 1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
 
-   ```powershell
+   ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
    ```
 
-   ```powershell
+   ```shell
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
 2. 使用 [PSCompletions](https://gitee.com/abgox/PSCompletions) 添加 `scoop` 命令补全
 
-   ```powershell
+   ```shell
    scoop install abyss/abgox.PSCompletions
    ```
 
-   ```powershell
+   ```shell
    Import-Module PSCompletions
    ```
 
-   ```powershell
+   ```shell
    psc add scoop
    ```
 
 3. 安装应用
 
-   ```powershell
+   ```shell
    scoop install abyss/Microsoft.PowerShell
    ```
 
@@ -107,45 +107,50 @@
 > [!Tip]
 >
 > 如果因为网络问题无法快速访问 Github 资源，可以尝试以下方案
+>
+> 推荐使用 [PSCompletions 中的 scoop/scoop-install/scoop-update 命令补全](https://gitee.com/abgox/PSCompletions)
 
 1. 使用 Gitee 仓库
 
-   ```powershell
+   ```shell
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
 2. 安装 [scoop-install](https://gitee.com/abgox/scoop-tools) 和 [scoop-update](https://gitee.com/abgox/scoop-tools)
 
-   ```powershell
+   ```shell
    scoop install abyss/abgox.scoop-install
    ```
 
-   ```powershell
+   ```shell
    scoop install abyss/abgox.scoop-update
    ```
 
 3. 设置 url 替换
 
-   ```powershell
+   ```shell
    scoop config scoop-install-url-replace-from "^https://github.com|||^https://raw.githubusercontent.com"
+   ```
+
+   ```shell
    scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
    ```
 
 4. 使用 [PSCompletions](https://github.com/abgox/PSCompletions) 添加命令补全
 
-   ```powershell
+   ```shell
    psc add scoop-install scoop-update
    ```
 
 5. 使用 [scoop-install](https://gitee.com/abgox/scoop-tools) 安装应用
 
-   ```powershell
+   ```shell
    scoop-install abyss/Microsoft.PowerShell
    ```
 
 6. 使用 [scoop-update](https://gitee.com/abgox/scoop-tools) 更新应用
 
-   ```powershell
+   ```shell
    scoop-update abyss/Microsoft.PowerShell
    ```
 
@@ -163,7 +168,7 @@
 - 使用此配置项控制应用卸载时的额外操作
 - 你可以通过以下命令去设置
 
-  ```powershell
+  ```shell
   scoop config abgox-abyss-app-uninstall-action 123
   ```
 
@@ -184,7 +189,7 @@
 - Scoop 也会创建清单中定义的快捷方式，这会导致存在多个重复的快捷方式
 - 因此，你可以使用此配置项控制是否创建清单中定义的快捷方式
 
-  ```powershell
+  ```shell
   scoop config abgox-abyss-app-shortcuts-action 2
   ```
 
