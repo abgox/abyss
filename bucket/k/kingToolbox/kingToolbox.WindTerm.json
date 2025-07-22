@@ -1,0 +1,57 @@
+{
+    "version": "2.7.0",
+    "description": "专业的跨平台 SSH/Sftp/Shell/Telnet/Tmux/Serial 终端。A professional cross-platform SSH/Sftp/Shell/Telnet/Tmux/Serial terminal.",
+    "homepage": "https://github.com/kingToolbox/WindTerm",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/kingToolbox/WindTerm/releases/download/2.7.0/WindTerm_2.7.0_Windows_Portable_x86_64.zip",
+            "hash": "b05c3c7371340ff1302967247ffcd3a3ba27b237f72010e9157086143c453e50"
+        }
+    },
+    "extract_dir": "WindTerm_2.7.0",
+    "shortcuts": [
+        [
+            "WindTerm.exe",
+            "WindTerm"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-New-PersistFile \"$persist_dir\\profiles.config\" -Content '{\"path\" : \".\"}'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "persist": [
+        "profiles.config",
+        ".wind"
+    ],
+    "checkver": {
+        "url": "https://github.com/kingToolbox/WindTerm/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/kingToolbox/WindTerm/releases/download/$version/WindTerm_$version_Windows_Portable_x86_64.zip"
+            }
+        },
+        "extract_dir": "WindTerm_$version"
+    }
+}
