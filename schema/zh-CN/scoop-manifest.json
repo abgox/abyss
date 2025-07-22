@@ -2104,6 +2104,37 @@
                 "not": true,
                 "errorMessage": "abyss 中必须使用 pre_(un)install 和 post_(un)install 定义"
             }
+        },
+        {
+            "$comment": "abyss 中不允许 checkver 使用内置的 github 字段",
+            "allOf": [
+                {
+                    "properties": {
+                        "checkver": {
+                            "if": {
+                                "type": "string",
+                                "const": "github"
+                            },
+                            "then": {
+                                "not": true,
+                                "errorMessage": "abyss 中不允许使用 github 字段"
+                            }
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "checkver": {
+                            "properties": {
+                                "github": {
+                                    "not": true,
+                                    "errorMessage": "abyss 中不允许使用 github 字段"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
         }
         // {
         //   "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀。有些会通过 A-Install-Exe 安装，但 schema 无法检测到，会存在误判",
