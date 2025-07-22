@@ -1360,8 +1360,7 @@ function A-Get-Version {
     )
 
     if (!$PSBoundParameters.ContainsKey('Regex')) {
-        # 匹配 Github Releases 页面上的版本号
-        $Regex = "/tree/v?([^`"]+)"
+        return $null
     }
 
     # Scoop 会提供 $url 变量 manifest.checkver.github > manifest.checkver.url > manifest.url
@@ -1414,9 +1413,6 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    Write-Host
-    Write-Host "正在从 winget-pkgs 中获取 $Package 安装信息" -ForegroundColor Green
-
     $rootDir = $Package.ToLower()[0]
 
     $PackageIdentifier = $Package
@@ -1425,7 +1421,6 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     try {
-        Write-Host "正在访问: $url" -ForegroundColor Green
         $parameters = @{
             Uri                      = $url
             ConnectionTimeoutSeconds = 10
@@ -1460,12 +1455,9 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    Write-Host "$app 的最新版本: $latestVersion" -ForegroundColor Green
-
     $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        Write-Host "正在访问: $url" -ForegroundColor Green
         $parameters = @{
             Uri                      = $url
             ConnectionTimeoutSeconds = 10
@@ -1530,9 +1522,6 @@ function A-Get-InstallerInfoFromWinget {
 
     # 写入到 bin\scoop-auto-check-update-temp-data.jsonc，用于后续读取
     $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
-
-    Write-Host "$Package 安装信息获取成功，进行版本比对" -ForegroundColor Green
-    Write-Host
 
     $installerInfo
 }
