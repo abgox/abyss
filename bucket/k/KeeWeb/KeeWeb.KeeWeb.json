@@ -1,0 +1,59 @@
+{
+    "version": "1.18.7",
+    "description": "一个密码管理器用于浏览器和桌面，与 KeePass 兼容。A browser and desktop password manager compatible with KeePass.",
+    "homepage": "https://github.com/keeweb/keeweb",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/keeweb/keeweb/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/keeweb/keeweb/releases/download/v1.18.7/KeeWeb-1.18.7.win.x64.zip",
+            "hash": "8bca3bd04172863f14b649763e7dc0696230e94b11b4ba9ea6158822057b1551"
+        },
+        "arm64": {
+            "url": "https://github.com/keeweb/keeweb/releases/download/v1.18.7/KeeWeb-1.18.7.win.arm64.zip",
+            "hash": "d75fb871120c25a8dbb576c51af9c59f4aaca35d6184b46872bcc8d2dde865e4"
+        }
+    },
+    "shortcuts": [
+        [
+            "KeeWeb.exe",
+            "KeeWeb"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreInstall",
+        "A-New-LinkDirectory @(\"$env:AppData\\KeeWeb\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostInstall"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PreUninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-PostUninstall"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/keeweb/keeweb/releases/download/v$version/KeeWeb-$version.win.x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/keeweb/keeweb/releases/download/v$version/KeeWeb-$version.win.arm64.zip"
+            }
+        }
+    }
+}
