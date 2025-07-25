@@ -5,7 +5,6 @@
 
     1. 在 pre_install
 
-        - A-Start-PreInstall: pre_install 中的自定义脚本，需要放在此函数之后
         - A-Require-Admin: 要求以管理员权限运行
         - A-Ensure-Directory: 确保指定目录路径存在
         - A-Copy-Item: 复制文件或目录
@@ -20,7 +19,6 @@
 
     2. 在 pre_uninstall
 
-        - A-Start-PreUninstall: pre_uninstall 中的自定义脚本，需要放在此函数之后
         - A-Deny-Update: 禁止通过 Scoop 更新
         - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
         - A-Stop-Service: 尝试停止并移除指定的应用服务，以确保能正常卸载
@@ -151,32 +149,38 @@ else {
     }
 }
 
-function A-Start-PreInstall {
-    <#
-    .SYNOPSIS
-        由于 abyss 中的应用会在此函数运行后执行自定义安装脚本，所以此函数可以当做安装阶段的开始
-    #>
+
+<#
+应用的安装/卸载步骤 (xxx 表示其他自定义逻辑)
+
+pre_install
+   A-Start-Install
+   xxx
+post_install
+   xxx
+   A-Complete-Install
+pre_uninstall
+   A-Start-Uninstall
+   xxx
+post_uninstall
+   xxx
+   A-Complete-Uninstall
+
+#>
+function A-Start-Install {
+
 }
 
-function A-Start-PostInstall {
-    <#
-    .SYNOPSIS
-        由于 abyss 中的应用会在 pre_install 阶段完成自定义安装脚本，所以此函数可以当做安装阶段的结束
-    #>
+function A-Complete-Install {
+
 }
 
-function A-Start-PreUninstall {
-    <#
-    .SYNOPSIS
-        由于 abyss 中的应用会在此函数运行后执行自定义卸载脚本，所以此函数可以当做安装阶段的开始
-    #>
+function A-Start-Uninstall {
+
 }
 
-function A-Start-PostUninstall {
-    <#
-    .SYNOPSIS
-        由于 abyss 中的应用会在 pre_uninstall 阶段完成自定义卸载脚本，所以此函数可以当做卸载阶段的结束
-    #>
+function A-Complete-Uninstall {
+
 }
 
 function A-Ensure-Directory {
@@ -1585,6 +1589,23 @@ function A-Compare-Version {
     return 0
 }
 
+#region 废弃
+
+function A-Start-PreUninstall {
+    <#
+    .SYNOPSIS
+        由于 abyss 中的应用会在此函数运行后执行自定义卸载脚本，所以此函数可以当做安装阶段的开始
+    #>
+}
+
+function A-Start-PostUninstall {
+    <#
+    .SYNOPSIS
+        由于 abyss 中的应用会在 pre_uninstall 阶段完成自定义卸载脚本，所以此函数可以当做卸载阶段的结束
+    #>
+}
+
+#endregion
 
 #region 以下的函数不应该被直接使用。请使用文件开头列出的可用函数。
 function A-New-Link {
