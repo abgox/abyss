@@ -983,7 +983,7 @@
                                 [
                                     "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "A-Start-PreInstall",
+                                    "A-Start-Install",
                                     "A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
                                 ]
                             ],
@@ -999,7 +999,7 @@
                                             "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
                                         },
                                         {
-                                            "const": "A-Start-PreInstall"
+                                            "const": "A-Start-Install"
                                         }
                                     ]
                                 },
@@ -1011,7 +1011,7 @@
                                                 "enum": [
                                                     "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "A-Start-PreInstall",
+                                                    "A-Start-Install",
                                                     "A-New-PersistFile \"\"",
                                                     "A-Copy-Item",
                                                     "A-Expand-SetupExe",
@@ -1029,7 +1029,7 @@
                                                 "markdownEnumDescriptions": [
                                                     "脚本\n- 获取 $bucket 变量",
                                                     "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                                    "函数\n- 表示 `pre_install` 的开始",
+                                                    "函数\n- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`",
                                                     "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
                                                     "函数\n- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`",
                                                     "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`",
@@ -1055,26 +1055,33 @@
                 {
                     "properties": {
                         "post_install": {
-                            "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，它只能是规定的固定数组，不允许有其他定义",
+                            "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`",
                             "type": "array",
-                            "const": [
-                                "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "A-Start-PostInstall"
-                            ],
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "A-Start-PostInstall"
-                                ],
-                                "markdownEnumDescriptions": [
-                                    "脚本\n- 获取 $bucket 变量",
-                                    "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                    "函数\n- 表示 `post_install` 的开始\n- 但是 [abyss](https://github.com/abgox/abyss) 中不允许在 `post_install` 中定义安装脚本\n- 因此，它通常作为安装阶段的结束"
-                                ]
-                            }
+                            "oneOf": [
+                                {
+                                    "const": [
+                                        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "A-Complete-Install"
+                                    ],
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                            ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                            "A-Complete-Install"
+                                        ],
+                                        "markdownEnumDescriptions": [
+                                            "脚本\n- 获取 $bucket 变量",
+                                            "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                                            "函数\n- 表示安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "minItems": 4
+                                }
+                            ]
                         }
                     }
                 },
@@ -1085,7 +1092,7 @@
                                 [
                                     "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "A-Start-PreUninstall",
+                                    "A-Start-Uninstall",
                                     "A-Stop-Process",
                                     "A-Remove-Link"
                                 ]
@@ -1102,7 +1109,7 @@
                                             "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
                                         },
                                         {
-                                            "const": "A-Start-PreUninstall"
+                                            "const": "A-Start-Uninstall"
                                         }
                                     ]
                                 },
@@ -1115,7 +1122,7 @@
                                                 "enum": [
                                                     "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                                     ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "A-Start-PreUninstall",
+                                                    "A-Start-Uninstall",
                                                     "A-Stop-Process",
                                                     "A-Stop-Service",
                                                     "A-Remove-Link",
@@ -1133,7 +1140,7 @@
                                                 "markdownEnumDescriptions": [
                                                     "脚本\n- 获取 $bucket 变量",
                                                     "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                                    "函数\n- 表示 `pre_uninstall` 的开始",
+                                                    "函数\n- 表示卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
                                                     "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
                                                     "函数\n- 尝试停止并移除指定的应用服务，以确保能正常卸载",
                                                     "函数\n- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction",
@@ -1158,26 +1165,33 @@
                 {
                     "properties": {
                         "post_uninstall": {
-                            "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，它只能是规定的固定数组，不允许有其他定义",
+                            "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`",
                             "type": "array",
-                            "const": [
-                                "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "A-Start-PostUninstall"
-                            ],
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "A-Start-PostUninstall"
-                                ],
-                                "markdownEnumDescriptions": [
-                                    "脚本\n- 获取 $bucket 变量",
-                                    "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                    "函数\n- 表示 `post_uninstall` 的开始\n- 但是 [abyss](https://github.com/abgox/abyss) 中不允许在 `post_uninstall` 中定义卸载脚本\n- 因此，它通常作为卸载阶段的结束"
-                                ]
-                            }
+                            "oneOf": [
+                                {
+                                    "const": [
+                                        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "A-Complete-Uninstall"
+                                    ],
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                            ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                            "A-Complete-Uninstall"
+                                        ],
+                                        "markdownEnumDescriptions": [
+                                            "脚本\n- 获取 $bucket 变量",
+                                            "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                                            "函数\n- 表示卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "minItems": 4
+                                }
+                            ]
                         }
                     }
                 }
