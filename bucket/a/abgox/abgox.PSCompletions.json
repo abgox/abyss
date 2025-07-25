@@ -32,24 +32,24 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse",
         "A-New-PersistFile \"$persist_dir\\data.json\" -Content '{}'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall"
+        "A-Start-Uninstall"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "persist": [
         "completions",

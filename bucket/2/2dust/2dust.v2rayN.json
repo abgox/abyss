@@ -28,26 +28,29 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "persist": "guiConfigs",
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/2dust/v2rayN/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {

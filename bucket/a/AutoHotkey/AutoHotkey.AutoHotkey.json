@@ -23,7 +23,7 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "A-Require-Admin",
         "A-Install-Exe -ArgumentList @('/silent') -SuccessFile \"$env:ProgramFiles\\AutoHotkey\\UX\\ui-dash.ahk\"",
         "A-New-LinkDirectory @(\"$env:ProgramFiles\\AutoHotkey\\Compiler\",\"$env:UserProfile\\Documents\\AutoHotkey\")",
@@ -32,12 +32,12 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "A-Stop-Process \"$env:ProgramFiles\\AutoHotkey\"",
         "A-Remove-Link",
         "A-Remove-TempData @(\"$env:ProgramFiles\\AutoHotkey\", \"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Dash.lnk\",\"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\AutoHotkey Window Spy.lnk\")"
@@ -45,7 +45,7 @@
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "checkver": "github",
     "autoupdate": {

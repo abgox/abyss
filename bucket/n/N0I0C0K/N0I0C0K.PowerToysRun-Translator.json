@@ -19,24 +19,24 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "A-Add-PowerToysRunPlugin 'Translator'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "A-Remove-PowerToysRunPlugin"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "checkver": "github",
     "autoupdate": {

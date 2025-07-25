@@ -33,7 +33,7 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "A-Require-Admin",
         "A-Stop-Process \"${env:ProgramFiles(x86)}\\Microsoft\\Edge\"",
         "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')",
@@ -42,12 +42,12 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "if ($cmd -eq 'uninstall') {",
         "    if($PSUICulture -like 'zh*') {",
         "        Write-Host \"Microsoft Edge 是特殊的，在 Windows 系统中，它不允许被卸载，因此只会删除 Scoop 下的 $app 目录\" -ForegroundColor Yellow",
@@ -61,7 +61,7 @@
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [

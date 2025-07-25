@@ -33,7 +33,7 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "A-Require-Admin",
         "# 不能使用 /D=$dir 安装到 Scoop 目录下，只能使用标准安装目录 $env:ProgramFiles\\Zen Browser",
         "# 如果安装到 Scoop 目录下，每次重新安装/更新都会自动新建 Profile 用户配置，而不是使用旧的用户配置",
@@ -43,12 +43,12 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\Zen Browser\"",
         "A-Remove-Link",
@@ -58,7 +58,7 @@
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "checkver": {
         "url": "https://github.com/zen-browser/desktop/releases/latest",

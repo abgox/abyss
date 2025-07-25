@@ -33,7 +33,7 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "A-Require-Admin",
         "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Google\\Chrome Dev\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--chrome-dev','--do-not-launch-chrome','--system-level')",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome Dev\\User Data\")"
@@ -41,12 +41,12 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "A-Require-Admin",
         "A-Uninstall-Exe -ArgumentList @('--chrome-dev','--uninstall','--system-level','--multi-install','--force-uninstall')",
         "A-Remove-Link"
@@ -54,7 +54,7 @@
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [

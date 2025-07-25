@@ -23,36 +23,42 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/hulo-lang/hulo/releases/download/v0.2.0/hulo_Windows_x86_64.zip",
-            "hash": "dd52cb61d34007e97b3573ba117f451e10222d28486b774a17b4d0bdb519e8b4"
+            "hash": "737769c19438a39abf3cf61f7e6b45924fb4b7a1c9ed12aed2a47e18d8c6f07e"
         },
         "arm64": {
             "url": "https://github.com/hulo-lang/hulo/releases/download/v0.2.0/hulo_Windows_arm64.zip",
-            "hash": "a50eec0cd32144c4ec261fbf3823d065520e7aba2236574515fa2dd259e317b9"
+            "hash": "2a0af34101a05adf1194ec9cd732bc0317f96f1c617474984f7e99c5da07239d"
         }
     },
     "env_add_path": "bin",
+    "env_set": {
+        "HULO_PATH": "$dir"
+    },
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/hulo-lang/hulo/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {

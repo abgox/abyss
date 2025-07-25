@@ -23,7 +23,7 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreInstall",
+        "A-Start-Install",
         "if($PSUICulture -like 'zh*') {",
         "    Write-Host \"正在将 $app 配置文件复制到 Rime.Weasel 用户文件夹中...\" -ForegroundColor Yellow",
         "}",
@@ -37,12 +37,12 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostInstall"
+        "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PreUninstall",
+        "A-Start-Uninstall",
         "if($PSUICulture -like 'zh*') {",
         "    Write-Host \"正在从 Rime.Weasel 用户文件夹中移除 $app 配置文件...\" -ForegroundColor Yellow",
         "}",
@@ -56,7 +56,7 @@
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-PostUninstall"
+        "A-Complete-Uninstall"
     ],
     "checkver": {
         "url": "https://api.github.com/repos/iDvel/rime-ice/releases/latest",
