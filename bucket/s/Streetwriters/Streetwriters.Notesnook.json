@@ -1,0 +1,69 @@
+{
+    "version": "3.2.3",
+    "description": "一款完全开源且端到端加密的笔记应用，可替代 Evernote。A fully open source & end-to-end encrypted note taking alternative to Evernote.",
+    "homepage": "https://github.com/streetwriters/notesnook",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/streetwriters/notesnook/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/streetwriters/notesnook/releases/download/v3.2.3/notesnook_win_x64.exe",
+            "hash": "sha512:45d2a3a735cc32352671c7a3e7a733066ae0164e876c1193472df52caaad603b846e04b56cc40aa3661923732d145de55306cce093d4ee73c42913de67ab1b7e"
+        },
+        "arm64": {
+            "url": "https://github.com/streetwriters/notesnook/releases/download/v3.2.3/notesnook_win_arm64.exe",
+            "hash": "sha512:b1f05a71c8f63751746523e8549372eb119e9f21a2d5bdf3c606d8bcffa430ed2aa4900efa0f08ebf243cd3f8a9168351fe1c8bb56ff28abf792b4b06833fbf1"
+        }
+    },
+    "shortcuts": [
+        [
+            "Notesnook.exe",
+            "Notesnook"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall Notesnook.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\Notesnook\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\@notesnookdesktop-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/streetwriters/notesnook/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/streetwriters/notesnook/releases/download/v$version/notesnook_win_x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/streetwriters/notesnook/releases/download/v$version/notesnook_win_arm64.exe"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/latest.yml",
+            "regex": "(?sm)$basename.*?$base64"
+        }
+    }
+}
