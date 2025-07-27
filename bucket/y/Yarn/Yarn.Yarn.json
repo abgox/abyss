@@ -1,0 +1,76 @@
+{
+    "version": "1.22.22",
+    "description": "快速、可靠且安全的 Node.js 依赖管理器。Fast, reliable, and secure dependency Node.js dependency manager.",
+    "homepage": "https://github.com/yarnpkg/yarn",
+    "license": {
+        "identifier": "BSD-2-Clause",
+        "url": "https://github.com/yarnpkg/yarn/blob/master/LICENSE"
+    },
+    "notes-cn": [
+        "你需要运行以下命令更新 Yarn 配置，以确保数据被 Scoop 持久化 (persist):",
+        " ",
+        "yarn config set prefix \"$dir\\global\"",
+        "yarn config set cache-folder \"$dir\\cache\"",
+        "yarn config set global-folder \"$dir\\global\"",
+        "yarn config set yarn-offline-mirror \"$dir\\mirror\""
+    ],
+    "notes": [
+        "You need to run the following commands to update Yarn configuration to ensure that data is persisted (persist):",
+        " ",
+        "yarn config set prefix \"$dir\\global\"",
+        "yarn config set cache-folder \"$dir\\cache\"",
+        "yarn config set global-folder \"$dir\\global\"",
+        "yarn config set yarn-offline-mirror \"$dir\\mirror\""
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/yarnpkg/yarn/releases/download/v1.22.22/yarn-1.22.22.msi",
+            "hash": "ebc1f46891b8d507efad2dd18eec2c4e617457f93e13bc701483cb047a053fa1"
+        }
+    },
+    "extract_dir": "Yarn",
+    "env_add_path": [
+        "bin",
+        "global\\bin"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-PersistFile \"$env:UserProfile\\.yarnrc\"",
+        "A-New-LinkFile @(\"$env:UserProfile\\.yarnrc\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "persist": [
+        "global",
+        "cache",
+        "mirror"
+    ],
+    "checkver": {
+        "url": "https://github.com/yarnpkg/yarn/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yarnpkg/yarn/releases/download/v$version/yarn-$version.msi"
+            }
+        }
+    }
+}
