@@ -1,0 +1,57 @@
+{
+    "version": "12.1.0",
+    "description": "功能强大且使用简单的屏幕截图软件。Powerful yet simple to use screenshot software.",
+    "homepage": "https://flameshot.org",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/flameshot-org/flameshot/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/flameshot-org/flameshot/releases/download/v12.1.0/Flameshot-12.1.0-win64.msi",
+            "hash": "e4559e32213ffa2e60533a02c5845aebfe110d5c8d8592739c6a6d202928fabf"
+        }
+    },
+    "extract_dir": "Flameshot",
+    "bin": "bin\\flameshot.exe",
+    "shortcuts": [
+        [
+            "bin\\flameshot.exe",
+            "Flameshot"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\flameshot\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/flameshot-org/flameshot/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/flameshot-org/flameshot/releases/download/v$version/Flameshot-$version-win64.msi"
+            }
+        }
+    }
+}
