@@ -426,7 +426,7 @@ function A-Remove-Link {
 
     @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
         if (Test-Path $_) {
-            $LinkPaths = Get-Content $_ -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
+            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
 
             foreach ($p in $LinkPaths) {
                 if (Test-Path $p) {
@@ -809,7 +809,12 @@ function A-Uninstall-Exe {
         $ArgumentList = @('/S')
     }
     if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
-        $Uninstaller = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Uninstaller"
+        if (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc") {
+            $Uninstaller = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Uninstaller"
+        }
+        else {
+            return
+        }
     }
 
     $path = A-Get-AbsolutePath $Uninstaller
