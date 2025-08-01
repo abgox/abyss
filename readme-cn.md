@@ -29,7 +29,7 @@
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
-> - 它们包含 Scoop 官方规范之外的 [风格特性](#特性)，其他 bucket 不应该合并它们
+> - 它们包含 Scoop 官方规范之外的 [风格与特性](#特性)，其他 bucket 不应该合并它们，以避免冲突和错误
 
 > Just like the abyss — limitless, mysterious, and filled with treasures.
 
@@ -93,7 +93,7 @@
 3. 安装应用
 
    ```shell
-   scoop install abyss/Microsoft.PowerShell
+   scoop install abyss/Microsoft.PowerToys
    ```
 
 ### 演示
@@ -145,13 +145,13 @@
 5. 使用 [scoop-install](https://gitee.com/abgox/scoop-tools) 安装应用
 
    ```shell
-   scoop-install abyss/Microsoft.PowerShell
+   scoop-install abyss/Microsoft.PowerToys
    ```
 
 6. 使用 [scoop-update](https://gitee.com/abgox/scoop-tools) 更新应用
 
    ```shell
-   scoop-update abyss/Microsoft.PowerShell
+   scoop-update abyss/Microsoft.PowerToys
    ```
 
 7. 更多详情请查看:

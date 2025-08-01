@@ -29,7 +29,7 @@
 > [!Warning]
 >
 > - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
-> - They contain some [style and features](#features) outside of the official Scoop specification, and other buckets should not merge them.
+> - They contain some [style and features](#features) outside of the official Scoop specification, and other buckets should not merge them to avoid conflicts and errors.
 
 > Just like the abyss — limitless, mysterious, and filled with treasures.
 
@@ -94,7 +94,7 @@
 3.  Install apps.
 
     ```shell
-    scoop install abyss/abgox.PSCompletions
+    scoop install abyss/Microsoft.PowerToys
     ```
 
 ### Demo
@@ -146,13 +146,13 @@
 5. Use [scoop-install](https://gitee.com/abgox/scoop-tools) to install apps.
 
    ```shell
-   scoop-install abyss/Microsoft.PowerShell
+   scoop-install abyss/Microsoft.PowerToys
    ```
 
 6. Use [scoop-update](https://gitee.com/abgox/scoop-tools) to update apps.
 
    ```shell
-   scoop-update abyss/Microsoft.PowerShell
+   scoop-update abyss/Microsoft.PowerToys
    ```
 
 7. For more details, please visit:
