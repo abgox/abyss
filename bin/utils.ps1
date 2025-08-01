@@ -1386,6 +1386,16 @@ function A-Get-VersionFromPage {
         return $null
     }
 
+    try {
+        if ((pip freeze) -notmatch "selenium") {
+            Write-Host "Installing selenium..." -ForegroundColor Green
+            $null = pip install selenium
+        }
+    }
+    catch {
+        return $null
+    }
+
     $Page = python "$PSScriptRoot\get-page.py" $Url
     $Matches = [regex]::Matches($Page, $Regex)
 
