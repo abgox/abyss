@@ -1,0 +1,60 @@
+{
+    "version": "0.31.0",
+    "description": "一款既简单又强大的与 Git 兼容的版本控制系统。A Git-compatible VCS that is both simple and powerful.",
+    "homepage": "https://jj-vcs.github.io/jj",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/jj-vcs/jj/blob/main/LICENSE"
+    },
+    "suggest": {
+        "completions": "abyss/abgox.PSCompletions"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jj-vcs/jj/releases/download/v0.31.0/jj-v0.31.0-x86_64-pc-windows-msvc.zip",
+            "hash": "a4d208037a416abe27d2f6e6660b6793adcae001023323a9618927edc0872bbc"
+        },
+        "arm64": {
+            "url": "https://github.com/jj-vcs/jj/releases/download/v0.31.0/jj-v0.31.0-aarch64-pc-windows-msvc.zip",
+            "hash": "4b89cb5f54203ef9e1be6e52727c9e2c02cbf28d9d4a94ce6bd00796e7fca7f1"
+        }
+    },
+    "bin": "jj.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\jj\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/jj-vcs/jj/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jj-vcs/jj/releases/download/v$version/jj-v$version-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/jj-vcs/jj/releases/download/v$version/jj-v$version-aarch64-pc-windows-msvc.zip"
+            }
+        }
+    }
+}
