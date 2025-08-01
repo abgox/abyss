@@ -34,7 +34,8 @@
         - A-Hold-App: 它应该在 pre_install 中使用，和 A-Deny-Update 搭配
         - A-Get-ProductCode: 获取应用的产品代码
         - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
-        - A-Get-Version: 获取最新的版本号(等待网页完全加载后，提取网页中的版本号)
+        - A-Get-VersionFromPage: 获取最新的版本号，适用于动态加载的网页
+        - A-Resolve-DownloadUrl: 解析跳转后的真实下载地址
         - A-Move-PersistDirectory: 用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
             - 它用于未来可能存在的清单文件更名
             - 当清单文件更名后，需要使用它，并传入旧的清单名称
@@ -1363,24 +1364,52 @@ function A-Get-ProductCode {
     return $null
 }
 
-function A-Get-Version {
+function A-Get-VersionFromPage {
+    <#
+    .SYNOPSIS
+        从指定的 Url 页面获取版本号。
+
+    .DESCRIPTION
+        从指定的 Url 页面获取版本号。
+        它会等待页面的 js 加载完成，然后使用指定的 Regex 匹配页面内容获取版本号。
+    #>
     param(
-        [string]$Regex
+        [string]$Regex,
+        [string]$Url
     )
 
     if (!$PSBoundParameters.ContainsKey('Regex')) {
         return $null
     }
 
-    # Scoop 会提供 $url 变量 manifest.checkver.github > manifest.checkver.url > manifest.url
-    # manifest.checkver.github 会被转换成 https://api.github.com/owner/repos/releases/latest
-    # 非必要，不要使用 manifest.checkver.github
-    $Page = python "$PSScriptRoot\get-page.py" $url
+    if (!$PSBoundParameters.ContainsKey('Url')) {
+        return $null
+    }
+
+    $Page = python "$PSScriptRoot\get-page.py" $Url
     $Matches = [regex]::Matches($Page, $Regex)
 
     if ($Matches) {
         return $Matches[0].Groups[1].Value
     }
+}
+
+function A-Resolve-DownloadUrl {
+    <#
+    .SYNOPSIS
+        从指定的 URL 中解析跳转后的真实下载地址
+    #>
+    param(
+        [string]$Url
+    )
+
+    if (!$PSBoundParameters.ContainsKey('Url')) {
+        return $null
+    }
+
+    $res = [System.Net.HttpWebRequest]::Create($Url).GetResponse()
+    $res.ResponseUri.AbsoluteUri
+    $res.Close()
 }
 
 function A-Get-InstallerInfoFromWinget {
