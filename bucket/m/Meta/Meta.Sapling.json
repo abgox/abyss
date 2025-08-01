@@ -1,0 +1,73 @@
+{
+    "version": "0.2.20250521-115337+25ed6ac4",
+    "description": "一个可扩展、用户友好的版本控制系统，兼容 Git。A Scalable, User-Friendly Source Control System, Compatible with Git.",
+    "homepage": "https://sapling-scm.com/",
+    "license": {
+        "identifier": "GPL-2.0",
+        "url": "https://github.com/facebook/sapling/blob/main/LICENSE"
+    },
+    "notes": [
+        "The name of the Sapling CLI sl.exe conflicts with the sl command built-in in PowerShell.",
+        "If you want to use sl.exe in PowerShell, you need to use the following command:",
+        " ",
+        "  Set-Alias sl sl.exe -Force",
+        " "
+    ],
+    "notes-cn": [
+        "Sapling 的命令行命令 sl.exe 与 PowerShell 中的内置命令 sl 冲突",
+        "如果你想在 PowerShell 中使用 sl 来运行 sl.exe，你需要使用以下命令：",
+        " ",
+        "  Set-Alias sl sl.exe -Force",
+        " "
+    ],
+    "suggest": {
+        "Node.js": [
+            "abyss/OpenJS.NodeJS"
+        ],
+        "Git": "abyss/Git.Git",
+        "completions": "abyss/abgox.PSCompletions"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/facebook/sapling/releases/download/0.2.20250521-115337+25ed6ac4/sapling_windows_0.2.20250521-115337+25ed6ac4_amd64.zip",
+            "hash": "da706ae9989cea31003346ad1ed69ebd82cedf86050e13efb6598ebcdf5cba2e"
+        }
+    },
+    "extract_dir": "Sapling",
+    "bin": "sl.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\sapling\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/facebook/sapling/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)%2B([^\"?]+)",
+        "replace": "${1}+${2}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/facebook/sapling/releases/download/$version/sapling_windows_$version_amd64.zip"
+            }
+        }
+    }
+}
