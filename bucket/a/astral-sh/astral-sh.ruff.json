@@ -1,0 +1,73 @@
+{
+    "version": "0.12.7",
+    "description": "一款由 Rust 编写的极快速的 Python 代码检查工具和代码格式化工具。An extremely fast Python linter and code formatter, written in Rust.",
+    "homepage": "https://docs.astral.sh/ruff/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/astral-sh/ruff/blob/main/LICENSE"
+    },
+    "notes": [
+        "To start using ruff:",
+        "  ruff                    # Check command help",
+        "  ruff -V                 # Check version",
+        " ",
+        "For more information, visit: https://docs.astral.sh/ruff/"
+    ],
+    "notes-cn": [
+        "开始使用 ruff:",
+        "  ruff                    # 查看命令帮助",
+        "  ruff -V                 # 查看版本",
+        " ",
+        "更多信息，请访问：https://docs.astral.sh/ruff/"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/astral-sh/ruff/releases/download/0.12.7/ruff-x86_64-pc-windows-msvc.zip",
+            "hash": "12a239698d4f0926523cb51a9b00a560615d6237e9a748c563a74f4708f4abdf"
+        },
+        "arm64": {
+            "url": "https://github.com/astral-sh/ruff/releases/download/0.12.7/ruff-aarch64-pc-windows-msvc.zip",
+            "hash": "35b51d47463eebfc2d39863222a19540e73ddda5b1662b88e774580a7ac526a4"
+        }
+    },
+    "bin": "ruff.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/astral-sh/ruff/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/astral-sh/ruff/releases/download/$version/ruff-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/astral-sh/ruff/releases/download/$version/ruff-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "url": "$url.sha256"
+        }
+    }
+}
