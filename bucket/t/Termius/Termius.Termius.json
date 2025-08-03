@@ -1,0 +1,63 @@
+{
+    "version": "9.22.1",
+    "description": "一款适用于 Windows 的现代 SSH 客户端和终端。A modern SSH client and terminal for Windows.",
+    "homepage": "https://termius.com/",
+    "license": "Freemium",
+    "architecture": {
+        "64bit": {
+            "url": "https://autoupdate.termius.com/windows/Install%20Termius.exe",
+            "hash": "6a1219d90edd6a2ed8880295107f5612b3ef9a6484e1c0c1a95754ca56d92279"
+        }
+    },
+    "shortcuts": [
+        [
+            "Termius.exe",
+            "Termius"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall Termius.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\Termius\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\termius-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Termius.Termius' 'exe'",
+            "$InstallerInfo.PackageVersion"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://autoupdate.termius.com/windows/Install%20Termius.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
