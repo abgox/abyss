@@ -2,6 +2,16 @@
     "version": "2025.08.03",
     "description": "(exe 版本) 一个输入法状态管理工具：实时提示(鼠标样式、符号显示) + 窗口自动切换状态 + 快捷键切换状态。(exe version) An input method status manager tool: real-time tips(cursor style, symbol display) + auto-switch status per window + hotkey to switch status.",
     "homepage": "https://inputtip.abgox.com/",
+    "notes": [
+        "It is recommended to use abgox.InputTip-zip instead of abgox.InputTip",
+        "abgox.InputTip is the exe version and is not recommended for use.",
+        "Refer to: https://inputtip.abgox.com/FAQ/zip-vs-exe"
+    ],
+    "notes-cn": [
+        "推荐使用 abgox.InputTip-zip 而非 abgox.InputTip",
+        "abgox.InputTip 是 exe 版本，不推荐使用",
+        "参考: https://inputtip.abgox.com/FAQ/zip-vs-exe"
+    ],
     "license": {
         "identifier": "AGPL-3.0-only",
         "url": "https://github.com/abgox/InputTip/blob/main/LICENSE"
@@ -23,6 +33,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-Require-Admin",
         "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\""
     ],
     "post_install": [
@@ -34,6 +45,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process"
     ],
     "post_uninstall": [
@@ -47,7 +59,8 @@
         "InputTipCursor"
     ],
     "checkver": {
-        "github": "https://github.com/abgox/InputTip"
+        "url": "https://github.com/abgox/InputTip/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
