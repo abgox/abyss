@@ -1,0 +1,68 @@
+{
+    "version": "2.1.3",
+    "description": "一个适用于 JavaScript、TypeScript、JSX、JSON、CSS 和 GraphQL 的快速格式化工具，与 Prettier 有高达 97% 的兼容覆盖率，能有效节约持续化集成和开发者的时间。A fast formatter for JavaScript, TypeScript, JSX, TSX, JSON, HTML, CSS and GraphQL that scores 97% compatibility with Prettier, saving CI and developer time.",
+    "homepage": "https://biomejs.dev/",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "notes": [
+        "To start using Biome:",
+        "  biome                    # Check command help",
+        "  biome -V                 # Check version",
+        " ",
+        "For more information, visit: https://biomejs.dev/"
+    ],
+    "notes-cn": [
+        "开始使用 Biome:",
+        "  biome                    # 查看命令帮助",
+        "  biome -V                 # 查看版本",
+        " ",
+        "更多信息，请访问：https://biomejs.dev/"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%402.1.3/biome-win32-x64.exe#/biome.exe",
+            "hash": "11331e52484f5c1efe0670f118fb4227e0667c82352b7f23d51a59a430068f50"
+        },
+        "arm64": {
+            "url": "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%402.1.3/biome-win32-arm64.exe#/biome.exe",
+            "hash": "37cae5aad5d7e76baee1b57619e570d4627da2a5aba9933442c761ed28189076"
+        }
+    },
+    "bin": "biome.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/biomejs/biome/releases",
+        "regex": "/tree/%40biomejs/biome%40(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%40$version/biome-win32-x64.exe#/biome.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%40$version/biome-win32-arm64.exe#/biome.exe"
+            }
+        }
+    }
+}
