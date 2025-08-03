@@ -166,7 +166,7 @@
 
 #### abgox-abyss-app-uninstall-action
 
-- Apps in `abyss` have some [features](#features) controlled by it.
+- It will control additional actions when uninstalling the app.
 - You can set it using the following command:
 
   ```shell
@@ -263,3 +263,9 @@
 
 - [English](./app-list.md)
 - [简体中文](./app-list-cn.md)
+
+### Star
+
+<p align="center">
+  <strong>If you like this project, please give it a star ⭐️</strong>
+</p>

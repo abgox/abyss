@@ -264,3 +264,9 @@
 
 - [简体中文](./app-list-cn.md)
 - [English](./app-list.md)
+
+### Star
+
+<p align="center">
+  <strong>如果你喜欢这个项目，请给它一个 ⭐️</strong>
+</p>
