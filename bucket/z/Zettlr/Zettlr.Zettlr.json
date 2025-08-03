@@ -1,0 +1,58 @@
+{
+    "version": "3.6.0",
+    "description": "一个 Markdown 编辑器，用于支持一站式出版服务。A Markdown editor for supporting one-stop publication workbench.",
+    "homepage": "https://github.com/Zettlr/Zettlr",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/Zettlr/Zettlr/blob/develop/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Zettlr/Zettlr/releases/download/v3.6.0/Zettlr-3.6.0-x64.exe",
+            "hash": "1db36800f7d96166af19185939b30f9b382db78792eb969e36101ca4f577a677"
+        }
+    },
+    "shortcuts": [
+        [
+            "Zettlr.exe",
+            "Zettlr"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall Zettlr.exe' -ArgumentList @('/S','/currentuser',\"/D=$dir\")",
+        "A-New-LinkDirectory @(\"$env:AppData\\Zettlr\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\zettlr-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Zettlr/Zettlr/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Zettlr/Zettlr/releases/download/v$version/Zettlr-$version-x64.exe"
+            }
+        }
+    }
+}
