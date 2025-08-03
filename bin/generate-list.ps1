@@ -71,7 +71,7 @@ function get_static_content($path) {
 
 
 foreach ($path in $PathList) {
-    $content = @("|App ($($manifests.Length))|Tag|Description|", "|:-:|:-:|-|")
+    $content = @("|App ($($manifests.Length))|Tag|Description|", "|-|:-:|-|")
 
     $isCN = $path -like "*cn*.md"
 
