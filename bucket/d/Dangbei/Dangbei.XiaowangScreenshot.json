@@ -1,0 +1,64 @@
+{
+    "version": "1.2.4",
+    "description": "小旺 AI 截图，一款接入 DeepSeek 的 AI 截图神器，轻巧、好用、免费、无广告。wang-screenshot - A screenshot tool that integrates with DeepSeek's AI technology, lightweight, easy to use, free, and without advertisements.",
+    "homepage": "https://www.xiaowang.com/",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://ai-search-static.dangbei.net/ai-screenshot-updates/xw-screenshot-setup.exe#/dl.7z",
+            "hash": "508c9bcbbf1145bf35afb0ea034dc103fda808f0a75f9109550c4cf72e6e671e"
+        }
+    },
+    "shortcuts": [
+        [
+            "wang-screenshot.exe",
+            "小旺 AI 截图"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.wangscreenshot.app\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.wangscreenshot.app\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Dangbei.XiaowangScreenshot' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.7z",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
