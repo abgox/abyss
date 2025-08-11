@@ -1,0 +1,65 @@
+{
+    "version": "0.51.6",
+    "description": "一个可插拔的多语言版本管理器。A pluggable multi-language version manager.",
+    "homepage": "https://moonrepo.dev/proto",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/moonrepo/proto/blob/master/LICENSE"
+    },
+    "notes": [
+        "To start:",
+        "  proto                    # Check command help",
+        "  proto --version          # Check version",
+        " ",
+        "For more information, visit: https://moonrepo.dev/proto"
+    ],
+    "notes-cn": [
+        "开始使用:",
+        "  proto                    # 查看命令帮助",
+        "  proto --version          # 查看版本",
+        " ",
+        "更多信息，请访问：https://moonrepo.dev/proto"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/moonrepo/proto/releases/download/v0.51.6/proto_cli-x86_64-pc-windows-msvc.zip",
+            "hash": "b8ba25e9d771b519a72c40e2b937df6bfa72a8bc684f4dd9e6a33b88ef6c0c57"
+        }
+    },
+    "bin": "proto.exe",
+    "env_add_path": "$env:UserProfile\\.proto\\shims",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.proto\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/moonrepo/proto/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/moonrepo/proto/releases/download/v$version/proto_cli-x86_64-pc-windows-msvc.zip"
+            }
+        }
+    }
+}
