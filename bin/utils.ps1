@@ -1842,11 +1842,10 @@ function A-Get-AbsolutePath {
 
 # 重写的函数是基于这个 Scoop 版本的。
 # 如果 Scoop 最新版本大于它，需要检查重写的函数，如果新版本中这些函数有变动，需要立即修正，然后更新此处的 Scoop 版本号
-$ScoopVersion = "0.5.2"
+$ScoopVersion = "0.5.3"
 
 #region 重写部分 Scoop 内置函数，添加本地化输出
 
-#region function env_set: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L901
 Set-Item -Path Function:\env_set -Value {
     param($manifest, $global, $arch)
     $env_set = arch_specific 'env_set' $manifest $arch
@@ -1866,9 +1865,7 @@ Set-Item -Path Function:\env_set -Value {
         }
     }
 }
-#endregion
 
-#region function env_rm: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L912
 Set-Item -Path Function:\env_rm -Value {
     param($manifest, $global, $arch)
     $env_set = arch_specific 'env_set' $manifest $arch
@@ -1886,53 +1883,45 @@ Set-Item -Path Function:\env_rm -Value {
         }
     }
 }
-#endregion
+
+Set-Item -Path Function:\show_suggestions -Value {
+    param($suggested)
+    $installed_apps = (installed_apps $true) + (installed_apps $false)
+
+    foreach ($app in $suggested.keys) {
+        $features = $suggested[$app] | Get-Member -type noteproperty | ForEach-Object { $_.name }
+        foreach ($feature in $features) {
+            $feature_suggestions = $suggested[$app].$feature
+
+            $fulfilled = $false
+            foreach ($suggestion in $feature_suggestions) {
+                $suggested_app, $bucket, $null = parse_app $suggestion
+
+                if ($installed_apps -contains $suggested_app) {
+                    $fulfilled = $true
+                    break
+                }
+            }
+
+            if (!$fulfilled) {
+                Write-Host
+                if ($PSUICulture -like "zh*" -and $cmd) {
+                    Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))" -ForegroundColor Yellow
+                }
+                else {
+                    Write-Host "'$app' suggests installing '$([string]::join("' or '", $feature_suggestions))'." -ForegroundColor Yellow
+                }
+            }
+        }
+    }
+}
 
 if ($ShowCN) {
 
     #region 用于打印的函数
 
-    #region function abort: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L334
-    # Set-Item -Path Function:\abort -Value {
-    #     param($msg, [int] $exit_code = 1)
+    # function abort
 
-    #     function Translate-Message {
-    #         param([string]$msg)
-
-    #         if ($msgMap.ContainsKey($msg)) {
-    #             return $msgMap[$msg]
-    #         }
-
-    #         foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
-    #             $escapedPattern = [regex]::Escape($pattern)
-    #             $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
-
-    #             $match = [regex]::Match($msg, $regexPattern)
-    #             if ($match.Success) {
-    #                 $translation = $msgMap[$pattern]
-    #                 $translation = [regex]::Replace($translation, '\{(\d+)\}', {
-    #                         param($m)
-    #                         $index = [int]$m.Groups[1].Value
-    #                         return $match.Groups[$index + 1].Value.Trim()
-    #                     })
-    #                 return $translation
-    #             }
-    #         }
-
-    #         return $msg
-    #     }
-
-    #     $msgMap = @{
-    #         "Error: Version 'current' is not allowed!" = "错误：不允许使用 current 作为版本!"
-    #     }
-
-    #     $translated = Translate-Message $msg
-
-    #     Write-Host $msg -f red; exit $exit_code
-    # }
-    #endregion
-
-    #region function error: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L335
     Set-Item -Path Function:\error -Value {
         param($msg)
 
@@ -1969,13 +1958,11 @@ if ($ShowCN) {
         $translated = Translate-Message $msg
         Write-Host "错误: $translated" -f darkred
     }
-    #endregion
 
-    # function warn: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L336
+    # function warn
 
-    # function info: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L337
+    # function info
 
-    #region function success: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L367
     Set-Item -Path Function:\success -Value {
         param($msg)
 
@@ -2014,13 +2001,11 @@ if ($ShowCN) {
 
         Write-Host $translated -ForegroundColor darkgreen
     }
-    #endregion
 
     #endregion
 
     #region 安装前的准备，下载安装包
 
-    #region function Invoke-HookScript: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L713
     Set-Item -Path Function:\Invoke-HookScript -Value {
         [CmdletBinding()]
         param(
@@ -2047,9 +2032,7 @@ if ($ShowCN) {
             Write-Host '完成!' -ForegroundColor Green
         }
     }
-    #endregion
 
-    #region function ensure_install_dir_not_in_path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L849
     Set-Item -Path Function:\ensure_install_dir_not_in_path -Value {
         param($dir, $global)
         $path = (Get-EnvVar -Name 'PATH' -Global:$global)
@@ -2067,60 +2050,9 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
-    #region function Invoke-ScoopDownload: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L539
-    # Set-Item -Path Function:\Invoke-ScoopDownload -Value {
-    #     param($app, $version, $manifest, $bucket, $architecture, $dir, $use_cache = $true, $check_hash = $true)
-    #     # we only want to show this warning once
-    #     if (!$use_cache) { warn '缓存被忽略。' }
+    # function Invoke-ScoopDownload
 
-    #     # can be multiple urls: if there are, then installer should go first to make 'installer.args' section work
-    #     $urls = @(script:url $manifest $architecture)
-
-    #     # can be multiple cookies: they will be used for all HTTP requests.
-    #     $cookies = $manifest.cookie
-
-    #     # download first
-    #     if (Test-Aria2Enabled) {
-    #         Invoke-CachedAria2Download $app $version $manifest $architecture $dir $cookies $use_cache $check_hash
-    #     }
-    #     else {
-    #         foreach ($url in $urls) {
-    #             $fname = url_filename $url
-
-    #             try {
-    #                 Invoke-CachedDownload $app $version $url "$dir\$fname" $cookies $use_cache
-    #             }
-    #             catch {
-    #                 Write-Host -f darkred $_
-    #                 abort "URL $url 是无效的。"
-    #             }
-
-    #             if ($check_hash) {
-    #                 $manifest_hash = hash_for_url $manifest $url $architecture
-    #                 $ok, $err = check_hash "$dir\$fname" $manifest_hash $(show_app $app $bucket)
-    #                 if (!$ok) {
-    #                     error $err
-    #                     $cached = cache_path $app $version $url
-    #                     if (Test-Path $cached) {
-    #                         # rm cached file
-    #                         Remove-Item -Force $cached
-    #                     }
-    #                     if ($url.Contains('sourceforge.net')) {
-    #                         Write-Host -f yellow 'SourceForge.net 经常导致哈希验证失败。请在提交工单前重试。'
-    #                     }
-    #                     abort $(new_issue_msg $app $bucket 'hash 检查失败')
-    #                 }
-    #             }
-    #         }
-    #     }
-
-    #     return $urls.ForEach({ url_filename $_ })
-    # }
-    #endregion
-
-    #region function Invoke-CachedAria2Download: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L186
     Set-Item -Path Function:\Invoke-CachedAria2Download -Value {
         param($app, $version, $manifest, $architecture, $dir, $cookies = $null, $use_cache = $true, $check_hash = $true)
 
@@ -2185,7 +2117,7 @@ if ($ShowCN) {
 
             if ((Test-Path $data.$url.source) -and -not((Test-Path "$($data.$url.source).aria2") -or (Test-Path $urlstxt)) -and $use_cache) {
                 Write-Host '从缓存中加载 ' -NoNewline
-                Write-Host $(url_remote_filename $url) -f Cyan
+                Write-Host $(url_remote_filename $url) -ForegroundColor Cyan
             }
             else {
                 $download_finished = $false
@@ -2251,10 +2183,22 @@ if ($ShowCN) {
             Write-Host ''
 
             if ($lastexitcode -gt 0) {
-                error "下载失败! (Error $lastexitcode) $(aria_exit_code $lastexitcode)"
-                error $urlstxt_content
-                error $aria2
-                abort $(new_issue_msg $app $bucket 'download via aria2 failed')
+                warn "下载失败! (Error $lastexitcode) $(aria_exit_code $lastexitcode)"
+                warn $urlstxt_content
+                warn $aria2
+                warn $(new_issue_msg $app $bucket "通过 aria2 下载失败")
+
+                Write-Host "回退到默认下载器 ..."
+
+                try {
+                    foreach ($url in $urls) {
+                        Invoke-CachedDownload $app $version $url "$($data.$url.target)" $cookies $use_cache
+                    }
+                }
+                catch {
+                    Write-Host $_ -ForegroundColor DarkRed
+                    abort "URL $url 是无效的。"
+                }
             }
 
             # remove aria2 input file when done
@@ -2308,32 +2252,28 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
-    #region function Invoke-CachedDownload: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L84
-    # Set-Item -Path Function:\Invoke-CachedDownload -Value {
-    #     param($app, $version, $url, $to, $cookies = $null, $use_cache = $true)
-    #     $cached = cache_path $app $version $url
+    Set-Item -Path Function:\Invoke-CachedDownload -Value {
+        param($app, $version, $url, $to, $cookies = $null, $use_cache = $true)
+        $cached = cache_path $app $version $url
 
-    #     if (!(Test-Path $cached) -or !$use_cache) {
-    #         ensure $cachedir | Out-Null
-    #         Start-Download $url "$cached.download" $cookies
-    #         Move-Item "$cached.download" $cached -Force
-    #     }
-    #     else { Write-Host "从缓存中加载 $(url_remote_filename $url)" }
+        if (!(Test-Path $cached) -or !$use_cache) {
+            ensure $cachedir | Out-Null
+            Start-Download $url "$cached.download" $cookies
+            Move-Item "$cached.download" $cached -Force
+        }
+        else { Write-Host "从缓存中加载 $(url_remote_filename $url)" }
 
-    #     if (!($null -eq $to)) {
-    #         if ($use_cache) {
-    #             Copy-Item $cached $to
-    #         }
-    #         else {
-    #             Move-Item $cached $to -Force
-    #         }
-    #     }
-    # }
-    #endregion
+        if (!($null -eq $to)) {
+            if ($use_cache) {
+                Copy-Item $cached $to
+            }
+            else {
+                Move-Item $cached $to -Force
+            }
+        }
+    }
 
-    #region function Invoke-Extraction: https://github.com/ScoopInstaller/Scoop/blob/master/lib/decompress.ps1#L3
     Set-Item -Path Function:\Invoke-Extraction -Value {
         param (
             [string]
@@ -2358,7 +2298,7 @@ if ($ShowCN) {
             $extractFn = $null
             switch -regex ($Name[$i]) {
                 '\.zip$' {
-                    if ((Test-HelperInstalled -Helper 7zip) -or ((get_config 7ZIPEXTRACT_USE_EXTERNAL) -and (Test-CommandAvailable 7z))) {
+                    if ((Test-HelperInstalled -Helper 7zip) -or ((get_config USE_EXTERNAL_7ZIP) -and (Test-CommandAvailable 7z))) {
                         $extractFn = 'Expand-7zipArchive'
                     }
                     else {
@@ -2396,13 +2336,11 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
     #endregion
 
-    #region 安装和卸载: 创建/移除 Link、shim、快捷方式、环境变量、persist，安装/卸载 PowerShell 模块，显示 notes，显示 suggest
+    #region 安装和卸载
 
-    #region function link_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L804
     Set-Item -Path Function:\link_current -Value {
         param($versiondir)
         if (get_config NO_JUNCTION) { return $versiondir.ToString() }
@@ -2425,9 +2363,7 @@ if ($ShowCN) {
         attrib $currentdir +R /L
         return $currentdir
     }
-    #endregion
 
-    #region function unlink_current: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L831
     Set-Item -Path Function:\unlink_current -Value {
         param($versiondir)
         if (get_config NO_JUNCTION) { return $versiondir.ToString() }
@@ -2445,9 +2381,7 @@ if ($ShowCN) {
         }
         return $versiondir
     }
-    #endregion
 
-    #region function create_shims: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L746
     Set-Item -Path Function:\create_shims -Value {
         param($manifest, $dir, $global, $arch)
         $shims = @(arch_specific 'bin' $manifest $arch)
@@ -2469,9 +2403,7 @@ if ($ShowCN) {
             shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
         }
     }
-    #endregion
 
-    #region function rm_shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L765
     Set-Item -Path Function:\rm_shim -Value {
         param($name, $shimdir, $app)
         '', '.shim', '.cmd', '.ps1' | ForEach-Object {
@@ -2497,9 +2429,7 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
-    #region function shim: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L952
     Set-Item -Path Function:\shim -Value {
         param($path, $global, $name, $arg)
         if (!(Test-Path $path)) { abort "不能 shim '$(fname $path)': 不能找到 $path" }
@@ -2629,11 +2559,18 @@ if ($ShowCN) {
         }
         else {
             warn_on_overwrite "$shim.cmd" $path
+            $quoted_arg = if ($arg.Count -gt 0) { $arg | ForEach-Object { "`"$_`"" } }
             @(
                 "@rem $resolved_path",
-                "@bash `"`$(wslpath -u '$resolved_path')`" $arg %* 2>nul",
-                '@if %errorlevel% neq 0 (',
-                "  @bash `"`$(cygpath -u '$resolved_path')`" $arg %* 2>nul",
+                '@echo off',
+                'bash -c "command -v wslpath >/dev/null"',
+                'if %errorlevel% equ 0 (',
+                "  bash `"`$(wslpath -u '$resolved_path')`" $quoted_arg %*",
+                ') else (',
+                "  set args=$quoted_arg %*",
+                '  setlocal enabledelayedexpansion',
+                '  if not "!args!"=="" set args=!args:"=""!',
+                "  bash -c `"`$(cygpath -u '$resolved_path') !args!`"",
                 ')'
             ) -join "`r`n" | Out-UTF8File "$shim.cmd"
 
@@ -2650,9 +2587,7 @@ if ($ShowCN) {
             ) -join "`n" | Out-UTF8File $shim -NoNewLine
         }
     }
-    #endregion
 
-    #region function warn_on_overwrite: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L933
     Set-Item -Path Function:\warn_on_overwrite -Value {
         param($shim, $path)
         if (!(Test-Path $shim)) {
@@ -2673,9 +2608,7 @@ if ($ShowCN) {
         $filename = (fname $path) -replace '\.shim$', '.exe'
         warn "正在覆盖$(if ($shim_app) { "安装 $shim_app 时创建的" }) shim ('$shimname' -> '$filename')"
     }
-    #endregion
 
-    #region function startmenu_shortcut: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L31
     Set-Item -Path Function:\startmenu_shortcut -Value {
         param([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global)
 
@@ -2801,9 +2734,7 @@ if ($ShowCN) {
         $wsShell.Save()
         Write-Host "为 $(fname $target) 创建了快捷方式: $shortcutName"
     }
-    #endregion
 
-    #region function rm_startmenu_shortcuts: https://github.com/ScoopInstaller/Scoop/blob/master/lib/shortcuts.ps1#L62
     Set-Item -Path Function:\rm_startmenu_shortcuts -Value {
         param($manifest, $global, $arch)
         $shortcuts = @(arch_specific 'shortcuts' $manifest $arch)
@@ -2816,9 +2747,7 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
-    #region function Add-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L96
     Set-Item -Path Function:\Add-Path -Value {
         param(
             [string[]]$Path,
@@ -2849,9 +2778,7 @@ if ($ShowCN) {
             $env:PATH = (@($Path) + $strippedPath) -join ';'
         }
     }
-    #endregion
 
-    #region function Remove-Path: https://github.com/ScoopInstaller/Scoop/blob/master/lib/system.ps1#L122
     Set-Item -Path Function:\Remove-Path -Value {
         param(
             [string[]]$Path,
@@ -2866,12 +2793,7 @@ if ($ShowCN) {
         if ($inPath) {
             if (!$Quiet) {
                 $Path | ForEach-Object {
-                    if ($PSCulture -like "zh*") {
-                        Write-Host "正在从环境变量$(if ($Global) {'(系统级)'} else {'(当前用户)'}) $TargetEnvVar 中移除 $(friendly_path $_)"
-                    }
-                    else {
-                        Write-Host "Removing $(friendly_path $_) from $(if ($Global) {'global'} else {'your'}) path."
-                    }
+                    Write-Host "正在从环境变量$(if ($Global) {'(系统级)'} else {'(当前用户)'}) $TargetEnvVar 中移除 $(friendly_path $_)"
                 }
             }
             Set-EnvVar -Name $TargetEnvVar -Value $strippedPath -Global:$Global
@@ -2885,9 +2807,7 @@ if ($ShowCN) {
             return $inPath
         }
     }
-    #endregion
 
-    #region function install_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L1
     Set-Item -Path Function:\install_psmodule -Value {
         param($manifest, $dir, $global)
 
@@ -2915,9 +2835,7 @@ if ($ShowCN) {
 
         New-DirectoryJunction $linkfrom $dir | Out-Null
     }
-    #endregion
 
-    #region function uninstall_psmodule: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L27
     Set-Item -Path Function:\uninstall_psmodule -Value {
         param($manifest, $dir, $global)
         $psmodule = $manifest.psmodule
@@ -2935,9 +2853,7 @@ if ($ShowCN) {
             Remove-Item -Path $linkfrom -Force -Recurse -ErrorAction SilentlyContinue
         }
     }
-    #endregion
 
-    #region function ensure_in_psmodulepath: https://github.com/ScoopInstaller/Scoop/blob/master/lib/psmodules.ps1#L44
     Set-Item -Path Function:\ensure_in_psmodulepath -Value {
         param($dir, $global)
         $path = Get-EnvVar -Name 'PSModulePath' -Global:$global
@@ -2950,9 +2866,7 @@ if ($ShowCN) {
             Set-EnvVar -Name 'PSModulePath' -Value "$dir;$path" -Global:$global
         }
     }
-    #endregion
 
-    #region function persist_data: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1011
     Set-Item -Path Function:\persist_data -Value {
         param($manifest, $original_dir, $persist_dir)
         $persist = $manifest.persist
@@ -3008,9 +2922,7 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
-    #region function show_notes: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L923
     Set-Item -Path Function:\show_notes -Value {
         param($manifest, $dir, $original_dir, $persist_dir)
 
@@ -3042,42 +2954,11 @@ if ($ShowCN) {
             Write-Output '-----'
         }
     }
-    #endregion
-
-    #region function show_suggestions: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L969
-    Set-Item -Path Function:\show_suggestions -Value {
-        param($suggested)
-        $installed_apps = (installed_apps $true) + (installed_apps $false)
-
-        foreach ($app in $suggested.keys) {
-            $features = $suggested[$app] | Get-Member -type noteproperty | ForEach-Object { $_.name }
-            foreach ($feature in $features) {
-                $feature_suggestions = $suggested[$app].$feature
-
-                $fulfilled = $false
-                foreach ($suggestion in $feature_suggestions) {
-                    $suggested_app, $bucket, $null = parse_app $suggestion
-
-                    if ($installed_apps -contains $suggested_app) {
-                        $fulfilled = $true
-                        break
-                    }
-                }
-
-                if (!$fulfilled) {
-                    Write-Host
-                    Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))" -ForegroundColor Yellow
-                }
-            }
-        }
-    }
-    #endregion
 
     #endregion
 
     #region 其他函数
 
-    #region function test_running_process: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L1100
     Set-Item -Path Function:\test_running_process -Value {
         param($app, $global)
         $processdir = appdir $app $global | Convert-Path
@@ -3099,9 +2980,7 @@ if ($ShowCN) {
             return $false
         }
     }
-    #endregion
 
-    #region function ensure_none_failed: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L947
     Set-Item -Path Function:\ensure_none_failed -Value {
         param($apps)
         foreach ($app in $apps) {
@@ -3115,7 +2994,6 @@ if ($ShowCN) {
                 }
                 if (failed $app $global) {
                     if (installed $app $global) {
-
                         info "修复 $app 先前失败的安装。"
                         & "$PSScriptRoot\..\libexec\scoop-reset.ps1" $app @instArgs
                     }
@@ -3127,9 +3005,7 @@ if ($ShowCN) {
             }
         }
     }
-    #endregion
 
-    #region function Invoke-Installer: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L654
     Set-Item -Path Function:\Invoke-Installer -Value {
         [CmdletBinding()]
         param (
@@ -3191,143 +3067,9 @@ if ($ShowCN) {
         }
         Invoke-HookScript -HookType $type -Manifest $Manifest -ProcessorArchitecture $ProcessorArchitecture
     }
-    #endregion
 
-    #region function Invoke-ExternalCommand: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L720
-    # Set-Item -Path Function:\Invoke-ExternalCommand -Value {
-    #     [CmdletBinding(DefaultParameterSetName = "Default")]
-    #     [OutputType([Boolean])]
-    #     param (
-    #         [Parameter(Mandatory = $true, Position = 0)]
-    #         [Alias("Path")]
-    #         [ValidateNotNullOrEmpty()]
-    #         [String]
-    #         $FilePath,
-    #         [Parameter(Position = 1)]
-    #         [Alias("Args")]
-    #         [String[]]
-    #         $ArgumentList,
-    #         [Parameter(ParameterSetName = "UseShellExecute")]
-    #         [Switch]
-    #         $RunAs,
-    #         [Parameter(ParameterSetName = "UseShellExecute")]
-    #         [Switch]
-    #         $Quiet,
-    #         [Alias("Msg")]
-    #         [String]
-    #         $Activity,
-    #         [Alias("cec")]
-    #         [Hashtable]
-    #         $ContinueExitCodes,
-    #         [Parameter(ParameterSetName = "Default")]
-    #         [Alias("Log")]
-    #         [String]
-    #         $LogPath
-    #     )
-    #     if ($Activity) {
-    #         Write-Host "$Activity " -NoNewline
-    #     }
-    #     $Process = New-Object System.Diagnostics.Process
-    #     $Process.StartInfo.FileName = $FilePath
-    #     $Process.StartInfo.UseShellExecute = $false
-    #     if ($LogPath) {
-    #         if ($FilePath -match '^msiexec(.exe)?$') {
-    #             $ArgumentList += "/lwe `"$LogPath`""
-    #         }
-    #         else {
-    #             $redirectToLogFile = $true
-    #             $Process.StartInfo.RedirectStandardOutput = $true
-    #             $Process.StartInfo.RedirectStandardError = $true
-    #         }
-    #     }
-    #     if ($RunAs) {
-    #         $Process.StartInfo.UseShellExecute = $true
-    #         $Process.StartInfo.Verb = 'RunAs'
-    #     }
-    #     if ($Quiet) {
-    #         $Process.StartInfo.UseShellExecute = $true
-    #         $Process.StartInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden
-    #     }
-    #     if ($ArgumentList.Length -gt 0) {
-    #         # Remove existing double quotes and split arguments
-    #         # '(?<=(?<![:\w])[/-]\w+) ' matches a space after a command line switch starting with a slash ('/') or a hyphen ('-')
-    #         # The inner item '(?<![:\w])[/-]' matches a slash ('/') or a hyphen ('-') not preceded by a colon (':') or a word character ('\w')
-    #         # so that it must be a command line switch, otherwise, it would be a path (e.g. 'C:/Program Files') or other word (e.g. 'some-arg')
-    #         # ' (?=[/-])' matches a space followed by a slash ('/') or a hyphen ('-'), i.e. the space before a command line switch
-    #         $ArgumentList = $ArgumentList.ForEach({ $_ -replace '"' -split '(?<=(?<![:\w])[/-]\w+) | (?=[/-])' })
-    #         # Use legacy argument escaping for commands having non-standard behavior with regard to argument passing.
-    #         # `msiexec` requires some args like `TARGETDIR="C:\Program Files"`, which is non-standard, therefore we treat it as a legacy command.
-    #         # NSIS installer's '/D' param may not work with the ArgumentList property, so we need to escape arguments manually.
-    #         # ref-1: https://learn.microsoft.com/en-us/powershell/scripting/learn/experimental-features?view=powershell-7.4#psnativecommandargumentpassing
-    #         # ref-2: https://nsis.sourceforge.io/Docs/Chapter3.html
-    #         $LegacyCommand = $FilePath -match '^((cmd|cscript|find|sqlcmd|wscript|msiexec)(\.exe)?|.*\.(bat|cmd|js|vbs|wsf))$' -or
-    #         ($ArgumentList -match '^/S$|^/D=[A-Z]:[\\/].*$').Length -eq 2
-    #         $SupportArgumentList = $Process.StartInfo.PSObject.Properties.Name -contains 'ArgumentList'
-    #         if ((-not $LegacyCommand) -and $SupportArgumentList) {
-    #             # ArgumentList is supported in PowerShell 6.1 and later (built on .NET Core 2.1+)
-    #             # ref-1: https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo.argumentlist?view=net-6.0
-    #             # ref-2: https://docs.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell?view=powershell-7.2#net-framework-vs-net-core
-    #             $ArgumentList.ForEach({ $Process.StartInfo.ArgumentList.Add($_) })
-    #         }
-    #         else {
-    #             # Escape arguments manually in lower versions
-    #             $escapedArgs = switch -regex ($ArgumentList) {
-    #                 # Quote paths starting with a drive letter
-    #                 '(?<!/D=)[A-Z]:[\\/].*' { $_ -replace '([A-Z]:[\\/].*)', '"$1"'; continue }
-    #                 # Do not quote paths if it is NSIS's '/D' argument
-    #                 '/D=[A-Z]:[\\/].*' { $_; continue }
-    #                 # Quote args with spaces
-    #                 ' ' { "`"$_`""; continue }
-    #                 default { $_; continue }
-    #             }
-    #             $Process.StartInfo.Arguments = $escapedArgs -join ' '
-    #         }
-    #     }
-    #     try {
-    #         [void]$Process.Start()
-    #     }
-    #     catch {
-    #         if ($Activity) {
-    #             Write-Host "错误。" -ForegroundColor DarkRed
-    #         }
-    #         error $_.Exception.Message
-    #         return $false
-    #     }
-    #     if ($redirectToLogFile) {
-    #         # we do this to remove a deadlock potential
-    #         # ref: https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.standardoutput?view=netframework-4.5#remarks
-    #         $stdoutTask = $Process.StandardOutput.ReadToEndAsync()
-    #         $stderrTask = $Process.StandardError.ReadToEndAsync()
-    #     }
-    #     $Process.WaitForExit()
-    #     if ($redirectToLogFile) {
-    #         Out-UTF8File -FilePath $LogPath -Append -InputObject $stdoutTask.Result
-    #         Out-UTF8File -FilePath $LogPath -Append -InputObject $stderrTask.Result
-    #     }
-    #     if ($Process.ExitCode -ne 0) {
-    #         if ($ContinueExitCodes -and ($ContinueExitCodes.ContainsKey($Process.ExitCode))) {
-    #             if ($Activity) {
-    #                 Write-Host "完成。" -ForegroundColor DarkYellow
-    #             }
-    #             warn $ContinueExitCodes[$Process.ExitCode]
-    #             return $true
-    #         }
-    #         else {
-    #             if ($Activity) {
-    #                 Write-Host "错误" -ForegroundColor DarkRed
-    #             }
-    #             error "退出代码为: $($Process.ExitCode)!"
-    #             return $false
-    #         }
-    #     }
-    #     if ($Activity) {
-    #         Write-Host "完成。" -ForegroundColor Green
-    #     }
-    #     return $true
-    # }
-    #endregion
+    # function Invoke-ExternalCommand
 
-    #region function install_app: https://github.com/ScoopInstaller/Scoop/blob/master/lib/install.ps1#L8
     Set-Item -Path Function:\install_app -Value {
         param($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true)
         $app, $manifest, $bucket, $url = Get-Manifest $app
@@ -3405,53 +3147,6 @@ if ($ShowCN) {
 
         show_notes $manifest $dir $original_dir $persist_dir
     }
-    #endregion
-
-    #region function Confirm-InstallationStatus: https://github.com/ScoopInstaller/Scoop/blob/master/lib/core.ps1#L1142
-    # Set-Item -Path Function:\Confirm-InstallationStatus -Value {
-    #     [CmdletBinding()]
-    #     [OutputType([Object[]])]
-    #     param(
-    #         [Parameter(Mandatory = $true)]
-    #         [String[]]
-    #         $Apps,
-    #         [Switch]
-    #         $Global
-    #     )
-    #     $Installed = @()
-    #     $Apps | Select-Object -Unique | Where-Object { $_ -ne 'scoop' } | ForEach-Object {
-    #         $App, $null, $null = parse_app $_
-    #         if ($Global) {
-    #             if (Test-Path (appdir $App $true)) {
-    #                 $Installed += , @($App, $true)
-    #             }
-    #             elseif (Test-Path (appdir $App $false)) {
-    #                 error "$App 不是在全局(--global/-g)安装的，但可能是在本地安装的。"
-    #                 warn "请重新尝试一下，不要使用 --global 或 -g 。"
-    #             }
-    #             else {
-    #                 error "$App 还未安装。"
-    #             }
-    #         }
-    #         else {
-    #             if (Test-Path (appdir $App $false)) {
-    #                 $Installed += , @($App, $false)
-    #             }
-    #             elseif (Test-Path (appdir $App $true)) {
-    #                 error "$App 不是在本地安装的，但可能是在全局(--global/-g)安装的。"
-    #                 warn "请重新尝试一下，使用 --global 或 -g 。"
-    #             }
-    #             else {
-    #                 error "$App 还未安装。"
-    #             }
-    #         }
-    #         if (failed $App $Global) {
-    #             error "$App 未正确安装。"
-    #         }
-    #     }
-    #     return , $Installed
-    # }
-    #endregion
 
     #endregion
 }
