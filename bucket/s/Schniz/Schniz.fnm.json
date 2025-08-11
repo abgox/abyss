@@ -1,0 +1,71 @@
+{
+    "version": "1.38.1",
+    "description": "快速、简单的 Node.js 版本管理器，采用 Rust 内建。Fast and simple Node.js version manager, built in Rust.",
+    "homepage": "https://github.com/Schniz/fnm",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/Schniz/fnm/blob/master/LICENSE"
+    },
+    "notes": [
+        "To start:",
+        "  fnm                    # Check command help",
+        "  fnm -V                 # Check version",
+        " ",
+        "In PowerShell:",
+        "  fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression",
+        " ",
+        "For more information, visit: https://github.com/Schniz/fnm"
+    ],
+    "notes-cn": [
+        "开始使用:",
+        "  fnm                    # 查看命令帮助",
+        "  fnm -V                 # 查看版本",
+        " ",
+        "在 PowerShell 中使用:",
+        "  fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression",
+        " ",
+        "更多信息，请访问：https://github.com/Schniz/fnm"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Schniz/fnm/releases/download/v1.38.1/fnm-windows.zip",
+            "hash": "377796e8f2f51eb8b5de8983974caa8922b83c167197b68b33962775703ad4a0"
+        }
+    },
+    "bin": "fnm.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\fnm\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\fnm_multishells\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Schniz/fnm/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Schniz/fnm/releases/download/v$version/fnm-windows.zip"
+            }
+        }
+    }
+}
