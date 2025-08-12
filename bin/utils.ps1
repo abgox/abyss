@@ -1846,6 +1846,35 @@ $ScoopVersion = "0.5.3"
 
 #region 重写部分 Scoop 内置函数及输出函数以添加本地化输出
 
+function script:A-Translate-Message {
+    param(
+        [string]$msg,
+        [System.Object]$msgMap
+    )
+
+    if ($msgMap.ContainsKey($msg)) {
+        return $msgMap[$msg]
+    }
+
+    foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
+        $escapedPattern = [regex]::Escape($pattern)
+        $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
+
+        $match = [regex]::Match($msg, $regexPattern)
+        if ($match.Success) {
+            $translation = $msgMap[$pattern]
+            $translation = [regex]::Replace($translation, '\{(\d+)\}', {
+                    param($m)
+                    $index = [int]$m.Groups[1].Value
+                    return $match.Groups[$index + 1].Value.Trim()
+                })
+            return $translation
+        }
+    }
+
+    return $msg
+}
+
 function script:Write-Host {
     [CmdletBinding()]
     param(
@@ -1858,33 +1887,7 @@ function script:Write-Host {
     )
 
     if ($Object -is [string]) {
-        function Translate-Message {
-            param([string]$msg)
-
-            if ($msgMap.ContainsKey($msg)) {
-                return $msgMap[$msg]
-            }
-
-            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
-                $escapedPattern = [regex]::Escape($pattern)
-                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
-
-                $match = [regex]::Match($msg, $regexPattern)
-                if ($match.Success) {
-                    $translation = $msgMap[$pattern]
-                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
-                            param($m)
-                            $index = [int]$m.Groups[1].Value
-                            return $match.Groups[$index + 1].Value.Trim()
-                        })
-                    return $translation
-                }
-            }
-
-            return $msg
-        }
-
-        $msgMap = @{
+        $Object = A-Translate-Message $Object @{
             # "'$app' ($version) was installed successfully!" = "$app ($version) 已成功安装!"
             "'{0}' ({1}) was installed successfully!"                                                                                                        = "{0} ({1}) 已成功安装!"
             "'{0}' was uninstalled."                                                                                                                         = "{0} 已成功卸载!"
@@ -1952,8 +1955,6 @@ function script:Write-Host {
             "Creating shortcut for {0} ({1}) failed: Couldn't find icon {2}"                                                                                 = "为 {1} 创建快捷方式 {0} 失败了: 没有找到 icon 图标 {2}"
             "Creating shortcut for {0} ({1})"                                                                                                                = "为 {1} 创建了快捷方式: {0}"
         }
-
-        $Object = Translate-Message $Object
     }
 
     $splatParams = @{}
@@ -1981,41 +1982,14 @@ function script:Write-Output {
     )
 
     if ($InputObject -is [string]) {
-        function Translate-Message {
-            param([string]$msg)
 
-            if ($msgMap.ContainsKey($msg)) {
-                return $msgMap[$msg]
-            }
-
-            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
-                $escapedPattern = [regex]::Escape($pattern)
-                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
-
-                $match = [regex]::Match($msg, $regexPattern)
-                if ($match.Success) {
-                    $translation = $msgMap[$pattern]
-                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
-                            param($m)
-                            $index = [int]$m.Groups[1].Value
-                            return $match.Groups[$index + 1].Value.Trim()
-                        })
-                    return $translation
-                }
-            }
-
-            return $msg
-        }
-
-        $msgMap = @{
+        $InputObject = A-Translate-Message $InputObject @{
             "Uninstalling '{0}'"           = "正在卸载 {0}"
             "Creating shim for '{0}'."     = "正在为 {0} 创建 shim"
             "Removing shim '{0}'."         = "正在移除 shim: {0}"
             "Removing shim '{0}.exe'."     = "正在移除 shim: {0}.exe"
             "Making {0}.exe a GUI binary." = "{0}.exe 是一个 GUI 二进制文件"
         }
-
-        $InputObject = Translate-Message $InputObject
     }
 
     Microsoft.PowerShell.Utility\Write-Output $InputObject
