@@ -1843,3 +1843,616 @@ function A-Get-AbsolutePath {
 # 重写的函数是基于这个 Scoop 版本的。
 # 如果 Scoop 最新版本大于它，需要检查重写的函数，如果新版本中这些函数有变动，需要立即修正，然后更新此处的 Scoop 版本号
 $ScoopVersion = "0.5.3"
+
+#region 重写部分 Scoop 内置函数及输出函数以添加本地化输出
+
+function script:Write-Host {
+    [CmdletBinding()]
+    param(
+        $Object,
+        [switch]$NoNewline,
+        [Alias('f')]
+        [System.ConsoleColor]$ForegroundColor,
+        [Alias('b')]
+        [System.ConsoleColor]$BackgroundColor
+    )
+
+    if ($Object -is [string]) {
+        function Translate-Message {
+            param([string]$msg)
+
+            if ($msgMap.ContainsKey($msg)) {
+                return $msgMap[$msg]
+            }
+
+            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
+                $escapedPattern = [regex]::Escape($pattern)
+                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
+
+                $match = [regex]::Match($msg, $regexPattern)
+                if ($match.Success) {
+                    $translation = $msgMap[$pattern]
+                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
+                            param($m)
+                            $index = [int]$m.Groups[1].Value
+                            return $match.Groups[$index + 1].Value.Trim()
+                        })
+                    return $translation
+                }
+            }
+
+            return $msg
+        }
+
+        $msgMap = @{
+            # "'$app' ($version) was installed successfully!" = "$app ($version) 已成功安装!"
+            "'{0}' ({1}) was installed successfully!"                                                                                                        = "{0} ({1}) 已成功安装!"
+            "'{0}' was uninstalled."                                                                                                                         = "{0} 已成功卸载!"
+            "ERROR '{0}' isn't installed correctly."                                                                                                         = "错误: {0} 未正确安装。"
+            "Running {0} script..."                                                                                                                          = "正在运行 {0} 脚本..."
+            "done."                                                                                                                                          = "完成。"
+
+            "Loading {0} from cache"                                                                                                                         = "正在加载 {0} 的缓存"
+            "Loading "                                                                                                                                       = "正在加载 "
+            " from cache."                                                                                                                                   = " 的缓存"
+            "WARN  Token might be misconfigured."                                                                                                            = "警告: 令牌可能被错误配置。"
+
+            "Starting download with aria2 ..."                                                                                                               = "正在使用 aria2 下载..."
+            "`rDownload: {0}"                                                                                                                                = "`r下载: {0}"
+            "WARN  Download failed! (Error {0}) {1}"                                                                                                         = "警告: 下载失败! (错误 {0}) {1}"
+            "WARN  {0} download via aria2 failed"                                                                                                            = "警告: {0} 下载失败"
+            "Fallback to default downloader ..."                                                                                                             = "回退到默认下载器..."
+            "URL {0} is not valid"                                                                                                                           = "URL {0} 无效"
+            "SourceForge.net is known for causing hash validation fails. Please try again before opening a ticket."                                          = "SourceForge.net 经常导致哈希验证失败。请在提交工单前重试。"
+            "{0} hash check failed"                                                                                                                          = "{0} 哈希校验失败"
+            "{0} cached file not found"                                                                                                                      = "{0} 缓存文件未找到"
+
+            "Extracting "                                                                                                                                    = "正在解压 "
+
+            "Linking {0} => {1}"                                                                                                                             = "正在创建链接: {0} => {1}"
+            "Error: Version 'current' is not allowed!"                                                                                                       = "错误：不允许使用 current 作为版本！请联系 bucket 维护者。"
+
+            "Unlinking {0}"                                                                                                                                  = "正在解除链接: {0}"
+
+            "Can't shim '{0}': File doesn't exist."                                                                                                          = "不能为 {0} 创建 shim: 文件不存在。"
+
+            "Can't shim '{0}': couldn't find '{1}'."                                                                                                         = "不能为 {0} 创建 shim: 不能找到 {1}"
+            "WARN  Overwriting shim ('{0}' -> '{1}')"                                                                                                        = "警告: 正在覆盖 shim ('{0}' -> '{1}')"
+            "WARN  Overwriting shim ('{0}' -> '{1}') installed from {2}"                                                                                     = "警告: 正在覆盖安装 {2} 时创建的 shim ('{0}' -> '{1}')"
+
+            "Removing shortcut {0}"                                                                                                                          = "正在移除快捷方式: {0}"
+
+            "Invalid manifest: The 'name' property is missing from 'psmodule'."                                                                              = "无效的应用清单(manifest)：psmodule 中缺少 name 属性。"
+            "Installing PowerShell module '{0}'"                                                                                                             = "正在安装 PowerShell 模块: '{0}'"
+            "WARN  {0} already exists. It will be replaced."                                                                                                 = "警告: {0} 已经存在，它将被替换。"
+
+            "Uninstalling PowerShell module '{0}'."                                                                                                          = "正在卸载 PowerShell 模块: {0}"
+
+            "Removing {0}"                                                                                                                                   = "正在移除: {0}"
+
+            "Persisting {0}"                                                                                                                                 = "正在持久化数据: {0}"
+
+
+            "WARN  The following instances of `"{0}`" are still running. Scoop is configured to ignore this condition."                                      = "警告: {0} 的以下实例仍在运行。Scoop 被配置为忽略此情况。"
+            "ERROR The following instances of `"{0}`" are still running. Close them and try again."                                                          = "错误: {0} 的以下实例仍在运行。请关闭它们然后重试。"
+
+            "INFO  Repair previous failed installation of {0}."                                                                                              = "提示: 修复 {0} 先前失败的安装。"
+
+            "WARN  Purging previous failed installation of {0}."                                                                                             = "警告: 正在清除 {0} 之前安装失败的残留。"
+
+            "Error in manifest: {0} is outside the app directory."                                                                                           = "应用清单(manifest)错误: {0} 在应用程序目录之外。"
+            "{0} is missing."                                                                                                                                = "{0} 不存在。"
+            "Uninstallation aborted."                                                                                                                        = "卸载已中止。"
+            "Installation aborted. You might need to run 'scoop uninstall {0}' before trying again."                                                         = "安装已中止。在再次尝试之前，你可能需要运行 scoop uninstall {0}"
+
+            "The config 'abgox-abyss-app-shortcuts-action' is set to 0, so the shortcuts defined in the manifest will not be created."                       = "配置 abgox-abyss-app-shortcuts-action 的值为 0，因此不会创建清单中定义的快捷方式。"
+            "{0} uses an installer and config 'abgox-abyss-app-shortcuts-action' is set to 2, so the shortcuts defined in the manifest will not be created." = "{0} 使用安装程序进行安装，且配置 abgox-abyss-app-shortcuts-action 的值为 2，因此不会创建清单中定义的快捷方式。"
+
+            "Creating shortcut for {0} ({1}) failed: Couldn't find {2}"                                                                                      = "为 {1} 创建快捷方式 {0} 失败了: 没有找到 {2}"
+            "Creating shortcut for {0} ({1}) failed: Couldn't find icon {2}"                                                                                 = "为 {1} 创建快捷方式 {0} 失败了: 没有找到 icon 图标 {2}"
+            "Creating shortcut for {0} ({1})"                                                                                                                = "为 {1} 创建了快捷方式: {0}"
+        }
+
+        $Object = Translate-Message $Object
+    }
+
+    $splatParams = @{}
+
+    if ($PSBoundParameters.ContainsKey('Object')) {
+        $splatParams['Object'] = $Object
+    }
+    if ($PSBoundParameters.ContainsKey('NoNewline')) {
+        $splatParams['NoNewline'] = $NoNewline
+    }
+    if ($PSBoundParameters.ContainsKey('ForegroundColor')) {
+        $splatParams['ForegroundColor'] = $ForegroundColor
+    }
+    if ($PSBoundParameters.ContainsKey('BackgroundColor')) {
+        $splatParams['BackgroundColor'] = $BackgroundColor
+    }
+
+    Microsoft.PowerShell.Utility\Write-Host @splatParams
+}
+function script:Write-Output {
+    [CmdletBinding()]
+    param(
+        $InputObject
+    )
+
+    if ($Object -is [string]) {
+        function Translate-Message {
+            param([string]$msg)
+
+            if ($msgMap.ContainsKey($msg)) {
+                return $msgMap[$msg]
+            }
+
+            foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
+                $escapedPattern = [regex]::Escape($pattern)
+                $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
+
+                $match = [regex]::Match($msg, $regexPattern)
+                if ($match.Success) {
+                    $translation = $msgMap[$pattern]
+                    $translation = [regex]::Replace($translation, '\{(\d+)\}', {
+                            param($m)
+                            $index = [int]$m.Groups[1].Value
+                            return $match.Groups[$index + 1].Value.Trim()
+                        })
+                    return $translation
+                }
+            }
+
+            return $msg
+        }
+
+        $msgMap = @{
+            "Uninstalling '{0}'"           = "正在卸载 {0}"
+            "Creating shim for '{0}'."     = "正在为 {0} 创建 shim"
+            "Removing shim '{0}'."         = "正在移除 shim: {0}"
+            "Removing shim '{0}.exe'."     = "正在移除 shim: {0}.exe"
+            "Making {0}.exe a GUI binary." = "{0}.exe 是一个 GUI 二进制文件"
+        }
+
+        $InputObject = Translate-Message $InputObject
+    }
+
+    Microsoft.PowerShell.Utility\Write-Output $InputObject
+}
+
+function script:env_set($manifest, $global, $arch) {
+    $env_set = arch_specific 'env_set' $manifest $arch
+    if ($env_set) {
+        $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            $val = $ExecutionContext.InvokeCommand.ExpandString($env_set.$($name))
+            #region 新增: 环境变量输出
+            if ($PSUICulture -like "zh*" -and $cmd) {
+                Microsoft.PowerShell.Utility\Write-Output "正在设置环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name = $val"
+            }
+            else {
+                Microsoft.PowerShell.Utility\Write-Output "Setting environment variable$(if($global){'(system)'}else{'(for current user)'}): $name = $val"
+            }
+            #endregion
+            Set-EnvVar -Name $name -Value $val -Global:$global
+            Set-Content env:\$name $val
+        }
+    }
+}
+
+function script:env_rm($manifest, $global, $arch) {
+    $env_set = arch_specific 'env_set' $manifest $arch
+    if ($env_set) {
+        $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            #region 新增: 环境变量输出
+            if ($PSUICulture -like "zh*" -and $cmd) {
+                Microsoft.PowerShell.Utility\Write-Output "正在移除环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name"
+            }
+            else {
+                Microsoft.PowerShell.Utility\Write-Output "Removing environment variable$(if($global){'(system)'}else{'(for current user)'}): $name"
+            }
+            #endregion
+            Set-EnvVar -Name $name -Value $null -Global:$global
+            if (Test-Path env:\$name) { Remove-Item env:\$name }
+        }
+    }
+}
+
+function script:Add-Path {
+    param(
+        [string[]]$Path,
+        [string]$TargetEnvVar = 'PATH',
+        [switch]$Global,
+        [switch]$Force,
+        [switch]$Quiet
+    )
+    #region 新增: $env:xxx 变量支持
+    $Path = $Path | ForEach-Object {
+        # 处理当 env_add_path 值为 $dir 的特殊情况
+        if ($_ -eq "$dir\`$dir") {
+            $dir
+        }
+        else {
+            Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
+        }
+    }
+    #endregion
+
+    # future sessions
+    $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
+
+    if (!$inPath -or $Force) {
+        if (!$Quiet) {
+            #region 修改: 本地化输出
+            if ($PSUICulture -like "zh*" -and $cmd) {
+                $Path | ForEach-Object {
+                    Write-Host "正在添加 $(friendly_path $_) 到环境变量$(if($global){'(系统级)'}else{'(当前用户)'}) $TargetEnvVar 中。"
+                }
+            }
+            else {
+                $Path | ForEach-Object {
+                    Write-Host "Adding $(friendly_path $_) to $(if ($Global) {'global'} else {'your'}) path."
+                }
+            }
+            #endregion
+        }
+        Set-EnvVar -Name $TargetEnvVar -Value ((@($Path) + $strippedPath) -join ';') -Global:$Global
+    }
+    # current session
+    $inPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
+    if (!$inPath -or $Force) {
+        $env:PATH = (@($Path) + $strippedPath) -join ';'
+    }
+}
+
+function script:Remove-Path {
+    param(
+        [string[]]$Path,
+        [string]$TargetEnvVar = 'PATH',
+        [switch]$Global,
+        [switch]$Quiet,
+        [switch]$PassThru
+    )
+    #region 新增: $env:xxx 变量支持
+    $Path = $Path | ForEach-Object {
+        # 处理当 env_add_path 值为 $dir 的特殊情况
+        if ($_ -eq "$dir\`$dir") {
+            $dir
+        }
+        else {
+            Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
+        }
+    }
+    #endregion
+
+    # future sessions
+    $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
+    if ($inPath) {
+        if (!$Quiet) {
+            #region 修改: 本地化输出
+            if ($PSUICulture -like "zh*" -and $cmd) {
+                $Path | ForEach-Object {
+                    Write-Host "正在从环境变量$(if ($Global) {'(系统级)'} else {'(当前用户)'}) $TargetEnvVar 中移除 $(friendly_path $_)"
+                }
+            }
+            else {
+                $Path | ForEach-Object {
+                    Write-Host "Removing $(friendly_path $_) from $(if ($Global) {'global'} else {'your'}) path."
+                }
+            }
+            #endregion
+        }
+        Set-EnvVar -Name $TargetEnvVar -Value $strippedPath -Global:$Global
+    }
+    # current session
+    $inSessionPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
+    if ($inSessionPath) {
+        $env:PATH = $strippedPath
+    }
+    if ($PassThru) {
+        return $inPath
+    }
+}
+
+function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global) {
+    #region 新增: 支持 abyss 的特性
+    function A-Test-ScriptPattern {
+        param(
+            [Parameter(Mandatory = $true)]
+            [PSObject]$InputObject,
+
+            [Parameter(Mandatory = $true)]
+            [string]$Pattern,
+
+            [string[]]$ScriptSections = @('pre_install', 'post_install', 'pre_uninstall', 'post_uninstall'),
+
+            [string[]]$ScriptProperties = @('installer', 'uninstaller')
+        )
+
+        function Test-ObjectForPattern {
+            param(
+                [PSObject]$Object,
+                [string]$SearchPattern
+            )
+
+            $found = $false
+
+            foreach ($section in $ScriptSections) {
+                if (!$found -and $Object.$section) {
+                    $found = ($Object.$section -join "`n") -match $SearchPattern
+                }
+            }
+
+            foreach ($property in $ScriptProperties) {
+                if (!$found -and $Object.$property.script) {
+                    $found = ($Object.$property.script -join "`n") -match $SearchPattern
+                }
+            }
+
+            return $found
+        }
+
+        $patternFound = Test-ObjectForPattern -Object $InputObject -SearchPattern $Pattern
+
+        if (!$patternFound -and $InputObject.architecture) {
+            if ($InputObject.architecture.'64bit') {
+                $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.'64bit' -SearchPattern $Pattern
+            }
+            if (!$patternFound -and $InputObject.architecture.'32bit') {
+                $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.'32bit' -SearchPattern $Pattern
+            }
+            if (!$patternFound -and $InputObject.architecture.arm64) {
+                $patternFound = Test-ObjectForPattern -Object $InputObject.architecture.arm64 -SearchPattern $Pattern
+            }
+        }
+
+        return $patternFound
+    }
+
+    try {
+        $ScoopConfig = scoop config
+
+        # 创建快捷方式的操作行为。
+        # 0: 不创建清单中定义的快捷方式
+        # 1: 创建清单中定义的快捷方式
+        # 2: 如果应用使用安装程序进行安装，不创建清单中定义的快捷方式
+        $shortcutsActionLevel = $ScoopConfig.'abgox-abyss-app-shortcuts-action'
+    }
+    catch {}
+
+    if ($null -eq $shortcutsActionLevel) {
+        $shortcutsActionLevel = "1"
+    }
+
+    if ($shortcutsActionLevel -eq '0') {
+        Write-Host "The config 'abgox-abyss-app-shortcuts-action' is set to 0, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
+        return
+    }
+    if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '.*A-Install-Exe.*')) {
+        Write-Host "$app uses an installer and config 'abgox-abyss-app-shortcuts-action' is set to 2, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
+        return
+    }
+
+    # 支持在 shortcuts 中使用以 $env:xxx 环境变量开头的路径
+    $filename = $target.FullName
+    if ($filename -match '\$env:[a-zA-Z_].*') {
+        $filename = $filename.Replace("$dir\", '')
+        $target = [System.IO.FileInfo]::new((Invoke-Expression "`"$filename`""))
+    }
+
+    #endregion
+
+    if (!$target.Exists) {
+        Write-Host -f DarkRed "Creating shortcut for $shortcutName ($(fname $target)) failed: Couldn't find $target"
+        return
+    }
+    if ($icon -and !$icon.Exists) {
+        Write-Host -f DarkRed "Creating shortcut for $shortcutName ($(fname $target)) failed: Couldn't find icon $icon"
+        return
+    }
+
+    $scoop_startmenu_folder = shortcut_folder $global
+    $subdirectory = [System.IO.Path]::GetDirectoryName($shortcutName)
+    if ($subdirectory) {
+        $subdirectory = ensure $([System.IO.Path]::Combine($scoop_startmenu_folder, $subdirectory))
+    }
+
+    $wsShell = New-Object -ComObject WScript.Shell
+    $wsShell = $wsShell.CreateShortcut("$scoop_startmenu_folder\$shortcutName.lnk")
+    $wsShell.TargetPath = $target.FullName
+    $wsShell.WorkingDirectory = $target.DirectoryName
+    if ($arguments) {
+        $wsShell.Arguments = $arguments
+    }
+    if ($icon -and $icon.Exists) {
+        $wsShell.IconLocation = $icon.FullName
+    }
+    $wsShell.Save()
+    Write-Host "Creating shortcut for $shortcutName ($(fname $target))"
+}
+
+function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
+    #region 修改: 本地化输出
+    $label = 'Notes'
+    $note = $manifest.notes
+
+    if ($PSUICulture -like 'zh*') {
+        $label = '说明'
+        $note = $manifest.'notes-cn'
+    }
+
+    if ($note) {
+        Write-Host
+        Write-Output $label
+        Write-Output '-----'
+
+        Write-Output (substitute $note @{
+                '$dir'                     = $dir
+                '$original_dir'            = $original_dir
+                '$persist_dir'             = $persist_dir
+                '$app'                     = $app
+                '$version'                 = $manifest.version
+                '$env:ProgramFiles'        = $env:ProgramFiles
+                '${env:ProgramFiles(x86)}' = ${env:ProgramFiles(x86)}
+                '$env:ProgramData'         = $env:ProgramData
+                '$env:AppData'             = $env:AppData
+                '$env:LocalAppData'        = $env:LocalAppData
+            })
+        Write-Output '-----'
+    }
+    #endregion
+}
+
+function script:show_suggestions($suggested) {
+    $installed_apps = (installed_apps $true) + (installed_apps $false)
+
+    foreach ($app in $suggested.keys) {
+        $features = $suggested[$app] | Get-Member -type noteproperty | ForEach-Object { $_.name }
+        foreach ($feature in $features) {
+            $feature_suggestions = $suggested[$app].$feature
+
+            $fulfilled = $false
+            foreach ($suggestion in $feature_suggestions) {
+                $suggested_app, $bucket, $null = parse_app $suggestion
+
+                if ($installed_apps -contains $suggested_app) {
+                    $fulfilled = $true
+                    break
+                }
+            }
+
+            if (!$fulfilled) {
+                #region 修改: 本地化输出
+                Microsoft.PowerShell.Utility\Write-Host
+                if ($PSUICulture -like "zh*" -and $cmd) {
+                    Microsoft.PowerShell.Utility\Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))" -ForegroundColor Yellow
+                }
+                else {
+                    Microsoft.PowerShell.Utility\Write-Host "'$app' suggests installing '$([string]::join("' or '", $feature_suggestions))'." -ForegroundColor Yellow
+                }
+                #endregion
+            }
+        }
+    }
+}
+
+if ($ShowCN) {
+    function script:ensure_install_dir_not_in_path($dir, $global) {
+        $path = (Get-EnvVar -Name 'PATH' -Global:$global)
+
+        $fixed, $removed = find_dir_or_subdir $path "$dir"
+        if ($removed) {
+            # $removed | ForEach-Object { "Installer added '$(friendly_path $_)' to path. Removing." }
+            $removed | ForEach-Object { "安装程序已将 '$(friendly_path $_)' 添加到环境变量 Path 中，正在删除。" }
+            Set-EnvVar -Name 'PATH' -Value $fixed -Global:$global
+        }
+
+        if (!$global) {
+            $fixed, $removed = find_dir_or_subdir (Get-EnvVar -Name 'PATH' -Global) "$dir"
+            if ($removed) {
+                # $removed | ForEach-Object { warn "Installer added '$_' to system path. You might want to remove this manually (requires admin permission)." }
+                $removed | ForEach-Object { warn "安装程序在系统环境变量 Path 中添加了 $_，你可能需要手动删除 (需要管理员权限)。" }
+            }
+        }
+    }
+
+    function script:ensure_in_psmodulepath($dir, $global) {
+        $path = Get-EnvVar -Name 'PSModulePath' -Global:$global
+        if (!$global -and $null -eq $path) {
+            $path = "$env:USERPROFILE\Documents\WindowsPowerShell\Modules"
+        }
+        if ($path -notmatch [Regex]::Escape($dir)) {
+            # Write-Output "Adding $(friendly_path $dir) to $(if($global){'global'}else{'your'}) PowerShell module path."
+            Write-Output "正在添加 $(friendly_path $dir) 到环境变量$(if($global){'(系统级)'}else{'(当前用户)'}) PSModulePath 中。"
+
+            Set-EnvVar -Name 'PSModulePath' -Value "$dir;$path" -Global:$global
+        }
+    }
+
+    function script:install_app($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true) {
+        $app, $manifest, $bucket, $url = Get-Manifest $app
+
+        if (!$manifest) {
+            # abort "Couldn't find manifest for '$app'$(if ($bucket) { " from '$bucket' bucket" } elseif ($url) { " at '$url'" })."
+            abort "无法从 $(if ($bucket) { "$bucket (bucket)" } elseif ($url) { $url }) 中找到应用 $app 的清单(manifest)"
+        }
+
+        $version = $manifest.version
+        # if (!$version) { abort "Manifest doesn't specify a version." }
+        if (!$version) { abort "清单(manifest) 中没有指定一个版本号。" }
+        if ($version -match '[^\w\.\-\+_]') {
+            # abort "Manifest version has unsupported character '$($matches[0])'."
+            abort "清单(manifest) 中的版本具有不支持的字符: $($matches[0])"
+        }
+
+        $is_nightly = $version -eq 'nightly'
+        if ($is_nightly) {
+            $version = nightly_version
+            $check_hash = $false
+        }
+
+        $architecture = Get-SupportedArchitecture $manifest $architecture
+        if ($null -eq $architecture) {
+            # error "'$app' doesn't support current architecture!"
+            error "$app 不支持当前的架构!"
+            return
+        }
+
+        if ((get_config SHOW_MANIFEST $false) -and ($MyInvocation.ScriptName -notlike '*scoop-update*')) {
+            # Write-Host "Manifest: $app.json"
+            Write-Host "清单(manifest): $app.json"
+            $style = get_config CAT_STYLE
+            if ($style) {
+                $manifest | ConvertToPrettyJson | bat --no-paging --style $style --language json
+            }
+            else {
+                $manifest | ConvertToPrettyJson
+            }
+            # $answer = Read-Host -Prompt 'Continue installation? [Y/n]'
+            $answer = Read-Host -Prompt '继续安装? [Y/n]'
+            if (($answer -eq 'n') -or ($answer -eq 'N')) {
+                return
+            }
+        }
+        # Write-Output "Installing '$app' ($version) [$architecture]$(if ($bucket) { " from '$bucket' bucket" } else { " from '$url'" })"
+        Write-Output "正在从 $(if ($bucket) { "$bucket (bucket)" } else { $url }) 中安装 $app ($version) [$architecture]"
+
+        $dir = ensure (versiondir $app $version $global)
+        $original_dir = $dir # keep reference to real (not linked) directory
+        $persist_dir = persistdir $app $global
+
+        $fname = Invoke-ScoopDownload $app $version $manifest $bucket $architecture $dir $use_cache $check_hash
+        Invoke-Extraction -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture
+        Invoke-HookScript -HookType 'pre_install' -Manifest $manifest -ProcessorArchitecture $architecture
+
+        Invoke-Installer -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture -AppName $app -Global:$global
+        ensure_install_dir_not_in_path $dir $global
+        $dir = link_current $dir
+        create_shims $manifest $dir $global $architecture
+        create_startmenu_shortcuts $manifest $dir $global $architecture
+        install_psmodule $manifest $dir $global
+        env_add_path $manifest $dir $global $architecture
+        env_set $manifest $global $architecture
+
+        # persist data
+        persist_data $manifest $original_dir $persist_dir
+        persist_permission $manifest $global
+
+        Invoke-HookScript -HookType 'post_install' -Manifest $manifest -ProcessorArchitecture $architecture
+
+        # save info for uninstall
+        save_installed_manifest $app $bucket $dir $url
+        save_install_info @{ 'architecture' = $architecture; 'url' = $url; 'bucket' = $bucket } $dir
+
+        if ($manifest.suggest) {
+            $suggested[$app] = $manifest.suggest
+        }
+
+        success "'$app' ($version) was installed successfully!"
+
+        show_notes $manifest $dir $original_dir $persist_dir
+    }
+
+}
+#endregion
