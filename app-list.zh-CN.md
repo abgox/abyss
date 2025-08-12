@@ -14,8 +14,8 @@
     - 基础标签
 
       - `v1.0.0`：应用版本，点击它查看 json 清单文件
-      - `Persist`：使用 Scoop 官方的 [Persist](./readme-cn.md#persist) 实现数据持久化
-      - `Link`：使用 `New-Item -ItemType Junction` 实现数据持久化, 详情参考 [Link](./readme-cn.md#link)
+      - `Persist`：使用 Scoop 官方的 [Persist](./readme.zh-CN.md#persist) 实现数据持久化
+      - `Link`：使用 `New-Item -ItemType Junction` 实现数据持久化, 详情参考 [Link](./readme.zh-CN.md#link)
 
     - 注意
 

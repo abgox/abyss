@@ -1,6 +1,6 @@
 # App List
 
-[简体中文](./app-list-cn.md)
+[简体中文](./app-list.zh-CN.md)
 
 - Guide
 
@@ -14,7 +14,7 @@
     - Basic Tags
 
       - `v1.0.0`: The app version. Click it to view the manifest json file.
-      - `Persist`: Uses Scoop's official [Persist](./readme-cn.md#persist).
+      - `Persist`: Uses Scoop's official [Persist](./readme.zh-CN.md#persist).
       - `Link`: Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
 
     - Notes

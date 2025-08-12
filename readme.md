@@ -1,7 +1,7 @@
 <h1 align="center">✨ abyss ✨</h1>
 
 <p align="center">
-    <a href="readme-cn.md">简体中文</a> |
+    <a href="readme.zh-CN.md">简体中文</a> |
     <a href="readme.md">English</a> |
     <a href="https://github.com/abgox/abyss">Github</a> |
     <a href="https://gitee.com/abgox/abyss">Gitee</a>
@@ -20,6 +20,12 @@
     <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/created-at/abgox/abyss" alt="created" />
     </a>
+</p>
+
+---
+
+<p align="center">
+  <strong>If you like this project, please give it a star ⭐️</strong>
 </p>
 
 > [!Tip]
@@ -262,10 +268,4 @@
 [Gitee - abgox/abyss](https://gitee.com/abgox/abyss) may not display them normally, please use [Github - abgox/abyss](https://github.com/abgox/abyss).
 
 - [English](./app-list.md)
-- [简体中文](./app-list-cn.md)
-
-### Star
-
-<p align="center">
-  <strong>If you like this project, please give it a star ⭐️</strong>
-</p>
+- [简体中文](./app-list.zh-CN.md)

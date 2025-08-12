@@ -1,5 +1,5 @@
 param(
-    [array]$PathList = @("app-list.md", "app-list-cn.md")
+    [array]$PathList = @("app-list.md", "app-list.zh-CN.md")
 )
 
 $manifests = Get-ChildItem "$PSScriptRoot\..\bucket" -Recurse -Filter *.json | Sort-Object { $_.BaseName }

@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="readme.md">English</a> |
-    <a href="readme-cn.md">简体中文</a> |
+    <a href="readme.zh-CN.md">简体中文</a> |
     <a href="https://github.com/abgox/abyss">Github</a> |
     <a href="https://gitee.com/abgox/abyss">Gitee</a>
 </p>
@@ -20,6 +20,12 @@
     <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/created-at/abgox/abyss" alt="created" />
     </a>
+</p>
+
+---
+
+<p align="center">
+  <strong>如果你喜欢这个项目，请给它一个 ⭐️</strong>
 </p>
 
 > [!Tip]
@@ -262,11 +268,5 @@
 
 [Gitee - abgox/abyss](https://gitee.com/abgox/abyss) 可能无法正常显示应用列表，请使用 [Github - abgox/abyss](https://github.com/abgox/abyss)
 
-- [简体中文](./app-list-cn.md)
+- [简体中文](./app-list.zh-CN.md)
 - [English](./app-list.md)
-
-### Star
-
-<p align="center">
-  <strong>如果你喜欢这个项目，请给它一个 ⭐️</strong>
-</p>
