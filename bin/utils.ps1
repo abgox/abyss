@@ -1982,13 +1982,14 @@ function script:Write-Output {
     )
 
     if ($InputObject -is [string]) {
-
         $InputObject = A-Translate-Message $InputObject @{
-            "Uninstalling '{0}'"           = "正在卸载 {0}"
-            "Creating shim for '{0}'."     = "正在为 {0} 创建 shim"
-            "Removing shim '{0}'."         = "正在移除 shim: {0}"
-            "Removing shim '{0}.exe'."     = "正在移除 shim: {0}.exe"
-            "Making {0}.exe a GUI binary." = "{0}.exe 是一个 GUI 二进制文件"
+            "Uninstalling '{0}'"                           = "正在卸载 {0}"
+            "Creating shim for '{0}'."                     = "正在为 {0} 创建 shim"
+            "Removing shim '{0}'."                         = "正在移除 shim: {0}"
+            "Removing shim '{0}.exe'."                     = "正在移除 shim: {0}.exe"
+            "Making {0}.exe a GUI binary."                 = "{0}.exe 是一个 GUI 二进制文件"
+            "Adding {0} to global PowerShell module path." = "正在添加 {0} 到环境变量(系统级) PSModulePath 中。"
+            "Adding {0} to your PowerShell module path."   = "正在添加 {0} 到环境变量(当前用户) PSModulePath 中。"
         }
     }
 
@@ -2329,19 +2330,6 @@ if ($ShowCN) {
                 # $removed | ForEach-Object { warn "Installer added '$_' to system path. You might want to remove this manually (requires admin permission)." }
                 $removed | ForEach-Object { warn "安装程序在系统环境变量 Path 中添加了 $_，你可能需要手动删除 (需要管理员权限)。" }
             }
-        }
-    }
-
-    function script:ensure_in_psmodulepath($dir, $global) {
-        $path = Get-EnvVar -Name 'PSModulePath' -Global:$global
-        if (!$global -and $null -eq $path) {
-            $path = "$env:USERPROFILE\Documents\WindowsPowerShell\Modules"
-        }
-        if ($path -notmatch [Regex]::Escape($dir)) {
-            # Write-Output "Adding $(friendly_path $dir) to $(if($global){'global'}else{'your'}) PowerShell module path."
-            Write-Output "正在添加 $(friendly_path $dir) 到环境变量$(if($global){'(系统级)'}else{'(当前用户)'}) PSModulePath 中。"
-
-            Set-EnvVar -Name 'PSModulePath' -Value "$dir;$path" -Global:$global
         }
     }
 
