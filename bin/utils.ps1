@@ -1973,13 +1973,14 @@ function script:Write-Host {
 
     Microsoft.PowerShell.Utility\Write-Host @splatParams
 }
+
 function script:Write-Output {
     [CmdletBinding()]
     param(
         $InputObject
     )
 
-    if ($Object -is [string]) {
+    if ($InputObject -is [string]) {
         function Translate-Message {
             param([string]$msg)
 
@@ -2453,6 +2454,5 @@ if ($ShowCN) {
 
         show_notes $manifest $dir $original_dir $persist_dir
     }
-
 }
 #endregion
