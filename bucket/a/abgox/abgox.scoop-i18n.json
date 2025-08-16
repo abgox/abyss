@@ -1,0 +1,70 @@
+{
+    "version": "2025.08.16.002117",
+    "description": "一个为 Scoop 设计的国际化工具，提升不同语言的用户使用 Scoop 时的体验。An internationalization tool designed for Scoop to help users of different languages use Scoop more easily.",
+    "homepage": "https://github.com/abgox/scoop-i18n",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/abgox/scoop-i18n/blob/main/license"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/scoop-i18n/archive/refs/heads/main.zip",
+            "hash": "a5a08f5b81b6247a38b7787bd8a9d79b3ac98e65bf55bf0f9d0035635c16eea9"
+        },
+        "arm64": {
+            "url": "https://github.com/abgox/scoop-i18n/archive/refs/heads/main.zip",
+            "hash": "a5a08f5b81b6247a38b7787bd8a9d79b3ac98e65bf55bf0f9d0035635c16eea9"
+        }
+    },
+    "extract_dir": "scoop-i18n-main",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Ensure-Directory \"$dir\\original\"",
+        "A-Ensure-Directory \"$dir\\shims\"",
+        "Get-ChildItem \"$bucketsdir\\$bucket\\extras\\$app\" | ForEach-Object {",
+        "    Move-Item \"$env:SCOOP\\shims\\$($_.Name)\" \"$dir\\original\"",
+        "    $content = Get-Content $_.FullName -Raw",
+        "    $content = $content.Replace('${scoop.ps1}', \"$env:SCOOP\\apps\\scoop\\current\\bin\\scoop.ps1\")",
+        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$env:SCOOP\\apps\\$app\\current\\scoop-i18n.ps1\")",
+        "    [System.IO.File]::WriteAllText(\"$dir\\shims\\$($_.Name)\", ($content -join [System.Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))",
+        "}",
+        "Get-ChildItem \"$dir\\shims\" | ForEach-Object {",
+        "    Copy-Item $_.FullName \"$env:SCOOP\\shims\" -Force",
+        "}"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "Get-ChildItem \"$dir\\original\" | ForEach-Object {",
+        "    Move-Item $_.FullName \"$env:SCOOP\\shims\" -Force",
+        "}"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/abgox/scoop-i18n/commits?per_page=1",
+        "regex": "sha\":\\s*\"(?<sha>[^\"]+).*\"date\":\\s*\"(\\d+)-(\\d+)-(\\d+)T(\\d+):(\\d+):(\\d+)",
+        "replace": "${1}.${2}.${3}.${4}${5}${6}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/abgox/scoop-i18n/archive/refs/heads/main.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/abgox/scoop-i18n/archive/refs/heads/main.zip"
+            }
+        }
+    }
+}
