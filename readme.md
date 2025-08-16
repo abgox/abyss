@@ -25,19 +25,16 @@
 ---
 
 <p align="center">
+  <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
+</p>
+<p align="center">
   <strong>If you like this project, please give it a star ⭐️</strong>
 </p>
-
-> [!Tip]
->
-> [scoop completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
 > [!Warning]
 >
 > - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
 > - They contain some [style and features](#features) outside of the official Scoop specification, and other buckets should not merge them to avoid conflicts and errors.
-
-> Just like the abyss — limitless, mysterious, and filled with treasures.
 
 ### Features
 
@@ -50,13 +47,9 @@
 
 #### Manifest
 
-- For apps that cannot use [persist](#persist), [Link](#link) will be used as a fallback.
+- For apps that cannot use [Persist](#persist), [Link](#link) will be used as a fallback.
 - When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
-- Improved information output during installation and uninstallation.
-  - Localized output.
-    - `zh-CN`: Simplified Chinese
-    - `en-US`: English
-  - Shows notifications for environment variable modifications.
+- Use [abgox/scoop-i18n](https://github.com/abgox/scoop-i18n) to add localized output.
 
 ---
 
@@ -73,14 +66,14 @@
 >
 > Please use `abyss` as the bucket name to avoid "bucket not found" errors when parsing "depends" in some manifests.
 
-1.  Add `abyss` with Github or Gitee repository.
+1.  Add [abyss](https://abyss.abgox.com) with [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss) repository.
 
     ```shell
-    scoop bucket add abyss https://github.com/abgox/abyss.git
+    scoop bucket add abyss https://github.com/abgox/abyss
     ```
 
     ```shell
-    scoop bucket add abyss https://gitee.com/abgox/abyss.git
+    scoop bucket add abyss https://gitee.com/abgox/abyss
     ```
 
 2.  Use [PSCompletions](https://github.com/abgox/PSCompletions) to add `scoop` completion.
@@ -100,7 +93,7 @@
 3.  Install apps.
 
     ```shell
-    scoop install abyss/Microsoft.PowerToys
+    scoop install abyss/abgox.scoop-i18n
     ```
 
 ### Demo
@@ -117,10 +110,10 @@
 >
 > [scoop/scoop-install/scoop-update completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
 
-1. Use the Gitee repository.
+1. Use the [Gitee](https://gitee.com/abgox/abyss) repository.
 
    ```shell
-   scoop bucket add abyss https://gitee.com/abgox/abyss.git
+   scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
 2. Install [scoop-install](https://gitee.com/abgox/scoop-tools) and [scoop-update](https://gitee.com/abgox/scoop-tools).
@@ -152,13 +145,13 @@
 5. Use [scoop-install](https://gitee.com/abgox/scoop-tools) to install apps.
 
    ```shell
-   scoop-install abyss/Microsoft.PowerToys
+   scoop-install abyss/abgox.scoop-i18n
    ```
 
 6. Use [scoop-update](https://gitee.com/abgox/scoop-tools) to update apps.
 
    ```shell
-   scoop-update abyss/Microsoft.PowerToys
+   scoop-update abyss/abgox.scoop-i18n
    ```
 
 7. For more details, please visit:
@@ -211,8 +204,8 @@
 
 #### abgox-abyss-bucket-name
 
-- It is used to record the name of `abyss` added locally, and then it is used in some special cases.
-- It doesn't need to be modified manually. When installing/updating/uninstalling an app in `abyss`, it will be automatically updated.
+- It is only used to record the name of `abyss` added locally, and then it is used in some special cases.
+- Don't modify it manually. When installing/updating/uninstalling an app in `abyss`, it will be automatically updated.
 - For example:
   - If you use `scoop install abyss/JetBrains.WebStorm@2025.1.2` to specify version `2025.1.2`.
   - It will be used during installation to avoid installation errors.

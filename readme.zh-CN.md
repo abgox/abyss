@@ -25,19 +25,16 @@
 ---
 
 <p align="center">
+  <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
+</p>
+<p align="center">
   <strong>如果你喜欢这个项目，请给它一个 ⭐️</strong>
 </p>
-
-> [!Tip]
->
-> 推荐使用 [PSCompletions 中的 scoop 命令补全](https://gitee.com/abgox/PSCompletions)
 
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
 > - 它们包含 Scoop 官方规范之外的 [风格与特性](#特性)，其他 bucket 不应该合并它们，以避免冲突和错误
-
-> Just like the abyss — limitless, mysterious, and filled with treasures.
 
 ### 特性
 
@@ -49,13 +46,9 @@
 
 #### Manifest
 
-- 无法使用 [persist](#persist) 的应用，会使用 [Link](#link) 实现
+- 无法使用 [Persist](#persist) 的应用，会使用 [Link](#link) 实现
 - 当卸载和更新应用时，会先尝试终止进程，详情参考 [Config](#config)
-- 优化了在安装和卸载过程中的信息输出
-  - 根据语言环境使用对应的输出
-    - `zh-CN`: 简体中文
-    - `en-US`: 英文
-  - 如果安装和卸载过程中会修改环境变量，将显示环境变量的具体变化
+- 使用 [abgox/scoop-i18n](https://github.com/abgox/scoop-i18n) 添加本地化输出
 
 ---
 
@@ -72,7 +65,7 @@
 >
 > 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在解析 depends 时找不到 bucket
 
-1. 添加 `abyss` (使用 Github 或 Gitee 仓库)
+1. 添加 [abyss](https://abyss.abgox.com) (使用 [Github](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss) 仓库)
 
    ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
@@ -99,7 +92,7 @@
 3. 安装应用
 
    ```shell
-   scoop install abyss/Microsoft.PowerToys
+   scoop install abyss/abgox.scoop-i18n
    ```
 
 ### 演示
@@ -116,7 +109,7 @@
 >
 > 推荐使用 [PSCompletions 中的 scoop/scoop-install/scoop-update 命令补全](https://gitee.com/abgox/PSCompletions)
 
-1. 使用 Gitee 仓库
+1. 使用 [Gitee](https://gitee.com/abgox/abyss) 仓库
 
    ```shell
    scoop bucket add abyss https://gitee.com/abgox/abyss
@@ -151,13 +144,13 @@
 5. 使用 [scoop-install](https://gitee.com/abgox/scoop-tools) 安装应用
 
    ```shell
-   scoop-install abyss/Microsoft.PowerToys
+   scoop-install abyss/abgox.scoop-i18n
    ```
 
 6. 使用 [scoop-update](https://gitee.com/abgox/scoop-tools) 更新应用
 
    ```shell
-   scoop-update abyss/Microsoft.PowerToys
+   scoop-update abyss/abgox.scoop-i18n
    ```
 
 7. 更多详情请查看:
@@ -210,8 +203,8 @@
 
 #### abgox-abyss-bucket-name
 
-- 此配置项用于记录添加到本地的 `abyss` 的名称，然后在部分特殊情况中使用
-- 它不需要手动修改，当安装/更新/卸载 `abyss` 中的应用时，会自动更新此配置项
+- 此配置项仅用于记录添加到本地的 `abyss` 的名称，然后在部分特殊情况中使用
+- 不要手动修改它，当安装/更新/卸载 `abyss` 中的应用时，会自动更新此配置项
 - 举个例子：
   - 如果你使用了 `scoop install abyss/JetBrains.WebStorm@2025.1.2` 指定 `2025.1.2` 版本
   - 安装时会用到这个配置项的值，避免安装错误
