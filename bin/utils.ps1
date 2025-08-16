@@ -389,6 +389,7 @@ function A-Stop-Process {
                 }
                 catch {
                     error $_.Exception.Message
+                    A-Exit
                 }
             }
         }
@@ -406,8 +407,10 @@ function A-Stop-Process {
         $matched = $processes.where({ $_.MainModule.FileName -like "$app_dir\*" })
         foreach ($p in $matched) {
             try {
-                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
-                Stop-Process -Id $p.Id -Force -ErrorAction Stop
+                if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
+                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                    Stop-Process -Id $p.Id -Force -ErrorAction Stop
+                }
             }
             catch {
                 error $_.Exception.Message
