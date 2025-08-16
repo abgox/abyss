@@ -921,9 +921,6 @@
         },
         "autoupdate_hash": {
             "description": "定义 hash 的获取",
-            "required": [
-                "url"
-            ],
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -940,23 +937,28 @@
                     "$ref": "#/definitions/str"
                 },
                 "mode": {
-                    "description": "extract: 通过RegEx从纯文本文件或网页中提取(默认，可省略)\njson: 通过JSONPath从JSON文件中提取\nxpath: 通过XML文件提取\nrdf: 从RDF文件中提取\nmetalink: 从Metalink的头文件或 .meta4 文件中提取\nfosshub: 自动。为FossHub预定义\nsourceforge: 自动。为SourceForge预定义\ndownload: 下载应用程序文件并在本地对其进行散列(回退)",
-                    "allOf": [
-                        {
-                            "examples": [
-                                "extract",
-                                "json",
-                                "xpath",
-                                "rdf",
-                                "metalink",
-                                "fosshub",
-                                "sourceforge",
-                                "download"
-                            ]
-                        },
-                        {
-                            "$ref": "#/definitions/str"
-                        }
+                    "title": "获取 hash 的模式",
+                    "enum": [
+                        "github",
+                        "extract",
+                        "json",
+                        "xpath",
+                        "rdf",
+                        "metalink",
+                        "fosshub",
+                        "sourceforge",
+                        "download"
+                    ],
+                    "markdownEnumDescriptions": [
+                        "获取 Github 自动生成的 hash，详情查看 [Github blog](https://github.blog/changelog/2025-06-03-releases-now-expose-digests-for-release-assets/)",
+                        "通过 RegEx 从纯文本文件或网页中提取(默认，可省略)",
+                        "通过 JSONPath 从 JSON 文件中提取",
+                        "通过 XML 文件提取",
+                        "从 RDF 文件中提取",
+                        "从 Metalink 的头文件或 .meta4 文件中提取",
+                        "为 FossHub 预定义",
+                        "为 SourceForge 预定义",
+                        "下载应用程序文件并在本地对其进行散列(回退)"
                     ]
                 },
                 "jp": {
@@ -2151,29 +2153,5 @@
                 }
             ]
         }
-        // {
-        //   "$comment": "如果没有设置 innosetup，Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀。有些会通过 A-Install-Exe 安装，但 schema 无法检测到，会存在误判",
-        //   "if": {
-        //     "not": {
-        //       "required": [
-        //         "innosetup"
-        //       ]
-        //     }
-        //   },
-        //   "then": {
-        //     "allOf": [
-        //       {
-        //         "$ref": "#/definitions/setup_exe_url"
-        //       },
-        //       {
-        //         "properties": {
-        //           "autoupdate": {
-        //             "$ref": "#/definitions/setup_exe_url"
-        //           }
-        //         }
-        //       }
-        //     ]
-        //   }
-        // }
     ]
 }
