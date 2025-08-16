@@ -1,54 +1,6 @@
 ﻿#Requires -Version 5.1
 
-<#
-一些能在清单中使用的函数:
-
-    1. 在 pre_install
-
-        - A-Require-Admin: 要求以管理员权限运行
-        - A-Ensure-Directory: 确保指定目录路径存在
-        - A-Copy-Item: 复制文件或目录
-        - A-New-PersistFile: 创建文件，可选择设置内容(不能在 post_install 中使用)
-        - A-New-LinkDirectory: 为目录创建 Junction
-        - A-New-LinkFile: 为文件创建 SymbolicLink
-        - A-Add-Font: 安装字体
-        - A-Add-MsixPackage: 安装 AppX/Msix 包
-        - A-Add-PowerToysRunPlugin: 添加 PowerToys Run 插件
-        - A-Install-Exe: 运行安装程序
-        - A-Expand-SetupExe: 展开 Setup.exe 类型的安装包，非特殊情况不使用，优先使用 A-Install-Exe
-
-    2. 在 pre_uninstall
-
-        - A-Deny-Update: 禁止通过 Scoop 更新
-        - A-Stop-Process: 尝试暂停安装目录下的应用进程，以确保能正常卸载
-        - A-Stop-Service: 尝试停止并移除指定的应用服务，以确保能正常卸载
-        - A-Remove-Link: 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction
-        - A-Remove-Font: 移除字体
-        - A-Remove-MsixPackage: 卸载 AppX/Msix 包
-        - A-Remove-PowerToysRunPlugin: 移除 PowerToys Run 插件
-        - A-Uninstall-Exe: 运行卸载程序
-        - A-Remove-TempData: 移除指定的一些临时数据文件，常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成
-
-    3. 其他:
-        - A-Test-Admin: 检查是否以管理员权限运行
-        - A-Hold-App: 它应该在 pre_install 中使用，和 A-Deny-Update 搭配
-        - A-Get-ProductCode: 获取应用的产品代码
-        - A-Get-InstallerInfoFromWinget: 从 winget 数据库中获取安装信息，用于清单文件的 checkver 和 autoupdate
-        - A-Get-VersionFromPage: 获取最新的版本号，适用于动态加载的网页
-        - A-Resolve-DownloadUrl: 解析跳转后的真实下载地址
-        - A-Move-PersistDirectory: 用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
-            - 它用于未来可能存在的清单文件更名
-            - 当清单文件更名后，需要使用它，并传入旧的清单名称
-            - 当用新的清单名称安装时，它会将 persist 中的旧目录用新的清单名称重命名，以实现 persist 的迁移
-            - 由于只有 abyss 使用了 Publisher.PackageIdentifier 这样的命名格式，迁移不会与官方或其他第三方仓库冲突
-#>
-
-# -------------------------------------------------
-
-Write-Host
-
-# 结合 $cmd，避免自动化执行更新检查时中文内容导致错误
-$ShowCN = $PSUICulture -like 'zh*' -and $cmd
+Microsoft.PowerShell.Utility\Write-Host
 
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
@@ -65,12 +17,7 @@ try {
             scoop config 'abgox-abyss-bucket-name' $bucket
         }
         if ($bucket -ne 'abyss') {
-            if ($ShowCN) {
-                Write-Host "你应该使用 abyss 作为 bucket 名称，但是目前使用的名称是 $bucket`n当安装的应用存在 depends 时，它可能出现问题，建议尽快修改" -ForegroundColor Red
-            }
-            else {
-                Write-Host "You should only use 'abyss' as the bucket name, but the current name is $bucket`nWhen installing applications with depends, it may cause problems, and modify it as soon as possible." -ForegroundColor Red
-            }
+            error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
         }
     }
 }
@@ -94,61 +41,6 @@ function A-Test-Admin {
 }
 
 $isAdmin = A-Test-Admin
-
-if ($ShowCN) {
-    $cmdMap_zh = @{
-        "install"   = "安装"
-        "uninstall" = "卸载"
-        "update"    = "更新"
-    }
-
-    $adminText = if ($isAdmin) { "" } else { " 或使用管理员权限。" }
-
-    $words = @{
-        "Creating directory:"                                            = "正在创建目录:"
-        "The number of links is wrong"                                   = "这个清单中的脚本定义有误。`n定义的链接数量不一致。"
-        "Copying"                                                        = "正在复制:"
-        "Moving"                                                         = "正在移动:"
-        "Removing"                                                       = "正在删除:"
-        "Failed to $cmd $app."                                           = "无法$($cmdMap_zh[$cmd]) $app"
-        "Please stop the relevant processes and try to $cmd $app again." = "请停止相关进程并再次尝试$($cmdMap_zh[$cmd]) $app。"
-        "Failed to remove:"                                              = "无法删除:"
-        "Linking"                                                        = "正在创建链接:"
-        "Successfully terminated the process:"                           = "成功终止进程:"
-        "Failed to terminate the process:"                               = "无法终止进程:"
-        "Maybe try again"                                                = "可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
-        "No running processes found."                                    = "未找到正在运行的相关进程。"
-        "If failed, You may need to try again"                           = "如果$($cmdMap_zh[$cmd])失败，可能需要再次尝试$($cmdMap_zh[$cmd]) $app$adminText"
-        "Successfully terminated the service:"                           = "成功终止服务:"
-        "Failed to terminate the service:"                               = "无法终止服务:"
-        "Failed to remove the service:"                                  = "无法删除服务:"
-        "Removing link:"                                                 = "正在删除链接:"
-    }
-}
-else {
-    $adminText = if ($isAdmin) { "." } else { " or use administrator permissions." }
-
-    $words = @{
-        "Creating directory:"                                            = "Creating directory:"
-        "The number of links is wrong"                                   = "The script in this manifest is incorrectly defined.`nThe number of links defined in the manifest is inconsistent."
-        "Copying"                                                        = "Copying"
-        "Moving"                                                         = "Moving"
-        "Removing"                                                       = "Removing"
-        "Failed to $cmd $app."                                           = "Failed to $cmd $app."
-        "Please stop the relevant processes and try to $cmd $app again." = "Please stop the relevant processes and try to $cmd $app again."
-        "Failed to remove:"                                              = "Failed to remove:"
-        "Linking"                                                        = "Linking"
-        "Successfully terminated the process:"                           = "Successfully terminated the process:"
-        "Failed to terminate the process:"                               = "Failed to terminate the process:"
-        "Maybe try again"                                                = "You may need to try $cmd $app again$adminText"
-        "No running processes found."                                    = "No running processes found. "
-        "If failed, You may need to try again"                           = "If failed to $cmd, You may need to try $cmd $app again$adminText"
-        "Successfully terminated the service:"                           = "Successfully terminated the service:"
-        "Failed to terminate the service:"                               = "Failed to terminate the service:"
-        "Failed to remove the service:"                                  = "Failed to remove the service:"
-        "Removing link:"                                                 = "Removing link:"
-    }
-}
 
 
 <#
@@ -326,6 +218,11 @@ function A-New-LinkFile {
         [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
+    if (!$isAdmin) {
+        error "$app requires admin permission to create SymbolicLink."
+        A-Exit
+    }
+
     for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
         $LinkPath = $LinkPaths[$i]
         $LinkTarget = $LinkTargets[$i]
@@ -338,31 +235,6 @@ function A-New-LinkFile {
             }
             $LinkTargets.Add($path)
         }
-    }
-
-    if (!$isAdmin) {
-        if ($ShowCN) {
-            Write-Host "$app 需要为以下文件创建 SymbolicLink:" -ForegroundColor Yellow
-        }
-        else {
-            Write-Host "$app needs to create symbolic links the following data file:"
-        }
-
-        Write-Host "-----"
-        for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-            Write-Host $LinkPaths[$i] -ForegroundColor Cyan -NoNewline
-            Write-Host " => " -NoNewline
-            Write-Host $LinkTargets[$i] -ForegroundColor Cyan
-        }
-        Write-Host "-----"
-
-        if ($ShowCN) {
-            Write-Host "创建 SymbolicLink 需要管理员权限。请使用管理员权限再次尝试。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "It requires administrator permission. Please Try again with administrator permission." -ForegroundColor Red
-        }
-        A-Exit
     }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
@@ -432,13 +304,11 @@ function A-Remove-Link {
             foreach ($p in $LinkPaths) {
                 if (Test-Path $p) {
                     try {
-                        Write-Host $words["Removing link:"] -ForegroundColor Yellow -NoNewline
-                        Write-Host " $p" -ForegroundColor Cyan
+                        Write-Host "Unlinking $p"
                         Remove-Item $p -Force -Recurse -ErrorAction Stop
                     }
                     catch {
-                        Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
-                        Write-Host " $p" -ForegroundColor Cyan
+                        error $_.Exception.Message
                     }
                 }
             }
@@ -473,13 +343,11 @@ function A-Remove-TempData {
     foreach ($p in $Paths) {
         if (Test-Path $p) {
             try {
-                Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
-                Write-Host " $p" -ForegroundColor Cyan
+                Write-Host "Removing $p"
                 Remove-Item $p -Force -Recurse -ErrorAction Stop
             }
             catch {
-                Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
-                Write-Host " $p" -ForegroundColor Cyan
+                error $_.Exception.Message
             }
         }
     }
@@ -516,11 +384,11 @@ function A-Stop-Process {
             $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
             if ($p) {
                 try {
+                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
                     Stop-Process -Id $p.Id -Force -ErrorAction Stop
-                    Write-Host "$($words["Successfully terminated the process:"]) $($p.Id) $($p.Name) ($($p.MainModule.FileName))" -ForegroundColor Green
                 }
                 catch {
-                    Write-Host "$($words["Failed to terminate the process:"]) $($p.Id) $($p.Name)`n$($words["Maybe try again"])" -ForegroundColor Red
+                    error $_.Exception.Message
                 }
             }
         }
@@ -532,26 +400,20 @@ function A-Stop-Process {
     }
 
     $processes = Get-Process
-    $NoFound = $true
 
     foreach ($app_dir in $Paths) {
         # $matched = $processes.where({ $_.Modules.FileName -like "$app_dir\*" })
         $matched = $processes.where({ $_.MainModule.FileName -like "$app_dir\*" })
-        foreach ($m in $matched) {
-            $NoFound = $false
+        foreach ($p in $matched) {
             try {
-                Stop-Process -Id $m.Id -Force -ErrorAction Stop
-                Write-Host "$($words["Successfully terminated the process:"]) $($m.Id) $($m.Name) ($($m.MainModule.FileName))" -ForegroundColor Green
+                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                Stop-Process -Id $p.Id -Force -ErrorAction Stop
             }
             catch {
-                Write-Host "$($words["Failed to terminate the process:"]) $($m.Id) $($m.Name)`n$($words["Maybe try again"])" -ForegroundColor Red
+                error $_.Exception.Message
                 A-Exit
             }
         }
-    }
-
-    if ($NoFound) {
-        Write-Host "$($words["No running processes found."])$($words["If failed, You may need to try again"])" -ForegroundColor Yellow
     }
 
     Start-Sleep -Seconds 1
@@ -585,11 +447,11 @@ function A-Stop-Service {
     }
 
     try {
+        Write-Host "Stopping the service: $ServiceName"
         Stop-Service -Name $ServiceName -ErrorAction Stop
-        Write-Host "$($words["Successfully terminated the service:"]) $ServiceName" -ForegroundColor Green
     }
     catch {
-        Write-Host "$($words["Failed to terminate the service:"]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
+        error $_.Exception.Message
         A-Exit
     }
 
@@ -601,7 +463,7 @@ function A-Stop-Service {
         Remove-Service -Name $ServiceName -ErrorAction Stop
     }
     catch {
-        Write-Host "$($words["Failed to remove the service:" ]) $ServiceName `n$($words["Maybe try again"])" -ForegroundColor Red
+        error $_.Exception.Message
         A-Exit
     }
 }
@@ -640,12 +502,7 @@ function A-Install-Exe {
         $SuccessFile = Invoke-Expression "`"$SuccessFile`""
 
         if (!$SuccessFile) {
-            if ($ShowCN) {
-                Write-Host "清单中需要定义 shortcuts 字段，或在 A-Install-Exe 中指定 SuccessFile 参数。" -ForegroundColor Red
-            }
-            else {
-                Write-Host "Manifest needs to define shortcuts field, or SuccessFile parameter needs to be specified in A-Install-Exe." -ForegroundColor Red
-            }
+            error "Please contact the bucket maintainer!"
             A-Exit
         }
     }
@@ -661,29 +518,14 @@ function A-Install-Exe {
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
     if (Test-Path $path) {
-        try {
-            if ($ShowCN) {
-                Write-Host "正在运行安装程序 ($fileName) 安装 $app" -ForegroundColor Yellow
-                # if ($ArgumentList) {
-                #     Write-Host "安装程序携带参数: $ArgumentList" -ForegroundColor Yellow
-                # }
-                $msg = "如果安装超时($Timeout 秒)，安装过程将被强行终止"
-                if ($NoSilent) {
-                    $msg = "安装程序可能需要你手动进行交互操作，" + $msg
-                }
-            }
-            else {
-                Write-Host "Installing '$app' using installer ($fileName)" -ForegroundColor Yellow
-                # if ($ArgumentList) {
-                #     Write-Host "Installer with arguments: $ArgumentList" -ForegroundColor Yellow
-                # }
-                $msg = "If installation timeout ($Timeout seconds), the process will be terminated."
-                if ($NoSilent) {
-                    $msg = "The installer may require you to perform some manual operations, " + $msg
-                }
-            }
-            Write-Host $msg -ForegroundColor Yellow
 
+        Write-Host "Running the installer: $fileName"
+        if ($NoSilent) {
+            warn "The installer may require some manual operations."
+        }
+        warn "It will be aborted if times out: $Timeout seconds"
+
+        try {
             # 在后台作业中运行安装程序，强制停止进程的时机更晚
             $job = Start-Job -ScriptBlock {
                 param($path, $ArgumentList)
@@ -703,12 +545,7 @@ function A-Install-Exe {
 
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    if ($ShowCN) {
-                        Write-Host -NoNewline "`r等待中: $seconds 秒" -ForegroundColor Yellow
-                    }
-                    else {
-                        Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
-                    }
+                    Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
 
                     if ($Uninstaller) {
                         $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
@@ -722,7 +559,7 @@ function A-Install-Exe {
                     Start-Sleep -Seconds 1
                     $seconds += 1
                 }
-                Write-Host
+                Microsoft.PowerShell.Utility\Write-Host
 
                 if ($path -notmatch "^C:\\Windows\\System32\\") {
                     $null = Start-Job -ScriptBlock {
@@ -738,50 +575,20 @@ function A-Install-Exe {
 
                     } -ArgumentList $path, $job
                 }
-
-                if ($fileExists) {
-                    if ($ShowCN) {
-                        Write-Host "安装成功" -ForegroundColor Green
-                    }
-                    else {
-                        Write-Host "Install successfully." -ForegroundColor Green
-                    }
-                }
-                else {
-                    if ($ShowCN) {
-                        Write-Host "安装超时($Timeout 秒)" -ForegroundColor Red
-                    }
-                    else {
-                        Write-Host "Installation timeout ($Timeout seconds)." -ForegroundColor Red
-                    }
-                    A-Exit
-                }
             }
             finally {
                 if (!$fileExists) {
-                    Write-Host
-                    if ($ShowCN) {
-                        Write-Host "安装过程被终止" -ForegroundColor Red
-                    }
-                    else {
-                        Write-Host "Installation process terminated." -ForegroundColor Red
-                    }
                     A-Exit
                 }
             }
         }
         catch {
-            Write-Host $_.Exception.Message -ForegroundColor Red
+            error $_.Exception.Message
             A-Exit
         }
     }
     else {
-        if ($ShowCN) {
-            Write-Host "未找到安装程序: $path" -ForegroundColor Red
-        }
-        else {
-            Write-Host "Installer not found: $path" -ForegroundColor Red
-        }
+        error "'$path' not found."
         A-Exit
     }
 }
@@ -822,37 +629,12 @@ function A-Uninstall-Exe {
     $fileName = Split-Path $path -Leaf
 
     if (Test-Path $path) {
-        if ($ShowCN) {
-            Write-Host "正在运行卸载程序 ($fileName) 卸载 $app" -ForegroundColor Yellow
-            # if ($ArgumentList) {
-            #     Write-Host "卸载程序携带参数: $ArgumentList" -ForegroundColor Yellow
-            # }
-            $msg = "如果卸载超时($Timeout 秒)，卸载过程将被强行终止"
-            if ($NoSilent) {
-                if ($Wait) {
-                    $msg = "卸载程序可能需要你手动进行交互操作，如果卸载程序不结束，卸载过程将一直陷入等待"
-                }
-                else {
-                    $msg = "卸载程序可能需要你手动进行交互操作，" + $msg
-                }
-            }
+
+        Write-Host "Running the uninstaller: $fileName"
+        if ($NoSilent) {
+            warn "The uninstaller may require some manual operations."
         }
-        else {
-            Write-Host "Uninstalling '$app' using uninstaller ($fileName)" -ForegroundColor Yellow
-            # if ($ArgumentList) {
-            #     Write-Host "Uninstaller with arguments: $ArgumentList" -ForegroundColor Yellow
-            # }
-            $msg = "If the uninstallation times out ($Timeout seconds), the process will be terminated."
-            if ($NoSilent) {
-                if ($Wait) {
-                    $msg = "The uninstaller may require you to perform some manual operations. If the uninstaller does not end, the uninstallation process will be indefinitely waiting."
-                }
-                else {
-                    $msg = "The uninstaller may require you to perform some manual operations. " + $msg
-                }
-            }
-        }
-        Write-Host $msg -ForegroundColor Yellow
+        warn "It will be aborted if times out: $Timeout seconds"
 
         if (!$PSBoundParameters.ContainsKey('FailureFile')) {
             $FailureFile = $path
@@ -874,13 +656,10 @@ function A-Uninstall-Exe {
                 $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
             }
             catch {
+                error $_.Exception.Message
+
                 $process | Stop-Process -Force -ErrorAction SilentlyContinue
-                if ($ShowCN) {
-                    Write-Host "卸载程序运行超时($Timeout 秒)，强行终止" -ForegroundColor Red
-                }
-                else {
-                    Write-Host "Uninstaller timeout ($Timeout seconds), process terminated." -ForegroundColor Red
-                }
+
                 A-Exit
             }
 
@@ -888,12 +667,7 @@ function A-Uninstall-Exe {
             $seconds = 1
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    if ($ShowCN) {
-                        Write-Host -NoNewline "`r等待中: $seconds 秒" -ForegroundColor Yellow
-                    }
-                    else {
-                        Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
-                    }
+                    Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
 
                     $fileExists = Test-Path $FailureFile
                     if ($fileExists) {
@@ -908,47 +682,26 @@ function A-Uninstall-Exe {
                     Start-Sleep -Seconds 1
                     $seconds += 1
                 }
-                Write-Host
-
-                if ($fileExists) {
-                    if ($ShowCN) {
-                        Write-Host "$app 卸载失败，卸载过程被强行终止`n如果卸载程序还在运行，你可以继续和它交互，当卸载完成后，再次运行卸载命令即可" -ForegroundColor Red
-                    }
-                    else {
-                        Write-Host "Failed to uninstall $app, process terminated.`nIf uninstaller is still running, you can continue to interact with it, and run the command again after the uninstallation is complete." -ForegroundColor Red
-                    }
-                    A-Exit
-                }
-                else {
-                    if ($ShowCN) {
-                        Write-Host "卸载成功" -ForegroundColor Green
-                    }
-                    else {
-                        Write-Host "Uninstall successfully." -ForegroundColor Green
-                    }
-                }
+                Microsoft.PowerShell.Utility\Write-Host
             }
             finally {
                 if ($fileExists) {
-                    Write-Host
-                    if ($ShowCN) {
-                        Write-Host "卸载过程被终止" -ForegroundColor Red
-                    }
-                    else {
-                        Write-Host "Uninstallation process terminated." -ForegroundColor Red
-                    }
                     A-Exit
                 }
             }
         }
         catch {
-            Write-Host $_.Exception.Message -ForegroundColor Red
+            error $_.Exception.Message
             A-Exit
         }
     }
 }
 
 function A-Add-MsixPackage {
+    <#
+    .SYNOPSIS
+        安装 AppX/Msix 包
+    #>
     param(
         [string]$PackageFamilyName,
         [string]$FileName
@@ -999,30 +752,12 @@ function A-Add-Font {
     $windows10Version1809BuildNumber = 17763
     $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
     if (!$isPerUserFontInstallationSupported -and !$global) {
-        scoop uninstall $app
-
-        if ($ShowCN) {
-            Write-Host
-            Write-Host "对于 Windows 版本低于 Windows 10 版本 1809 (OS Build 17763)，" -Foreground DarkRed
-            Write-Host "字体只能安装为所有用户。" -Foreground DarkRed
-            Write-Host
-            Write-Host "请使用以下命令为所有用户安装 $app 字体。" -Foreground DarkRed
-            Write-Host
-            Write-Host "        scoop install sudo"
-            Write-Host "        sudo scoop install -g $app"
-            Write-Host
-        }
-        else {
-            Write-Host
-            Write-Host "For Windows version before Windows 10 Version 1809 (OS Build 17763)," -Foreground DarkRed
-            Write-Host "Font can only be installed for all users." -Foreground DarkRed
-            Write-Host
-            Write-Host "Please use following commands to install '$app' Font for all users." -Foreground DarkRed
-            Write-Host
-            Write-Host "        scoop install sudo"
-            Write-Host "        sudo scoop install -g $app"
-            Write-Host
-        }
+        Microsoft.PowerShell.Utility\Write-Host
+        error "For Windows version before Windows 10 Version 1809 (OS Build 17763), Font can only be installed for all users.`nPlease use following commands to install '$app' Font for all users."
+        Microsoft.PowerShell.Utility\Write-Host
+        Microsoft.PowerShell.Utility\Write-Host "        scoop install sudo"
+        Microsoft.PowerShell.Utility\Write-Host "        sudo scoop install -g $app"
+        Microsoft.PowerShell.Utility\Write-Host
         A-Exit
     }
     $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
@@ -1078,38 +813,7 @@ function A-Remove-Font {
                 Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
             }
             catch {
-                if ($ShowCN) {
-                    Write-Host
-                    Write-Host " 错误 " -Background DarkRed -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " 无法卸载 $app 字体。" -Foreground DarkRed
-                    Write-Host
-                    Write-Host " 原因 " -Background DarkCyan -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " $app 字体当前被其他应用程序使用，所以无法删除。" -Foreground DarkCyan
-                    Write-Host
-                    Write-Host " 建议 " -Background Magenta -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " 关闭所有使用 $app 字体的应用程序 (例如 vscode) 后，然后再次尝试。" -Foreground Magenta
-                    Write-Host
-                }
-                else {
-                    Write-Host
-                    Write-Host " Error " -Background DarkRed -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " Cannot uninstall '$app' font." -Foreground DarkRed
-                    Write-Host
-                    Write-Host " Reason " -Background DarkCyan -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " The '$app' font is currently being used by another application," -Foreground DarkCyan
-                    Write-Host " so it cannot be deleted." -Foreground DarkCyan
-                    Write-Host
-                    Write-Host " Suggestion " -Background Magenta -Foreground White -NoNewline
-                    Write-Host
-                    Write-Host " Close all applications that are using '$app' font (e.g. vscode)," -Foreground Magenta
-                    Write-Host " and then try again." -Foreground Magenta
-                    Write-Host
-                }
+                error "Cannot uninstall '$app' font.`nIt is currently being used by another application.`nPlease close all applications that are using it (e.g. vscode) and try again."
                 A-Exit
             }
         }
@@ -1122,12 +826,7 @@ function A-Remove-Font {
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
     if ($cmd -eq "uninstall") {
-        if ($ShowCN) {
-            Write-Host "$app 字体已经成功卸载，但可能有系统缓存，需要重启系统后才能完全删除。" -Foreground Magenta
-        }
-        else {
-            Write-Host "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove." -Foreground Magenta
-        }
+        warn "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove."
     }
 }
 
@@ -1142,37 +841,20 @@ function A-Add-PowerToysRunPlugin {
 
     try {
         if (Test-Path -Path $PluginPath) {
-            Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
-            Write-Host " $PluginPath" -ForegroundColor Cyan
+            Write-Host "Removing $PluginPath"
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
         $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
-        Write-Host "$($words["Copying"]) $CopyingPath => $PluginPath" -ForegroundColor Yellow
         A-Ensure-Directory (Split-Path $PluginPath -Parent)
+        Write-Host "Copying $CopyingPath => $PluginPath"
         Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
-
-        if ($ShowCN) {
-            Write-Host "请重启 PowerToys 以加载插件。" -ForegroundColor Green
-        }
-        else {
-            Write-Host "Please restart PowerToys to load the plugin." -ForegroundColor Green
-        }
 
         @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
     catch {
-        Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
-        Write-Host " $PluginPath" -ForegroundColor Cyan
-        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-        if ($ShowCN) {
-            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
-        }
+        error $_.Exception.Message
         A-Exit
     }
-
 }
 
 function A-Remove-PowerToysRunPlugin {
@@ -1190,21 +872,12 @@ function A-Remove-PowerToysRunPlugin {
         }
 
         if (Test-Path -Path $PluginPath) {
-            Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
-            Write-Host " $PluginPath" -ForegroundColor Cyan
+            Write-Host "Removing $PluginPath"
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
     }
     catch {
-        Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
-        Write-Host " $PluginPath" -ForegroundColor Cyan
-        Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-        if ($ShowCN) {
-            Write-Host "请终止 PowerToys 进程并尝试再次 $cmd $app。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "Please stop PowerToys and try to $cmd $app again." -ForegroundColor Red
-        }
+        error $_.Exception.Message
         A-Exit
     }
 }
@@ -1237,29 +910,28 @@ function A-Require-Admin {
     #>
 
     if (!$isAdmin) {
-        if ($ShowCN) {
-            Write-Host "这个操作需要管理员权限。`n请使用管理员权限再次尝试。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "It requires administrator permission.`nPlease try again with administrator permission." -ForegroundColor Red
-        }
+        error "It requires admin permission. Please try again with admin permission."
         A-Exit
     }
 }
 
 function A-Deny-Update {
+    <#
+    .SYNOPSIS
+        禁止通过 scoop 更新
+    #>
     if ($cmd -eq "update") {
-        if ($ShowCN) {
-            Write-Host "$app 不允许通过 Scoop 更新。" -ForegroundColor Red
-        }
-        else {
-            Write-Host "$app does not allow update by Scoop." -ForegroundColor Red
-        }
+        error "'$app' does not allow update by Scoop."
         A-Exit
     }
 }
 
 function A-Hold-App {
+    <#
+    .SYNOPSIS
+        scoop hold <app>
+        它应该在 pre_install 中使用，和 A-Deny-Update 搭配
+    #>
     param(
         [string]$AppName = $app
     )
@@ -1289,6 +961,16 @@ function A-Hold-App {
 }
 
 function A-Move-PersistDirectory {
+    <#
+    .SYNOPSIS
+        用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
+
+    .DESCRIPTION
+        它用于未来可能存在的清单文件更名
+        当清单文件更名后，需要使用它，并传入旧的清单名称
+        当用新的清单名称安装时，它会将 persist 中的旧目录用新的清单名称重命名，以实现 persist 的迁移
+        由于只有 abyss 使用了 Publisher.PackageIdentifier 这样的命名格式，迁移不会与官方或其他第三方仓库冲突
+    #>
     param(
         # 旧的清单名称(不包含 .json 后缀)
         [array]$OldNames
@@ -1306,24 +988,10 @@ function A-Move-PersistDirectory {
         if (Test-Path $old) {
             try {
                 Rename-Item -Path $old -NewName $app -Force -ErrorAction Stop
-                if ($ShowCN) {
-                    Write-Host "persist 迁移成功: " -ForegroundColor Yellow -NoNewline
-                }
-                else {
-                    Write-Host "Successfully migrate persist: " -ForegroundColor Yellow -NoNewline
-                }
-                Write-Host $old -ForegroundColor Cyan -NoNewline
-                Write-Host " => " -NoNewline
-                Write-Host "$dir\$app" -ForegroundColor Cyan
                 break
             }
             catch {
-                if ($ShowCN) {
-                    Write-Host "persist 迁移失败: $old" -ForegroundColor Red
-                }
-                else {
-                    Write-Host "Failed to migrate persist: $old" -ForegroundColor Red
-                }
+                error $_.Exception.Message
             }
         }
     }
@@ -1354,12 +1022,7 @@ function A-Get-ProductCode {
         }
     }
 
-    if ($ShowCN) {
-        Write-Host "没有找到 $app 的生产代码，可能在安装过程中存在问题" -ForegroundColor Red
-    }
-    else {
-        Write-Host "Cannot find product code of $app，maybe there is a problem during installation" -ForegroundColor Red
-    }
+    error "Cannot find product code of '$app'"
 
     return $null
 }
@@ -1686,7 +1349,7 @@ function A-New-Link {
     )
 
     if ($LinkPaths.Count -ne $LinkTargets.Count) {
-        Write-Host $words["The number of links is wrong"] -ForegroundColor Red
+        error "Please contact the bucket maintainer!"
         A-Exit
     }
 
@@ -1704,29 +1367,22 @@ function A-New-Link {
             if ((Test-Path $linkPath) -and !(Get-Item $linkPath -ErrorAction SilentlyContinue).LinkType) {
                 if (!(Test-Path $linkTarget)) {
                     A-Ensure-Directory (Split-Path $linkTarget -Parent)
-                    Write-Host $words["Copying"] -ForegroundColor Yellow -NoNewline
-                    Write-Host " $linkPath" -ForegroundColor Cyan -NoNewline
-                    Write-Host " => " -NoNewline
-                    Write-Host $linkTarget -ForegroundColor Cyan
+                    Write-Host "Copying $linkPath => $linkTarget"
                     try {
                         Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
                     }
                     catch {
                         Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-                        Write-Host $_.Exception.Message -ForegroundColor Red
+                        error $_.Exception.Message
                         A-Exit
                     }
                 }
                 try {
-                    Write-Host $words["Removing"] -ForegroundColor Yellow -NoNewline
-                    Write-Host " $linkPath" -ForegroundColor Cyan
+                    Write-Host "Removing $linkPath"
                     Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
                 }
                 catch {
-                    Write-Host $words["Failed to remove:"] -ForegroundColor Red -NoNewline
-                    Write-Host " $linkPath" -ForegroundColor Cyan
-                    Write-Host $words["Failed to $cmd $app."] -ForegroundColor Red
-                    Write-Host $words["Please stop the relevant processes and try to $cmd $app again."] -ForegroundColor Red
+                    error $_.Exception.Message
                     A-Exit
                 }
             }
@@ -1745,10 +1401,7 @@ function A-New-Link {
             else {
                 New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
             }
-            Write-Host $words["Linking"] -ForegroundColor Yellow -NoNewline
-            Write-Host " $linkPath" -ForegroundColor Cyan -NoNewline
-            Write-Host " => " -NoNewline
-            Write-Host $linkTarget -ForegroundColor Cyan
+            Write-Host "Linking $linkPath => $linkTarget"
         }
         $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
@@ -1781,7 +1434,7 @@ function A-Add-AppxPackage {
         Add-AppxPackage -Path $Path -AllowUnsigned -ForceApplicationShutdown -ForceUpdateFromAnyVersion -ErrorAction Stop
     }
     catch {
-        Write-Host $_.Exception.Message -ForegroundColor Red
+        error $_.Exception.Message
         A-Exit
     }
 
@@ -1791,13 +1444,6 @@ function A-Add-AppxPackage {
         }
     }
     $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-AppxPackage.jsonc" -Force -Encoding utf8
-
-    if ($ShowCN) {
-        Write-Host "$app 的程序安装目录不在 Scoop 中。`nScoop 只管理数据(如果存在)、安装、卸载、更新。" -ForegroundColor Yellow
-    }
-    else {
-        Write-Host "The installation directory of $app is not in Scoop.`nScoop only manages the data that may exist and installation, uninstallation, and update." -ForegroundColor Yellow
-    }
 }
 
 function A-Remove-AppxPackage {
@@ -1819,7 +1465,7 @@ function A-Remove-AppxPackage {
 
 function A-Exit {
     if ($cmd -eq 'install') {
-        Write-Host
+        Microsoft.PowerShell.Utility\Write-Host
         scoop uninstall $app
     }
     exit 1
@@ -1840,161 +1486,10 @@ function A-Get-AbsolutePath {
 
 
 
-# 重写的函数是基于这个 Scoop 版本的。
-# 如果 Scoop 最新版本大于它，需要检查重写的函数，如果新版本中这些函数有变动，需要立即修正，然后更新此处的 Scoop 版本号
+# 以下的扩展功能是基于这个 Scoop 版本的，如果 Scoop 最新版本大于它，需要重新检查并跟进
 $ScoopVersion = "0.5.3"
 
-#region 重写部分 Scoop 内置函数及输出函数以添加本地化输出
-
-function script:A-Translate-Message {
-    param(
-        [string]$msg,
-        [System.Object]$msgMap
-    )
-
-    if ($msgMap.ContainsKey($msg)) {
-        return $msgMap[$msg]
-    }
-
-    foreach ($pattern in $msgMap.Keys | Where-Object { $_ -match '\{\d+\}' }) {
-        $escapedPattern = [regex]::Escape($pattern)
-        $regexPattern = $escapedPattern -replace '\\\{\d+\}', '(.*)'
-
-        $match = [regex]::Match($msg, $regexPattern)
-        if ($match.Success) {
-            $translation = $msgMap[$pattern]
-            $translation = [regex]::Replace($translation, '\{(\d+)\}', {
-                    param($m)
-                    $index = [int]$m.Groups[1].Value
-                    return $match.Groups[$index + 1].Value.Trim()
-                })
-            return $translation
-        }
-    }
-
-    return $msg
-}
-
-function script:Write-Host {
-    [CmdletBinding()]
-    param(
-        $Object,
-        [switch]$NoNewline,
-        [Alias('f')]
-        [System.ConsoleColor]$ForegroundColor,
-        [Alias('b')]
-        [System.ConsoleColor]$BackgroundColor
-    )
-
-    if ($Object -is [string]) {
-        $Object = A-Translate-Message $Object @{
-            # "'$app' ($version) was installed successfully!" = "$app ($version) 已成功安装!"
-            "'{0}' ({1}) was installed successfully!"                                                                                                        = "{0} ({1}) 已成功安装!"
-            "'{0}' was uninstalled."                                                                                                                         = "{0} 已成功卸载!"
-            "ERROR '{0}' isn't installed correctly."                                                                                                         = "错误: {0} 未正确安装。"
-            "Running {0} script..."                                                                                                                          = "正在运行 {0} 脚本..."
-            "done."                                                                                                                                          = "完成。"
-
-            "Loading {0} from cache"                                                                                                                         = "正在加载 {0} 的缓存"
-            "Loading "                                                                                                                                       = "正在加载 "
-            " from cache."                                                                                                                                   = " 的缓存"
-            "WARN  Token might be misconfigured."                                                                                                            = "警告: 令牌可能被错误配置。"
-
-            "Starting download with aria2 ..."                                                                                                               = "正在使用 aria2 下载..."
-            "`rDownload: {0}"                                                                                                                                = "`r下载: {0}"
-            "WARN  Download failed! (Error {0}) {1}"                                                                                                         = "警告: 下载失败! (错误 {0}) {1}"
-            "WARN  {0} download via aria2 failed"                                                                                                            = "警告: {0} 下载失败"
-            "Fallback to default downloader ..."                                                                                                             = "回退到默认下载器..."
-            "URL {0} is not valid"                                                                                                                           = "URL {0} 无效"
-            "SourceForge.net is known for causing hash validation fails. Please try again before opening a ticket."                                          = "SourceForge.net 经常导致哈希验证失败。请在提交工单前重试。"
-            "{0} hash check failed"                                                                                                                          = "{0} 哈希校验失败"
-            "{0} cached file not found"                                                                                                                      = "{0} 缓存文件未找到"
-
-            "Extracting "                                                                                                                                    = "正在解压 "
-
-            "Linking {0} => {1}"                                                                                                                             = "正在创建链接: {0} => {1}"
-            "Error: Version 'current' is not allowed!"                                                                                                       = "错误：不允许使用 current 作为版本！请联系 bucket 维护者。"
-
-            "Unlinking {0}"                                                                                                                                  = "正在解除链接: {0}"
-
-            "Can't shim '{0}': File doesn't exist."                                                                                                          = "不能为 {0} 创建 shim: 文件不存在。"
-
-            "Can't shim '{0}': couldn't find '{1}'."                                                                                                         = "不能为 {0} 创建 shim: 不能找到 {1}"
-            "WARN  Overwriting shim ('{0}' -> '{1}')"                                                                                                        = "警告: 正在覆盖 shim ('{0}' -> '{1}')"
-            "WARN  Overwriting shim ('{0}' -> '{1}') installed from {2}"                                                                                     = "警告: 正在覆盖安装 {2} 时创建的 shim ('{0}' -> '{1}')"
-
-            "Removing shortcut {0}"                                                                                                                          = "正在移除快捷方式: {0}"
-
-            "Invalid manifest: The 'name' property is missing from 'psmodule'."                                                                              = "无效的应用清单(manifest)：psmodule 中缺少 name 属性。"
-            "Installing PowerShell module '{0}'"                                                                                                             = "正在安装 PowerShell 模块: '{0}'"
-            "WARN  {0} already exists. It will be replaced."                                                                                                 = "警告: {0} 已经存在，它将被替换。"
-
-            "Uninstalling PowerShell module '{0}'."                                                                                                          = "正在卸载 PowerShell 模块: {0}"
-
-            "Removing {0}"                                                                                                                                   = "正在移除: {0}"
-
-            "Persisting {0}"                                                                                                                                 = "正在持久化数据: {0}"
-
-
-            "WARN  The following instances of `"{0}`" are still running. Scoop is configured to ignore this condition."                                      = "警告: {0} 的以下实例仍在运行。Scoop 被配置为忽略此情况。"
-            "ERROR The following instances of `"{0}`" are still running. Close them and try again."                                                          = "错误: {0} 的以下实例仍在运行。请关闭它们然后重试。"
-
-            "INFO  Repair previous failed installation of {0}."                                                                                              = "提示: 修复 {0} 先前失败的安装。"
-
-            "WARN  Purging previous failed installation of {0}."                                                                                             = "警告: 正在清除 {0} 之前安装失败的残留。"
-
-            "Error in manifest: {0} is outside the app directory."                                                                                           = "应用清单(manifest)错误: {0} 在应用程序目录之外。"
-            "{0} is missing."                                                                                                                                = "{0} 不存在。"
-            "Uninstallation aborted."                                                                                                                        = "卸载已中止。"
-            "Installation aborted. You might need to run 'scoop uninstall {0}' before trying again."                                                         = "安装已中止。在再次尝试之前，你可能需要运行 scoop uninstall {0}"
-
-            "The config 'abgox-abyss-app-shortcuts-action' is set to 0, so the shortcuts defined in the manifest will not be created."                       = "配置 abgox-abyss-app-shortcuts-action 的值为 0，因此不会创建清单中定义的快捷方式。"
-            "{0} uses an installer and config 'abgox-abyss-app-shortcuts-action' is set to 2, so the shortcuts defined in the manifest will not be created." = "{0} 使用安装程序进行安装，且配置 abgox-abyss-app-shortcuts-action 的值为 2，因此不会创建清单中定义的快捷方式。"
-
-            "Creating shortcut for {0} ({1}) failed: Couldn't find {2}"                                                                                      = "为 {1} 创建快捷方式 {0} 失败了: 没有找到 {2}"
-            "Creating shortcut for {0} ({1}) failed: Couldn't find icon {2}"                                                                                 = "为 {1} 创建快捷方式 {0} 失败了: 没有找到 icon 图标 {2}"
-            "Creating shortcut for {0} ({1})"                                                                                                                = "为 {1} 创建了快捷方式: {0}"
-        }
-    }
-
-    $splatParams = @{}
-
-    if ($PSBoundParameters.ContainsKey('Object')) {
-        $splatParams['Object'] = $Object
-    }
-    if ($PSBoundParameters.ContainsKey('NoNewline')) {
-        $splatParams['NoNewline'] = $NoNewline
-    }
-    if ($PSBoundParameters.ContainsKey('ForegroundColor')) {
-        $splatParams['ForegroundColor'] = $ForegroundColor
-    }
-    if ($PSBoundParameters.ContainsKey('BackgroundColor')) {
-        $splatParams['BackgroundColor'] = $BackgroundColor
-    }
-
-    Microsoft.PowerShell.Utility\Write-Host @splatParams
-}
-
-function script:Write-Output {
-    [CmdletBinding()]
-    param(
-        $InputObject
-    )
-
-    if ($InputObject -is [string]) {
-        $InputObject = A-Translate-Message $InputObject @{
-            "Uninstalling '{0}'"                           = "正在卸载 {0}"
-            "Creating shim for '{0}'."                     = "正在为 {0} 创建 shim"
-            "Removing shim '{0}'."                         = "正在移除 shim: {0}"
-            "Removing shim '{0}.exe'."                     = "正在移除 shim: {0}.exe"
-            "Making {0}.exe a GUI binary."                 = "{0}.exe 是一个 GUI 二进制文件"
-            "Adding {0} to global PowerShell module path." = "正在添加 {0} 到环境变量(系统级) PSModulePath 中。"
-            "Adding {0} to your PowerShell module path."   = "正在添加 {0} 到环境变量(当前用户) PSModulePath 中。"
-        }
-    }
-
-    Microsoft.PowerShell.Utility\Write-Output $InputObject
-}
+#region 扩展 Scoop 部分功能
 
 function script:env_set($manifest, $global, $arch) {
     $env_set = arch_specific 'env_set' $manifest $arch
@@ -2003,12 +1498,7 @@ function script:env_set($manifest, $global, $arch) {
             $name = $_.Name
             $val = $ExecutionContext.InvokeCommand.ExpandString($env_set.$($name))
             #region 新增: 环境变量输出
-            if ($PSUICulture -like "zh*" -and $cmd) {
-                Microsoft.PowerShell.Utility\Write-Output "正在设置环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name = $val"
-            }
-            else {
-                Microsoft.PowerShell.Utility\Write-Output "Setting environment variable$(if($global){'(system)'}else{'(for current user)'}): $name = $val"
-            }
+            Write-Output "Setting $(if($global){'system'}else{'user'}) environment variable: $name = $val"
             #endregion
             Set-EnvVar -Name $name -Value $val -Global:$global
             Set-Content env:\$name $val
@@ -2022,12 +1512,7 @@ function script:env_rm($manifest, $global, $arch) {
         $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
             $name = $_.Name
             #region 新增: 环境变量输出
-            if ($PSUICulture -like "zh*" -and $cmd) {
-                Microsoft.PowerShell.Utility\Write-Output "正在移除环境变量$(if($global){'(系统级)'}else{'(当前用户)'}): $name"
-            }
-            else {
-                Microsoft.PowerShell.Utility\Write-Output "Removing environment variable$(if($global){'(system)'}else{'(for current user)'}): $name"
-            }
+            Write-Output "Removing $(if($global){'system'}else{'user'}) environment variable: $name"
             #endregion
             Set-EnvVar -Name $name -Value $null -Global:$global
             if (Test-Path env:\$name) { Remove-Item env:\$name }
@@ -2043,7 +1528,7 @@ function script:Add-Path {
         [switch]$Force,
         [switch]$Quiet
     )
-    #region 新增: $env:xxx 变量支持
+    #region 新增: 支持使用 $env:xxx 变量
     $Path = $Path | ForEach-Object {
         # 处理当 env_add_path 值为 $dir 的特殊情况
         if ($_ -eq "$dir\`$dir") {
@@ -2060,16 +1545,9 @@ function script:Add-Path {
 
     if (!$inPath -or $Force) {
         if (!$Quiet) {
-            #region 修改: 本地化输出
-            if ($PSUICulture -like "zh*" -and $cmd) {
-                $Path | ForEach-Object {
-                    Write-Host "正在添加 $(friendly_path $_) 到环境变量$(if($global){'(系统级)'}else{'(当前用户)'}) $TargetEnvVar 中。"
-                }
-            }
-            else {
-                $Path | ForEach-Object {
-                    Write-Host "Adding $(friendly_path $_) to $(if ($Global) {'global'} else {'your'}) path."
-                }
+            #region 修改: 输出更友好
+            $Path | ForEach-Object {
+                Write-Host "Adding $(friendly_path $_) to $(if ($Global) {'system'} else {'user'}) environment variable $TargetEnvVar."
             }
             #endregion
         }
@@ -2090,7 +1568,7 @@ function script:Remove-Path {
         [switch]$Quiet,
         [switch]$PassThru
     )
-    #region 新增: $env:xxx 变量支持
+    #region 新增: 支持使用 $env:xxx 变量
     $Path = $Path | ForEach-Object {
         # 处理当 env_add_path 值为 $dir 的特殊情况
         if ($_ -eq "$dir\`$dir") {
@@ -2106,16 +1584,9 @@ function script:Remove-Path {
     $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
     if ($inPath) {
         if (!$Quiet) {
-            #region 修改: 本地化输出
-            if ($PSUICulture -like "zh*" -and $cmd) {
-                $Path | ForEach-Object {
-                    Write-Host "正在从环境变量$(if ($Global) {'(系统级)'} else {'(当前用户)'}) $TargetEnvVar 中移除 $(friendly_path $_)"
-                }
-            }
-            else {
-                $Path | ForEach-Object {
-                    Write-Host "Removing $(friendly_path $_) from $(if ($Global) {'global'} else {'your'}) path."
-                }
+            #region 修改: 输出更友好
+            $Path | ForEach-Object {
+                Write-Host "Removing $(friendly_path $_) from $(if ($Global) {'system'} else {'user'}) environment variable $TargetEnvVar."
             }
             #endregion
         }
@@ -2202,11 +1673,9 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     }
 
     if ($shortcutsActionLevel -eq '0') {
-        Write-Host "The config 'abgox-abyss-app-shortcuts-action' is set to 0, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
         return
     }
     if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '.*A-Install-Exe.*')) {
-        Write-Host "$app uses an installer and config 'abgox-abyss-app-shortcuts-action' is set to 2, so the shortcuts defined in the manifest will not be created." -ForegroundColor Yellow
         return
     }
 
@@ -2250,18 +1719,16 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
 
 function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     #region 修改: 本地化输出
-    $label = 'Notes'
     $note = $manifest.notes
 
     if ($PSUICulture -like 'zh*') {
-        $label = '说明'
         $note = $manifest.'notes-cn'
     }
 
     if ($note) {
-        Write-Host
-        Write-Output $label
-        Write-Output '-----'
+        Microsoft.PowerShell.Utility\Write-Host
+        Write-Output 'Notes'
+        Microsoft.PowerShell.Utility\Write-Output '-----'
 
         Write-Output (substitute $note @{
                 '$dir'                     = $dir
@@ -2275,146 +1742,8 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
                 '$env:AppData'             = $env:AppData
                 '$env:LocalAppData'        = $env:LocalAppData
             })
-        Write-Output '-----'
+        Microsoft.PowerShell.Utility\Write-Output '-----'
     }
     #endregion
-}
-
-function script:show_suggestions($suggested) {
-    $installed_apps = (installed_apps $true) + (installed_apps $false)
-
-    foreach ($app in $suggested.keys) {
-        $features = $suggested[$app] | Get-Member -type noteproperty | ForEach-Object { $_.name }
-        foreach ($feature in $features) {
-            $feature_suggestions = $suggested[$app].$feature
-
-            $fulfilled = $false
-            foreach ($suggestion in $feature_suggestions) {
-                $suggested_app, $bucket, $null = parse_app $suggestion
-
-                if ($installed_apps -contains $suggested_app) {
-                    $fulfilled = $true
-                    break
-                }
-            }
-
-            if (!$fulfilled) {
-                #region 修改: 本地化输出
-                Microsoft.PowerShell.Utility\Write-Host
-                if ($PSUICulture -like "zh*" -and $cmd) {
-                    Microsoft.PowerShell.Utility\Write-Host "$app 建议你安装 $([string]::join("，", $feature_suggestions))" -ForegroundColor Yellow
-                }
-                else {
-                    Microsoft.PowerShell.Utility\Write-Host "'$app' suggests installing '$([string]::join("' or '", $feature_suggestions))'." -ForegroundColor Yellow
-                }
-                #endregion
-            }
-        }
-    }
-}
-
-if ($ShowCN) {
-    function script:ensure_install_dir_not_in_path($dir, $global) {
-        $path = (Get-EnvVar -Name 'PATH' -Global:$global)
-
-        $fixed, $removed = find_dir_or_subdir $path "$dir"
-        if ($removed) {
-            # $removed | ForEach-Object { "Installer added '$(friendly_path $_)' to path. Removing." }
-            $removed | ForEach-Object { "安装程序已将 '$(friendly_path $_)' 添加到环境变量 Path 中，正在删除。" }
-            Set-EnvVar -Name 'PATH' -Value $fixed -Global:$global
-        }
-
-        if (!$global) {
-            $fixed, $removed = find_dir_or_subdir (Get-EnvVar -Name 'PATH' -Global) "$dir"
-            if ($removed) {
-                # $removed | ForEach-Object { warn "Installer added '$_' to system path. You might want to remove this manually (requires admin permission)." }
-                $removed | ForEach-Object { warn "安装程序在系统环境变量 Path 中添加了 $_，你可能需要手动删除 (需要管理员权限)。" }
-            }
-        }
-    }
-
-    function script:install_app($app, $architecture, $global, $suggested, $use_cache = $true, $check_hash = $true) {
-        $app, $manifest, $bucket, $url = Get-Manifest $app
-
-        if (!$manifest) {
-            # abort "Couldn't find manifest for '$app'$(if ($bucket) { " from '$bucket' bucket" } elseif ($url) { " at '$url'" })."
-            abort "无法从 $(if ($bucket) { "$bucket (bucket)" } elseif ($url) { $url }) 中找到应用 $app 的清单(manifest)"
-        }
-
-        $version = $manifest.version
-        # if (!$version) { abort "Manifest doesn't specify a version." }
-        if (!$version) { abort "清单(manifest) 中没有指定一个版本号。" }
-        if ($version -match '[^\w\.\-\+_]') {
-            # abort "Manifest version has unsupported character '$($matches[0])'."
-            abort "清单(manifest) 中的版本具有不支持的字符: $($matches[0])"
-        }
-
-        $is_nightly = $version -eq 'nightly'
-        if ($is_nightly) {
-            $version = nightly_version
-            $check_hash = $false
-        }
-
-        $architecture = Get-SupportedArchitecture $manifest $architecture
-        if ($null -eq $architecture) {
-            # error "'$app' doesn't support current architecture!"
-            error "$app 不支持当前的架构!"
-            return
-        }
-
-        if ((get_config SHOW_MANIFEST $false) -and ($MyInvocation.ScriptName -notlike '*scoop-update*')) {
-            # Write-Host "Manifest: $app.json"
-            Write-Host "清单(manifest): $app.json"
-            $style = get_config CAT_STYLE
-            if ($style) {
-                $manifest | ConvertToPrettyJson | bat --no-paging --style $style --language json
-            }
-            else {
-                $manifest | ConvertToPrettyJson
-            }
-            # $answer = Read-Host -Prompt 'Continue installation? [Y/n]'
-            $answer = Read-Host -Prompt '继续安装? [Y/n]'
-            if (($answer -eq 'n') -or ($answer -eq 'N')) {
-                return
-            }
-        }
-        # Write-Output "Installing '$app' ($version) [$architecture]$(if ($bucket) { " from '$bucket' bucket" } else { " from '$url'" })"
-        Write-Output "正在从 $(if ($bucket) { "$bucket (bucket)" } else { $url }) 中安装 $app ($version) [$architecture]"
-
-        $dir = ensure (versiondir $app $version $global)
-        $original_dir = $dir # keep reference to real (not linked) directory
-        $persist_dir = persistdir $app $global
-
-        $fname = Invoke-ScoopDownload $app $version $manifest $bucket $architecture $dir $use_cache $check_hash
-        Invoke-Extraction -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture
-        Invoke-HookScript -HookType 'pre_install' -Manifest $manifest -ProcessorArchitecture $architecture
-
-        Invoke-Installer -Path $dir -Name $fname -Manifest $manifest -ProcessorArchitecture $architecture -AppName $app -Global:$global
-        ensure_install_dir_not_in_path $dir $global
-        $dir = link_current $dir
-        create_shims $manifest $dir $global $architecture
-        create_startmenu_shortcuts $manifest $dir $global $architecture
-        install_psmodule $manifest $dir $global
-        env_add_path $manifest $dir $global $architecture
-        env_set $manifest $global $architecture
-
-        # persist data
-        persist_data $manifest $original_dir $persist_dir
-        persist_permission $manifest $global
-
-        Invoke-HookScript -HookType 'post_install' -Manifest $manifest -ProcessorArchitecture $architecture
-
-        # save info for uninstall
-        save_installed_manifest $app $bucket $dir $url
-        save_install_info @{ 'architecture' = $architecture; 'url' = $url; 'bucket' = $bucket } $dir
-
-        if ($manifest.suggest) {
-            $suggested[$app] = $manifest.suggest
-        }
-
-        success "'$app' ($version) was installed successfully!"
-
-        show_notes $manifest $dir $original_dir $persist_dir
-    }
 }
 #endregion
