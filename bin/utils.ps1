@@ -495,16 +495,17 @@ function A-Install-Exe {
         # $fname 由 Scoop 提供，即下载的文件名
         $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
     }
+
+    if (!$path) {
+        error "Please contact the bucket maintainer!"
+        A-Exit
+    }
+
     $fileName = Split-Path $path -Leaf
 
     if (!$PSBoundParameters.ContainsKey('SuccessFile')) {
         $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
         $SuccessFile = Invoke-Expression "`"$SuccessFile`""
-
-        if (!$SuccessFile) {
-            error "Please contact the bucket maintainer!"
-            A-Exit
-        }
     }
     $SuccessFile = A-Get-AbsolutePath $SuccessFile
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
@@ -626,7 +627,10 @@ function A-Uninstall-Exe {
     }
 
     $path = A-Get-AbsolutePath $Uninstaller
-    $fileName = Split-Path $path -Leaf
+
+    if ($path) {
+        $fileName = Split-Path $path -Leaf
+    }
 
     if (Test-Path $path) {
 
@@ -712,6 +716,11 @@ function A-Add-MsixPackage {
     else {
         # $fname 由 Scoop 提供，即下载的文件名
         $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+    }
+
+    if (!$path) {
+        error "Please contact the bucket maintainer!"
+        A-Exit
     }
 
     A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
@@ -1475,6 +1484,10 @@ function A-Get-AbsolutePath {
     param(
         [string]$path
     )
+
+    if (!$path) {
+        return ""
+    }
 
     if ([System.IO.Path]::IsPathRooted($path)) {
         return $path
