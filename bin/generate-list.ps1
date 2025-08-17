@@ -95,8 +95,8 @@ foreach ($path in $PathList) {
         ## manifest
         $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
-        # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
-        $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+        $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
+        # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
 
         ## persist
         $isPersist = $json.persist
