@@ -11,9 +11,8 @@
 
   - **`Tag`**
 
-    - Basic Tags
+    - Data
 
-      - `v1.0.0`: The app version. Click it to view the manifest json file.
       - `Persist`: Uses Scoop's official [Persist](./readme.zh-CN.md#persist).
       - `Link`: Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
 
