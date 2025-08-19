@@ -1,0 +1,60 @@
+{
+    "version": "0.17.0",
+    "description": "一个免费、本地化、开源的替代方案，可取代 Lovable、v0、Bolt.new 和 Replit。打造您的应用程序，无需受限于特定平台。A free, local, open-source alternative to Lovable, v0, Bolt.new and Replit. Build your apps without the lock-in.",
+    "homepage": "https://dyad.sh/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/dyad-sh/dyad/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dyad-sh/dyad/releases/download/v0.17.0/dyad-0.17.0.Setup.exe",
+            "hash": "71f6e6f6f2b15f851d9305ee3df86d74ff68878609bc0d12c8e42bce533db8f7"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:LocalAppData\\dyad\\dyad.exe",
+            "dyad"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\dyad\")",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\dyad\\Update.exe\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process \"$env:LocalAppData\\dyad\"",
+        "A-Uninstall-Exe -ArgumentList @('--uninstall')",
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:LocalAppData\\dyad\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": "https://github.com/dyad-sh/dyad"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dyad-sh/dyad/releases/download/v$version/dyad-$version.Setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
