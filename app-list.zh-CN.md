@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (238)|Tag|Description|
+|App (239)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -117,6 +117,7 @@
 |[DigitalScholar.Zotero](https://www.zotero.org/ "点击访问仓库或主页")|<a href="./bucket/d/DigitalScholar/DigitalScholar.Zotero.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个免费，易于使用的工具，可帮助您收集，组织，注释，引用和共享研究。|
 |[Drawpile.Drawpile](https://drawpile.net/ "点击访问仓库或主页")|<a href="./bucket/d/Drawpile/Drawpile.Drawpile.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款绘图程序，能让你与他人在同一画布上共同进行绘制、涂色和制作动画。|
 |[DuongDieuPhap.ImageGlass](https://imageglass.org "点击访问仓库或主页")|<a href="./bucket/d/DuongDieuPhap/DuongDieuPhap.ImageGlass.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个轻量级的、多功能的图像查看器。|
+|[dyad-sh.dyad](https://dyad.sh/ "点击访问仓库或主页")|<a href="./bucket/d/dyad-sh/dyad-sh.dyad.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个免费、本地化、开源的替代方案，可取代 Lovable、v0、Bolt.new 和 Replit。打造您的应用程序，无需受限于特定平台。|
 |[EcoPaste.EcoPaste](https://github.com/EcoPasteHub/EcoPaste "点击访问仓库或主页")|<a href="./bucket/e/EcoPaste/EcoPaste.EcoPaste.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个跨平台的开源剪贴板管理工具。|
 |[electerm.electerm](https://github.com/electerm/electerm "点击访问仓库或主页")|<a href="./bucket/e/electerm/electerm.electerm.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端。|
 |[Eugeny.Tabby](https://tabby.sh "点击访问仓库或主页")|<a href="./bucket/e/Eugeny/Eugeny.Tabby.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个现代终端。|
