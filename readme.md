@@ -28,7 +28,7 @@
   <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
 </p>
 <p align="center">
-  <strong>If you like this project, please give it a star ⭐️</strong>
+  <strong>Star ⭐️ or <a href="https://abgox.com/donate" target="_blank">Donate 💰</a> if you like it!</strong>
 </p>
 
 > [!Warning]
