@@ -1,4 +1,4 @@
-<h1 align="center">✨ abyss ✨</h1>
+<h1 align="center">✨<a href="https://abyss.abgox.com/">abyss</a>✨</h1>
 
 <p align="center">
     <a href="readme.md">English</a> |
@@ -28,27 +28,27 @@
   <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
 </p>
 <p align="center">
-  <strong>如果你喜欢这个项目，请给它一个 ⭐️ 或 <a href="https://abgox.com/donate" target="_blank">赞赏 💰</a></strong>
+  <strong>喜欢这个项目？请给它一个 ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
 </p>
 
 > [!Warning]
 >
 > - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
-> - 它们包含 Scoop 官方规范之外的 [风格与特性](#特性)，其他 bucket 不应该合并它们，以避免冲突和错误
+> - 它们包含 Scoop 官方规范之外的 [特性](#特性)，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ### 特性
 
-#### Bucket
-
-- `abyss` 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
+- 部分应用无法做到 [Persist](#persist)，会使用 [Link](#link) 实现
+- 部分应用会使用安装程序而不是当作 zip 包进行安装
+- 通过一些 [配置](#config) 可以扩展功能
+- 通过 [abgox/scoop-i18n](https://scoop-i18n.abgox.com) 提供 i18n 支持
+- 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
   - 清单命名格式: `Publisher.PackageIdentifier`
   - 目录结构: `bucket/a/abgox/abgox.PSCompletions.json`
 
-#### Manifest
+### Demo
 
-- 无法使用 [Persist](#persist) 的应用，会使用 [Link](#link) 实现
-- 当卸载和更新应用时，会先尝试终止进程，详情参考 [Config](#config)
-- 使用 [abgox/scoop-i18n](https://github.com/abgox/scoop-i18n) 添加本地化输出
+![Demo](https://abyss.abgox.com/demo.zh-CN.gif)
 
 ---
 
@@ -63,7 +63,7 @@
 
 > [!Warning]
 >
-> 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在解析 depends 时找不到 bucket
+> 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在解析 depends 时找不到 `abyss` bucket
 
 1. 添加 [abyss](https://abyss.abgox.com) (使用 [Github](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss) 仓库)
 
@@ -89,76 +89,17 @@
    psc add scoop
    ```
 
-3. 安装应用
+3. 安装 [scoop-i18n](https://scoop-i18n.abgox.com) 以提供 i18n 支持
 
    ```shell
    scoop install abyss/abgox.scoop-i18n
    ```
 
-### 演示
-
-![演示](https://abyss.abgox.com/demo-cn.gif)
-
----
-
 ### 如果你访问 Github 存在问题
 
-> [!Tip]
->
-> 如果因为网络问题无法快速访问 Github 资源，可以尝试以下方案
->
-> 推荐使用 [PSCompletions 中的 scoop/scoop-install/scoop-update 命令补全](https://gitee.com/abgox/PSCompletions)
-
-1. 使用 [Gitee](https://gitee.com/abgox/abyss) 仓库
-
-   ```shell
-   scoop bucket add abyss https://gitee.com/abgox/abyss
-   ```
-
-2. 安装 [scoop-install](https://gitee.com/abgox/scoop-tools) 和 [scoop-update](https://gitee.com/abgox/scoop-tools)
-
-   ```shell
-   scoop install abyss/abgox.scoop-install
-   ```
-
-   ```shell
-   scoop install abyss/abgox.scoop-update
-   ```
-
-3. 设置 url 替换
-
-   ```shell
-   scoop config scoop-install-url-replace-from "^https://github.com|||^https://raw.githubusercontent.com"
-   ```
-
-   ```shell
-   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
-   ```
-
-4. 使用 [PSCompletions](https://github.com/abgox/PSCompletions) 添加命令补全
-
-   ```shell
-   psc add scoop-install scoop-update
-   ```
-
-5. 使用 [scoop-install](https://gitee.com/abgox/scoop-tools) 安装应用
-
-   ```shell
-   scoop-install abyss/abgox.scoop-i18n
-   ```
-
-6. 使用 [scoop-update](https://gitee.com/abgox/scoop-tools) 更新应用
-
-   ```shell
-   scoop-update abyss/abgox.scoop-i18n
-   ```
-
-7. 更多详情请查看:
-
-   - https://github.com/abgox/scoop-tools
-   - https://gitee.com/abgox/scoop-tools
-
----
+- 可以使用 [scoop-tools](https://scoop-tools.abgox.com)，它允许你临时使用替换之后的代理 url 来下载安装包
+  - Github: https://github.com/abgox/scoop-tools
+  - Gitee: https://gitee.com/abgox/scoop-tools
 
 ### Config
 
@@ -259,7 +200,9 @@
 
 ### 应用列表
 
-[Gitee - abgox/abyss](https://gitee.com/abgox/abyss) 可能无法正常显示应用列表，请使用 [Github - abgox/abyss](https://github.com/abgox/abyss)
+> [!Tip]
+>
+> 在 [官网](https://abyss.abgox.com) 中查看: https://abyss.abgox.com/app-list
 
 - [简体中文](./app-list.zh-CN.md)
 - [English](./app-list.md)

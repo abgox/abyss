@@ -1,4 +1,4 @@
-<h1 align="center">✨ abyss ✨</h1>
+<h1 align="center">✨<a href="https://abyss.abgox.com/">abyss</a>✨</h1>
 
 <p align="center">
     <a href="readme.zh-CN.md">简体中文</a> |
@@ -28,28 +28,27 @@
   <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
 </p>
 <p align="center">
-  <strong>Star ⭐️ or <a href="https://abgox.com/donate" target="_blank">Donate 💰</a> if you like it!</strong>
+  <strong>Star ⭐️ or <a href="https://abgox.com/donate">Donate 💰</a> if you like it!</strong>
 </p>
 
 > [!Warning]
 >
 > - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
-> - They contain some [style and features](#features) outside of the official Scoop specification, and other buckets should not merge them to avoid conflicts and errors.
+> - They contain some [features](#features) outside of the official Scoop specification, and other buckets should not merge them to avoid conflicts and errors.
 
 ### Features
 
-#### Bucket
-
+- Some apps that cannot use [Persist](#persist), [Link](#link) will be used as a fallback.
+- Some spps use installers instead of zip to install.
+- Use extra abilities via some [config](#config).
+- Use [abgox/scoop-i18n](https://scoop-i18n.abgox.com) to enable i18n support.
 - Inspired by [winget-pkgs](https://github.com/microsoft/winget-pkgs).
-
   - Manifest naming format: `Publisher.PackageIdentifier`
   - Directory structure: `bucket/a/abgox/abgox.PSCompletions.json`
 
-#### Manifest
+### Demo
 
-- For apps that cannot use [Persist](#persist), [Link](#link) will be used as a fallback.
-- When uninstalling or updating an apps, the system will first attempt to terminate the process. For details, refer to [Config](#config).
-- Use [abgox/scoop-i18n](https://github.com/abgox/scoop-i18n) to add localized output.
+![Demo](https://abyss.abgox.com/demo.gif)
 
 ---
 
@@ -90,76 +89,17 @@
     psc add scoop
     ```
 
-3.  Install apps.
+3.  Install [scoop-i18n](https://scoop-i18n.abgox.com) to enable i18n support.
 
     ```shell
     scoop install abyss/abgox.scoop-i18n
     ```
 
-### Demo
-
-![Demo](https://abyss.abgox.com/demo.gif)
-
----
-
 ### If you have problems accessing Github
 
-> [!Tip]
->
-> If you cannot access Github resources quickly due to network issues, you can try the following solutions.
->
-> [scoop/scoop-install/scoop-update completion in PSCompletions](https://github.com/abgox/PSCompletions) is recommended.
-
-1. Use the [Gitee](https://gitee.com/abgox/abyss) repository.
-
-   ```shell
-   scoop bucket add abyss https://gitee.com/abgox/abyss
-   ```
-
-2. Install [scoop-install](https://gitee.com/abgox/scoop-tools) and [scoop-update](https://gitee.com/abgox/scoop-tools).
-
-   ```shell
-   scoop install abyss/abgox.scoop-install
-   ```
-
-   ```shell
-   scoop install abyss/abgox.scoop-update
-   ```
-
-3. Configure URL replacement.
-
-   ```shell
-   scoop config scoop-install-url-replace-from "^https://github.com|||^https://raw.githubusercontent.com"
-   ```
-
-   ```shell
-   scoop config scoop-install-url-replace-to "https://gh-proxy.com/github.com|||https://gh-proxy.com/raw.githubusercontent.com"
-   ```
-
-4. Use [PSCompletions](https://github.com/abgox/PSCompletions) to add command completion.
-
-   ```shell
-   psc add scoop-install scoop-update
-   ```
-
-5. Use [scoop-install](https://gitee.com/abgox/scoop-tools) to install apps.
-
-   ```shell
-   scoop-install abyss/abgox.scoop-i18n
-   ```
-
-6. Use [scoop-update](https://gitee.com/abgox/scoop-tools) to update apps.
-
-   ```shell
-   scoop-update abyss/abgox.scoop-i18n
-   ```
-
-7. For more details, please visit:
-
-   - https://github.com/abgox/scoop-tools
-   - https://gitee.com/abgox/scoop-tools
-
----
+- You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy URL to download the installation package.
+  - Github: https://github.com/abgox/scoop-tools
+  - Gitee: https://gitee.com/abgox/scoop-tools
 
 ### Config
 
@@ -258,7 +198,9 @@
 
 ### App List
 
-[Gitee - abgox/abyss](https://gitee.com/abgox/abyss) may not display them normally, please use [Github - abgox/abyss](https://github.com/abgox/abyss).
+> [!Tip]
+>
+> Check on the official website: https://abyss.abgox.com/app-list
 
 - [English](./app-list.md)
 - [简体中文](./app-list.zh-CN.md)
