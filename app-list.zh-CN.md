@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (241)|Tag|Description|
+|App (242)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -219,6 +219,7 @@
 |[PDFgear.PDFgear](https://www.pdfgear.com/ "点击访问仓库或主页")|<a href="./bucket/p/PDFgear/PDFgear.PDFgear.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款功能齐全的 PDF 管理软件。|
 |[PicGo.PicGo](https://molunerfinn.com/PicGo/ "点击访问仓库或主页")|<a href="./bucket/p/PicGo/PicGo.PicGo.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|由 vue-cli-electron-builder 构建的简洁美观的图片上传工具。|
 |[PixPin.PixPin](https://pixpin.cn/ "点击访问仓库或主页")|<a href="./bucket/p/PixPin/PixPin.PixPin.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个功能强大使用简单的截图/贴图/录屏工具。|
+|[Planshit.Tai](https://github.com/Planshit/Tai "点击访问仓库或主页")|<a href="./bucket/p/Planshit/Planshit.Tai.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|在 Windows 上统计软件使用时长和网站浏览时长。|
 |[pnpm.pnpm](https://pnpm.io/ "点击访问仓库或主页")|<a href="./bucket/p/pnpm/pnpm.pnpm.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款快速且节省磁盘空间的 Node 包管理器。|
 |[Pylogmon.pot](https://pot-app.com/ "点击访问仓库或主页")|<a href="./bucket/p/Pylogmon/Pylogmon.pot.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个跨平台的划词翻译和 OCR 软件。|
 |[Quriz.PowerToysRun-Scoop](https://github.com/Quriz/PowerToysRunScoop "点击访问仓库或主页")|<a href="./bucket/q/Quriz/Quriz.PowerToysRun-Scoop.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一个 PowerToys Run 插件，用于从 Scoop 包管理器中搜索、安装、更新和卸载软件包。|
