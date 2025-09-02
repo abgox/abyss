@@ -1,19 +1,19 @@
 {
-    "version": "1.1.2",
+    "version": "2025.07.05.132535",
     "description": "一个 PowerShell 脚本，它允许你添加 Scoop 配置，在 Scoop 更新应用时使用替换后的 url 而不是原始的 url。A PowerShell script that allows you to add Scoop configurations to use a replaced url instead of the original url when updating the app in Scoop.",
-    "homepage": "https://gitee.com/abgox/scoop-tools",
+    "homepage": "https://scoop-tools.abgox.com",
     "license": {
         "identifier": "MIT",
         "url": "https://gitee.com/abgox/scoop-tools/blob/main/license"
     },
     "architecture": {
         "64bit": {
-            "url": "https://gitee.com/abgox/scoop-tools/releases/download/v1.1.2/scoop-update.ps1",
-            "hash": "8d77058dc008836cd01a905d13e037918f9e64049f0ca039105d8ee51534214b"
+            "url": "https://gitee.com/abgox/scoop-tools/raw/8cf080305e9b24dcb876a242ac2975af171020c0/scoop-update.ps1",
+            "hash": "e10141061603dd0495f10a63b1fa920a9dc885e256c0f1bf5c66ff8e97ad65ce"
         },
         "arm64": {
-            "url": "https://gitee.com/abgox/scoop-tools/releases/download/v1.1.2/scoop-update.ps1",
-            "hash": "8d77058dc008836cd01a905d13e037918f9e64049f0ca039105d8ee51534214b"
+            "url": "https://gitee.com/abgox/scoop-tools/raw/8cf080305e9b24dcb876a242ac2975af171020c0/scoop-update.ps1",
+            "hash": "e10141061603dd0495f10a63b1fa920a9dc885e256c0f1bf5c66ff8e97ad65ce"
         }
     },
     "bin": "scoop-update.ps1",
@@ -39,15 +39,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/abgox/scoop-tools"
+        "url": "https://api.github.com/repos/abgox/scoop-tools/commits?path=scoop-update.ps1&page=1&per_page=5",
+        "regex": "sha\":\\s*\"(?<sha>[^\"]+).*\"date\":\\s*\"(\\d+)-(\\d+)-(\\d+)T(\\d+):(\\d+):(\\d+)",
+        "replace": "${1}.${2}.${3}.${4}${5}${6}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://gitee.com/abgox/scoop-tools/releases/download/v$version/scoop-update.ps1"
+                "url": "https://gitee.com/abgox/scoop-tools/raw/$matchSha/scoop-update.ps1"
             },
             "arm64": {
-                "url": "https://gitee.com/abgox/scoop-tools/releases/download/v$version/scoop-update.ps1"
+                "url": "https://gitee.com/abgox/scoop-tools/raw/$matchSha/scoop-update.ps1"
             }
         }
     }
