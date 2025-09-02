@@ -1,27 +1,27 @@
 {
-    "version": "1.8.5",
+    "version": "1.8.6",
     "description": "一个易用的代理客户端。An easy-to-use proxy client.",
-    "homepage": "https://github.com/mihomo-party-org/mihomo-party",
+    "homepage": "https://github.com/mihomo-party-org/clash-party",
     "license": {
         "identifier": "GPL-3.0-only",
-        "url": "https://github.com/mihomo-party-org/mihomo-party/blob/main/LICENSE"
+        "url": "https://github.com/mihomo-party-org/clash-party/blob/main/LICENSE"
     },
     "notes": "$app will be automatically launched after installation.",
     "notes-cn": "$app 会在安装成功后自动启动",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v1.8.5/mihomo-party-windows-1.8.5-x64-portable.7z",
-            "hash": "069bc209008830b5c250fe0a5e1d45bdb92b47d2f6b59c0fe290c403bc9b42e1"
+            "url": "https://github.com/mihomo-party-org/clash-party/releases/download/v1.8.6/clash-party-windows-1.8.6-x64-portable.7z",
+            "hash": "27dd929126d8ccec464735c8eaec97ac5318e14a850ae630c4d93ec2756b837b"
         },
         "arm64": {
-            "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v1.8.5/mihomo-party-windows-1.8.5-arm64-portable.7z",
-            "hash": "c0b5508459ffa2e870a1f77e72089153c19d4ae09f1f6460c4ad83826a26bf87"
+            "url": "https://github.com/mihomo-party-org/clash-party/releases/download/v1.8.6/clash-party-windows-1.8.6-arm64-portable.7z",
+            "hash": "488a726bcd8b3a9e7318b2604bf100203c0ffd77cdf9d09cb06d83b87fab1a14"
         }
     },
     "shortcuts": [
         [
-            "Mihomo Party.exe",
-            "Mihomo Party"
+            "Clash Party.exe",
+            "Clash Party"
         ]
     ],
     "pre_install": [
@@ -35,7 +35,7 @@
         "    While (!(Test-Path \"$dir\\data\")) {",
         "        Start-Sleep -Milliseconds 100",
         "    }",
-        "    Start-Process \"$dir\\Mihomo Party.exe\"",
+        "    Start-Process \"$dir\\Clash Party.exe\"",
         "} -ArgumentList $dir"
     ],
     "post_install": [
@@ -56,19 +56,22 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
+    "checkver": {
+        "url": "https://github.com/mihomo-party-org/clash-party/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "persist": "data",
-    "checkver": "github",
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v$version/mihomo-party-windows-$version-x64-portable.7z"
+                "url": "https://github.com/mihomo-party-org/clash-party/releases/download/v$version/clash-party-windows-$version-x64-portable.7z"
             },
             "arm64": {
-                "url": "https://github.com/mihomo-party-org/mihomo-party/releases/download/v$version/mihomo-party-windows-$version-arm64-portable.7z"
+                "url": "https://github.com/mihomo-party-org/clash-party/releases/download/v$version/clash-party-windows-$version-arm64-portable.7z"
             }
         },
         "hash": {
-            "url": "$url.sha256"
+            "mode": "github"
         }
     }
 }
