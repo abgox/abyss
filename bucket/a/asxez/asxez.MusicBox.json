@@ -1,5 +1,5 @@
 {
-    "version": "0.1.0-beta2",
+    "version": "0.2.0-beta",
     "description": "一款高颜值的本地音乐播放器。A pretty local music player.",
     "homepage": "https://github.com/asxez/MusicBox",
     "license": {
@@ -8,11 +8,10 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/asxez/MusicBox/releases/download/0.1.0-beta2/musicbox-0.1.0-beta2.zip",
-            "hash": "2c5da753699a010fa69bbb15fd5a573e8a924d14baa92fb35da52b5cbb4475fb"
+            "url": "https://github.com/asxez/MusicBox/releases/download/0.2.0-beta/MusicBox-setup-0.2.0-beta.exe",
+            "hash": "4533cda76d1d8cb6bd287e608d3233f4fabf83653a932c75435a5a21d60c7bbf"
         }
     },
-    "extract_dir": "musicbox-0.1.0-beta2\\win-unpacked",
     "shortcuts": [
         [
             "MusicBox.exe",
@@ -23,6 +22,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall MusicBox.exe'",
         "A-New-LinkDirectory @(\"$env:AppData\\musicbox\")"
     ],
     "post_install": [
@@ -35,7 +35,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\musicbox-updater\")"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -49,9 +51,11 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/asxez/MusicBox/releases/download/$version/musicbox-$version.zip"
+                "url": "https://github.com/asxez/MusicBox/releases/download/$version/MusicBox-setup-$version.exe"
             }
         },
-        "extract_dir": "musicbox-$version\\win-unpacked"
+        "hash": {
+            "mode": "github"
+        }
     }
 }
