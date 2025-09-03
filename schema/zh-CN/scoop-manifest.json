@@ -222,112 +222,6 @@
             "minItems": 1,
             "uniqueItems": true
         },
-        "setup_exe_url_base": {
-            "examples": [
-                "",
-                []
-            ],
-            "if": {
-                "pattern": "^https?://.*/.*[sS]etup.*\\.exe$"
-            },
-            "then": {
-                "if": {
-                    "pattern": "^https?://.*/.*[sS]etup.*\\.exe#/dl\\.7z$"
-                },
-                "else": {
-                    "not": true,
-                    "errorMessage": "Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀，例如: https://example.com/app.Setup.exe#/dl.7z"
-                }
-            },
-            "items": {
-                "if": {
-                    "pattern": "^https?://.*/.*[sS]etup.*\\.exe$"
-                },
-                "then": {
-                    "if": {
-                        "pattern": "^https?://.*/.*[sS]etup.*\\.exe#/dl\\.7z$"
-                    },
-                    "else": {
-                        "not": true,
-                        "errorMessage": "Setup exe 类型的安装包必须使用 #/dl.7z 作为后缀，例如: https://example.com/app.Setup.exe#/dl.7z"
-                    }
-                }
-            }
-        },
-        "setup_exe_url": {
-            "allOf": [
-                {
-                    "if": {
-                        "required": [
-                            "url"
-                        ]
-                    },
-                    "then": {
-                        "properties": {
-                            "url": {
-                                "$ref": "#/definitions/setup_exe_url_base"
-                            }
-                        }
-                    }
-                },
-                {
-                    "if": {
-                        "required": [
-                            "architecture"
-                        ]
-                    },
-                    "then": {
-                        "allOf": [
-                            {
-                                "properties": {
-                                    "architecture": {
-                                        "properties": {
-                                            "64bit": {
-                                                "properties": {
-                                                    "url": {
-                                                        "$ref": "#/definitions/setup_exe_url_base"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "architecture": {
-                                        "properties": {
-                                            "32bit": {
-                                                "properties": {
-                                                    "url": {
-                                                        "$ref": "#/definitions/setup_exe_url_base"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "architecture": {
-                                        "properties": {
-                                            "arm64": {
-                                                "properties": {
-                                                    "url": {
-                                                        "$ref": "#/definitions/setup_exe_url_base"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
         "hash": {
             "title": "软件安装包的 hash 值",
             "description": "软件安装包的 hash 值，用于校验下载的软件是否完整",
@@ -977,227 +871,215 @@
         },
         "script_validation": {
             "$comment": "安装和卸载脚本中的特殊校验",
-            "allOf": [
-                {
-                    "properties": {
-                        "pre_install": {
-                            "examples": [
-                                [
-                                    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "A-Start-Install",
-                                    "A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
-                                ]
-                            ],
-                            "type": "array",
-                            "minItems": 3,
-                            "allOf": [
+            "properties": {
+                "pre_install": {
+                    "examples": [
+                        [
+                            "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                            ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                            "A-Start-Install",
+                            "A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+                        ]
+                    ],
+                    "type": "array",
+                    "minItems": 3,
+                    "allOf": [
+                        {
+                            "items": [
                                 {
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                        },
-                                        {
-                                            "const": "A-Start-Install"
-                                        }
-                                    ]
+                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
                                 },
                                 {
-                                    "items": {
-                                        "anyOf": [
-                                            {},
-                                            {
-                                                "enum": [
-                                                    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "A-Start-Install",
-                                                    "A-New-PersistFile \"\"",
-                                                    "A-Copy-Item",
-                                                    "A-Expand-SetupExe",
-                                                    "A-Install-Exe -Uninstaller 'xxx'",
-                                                    "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/S',\"/D=$dir\")",
-                                                    "A-Require-Admin",
-                                                    "A-Test-Admin",
-                                                    "A-Ensure-Directory",
-                                                    "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
-                                                    "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
-                                                    "A-Add-Font",
-                                                    "$PackageFamilyName = A-Add-MsixPackage 'PackageFamilyName'",
-                                                    "A-Add-PowerToysRunPlugin ''"
-                                                ],
-                                                "markdownEnumDescriptions": [
-                                                    "脚本\n- 获取 $bucket 变量",
-                                                    "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                                    "函数\n- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`",
-                                                    "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
-                                                    "函数\n- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`",
-                                                    "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`",
-                                                    "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 $fname 中的第一个文件名拼接 $dir\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\")`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n        - 默认使用 shortcuts 中第一个快捷方式的目标路径\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/D=$dir\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/D=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/D=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
-                                                    "函数\n- 使用安装程序安装应用",
-                                                    "函数\n- 要求以管理员权限运行",
-                                                    "函数\n- 检查是否以管理员权限运行",
-                                                    "函数\n- 确保指定目录路径存在",
-                                                    "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`",
-                                                    "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`",
-                                                    "函数\n- 安装字体",
-                                                    "函数\n- 安装 AppX/Msix 包\n- 示例: `$PackageFamilyName = A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`",
-                                                    "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
-                                                ]
-                                            }
-                                        ]
-                                    }
+                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                },
+                                {
+                                    "const": "A-Start-Install"
                                 }
                             ]
-                        }
-                    }
-                },
-                {
-                    "properties": {
-                        "post_install": {
-                            "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`",
-                            "type": "array",
-                            "oneOf": [
-                                {
-                                    "const": [
-                                        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "A-Complete-Install"
-                                    ],
-                                    "items": {
-                                        "type": "string",
+                        },
+                        {
+                            "items": {
+                                "anyOf": [
+                                    {},
+                                    {
                                         "enum": [
                                             "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                             ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                            "A-Complete-Install"
+                                            "A-Start-Install",
+                                            "A-New-PersistFile \"\"",
+                                            "A-Copy-Item",
+                                            "A-Expand-SetupExe",
+                                            "A-Install-Exe -Uninstaller 'xxx'",
+                                            "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/S',\"/D=$dir\")",
+                                            "A-Require-Admin",
+                                            "A-Test-Admin",
+                                            "A-Ensure-Directory",
+                                            "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
+                                            "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
+                                            "A-Add-Font",
+                                            "$PackageFamilyName = A-Add-MsixPackage 'PackageFamilyName'",
+                                            "A-Add-PowerToysRunPlugin ''"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
                                             "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                            "函数\n- 表示安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                            "函数\n- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`",
+                                            "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
+                                            "函数\n- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`",
+                                            "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`",
+                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 $fname 中的第一个文件名拼接 $dir\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\")`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n        - 默认使用 shortcuts 中第一个快捷方式的目标路径\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
+                                            "函数\n- 使用安装程序安装应用",
+                                            "函数\n- 要求以管理员权限运行",
+                                            "函数\n- 检查是否以管理员权限运行",
+                                            "函数\n- 确保指定目录路径存在",
+                                            "函数\n- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`",
+                                            "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`",
+                                            "函数\n- 安装字体",
+                                            "函数\n- 安装 AppX/Msix 包\n- 示例: `$PackageFamilyName = A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`",
+                                            "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
                                         ]
                                     }
-                                },
-                                {
-                                    "minItems": 4
-                                }
-                            ]
-                        }
-                    }
-                },
-                {
-                    "properties": {
-                        "pre_uninstall": {
-                            "examples": [
-                                [
-                                    "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "A-Start-Uninstall",
-                                    "A-Stop-Process",
-                                    "A-Remove-Link"
                                 ]
-                            ],
-                            "type": "array",
-                            "minItems": 3,
-                            "allOf": [
+                            }
+                        }
+                    ]
+                },
+                "post_install": {
+                    "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`",
+                    "type": "array",
+                    "minItems": 3,
+                    "anyOf": [
+                        {
+                            "items": [
                                 {
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                        },
-                                        {
-                                            "const": "A-Start-Uninstall"
-                                        }
-                                    ]
+                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                    "markdownDescription": "获取 `$bucket` 变量"
                                 },
                                 {
-                                    "items": {
-                                        "type": "string",
-                                        "anyOf": [
-                                            {},
-                                            {
-                                                "enum": [
-                                                    "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                    ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "A-Start-Uninstall",
-                                                    "A-Stop-Process",
-                                                    "A-Stop-Service",
-                                                    "A-Remove-Link",
-                                                    "A-Remove-Font",
-                                                    "A-Remove-MsixPackage",
-                                                    "A-Remove-PowerToysRunPlugin",
-                                                    "A-Remove-TempData",
-                                                    "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                                                    "A-Require-Admin",
-                                                    "A-Test-Admin",
-                                                    "A-Deny-Update",
-                                                    "A-Uninstall-Exe",
-                                                    "A-Uninstall-Exe -ArgumentList @('/S')"
-                                                ],
-                                                "markdownEnumDescriptions": [
-                                                    "脚本\n- 获取 $bucket 变量",
-                                                    "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                                    "函数\n- 表示卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
-                                                    "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
-                                                    "函数\n- 尝试停止并移除指定的应用服务，以确保能正常卸载",
-                                                    "函数\n- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction",
-                                                    "函数\n- 移除字体",
-                                                    "函数\n- 卸载 AppX/Msix 包",
-                                                    "函数\n- 移除 PowerToys Run 插件",
-                                                    "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`",
-                                                    "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
-                                                    "函数\n- 要求以管理员权限运行",
-                                                    "函数\n- 检查是否以管理员权限运行",
-                                                    "函数\n- 禁止通过 Scoop 更新",
-                                                    "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
-                                                ]
-                                            }
-                                        ]
-                                    }
+                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的"
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "const": "A-Complete-Install",
+                                            "markdownDescription": "函数\n- 表示安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                        },
+                                        {}
+                                    ]
                                 }
                             ]
+                        },
+                        {
+                            "minItems": 4
                         }
-                    }
+                    ]
                 },
-                {
-                    "properties": {
-                        "post_uninstall": {
-                            "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`",
-                            "type": "array",
-                            "oneOf": [
+                "pre_uninstall": {
+                    "examples": [
+                        [
+                            "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                            ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                            "A-Start-Uninstall",
+                            "A-Stop-Process",
+                            "A-Remove-Link"
+                        ]
+                    ],
+                    "type": "array",
+                    "minItems": 3,
+                    "allOf": [
+                        {
+                            "items": [
                                 {
-                                    "const": [
-                                        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "A-Complete-Uninstall"
-                                    ],
-                                    "items": {
-                                        "type": "string",
+                                    "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                },
+                                {
+                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                },
+                                {
+                                    "const": "A-Start-Uninstall"
+                                }
+                            ]
+                        },
+                        {
+                            "items": {
+                                "type": "string",
+                                "anyOf": [
+                                    {},
+                                    {
                                         "enum": [
                                             "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                             ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                            "A-Complete-Uninstall"
+                                            "A-Start-Uninstall",
+                                            "A-Stop-Process",
+                                            "A-Stop-Service",
+                                            "A-Remove-Link",
+                                            "A-Remove-Font",
+                                            "A-Remove-MsixPackage",
+                                            "A-Remove-PowerToysRunPlugin",
+                                            "A-Remove-TempData",
+                                            "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
+                                            "A-Require-Admin",
+                                            "A-Test-Admin",
+                                            "A-Deny-Update",
+                                            "A-Uninstall-Exe",
+                                            "A-Uninstall-Exe -ArgumentList @('/S')"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
                                             "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
-                                            "函数\n- 表示卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                            "函数\n- 表示卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
+                                            "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
+                                            "函数\n- 尝试停止并移除指定的应用服务，以确保能正常卸载",
+                                            "函数\n- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction",
+                                            "函数\n- 移除字体",
+                                            "函数\n- 卸载 AppX/Msix 包",
+                                            "函数\n- 移除 PowerToys Run 插件",
+                                            "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`",
+                                            "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
+                                            "函数\n- 要求以管理员权限运行",
+                                            "函数\n- 检查是否以管理员权限运行",
+                                            "函数\n- 禁止通过 Scoop 更新",
+                                            "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                         ]
                                     }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "post_uninstall": {
+                    "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`",
+                    "type": "array",
+                    "minItems": 3,
+                    "anyOf": [
+                        {
+                            "items": [
+                                {
+                                    "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                    "markdownDescription": "获取 `$bucket` 变量"
                                 },
                                 {
-                                    "minItems": 4
+                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的"
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "const": "A-Complete-Uninstall",
+                                            "markdownDescription": "函数\n- 表示卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                        },
+                                        {}
+                                    ]
                                 }
                             ]
+                        },
+                        {
+                            "minItems": 4
                         }
-                    }
+                    ]
                 }
-            ]
+            }
         }
     },
     "properties": {
