@@ -1,0 +1,62 @@
+{
+    "version": "0.1.20",
+    "description": "用于现实软件的自主智能编程平台。Agentic Coding Platform for Real Software.",
+    "homepage": "https://qoder.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://qoder.com/product-service"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://qoder-ide.oss-accelerate.aliyuncs.com/release/0.1.20/QoderUserSetup-x64.exe",
+            "hash": "907fc862a1f3e75e86c6101bba1abf0a029cc78c3d51f38880d1976f20da48d7"
+        }
+    },
+    "shortcuts": [
+        [
+            "Qoder.exe",
+            "Qoder"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Qoder\",\"$env:UserProfile\\.qoder\")",
+        "A-Install-Exe -Uninstaller 'unins000.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://center.qoder.sh/algo/api/update/win32-x64-user/stable/0.0.0",
+        "jsonpath": "$.url",
+        "regex": "(?<url>.*?/(?<version>[\\d\\.]+)/.*)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl"
+            }
+        },
+        "hash": {
+            "url": "https://center.qoder.sh/algo/api/update/win32-x64-user/stable/0.0.0",
+            "jsonpath": "$.sha256hash"
+        }
+    }
+}
