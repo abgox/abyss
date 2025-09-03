@@ -31,16 +31,30 @@ function A-Test-Admin {
     <#
     .SYNOPSIS
         检查当前用户是否具有管理员权限
-
-    .DESCRIPTION
-        该函数检查当前用户是否具有管理员权限，并返回一个布尔值。
     #>
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($identity)
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and ($identity.Groups -contains "S-1-5-32-544")
 }
 
+function A-Test-DeveloperMode {
+    <#
+    .SYNOPSIS
+        检查开发者模式是否启用
+    #>
+    $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
+    try {
+        $value = Get-ItemProperty -Path $path -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
+        return $value.AllowDevelopmentWithoutDevLicense -eq 1
+    }
+    catch {
+        return $false
+    }
+}
+
 $isAdmin = A-Test-Admin
+
+$isDevMode = A-Test-DeveloperMode
 
 
 <#
@@ -218,7 +232,7 @@ function A-New-LinkFile {
         [System.Collections.Generic.List[string]]$LinkTargets = @()
     )
 
-    if (!$isAdmin) {
+    if (!$isAdmin -and !$isDevMode) {
         error "$app requires admin permission to create SymbolicLink."
         A-Exit
     }
