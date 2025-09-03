@@ -13,14 +13,6 @@
             "hash": "590c555602a682ccb2a50da037cc791de572cbb3c84f27752a764d8d3380d810"
         }
     },
-    "innosetup": true,
-    "extract_dir": "{code_GetDestDir}",
-    "bin": [
-        [
-            "resources\\app\\bin\\cursor.cmd",
-            "cursor"
-        ]
-    ],
     "shortcuts": [
         [
             "Cursor.exe",
@@ -31,7 +23,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\Cursor\",\"$env:UserProfile\\.cursor\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Cursor\",\"$env:UserProfile\\.cursor\")",
+        "A-Install-Exe -Uninstaller 'unins000.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,7 +36,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
