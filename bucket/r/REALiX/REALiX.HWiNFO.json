@@ -80,7 +80,7 @@
     "checkver": {
         "script": [
             ". \"$pwd\\bin\\utils.ps1\"",
-            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'REALiX.HWiNFO' 'exe'",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'REALiX.HWiNFO' ''",
             "\"ver:$($InstallerInfo.PackageVersion);\"",
             "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
             "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
@@ -91,10 +91,18 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://www.hwinfo.com/files/hwi_$majorVersion$minorVersion.zip"
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                }
             },
             "arm64": {
-                "url": "https://www.hwinfo.com/files/hwi_$majorVersion$minorVersion.zip"
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64.InstallerSha256"
+                }
             }
         }
     }
