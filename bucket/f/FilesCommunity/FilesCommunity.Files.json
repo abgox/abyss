@@ -42,15 +42,31 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/files-community/Files"
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'FilesCommunity.Files' 'msixbundle'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://cdn.files.community/files/stable/Files.Package_$version.0_Test/Files.Package_$version.0_x64_arm64.msixbundle"
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64.InstallerSha256"
+                }
             },
             "arm64": {
-                "url": "https://cdn.files.community/files/stable/Files.Package_$version.0_Test/Files.Package_$version.0_x64_arm64.msixbundle"
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64.InstallerSha256"
+                }
             }
         }
     }
