@@ -1,0 +1,52 @@
+{
+    "version": "0.6.10",
+    "description": "LLM API 管理 & 分发系统，通过标准的 OpenAI API 格式访问所有的大模型。LLM API management & key redistribution system, providing access to all large models in standard OpenAI API format.",
+    "homepage": "https://github.com/songquanpeng/one-api",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/songquanpeng/one-api/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/songquanpeng/one-api/releases/download/v0.6.10/one-api.exe",
+            "hash": "90bff24c61f84165ede220770b52d9cec2af3689b349054232a5c4ec582049ca"
+        }
+    },
+    "bin": "one-api.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/songquanpeng/one-api/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/songquanpeng/one-api/releases/download/v$version/one-api.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
