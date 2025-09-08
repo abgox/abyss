@@ -1,0 +1,64 @@
+{
+    "version": "1.2.0",
+    "description": "一款超轻量级的 Windows 倒计时工具，具有番茄钟功能，透明界面和丰富的自定义选项。An ultra-lightweight Windows countdown tool with Pomodoro functionality, featuring a transparent interface and rich customization options.",
+    "homepage": "https://vladelaina.github.io/Catime/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/vladelaina/Catime/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/vladelaina/Catime/releases/download/v1.2.0/catime_1.2.0.exe",
+            "hash": "f5c3b562fbb2fb77bdfc36bccbc8011f2ed42f39474d3fead7c70937e6d8d48e"
+        }
+    },
+    "shortcuts": [
+        [
+            "catime_1.2.0.exe",
+            "Catime"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Catime\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/vladelaina/Catime/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/vladelaina/Catime/releases/download/v$version/catime_$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "shortcuts": [
+            [
+                "catime_$version.exe",
+                "Catime"
+            ]
+        ]
+    }
+}
