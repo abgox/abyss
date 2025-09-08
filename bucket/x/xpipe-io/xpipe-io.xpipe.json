@@ -1,0 +1,66 @@
+{
+    "version": "18.5",
+    "description": "一种新型的 shell 连接枢纽和远程文件管理器，它允许你从本地机器访问你的整个服务器基础设施。A new type of shell connection hub and remote file manager that allows you to access your entire server infrastructure from your local machine.",
+    "homepage": "https://xpipe.io/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/xpipe-io/xpipe/blob/master/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xpipe-io/xpipe/releases/download/18.5/xpipe-installer-windows-x86_64.msi",
+            "hash": "2332d3b7a9f8c88357aaaab2cbc8e80741c95cd14150a95e55215e0518817d03"
+        },
+        "arm64": {
+            "url": "https://github.com/xpipe-io/xpipe/releases/download/18.5/xpipe-installer-windows-arm64.msi",
+            "hash": "6eb07a47696d583fb3d38e4cf76780996c54bfdb102af9360f01fc2b4c4ade02"
+        }
+    },
+    "bin": "bin\\xpipe.exe",
+    "shortcuts": [
+        [
+            "xpiped.exe",
+            "XPipe"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.xpipe\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/xpipe-io/xpipe/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xpipe-io/xpipe/releases/download/$version/xpipe-installer-windows-x86_64.msi"
+            },
+            "arm64": {
+                "url": "https://github.com/xpipe-io/xpipe/releases/download/$version/xpipe-installer-windows-arm64.msi"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
