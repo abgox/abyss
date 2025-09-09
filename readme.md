@@ -44,7 +44,7 @@
 - Use [abgox/scoop-i18n](https://scoop-i18n.abgox.com) to enable i18n support.
 - Inspired by [winget-pkgs](https://github.com/microsoft/winget-pkgs).
   - Manifest naming format: `Publisher.PackageIdentifier`
-  - Directory structure: `bucket/a/abgox/abgox.PSCompletions.json`
+  - Directory structure: `bucket/a/abgox/abgox.scoop-i18n.json`
 
 ### Demo
 
@@ -97,7 +97,7 @@
 
 ### If you have problems accessing Github
 
-- You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy URL to download the installation package.
+- You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy url to download the installation package.
   - Github: https://github.com/abgox/scoop-tools
   - Gitee: https://gitee.com/abgox/scoop-tools
 
@@ -117,11 +117,11 @@
 - If you don't need them, you can set it to any value that does not include them.
 - Configuration values and their action:
 
-  | Value | Action                                                      |
-  | ----- | ----------------------------------------------------------- |
-  | `1`   | Attempt to terminate processes before uninstallation/update |
-  | `2`   | Remove Link directories (those created by [Link](#link))    |
-  | `3`   | Clean up temporary data during uninstallation               |
+  | Value | Action                                                          |
+  | ----- | --------------------------------------------------------------- |
+  | `1`   | Attempt to terminate processes before uninstallation/update     |
+  | `2`   | Remove directory created by [Link](#link) during uninstallation |
+  | `3`   | Clean up temporary data during uninstallation                   |
 
 #### abgox-abyss-app-shortcuts-action
 
@@ -155,18 +155,18 @@
 
 > [!Tip]
 >
-> Assume the Scoop root directory is `D:\Scoop`
+> Assume the Scoop root directory is `D:\scoop`
 
 - Scoop provides a `persist` configuration in the manifest files, which can persist data files in the app directory.
 
-  - Taking [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) as an example, Scoop will install it to `D:\Scoop\apps\abgox.PSCompletions`.
+  - Taking [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) as an example, Scoop will install it to `D:\scoop\apps\abgox.PSCompletions`.
   - It will persist data directory and file:
-    - `D:\Scoop\apps\abgox.PSCompletions\completions` => `D:\Scoop\persist\abgox.PSCompletions\completions`
-    - `D:\Scoop\apps\abgox.PSCompletions\data.json` => `D:\Scoop\persist\abgox.PSCompletions\data.json`
-  - When uninstalling [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json), Scoop only removes the `D:\Scoop\apps\abgox.PSCompletions` directory, not the `D:\Scoop\persist\abgox.PSCompletions` directory.
-    - So, its settings and completion data will still be saved in the `D:\Scoop\persist\abgox.PSCompletions` directory.
+    - `D:\scoop\apps\abgox.PSCompletions\completions` => `D:\scoop\persist\abgox.PSCompletions\completions`
+    - `D:\scoop\apps\abgox.PSCompletions\data.json` => `D:\scoop\persist\abgox.PSCompletions\data.json`
+  - When uninstalling [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json), Scoop only removes the `D:\scoop\apps\abgox.PSCompletions` directory, not the `D:\scoop\persist\abgox.PSCompletions` directory.
+    - So, its settings and completion data will still be saved in the `D:\scoop\persist\abgox.PSCompletions` directory.
     - After reinstalling, the data will continue to be used again.
-  - If the `-p/--purge` parameter is used when uninstalling, the `D:\Scoop\persist\abgox.PSCompletions` directory will be removed.
+  - If the `-p/--purge` parameter is used when uninstalling, the `D:\scoop\persist\abgox.PSCompletions` directory will be removed.
 
 - This is the most powerful feature of Scoop, which can quickly restore your app environment.
   - Some apps in `abyss` use [Link](#link), which cannot be reset correctly by `scoop reset`.
@@ -176,7 +176,7 @@
 
 > [!Tip]
 >
-> Assume the Scoop root directory is `D:\Scoop`
+> Assume the Scoop root directory is `D:\scoop`
 
 - Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the app data resides within the installation directory.
 - However, some apps store their data outside the installation directory, commonly in `$env:AppData`.
@@ -184,7 +184,7 @@
 - Taking [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) as an example:
   - [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) stores its data in `$env:AppData\Code` and `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
-  - `$persist_dir` = `D:\Scoop\persist\Microsoft.VisualStudioCode`
+  - `$persist_dir` = `D:\scoop\persist\Microsoft.VisualStudioCode`
   - It will link:
     - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
     - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
@@ -192,7 +192,8 @@
 > [!Warning]
 >
 > - Some apps store data as files instead of directories, requiring SymbolicLink to link.
-> - SymbolicLink requires administrator permission, so these apps will be added with the `RequireAdmin` tag in the [App List](#app-list).
+> - SymbolicLink requires administrator permission or [Developer Mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging).
+> - these apps will be added with the `RequireAdmin` tag in the [App List](#app-list).
 
 ---
 

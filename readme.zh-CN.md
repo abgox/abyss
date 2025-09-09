@@ -40,11 +40,11 @@
 
 - 部分应用无法做到 [Persist](#persist)，会使用 [Link](#link) 实现
 - 部分应用会使用安装程序而不是当作 zip 包进行安装
-- 通过一些 [配置](#config) 可以扩展功能
+- 通过 [配置](#config) 进行功能扩展
 - 通过 [abgox/scoop-i18n](https://scoop-i18n.abgox.com) 提供 i18n 支持
 - 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
   - 清单命名格式: `Publisher.PackageIdentifier`
-  - 目录结构: `bucket/a/abgox/abgox.PSCompletions.json`
+  - 目录结构: `bucket/a/abgox/abgox.scoop-i18n.json`
 
 ### Demo
 
@@ -117,11 +117,11 @@
 - 配置值的含义如下，你可以任意组合这些值，如 `12` 表示 `1` 和 `2` 都要执行
 - 如果不希望有这些额外行为，设置为不包含它们的任意值即可
 
-  | 配置值 | 行为                                                |
-  | :----: | --------------------------------------------------- |
-  |  `1`   | 卸载/更新时先尝试终止进程，然后进行卸载操作         |
-  |  `2`   | 卸载时删除 Link 目录(通过 [Link](#link) 创建的目录) |
-  |  `3`   | 卸载时删除临时数据                                  |
+  | 配置值 | 行为                                            |
+  | :----: | ----------------------------------------------- |
+  |  `1`   | 卸载/更新时先尝试终止相关进程，然后进行卸载操作 |
+  |  `2`   | 卸载时删除通过 [Link](#link) 创建的目录         |
+  |  `3`   | 卸载时删除临时数据                              |
 
 #### abgox-abyss-app-shortcuts-action
 
@@ -136,11 +136,11 @@
 - 如果没有设置，则默认为 `1`
 - 配置值的含义如下
 
-  | 配置值 | 行为                                                                       |
-  | :----: | -------------------------------------------------------------------------- |
-  |  `0`   | **不创建** 清单中定义的快捷方式                                            |
-  |  `1`   | **创建** 清单中定义的快捷方式                                              |
-  |  `2`   | 如果应用使用安装程序， 就 **不创建** 清单中定义的快捷方式，否则就 **创建** |
+  | 配置值 | 行为                                                                      |
+  | :----: | ------------------------------------------------------------------------- |
+  |  `0`   | **不创建** 清单中定义的快捷方式                                           |
+  |  `1`   | **创建** 清单中定义的快捷方式                                             |
+  |  `2`   | 如果应用使用安装程序，就 **不创建** 清单中定义的快捷方式，否则就 **创建** |
 
 #### abgox-abyss-bucket-name
 
@@ -155,22 +155,22 @@
 
 > [!Tip]
 >
-> 假设 Scoop 的根目录是 `D:\Scoop`
+> 假设 Scoop 的根目录是 `D:\scoop`
 
 - Scoop 在清单文件中提供了 `persist` 配置，可以持久化保存应用目录中的数据文件
 
-  - 以 [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) 为例, Scoop 会将其安装到 `D:\Scoop\apps\abgox.PSCompletions` 目录中
+  - 以 [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) 为例，Scoop 会将它安装到 `D:\scoop\apps\abgox.PSCompletions` 目录中
   - 然后会持久化(persist)数据目录和配置文件:
 
-    - `D:\Scoop\apps\abgox.PSCompletions\completions` => `D:\Scoop\persist\abgox.PSCompletions\completions`
-    - `D:\Scoop\apps\abgox.PSCompletions\data.json` => `D:\Scoop\persist\abgox.PSCompletions\data.json`
+    - `D:\scoop\apps\abgox.PSCompletions\completions` => `D:\scoop\persist\abgox.PSCompletions\completions`
+    - `D:\scoop\apps\abgox.PSCompletions\data.json` => `D:\scoop\persist\abgox.PSCompletions\data.json`
 
-  - 当卸载 [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) 时，Scoop 只会删除 `D:\Scoop\apps\abgox.PSCompletions` 目录，而不会删除 `D:\Scoop\persist\abgox.PSCompletions` 目录
-    - 因此，它的设置、补全数据仍然会保存在 `D:\Scoop\persist\abgox.PSCompletions` 目录中
+  - 当卸载 [abgox.PSCompletions](./bucket/a/abgox/abgox.PSCompletions.json) 时，Scoop 只会删除 `D:\scoop\apps\abgox.PSCompletions` 目录，而不会删除 `D:\scoop\persist\abgox.PSCompletions` 目录
+    - 因此，它的设置、补全数据仍然会保存在 `D:\scoop\persist\abgox.PSCompletions` 目录中
     - 重新安装后，又会继续使用这些数据
-  - 如果卸载时使用了 `-p/--purge` 参数，`D:\Scoop\persist\abgox.PSCompletions` 目录才会被删除
+  - 如果卸载时使用了 `-p/--purge` 参数，`D:\scoop\persist\abgox.PSCompletions` 目录才会被删除
 
-- 这是 Scoop 最强大的特性，可以快速的恢复自己的应用环境
+- 这是 Scoop 最强大的特性，可以快速的恢复应用环境
   - `abyss` 中的一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
   - 建议通过 `scoop update --force <app>` 强制更新应用
 
@@ -178,7 +178,7 @@
 
 > [!Tip]
 >
-> 假设 Scoop 的根目录是 `D:\Scoop`
+> 假设 Scoop 的根目录是 `D:\scoop`
 
 - Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
 - 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
@@ -186,7 +186,7 @@
 - 以 [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) 为例
   - [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
-  - `$persist_dir` = `D:\Scoop\persist\Microsoft.VisualStudioCode`
+  - `$persist_dir` = `D:\scoop\persist\Microsoft.VisualStudioCode`
   - 它会进行链接:
     - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
     - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
@@ -194,7 +194,8 @@
 > [!Warning]
 >
 > - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
-> - SymbolicLink 需要管理员权限，因此在 [应用列表](#应用列表) 中这些应用会被添加 `RequireAdmin` 标签
+> - SymbolicLink 需要管理员权限或者启用 [开发人员模式](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging)
+> - 在 [应用列表](#应用列表) 中这些应用会被添加 `RequireAdmin` 标签
 
 ---
 
