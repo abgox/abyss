@@ -2,6 +2,13 @@
 
 Microsoft.PowerShell.Utility\Write-Host
 
+if (!$env:SCOOP -and $scoopdir) {
+    [Environment]::SetEnvironmentVariable('SCOOP', $scoopdir, 'User')
+}
+if (!$env:SCOOP_GLOBAL -and $globaldir) {
+    [Environment]::SetEnvironmentVariable('SCOOP_GLOBAL', $globaldir, 'User')
+}
+
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
 try {
