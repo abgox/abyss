@@ -24,14 +24,14 @@
         "A-Ensure-Directory \"$dir\\original\"",
         "A-Ensure-Directory \"$dir\\shims\"",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extras\\$app\" | ForEach-Object {",
-        "    Move-Item \"$env:SCOOP\\shims\\$($_.Name)\" \"$dir\\original\"",
+        "    Move-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\original\"",
         "    $content = Get-Content $_.FullName -Raw",
-        "    $content = $content.Replace('${scoop.ps1}', \"$env:SCOOP\\apps\\scoop\\current\\bin\\scoop.ps1\")",
-        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$env:SCOOP\\apps\\$app\\current\\scoop-i18n.ps1\")",
+        "    $content = $content.Replace('${scoop.ps1}', \"$scoopdir\\apps\\scoop\\current\\bin\\scoop.ps1\")",
+        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$scoopdir\\apps\\$app\\current\\scoop-i18n.ps1\")",
         "    [System.IO.File]::WriteAllText(\"$dir\\shims\\$($_.Name)\", ($content -join [System.Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))",
         "}",
         "Get-ChildItem \"$dir\\shims\" | ForEach-Object {",
-        "    Copy-Item $_.FullName \"$env:SCOOP\\shims\" -Force",
+        "    Copy-Item $_.FullName \"$scoopdir\\shims\" -Force",
         "}"
     ],
     "post_install": [
@@ -44,7 +44,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "Get-ChildItem \"$dir\\original\" | ForEach-Object {",
-        "    Move-Item $_.FullName \"$env:SCOOP\\shims\" -Force",
+        "    Move-Item $_.FullName \"$scoopdir\\shims\" -Force",
         "}"
     ],
     "post_uninstall": [
