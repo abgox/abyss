@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (249)|Tag|Description|
+|App (250)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -110,6 +110,7 @@
 |[CommandLine.Wave](https://www.waveterm.dev "点击访问仓库或主页")|<a href="./bucket/c/CommandLine/CommandLine.Wave.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|具有超能力的开源终端，集成文件预览、文件编辑、人工智能、网页浏览和工作区组织。|
 |[CoreyHayward.PowerToysRun-ClipboardManager](https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager "点击访问仓库或主页")|<a href="./bucket/c/CoreyHayward/CoreyHayward.PowerToysRun-ClipboardManager.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一个 PowerToys Run 插件，用于轻松搜索和粘贴剪贴板历史记录。|
 |[CPUID.CPU-Z](https://www.cpuid.com/softwares/cpu-z.html "点击访问仓库或主页")|<a href="./bucket/c/CPUID/CPUID.CPU-Z.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|系统信息软件。|
+|[CrowdStrike.Perseus](https://github.com/CrowdStrike/perseus "点击访问仓库或主页")|<a href="./bucket/c/CrowdStrike/CrowdStrike.Perseus.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一个开源工具，旨在解决 Go 语言模块依赖关系复杂度激增的问题。|
 |[dail8859.NotepadNext](https://github.com/dail8859/NotepadNext "点击访问仓库或主页")|<a href="./bucket/d/dail8859/dail8859.NotepadNext.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|Notepad++ 的跨平台重新实现。|
 |[Dangbei.XiaowangScreenshot](https://www.xiaowang.com/ "点击访问仓库或主页")|<a href="./bucket/d/Dangbei/Dangbei.XiaowangScreenshot.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|小旺 AI 截图，一款接入 DeepSeek 的 AI 截图神器，轻巧、好用、免费、无广告。|
 |[Daum.PotPlayer](https://potplayer.daum.net "点击访问仓库或主页")|<a href="./bucket/d/Daum/Daum.PotPlayer.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|高度可定制的媒体播放器。|
