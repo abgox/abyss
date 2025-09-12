@@ -1,0 +1,52 @@
+{
+    "version": "0.24.0",
+    "description": "一个开源工具，旨在解决 Go 语言模块依赖关系复杂度激增的问题。A open-source tool for solving the complexity of Go module dependencies.",
+    "homepage": "https://github.com/CrowdStrike/perseus",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/CrowdStrike/perseus/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CrowdStrike/perseus/releases/download/v0.24.0/perseus_windows_amd64.zip",
+            "hash": "48ffe59cdf63b69237325bd2cfc8ab959b55a751dd6b61fbb3ae33fad4de57d3"
+        }
+    },
+    "bin": "perseus.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/CrowdStrike/perseus/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CrowdStrike/perseus/releases/download/v0.24.0/perseus_windows_amd64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
