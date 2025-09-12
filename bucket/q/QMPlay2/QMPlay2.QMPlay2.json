@@ -1,0 +1,60 @@
+{
+    "version": "25.09.11",
+    "description": "一款视频和音频播放器，可以播放大多数格式和编解码器。A video and audio player which can play most formats and codecs.",
+    "homepage": "https://github.com/zaps166/QMPlay2",
+    "license": {
+        "identifier": "LGPL-3.0-only",
+        "url": "https://github.com/zaps166/QMPlay2/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zaps166/QMPlay2/releases/download/25.09.11/QMPlay2-Win64-25.09.11-portable.7z",
+            "hash": "07b1a3aa20059867788adb5da8f5f0493fe11dd055c699af49b9e1fa7fde6793"
+        }
+    },
+    "extract_dir": "QMPlay2-Win64-25.09.11-portable",
+    "shortcuts": [
+        [
+            "QMPlay2.exe",
+            "QMPlay2"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/zaps166/QMPlay2/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "persist": "settings",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zaps166/QMPlay2/releases/download/$version/QMPlay2-Win64-$version-portable.7z"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "extract_dir": "QMPlay2-Win64-$version-portable"
+    }
+}
