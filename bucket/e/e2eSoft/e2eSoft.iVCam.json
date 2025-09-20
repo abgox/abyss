@@ -1,13 +1,12 @@
 {
-    // 启动报错 '请重新安装'
-    "version": "7.3.6",
+    "version": "deprecated",
     "description": "iVCam 可将你的手机/平板电脑变成适用于 Windows 电脑的高清网络摄像头。iVCam turns your Phone/Pad into an HD webcam for Windows PC.",
     "homepage": "https://www.e2esoft.com/",
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/e2eSoft/products/releases/download/v7.3/iVCam_x64_v7.3.6.exe",
-            "hash": "0f2eabc917ecf8e3b4d4206b110a55342a093746803fb76c31754f4e810a5993"
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
         }
     },
     "innosetup": true,
@@ -21,6 +20,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "# 废弃: 启动报错 '请重新安装'",
+        "A-Deny-Manifest",
         "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
     ],
     "post_install": [
@@ -42,7 +43,8 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/e2eSoft/products/releases",
-        "regex": "browser_download_url.+?iVCam_x64_v([\\d\\.]+).exe"
+        "regex": "browser_download_url.+?iVCam_x64_v([\\d\\.]+).exe",
+        "replace": "deprecated"
     },
     "autoupdate": {
         "architecture": {
