@@ -1,0 +1,57 @@
+{
+    "version": "2.0.21",
+    "description": "一款专注于快速绘制节点图的桌面工具。A software that focuses on quickly drawing diagrams.",
+    "homepage": "https://github.com/graphif/project-graph",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/graphif/project-graph/releases/download/v2.0.21/Project.Graph_2.0.21_x64-setup.exe",
+            "hash": "0db3e9f79af6531d6eb5f170d6d6e9fadea41ae495ab5a902213081b78997bab"
+        }
+    },
+    "shortcuts": [
+        [
+            "project-graph.exe",
+            "Project Graph"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/S',\"/D=$dir\")",
+        "A-New-LinkDirectory @(\"$env:AppData\\liren.project-graph\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/graphif/project-graph/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/graphif/project-graph/releases/download/v$version/Project.Graph_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
