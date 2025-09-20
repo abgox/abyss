@@ -1,0 +1,59 @@
+{
+    "version": "1.6.13",
+    "description": "一款能加快你下载速度的下载管理器。A download manager that speeds up your downloads.",
+    "homepage": "https://abdownloadmanager.com/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/amir1376/ab-download-manager/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/amir1376/ab-download-manager/releases/download/v1.6.13/ABDownloadManager_1.6.13_windows_x64.zip",
+            "hash": "5146aca8894aa8d9d97aebddf3b028ca418a1036e2aeaa165e208b877792a104"
+        }
+    },
+    "extract_dir": "ABDownloadManager",
+    "shortcuts": [
+        [
+            "ABDownloadManager.exe",
+            "ABDownloadManager"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.abdm\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/amir1376/ab-download-manager/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/amir1376/ab-download-manager/releases/download/v$version/ABDownloadManager_$version_windows_x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
