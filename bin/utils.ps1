@@ -60,9 +60,7 @@ function A-Test-DeveloperMode {
 }
 
 $isAdmin = A-Test-Admin
-
 $isDevMode = A-Test-DeveloperMode
-
 
 <#
 应用的安装/卸载步骤 (xxx 表示其他自定义逻辑)
@@ -991,6 +989,23 @@ function A-Hold-App {
             scoop hold $app
         }
     } -ArgumentList $AppName
+}
+
+function A-Deny-Manifest {
+    <#
+    .SYNOPSIS
+        拒绝清单文件，提示用户使用新的清单文件
+    #>
+    param(
+        [string]$NewManifestName
+    )
+    $msg = "'$app' is deprecated"
+
+    $msg += if ($NewManifestName) { ", please use '$NewManifestName' instead." }else { "." }
+
+    error $msg
+
+    A-Exit
 }
 
 function A-Move-PersistDirectory {
