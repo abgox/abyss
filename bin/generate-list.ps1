@@ -1,10 +1,12 @@
+#Requires -PSEdition Core
+
 param(
     [array]$PathList = @("app-list.md", "app-list.zh-CN.md")
 )
 
 $manifests = Get-ChildItem "$PSScriptRoot\..\bucket" -Recurse -Filter *.json | Sort-Object { $_.BaseName }
 
-function A-Test-ScriptPattern {
+function Test-ScriptPattern {
     param(
         [Parameter(Mandatory = $true)]
         [PSObject]$InputObject,
@@ -57,7 +59,7 @@ function A-Test-ScriptPattern {
     return $patternFound
 }
 
-function get_static_content($path) {
+function Get-StaticContent($path) {
     $content = Get-Content -Path $path -Encoding UTF8
 
     $match = $content | Select-String -Pattern "<!-- prettier-ignore-start -->"
@@ -93,10 +95,17 @@ foreach ($path in $PathList) {
         $tag = @()
 
         ## manifest
-        $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
+        $isDeprecated = Test-ScriptPattern $json '.*A-Deny-Manifest.*'
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
-        $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
-        # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+        if ($isDeprecated) {
+            $title = if ($isCN) { "它已被弃用，点击查看 manifest json 文件" } else { "It has been deprecated. Click to view the manifest json file" }
+            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/deprecated-critical" alt="deprecated" /></a>'
+        }
+        else {
+            $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
+            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
+            # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+        }
 
         ## persist
         $isPersist = $json.persist
@@ -111,7 +120,7 @@ foreach ($path in $PathList) {
         }
 
         ## Link
-        $isLink = A-Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
+        $isLink = Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
         if ($isLink) {
             if ($isCN) {
                 $label = '<code title="使用 Link 进行数据持久化">Link</code>'
@@ -124,17 +133,17 @@ foreach ($path in $PathList) {
         }
 
         ## RequireAdmin
-        $RequireAdmin = A-Test-ScriptPattern $json '.*(A-Require-Admin)|(A-New-LinkFile).*'
+        $RequireAdmin = Test-ScriptPattern $json '.*(A-Require-Admin)|(A-New-LinkFile).*'
         $label = if ($isCN) { '<code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires administrator permission to install, update, or uninstall">RequireAdmin</code>' }
         if ($RequireAdmin) { $tag += $label }
 
         ## NoSilentInstall
-        $NoSilentInstall = A-Test-ScriptPattern $json '.*A-Install-Exe.*-NoSilent.*'
+        $NoSilentInstall = Test-ScriptPattern $json '.*A-Install-Exe.*-NoSilent.*'
         $label = if ($isCN) { '<code title="在安装时可能需要用户交互">NoSilentInstall</code>' } else { '<code title="May require user interaction during installation">NoSilentInstall</code>' }
         if ($NoSilentInstall) { $tag += $label }
 
         ## NoSilentUninstall
-        $NoSilentUninstall = A-Test-ScriptPattern $json '.*A-Uninstall-Exe.*-NoSilent.*'
+        $NoSilentUninstall = Test-ScriptPattern $json '.*A-Uninstall-Exe.*-NoSilent.*'
         $label = if ($isCN) { '<code title="在卸载时可能需要用户交互">NoSilentUninstall</code>' } else { '<code title="May require user interaction during uninstallation">NoSilentUninstall</code>' }
         if ($NoSilentUninstall) { $tag += $label }
 
@@ -148,7 +157,7 @@ foreach ($path in $PathList) {
         if (!$json.autoupdate) { $tag += $label }
 
         ## font
-        if (A-Test-ScriptPattern $json '.*A-Add-Font.*') {
+        if (Test-ScriptPattern $json '.*A-Add-Font.*') {
             if ($isCN) {
                 $label = '<code title="一种字体">Font</code>'
             }
@@ -168,7 +177,7 @@ foreach ($path in $PathList) {
         if ($json.psmodule) { $tag += $label }
 
         ## Msix
-        $isMsix = A-Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
+        $isMsix = Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
         if ($isCN) {
             $label = '<code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>'
         }
@@ -192,5 +201,5 @@ foreach ($path in $PathList) {
         $content += "|" + ($info -join "|") + "|"
     }
 
-    (get_static_content $path) + $content + "`n<!-- prettier-ignore-end -->" | Out-File $path -Encoding UTF8 -Force
+    (Get-StaticContent $path) + $content + "`n<!-- prettier-ignore-end -->" | Out-File $path -Encoding UTF8 -Force
 }
