@@ -147,8 +147,15 @@
 - It is only used to record the name of `abyss` added locally, and then it is used in some special cases.
 - Don't modify it manually. When installing/updating/uninstalling an app in `abyss`, it will be automatically updated.
 - For example:
-  - If you use `scoop install abyss/JetBrains.WebStorm@2025.1.2` to specify version `2025.1.2`.
+
+  - You can install a specific version of JetBrains.WebStorm.
+
+    ```shell
+    scoop install abyss/JetBrains.WebStorm@2025.1.2
+    ```
+
   - It will be used during installation to avoid installation errors.
+
 - Reference: https://github.com/abgox/abyss/issues/10
 
 ### Persist
