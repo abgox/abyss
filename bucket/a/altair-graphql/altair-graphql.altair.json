@@ -1,0 +1,61 @@
+{
+    "version": "8.2.5",
+    "description": "一款适用于所有平台、功能丰富的 GraphQL 客户端。A beautiful feature-rich GraphQL Client for all platforms.",
+    "homepage": "https://altairgraphql.dev/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/altair-graphql/altair/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/altair-graphql/altair/releases/download/v8.2.5/altair_8.2.5_x64_win.exe",
+            "hash": "fe1bfe50e9f8e5878cea951602a14fcbf9dcf8029e9488c9a2ddf1bb9a44ea73"
+        }
+    },
+    "shortcuts": [
+        [
+            "Altair GraphQL Client.exe",
+            "Altair GraphQL Client"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall Altair GraphQL Client.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\Altair GraphQL Client\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\altair-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/altair-graphql/altair/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/altair-graphql/altair/releases/download/v$version/altair_$version_x64_win.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
