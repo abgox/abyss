@@ -1,0 +1,68 @@
+{
+    "version": "0.24.1",
+    "description": "一款注重隐私、本地优先、开源且即用型的 Notion 与 Miro 替代方案。A privacy-focused, local-first, open-source, and ready-to-use alternative for Notion & Miro.",
+    "homepage": "https://affine.pro",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/toeverything/AFFiNE/blob/canary/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/toeverything/AFFiNE/releases/download/v0.24.1/affine-0.24.1-stable-windows-x64.nsis.exe",
+            "hash": "902b0a1099e692356f02b7214f7f5481c604c38a010dfc22deb5a06eb3498f25"
+        },
+        "arm64": {
+            "url": "https://github.com/toeverything/AFFiNE/releases/download/v0.24.1/affine-0.24.1-stable-windows-arm64.nsis.exe",
+            "hash": "95c7de4bce7c63f148cf8ebb91e6c6ed59005626c3b0fe690bd9f4bf63b380c0"
+        }
+    },
+    "shortcuts": [
+        [
+            "AFFiNE.exe",
+            "AFFiNE"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall AFFiNE.exe' -ArgumentList @('/currentuser','/S',\"/D=$dir\")",
+        "A-New-LinkDirectory @(\"$env:AppData\\AFFiNE\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\affine-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/toeverything/AFFiNE/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/toeverything/AFFiNE/releases/download/v$version/affine-$version-stable-windows-x64.nsis.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/toeverything/AFFiNE/releases/download/v$version/affine-$version-stable-windows-arm64.nsis.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
