@@ -1,0 +1,60 @@
+{
+    "version": "4.16.1",
+    "description": "一个可一次性批量重命名多个文件和文件夹的程序。A program for bulk renaming multiple files and folders at once.",
+    "homepage": "https://www.advancedrenamer.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.advancedrenamer.com/license"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.advancedrenamer.com/down/win/advanced_renamer_setup_4_16_1.exe",
+            "hash": "f80bc125873211d926f205d682fc6438aa2b5957f4bbe814c46832fea1d0d7f2"
+        }
+    },
+    "bin": "arenc.exe",
+    "shortcuts": [
+        [
+            "ARen.exe",
+            "Advanced Renamer"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Exe inno",
+        "A-New-LinkDirectory @(\"$env:AppData\\Hulubulu\\Advanced Renamer $($version.split('.')[0])\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.advancedrenamer.com/versionlog",
+        "regex": "Advanced Renamer\\s+([\\d\\.]+)\\s"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.advancedrenamer.com/down/win/advanced_renamer_setup_$underscoreVersion.exe"
+            }
+        }
+    }
+}
