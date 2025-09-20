@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (253)|Tag|Description|
+|App (254)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -141,6 +141,7 @@
 |[Google.Chrome.Dev.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击访问仓库或主页")|<a href="./bucket/g/Google/Google.Chrome.Dev.EXE.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|(Dev 版本) 谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。|
 |[Google.Chrome.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击访问仓库或主页")|<a href="./bucket/g/Google/Google.Chrome.EXE.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。|
 |[GopeedLab.Gopeed](https://gopeed.com "点击访问仓库或主页")|<a href="./bucket/g/GopeedLab/GopeedLab.Gopeed.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一款现代下载管理器，使用 Golang 和 Flutter 构建。|
+|[graphif.project-graph](https://github.com/graphif/project-graph "点击访问仓库或主页")|<a href="./bucket/g/graphif/graphif.project-graph.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款专注于快速绘制节点图的桌面工具。|
 |[grzhan.PowerToysRun-HttpStatusCodes](https://github.com/grzhan/HttpStatusCodePowerToys "点击访问仓库或主页")|<a href="./bucket/g/grzhan/grzhan.PowerToysRun-HttpStatusCodes.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一个 PowerToys Run 插件，用于搜索 HTTP 状态代码。|
 |[Helix.Helix](https://helix-editor.com "点击访问仓库或主页")|<a href="./bucket/h/Helix/Helix.Helix.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|后现代文本编辑器。|
 |[HexHub.HexHub](https://www.hexhub.cn/ "点击访问仓库或主页")|<a href="./bucket/h/HexHub/HexHub.HexHub.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|为程序员和运维人员量身打造的一站式开发运维利器。|
