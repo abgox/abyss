@@ -1,0 +1,62 @@
+{
+    "version": "3.4.2",
+    "description": "一款免费、跨平台的开源字幕编辑软件。A free, cross-platform open source tool for creating and modifying subtitles.",
+    "homepage": "https://www.aegisub.org",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/TypesettingTools/Aegisub/blob/master/LICENCE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/TypesettingTools/Aegisub/releases/download/v3.4.2/Aegisub-3.4.2.exe",
+            "hash": "df0318afbc88aa461bb702a42a0d0b1203b88cec2d28b61691493766aefe784d"
+        }
+    },
+    "shortcuts": [
+        [
+            "aegisub.exe",
+            "Aegisub"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Exe inno",
+        "A-New-LinkDirectory @(\"$env:AppData\\Aegisub\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/TypesettingTools/Aegisub/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/TypesettingTools/Aegisub/releases/download/v$version/Aegisub-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
