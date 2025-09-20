@@ -20,8 +20,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$InstallLocation = '\"' + \"$dir\" + '\"'",
-        "A-Install-Exe -Uninstaller 'unins000.exe' -ArgumentList @('/VerySilent',\"/Dir=$InstallLocation\")",
+        "A-Install-Exe inno",
         "A-New-LinkDirectory @(\"$env:ProgramData\\Anytxt\")"
     ],
     "post_install": [
@@ -36,7 +35,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
