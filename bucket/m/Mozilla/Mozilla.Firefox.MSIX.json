@@ -1,6 +1,5 @@
 {
-    // 如果数据目录变成一个软链接，会出现运行问题
-    "version": "140.0.2",
+    "version": "deprecated",
     "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发。Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries.",
     "homepage": "https://www.mozilla.org/firefox",
     "license": {
@@ -9,14 +8,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/140.0.2/win64/multi/Firefox%20Setup%20140.0.2.msix",
-            "hash": "a5133ff378c4e59462ba719b9cc9e4ece03eaff1f2056108ba8dce32fd540542"
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
         }
     },
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "# 废弃: 如果数据目录变成一个软链接，会出现运行问题",
+        "A-Deny-Manifest",
         "$PackageFamilyName = A-Add-MsixPackage 'Mozilla.MozillaFirefox_jag0gd4e3s9p2'",
         "A-New-LinkDirectory @(\"$env:AppData\\Mozilla\\Firefox\")"
     ],
@@ -47,7 +48,8 @@
             "\"x86:$($InstallerInfo.x86.InstallerUrl);\"",
             "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
         ],
-        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+        "replace": "deprecated"
     },
     "autoupdate": {
         "architecture": {
