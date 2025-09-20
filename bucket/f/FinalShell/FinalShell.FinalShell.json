@@ -1,13 +1,12 @@
 {
-    // 安装后，无法正常运行
-    "version": "4.5.12",
+    "version": "deprecated",
     "description": "SSH 工具、服务器管理、开发运维工具。SSH tool, server management, remote desktop acceleration software.",
     "homepage": "https://www.hostbuf.com/t/988.html",
     "license": "Freemium",
     "architecture": {
         "64bit": {
-            "url": "https://dl.hostbuf.com/finalshell3/finalshell_windows_x64.exe",
-            "hash": "e1c3742dfc7a13f6cd642699e3dc7ea9bed906ef65813a9e768558d0fde0ea1b"
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
         }
     },
     "shortcuts": [
@@ -20,6 +19,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "# 废弃: 安装后，无法正常运行",
+        "A-Deny-Manifest",
         "A-Install-Exe -Uninstaller 'uninstaller.exe'",
         "A-New-PersistFile \"$persist_dir\\config.json\"",
         "A-New-PersistFile \"$persist_dir\\tconfig.json\""
@@ -51,7 +52,9 @@
     ],
     "checkver": {
         "url": "https://www.hostbuf.com/downloads/update_config_win.json",
-        "jsonpath": "$.version_name"
+        "jsonpath": "$.version_name",
+        "regex": "(.+)",
+        "replace": "deprecated"
     },
     "autoupdate": {
         "architecture": {
