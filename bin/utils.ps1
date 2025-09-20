@@ -492,22 +492,41 @@ function A-Stop-Service {
 
 function A-Install-Exe {
     param(
+        [ValidateSet("inno")]
+        [string]$InstallerType,
         [string]$Installer,
         [array]$ArgumentList,
+
         # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
         [string]$SuccessFile,
+
         # $Uninstaller 和 $SuccessFile 作用一致，不过它必须指定软件的卸载程序
         # 当指定它后，A-Uninstall-Exe 会默认使用它作为卸载程序路径
         [string]$Uninstaller,
+
         # 仅用于标识，表示可能需要用户交互
         [switch]$NoSilent,
+
         # 超时时间（秒）
         [string]$Timeout = 300
     )
 
-    # 如果没有传递安装参数，则使用默认参数
-    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-        $ArgumentList = @('/S', "/D=$dir")
+    if ($InstallerType -eq "inno") {
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            $ArgumentList = @('/VerySilent', "/Dir=$dir")
+        }
+        if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
+            $Uninstaller = 'unins000.exe'
+        }
+    }
+    # elseif () {
+
+    # }
+    else {
+        # 如果没有传递安装参数，则使用默认参数
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            $ArgumentList = @('/S', "/D=$dir")
+        }
     }
 
     if ($PSBoundParameters.ContainsKey('Installer')) {
@@ -534,10 +553,11 @@ function A-Install-Exe {
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
     @{
-        Installer    = $path
-        ArgumentList = $ArgumentList
-        SuccessFile  = $SuccessFile
-        Uninstaller  = $Uninstaller
+        InstallerType = $InstallerType
+        Installer     = $path
+        ArgumentList  = $ArgumentList
+        SuccessFile   = $SuccessFile
+        Uninstaller   = $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
     if (Test-Path $path) {
@@ -635,10 +655,23 @@ function A-Uninstall-Exe {
         [switch]$Hidden
     )
 
-    # 如果没有传递卸载参数，则使用默认参数
-    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-        $ArgumentList = @('/S')
+    $installerInfo = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json
+
+    if ($installerInfo.InstallerType -eq "inno") {
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            $ArgumentList = @('/VerySilent')
+        }
     }
+    # elseif () {
+
+    # }
+    else {
+        # 如果没有传递卸载参数，则使用默认参数
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            $ArgumentList = @('/S')
+        }
+    }
+
     if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
         if (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc") {
             $Uninstaller = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Uninstaller"
