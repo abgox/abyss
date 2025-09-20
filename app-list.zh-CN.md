@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (254)|Tag|Description|
+|App (255)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -265,6 +265,7 @@
 |[Termius.Termius](https://termius.com/ "点击访问仓库或主页")|<a href="./bucket/t/Termius/Termius.Termius.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款适用于 Windows 的现代 SSH 客户端和终端。|
 |[TermoraDev.Termora](https://github.com/TermoraDev/termora "点击访问仓库或主页")|<a href="./bucket/t/TermoraDev/TermoraDev.Termora.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个终端模拟器和 SSH 客户端。|
 |[TinyCraft.TinyRDM](https://redis.tinycraft.cc/ "点击访问仓库或主页")|<a href="./bucket/t/TinyCraft/TinyCraft.TinyRDM.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款现代轻量级跨平台 Redis 桌面管理器。|
+|[ToEverything.AFFiNE](https://affine.pro "点击访问仓库或主页")|<a href="./bucket/t/ToEverything/ToEverything.AFFiNE.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款注重隐私、本地优先、开源且即用型的 Notion 与 Miro 替代方案。|
 |[TominLab.WonderPen](https://www.tominlab.com/wonderpen "点击访问仓库或主页")|<a href="./bucket/t/TominLab/TominLab.WonderPen.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款专业的写作软件，致力于为作者提供专注且流畅的写作体验。|
 |[TranslucentTB.TranslucentTB](https://github.com/TranslucentTB/TranslucentTB "点击访问仓库或主页")|<a href="./bucket/t/TranslucentTB/TranslucentTB.TranslucentTB.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|一个轻量级的实用程序，使 Windows 任务栏半透明/透明。|
 |[TriliumNext.Notes](https://github.com/TriliumNext/Trilium "点击访问仓库或主页")|<a href="./bucket/t/TriliumNext/TriliumNext.Notes.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款免费开源、跨平台的分层式笔记应用程序，专注于构建大型个人知识库。|
