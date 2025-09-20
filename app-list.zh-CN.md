@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (255)|Tag|Description|
+|App (256)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -60,6 +60,7 @@
 |[Alibaba.DingTalk](https://www.dingtalk.com/ "点击访问仓库或主页")|<a href="./bucket/a/Alibaba/Alibaba.DingTalk.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|钉钉，阿里巴巴的智能移动办公平台。|
 |[Alibaba.Qoder](https://qoder.com/ "点击访问仓库或主页")|<a href="./bucket/a/Alibaba/Alibaba.Qoder.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|用于现实软件的自主智能编程平台。|
 |[Alibaba.Yuque](https://www.yuque.com/ "点击访问仓库或主页")|<a href="./bucket/a/Alibaba/Alibaba.Yuque.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|语雀，阿里巴巴的笔记与文档知识库。|
+|[altair-graphql.altair](https://altairgraphql.dev/ "点击访问仓库或主页")|<a href="./bucket/a/altair-graphql/altair-graphql.altair.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款适用于所有平台、功能丰富的 GraphQL 客户端。|
 |[amir1376.ABDownloadManager](https://abdownloadmanager.com/ "点击访问仓库或主页")|<a href="./bucket/a/amir1376/amir1376.ABDownloadManager.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款能加快你下载速度的下载管理器。|
 |[amzxyz.rime_wanxiang](https://github.com/amzxyz/rime_wanxiang "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|Rime 小狼毫配置: 万象拼音输入方案。|
 |[amzxyz.rime_wanxiang.model](https://github.com/amzxyz/RIME-LMDG "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.model.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|Rime 小狼毫配置: 万象语法模型。|
