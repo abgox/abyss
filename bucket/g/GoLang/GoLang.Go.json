@@ -1,0 +1,64 @@
+{
+    "version": "1.25.1",
+    "description": "一个开源的编程语言，它能让构建安全、可扩展的系统变得简单。An open source programming language that makes it simple to build secure, scalable systems.",
+    "homepage": "https://go.dev/",
+    "license": {
+        "identifier": "BSD-3-Clause",
+        "url": "https://github.com/golang/go/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://go.dev/dl/go1.25.1.windows-amd64.msi#/dl.msi_",
+            "hash": "c9b5057b918862849ef83795ad5ace4812363ce3877e99863be759715571dbc1"
+        },
+        "arm64": {
+            "url": "https://go.dev/dl/go1.25.1.windows-arm64.msi#/dl.msi_",
+            "hash": "96211f78b8b0690a898358802d1dd431ca0cd7644f2a6633ee0a2d4174f90bf2"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive') -SuccessFile \"$env:ProgramFiles\\Go\\bin\\go.exe\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "$ProductCode = A-Get-ProductCode '^Go Programming Language (amd64|arm64) go[\\d\\.]+'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:ProgramFiles\\Go\\bin\\go.exe\"",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'GoLang.Go' 'msi'",
+            "$InstallerInfo.PackageVersion"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://go.dev/dl/go$version.windows-amd64.msi#/dl.msi_"
+            },
+            "arm64": {
+                "url": "https://go.dev/dl/go$version.windows-arm64.msi#/dl.msi_"
+            }
+        }
+    }
+}
