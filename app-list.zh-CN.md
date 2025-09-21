@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (259)|Tag|Description|
+|App (260)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -140,6 +140,7 @@
 |[Git.Git](https://gitforwindows.org/ "点击访问仓库或主页")|<a href="./bucket/g/Git/Git.Git.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个分布式版本控制系统。|
 |[GitExtensionsTeam.GitExtensions](https://gitextensions.github.io/ "点击访问仓库或主页")|<a href="./bucket/g/GitExtensionsTeam/GitExtensionsTeam.GitExtensions.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个用于管理 Git 仓库的独立用户界面工具。|
 |[GnuPG.Gpg4win](https://www.gpg4win.org "点击访问仓库或主页")|<a href="./bucket/g/GnuPG/GnuPG.Gpg4win.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|GNU Privacy Guard 是一款用于文件和电子邮件的加密软件，适用于 Windows 系统。|
+|[GoLang.Go](https://go.dev/ "点击访问仓库或主页")|<a href="./bucket/g/GoLang/GoLang.Go.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个开源的编程语言，它能让构建安全、可扩展的系统变得简单。|
 |[Google.Chrome.Beta.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击访问仓库或主页")|<a href="./bucket/g/Google/Google.Chrome.Beta.EXE.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|(Beta 版本) 谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。|
 |[Google.Chrome.Dev.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击访问仓库或主页")|<a href="./bucket/g/Google/Google.Chrome.Dev.EXE.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|(Dev 版本) 谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。|
 |[Google.Chrome.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击访问仓库或主页")|<a href="./bucket/g/Google/Google.Chrome.EXE.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。|
