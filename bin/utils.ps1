@@ -1217,21 +1217,39 @@ function A-Get-InstallerInfoFromWinget {
             Uri                      = $url
             ConnectionTimeoutSeconds = 10
             OperationTimeoutSeconds  = 15
+            UseBasicParsing          = $true
+            ErrorAction              = 'Stop'
         }
         if ($env:GITHUB_TOKEN) {
             $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
         }
         $versionList = Invoke-WebRequest @parameters
+
+        $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
-        Write-Host "::error::访问 $url 失败" -ForegroundColor Red
+        Write-Host "::warn::访问 $url 失败" -ForegroundColor Yellow
         Write-Host
-        return
+
+        $url = "https://github.com/microsoft/winget-pkgs/tree/master/manifests/$rootDir/$PackagePath"
+        try {
+            $page = Invoke-WebRequest $url -UseBasicParsing -ErrorAction Stop
+        }
+        catch {
+            Write-Host "::warn::访问 $url 失败" -ForegroundColor Yellow
+            Write-Host
+            return
+        }
+
+        $versions = [regex]::Matches($page.Content, "manifests/$rootDir/$PackagePath/([^`"]+)") | ForEach-Object {
+            $v = $_.Groups[1].Value
+            if ($v -notmatch '^\.') {
+                $v
+            }
+        }
     }
 
     $latestVersion = ""
-
-    $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
 
     foreach ($v in $versions) {
         if ($MaxExclusiveVersion) {
@@ -1254,6 +1272,8 @@ function A-Get-InstallerInfoFromWinget {
             Uri                      = $url
             ConnectionTimeoutSeconds = 10
             OperationTimeoutSeconds  = 15
+            UseBasicParsing          = $true
+            ErrorAction              = 'Stop'
         }
         if ($env:GITHUB_TOKEN) {
             $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
