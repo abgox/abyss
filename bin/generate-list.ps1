@@ -95,7 +95,7 @@ foreach ($path in $PathList) {
         $tag = @()
 
         ## manifest
-        $isDeprecated = Test-ScriptPattern $json '.*A-Deny-Manifest.*'
+        $isDeprecated = Test-ScriptPattern $json '(?<!#.*)A-Deny-Manifest'
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
         if ($isDeprecated) {
             $title = if ($isCN) { "它已被弃用，点击查看 manifest json 文件" } else { "It has been deprecated. Click to view the manifest json file" }
@@ -120,7 +120,7 @@ foreach ($path in $PathList) {
         }
 
         ## Link
-        $isLink = Test-ScriptPattern $json '.*(A-New-LinkDirectory)|(A-New-LinkFile).*'
+        $isLink = Test-ScriptPattern $json '(?<!#.*)(A-New-LinkDirectory|A-New-LinkFile)'
         if ($isLink) {
             if ($isCN) {
                 $label = '<code title="使用 Link 进行数据持久化">Link</code>'
@@ -133,17 +133,17 @@ foreach ($path in $PathList) {
         }
 
         ## RequireAdmin
-        $RequireAdmin = Test-ScriptPattern $json '.*(A-Require-Admin)|(A-New-LinkFile).*'
+        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-New-LinkFile)'
         $label = if ($isCN) { '<code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires administrator permission to install, update, or uninstall">RequireAdmin</code>' }
         if ($RequireAdmin) { $tag += $label }
 
         ## NoSilentInstall
-        $NoSilentInstall = Test-ScriptPattern $json '.*A-Install-Exe.*-NoSilent.*'
+        $NoSilentInstall = Test-ScriptPattern $json '(?<!#.*)A-Install-Exe.*-NoSilent'
         $label = if ($isCN) { '<code title="在安装时可能需要用户交互">NoSilentInstall</code>' } else { '<code title="May require user interaction during installation">NoSilentInstall</code>' }
         if ($NoSilentInstall) { $tag += $label }
 
         ## NoSilentUninstall
-        $NoSilentUninstall = Test-ScriptPattern $json '.*A-Uninstall-Exe.*-NoSilent.*'
+        $NoSilentUninstall = Test-ScriptPattern $json '(?<!#.*)A-Uninstall-Exe.*-NoSilent'
         $label = if ($isCN) { '<code title="在卸载时可能需要用户交互">NoSilentUninstall</code>' } else { '<code title="May require user interaction during uninstallation">NoSilentUninstall</code>' }
         if ($NoSilentUninstall) { $tag += $label }
 
@@ -157,7 +157,7 @@ foreach ($path in $PathList) {
         if (!$json.autoupdate) { $tag += $label }
 
         ## font
-        if (Test-ScriptPattern $json '.*A-Add-Font.*') {
+        if (Test-ScriptPattern $json '(?<!#.*)A-Add-Font') {
             if ($isCN) {
                 $label = '<code title="一种字体">Font</code>'
             }
@@ -177,7 +177,7 @@ foreach ($path in $PathList) {
         if ($json.psmodule) { $tag += $label }
 
         ## Msix
-        $isMsix = Test-ScriptPattern $json '.*A-Add-MsixPackage.*'
+        $isMsix = Test-ScriptPattern $json '(?<!#.*)A-Add-MsixPackage'
         if ($isCN) {
             $label = '<code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>'
         }
