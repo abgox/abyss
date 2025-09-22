@@ -1,0 +1,52 @@
+{
+    "version": "1.6.3",
+    "description": "一站式 OpenAI API 聚合服务。All in Done Hub service for OpenAI API.",
+    "homepage": "https://github.com/deanxv/done-hub",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/deanxv/done-hub/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/deanxv/done-hub/releases/download/v1.6.3/done-hub.exe",
+            "hash": "5b1a1e8cc0deb9bcf50724a633aac8613f326a86730fd49b0501e35fd6d514e5"
+        }
+    },
+    "bin": "done-hub.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/deanxv/done-hub/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/deanxv/done-hub/releases/download/v$version/done-hub.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
