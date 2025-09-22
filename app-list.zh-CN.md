@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (261)|Tag|Description|
+|App (262)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -118,6 +118,7 @@
 |[Dangbei.XiaowangScreenshot](https://www.xiaowang.com/ "点击访问仓库或主页")|<a href="./bucket/d/Dangbei/Dangbei.XiaowangScreenshot.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|小旺 AI 截图，一款接入 DeepSeek 的 AI 截图神器，轻巧、好用、免费、无广告。|
 |[Daum.PotPlayer](https://potplayer.daum.net "点击访问仓库或主页")|<a href="./bucket/d/Daum/Daum.PotPlayer.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|高度可定制的媒体播放器。|
 |[DCloud.HBuilderX](https://www.dcloud.io/hbuilderx.html "点击访问仓库或主页")|<a href="./bucket/d/DCloud/DCloud.HBuilderX.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|DCloud 旗下的代码编辑器。|
+|[deanxv.DoneHub](https://github.com/deanxv/done-hub "点击访问仓库或主页")|<a href="./bucket/d/deanxv/deanxv.DoneHub.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一站式 OpenAI API 聚合服务。|
 |[DeltaChat.DeltaChat](https://github.com/deltachat/deltachat-desktop "点击访问仓库或主页")|<a href="./bucket/d/DeltaChat/DeltaChat.DeltaChat.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|适用于桌面端、带有聊天共享工具和游戏的去中心化私人即时通讯软件。|
 |[DenoLand.Deno](https://deno.com/ "点击访问仓库或主页")|<a href="./bucket/d/DenoLand/DenoLand.Deno.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个适用于 JavaScript 和 TypeScript 的现代运行时环境。|
 |[DevToys-app.DevToys](https://devtoys.app/ "点击访问仓库或主页")|<a href="./bucket/d/DevToys-app/DevToys-app.DevToys.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="无法通过 Github Actions 去检查它的版本更新，因为没有配置 autoupdate">NoUpdate</code><br /><code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|开发人员的瑞士军刀。|
