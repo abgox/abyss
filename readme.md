@@ -11,11 +11,11 @@
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
     </a>
-    <a href="https://img.shields.io/github/languages/code-size/abgox/abyss.svg">
-        <img src="https://img.shields.io/github/languages/code-size/abgox/abyss.svg" alt="code size" />
+    <a href="https://img.shields.io/github/languages/code-size/abgox/abyss">
+        <img src="https://img.shields.io/github/languages/code-size/abgox/abyss" alt="code size" />
     </a>
-    <a href="https://img.shields.io/github/repo-size/abgox/abyss.svg">
-        <img src="https://img.shields.io/github/repo-size/abgox/abyss.svg" alt="code size" />
+    <a href="https://img.shields.io/github/repo-size/abgox/abyss">
+        <img src="https://img.shields.io/github/repo-size/abgox/abyss" alt="repo size" />
     </a>
     <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/created-at/abgox/abyss" alt="created" />
