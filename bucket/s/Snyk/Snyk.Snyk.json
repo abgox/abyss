@@ -1,0 +1,58 @@
+{
+    "version": "1.1299.1",
+    "description": "Snyk CLI 会扫描并监控你的项目，以查找安全漏洞。Snyk CLI scans and monitors your projects for security vulnerabilities.",
+    "homepage": "https://snyk.io/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/snyk/cli/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/snyk/cli/releases/download/v1.1299.1/snyk-win.exe",
+            "hash": "e061fe3011b4ad2b811348e5f856f681d2d183d53da11060b6840a734937e4c8"
+        }
+    },
+    "bin": [
+        [
+            "snyk-win.exe",
+            "snyk"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/snyk/cli/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/snyk/cli/releases/download/v$version/snyk-win.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
