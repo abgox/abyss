@@ -520,7 +520,7 @@ function A-Install-Exe {
                 '/NoRestart',
                 '/SP-',
                 "/Log=$dir\$app-install.log",
-                "/Dir=$dir"
+                "/Dir=`"$dir`""
             )
         }
         if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
@@ -533,7 +533,7 @@ function A-Install-Exe {
     else {
         # 如果没有传递安装参数，则使用默认参数
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @('/S', "/D=$dir")
+            $ArgumentList = @('/S', "/D=`"$dir`"")
         }
     }
 
