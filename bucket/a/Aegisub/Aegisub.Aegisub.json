@@ -12,6 +12,7 @@
             "hash": "df0318afbc88aa461bb702a42a0d0b1203b88cec2d28b61691493766aefe784d"
         }
     },
+    "innosetup": true,
     "shortcuts": [
         [
             "aegisub.exe",
@@ -22,8 +23,6 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Require-Admin",
-        "A-Install-Exe inno",
         "A-New-LinkDirectory @(\"$env:AppData\\Aegisub\")"
     ],
     "post_install": [
@@ -35,10 +34,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Uninstall-Exe"
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
