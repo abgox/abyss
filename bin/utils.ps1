@@ -513,7 +513,15 @@ function A-Install-Exe {
 
     if ($InstallerType -eq "inno") {
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @('/VerySilent', "/Dir=$dir")
+            $ArgumentList = @(
+                '/CurrentUser',
+                '/VerySilent',
+                '/SuppressMsgBoxes',
+                '/NoRestart',
+                '/SP-',
+                "/Log=$dir\$app-install.log",
+                "/Dir=$dir"
+            )
         }
         if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
             $Uninstaller = 'unins000.exe'
