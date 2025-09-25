@@ -1,0 +1,60 @@
+{
+    "version": "2.6.0",
+    "description": "LiveKit 的命令行界面。Command line interface to LiveKit.",
+    "homepage": "https://livekit.io/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/livekit/livekit-cli/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/livekit/livekit-cli/releases/download/v2.6.0/lk_2.6.0_windows_amd64.zip",
+            "hash": "b0e767dccf96f2c5676d20538980e0928970550688393008ac78c429a01c2016"
+        },
+        "arm64": {
+            "url": "https://github.com/livekit/livekit-cli/releases/download/v2.6.0/lk_2.6.0_windows_arm64.zip",
+            "hash": "0720cce3122fa8abe3592d5712ea3ee47cda2b40d45c52ecd6534924e6ebfa74"
+        }
+    },
+    "bin": "lk.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/livekit/livekit-cli/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/livekit/livekit-cli/releases/download/v$version/lk_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/livekit/livekit-cli/releases/download/v$version/lk_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
