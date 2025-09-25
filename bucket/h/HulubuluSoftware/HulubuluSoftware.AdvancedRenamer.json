@@ -12,6 +12,7 @@
             "hash": "f80bc125873211d926f205d682fc6438aa2b5957f4bbe814c46832fea1d0d7f2"
         }
     },
+    "innosetup": true,
     "bin": "arenc.exe",
     "shortcuts": [
         [
@@ -23,8 +24,6 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Require-Admin",
-        "A-Install-Exe inno",
         "A-New-LinkDirectory @(\"$env:AppData\\Hulubulu\\Advanced Renamer $($version.split('.')[0])\")"
     ],
     "post_install": [
@@ -36,10 +35,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Uninstall-Exe"
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
