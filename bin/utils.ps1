@@ -9,6 +9,34 @@ Microsoft.PowerShell.Utility\Write-Host
 try {
     $ScoopConfig = scoop config
 
+    if ($scoopdir) {
+        try {
+            if (!$ScoopConfig.root_path) {
+                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'root_path' -Value $scoopdir
+            }
+        }
+        catch {
+            try {
+                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'root_path' -Value $scoopdir
+            }
+            catch {}
+        }
+    }
+
+    if ($globaldir) {
+        try {
+            if (!$ScoopConfig.global_path) {
+                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'global_path' -Value $globaldir
+            }
+        }
+        catch {
+            try {
+                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'global_path' -Value $globaldir
+            }
+            catch {}
+        }
+    }
+
     # 卸载时的操作行为。
     $uninstallActionLevel = $ScoopConfig.'abgox-abyss-app-uninstall-action'
 
