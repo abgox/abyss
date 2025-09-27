@@ -37,6 +37,10 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "if (!$ScoopConfig.root_path) {",
+        "   $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'root_path' -Value $scoopdir",
+        "}",
+        "$ScoopConfig | ConvertTo-Json -Depth 100 | Out-File \"$dir\\config.json\" -Encoding utf8 -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
