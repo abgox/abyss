@@ -1,5 +1,7 @@
 ﻿#Requires -Version 5.1
 
+Set-StrictMode -Off
+
 Microsoft.PowerShell.Utility\Write-Host
 
 if (!$env:SCOOP -and $scoopdir) {
