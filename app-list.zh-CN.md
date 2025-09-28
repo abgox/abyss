@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (279)|Tag|Description|
+|App (282)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -45,6 +45,9 @@
 |[5rahim.Seanime](https://seanime.rahim.app/ "点击访问仓库或主页")|<a href="./bucket/5/5rahim/5rahim.Seanime.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|免费开源的媒体服务器，为动漫爱好者提供丰富功能。|
 |[8LWXpg.PowerToysRun-GitHubRepo](https://github.com/8LWXpg/PowerToysRun-GitHubRepo "点击访问仓库或主页")|<a href="./bucket/8/8LWXpg/8LWXpg.PowerToysRun-GitHubRepo.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一个 PowerToys Run 插件，用于搜索 GitHub 存储库，然后在默认浏览器中打开。|
 |[8LWXpg.PowerToysRun-ProcessKiller](https://github.com/8LWXpg/PowerToysRun-ProcessKiller "点击访问仓库或主页")|<a href="./bucket/8/8LWXpg/8LWXpg.PowerToysRun-ProcessKiller.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>|一个 PowerToys Run 插件，用于杀死进程。|
+|[aardio.aardio](https://www.aardio.com "点击访问仓库或主页")|<a href="./bucket/a/aardio/aardio.aardio.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|灵活而强大的动态语言。|
+|[aardio.ImTip](https://imtip.aardio.com/ "点击访问仓库或主页")|<a href="./bucket/a/aardio/aardio.ImTip.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|智能桌面助手。|
+|[aardio.WubiLex](https://wubi.aardio.com "点击访问仓库或主页")|<a href="./bucket/a/aardio/aardio.WubiLex.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|五笔词库助手，让 Win10/Win11 微软五笔更强大。|
 |[abgox.ConvertFrom-JsonAsHashtable](https://www.powershellgallery.com/packages/ConvertFrom-JsonAsHashtable "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.ConvertFrom-JsonAsHashtable.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="一个 Powershell 模块">PSModule</code>|适用于 Windows PowerShell 5.0 及更高版本的 JSON 到哈希表的转换。|
 |[abgox.InputTip](https://inputtip.abgox.com/ "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.InputTip.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|(exe 版本) 一个输入法状态管理工具：实时提示(鼠标样式、符号显示) + 窗口自动切换状态 + 快捷键切换状态。|
 |[abgox.InputTip-zip](https://inputtip.abgox.com "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.InputTip-zip.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|(zip 版本) 一个输入法状态管理工具：实时提示(鼠标样式、符号显示) + 窗口自动切换状态 + 快捷键切换状态。|
