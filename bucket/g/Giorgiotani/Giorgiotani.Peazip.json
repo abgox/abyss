@@ -1,0 +1,60 @@
+{
+    "version": "10.6.1",
+    "description": "一款免费的文件归档工具和 rar 解压缩器。A free file archiver utility and rar extractor.",
+    "homepage": "https://peazip.github.io/",
+    "license": {
+        "identifier": "LGPL-3.0-only",
+        "url": "https://github.com/peazip/PeaZip/blob/sources/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/peazip/PeaZip/releases/download/10.6.1/peazip-10.6.1.WIN64.exe",
+            "hash": "3d0bb650f3ee6acaea8f0588cf300ffaff9b5a9d8a6ae607790a5c9e4983e6f3"
+        }
+    },
+    "innosetup": true,
+    "bin": "peazip.exe",
+    "shortcuts": [
+        [
+            "peazip.exe",
+            "PeaZip"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\PeaZip\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/peazip/PeaZip/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/peazip/PeaZip/releases/download/$version/peazip-$version.WIN64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
