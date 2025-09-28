@@ -1,0 +1,59 @@
+{
+    "version": "0.10.0",
+    "description": "将终端 GIF 动图编写为代码，用于集成测试和演示你的命令行界面工具。Write terminal GIFs as code for integration testing and demoing your CLI tools.",
+    "homepage": "https://github.com/charmbracelet/vhs",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/charmbracelet/vhs/blob/main/LICENSE"
+    },
+    "depends": [
+        "ttyd",
+        "ffmpeg"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/charmbracelet/vhs/releases/download/v0.10.0/vhs_0.10.0_Windows_x86_64.zip",
+            "hash": "7f5cffbbd01fe4229af0540856ddc0da933af0c16c05b1fbe62e0ef2097038a8",
+            "extract_dir": "vhs_0.10.0_Windows_x86_64"
+        }
+    },
+    "bin": "vhs.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/charmbracelet/vhs/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/charmbracelet/vhs/releases/download/v$version/vhs_$version_Windows_x86_64.zip",
+                "extract_dir": "vhs_$version_Windows_x86_64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
