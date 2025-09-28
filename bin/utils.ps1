@@ -9,41 +9,11 @@ Microsoft.PowerShell.Utility\Write-Host
 try {
     $ScoopConfig = scoop config
 
-    $needWriteConfig = $false
-    if ($scoopdir) {
-        try {
-            if (!$ScoopConfig.root_path) {
-                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'root_path' -Value $scoopdir
-                $needWriteConfig = $true
-            }
-        }
-        catch {
-            try {
-                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'root_path' -Value $scoopdir
-                $needWriteConfig = $true
-            }
-            catch {}
-        }
+    if ($scoopdir -and $ScoopConfig.root_path -ne $scoopdir) {
+        scoop config 'root_path' $scoopdir
     }
-
-    if ($globaldir) {
-        try {
-            if (!$ScoopConfig.global_path) {
-                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'global_path' -Value $globaldir
-                $needWriteConfig = $true
-            }
-        }
-        catch {
-            try {
-                $ScoopConfig | Add-Member -MemberType NoteProperty -Name 'global_path' -Value $globaldir
-                $needWriteConfig = $true
-            }
-            catch {}
-        }
-    }
-
-    if ($needWriteConfig) {
-        $ScoopConfig | ConvertTo-Json -Depth 100 | Set-Content -Path $configFile -Encoding utf8 -Force
+    if ($globaldir -and $ScoopConfig.global_path -ne $globaldir) {
+        scoop config 'global_path' $globaldir
     }
 
     # 卸载时的操作行为。
