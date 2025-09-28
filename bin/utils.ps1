@@ -1238,7 +1238,7 @@ function A-Get-InstallerInfoFromWinget {
         $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
-        Write-Host "::warn::访问 $url 失败" -ForegroundColor Yellow
+        Write-Host "::warning::访问 $url 失败" -ForegroundColor Yellow
         Write-Host
 
         $url = "https://github.com/microsoft/winget-pkgs/tree/master/manifests/$rootDir/$PackagePath"
@@ -1246,7 +1246,7 @@ function A-Get-InstallerInfoFromWinget {
             $page = Invoke-WebRequest $url -UseBasicParsing -ErrorAction Stop
         }
         catch {
-            Write-Host "::warn::访问 $url 失败" -ForegroundColor Yellow
+            Write-Host "::warning::访问 $url 失败" -ForegroundColor Yellow
             Write-Host
             return
         }
