@@ -36,7 +36,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (273)|Tag|Description|
+|App (274)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="在卸载时可能需要用户交互">NoSilentUninstall</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://github.com/1zilc/fishing-funds "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -131,6 +131,7 @@
 |[EcoPaste.EcoPaste](https://github.com/EcoPasteHub/EcoPaste "点击访问仓库或主页")|<a href="./bucket/e/EcoPaste/EcoPaste.EcoPaste.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个跨平台的开源剪贴板管理工具。|
 |[electerm.electerm](https://github.com/electerm/electerm "点击访问仓库或主页")|<a href="./bucket/e/electerm/electerm.electerm.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端。|
 |[Eugeny.Tabby](https://tabby.sh "点击访问仓库或主页")|<a href="./bucket/e/Eugeny/Eugeny.Tabby.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个现代终端。|
+|[everauto.zTasker](https://www.everauto.net "点击访问仓库或主页")|<a href="./bucket/e/everauto/everauto.zTasker.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个自动化任务工具。|
 |[FastStone.Viewer](https://www.faststone.org/FSViewerDetail.htm "点击访问仓库或主页")|<a href="./bucket/f/FastStone/FastStone.Viewer.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|Faststone Image Viewer 是一个快速，稳定，用户友好的图像浏览器，转换器和编辑器。|
 |[Ferry-200.Coriander-Player](https://github.com/Ferry-200/coriander_player "点击访问仓库或主页")|<a href="./bucket/f/Ferry-200/Ferry-200.Coriander-Player.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个 Windows 上的本地音乐播放器。|
 |[FilesCommunity.Files](https://github.com/files-community "点击访问仓库或主页")|<a href="./bucket/f/FilesCommunity/FilesCommunity.Files.json" title="点击查看 manifest json 文件"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|一款帮助用户整理文件和文件夹的现代文件管理器。|
