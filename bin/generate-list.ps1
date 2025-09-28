@@ -195,7 +195,12 @@ foreach ($path in $PathList) {
             $info += $description[0]
         }
         else {
-            $info += $description[1]
+            if ($description[1]) {
+                $info += $description[1]
+            }
+            else {
+                $info += $description[0]
+            }
         }
 
         $content += "|" + ($info -join "|") + "|"
