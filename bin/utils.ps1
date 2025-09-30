@@ -1645,13 +1645,7 @@ function script:Add-Path {
     )
     #region 新增: 支持使用 $env:xxx 变量
     $Path = $Path | ForEach-Object {
-        # 处理当 env_add_path 值为 $dir 的特殊情况
-        if ($_ -eq "$dir\`$dir") {
-            $dir
-        }
-        else {
-            Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
-        }
+        Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
     }
     #endregion
 
@@ -1685,13 +1679,7 @@ function script:Remove-Path {
     )
     #region 新增: 支持使用 $env:xxx 变量
     $Path = $Path | ForEach-Object {
-        # 处理当 env_add_path 值为 $dir 的特殊情况
-        if ($_ -eq "$dir\`$dir") {
-            $dir
-        }
-        else {
-            Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
-        }
+        Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
     }
     #endregion
 
