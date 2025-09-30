@@ -1,0 +1,60 @@
+{
+    "version": "3.4.0",
+    "description": "JetBrains Mono 字体，Nerd Font 系列。'JetBrains Mono' Font family with Nerd Fonts patched.",
+    "homepage": "https://github.com/ryanoasis/nerd-fonts",
+    "license": {
+        "identifier": "MIT|OFL-1.1",
+        "url": "https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE"
+    },
+    "notes": "Font's name: \"JetBrainsMono Nerd Font\" | \"JetBrainsMono Nerd Font Mono\" | \"JetBrainsMono Nerd Font Propo\" | \"JetBrainsMonoNL Nerd Font\" | \"JetBrainsMonoNL Nerd Font Mono\" | \"JetBrainsMonoNL Nerd Font Propo\"",
+    "notes-cn": "字体名称: \"JetBrainsMono Nerd Font\" | \"JetBrainsMono Nerd Font Mono\" | \"JetBrainsMono Nerd Font Propo\" | \"JetBrainsMonoNL Nerd Font\" | \"JetBrainsMonoNL Nerd Font Mono\" | \"JetBrainsMonoNL Nerd Font Propo\"",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip",
+            "hash": "76f05ff3ace48a464a6ca57977998784ff7bdbb65a6d915d7e401cd3927c493c"
+        },
+        "arm64": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip",
+            "hash": "76f05ff3ace48a464a6ca57977998784ff7bdbb65a6d915d7e401cd3927c493c"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Add-Font"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Remove-Font"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/ryanoasis/nerd-fonts/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/JetBrainsMono.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/JetBrainsMono.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
