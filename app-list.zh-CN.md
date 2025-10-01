@@ -18,6 +18,9 @@
 
     - 注意
 
+      - `deprecated`: 它已被弃用或重命名，无法成功安装或更新
+        - 如果是重命名，它会在错误信息中显示新的名称，你应该使用新的名称进行安装
+        - 如果存在 [Persist](./readme.zh-CN.md#persist) 或 [Link](./readme.zh-CN.md#link) 的数据，会自动迁移
       - `RequireAdmin`：在安装、更新或卸载时需要管理员权限
       - `NoSilentInstall`：在安装过程中可能需要用户交互
       - `NoSilentUninstall`：在卸载过程中可能需要用户交互
