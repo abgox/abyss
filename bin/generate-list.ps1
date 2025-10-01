@@ -96,9 +96,14 @@ foreach ($path in $PathList) {
 
         ## manifest
         $isDeprecated = Test-ScriptPattern $json '(?<!#.*)A-Deny-Manifest'
+        $isRenamed = Test-ScriptPattern $json '(?<!#.*)A-Deny-Manifest\s*(''|")'
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
-        if ($isDeprecated) {
-            $title = if ($isCN) { "它已被弃用，点击查看 manifest json 文件" } else { "It has been deprecated. Click to view the manifest json file" }
+        if ($isRenamed) {
+            $title = if ($isCN) { "它已被重命名，错误信息中会显示新的名称" } else { "It has been renamed, and the new name will be displayed in the error message" }
+            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-orange" alt="renamed" /></a>'
+        }
+        elseif ($isDeprecated) {
+            $title = if ($isCN) { "它已被弃用，无法成功安装或更新" } else { "It has been deprecated, and will fail to install or update." }
             $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/deprecated-critical" alt="deprecated" /></a>'
         }
         else {
