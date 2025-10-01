@@ -1,0 +1,68 @@
+{
+    "version": "3.3.4",
+    "description": "一款以隐私为首要原则、可自行托管且完全开源的个人知识管理软件。A privacy-first, self-hosted, fully open source personal knowledge management software.",
+    "homepage": "https://b3log.org/siyuan/",
+    "license": {
+        "identifier": "AGPL-3.0-only",
+        "url": "https://github.com/siyuan-note/siyuan/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/siyuan-note/siyuan/releases/download/v3.3.4/siyuan-3.3.4-win.exe",
+            "hash": "e5b44a2a25e39b3ff7729758bad06a2c8fd12dd8a6de3fa709b0149371ffd015"
+        },
+        "arm64": {
+            "url": "https://github.com/siyuan-note/siyuan/releases/download/v3.3.4/siyuan-3.3.4-win-arm64.exe",
+            "hash": "435777fad4d0d37db2b5da2772136893c3c42163ef000940964db6f626211f75"
+        }
+    },
+    "shortcuts": [
+        [
+            "SiYuan.exe",
+            "SiYuan"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'Uninstall SiYuan.exe' -ArgumentList @('/currentuser','/S',\"/D=$dir\")",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\SiYuan\",\"$env:UserProfile\\.config\\siyuan\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:AppData\\SiYuan-Electron\",\"$env:LocalAppData\\siyuan-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/siyuan-note/siyuan/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/siyuan-note/siyuan/releases/download/v$version/siyuan-$version-win.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/siyuan-note/siyuan/releases/download/v$version/siyuan-$version-win-arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
