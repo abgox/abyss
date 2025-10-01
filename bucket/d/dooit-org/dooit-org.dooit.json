@@ -1,0 +1,54 @@
+{
+    "version": "3.2.3",
+    "description": "一个 TUI 待办事项管理器。A TUI todo manager",
+    "homepage": "https://github.com/dooit-org/dooit",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/dooit-org/dooit/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dooit-org/dooit/releases/download/v3.2.3/windows-dooit.exe",
+            "hash": "b6b321b58df899936783436d25c321d1280757b42ab887c5f3cd124b0960b9f9"
+        }
+    },
+    "bin": [
+        [
+            "windows-dooit.exe",
+            "dooit"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/dooit-org/dooit/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dooit-org/dooit/releases/download/v$version/windows-dooit.exe"
+            }
+        }
+    }
+}
