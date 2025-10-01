@@ -18,8 +18,9 @@
 
     - Notes
 
-      - `deprecated`: It has been deprecated or renamed, which cannot be installed or updated successfully.
-        - For renamed app, it will show the new name in the error information, and you should use the new name to install.
+      - `deprecated`: It has been deprecated and will fail to install or update.
+      - `renamed`: It has been renamed and will fail to install or update.
+        - The new name will be displayed in the error message, and you should use the new name for installation
         - If there is data from [Persist](./readme.zh-CN.md#persist) or [Link](./readme.zh-CN.md#link), it will be migrated automatically.
       - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
       - `NoSilentInstall`: May require user interaction during installation.
