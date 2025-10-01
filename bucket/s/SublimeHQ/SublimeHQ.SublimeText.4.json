@@ -1,0 +1,69 @@
+{
+    "version": "4.0.0.420000",
+    "description": "一款用于代码、标记和散文的复杂跨平台文本编辑器。A sophisticated cross-platform text editor for code, markup and prose.",
+    "homepage": "https://www.sublimetext.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.sublimetext.com/eula"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.sublimetext.com/sublime_text_build_4200_x64_setup.exe",
+            "hash": "3d3c70e51aef08f85d7160bcc70793bed9acec250973090ab67d98987bce7c7e"
+        }
+    },
+    "innosetup": true,
+    "bin": "subl.exe",
+    "shortcuts": [
+        [
+            "sublime_text.exe",
+            "Sublime Text 4"
+        ]
+    ],
+    "persist": "Data",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'SublimeHQ.SublimeText.4' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
