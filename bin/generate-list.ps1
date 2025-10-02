@@ -100,7 +100,7 @@ foreach ($path in $PathList) {
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
         if ($isRenamed) {
             $title = if ($isCN) { "它已被重命名，错误信息中会显示新的名称" } else { "It has been renamed, and the new name will be displayed in the error message" }
-            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-orange" alt="renamed" /></a>'
+            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-purple" alt="renamed" /></a>'
         }
         elseif ($isDeprecated) {
             $title = if ($isCN) { "它已被弃用，无法成功安装或更新" } else { "It has been deprecated, and will fail to install or update." }
