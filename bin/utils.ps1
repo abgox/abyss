@@ -1610,6 +1610,8 @@ $ScoopVersion = "0.5.3"
 
 #region 扩展 Scoop 部分功能
 
+
+# TODO: 等待合并后移除此函数: https://github.com/ScoopInstaller/Scoop/pull/6460
 function script:env_set($manifest, $global, $arch) {
     $env_set = arch_specific 'env_set' $manifest $arch
     if ($env_set) {
@@ -1625,6 +1627,7 @@ function script:env_set($manifest, $global, $arch) {
     }
 }
 
+# TODO: 等待合并后移除此函数: https://github.com/ScoopInstaller/Scoop/pull/6460
 function script:env_rm($manifest, $global, $arch) {
     $env_set = arch_specific 'env_set' $manifest $arch
     if ($env_set) {
