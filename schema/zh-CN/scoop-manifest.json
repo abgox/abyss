@@ -946,13 +946,13 @@
                                             "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                             ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                             "A-Start-Install",
-                                            "A-Deny-Manifest",
+                                            "A-Deny-Manifest 'newName'",
                                             "A-New-PersistFile \"\"",
                                             "A-Copy-Item",
                                             "A-Expand-SetupExe",
                                             "A-Install-Exe inno",
                                             "A-Install-Exe -Uninstaller 'xxx'",
-                                            "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/S',\"/D=$dir\")",
+                                            "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\")",
                                             "A-Require-Admin",
                                             "A-Test-Admin",
                                             "A-Ensure-Directory",
@@ -966,7 +966,7 @@
                                             "脚本\n- 获取 $bucket 变量",
                                             "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
                                             "函数\n- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`",
-                                            "函数\n- 拒绝安装或更新此清单，提示新的可用清单(如果有)",
+                                            "函数\n- 拒绝安装或更新此清单\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用",
                                             "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
                                             "函数\n- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`",
                                             "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`",
@@ -1067,7 +1067,7 @@
                                             "A-Test-Admin",
                                             "A-Deny-Update",
                                             "A-Uninstall-Exe",
-                                            "A-Uninstall-Exe -ArgumentList @('/S')"
+                                            "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
@@ -1084,7 +1084,8 @@
                                             "函数\n- 要求以管理员权限运行",
                                             "函数\n- 检查是否以管理员权限运行",
                                             "函数\n- 禁止通过 Scoop 更新",
-                                            "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                            "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数",
+                                            "函数\n- 使用卸载程序卸载应用"
                                         ]
                                     }
                                 ]
