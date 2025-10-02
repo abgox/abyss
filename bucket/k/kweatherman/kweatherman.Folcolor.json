@@ -1,0 +1,61 @@
+{
+    "version": "1.2.0",
+    "description": "Windows文件夹颜色工具。The Windows folder color utility.",
+    "homepage": "https://github.com/kweatherman/Folcolor",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/kweatherman/Folcolor/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/kweatherman/Folcolor/releases/download/1.2.0/Folcolor.zip",
+            "hash": "c7b1d7b576ed698b0c8d5f6496ee7c00fdac7bd259e802f2052c1221519f5f33"
+        }
+    },
+    "extract_dir": "Folcolor",
+    "shortcuts": [
+        [
+            "Folcolor.exe",
+            "Folcolor"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/kweatherman/Folcolor/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/kweatherman/Folcolor/releases/download/1.2.0/Folcolor.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
