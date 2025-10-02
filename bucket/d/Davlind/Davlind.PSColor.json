@@ -1,0 +1,52 @@
+{
+    "version": "1.0.0.0",
+    "description": "一个 PowerShell 模块，为 files、services、select-string 等提供基本颜色高亮显示。A PowerShell module that provides basic color highlighting for files, services, select-string etc.",
+    "homepage": "https://github.com/Davlind/PSColor",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/Davlind/PSColor/blob/master/LICENSE"
+    },
+    "notes": [
+        "Import the module: Import-Module PSColor",
+        "Add it to your $Profile to make it permanent."
+    ],
+    "notes-cn": [
+        "导入模块: Import-Module PSColor",
+        "可以将它写入 $Profile 中，就不需要每次都导入了。"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Davlind/PSColor/raw/master/release/PSColor.zip",
+            "hash": "6e2f25dca53e1c9f28557fb9dec97d50e968d3e83d3be59a4b6f9954da826ebb"
+        },
+        "arm64": {
+            "url": "https://github.com/Davlind/PSColor/raw/master/release/PSColor.zip",
+            "hash": "6e2f25dca53e1c9f28557fb9dec97d50e968d3e83d3be59a4b6f9954da826ebb"
+        }
+    },
+    "psmodule": {
+        "name": "PSColor"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ]
+}
