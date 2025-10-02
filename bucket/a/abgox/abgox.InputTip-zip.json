@@ -1,5 +1,5 @@
 {
-    "version": "2025.10.01",
+    "version": "2025.10.01-789f790",
     "description": "(zip 版本) 一个输入法状态管理工具: 实时提示(鼠标方案/符号方案) + 状态切换(窗口触发/热键触发)。(zip version) An input method state management tool: real-time tip(mouse scheme/symbol scheme) + state switching (window trigger/hotkey trigger)",
     "homepage": "https://inputtip.abgox.com",
     "license": {
@@ -8,11 +8,11 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/InputTip/archive/2c4b97ed363ef65df59161abdc0d9f1285964afe.zip#/InputTip-main.zip",
-            "hash": "e46fe0e30e99c37aed33fa3151304f45b1f7cebc33a2d426fa8075c930036781"
+            "url": "https://github.com/abgox/InputTip/archive/789f790280953ac21e6802d3c3df0e17f4c608e1.zip#/InputTip-main.zip",
+            "hash": "96fd24b0858faa2630f8a0ca0b39aa2b6368038d4f6b4825f3a3bc94389135a7"
         }
     },
-    "extract_dir": "InputTip-2c4b97ed363ef65df59161abdc0d9f1285964afe",
+    "extract_dir": "InputTip-789f790280953ac21e6802d3c3df0e17f4c608e1",
     "bin": [
         [
             "src\\AutoHotkey\\AutoHotkey64.exe",
@@ -73,8 +73,13 @@
         ]
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/abgox/InputTip/commits?path=src/version-zip.txt&page=1&per_page=5",
-        "regex": "sha\":\"(?<sha>\\w+)\".*?message\":\".*?(?<version>[\\d\\.]+)\""
+        "script": [
+            "$version = Invoke-RestMethod -Uri 'https://github.com/abgox/InputTip/raw/refs/heads/main/src/version-zip.txt'",
+            "$commit = Invoke-RestMethod -Uri 'https://api.github.com/repos/abgox/InputTip/commits?page=1&per_page=3'",
+            "\"ver:$($version.Trim())-$($commit[0].sha.substring(0, 7));\"",
+            "\"sha:$($commit[0].sha);\""
+        ],
+        "regex": "ver:(?<version>[^;]+).*?sha:(?<sha>[^;]+)"
     },
     "autoupdate": {
         "architecture": {
