@@ -95,11 +95,13 @@ foreach ($path in $PathList) {
         $tag = @()
 
         ## manifest
-        $isDeprecated = Test-ScriptPattern $json '(?<!#.*)A-Deny-Manifest'
+        $isDeprecated = $json.version -eq 'deprecated'
         $isRenamed = Test-ScriptPattern $json '(?<!#.*)A-Deny-Manifest\s*(''|")'
         $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
         if ($isRenamed) {
-            $title = if ($isCN) { "它已被重命名，错误信息中会显示新的名称" } else { "It has been renamed, and the new name will be displayed in the error message" }
+            (Get-Content $_.FullName -Raw -Encoding UTF8) -match '(?<!#.*)A-Deny-Manifest\s*(''|")(.+?)(''|")"' | Out-Null
+            $newName = $Matches[2]
+            $title = if ($isCN) { "它已被重命名为 $newName" } else { "It has been renamed to '$newName'" }
             $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-purple" alt="renamed" /></a>'
         }
         elseif ($isDeprecated) {
