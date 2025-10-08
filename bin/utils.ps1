@@ -1039,12 +1039,19 @@ function A-Deny-Manifest {
     param(
         [string]$NewManifestName
     )
-
-    if ($NewManifestName) {
-        $msg = "'$app' is renamed to '$NewManifestName'."
-    }
-    else {
-        $msg = "'$app' is deprecated."
+    switch ($manifest.version) {
+        deprecated {
+            $msg = "'$app' is deprecated."
+        }
+        pending {
+            $msg = "'$app' is pending."
+        }
+        renamed {
+            $msg = "'$app' is renamed to '$NewManifestName'."
+        }
+        Default {
+            $msg = "'$app' is deprecated."
+        }
     }
 
     error $msg
