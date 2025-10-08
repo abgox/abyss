@@ -1,41 +1,59 @@
 # App List
 
-[简体中文](./app-list.zh-CN.md)
+[简体中文](./app-list.zh-CN.md) | [English](./app-list.md)
 
-- Guide
+---
 
-  - **`App`** : App package name. `Publisher.PackageIdentifier`
+- **`App`** : App package name. `Publisher.PackageIdentifier`
 
-    - Click to view the repository or homepage.
-    - Sort by first letter: 0-9a-z
+  - Click to view the repository or homepage.
+  - Sort by first letter: 0-9a-z
 
-  - **`Tag`**
+- **`Tag`**
 
-    - Data
+  - Data
 
-      - `Persist`: Uses Scoop's official [Persist](./readme.zh-CN.md#persist).
-      - `Link`: Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
+    - `Persist`: Uses Scoop's official [Persist](./readme.zh-CN.md#persist).
+    - `Link`: Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
 
-    - Notes
+  - Manifest Status
 
-      - `deprecated`: It has been deprecated and will fail to install or update.
-      - `renamed`: It has been renamed and will fail to install or update.
-        - The new name will be displayed in the error message, and you should use the new name for installation
-        - If there is data from [Persist](./readme.zh-CN.md#persist) or [Link](./readme.zh-CN.md#link), it will be migrated automatically.
-      - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
-      - `NoSilentInstall`: May require user interaction during installation.
-      - `NoSilentUninstall`: May require user interaction during uninstallation.
-      - `NoUpdate` : `json.autoupdate` are not configured, and it cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
+    > Click on the badge to view the manifest json file.
 
-    - App Types
+    - <img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" />
 
-      - `Font` : A font.
-      - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
-      - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
-        - The installation directory is not in Scoop.
-        - Scoop only manages the data that may exist and installation, uninstallation, and update.
+      - It is available and can be installed or updated normally.
 
-  - **`Description`** : App Description.
+    - <img src="https://img.shields.io/badge/deprecated-red" style="display:inline" alt="deprecated" />
+
+      - It has been deprecated, and any installation or update will fail.
+
+    - <img src="https://img.shields.io/badge/pending-purple" style="display:inline" alt="pending" />
+
+      - It is pending and cannot be installed temporarily.
+
+    - <img src="https://img.shields.io/badge/renamed-teal" style="display:inline" alt="renamed" />
+
+      - It has been renamed and will fail to install or update.
+      - The new name will be displayed in the error message, and you should use the new name for installation
+      - If there is data from [Persist](./readme.zh-CN.md#persist) or [Link](./readme.zh-CN.md#link), it will be migrated automatically.
+
+  - Notes
+
+    - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
+    - `NoSilentInstall`: May require user interaction during installation.
+    - `NoSilentUninstall`: May require user interaction during uninstallation.
+    - `NoUpdate` : `json.autoupdate` are not configured, and it cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
+
+  - App Types
+
+    - `Font` : A font.
+    - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
+    - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
+      - The installation directory is not in Scoop.
+      - Scoop only manages the data that may exist and installation, uninstallation, and update.
+
+- **`Description`** : App Description.
 
 ---
 

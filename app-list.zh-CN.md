@@ -1,41 +1,59 @@
 # 应用列表
 
-[English](./app-list.md)
+[English](./app-list.md) | [简体中文](./app-list.zh-CN.md)
 
-- 说明
+---
 
-  - **`App`**：应用包的名称 `Publisher.PackageIdentifier`
+- **`App`**：应用包的名称 `Publisher.PackageIdentifier`
 
-    - 点击查看仓库或官网
-    - 按照首字母(数字)排序：0-9a-z
+  - 点击查看仓库或官网
+  - 按照首字母(数字)排序：0-9a-z
 
-  - **`Tag`**：标签
+- **`Tag`**：标签
 
-    - 数据
+  - 数据
 
-      - `Persist`：使用 Scoop 官方的 [Persist](./readme.zh-CN.md#persist) 实现数据持久化
-      - `Link`：使用 `New-Item -ItemType Junction` 实现数据持久化, 详情参考 [Link](./readme.zh-CN.md#link)
+    - `Persist`：使用 Scoop 官方的 [Persist](./readme.zh-CN.md#persist) 实现数据持久化
+    - `Link`：使用 `New-Item -ItemType Junction` 实现数据持久化, 详情参考 [Link](./readme.zh-CN.md#link)
 
-    - 注意
+  - 清单状态
 
-      - `deprecated`: 它已被弃用，无法成功安装或更新
-      - `renamed`: 它已被重命名，无法成功安装或更新
-        - 在错误信息中会显示新的名称，你应该使用新的名称进行安装
-        - 如果存在 [Persist](./readme.zh-CN.md#persist) 或 [Link](./readme.zh-CN.md#link) 的数据，会自动迁移
-      - `RequireAdmin`：在安装、更新或卸载时需要管理员权限
-      - `NoSilentInstall`：在安装过程中可能需要用户交互
-      - `NoSilentUninstall`：在卸载过程中可能需要用户交互
-      - `NoUpdate`：没有配置 `json.autoupdate`，无法通过 [Github Actions](./.github/workflows/excavator.yml) 自动更新清单
+    > 点击徽章可查看对应的 json 文件
 
-    - 应用类型
+    - <img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" />
 
-      - `Font`：字体
-      - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
-      - `Msix`：通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
-        - 它的安装目录不在 Scoop 中
-        - Scoop 只管理数据(如果存在)，应用的安装、更新以及卸载操作。
+      - 它是可用的，可以正常安装或更新
 
-  - **`Description`**：应用描述
+    - <img src="https://img.shields.io/badge/deprecated-red" style="display:inline" alt="deprecated" />
+
+      - 它已被弃用，安装或更新都会失败
+
+    - <img src="https://img.shields.io/badge/pending-purple" style="display:inline" alt="pending" />
+
+      - 它是待定的，暂时无法安装
+
+    - <img src="https://img.shields.io/badge/renamed-teal" style="display:inline" alt="renamed" />
+
+      - 它已被重命名，安装或更新都会失败
+      - 在错误信息中会显示新的名称，你应该使用新的名称进行安装
+      - 如果存在 [Persist](./readme.zh-CN.md#persist) 或 [Link](./readme.zh-CN.md#link) 的数据，会自动迁移
+
+  - 注意
+
+    - `RequireAdmin`：在安装、更新或卸载时需要管理员权限
+    - `NoSilentInstall`：在安装过程中可能需要用户交互
+    - `NoSilentUninstall`：在卸载过程中可能需要用户交互
+    - `NoUpdate`：没有配置 `json.autoupdate`，无法通过 [Github Actions](./.github/workflows/excavator.yml) 自动更新清单
+
+  - 应用类型
+
+    - `Font`：字体
+    - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
+    - `Msix`：通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
+      - 它的安装目录不在 Scoop 中
+      - Scoop 只管理数据(如果存在)，应用的安装、更新以及卸载操作。
+
+- **`Description`**：应用描述
 
 ---
 
