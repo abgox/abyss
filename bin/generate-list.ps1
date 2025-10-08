@@ -101,22 +101,22 @@ foreach ($path in $PathList) {
         switch ($json.version) {
             deprecated {
                 $title = if ($isCN) { "它已被弃用，无法安装或更新" } else { "It has been deprecated, and will fail to install or update." }
-                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/deprecated-red" alt="deprecated" /></a>'
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/deprecated-red" style="display:inline" alt="deprecated" /></a>'
             }
             pending {
                 $title = if ($isCN) { "它还处于 pending 状态，无法安装或更新" } else { "It is pending, and will fail to install or update." }
-                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/pending-purple" alt="pending" /></a>'
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/pending-purple" style="display:inline" alt="pending" /></a>'
             }
             renamed {
                 (Get-Content $mp.FullName -Raw -Encoding UTF8) -match '(?<!#.*)A-Deny-Manifest\s*(''|")(.+?)(''|")"' | Out-Null
                 $newName = $Matches[2]
                 $title = if ($isCN) { "它已被重命名为 $newName" } else { "It has been renamed to '$newName'" }
-                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-teal" alt="renamed" /></a>'
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-teal" style="display:inline" alt="renamed" /></a>'
             }
             Default {
                 $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
-                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
-                # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a>'
+                # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" style="display:inline" alt="version" /></a>'
             }
         }
 
