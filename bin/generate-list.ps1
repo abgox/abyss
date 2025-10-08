@@ -77,11 +77,12 @@ foreach ($path in $PathList) {
 
     $isCN = $path -like "*cn*.md"
 
-    foreach ($_ in $manifests) {
-        $json = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
+    foreach ($mp in $manifests) {
+
+        $json = Get-Content $mp.FullName -Raw -Encoding UTF8 | ConvertFrom-Json -AsHashtable
         $info = @()
 
-        $app = $_.BaseName
+        $app = $mp.BaseName
 
         # homepage
         if ($isCN) {
@@ -95,23 +96,28 @@ foreach ($path in $PathList) {
         $tag = @()
 
         ## manifest
-        $isDeprecated = $json.version -eq 'deprecated'
-        $isRenamed = Test-ScriptPattern $json '(?<!#.*)A-Deny-Manifest\s*(''|")'
-        $p = $_.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
-        if ($isRenamed) {
-            (Get-Content $_.FullName -Raw -Encoding UTF8) -match '(?<!#.*)A-Deny-Manifest\s*(''|")(.+?)(''|")"' | Out-Null
-            $newName = $Matches[2]
-            $title = if ($isCN) { "它已被重命名为 $newName" } else { "It has been renamed to '$newName'" }
-            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-purple" alt="renamed" /></a>'
-        }
-        elseif ($isDeprecated) {
-            $title = if ($isCN) { "它已被弃用，无法成功安装或更新" } else { "It has been deprecated, and will fail to install or update." }
-            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/deprecated-critical" alt="deprecated" /></a>'
-        }
-        else {
-            $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
-            $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
-            # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+        $p = $mp.FullName -replace '^.+bucket\\', '' -replace '\\', '/'
+
+        switch ($json.version) {
+            deprecated {
+                $title = if ($isCN) { "它已被弃用，无法安装或更新" } else { "It has been deprecated, and will fail to install or update." }
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/deprecated-red" alt="deprecated" /></a>'
+            }
+            pending {
+                $title = if ($isCN) { "它还处于 pending 状态，无法安装或更新" } else { "It is pending, and will fail to install or update." }
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/pending-purple" alt="pending" /></a>'
+            }
+            renamed {
+                (Get-Content $mp.FullName -Raw -Encoding UTF8) -match '(?<!#.*)A-Deny-Manifest\s*(''|")(.+?)(''|")"' | Out-Null
+                $newName = $Matches[2]
+                $title = if ($isCN) { "它已被重命名为 $newName" } else { "It has been renamed to '$newName'" }
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-teal" alt="renamed" /></a>'
+            }
+            Default {
+                $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
+                $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" alt="manifest-json" /></a>'
+                # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" alt="version" /></a>'
+            }
         }
 
         ## persist
