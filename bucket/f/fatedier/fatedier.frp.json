@@ -1,0 +1,90 @@
+{
+    "version": "pending",
+    "description": "一个专注于内网穿透的高性能的反向代理应用，支持 TCP、UDP、HTTP、HTTPS 等多种协议，且支持 P2P 通信。可以将内网服务以安全、便捷的方式通过具有公网 IP 节点的中转暴露到公网。A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.",
+    "homepage": "https://github.com/fatedier/frp",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/fatedier/frp/blob/dev/LICENSE"
+    },
+    "notes": [
+        "To start:",
+        "  frpc                    # Start frpc",
+        "  frpc -v                 # Check version",
+        " ",
+        "For more information, visit: https://gofrp.org/"
+    ],
+    "notes-cn": [
+        "开始使用:",
+        "  frpc                    # 启动 frpc",
+        "  frpc -v                 # 查看版本",
+        " ",
+        "更多信息，请访问：https://gofrp.org/"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068",
+            "extract_dir": "frp_0.63.0_windows_amd64"
+        },
+        "arm64": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068",
+            "extract_dir": "frp_0.63.0_windows_arm64"
+        }
+    },
+    "bin": [
+        [
+            "frpc.exe",
+            "frpc",
+            "-c \"$dir\\frpc.toml\""
+        ],
+        [
+            "frps.exe",
+            "frps",
+            "-c \"$dir\\frps.toml\""
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Deny-Manifest"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "persist": [
+        "frpc.toml",
+        "frps.toml"
+    ],
+    "checkver": {
+        "url": "https://github.com/fatedier/frp/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)",
+        "replace": "pending"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/fatedier/frp/releases/download/v$version/frp_$version_windows_amd64.zip",
+                "extract_dir": "frp_$version_windows_amd64"
+            },
+            "arm64": {
+                "url": "https://github.com/fatedier/frp/releases/download/v$version/frp_$version_windows_arm64.zip",
+                "extract_dir": "frp_$version_windows_arm64"
+            }
+        }
+    }
+}
