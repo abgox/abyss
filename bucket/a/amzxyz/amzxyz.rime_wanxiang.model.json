@@ -59,12 +59,15 @@
         "    Write-Host \"Removing $app syntax model from Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
         "}",
         "$p = Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1",
-        "$path = $p.Path",
-        "$p | Stop-Process -Force -ErrorAction SilentlyContinue",
+        "if ($p) {",
+        "    $p | Stop-Process -Force -ErrorAction SilentlyContinue",
+        "}",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
         "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
         "Remove-Item \"$RimeDataDir\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue",
-        "Start-Process $path -ErrorAction SilentlyContinue"
+        "if ($p.Path) {",
+        "    Start-Process $p.Path -ErrorAction SilentlyContinue",
+        "}"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
