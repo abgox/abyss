@@ -12,9 +12,6 @@ try {
     if ($scoopdir -and $ScoopConfig.root_path -ne $scoopdir) {
         scoop config 'root_path' $scoopdir
     }
-    if ($globaldir -and $ScoopConfig.global_path -ne $globaldir) {
-        scoop config 'global_path' $globaldir
-    }
 
     # 卸载时的操作行为。
     $uninstallActionLevel = $ScoopConfig.'abgox-abyss-app-uninstall-action'
