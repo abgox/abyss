@@ -110,11 +110,11 @@ foreach ($path in $PathList) {
             renamed {
                 (Get-Content $mp.FullName -Raw -Encoding UTF8) -match '(?<!#.*)A-Deny-Manifest\s*(''|")(.+?)(''|")"' | Out-Null
                 $newName = $Matches[2]
-                $title = if ($isCN) { "它已被重命名为 $newName" } else { "It has been renamed to '$newName'" }
+                $title = if ($isCN) { "它已被重命名为 $newName" } else { "It has been renamed to '$newName'." }
                 $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/renamed-teal" style="display:inline" alt="renamed" /></a>'
             }
             Default {
-                $title = if ($isCN) { "点击查看 manifest json 文件" } else { "Click to view the manifest json file" }
+                $title = if ($isCN) { "它是可用的，可以正常安装或更新" } else { "It is available, and can be installed or updated normally." }
                 $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a>'
                 # $tag += '<a href="./bucket/' + $p + '" title="' + $title + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" style="display:inline" alt="version" /></a>'
             }
