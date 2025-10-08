@@ -1,6 +1,6 @@
 # 应用列表
 
-[English](./app-list.md) | [简体中文](./app-list.zh-CN.md)
+[English](./app-list.md) | [简体中文](./app-list.zh-CN.md) | [官网](https://abyss.abgox.com/app-list)
 
 ---
 

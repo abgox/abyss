@@ -1,6 +1,6 @@
 # App List
 
-[简体中文](./app-list.zh-CN.md) | [English](./app-list.md)
+[简体中文](./app-list.zh-CN.md) | [English](./app-list.md) | [Website](https://abyss.abgox.com/app-list)
 
 ---
 
