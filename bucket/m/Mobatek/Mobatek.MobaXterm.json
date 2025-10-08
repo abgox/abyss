@@ -1,0 +1,66 @@
+{
+    "version": "25.3.0.5384",
+    "description": "适用于 Windows 的增强型终端，配备 X11 服务器、多标签 SSH 客户端、网络工具等诸多功能。Enhanced terminal for Windows with X11 server, tabbed SSH client, network tools and much more.",
+    "homepage": "https://mobaxterm.mobatek.net/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://mobaxterm.mobatek.net/license.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.mobatek.net/2532025092512146/MobaXterm_Portable_v25.3.zip",
+            "hash": "5c8d9b4034c928c3542b502ae11c914caa9710b49ae384ce0c4f1eaa1405735b"
+        }
+    },
+    "bin": "MobaXterm.exe",
+    "shortcuts": [
+        [
+            "MobaXterm.exe",
+            "MobaXterm Personal"
+        ]
+    ],
+    "persist": "MobaXterm.ini",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "Get-ChildItem $dir 'mobaxterm*.exe' | Select-Object -First 1 | Rename-Item -NewName 'MobaXterm.exe'",
+        "A-New-PersistFile \"$persist_dir\\MobaXterm.ini\"",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Mobatek.MobaXterm' 'zip'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl.Replace('Installer','Portable'));\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX86"
+            }
+        }
+    }
+}
