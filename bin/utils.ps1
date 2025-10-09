@@ -47,6 +47,9 @@ function A-Test-DeveloperMode {
     <#
     .SYNOPSIS
         检查开发者模式是否启用
+
+    .LINK
+        https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging
     #>
     $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
     try {
@@ -100,19 +103,12 @@ function A-Ensure-Directory {
         确保指定目录路径存在
 
     .PARAMETER Path
-        需要确保存在的目录路径
-
-    .EXAMPLE
-        A-Ensure-Directory
-        确保 $persist_dir 目录存在
-
-    .EXAMPLE
-        A-Ensure-Directory "D:\scoop\persist\VSCode"
+        目录路径，默认使用 $persist_dir
     #>
     param (
         [string]$Path = $persist_dir
     )
-    if (!(Test-Path $Path)) {
+    if (-not (Test-Path $Path)) {
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
     }
 }
@@ -130,25 +126,47 @@ function A-Copy-Item {
         A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" "$persist_dir\InputTip.ini"
 
     .NOTES
-        文件名必须一一对应，不允许使用以下写法
+        文件或目录名必须对应，以下是错误写法
         A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" $persist_dir
     #>
     param (
-        [string]$From,
-        [string]$To
+        [string]$Path,
+        [string]$Destination
     )
 
-    A-Ensure-Directory (Split-Path $To -Parent)
+    if (-not (Test-Path $Path)) {
+        error "Source path does not exist: $Path"
+        A-Exit
+    }
 
-    if (Test-Path $To) {
-        # 如果是错误的文件类型，需要删除重建
-        if ((Get-Item $From).PSIsContainer -ne (Get-Item $To).PSIsContainer) {
-            Remove-Item $To -Recurse -Force
-            Copy-Item -Path $From -Destination $To -Recurse -Force
+    $sourceItem = Get-Item $Path
+    $targetDir = Split-Path $Destination -Parent
+
+    A-Ensure-Directory $targetDir
+
+    $needCopy = $true
+
+    if (Test-Path $Destination) {
+        $targetItem = Get-Item $Destination
+
+        if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
+            $needCopy = $false
+        }
+        else {
+            Remove-Item $Destination -Recurse -Force
+            $needCopy = $true
         }
     }
-    else {
-        Copy-Item -Path $From -Destination $To -Recurse -Force
+
+    if ($needCopy) {
+        try {
+            Copy-Item -Path $Path -Destination $Destination -Recurse -Force
+            Write-Host "Copying $Path => $Destination"
+        }
+        catch {
+            error $_.Exception.Message
+            A-Exit
+        }
     }
 }
 
@@ -164,50 +182,56 @@ function A-New-PersistFile {
         文件内容。如果指定了此参数，则写入文件内容，否则创建空文件
 
     .PARAMETER Encoding
-        文件编码（默认: utf8），此参数仅在指定了 -content 参数时有效
-
-    .PARAMETER Force
-        强制创建文件，即使文件已存在。
+        文件编码，默认为 utf8
+        此参数仅在指定了 -Content 参数时有效
 
     .EXAMPLE
-        A-New-PersistFile -path "$persist_dir\data.json" -content "{}"
+        A-New-PersistFile "$persist_dir\data.json" -Content "{}"
         创建文件并指定内容
 
     .EXAMPLE
-        A-New-PersistFile -path "$persist_dir\data.ini" -content @('[Settings]', 'AutoUpdate=0')
+        A-New-PersistFile "$persist_dir\data.ini" -Content @('[Settings]', 'AutoUpdate=0')
         创建文件并指定内容，传入数组会被写入多行
 
     .EXAMPLE
-        A-New-PersistFile -path "$persist_dir\data.ini"
+        A-New-PersistFile "$persist_dir\data.ini"
         创建空文件
     #>
     param (
         [string]$Path,
-        [string]$Copy,
         [array]$Content,
         [ValidateSet("utf8", "utf8Bom", "utf8NoBom", "unicode", "ansi", "ascii", "bigendianunicode", "bigendianutf32", "oem", "utf7", "utf32")]
-        [string]$Encoding = "utf8",
-        [switch]$Force
+        [string]$Encoding = "utf8"
     )
 
-    if (Test-Path $Path) {
-        # 如果是一个错误的目录，也要删除重建
-        $isDir = (Get-Item $Path).PSIsContainer
-        if ($Force -or $isDir) {
-            Remove-Item $Path -Force -ErrorAction SilentlyContinue
+    $itemExists = Test-Path $Path
+    $item = if ($itemExists) { Get-Item $Path } else { $null }
+
+    if ($itemExists) {
+        # 如果是一个目录，就删除它
+        if ($item.PSIsContainer) {
+            try {
+                Remove-Item $Path -Recurse -Force
+            }
+            catch {
+                error $_.Exception.Message
+                A-Exit
+            }
         }
         else {
             return
         }
     }
 
-    if ($PSBoundParameters.ContainsKey('content')) {
-        # 当明确传递了 content 参数时（包括空字符串或 $null）
-        A-Ensure-Directory (Split-Path $Path -Parent)
+    $parentDir = Split-Path $Path -Parent
+    A-Ensure-Directory $parentDir
+
+    if ($PSBoundParameters.ContainsKey('Content')) {
+        # 当明确传递了 Content 参数时（包括空字符串或 $null）
         Set-Content -Path $Path -Value $Content -Encoding $Encoding -Force
     }
     else {
-        # 当没有传递 content 参数时
+        # 当没有传递 Content 参数时
         New-Item -ItemType File -Path $Path -Force | Out-Null
     }
 }
@@ -223,9 +247,12 @@ function A-New-LinkFile {
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
         可忽略，将根据 LinkPaths 自动生成
+        生成规则:
+            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
+            否则，去掉盘符
 
     .EXAMPLE
-        A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml")
+        A-New-LinkFile @("$env:UserProfile\.config\starship.toml")
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -269,9 +296,12 @@ function A-New-LinkDirectory {
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
         可忽略，将根据 LinkPaths 自动生成
+        生成规则:
+            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
+            否则，去掉盘符
 
     .EXAMPLE
-        A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data")
+        A-New-LinkDirectory @("$env:AppData\Code","$env:UserProfile\.vscode")
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -306,6 +336,7 @@ function A-Remove-Link {
 
     .DESCRIPTION
         该函数用于删除在应用安装过程中创建的 SymbolicLink 和 Junction
+        根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
     if ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc")) {
@@ -340,11 +371,11 @@ function A-Remove-TempData {
         删除临时数据目录或文件
 
     .DESCRIPTION
-        该函数用于递归删除指定的临时数据目录或文件。
+        该函数用于删除指定的临时数据目录或文件。
         根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
 
     .PARAMETER Paths
-        要删除的临时数据路径数组，支持通过管道传入。
+        要删除的临时数据路径数组。
         可以包含文件或目录路径。
 
     .EXAMPLE
@@ -441,51 +472,50 @@ function A-Stop-Process {
 }
 
 function A-Stop-Service {
-    <#
-    .SYNOPSIS
-        停止并删除 Windows 服务
-
-    .DESCRIPTION
-        该函数尝试停止并删除指定的 Windows 服务。
-
-    .PARAMETER ServiceName
-        要停止和删除的 Windows 服务名称
-
-    .PARAMETER NoRemove
-        不删除服务，仅停止服务。
-
-    .EXAMPLE
-        A-Stop-Service -ServiceName "Everything"
-    #>
     param(
         [string]$ServiceName,
-        [switch]$NoRemove
+        [switch]$RequireAdmin
     )
 
-    $isExist = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
-    if (!$isExist) {
+    if (-not $isAdmin -and $RequireAdmin) {
+        A-Require-Admin
+    }
+
+    $service = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
+    if (-not $service) {
         return
     }
 
     try {
-        Write-Host "Stopping the service: $ServiceName"
-        Stop-Service -Name $ServiceName -ErrorAction Stop
+        Write-Host "Stopping the service: $($service.Name)"
+        $service | Stop-Service -ErrorAction Stop -Force
     }
     catch {
         error $_.Exception.Message
         A-Exit
     }
 
-    if ($NoRemove) {
-        return
-    }
+    return $service
+}
 
-    try {
-        Remove-Service -Name $ServiceName -ErrorAction Stop
-    }
-    catch {
-        error $_.Exception.Message
-        A-Exit
+function A-Remove-Service {
+    param(
+        [Parameter(ValueFromPipeline)]
+        $InputObject
+    )
+
+    process {
+        $service = $_
+        if (-not $service) { return }
+
+        try {
+            Write-Host "Removing the service: $($service.Name)"
+            $service | Remove-Service -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
+            A-Exit
+        }
     }
 }
 
@@ -679,17 +709,22 @@ function A-Uninstall-Exe {
     param(
         [string]$Uninstaller,
         [array]$ArgumentList,
-        # 仅用于标识，表示可能需要用户交互
-        [switch]$NoSilent,
-        # 超时时间（秒）
-        [string]$Timeout = 300,
+
         # 如果存在这个 FailureFile 指定的文件或路径，则认定为卸载失败
         # 如果未指定，默认使用 $Uninstaller
         [string]$FailureFile,
+
+        # 仅用于标识，表示可能需要用户交互
+        [switch]$NoSilent,
+
+        # 超时时间（秒）
+        [string]$Timeout = 300,
+
         # 是否等待卸载程序完成
         # 它会忽略超时时间，一直等待卸载程序结束
         # 除非确定卸载程序会自动结束，否则不要使用
         [switch]$Wait,
+
         # 是否需要隐藏卸载程序窗口
         [switch]$Hidden
     )
@@ -1117,7 +1152,7 @@ function A-Move-PersistDirectory {
         [array]$OldNames
     )
 
-    if (Test-Path $persist_dir) {
+    if (A-Test-DirectoryNotEmpty $persist_dir) {
         return
     }
 
@@ -1126,7 +1161,7 @@ function A-Move-PersistDirectory {
     foreach ($oldName in $OldNames) {
         $old = "$dir\$oldName"
 
-        if (Test-Path $old) {
+        if (A-Test-DirectoryNotEmpty $old) {
             try {
                 Rename-Item -Path $old -NewName $app -Force -ErrorAction Stop
                 break
@@ -1457,6 +1492,16 @@ function A-Compare-Version {
     return 0
 }
 
+function A-Test-DirectoryNotEmpty {
+    param(
+        [string]$Path
+    )
+    if (-not (Test-Path -Path $Path -PathType Container)) {
+        return $false
+    }
+    return [bool](Get-ChildItem -Path $Path -Force | Select-Object -First 1)
+}
+
 #region 废弃
 
 function A-Start-PreUninstall {
@@ -1581,7 +1626,7 @@ function A-Add-AppxPackage {
         应用程序包的 PackageFamilyName
 
     .PARAMETER Path
-        要安装的 AppX/Msix 包的文件路径。支持管道输入。
+        要安装的 AppX/Msix 包的文件路径。
 
     .EXAMPLE
         A-Add-AppxPackage -Path "D:\dl.msixbundle"
