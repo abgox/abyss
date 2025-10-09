@@ -537,22 +537,32 @@ function A-Install-Exe {
     }
 
     if ($PSBoundParameters.ContainsKey('Installer')) {
-        $path = A-Get-AbsolutePath $Installer
+        $Installer = A-Get-AbsolutePath $Installer
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
-        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+        $Installer = Join-Path $dir ($fname | Select-Object -First 1)
     }
 
-    if (!$path) {
+    if (!$Installer) {
         error "Please contact the bucket maintainer!"
         A-Exit
     }
 
-    $fileName = Split-Path $path -Leaf
+    $fileName = Split-Path $Installer -Leaf
 
     if (!$PSBoundParameters.ContainsKey('SuccessFile')) {
-        $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
+        try {
+            $SuccessFile = $manifest.shortcuts[0][0]
+        }
+        catch {
+            try {
+                $SuccessFile = $manifest.architecture.$architecture.shortcuts[0][0]
+            }
+            catch {
+                $SuccessFile = $null
+            }
+        }
         $SuccessFile = Invoke-Expression "`"$SuccessFile`""
     }
     $SuccessFile = A-Get-AbsolutePath $SuccessFile
@@ -561,13 +571,13 @@ function A-Install-Exe {
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
     @{
         InstallerType = $InstallerType
-        Installer     = $path
+        Installer     = $Installer
         ArgumentList  = $ArgumentList
         SuccessFile   = $SuccessFile
         Uninstaller   = $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
-    if (Test-Path $path) {
+    if (Test-Path $Installer) {
 
         Write-Host "Running the installer: $fileName"
         if ($NoSilent) {
@@ -575,30 +585,49 @@ function A-Install-Exe {
         }
         warn "It will be aborted if times out: $Timeout seconds"
 
+        if ($Uninstaller -or $SuccessFile) {
+            $fileExists = $false
+        }
+        else {
+            $fileExists = $null
+        }
+
+        if ($null -eq $fileExists) {
+            $process = Start-Process $Installer -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
+            try {
+                $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
+                return
+            }
+            catch {
+                error $_.Exception.Message
+                $process | Stop-Process -Force -ErrorAction SilentlyContinue
+                A-Exit
+            }
+        }
+
         try {
-            # 在后台作业中运行安装程序，强制停止进程的时机更晚
+            # 在后台作业中运行安装程序
             $job = Start-Job -ScriptBlock {
-                param($path, $ArgumentList)
+                param($Installer, $ArgumentList)
 
-                Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+                Start-Process $Installer -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
 
-            } -ArgumentList $path, $ArgumentList
+            } -ArgumentList $Installer, $ArgumentList
 
             $startTime = Get-Date
             $seconds = 1
-            if ($Uninstaller) {
-                $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
-            }
-            else {
-                $fileExists = Test-Path $SuccessFile
-            }
 
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
                     Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
 
                     if ($Uninstaller) {
-                        $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
+                        if ($SuccessFile) {
+                            $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
+                        }
+                        else {
+                            $fileExists = Test-Path $Uninstaller
+                        }
                     }
                     else {
                         $fileExists = Test-Path $SuccessFile
@@ -611,20 +640,23 @@ function A-Install-Exe {
                 }
                 Microsoft.PowerShell.Utility\Write-Host
 
-                if ($path -notmatch "^C:\\Windows\\System32\\") {
+                if ($Installer -notmatch "^C:\\Windows\\System32\\") {
                     $null = Start-Job -ScriptBlock {
-                        param($path, $job)
+                        param($Installer, $job)
                         # 30 秒后再删除安装程序
                         Start-Sleep -Seconds 30
 
                         $job | Stop-Job -ErrorAction SilentlyContinue
 
-                        Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
+                        Get-Process | Where-Object { $_.Path -eq $Installer } | Stop-Process -Force -ErrorAction SilentlyContinue
 
-                        Remove-Item $path -Force -ErrorAction SilentlyContinue
+                        Remove-Item $Installer -Force -ErrorAction SilentlyContinue
 
-                    } -ArgumentList $path, $job
+                    } -ArgumentList $Installer, $job
                 }
+            }
+            catch {
+                error $_.Exception.Message
             }
             finally {
                 if (!$fileExists) {
@@ -638,7 +670,7 @@ function A-Install-Exe {
         }
     }
     else {
-        error "'$path' not found."
+        error "'$Installer' not found."
         A-Exit
     }
 }
@@ -662,9 +694,16 @@ function A-Uninstall-Exe {
         [switch]$Hidden
     )
 
-    $installerInfo = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json
+    $InstallerInfoPath = "$dir\scoop-install-A-Install-Exe.jsonc"
 
-    if ($installerInfo.InstallerType -eq "inno") {
+    if (Test-Path $InstallerInfoPath) {
+        $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+    }
+    else {
+        return
+    }
+
+    if ($InstallerInfo.InstallerType -eq "inno") {
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
             $ArgumentList = @('/VerySilent')
         }
@@ -680,21 +719,19 @@ function A-Uninstall-Exe {
     }
 
     if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
-        if (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc") {
-            $Uninstaller = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Uninstaller"
-        }
-        else {
-            return
-        }
+        $Uninstaller = $InstallerInfo.Uninstaller
     }
 
-    $path = A-Get-AbsolutePath $Uninstaller
+    $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
-    if ($path) {
-        $fileName = Split-Path $path -Leaf
+    if ($Uninstaller) {
+        $fileName = Split-Path $Uninstaller -Leaf
+    }
+    else {
+        return
     }
 
-    if (Test-Path $path) {
+    if (Test-Path $Uninstaller) {
 
         Write-Host "Running the uninstaller: $fileName"
         if ($NoSilent) {
@@ -703,12 +740,12 @@ function A-Uninstall-Exe {
         warn "It will be aborted if times out: $Timeout seconds"
 
         if (!$PSBoundParameters.ContainsKey('FailureFile')) {
-            $FailureFile = $path
+            $FailureFile = $Uninstaller
         }
 
         try {
             $paramList = @{
-                FilePath     = $path
+                FilePath     = $Uninstaller
                 ArgumentList = $ArgumentList
                 WindowStyle  = if ($Hidden) { "Hidden" }else { "Normal" }
                 Wait         = $Wait
@@ -723,13 +760,15 @@ function A-Uninstall-Exe {
             }
             catch {
                 error $_.Exception.Message
-
                 $process | Stop-Process -Force -ErrorAction SilentlyContinue
-
                 A-Exit
             }
 
-            $fileExists = Test-Path $FailureFile
+            if (!$FailureFile) {
+                return
+            }
+
+            $fileExists = $true
             $seconds = 1
             try {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
@@ -749,6 +788,9 @@ function A-Uninstall-Exe {
                     $seconds += 1
                 }
                 Microsoft.PowerShell.Utility\Write-Host
+            }
+            catch {
+                error $_.Exception.Message
             }
             finally {
                 if ($fileExists) {
@@ -777,7 +819,7 @@ function A-Add-MsixPackage {
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
-        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+        $path = Join-Path $dir ($fname | Select-Object -First 1)
     }
 
     if (!$path) {
@@ -1578,7 +1620,15 @@ function A-Remove-AppxPackage {
 
     if (Test-Path $OutFile) {
         $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
-        Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
+
+        $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
+
+        if ($package) {
+            if ($package.InstallLocation) {
+                Get-Process | Where-Object { $_.Path -and $_.Path -like "*$($package.InstallLocation)*" } | Stop-Process -Force -ErrorAction SilentlyContinue
+            }
+            $package | Remove-AppxPackage
+        }
     }
 }
 
