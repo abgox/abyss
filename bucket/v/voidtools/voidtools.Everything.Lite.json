@@ -40,7 +40,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Service Everything",
+        "A-Stop-Service 'Everything' -RequireAdmin | A-Remove-Service",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Remove-TempData @(\"$env:LocalAppData\\Everything\")"
