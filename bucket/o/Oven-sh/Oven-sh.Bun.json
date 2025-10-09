@@ -1,0 +1,61 @@
+{
+    "version": "1.2.23",
+    "description": "速度极快的 JavaScript 运行时、打包工具、测试运行器和包管理器。Incredibly fast JavaScript runtime, bundler, test runner, and package manager.",
+    "homepage": "https://bun.sh/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/oven-sh/bun/blob/main/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/oven-sh/bun/releases/download/bun-v1.2.23/bun-windows-x64.zip",
+            "hash": "2171e94f9d1e0cd6d45bdced38e2dc821f4181a075ed80772e750b3298a9016d",
+            "extract_dir": "bun-windows-x64"
+        }
+    },
+    "bin": [
+        "bun.exe",
+        [
+            "bun.exe",
+            "bunx",
+            "x"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/oven-sh/bun/releases/latest",
+        "regex": "/tree/bun-(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/oven-sh/bun/releases/download/bun-v$version/bun-windows-x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
