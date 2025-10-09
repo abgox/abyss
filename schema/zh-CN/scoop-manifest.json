@@ -1184,7 +1184,15 @@
             "description": "软件的主页或仓库地址",
             "type": "string",
             "pattern": "^https?://",
-            "errorMessage": "homepage 必须是一个有效的 http/https URL"
+            "errorMessage": "homepage 必须是一个有效的 http/https URL",
+            "$comment": "在 Scoop 的应用清单版本检查中，官网根域名以 '/' 结尾，可以避免一些访问错误",
+            "if": {
+                "pattern": "^https?://[^/]+$"
+            },
+            "then": {
+                "not": true,
+                "errorMessage": "如果是官网根域名，请以 '/' 结尾"
+            }
         },
         "license": {
             "$ref": "#/definitions/license"
