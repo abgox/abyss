@@ -146,7 +146,7 @@ foreach ($path in $PathList) {
         }
 
         ## RequireAdmin
-        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-New-LinkFile)'
+        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-New-LinkFile|A-Stop-Service.+?-RequireAdmin)'
         $label = if ($isCN) { '<code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires administrator permission to install, update, or uninstall">RequireAdmin</code>' }
         if ($RequireAdmin) { $tag += $label }
 
