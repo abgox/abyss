@@ -11,10 +11,10 @@
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
     </a>
-    <a href="https://img.shields.io/github/languages/code-size/abgox/abyss">
+    <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/languages/code-size/abgox/abyss" alt="code size" />
     </a>
-    <a href="https://img.shields.io/github/repo-size/abgox/abyss">
+    <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/repo-size/abgox/abyss" alt="repo size" />
     </a>
     <a href="https://github.com/abgox/abyss">
@@ -117,11 +117,11 @@
 - If you don't need them, you can set it to any value that does not include them.
 - Configuration values and their action:
 
-  | Value | Action                                                          |
-  | ----- | --------------------------------------------------------------- |
-  | `1`   | Attempt to terminate processes before uninstallation/update     |
-  | `2`   | Remove directory created by [Link](#link) during uninstallation |
-  | `3`   | Clean up temporary data during uninstallation                   |
+  | Value | Action                                                               |
+  | ----- | -------------------------------------------------------------------- |
+  | `1`   | Attempt to terminate processes before uninstallation/update          |
+  | `2`   | Remove file/directory created by [Link](#link) during uninstallation |
+  | `3`   | Clean up temporary data during uninstallation                        |
 
 #### abgox-abyss-app-shortcuts-action
 
@@ -188,6 +188,9 @@
 - Scoop's `persist` is powerful, but unfortunately, it has a limitation: it only works if the app data resides within the installation directory.
 - However, some apps store their data outside the installation directory, commonly in `$env:AppData`.
 - For such apps, they will use `New-Item -ItemType Junction` to link.
+  - It uses the following rules to form the directory structure:
+    - If there is `$env:UserProfile`, replace it with `$persist_dir`.
+    - Otherwise, replace the drive letter with `$persist_dir`.
 - Taking [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) as an example:
   - [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) stores its data in `$env:AppData\Code` and `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`

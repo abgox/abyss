@@ -11,10 +11,10 @@
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
     </a>
-    <a href="https://img.shields.io/github/languages/code-size/abgox/abyss">
+    <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/languages/code-size/abgox/abyss" alt="code size" />
     </a>
-    <a href="https://img.shields.io/github/repo-size/abgox/abyss">
+    <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/repo-size/abgox/abyss" alt="repo size" />
     </a>
     <a href="https://github.com/abgox/abyss">
@@ -28,7 +28,7 @@
   <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
 </p>
 <p align="center">
-  <strong>喜欢这个项目？请给它一个 ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
+  <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
 </p>
 
 > [!Warning]
@@ -120,7 +120,7 @@
   | 配置值 | 行为                                            |
   | :----: | ----------------------------------------------- |
   |  `1`   | 卸载/更新时先尝试终止相关进程，然后进行卸载操作 |
-  |  `2`   | 卸载时删除通过 [Link](#link) 创建的目录         |
+  |  `2`   | 卸载时删除通过 [Link](#link) 创建的文件或目录   |
   |  `3`   | 卸载时删除临时数据                              |
 
 #### abgox-abyss-app-shortcuts-action
@@ -190,6 +190,9 @@
 - Scoop 的 persist 功能很强大，遗憾的是它有局限性: 只有应用数据在应用安装目录中，才可以使用它
 - 但是有些应用的数据是存储在安装目录之外的，常见的是在 `$env:AppData` 目录中
 - 像这样的应用，`abyss` 选择使用 `New-Item -ItemType Junction` 进行链接
+  - 它使用以下规则去形成目录结构：
+    - 如果有 `$env:UserProfile`，替换为 `$persist_dir`
+    - 否则将盘符替换为 `$persist_dir`
 - 以 [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) 为例
   - [Microsoft.VisualStudioCode](./bucket/m/Microsoft/Microsoft.VisualStudioCode.json) 的数据目录是 `$env:AppData\Code` 和 `$env:UserProfile\.vscode`
   - `$env:AppData` = `$env:UserProfile\AppData\Roaming`
