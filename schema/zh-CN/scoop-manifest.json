@@ -947,7 +947,7 @@
                                             ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                             "A-Start-Install",
                                             "A-Deny-Manifest 'newName'",
-                                            "A-New-PersistFile \"\"",
+                                            "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
                                             "A-Copy-Item",
                                             "A-Expand-SetupExe",
                                             "A-Install-Exe inno",
@@ -955,12 +955,12 @@
                                             "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\")",
                                             "A-Require-Admin",
                                             "A-Test-Admin",
-                                            "A-Ensure-Directory",
+                                            "A-Ensure-Directory 'xxx'",
                                             "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
                                             "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
                                             "A-Add-Font",
                                             "$PackageFamilyName = A-Add-MsixPackage 'PackageFamilyName'",
-                                            "A-Add-PowerToysRunPlugin ''"
+                                            "A-Add-PowerToysRunPlugin 'xxx'"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
@@ -2054,6 +2054,90 @@
                 "not": true,
                 "errorMessage": "abyss 中必须使用 pre_(un)install 和 post_(un)install 定义"
             }
+        },
+        {
+            "$comment": "如果 url 是 github releases 链接，则需要指定 hash 模式为 github",
+            "properties": {
+                "autoupdate": {
+                    "type": "object",
+                    "if": {
+                        "properties": {
+                            "architecture": {
+                                "type": "object",
+                                "patternProperties": {
+                                    "^(64bit|arm64|32bit)$": {
+                                        "properties": {
+                                            "url": {
+                                                "oneOf": [
+                                                    {
+                                                        "type": "string",
+                                                        "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                    },
+                                                    {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "hash"
+                        ],
+                        "properties": {
+                            "hash": {
+                                "required": [
+                                    "mode"
+                                ],
+                                "properties": {
+                                    "mode": {
+                                        "const": "github"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "$comment": "abyss 中不允许 checkver 使用内置的 github 字段",
+            "allOf": [
+                {
+                    "properties": {
+                        "checkver": {
+                            "if": {
+                                "type": "string",
+                                "const": "github"
+                            },
+                            "then": {
+                                "not": true,
+                                "errorMessage": "abyss 中不允许使用 github 字段"
+                            }
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "checkver": {
+                            "properties": {
+                                "github": {
+                                    "not": true,
+                                    "errorMessage": "abyss 中不允许使用 github 字段"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
         }
     ]
 }
