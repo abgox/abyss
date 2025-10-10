@@ -23,6 +23,7 @@
             "--user-data-dir=\"$persist_dir\\SuperProductivity\""
         ]
     ],
+    "persist": "SuperProductivity",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -45,9 +46,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "SuperProductivity",
     "checkver": {
-        "github": "https://github.com/johannesjo/super-productivity"
+        "url": "https://github.com/johannesjo/super-productivity/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -57,6 +58,9 @@
             "arm64": {
                 "url": "https://github.com/johannesjo/super-productivity/releases/download/v$version/superProductivity-arm64.exe#/dl.7z"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

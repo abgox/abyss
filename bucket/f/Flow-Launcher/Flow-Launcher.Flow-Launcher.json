@@ -19,6 +19,12 @@
             "Flow Launcher"
         ]
     ],
+    "persist": [
+        [
+            "app-2.0.1\\UserData",
+            "UserData"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -40,14 +46,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        [
-            "app-2.0.1\\UserData",
-            "UserData"
-        ]
-    ],
     "checkver": {
-        "github": "https://github.com/Flow-Launcher/Flow.Launcher"
+        "url": "https://github.com/Flow-Launcher/Flow.Launcher/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -60,6 +61,9 @@
                 "app-$version\\UserData",
                 "UserData"
             ]
-        ]
+        ],
+        "hash": {
+            "mode": "github"
+        }
     }
 }

@@ -18,6 +18,11 @@
             ]
         }
     },
+    "persist": [
+        "mpc-hc64.ini",
+        "mpc-hc.ini",
+        "default.mpcpl"
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -42,17 +47,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "mpc-hc64.ini",
-        "mpc-hc.ini",
-        "default.mpcpl"
-    ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/clsid2/mpc-hc/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/clsid2/mpc-hc/releases/download/$version/MPC-HC.$version.x64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -19,6 +19,7 @@
             "HashCalculator"
         ]
     ],
+    "persist": "settings.json",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -41,13 +42,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "settings.json",
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/hrpzcf/HashCalculator/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/hrpzcf/HashCalculator/releases/download/$version/HashCalculator-$version.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

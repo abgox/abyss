@@ -33,6 +33,11 @@
         "bin",
         "global\\bin"
     ],
+    "persist": [
+        "global",
+        "cache",
+        "mirror"
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -57,11 +62,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "global",
-        "cache",
-        "mirror"
-    ],
     "checkver": {
         "url": "https://github.com/yarnpkg/yarn/releases/latest",
         "regex": "/tree/(?:v|V)?([^\"?]+)"
@@ -71,6 +71,9 @@
             "64bit": {
                 "url": "https://github.com/yarnpkg/yarn/releases/download/v$version/yarn-$version.msi"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

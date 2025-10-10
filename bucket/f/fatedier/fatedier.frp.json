@@ -44,6 +44,10 @@
             "-c \"$dir\\frps.toml\""
         ]
     ],
+    "persist": [
+        "frpc.toml",
+        "frps.toml"
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -65,10 +69,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "frpc.toml",
-        "frps.toml"
-    ],
     "checkver": {
         "url": "https://github.com/fatedier/frp/releases/latest",
         "regex": "/tree/(?:v|V)?([^\"?]+)"
@@ -83,6 +83,9 @@
                 "url": "https://github.com/fatedier/frp/releases/download/v$version/frp_$version_windows_arm64.zip",
                 "extract_dir": "frp_$version_windows_arm64"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -16,6 +16,10 @@
             "WindTerm"
         ]
     ],
+    "persist": [
+        "profiles.config",
+        ".wind"
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -38,10 +42,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "profiles.config",
-        ".wind"
-    ],
     "checkver": {
         "url": "https://github.com/kingToolbox/WindTerm/releases/latest",
         "regex": "/tree/(?:v|V)?([^\"?]+)"
@@ -51,6 +51,9 @@
             "64bit": {
                 "url": "https://github.com/kingToolbox/WindTerm/releases/download/$version/WindTerm_$version_Windows_Portable_x86_64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         },
         "extract_dir": "WindTerm_$version"
     }

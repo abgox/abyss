@@ -25,6 +25,10 @@
             "ImageGlass"
         ]
     ],
+    "persist": [
+        "Themes",
+        "igconfig.json"
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -48,12 +52,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "Themes",
-        "igconfig.json"
-    ],
     "checkver": {
-        "github": "https://github.com/d2phap/ImageGlass"
+        "url": "https://github.com/d2phap/ImageGlass/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -65,6 +66,9 @@
                 "url": "https://github.com/d2phap/ImageGlass/releases/download/$version/ImageGlass_$version_arm64.zip",
                 "extract_dir": "ImageGlass_$version_arm64"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -24,6 +24,7 @@
             "LocalSend"
         ]
     ],
+    "persist": "settings.json",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -45,15 +46,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "settings.json",
     "checkver": {
-        "github": "https://github.com/localsend/localsend"
+        "url": "https://github.com/localsend/localsend/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/localsend/localsend/releases/download/v$version/LocalSend-$version-windows-x86-64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

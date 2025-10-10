@@ -19,6 +19,7 @@
             "Gopeed"
         ]
     ],
+    "persist": "gopeed.db",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -41,15 +42,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "gopeed.db",
     "checkver": {
-        "github": "https://github.com/GopeedLab/gopeed"
+        "url": "https://github.com/GopeedLab/gopeed/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/GopeedLab/gopeed/releases/download/v$version/Gopeed-v$version-windows-amd64-portable.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

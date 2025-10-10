@@ -19,6 +19,7 @@
             "Fluent Search"
         ]
     ],
+    "persist": "Blast",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -40,8 +41,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "Blast",
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/adirh3/Fluent-Search/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -50,6 +53,9 @@
             "arm64": {
                 "url": "https://github.com/adirh3/Fluent-Search/releases/download/$version/fluent-search-portable-arm64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

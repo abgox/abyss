@@ -19,6 +19,7 @@
             "QtScrcpy"
         ]
     ],
+    "persist": "config",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -40,14 +41,19 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "config",
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/barry-ran/QtScrcpy/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/barry-ran/QtScrcpy/releases/download/v$version/QtScrcpy-win-x64-v$version.zip",
                 "extract_dir": "QtScrcpy-win-x64-v$version"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -18,6 +18,7 @@
             "GitExtensions"
         ]
     ],
+    "persist": "GitExtensions.settings",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -40,7 +41,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "GitExtensions.settings",
     "checkver": {
         "url": "https://api.github.com/repositories/85953/releases",
         "jsonpath": "$..browser_download_url",
@@ -51,6 +51,9 @@
             "64bit": {
                 "url": "https://github.com/gitextensions/gitextensions/releases/download/v$matchTag/GitExtensions-Portable-x64-$version-$matchCommit.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -19,6 +19,7 @@
             "Carnac"
         ]
     ],
+    "persist": "Keymaps",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -41,15 +42,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "Keymaps",
     "checkver": {
-        "github": "https://github.com/Code52/carnac/"
+        "url": "https://github.com/Code52/carnac/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/Code52/carnac/releases/download/$version/carnac-$version-full.nupkg"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }
