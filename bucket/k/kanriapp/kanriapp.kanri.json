@@ -1,0 +1,61 @@
+{
+    "version": "0.8.2",
+    "description": "现代化的离线看板应用程序。Modern offline Kanban board app.",
+    "homepage": "https://kanriapp.com/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/kanriapp/kanri/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/kanriapp/kanri/releases/download/app-v0.8.2/kanri_0.8.2_x64-setup.exe",
+            "hash": "21bc43462a8a7f5312adafb32562124112546e836a24320cc7e8681fd9b28bac"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\kanri.exe",
+            "Kanri"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\tech.trobonox.kanri\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\tech.trobonox.kanri\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/kanriapp/kanri/releases/latest",
+        "regex": "/tree/app-(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/kanriapp/kanri/releases/download/app-v$version/kanri_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
