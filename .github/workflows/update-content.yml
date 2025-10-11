@@ -13,18 +13,33 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  push-changes:
     runs-on: windows-latest
+    outputs:
+      has_changes: ${{ steps.changes.outputs.has_changes }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate list and update content
         shell: pwsh
         run: |
           .\bin\generate-list.ps1
 
+      - name: Check for changes
+        id: changes
+        shell: pwsh
+        run: |
+          git add .
+          $changes = git status --porcelain
+          if ($changes) {
+              "has_changes=true" >> $env:GITHUB_OUTPUT
+          } else {
+              "has_changes=false" >> $env:GITHUB_OUTPUT
+          }
+
       - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
@@ -33,3 +48,24 @@ jobs:
           # scoop update 会忽略以 (chore) 开头的提交
           git commit -m "(chore): automatically update some content"
           git push
+
+  update-docs:
+    needs: push-changes
+    if: github.event_name != 'schedule' || needs.push-changes.outputs.has_changes == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Configure Git
+        shell: pwsh
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update Docs
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git abyss-docs
+          cd abyss-docs
+          .\scripts\update-app-list.ps1
+          git add .
+          git commit -m "chore: automatically update some content"
+          git push --force
