@@ -5,4 +5,17 @@ if (-not $root_path) {
     exit 1
 }
 
-New-Item -ItemType SymbolicLink -Path "$root_path\buckets\abyss-test" -Target "$PSScriptRoot\.." -Force
+$path = "$root_path\buckets\abyss"
+
+if (Test-Path $path) {
+    $confirm = Read-Host "The bucket 'abyss' already exists in Scoop. Do you want to overwrite it? (y/n)"
+    if ($confirm -eq "y") {
+        Remove-Item $path -Recurse -Force
+    }
+    else {
+        Write-Host "Aborted." -ForegroundColor Red
+        exit 1
+    }
+}
+
+New-Item -ItemType SymbolicLink -Path "$root_path\buckets\abyss" -Target "$PSScriptRoot\.." -Force
