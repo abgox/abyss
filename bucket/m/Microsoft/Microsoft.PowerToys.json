@@ -20,10 +20,10 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -ArgumentList @('/quiet','/norestart') -SuccessFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\"",
         "if ($cmd -ne 'update') {",
         "    A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\PowerToys\")",
-        "}"
+        "}",
+        "A-Install-Exe -ArgumentList @('/quiet','/norestart') -SuccessFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -39,7 +39,9 @@
         "    $_.Name -eq \"PowerToysUserSetup-$version-x64.exe\"",
         "} | Select-Object -First 1",
         "A-Uninstall-Exe -Uninstaller $uninstaller.FullName -ArgumentList @() -NoSilent -FailureFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\"",
-        "A-Remove-Link"
+        "if ($cmd -ne 'update') {",
+        "    A-Remove-Link",
+        "}"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

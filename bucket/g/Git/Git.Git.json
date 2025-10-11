@@ -34,10 +34,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile \"$env:ProgramFiles\\Git\\unins000.exe\"",
         "A-New-PersistFile \"$persist_dir\\.gitconfig\"",
         "A-New-PersistFile \"$persist_dir\\.gitmessage\"",
-        "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")"
+        "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile \"$env:ProgramFiles\\Git\\unins000.exe\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -31,7 +31,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')",
         "$DataDir = \"$env:UserProfile\\Documents\\Tencent Files\"",
         "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
         "$PersistDir = $DataDir.Replace($env:UserProfile, $persist_dir)",
@@ -40,7 +39,8 @@
         "$LinkPaths = @()",
         "$SubDir | ForEach-Object { $LinkPaths += Join-Path $DataDir \"$_\\nt_qq\" }",
         "$LinkPaths += Join-Path $DataDir \"nt_qq\"",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory $LinkPaths",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
