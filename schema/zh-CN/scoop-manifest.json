@@ -326,7 +326,7 @@
         },
         "architecture": {
             "title": "架构信息",
-            "description": "程序的架构信息。\n如果应用程序不是32位的，架构可以用来包装差异。",
+            "description": "程序的架构信息。\n架构可以用来包装差异。",
             "type": "object",
             "if": {
                 "type": "object",
@@ -486,6 +486,19 @@
                         },
                         "allOf": [
                             {
+                                "items": [
+                                    {
+                                        "description": "程序名"
+                                    },
+                                    {
+                                        "description": "shim 别名"
+                                    },
+                                    {
+                                        "description": "参数，它是可选的"
+                                    }
+                                ]
+                            },
+                            {
                                 "if": {
                                     "minItems": 1,
                                     "maxItems": 1
@@ -547,6 +560,23 @@
                     ]
                 },
                 "allOf": [
+                    {
+                        "items": [
+                            {
+                                "description": "目标文件的路径"
+                            },
+                            {
+                                "description": "快捷方式的名称，支持子目录: `aaa\\bbb`",
+                                "markdownDescription": "快捷方式的名称，支持子目录: `aaa\\bbb`"
+                            },
+                            {
+                                "description": "启动参数，它是可选的"
+                            },
+                            {
+                                "description": "图标文件的路径，它是可选的"
+                            }
+                        ]
+                    },
                     {
                         "if": {
                             "minItems": 1,
@@ -952,7 +982,7 @@
                                             "A-Expand-SetupExe",
                                             "A-Install-Exe inno",
                                             "A-Install-Exe -Uninstaller 'xxx'",
-                                            "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\")",
+                                            "A-Install-Exe -Uninstaller 'xxx' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
                                             "A-Require-Admin",
                                             "A-Test-Admin",
                                             "A-Ensure-Directory 'xxx'",
@@ -971,7 +1001,7 @@
                                             "函数\n- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`",
                                             "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`",
                                             "函数\n- 使用 innosetup 安装程序",
-                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 $fname 中的第一个文件名拼接 $dir\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\")`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n        - 默认使用 shortcuts 中第一个快捷方式的目标路径\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
+                                            "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 $fname 中的第一个文件名拼接 $dir\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n    - SuccessFile: 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功\n        - 默认使用 shortcuts 中第一个快捷方式的目标路径\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数\n- 示例 3: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\") -SuccessFile \"$dir\\unins000.exe\"`\n    - 当存在 `$dir\\unins000.exe` 时，表示安装成功",
                                             "函数\n- 使用安装程序安装应用",
                                             "函数\n- 要求以管理员权限运行",
                                             "函数\n- 检查是否以管理员权限运行",
@@ -1311,7 +1341,7 @@
                 "architecture": {
                     "type": "object",
                     "title": "自动更新架构",
-                    "markdownDescription": "- 定义自动更新的架构\n- 如果应用程序不是32位的，架构可以用来包装差异",
+                    "markdownDescription": "- 定义自动更新的架构\n- 架构可以用来包装差异",
                     "properties": {
                         "64bit": {
                             "description": "64位架构",
