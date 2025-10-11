@@ -342,7 +342,7 @@ function A-Remove-Link {
     if ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc")) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
-    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
+    elseif ($uninstallActionLevel -notlike "*2*") {
         return
     }
 
@@ -425,29 +425,14 @@ function A-Stop-Process {
         [string[]]$ExtraProcessNames
     )
 
-    $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
-    $Paths += $ExtraPaths
-
-    if ($ExtraProcessNames) {
-        foreach ($processName in $ExtraProcessNames) {
-            $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
-            if ($p) {
-                try {
-                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
-                    Stop-Process -Id $p.Id -Force -ErrorAction Stop
-                }
-                catch {
-                    error $_.Exception.Message
-                    A-Exit
-                }
-            }
-        }
-    }
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
     if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
+
+    $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
+    $Paths += $ExtraPaths
 
     $processes = Get-Process
 
@@ -462,6 +447,28 @@ function A-Stop-Process {
                 }
             }
             catch {
+                if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
+                    # 进程已经不存在，无需处理
+                    continue
+                }
+                error $_.Exception.Message
+                A-Exit
+            }
+        }
+    }
+
+    foreach ($processName in $ExtraProcessNames) {
+        $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
+        if ($p) {
+            try {
+                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                Stop-Process -Id $p.Id -Force -ErrorAction Stop
+            }
+            catch {
+                if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
+                    # 进程已经不存在，无需处理
+                    continue
+                }
                 error $_.Exception.Message
                 A-Exit
             }
@@ -1095,7 +1102,7 @@ function A-Hold-App {
             if ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -ge $Timeout) {
                 break
             }
-            if ((scoop list).Name | Where-Object { $_ -eq $app }) {
+            if ((scoop list $app).Name | Where-Object { $_ -eq $app }) {
                 $can = $true
                 break
             }
@@ -1190,10 +1197,7 @@ function A-Get-ProductCode {
 
         foreach ($item in $uninstallItems) {
             if ($null -ne $item.DisplayName -and $item.DisplayName -match $AppNamePattern) {
-                if ($item.UninstallString -match '\{[0-9A-Fa-f\-]{36}\}') {
-                    # 返回匹配到的第一个 ProductCode GUID
-                    return $Matches[0]
-                }
+                return $item.PSChildName
             }
         }
     }
@@ -1884,8 +1888,28 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     if ($shortcutsActionLevel -eq '0') {
         return
     }
-    if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '.*A-Install-Exe.*')) {
-        return
+    if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-Exe.*')) {
+        $locations = @(
+            "$env:AppData\Microsoft\Windows\Start Menu\Programs",
+            "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",
+            "$env:ProgramData\Microsoft\Windows\Start Menu\Programs",
+            "$env:UserProfile\Desktop",
+            "$env:Public\Desktop"
+        )
+
+        if ($PSVersionTable.PSVersion.Major -ge 7) {
+            $found = $locations | ForEach-Object -Parallel {
+                $result = Get-ChildItem $_ -Filter "$using:shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                if ($result) { $result.FullName }
+            } | Select-Object -First 1
+            if ($found) { return }
+        }
+        else {
+            foreach ($location in $locations) {
+                $found = Get-ChildItem $location -Filter "$shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                if ($found) { return }
+            }
+        }
     }
 
     # 支持在 shortcuts 中使用以 $env:xxx 环境变量开头的路径
