@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
@@ -29,17 +29,20 @@ jobs:
 
   check-scoop-version:
     runs-on: windows-latest
+    outputs:
+      ScoopNewVersion: ${{ steps.scoop-new-version.outputs.ScoopNewVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check Scoop Version
+        id: scoop-new-version
         shell: pwsh
         run: |
           .\bin\check-scoop-version.ps1
 
       - name: Reopen Issue
-        if: env.ScoopNewVersion != ''
+        if: steps.scoop-new-version.outputs.ScoopNewVersion != ''
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
