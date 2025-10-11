@@ -1,0 +1,80 @@
+{
+    "version": "v0.2025.10.08.08.12.stable_03",
+    "description": "一款内置 AI 和开发团队知识的智能终端。The intelligent terminal with AI and your dev team's knowledge built-in.",
+    "homepage": "https://www.warp.dev/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.warp.dev/terms-of-service"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://app.warp.dev/download/windows?version=v0.2025.10.08.08.12.stable_03&arch=x86_64#/dl.exe",
+            "hash": "40eb448aea79c71e575f8c532e27f82fef5da86da487302a7323f3b344c82fc9"
+        },
+        "arm64": {
+            "url": "https://app.warp.dev/download/windows?version=v0.2025.10.08.08.12.stable_03&arch=arm64#/dl.exe",
+            "hash": "0bd515d9b891253ed5699f70b3721fd5e6e83b4cbfd5f45d91f9ac79963883bf"
+        }
+    },
+    "env_add_path": "app\\bin",
+    "shortcuts": [
+        [
+            "app\\warp.exe",
+            "Warp"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\warp\\Warp\")",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Warp.Warp' ''",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64#/dl.exe",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
