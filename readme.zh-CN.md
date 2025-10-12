@@ -8,6 +8,9 @@
 </p>
 
 <p align="center">
+    <a href="https://github.com/abgox/abyss">
+        <img src="https://img.shields.io/github/stars/abgox/abyss" alt="github stars" />
+    </a>
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
     </a>
@@ -46,13 +49,18 @@
   - 清单命名格式: `Publisher.PackageIdentifier`
   - 目录结构: `bucket/a/abgox/abgox.scoop-i18n.json`
 
-### Demo
+### 演示
 
 ![Demo](https://abyss.abgox.com/demo.zh-CN.gif)
 
 ---
 
 ### 如果你没有使用 Scoop
+
+> [!Tip]
+>
+> - 如果你无法访问 Github ，建议使用 [Scoop 镜像](https://gitee.com/scoop-installer-mirrors)
+> - 它可以让你正常安装并使用 Scoop，无需访问 Github
 
 - [Scoop](https://scoop.sh/)
 - [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
@@ -95,9 +103,9 @@
    scoop install abyss/abgox.scoop-i18n
    ```
 
-### 如果你访问 Github 存在问题
+### 如果你无法访问 Github
 
-- 可以使用 [scoop-tools](https://scoop-tools.abgox.com)，它允许你临时使用替换之后的代理 url 来下载安装包
+- 可以使用 [scoop-tools](https://scoop-tools.abgox.com)，它允许你临时使用替换之后的代理 url 来下载安装包，以解决下载问题
   - Github: https://github.com/abgox/scoop-tools
   - Gitee: https://gitee.com/abgox/scoop-tools
 
@@ -136,11 +144,11 @@
 - 如果没有设置，则默认为 `1`
 - 配置值的含义如下
 
-  | 配置值 | 行为                                                                      |
-  | :----: | ------------------------------------------------------------------------- |
-  |  `0`   | **不创建** 清单中定义的快捷方式                                           |
-  |  `1`   | **创建** 清单中定义的快捷方式                                             |
-  |  `2`   | 如果应用使用安装程序，就 **不创建** 清单中定义的快捷方式，否则就 **创建** |
+  | 配置值 | 行为                                                                                    |
+  | :----: | --------------------------------------------------------------------------------------- |
+  |  `0`   | **不创建** 清单中定义的快捷方式                                                         |
+  |  `1`   | **创建** 清单中定义的快捷方式                                                           |
+  |  `2`   | 如果应用使用安装程序创建了快捷方式，就 **不创建** 清单中定义的快捷方式，否则就 **创建** |
 
 #### abgox-abyss-bucket-name
 

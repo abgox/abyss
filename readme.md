@@ -8,6 +8,9 @@
 </p>
 
 <p align="center">
+    <a href="https://github.com/abgox/abyss">
+        <img src="https://img.shields.io/github/stars/abgox/abyss" alt="github stars" />
+    </a>
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
     </a>
@@ -38,8 +41,8 @@
 
 ### Features
 
-- Some apps that cannot use [Persist](#persist), [Link](#link) will be used as a fallback.
-- Some spps use installers instead of zip to install.
+- Some apps that cannot use [Persist](#persist), [Link](#link) will be used.
+- Some apps use installers instead of zip to install.
 - Use extra abilities via some [config](#config).
 - Use [abgox/scoop-i18n](https://scoop-i18n.abgox.com) to enable i18n support.
 - Inspired by [winget-pkgs](https://github.com/microsoft/winget-pkgs).
@@ -53,6 +56,11 @@
 ---
 
 ### If you are not using Scoop
+
+> [!Tip]
+>
+> - If you cannot access Github, it is recommended to use the [Scoop mirror](https://gitee.com/scoop-installer-mirrors).
+> - It allows you to install and use Scoop normally without accessing Github.
 
 - [Scoop](https://scoop.sh/)
 - [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
@@ -95,7 +103,7 @@
     scoop install abyss/abgox.scoop-i18n
     ```
 
-### If you have problems accessing Github
+### If you cannot access Github
 
 - You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy url to download the installation package.
   - Github: https://github.com/abgox/scoop-tools
@@ -136,11 +144,11 @@
 - If not set, the default value is `1`.
 - Configuration values and their action:
 
-  | Value | Action                                                                                                                 |
-  | :---: | ---------------------------------------------------------------------------------------------------------------------- |
-  |  `0`  | **Do not create** shortcuts defined in the manifest                                                                    |
-  |  `1`  | **Create** shortcuts defined in the manifest                                                                           |
-  |  `2`  | If the app is installed via installer, **do not create** shortcuts defined in the manifest; otherwise, **create** them |
+  | Value | Action                                                                                                                     |
+  | :---: | -------------------------------------------------------------------------------------------------------------------------- |
+  |  `0`  | **Don't create** shortcuts defined in the manifest                                                                         |
+  |  `1`  | **Create** shortcuts defined in the manifest                                                                               |
+  |  `2`  | If the app creates shortcuts via installer, **don't create** shortcuts defined in the manifest; otherwise, **create** them |
 
 #### abgox-abyss-bucket-name
 
