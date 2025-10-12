@@ -160,6 +160,18 @@ foreach ($path in $PathList) {
         $label = if ($isCN) { '<code title="在卸载时可能需要用户交互">NoSilentUninstall</code>' } else { '<code title="May require user interaction during uninstallation">NoSilentUninstall</code>' }
         if ($NoSilentUninstall) { $tag += $label }
 
+
+        ## DenyUpdate
+        $DenyUpdate = Test-ScriptPattern $json '(?<!#.*)A-Deny-Update'
+
+        if ($isCN) {
+            $label = '<code title="使用 Scoop 更新会被拒绝，只能先卸载再安装">DenyUpdate</code>'
+        }
+        else {
+            $label = '<code title="Deny update, only can uninstall and install again.">DenyUpdate</code>'
+        }
+        if ($DenyUpdate) { $tag += $label }
+
         ## NoUpdate
         if ($isCN) {
             $label = '<code title="无法通过 Github Actions 去检查它的版本更新，因为没有配置 autoupdate">NoUpdate</code>'
