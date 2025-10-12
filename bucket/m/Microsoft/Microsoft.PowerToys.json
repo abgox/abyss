@@ -20,10 +20,14 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "if ($cmd -ne 'update') {",
-        "    A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\PowerToys\")",
-        "}",
-        "A-Install-Exe -ArgumentList @('/quiet','/norestart') -SuccessFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\""
+        "Expand-DarkArchive \"$dir\\$fname\" \"$dir\\.tmp\"",
+        "Get-ChildItem $dir -Recurse -Filter '*.msi' | Select-Object -First 1 | ForEach-Object { Move-Item $_.FullName \"$dir\\dl.msi\" -Force }",
+        "Remove-Item \"$dir\\.tmp\", \"$dir\\$fname\" -Force -Recurse",
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\dl.msi\", '/passive')",
+        "Start-Sleep -Seconds 5",
+        "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
+        "# 安装程序启动时不能进行链接，会出现内存访问错误，因此等待安装完成并终止相关进程后再创建链接",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\PowerToys\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,14 +38,10 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "if ($cmd -eq 'update') { return }",
-        "$uninstaller = Get-ChildItem \"$env:LocalAppData\\Package Cache\" -Depth 2 | Where-Object {",
-        "    $_.Name -eq \"PowerToysUserSetup-$version-x64.exe\"",
-        "} | Select-Object -First 1",
-        "A-Uninstall-Exe -Uninstaller $uninstaller.FullName -ArgumentList @() -NoSilent -FailureFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\"",
-        "if ($cmd -ne 'update') {",
-        "    A-Remove-Link",
-        "}"
+        "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
+        "A-Remove-Link",
+        "$ProductCode = A-Get-ProductCode '^PowerToys*'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\""
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
