@@ -59,7 +59,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (304)|Tag|Description|
+|App (305)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -156,6 +156,7 @@
 |[DenoLand.Deno](https://deno.com/ "点击访问仓库或主页")|<a href="./bucket/d/DenoLand/DenoLand.Deno.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个适用于 JavaScript 和 TypeScript 的现代运行时环境。|
 |[DevToys-app.DevToys](https://devtoys.app/ "点击访问仓库或主页")|<a href="./bucket/d/DevToys-app/DevToys-app.DevToys.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="无法通过 Github Actions 去检查它的版本更新，因为没有配置 autoupdate">NoUpdate</code><br /><code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|开发人员的瑞士军刀。|
 |[DigitalScholar.Zotero](https://www.zotero.org/ "点击访问仓库或主页")|<a href="./bucket/d/DigitalScholar/DigitalScholar.Zotero.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个免费，易于使用的工具，可帮助您收集，组织，注释，引用和共享研究。|
+|[Ditto.Ditto](https://sabrogden.github.io/Ditto/ "点击访问仓库或主页")|<a href="./bucket/d/Ditto/Ditto.Ditto.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个 Windows 剪贴板的扩展工具。|
 |[dooit-org.dooit](https://github.com/dooit-org/dooit "点击访问仓库或主页")|<a href="./bucket/d/dooit-org/dooit-org.dooit.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a>|一个 TUI 待办事项管理器。|
 |[Drawpile.Drawpile](https://drawpile.net/ "点击访问仓库或主页")|<a href="./bucket/d/Drawpile/Drawpile.Drawpile.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款绘图程序，能让你与他人在同一画布上共同进行绘制、涂色和制作动画。|
 |[DuongDieuPhap.ImageGlass](https://imageglass.org/ "点击访问仓库或主页")|<a href="./bucket/d/DuongDieuPhap/DuongDieuPhap.ImageGlass.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个轻量级的、多功能的图像查看器。|
