@@ -20,19 +20,19 @@
 
     > Click on the badge to view the manifest json file.
 
-    - <img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" />
+    - <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
 
       - It is available and can be installed or updated normally.
 
-    - <img src="https://img.shields.io/badge/deprecated-red" style="display:inline" alt="deprecated" />
+    - <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
 
       - It has been deprecated, and any installation or update will fail.
 
-    - <img src="https://img.shields.io/badge/pending-purple" style="display:inline" alt="pending" />
+    - <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
 
       - It is pending and cannot be installed temporarily.
 
-    - <img src="https://img.shields.io/badge/renamed-teal" style="display:inline" alt="renamed" />
+    - <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
 
       - It has been renamed and will fail to install or update.
       - The new name will be displayed in the error message, and you should use the new name for installation

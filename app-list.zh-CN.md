@@ -20,19 +20,19 @@
 
     > 点击徽章可查看对应的 json 文件
 
-    - <img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" />
+    - <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
 
       - 它是可用的，可以正常安装或更新
 
-    - <img src="https://img.shields.io/badge/deprecated-red" style="display:inline" alt="deprecated" />
+    - <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
 
       - 它已被弃用，安装或更新都会失败
 
-    - <img src="https://img.shields.io/badge/pending-purple" style="display:inline" alt="pending" />
+    - <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
 
       - 它是待定的，暂时无法安装
 
-    - <img src="https://img.shields.io/badge/renamed-teal" style="display:inline" alt="renamed" />
+    - <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
 
       - 它已被重命名，安装或更新都会失败
       - 在错误信息中会显示新的名称，你应该使用新的名称进行安装
