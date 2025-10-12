@@ -59,7 +59,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (308)|Tag|Description|
+|App (309)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品。|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具。|
@@ -287,6 +287,7 @@
 |[OpenJS.NodeJS](https://nodejs.org/ "点击访问仓库或主页")|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个免费、开源、跨平台的 JavaScript 运行时环境。|
 |[OpenJS.NodeJS.LTS](https://nodejs.org/ "点击访问仓库或主页")|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.LTS.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个免费、开源、跨平台的 JavaScript 运行时环境。|
 |[Oven-sh.Bun](https://bun.sh/ "点击访问仓库或主页")|<a href="./bucket/o/Oven-sh/Oven-sh.Bun.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a>|速度极快的 JavaScript 运行时、打包工具、测试运行器和包管理器。|
+|[PasteBar.PasteBar](https://github.com/PasteBar/PasteBarApp "点击访问仓库或主页")|<a href="./bucket/p/PasteBar/PasteBar.PasteBar.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|无限制的、免费的剪贴板管理器。|
 |[PDFgear.PDFgear](https://www.pdfgear.com/ "点击访问仓库或主页")|<a href="./bucket/p/PDFgear/PDFgear.PDFgear.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款功能齐全的 PDF 管理软件。|
 |[PDFsam.PDFsam](https://pdfsam.org/ "点击访问仓库或主页")|<a href="./bucket/p/PDFsam/PDFsam.PDFsam.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a>|一款免费/自由、开源、多平台软件，用于拆分、合并、提取页面、混合和旋转 PDF 文件。|
 |[PicGo.PicGo](https://molunerfinn.com/PicGo/ "点击访问仓库或主页")|<a href="./bucket/p/PicGo/PicGo.PicGo.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/manifest-blue" style="display:inline" alt="manifest-json" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|由 vue-cli-electron-builder 构建的简洁美观的图片上传工具。|
