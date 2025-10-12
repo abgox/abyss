@@ -1,5 +1,5 @@
 {
-    "version": "1.0.13.0",
+    "version": "2.0-preview.8",
     "description": "开发人员的瑞士军刀。A Swiss Army knife for developers.",
     "homepage": "https://devtoys.app/",
     "license": {
@@ -8,16 +8,26 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/veler/DevToys/releases/download/v1.0.13.0/64360VelerSoftware.DevToys_1.0.13.0_neutral_._j80j2txgjg9dj.msixbundle",
-            "hash": "020dd37d165ce2568405a32cdbcb93bfbe0a79864df9eb8c742a6a771c785ae3"
+            "url": "https://github.com/DevToys-app/DevToys/releases/download/v2.0.8.0/devtoys_win_x64.exe",
+            "hash": "f6ad5ffe2c8a1466b5fa38bf23474ea0090abaab333546d67bf57c6bcf1f176a"
+        },
+        "arm64": {
+            "url": "https://github.com/DevToys-app/DevToys/releases/download/v2.0.8.0/devtoys_win_arm64.exe",
+            "hash": "d6b54ebdc8fc63e6a209c63d55876d9aeca8691c92be0d9071371c6a75c0a82f"
         }
     },
+    "shortcuts": [
+        [
+            "app\\DevToys.exe",
+            "DevToys Preview"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "$PackageFamilyName = A-Add-MsixPackage '64360VelerSoftware.DevToys_j80j2txgjg9dj'",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\DevToys-preview\")",
+        "A-Install-Exe inno"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -30,11 +40,41 @@
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-MsixPackage"
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\DevToys.WebView2\")"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
-    ]
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'DevToys-app.DevToys' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_user.InstallerSha256"
+                }
+            }
+        }
+    }
 }
