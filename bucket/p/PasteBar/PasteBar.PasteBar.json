@@ -1,0 +1,68 @@
+{
+    "version": "0.7.0",
+    "description": "无限制的、免费的剪贴板管理器。Limitless, Free Clipboard Manager.",
+    "homepage": "https://github.com/PasteBar/PasteBarApp",
+    "license": {
+        "identifier": "CC-BY-NC-4.0",
+        "url": "https://github.com/PasteBar/PasteBarApp/blob/main/CC-LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/PasteBar/PasteBarApp/releases/download/v0.7.0/PasteBar_0.7.0_x64-setup.exe",
+            "hash": "141d4577e8dd612a1248ad14d589e2b70de002bb5ec8f8f92dab33ea32e578a9"
+        },
+        "arm64": {
+            "url": "https://github.com/PasteBar/PasteBarApp/releases/download/v0.7.0/PasteBar_0.7.0_arm64-setup.exe",
+            "hash": "751f0c9ad4f09521a04c9255f289ec52dd6ea7beb7de39ce88057af1d258157d"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\PasteBar.exe",
+            "PasteBar"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\app.anothervision.pasteBar\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\app.anothervision.pasteBar\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/PasteBar/PasteBarApp/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/PasteBar/PasteBarApp/releases/download/v$version/PasteBar_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/PasteBar/PasteBarApp/releases/download/v$version/PasteBar_$version_arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
