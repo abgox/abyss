@@ -40,7 +40,8 @@
         "$SubDir | ForEach-Object { $LinkPaths += Join-Path $DataDir \"$_\\nt_qq\" }",
         "$LinkPaths += Join-Path $DataDir \"nt_qq\"",
         "A-New-LinkDirectory $LinkPaths",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')"
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')",
+        "A-Hold-App"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,6 +52,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
+        "A-Deny-Update",
         "A-Require-Admin",
         "A-Stop-Process @(\"$env:ProgramFiles\\Tencent\\QQNT\")",
         "A-Uninstall-Exe -NoSilent",
