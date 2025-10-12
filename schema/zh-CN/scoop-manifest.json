@@ -12,14 +12,6 @@
     ],
     "additionalProperties": false,
     "$comment": "markdownDescription 字段是 vscode 扩展属性，用于在 vscode 中显示 markdown 格式的描述",
-    "dependentRequired": {
-        "autoupdate": [
-            "checkver"
-        ],
-        "checkver": [
-            "autoupdate"
-        ]
-    },
     "definitions": {
         "bool": {
             "type": "boolean",
@@ -978,7 +970,7 @@
                                             "A-Start-Install",
                                             "A-Deny-Manifest 'newName'",
                                             "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
-                                            "A-Copy-Item",
+                                            "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\xxx\" \"$persist_dir\\xxx\"",
                                             "A-Expand-SetupExe",
                                             "A-Install-Exe inno",
                                             "A-Install-Exe -Uninstaller 'xxx'",
@@ -990,7 +982,8 @@
                                             "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
                                             "A-Add-Font",
                                             "$PackageFamilyName = A-Add-MsixPackage 'PackageFamilyName'",
-                                            "A-Add-PowerToysRunPlugin 'xxx'"
+                                            "A-Add-PowerToysRunPlugin 'xxx'",
+                                            "A-Hold-App"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
@@ -1010,7 +1003,8 @@
                                             "函数\n- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`",
                                             "函数\n- 安装字体",
                                             "函数\n- 安装 AppX/Msix 包\n- 示例: `$PackageFamilyName = A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`",
-                                            "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                            "函数\n- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`",
+                                            "函数\n- 安装完成后，自动 hold 应用程序，阻止 Scoop 更新它\n- 它通常与 `pre_uninstall` 中的 `A-Deny-Update` 搭配使用"
                                         ]
                                     }
                                 ]
@@ -1115,7 +1109,7 @@
                                             "函数\n- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成",
                                             "函数\n- 要求以管理员权限运行",
                                             "函数\n- 检查是否以管理员权限运行",
-                                            "函数\n- 禁止通过 Scoop 更新",
+                                            "函数\n- 禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用",
                                             "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n    - NoSilent: 是否静默安装\n        - 默认 `$false`\n    - Timeout: 超时时间\n        - 默认 `300` 秒\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数",
                                             "函数\n- 使用卸载程序卸载应用"
                                         ]
@@ -1409,11 +1403,105 @@
     },
     "allOf": [
         {
-            "$comment": "如果存在 notes，则 notes-cn 也必须存在",
-            "dependentRequired": {
-                "notes": [
-                    "notes-cn"
-                ]
+            "$comment": "如果定义了 checkver，就必须定义 autoupdate",
+            "allOf": [
+                {
+                    "if": {
+                        "required": [
+                            "checkver"
+                        ]
+                    },
+                    "then": {
+                        "if": {
+                            "required": [
+                                "autoupdate"
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "checkver": {
+                                    "not": true,
+                                    "errorMessage": "如果定义了 checkver，就必须定义 autoupdate"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "required": [
+                            "autoupdate"
+                        ]
+                    },
+                    "then": {
+                        "if": {
+                            "required": [
+                                "checkver"
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "autoupdate": {
+                                    "not": true,
+                                    "errorMessage": "如果定义了 autoupdate，就必须定义 checkver"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "$comment": "如果 url 是 github releases 链接，则需要指定 hash 模式为 github",
+            "properties": {
+                "autoupdate": {
+                    "type": "object",
+                    "if": {
+                        "properties": {
+                            "architecture": {
+                                "type": "object",
+                                "patternProperties": {
+                                    "^(64bit|arm64|32bit)$": {
+                                        "properties": {
+                                            "url": {
+                                                "oneOf": [
+                                                    {
+                                                        "type": "string",
+                                                        "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                    },
+                                                    {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "hash"
+                        ],
+                        "properties": {
+                            "hash": {
+                                "required": [
+                                    "mode"
+                                ],
+                                "properties": {
+                                    "mode": {
+                                        "const": "github"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         {
@@ -2006,7 +2094,7 @@
             ]
         },
         {
-            "$comment": "abyss bucket 必须使用 architecture 明确指定架构",
+            "$comment": "abyss 特性: 必须使用 architecture 明确指定架构",
             "if": {
                 "required": [
                     "url"
@@ -2022,6 +2110,56 @@
             }
         },
         {
+            "$comment": "abyss 特性: 如果定义了 notes，则必须定义 notes-cn",
+            "allOf": [
+                {
+                    "if": {
+                        "required": [
+                            "notes"
+                        ]
+                    },
+                    "then": {
+                        "if": {
+                            "required": [
+                                "notes-cn"
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "notes": {
+                                    "not": true,
+                                    "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "required": [
+                            "notes-cn"
+                        ]
+                    },
+                    "then": {
+                        "if": {
+                            "required": [
+                                "notes"
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "notes-cn": {
+                                    "not": true,
+                                    "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "$comment": "abyss 特性: 脚本校验",
             "$ref": "#/definitions/script_validation",
             "properties": {
                 "architecture": {
@@ -2040,7 +2178,7 @@
             }
         },
         {
-            "$comment": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
+            "$comment": "abyss 特性: 为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
             "allOf": [
                 {
                     "properties": {
@@ -2073,7 +2211,7 @@
             ]
         },
         {
-            "$comment": "abyss 中必须使用 pre_(un)install 和 post_(un)install 定义安装和卸载(这里懒得校验 install 脚本了)",
+            "$comment": "abyss 特性: 必须使用 pre_(un)install 和 post_(un)install 定义安装和卸载(这里懒得校验 install 脚本了)",
             "if": {
                 "required": [
                     "pre_uninstall",
@@ -2086,60 +2224,125 @@
             }
         },
         {
-            "$comment": "如果 url 是 github releases 链接，则需要指定 hash 模式为 github",
-            "properties": {
-                "autoupdate": {
-                    "type": "object",
-                    "if": {
-                        "properties": {
-                            "architecture": {
-                                "type": "object",
-                                "patternProperties": {
-                                    "^(64bit|arm64|32bit)$": {
-                                        "properties": {
-                                            "url": {
-                                                "oneOf": [
-                                                    {
-                                                        "type": "string",
-                                                        "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                    },
-                                                    {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "type": "string",
-                                                            "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+            "$comment": "abyss 特性: 如果在 pre_install 中使用了 A-Install-Exe，则 bin 和 shortcuts 路径必须以 app\\ 或 $env: 或 ${env: 开头",
+            "if": {
+                "properties": {
+                    "pre_install": {
+                        "type": "array",
+                        "contains": {
+                            "type": "string",
+                            "pattern": "^A-Install-Exe"
                         }
-                    },
-                    "then": {
-                        "required": [
-                            "hash"
-                        ],
-                        "properties": {
-                            "hash": {
-                                "required": [
-                                    "mode"
-                                ],
-                                "properties": {
-                                    "mode": {
-                                        "const": "github"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "bin": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "if": {
+                                    "not": {
+                                        "anyOf": [
+                                            {
+                                                "pattern": "^app\\\\"
+                                            },
+                                            {
+                                                "pattern": "^\\$\\{?env:"
+                                            }
+                                        ]
                                     }
+                                },
+                                "then": {
+                                    "not": true,
+                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                }
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string",
+                                            "if": {
+                                                "not": {
+                                                    "anyOf": [
+                                                        {
+                                                            "pattern": "^app\\\\"
+                                                        },
+                                                        {
+                                                            "pattern": "^\\$\\{?env:"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                            }
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": [
+                                                {
+                                                    "if": {
+                                                        "type": "string",
+                                                        "not": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "pattern": "^app\\\\"
+                                                                },
+                                                                {
+                                                                    "pattern": "^\\$\\{?env:"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 }
                             }
+                        ]
+                    },
+                    "shortcuts": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "if": {
+                                        "type": "string",
+                                        "not": {
+                                            "anyOf": [
+                                                {
+                                                    "pattern": "^app\\\\"
+                                                },
+                                                {
+                                                    "pattern": "^\\$\\{?env:"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "then": {
+                                        "not": true,
+                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
             }
         },
         {
-            "$comment": "abyss 中不允许 checkver 使用内置的 github 字段",
+            "$comment": "abyss 特性: 不允许 checkver 使用内置的 github 字段",
             "allOf": [
                 {
                     "properties": {
