@@ -617,6 +617,17 @@
                         },
                         "allOf": [
                             {
+                                "items": [
+                                    {
+                                        "description": "persist 的原始文件或目录"
+                                    },
+                                    {
+                                        "description": "persist 的目标位置，支持子目录: `aaa\\bbb`",
+                                        "markdownDescription": "persist 的目标位置，支持子目录: `aaa\\bbb`"
+                                    }
+                                ]
+                            },
+                            {
                                 "if": {
                                     "minItems": 1,
                                     "maxItems": 1
@@ -2336,6 +2347,46 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "persist": {
+                        "if": {
+                            "type": "array"
+                        },
+                        "then": {
+                            "items": {
+                                "if": {
+                                    "type": "array"
+                                },
+                                "then": {
+                                    "items": [
+                                        {
+                                            "if": {
+                                                "type": "string",
+                                                "not": {
+                                                    "anyOf": [
+                                                        {
+                                                            "pattern": "^app\\\\"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 开头"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "由于使用了 A-Install-Exe，必须使用数组格式"
+                                }
+                            }
+                        },
+                        "else": {
+                            "not": true,
+                            "errorMessage": "由于使用了 A-Install-Exe，必须使用数组格式"
                         }
                     }
                 }
