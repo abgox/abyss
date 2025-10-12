@@ -43,6 +43,7 @@
     - `RequireAdmin`：在安装、更新或卸载时需要管理员权限
     - `NoSilentInstall`：在安装过程中可能需要用户交互
     - `NoSilentUninstall`：在卸载过程中可能需要用户交互
+    - `DenyUpdate`: 使用 Scoop 更新会被拒绝，只能先卸载再安装
     - `NoUpdate`：没有配置 `json.autoupdate`，无法通过 [Github Actions](./.github/workflows/excavator.yml) 自动更新清单
 
   - 应用类型

@@ -43,6 +43,7 @@
     - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
     - `NoSilentInstall`: May require user interaction during installation.
     - `NoSilentUninstall`: May require user interaction during uninstallation.
+    - `DenyUpdate`: Deny update, only can uninstall and install again.
     - `NoUpdate` : `json.autoupdate` are not configured, and it cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
 
   - App Types
