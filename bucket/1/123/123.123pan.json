@@ -14,7 +14,7 @@
     },
     "shortcuts": [
         [
-            "app\\123pan\\123pan.exe",
+            "$env:LocalAppData\\123pan\\123pan.exe",
             "123云盘"
         ]
     ],
@@ -24,7 +24,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")",
-        "A-Install-Exe -Uninstaller 'app\\123pan\\uninst.exe'"
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\123pan\\uninst.exe\" -ArgumentList @('/S') -SuccessFile \"$env:LocalAppData\\123pan\\123pan.exe\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,9 +36,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process",
+        "A-Stop-Process \"$env:LocalAppData\\123pan\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe -ArgumentList @() -NoSilent",
+        "A-Uninstall-Exe",
         "A-Remove-TempData @(\"$env:AppData\\123pan\")"
     ],
     "post_uninstall": [
