@@ -1,0 +1,67 @@
+{
+    "version": "3.25.76.0",
+    "description": "一个 Windows 剪贴板的扩展工具。An extension to the Windows Clipboard.",
+    "homepage": "https://sabrogden.github.io/Ditto/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/sabrogden/Ditto/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sabrogden/Ditto/releases/download/3.25.76.0/DittoSetup_3_25_76_0.exe",
+            "hash": "f093225156eaee37f7dc178db66f0d14ed1988e4db9a561d8d2eaa421fd6b4a2"
+        }
+    },
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "Ditto.exe",
+            "Ditto"
+        ]
+    ],
+    "persist": [
+        "Ditto.db",
+        "Ditto.Settings"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "# A-New-LinkDirectory @(\"$env:AppData\\Ditto\")",
+        "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\Ditto.db\" \"$persist_dir\\Ditto.db\"",
+        "if (!(Test-Path \"$dir\\Ditto.Settings\")) {",
+        "    @('[Ditto]', \"DBPath3=Ditto.db\") | Set-Content \"$dir\\Ditto.Settings\" -Encoding Ascii",
+        "}"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/sabrogden/Ditto/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sabrogden/Ditto/releases/download/$version/DittoSetup_$underscoreVersion.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
