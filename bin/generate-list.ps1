@@ -214,7 +214,14 @@ foreach ($path in $PathList) {
         $info += $tag -join '<br />'
 
         ## description
-        $description = $json.description -split '(?<=。)(?=[^。]+$)'
+        $description = $json.description -split ' \| '
+
+        for ($i = 0; $i -lt $description.Count; $i++) {
+            if ($description[$i] -match '^\(([^)]+)\)\s*(.*)') {
+                $description[$i] = @("($($matches[1]))", $matches[2].Trim()) -join '<br />'
+            }
+        }
+
 
         if ($path -like "*cn*.md") {
             $info += $description[0]
