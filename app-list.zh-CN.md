@@ -59,7 +59,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (313)|Tag|Description|
+|App (315)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具|
@@ -272,6 +272,8 @@
 |[ndd.Notepad--](https://github.com/cxasm/notepad-- "点击访问仓库或主页")|<a href="./bucket/n/ndd/ndd.Notepad--.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个文本编辑器|
 |[Neovide.Neovide](https://neovide.dev/ "点击访问仓库或主页")|<a href="./bucket/n/Neovide/Neovide.Neovide.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个 Neovim 的简单图形用户界面|
 |[Neovim.Neovim](https://neovim.io/ "点击访问仓库或主页")|<a href="./bucket/n/Neovim/Neovim.Neovim.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个旨在重构 Vim 的文本编辑器项目|
+|[nerd-fonts.FiraCode](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.FiraCode.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|FiraCode 字体，Nerd Font 系列|
+|[nerd-fonts.FiraMono](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.FiraMono.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|FiraMono 字体，Nerd Font 系列|
 |[nerd-fonts.Hack](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.Hack.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|Hack 字体，Nerd Font 系列|
 |[nerd-fonts.Hack.NF](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.Hack.NF.json" title="它已被重命名为 nerd-fonts.Hack"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" /></a><br /><code title="一种字体">Font</code>|Hack 字体，Nerd Font 系列|
 |[nerd-fonts.JetBrainsMono](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.JetBrainsMono.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|JetBrains Mono 字体，Nerd Font 系列|
