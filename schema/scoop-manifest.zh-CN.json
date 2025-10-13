@@ -1194,26 +1194,12 @@
         },
         "description": {
             "title": "软件描述",
-            "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n- 例如：\"一个 xxx 软件，用于 xxx 功能。A xxx software for xxx.\"",
-            "description": "- 软件的简短描述\n- 需要包含中文和英文描述\n- 例如：\"一个 xxx 软件，用于 xxx 功能。A xxx software for xxx.\"",
+            "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n- 例如：\"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"",
+            "description": "- 软件的简短描述\n- 需要包含中文和英文描述\n- 例如：\"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"",
             "type": "string",
             "minLength": 1,
-            "allOf": [
-                {
-                    "pattern": "。",
-                    "errorMessage": "description 中必须包含一个中文的句号"
-                },
-                {
-                    "pattern": "。.*[A-Za-z].*",
-                    "errorMessage": "description 中必须包含英文描述。\n例如：这是一个中文描述。This is a English description."
-                },
-                {
-                    "not": {
-                        "pattern": "\\|"
-                    },
-                    "errorMessage": "description 中不允许使用 | 符号"
-                }
-            ]
+            "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+            "errorMessage": "不符合指定格式：中文描述 | English description\n注意: | 左右各只有一个空格"
         },
         "homepage": {
             "title": "软件主页",
