@@ -1,0 +1,64 @@
+{
+    "version": "1.71.1",
+    "description": "一个用于在不同云存储提供商之间同步文件和目录的命令行程序。A command-line program to sync files and directories to and from different cloud storage providers.",
+    "homepage": "https://rclone.org/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/rclone/rclone/blob/master/COPYING"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/rclone/rclone/releases/download/v1.71.1/rclone-v1.71.1-windows-amd64.zip",
+            "hash": "a36b5e4ce336beac1349644f43374628add9fe1ae5ab7a3ed3cec5b8550ce041",
+            "extract_dir": "rclone-v1.71.1-windows-amd64"
+        },
+        "arm64": {
+            "url": "https://github.com/rclone/rclone/releases/download/v1.71.1/rclone-v1.71.1-windows-arm64.zip",
+            "hash": "b7a754589144f1be6a60eefa08901d6d7c4f325aaea6a82ee1c98f57d939e165",
+            "extract_dir": "rclone-v1.71.1-windows-arm64"
+        }
+    },
+    "bin": "rclone.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\rclone\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/rclone/rclone/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rclone/rclone/releases/download/v$version/rclone-v$version-windows-amd64.zip",
+                "extract_dir": "rclone-v$version-windows-amd64"
+            },
+            "arm64": {
+                "url": "https://github.com/rclone/rclone/releases/download/v$version/rclone-v$version-windows-arm64.zip",
+                "extract_dir": "rclone-v$version-windows-arm64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
