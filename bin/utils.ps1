@@ -888,12 +888,17 @@ function A-Add-Font {
 
     .PARAMETER FontType
         字体类型，支持 ttf, otf, ttc
-        默认为 ttf
+        如果未指定字体类型，则根据字体文件扩展名自动判断
     #>
     param(
         [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType = "ttf"
+        [string]$FontType
     )
+
+    if (!$FontType) {
+        $fontFile = Get-ChildItem -Path $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
+        $FontType = $fontFile.Extension.TrimStart(".")
+    }
 
     $filter = "*.$($FontType)"
 
@@ -946,12 +951,17 @@ function A-Remove-Font {
 
     .PARAMETER FontType
         字体类型，支持 ttf, otf, ttc
-        默认为 ttf
+        如果未指定字体类型，则根据字体文件扩展名自动判断
     #>
     param(
         [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType = "ttf"
+        [string]$FontType
     )
+
+    if (!$FontType) {
+        $fontFile = Get-ChildItem -Path $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
+        $FontType = $fontFile.Extension.TrimStart(".")
+    }
 
     $filter = "*.$($FontType)"
 
