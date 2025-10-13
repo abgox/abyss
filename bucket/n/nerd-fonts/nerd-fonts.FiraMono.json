@@ -1,0 +1,70 @@
+{
+    "version": "3.4.0",
+    "description": "FiraMono 字体，Nerd Font 系列 | 'FiraMono' Font family with Nerd Fonts patched.",
+    "homepage": "https://github.com/ryanoasis/nerd-fonts",
+    "license": {
+        "identifier": "MIT|OFL-1.1",
+        "url": "https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE"
+    },
+    "notes": [
+        "Font Name:",
+        "FiraMono Nerd Font",
+        "FiraMono Nerd Font Mono",
+        "FiraMono Nerd Font Propo"
+    ],
+    "notes-cn": [
+        "字体名称:",
+        "FiraMono Nerd Font",
+        "FiraMono Nerd Font Mono",
+        "FiraMono Nerd Font Propo"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraMono.zip",
+            "hash": "ef37b99164614ad518721a8f3b1a1f654bac060dba820e73fa3b3e4cce8841e4"
+        },
+        "arm64": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraMono.zip",
+            "hash": "ef37b99164614ad518721a8f3b1a1f654bac060dba820e73fa3b3e4cce8841e4"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Add-Font"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Remove-Font"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/ryanoasis/nerd-fonts/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/FiraMono.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/FiraMono.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
