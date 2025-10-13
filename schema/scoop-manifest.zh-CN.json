@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "title": "abyss bucket 的清单(manifest)格式定义",
-    "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss bucket](https://github.com/abgox/abyss) 特有的风格和约定",
-    "description": "abyss 的 Scoop 软件包清单 JSON 格式定义(manifest json schema)\n具有 https://github.com/abgox/abyss 特有的风格和约定",
+    "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
+    "description": "abyss 的 Scoop 软件包清单 JSON 格式定义(manifest json schema)\n具有 https://abyss.abgox.com 特有的风格和约定",
     "type": "object",
     "required": [
         "version",
@@ -57,7 +57,7 @@
                 "使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)",
                 "使用 `Public Domain`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个属于公有领域的软件(Public Domain)",
                 "使用 `Shareware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)",
-                "使用 `Freemium`，这是由 [abyss bucket](https://github.com/abgox/abyss) 定义的特殊字段，表示这是一个免费增值软件，基础功能永久免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
+                "使用 `Freemium`，这是由 [abyss](https://abyss.abgox.com) 定义的特殊字段，表示这是一个免费增值软件，基础功能永久免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
             ]
         },
         "license_identifier": {
@@ -194,8 +194,8 @@
         },
         "notes-cn": {
             "title": "软件提示信息",
-            "markdownDescription": "- 安装软件之后的中文提示信息。\n- 它是 [abyss bucket](https://github.com/abgox/abyss) 的自定义属性，不是 Scoop 官方字段",
-            "description": "- 安装软件之后的中文提示信息。\n- 它是 https://github.com/abgox/abyss 的自定义属性，不是 Scoop 官方字段",
+            "markdownDescription": "- 安装软件之后的中文提示信息。\n- 它是 [abyss](https://abyss.abgox.com) 的自定义属性，不是 Scoop 官方字段",
+            "description": "- 安装软件之后的中文提示信息。\n- 它是 https://abyss.abgox.com 的自定义属性，不是 Scoop 官方字段",
             "$ref": "#/definitions/string_or_string_array"
         },
         "url": {
@@ -779,7 +779,7 @@
                                 "not": {
                                     "pattern": "\\.git(\\/|$)"
                                 },
-                                "errorMessage": "github 仓库地址格式错误，请使用正确格式，如: https://github.com/abgox/abyss"
+                                "errorMessage": "github 仓库地址格式错误，请使用正确格式，如: https://abyss.abgox.com"
                             }
                         },
                         "re": {
@@ -808,7 +808,24 @@
                         },
                         "replace": {
                             "description": "用计算值替换匹配值",
-                            "$ref": "#/definitions/str"
+                            "$ref": "#/definitions/str",
+                            "anyOf": [
+                                {},
+                                {
+                                    "enum": [
+                                        "${1}.${2}.${3}.${4}${5}${6}",
+                                        "pending",
+                                        "renamed",
+                                        "deprecated"
+                                    ],
+                                    "markdownEnumDescriptions": [
+                                        "将匹配值替换为 `${1}.${2}.${3}.${4}${5}${6}`，其中 `${1}` 表示第一个匹配组，`${2}` 表示第二个匹配组，以此类推。",
+                                        "确保检查更新时，新版本为 `pending`",
+                                        "确保检查更新时，新版本为 `renamed`",
+                                        "确保检查更新时，新版本为 `deprecated`"
+                                    ]
+                                }
+                            ]
                         },
                         "useragent": {
                             "description": "用于获取网页内容的 User-Agent",
@@ -998,7 +1015,7 @@
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
-                                            "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                                            "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的",
                                             "函数\n- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`",
                                             "函数\n- 拒绝安装或更新此清单\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用",
                                             "函数\n- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`",
@@ -1024,7 +1041,7 @@
                     ]
                 },
                 "post_install": {
-                    "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                    "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
                     "type": "array",
                     "minItems": 3,
                     "anyOf": [
@@ -1036,7 +1053,7 @@
                                 },
                                 {
                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的"
+                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
                                 },
                                 {
                                     "anyOf": [
@@ -1107,7 +1124,7 @@
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
-                                            "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的",
+                                            "脚本\n- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的",
                                             "函数\n- 表示卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
                                             "函数\n- 尝试暂停安装目录下的应用进程，以确保能正常卸载",
                                             "函数\n- 尝试停止指定的应用服务，以确保能正常卸载",
@@ -1131,7 +1148,7 @@
                     ]
                 },
                 "post_uninstall": {
-                    "markdownDescription": "- 对于 [abyss bucket](https://github.com/abgox/abyss)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`\n---\n- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                    "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`\n---\n- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
                     "type": "array",
                     "minItems": 3,
                     "anyOf": [
@@ -1143,7 +1160,7 @@
                                 },
                                 {
                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://github.com/abgox/abyss) 中的特性都是基于它实现的"
+                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
                                 },
                                 {
                                     "anyOf": [
@@ -1184,10 +1201,16 @@
                 },
                 {
                     "enum": [
-                        "0.0.0"
+                        "0.0.0",
+                        "pending",
+                        "renamed",
+                        "deprecated"
                     ],
                     "markdownEnumDescriptions": [
-                        "当前版本为 0.0.0"
+                        "当前版本为 0.0.0",
+                        "[abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `pending`",
+                        "[abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `renamed`",
+                        "[abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `deprecated`"
                     ]
                 }
             ]
@@ -1312,7 +1335,7 @@
         },
         "autoupdate": {
             "title": "自动更新",
-            "markdownDescription": "它将通过 [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
+            "markdownDescription": "它将通过 [Github Actions](https://abyss.abgox.com/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
             "type": "object",
             "additionalProperties": false,
             "minProperties": 1,
@@ -2622,6 +2645,74 @@
                                     "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
                                 },
                                 "errorMessage": "pre_uninstall 中使用了 A-Remove-PowerToysRunPlugin，而 pre_install 中缺少 A-Add-PowerToysRunPlugin"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "$comment": "abyss 特性: 当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "version": {
+                                "pattern": "^pending$"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "checkver": {
+                                "properties": {
+                                    "replace": {
+                                        "pattern": "^pending$",
+                                        "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "version": {
+                                "pattern": "^renamed$"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "checkver": {
+                                "properties": {
+                                    "replace": {
+                                        "pattern": "^renamed$",
+                                        "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "version": {
+                                "pattern": "^deprecated$"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "checkver": {
+                                "properties": {
+                                    "replace": {
+                                        "pattern": "^deprecated$",
+                                        "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                    }
+                                }
                             }
                         }
                     }
