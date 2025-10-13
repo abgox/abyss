@@ -1,0 +1,55 @@
+{
+    "version": "0.25.0",
+    "description": "一个具有语法高亮和 Git 集成功能的 cat(1) 克隆版本。A cat(1) clone with syntax highlighting and Git integration.",
+    "homepage": "https://github.com/sharkdp/bat",
+    "license": {
+        "identifier": "Apache-2.0|MIT",
+        "url": "https://github.com/sharkdp/bat/blob/master/LICENSE-APACHE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-pc-windows-msvc.zip",
+            "hash": "1d5ced071ba9c765e16f4065877c178cefcfd2fe9581e9ddc92af265b73991bd",
+            "extract_dir": "bat-v0.25.0-x86_64-pc-windows-msvc"
+        }
+    },
+    "bin": "bat.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\bat\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/sharkdp/bat/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sharkdp/bat/releases/download/v$version/bat-v$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "bat-v$version-x86_64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
