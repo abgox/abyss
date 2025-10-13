@@ -59,7 +59,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (312)|Tag|Description|
+|App (313)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具|
@@ -275,6 +275,7 @@
 |[nerd-fonts.Hack](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.Hack.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|Hack 字体，Nerd Font 系列|
 |[nerd-fonts.Hack.NF](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.Hack.NF.json" title="它已被重命名为 nerd-fonts.Hack"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" /></a><br /><code title="一种字体">Font</code>|Hack 字体，Nerd Font 系列|
 |[nerd-fonts.JetBrainsMono](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.JetBrainsMono.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|JetBrains Mono 字体，Nerd Font 系列|
+|[nerd-fonts.Meslo](https://github.com/ryanoasis/nerd-fonts "点击访问仓库或主页")|<a href="./bucket/n/nerd-fonts/nerd-fonts.Meslo.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="一种字体">Font</code>|Meslo 字体，Nerd Font 系列|
 |[NetEase.CloudMusic](https://music.163.com/ "点击访问仓库或主页")|<a href="./bucket/n/NetEase/NetEase.CloudMusic.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|网易云音乐，网易的一个音乐平台|
 |[NickeManarin.ScreenToGif](https://www.screentogif.com/ "点击访问仓库或主页")|<a href="./bucket/n/NickeManarin/NickeManarin.ScreenToGif.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|屏幕、摄像头和画板录像，并有内置编辑器|
 |[NomanDhoni.BlinkEye](https://blinkeye.app/ "点击访问仓库或主页")|<a href="./bucket/n/NomanDhoni/NomanDhoni.BlinkEye.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款极简主义的护眼提醒应用，旨在减轻长时间使用屏幕时的眼睛疲劳|
