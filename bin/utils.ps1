@@ -920,7 +920,7 @@ function A-Add-Font {
         Microsoft.PowerShell.Utility\Write-Host
         A-Exit
     }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
     if (!$global) {
         # Ensure user font install directory exists and has correct permission settings
         # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
@@ -934,10 +934,10 @@ function A-Add-Font {
     }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+    Get-ChildItem $dir -Filter $filter -Recurse | ForEach-Object {
         $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
         New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
-        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir
+        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force
     }
 }
 
@@ -971,8 +971,8 @@ function A-Remove-Font {
         ".ttc" = "TrueType"
     }
 
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
+    Get-ChildItem $dir -Filter $filter -Recurse | ForEach-Object {
         Get-ChildItem $fontInstallDir -Filter $_.Name | ForEach-Object {
             try {
                 Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
@@ -983,10 +983,9 @@ function A-Remove-Font {
             }
         }
     }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+    Get-ChildItem $dir -Filter $filter -Recurse | ForEach-Object {
         Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
@@ -1000,7 +999,7 @@ function A-Add-PowerToysRunPlugin {
         [string]$PluginName
     )
 
-    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+    $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
     $PluginPath = "$PluginsDir\$PluginName"
     $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
 
@@ -1023,7 +1022,7 @@ function A-Add-PowerToysRunPlugin {
 }
 
 function A-Remove-PowerToysRunPlugin {
-    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+    $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
 
     $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
 
