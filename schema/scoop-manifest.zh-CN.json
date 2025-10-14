@@ -104,57 +104,58 @@
                 "object"
             ],
             "examples": [
-                "Freeware",
                 {}
             ],
-            "oneOf": [
+            "minLength": 1,
+            "anyOf": [
+                {},
                 {
-                    "type": "string",
-                    "minLength": 1,
                     "$ref": "#/definitions/license_field"
-                },
-                {
-                    "type": "object",
-                    "required": [
-                        "identifier"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "identifier": {
-                            "title": "许可证标识符",
-                            "markdownDescription": "- 软件的许可证标识符\n- 如果没有许可证的相关说明，且符合 `Freeware`、`Proprietary`、`Public Domain`、`Shareware`、`Freemium`、`Unknown` 之一，可以使用它们\n- 如果不同的文件具有不同的许可证，请使用逗号 `,` 分隔许可证。如果整个应用程序是双重许可的 ，则使用 `|`\n- https://opensource.org/license\n- https://spdx.org/licenses",
-                            "description": "- 软件的许可证标识符\n- 如果没有许可证的相关说明，且符合 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 之一，可以使用它们\n- 如果不同的文件具有不同的许可证，请使用逗号 `,` 分隔许可证。如果整个应用程序是双重许可的 ，则使用 `|`\n- https://opensource.org/license\n- https://spdx.org/licenses",
-                            "type": "string",
-                            "$comment": "这里写 examples 只是为了 vscode 能触发补全菜单，不需要和下方的 enum 对应",
-                            "examples": [
-                                "",
-                                "MIT",
-                                "Apache-2.0"
-                            ],
-                            "anyOf": [
-                                {
-                                    "type": "string",
-                                    "minLength": 1
-                                },
-                                {
-                                    "$ref": "#/definitions/license_field"
-                                },
-                                {
-                                    "$ref": "#/definitions/license_identifier"
-                                }
-                            ]
-                        },
-                        "url": {
-                            "type": "string",
-                            "title": "许可证 URL",
-                            "markdownDescription": "软件许可证的 URL 地址。",
-                            "description": "软件许可证的 URL 地址。",
-                            "pattern": "^https?://",
-                            "errorMessage": "url 必须是一个有效的 http/https URL"
-                        }
-                    }
                 }
             ],
+            "if": {
+                "type": "object"
+            },
+            "then": {
+                "required": [
+                    "identifier"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "identifier": {
+                        "title": "许可证标识符",
+                        "markdownDescription": "- 软件的许可证标识符\n- 如果没有许可证的相关说明，且符合 `Freeware`、`Proprietary`、`Public Domain`、`Shareware`、`Freemium`、`Unknown` 之一，可以使用它们\n- 如果不同的文件具有不同的许可证，请使用逗号 `,` 分隔许可证。如果整个应用程序是双重许可的 ，则使用 `|`\n- https://opensource.org/license\n- https://spdx.org/licenses",
+                        "description": "- 软件的许可证标识符\n- 如果没有许可证的相关说明，且符合 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 之一，可以使用它们\n- 如果不同的文件具有不同的许可证，请使用逗号 `,` 分隔许可证。如果整个应用程序是双重许可的 ，则使用 `|`\n- https://opensource.org/license\n- https://spdx.org/licenses",
+                        "type": "string",
+                        "$comment": "这里写 examples 只是为了 vscode 能触发补全菜单，不需要和下方的 enum 对应",
+                        "examples": [
+                            "",
+                            "MIT",
+                            "Apache-2.0"
+                        ],
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            {
+                                "$ref": "#/definitions/license_field"
+                            },
+                            {
+                                "$ref": "#/definitions/license_identifier"
+                            }
+                        ]
+                    },
+                    "url": {
+                        "type": "string",
+                        "title": "许可证 URL",
+                        "markdownDescription": "软件许可证的 URL 地址。",
+                        "description": "软件许可证的 URL 地址。",
+                        "pattern": "^https?://",
+                        "errorMessage": "url 必须是一个有效的 http/https URL"
+                    }
+                }
+            },
             "allOf": [
                 {
                     "if": {
@@ -181,7 +182,7 @@
                                     ]
                                 }
                             },
-                            "errorMessage": "当 license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个时，必须提供 url，否则请使用字符串"
+                            "errorMessage": "license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个，此时必须提供 url，否则请使用字符串而非对象"
                         }
                     }
                 }
@@ -204,7 +205,11 @@
             "description": "- 要下载的文件的 URL\n- 如果有多个 URL，可以使用数组\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 #/dl.7z 这样的字段\n- 如：\"http://example.org/program.exe\" => \"http://example.org/program.exe#/dl.7z\"\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取\n- 此技术通常用于 Scoop 清单中，以绕过可能具有不良副作用的可执行安装程序，如注册表更改，放置在安装目录外的文件或管理员提升提示",
             "examples": [
                 "",
-                []
+                [],
+                "https://github.com/abgox/abyss/releases/download/empty/empty",
+                [
+                    "https://github.com/abgox/abyss/releases/download/empty/empty"
+                ]
             ],
             "type": [
                 "string",
@@ -217,6 +222,14 @@
         "hash": {
             "title": "软件安装包的 hash 值",
             "description": "软件安装包的 hash 值，用于校验下载的软件是否完整",
+            "examples": [
+                "",
+                [],
+                "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068",
+                [
+                    "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                ]
+            ],
             "type": [
                 "string",
                 "array"
@@ -779,7 +792,7 @@
                                 "not": {
                                     "pattern": "\\.git(\\/|$)"
                                 },
-                                "errorMessage": "github 仓库地址格式错误，请使用正确格式，如: https://abyss.abgox.com"
+                                "errorMessage": "github 仓库地址格式错误，请使用正确格式，如: https://github.com/abgox/abyss"
                             }
                         },
                         "re": {
@@ -1335,7 +1348,7 @@
         },
         "autoupdate": {
             "title": "自动更新",
-            "markdownDescription": "它将通过 [Github Actions](https://abyss.abgox.com/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
+            "markdownDescription": "它将通过 [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
             "type": "object",
             "additionalProperties": false,
             "minProperties": 1,
@@ -1584,8 +1597,8 @@
                     {
                         "properties": {
                             "architecture": {
-                                "properties": {
-                                    "64bit": {
+                                "patternProperties": {
+                                    "^(64bit|32bit|arm64)$": {
                                         "allOf": [
                                             {
                                                 "not": {
@@ -1593,7 +1606,7 @@
                                                         "url"
                                                     ]
                                                 },
-                                                "errorMessage": "architecture.64bit.url 和顶层的 url 冲突，你只能选择其中一种方式"
+                                                "errorMessage": "architecture 中的 url 和顶层的 url 冲突，你只能选择其中一种方式"
                                             },
                                             {
                                                 "not": {
@@ -1601,63 +1614,7 @@
                                                         "hash"
                                                     ]
                                                 },
-                                                "errorMessage": "当存在顶层 url 时，禁止定义 architecture.64bit.hash"
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "properties": {
-                            "architecture": {
-                                "properties": {
-                                    "32bit": {
-                                        "allOf": [
-                                            {
-                                                "not": {
-                                                    "required": [
-                                                        "url"
-                                                    ]
-                                                },
-                                                "errorMessage": "architecture.32bit.url 和顶层的 url 冲突，你只能选择其中一种方式"
-                                            },
-                                            {
-                                                "not": {
-                                                    "required": [
-                                                        "hash"
-                                                    ]
-                                                },
-                                                "errorMessage": "当存在顶层 url 时，禁止定义 architecture.32bit.hash"
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "properties": {
-                            "architecture": {
-                                "properties": {
-                                    "arm64": {
-                                        "allOf": [
-                                            {
-                                                "not": {
-                                                    "required": [
-                                                        "url"
-                                                    ]
-                                                },
-                                                "errorMessage": "architecture.arm64.url 和顶层的 url 冲突，你只能选择其中一种方式"
-                                            },
-                                            {
-                                                "not": {
-                                                    "required": [
-                                                        "hash"
-                                                    ]
-                                                },
-                                                "errorMessage": "当存在顶层 url 时，禁止定义 architecture.arm64.hash"
+                                                "errorMessage": "当存在顶层 url 时，禁止定义 architecture 中的 hash"
                                             }
                                         ]
                                     }
@@ -1674,47 +1631,17 @@
                     ]
                 },
                 "then": {
-                    "allOf": [
-                        {
-                            "properties": {
-                                "architecture": {
-                                    "properties": {
-                                        "64bit": {
-                                            "required": [
-                                                "url"
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "properties": {
-                                "architecture": {
-                                    "properties": {
-                                        "32bit": {
-                                            "required": [
-                                                "url"
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "properties": {
-                                "architecture": {
-                                    "properties": {
-                                        "arm64": {
-                                            "required": [
-                                                "url"
-                                            ]
-                                        }
-                                    }
+                    "properties": {
+                        "architecture": {
+                            "patternProperties": {
+                                "^(64bit|32bit|arm64)$": {
+                                    "required": [
+                                        "url"
+                                    ]
                                 }
                             }
                         }
-                    ]
+                    }
                 },
                 "else": {
                     "if": {
@@ -1755,26 +1682,17 @@
                             }
                         },
                         "else": {
-                            "if": {
-                                "properties": {
-                                    "url": {
-                                        "type": "array"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "hash": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/definitions/hash"
-                                        },
-                                        "examples": [
-                                            []
-                                        ],
-                                        "minItems": 1,
-                                        "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
-                                    }
+                            "properties": {
+                                "hash": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/hash"
+                                    },
+                                    "examples": [
+                                        []
+                                    ],
+                                    "minItems": 1,
+                                    "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
                                 }
                             }
                         }
@@ -1796,317 +1714,66 @@
                     "if": {
                         "required": [
                             "architecture"
-                        ],
-                        "not": {
-                            "required": [
-                                "url"
-                            ]
-                        }
+                        ]
                     },
                     "then": {
-                        "allOf": [
-                            {
-                                "if": {
-                                    "properties": {
-                                        "architecture": {
+                        "if": {
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|32bit|arm64)$": {
                                             "properties": {
-                                                "64bit": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "architecture": {
-                                            "properties": {
-                                                "64bit": {
-                                                    "required": [
-                                                        "hash"
-                                                    ],
-                                                    "properties": {
-                                                        "hash": {
-                                                            "type": "string",
-                                                            "minLength": 1,
-                                                            "errorMessage": "当 architecture.64bit.url 是字符串 (string) 时，architecture.64bit.hash 也必须是一个字符串 (string)"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "else": {
-                                    "if": {
-                                        "properties": {
-                                            "architecture": {
-                                                "properties": {
-                                                    "64bit": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "type": "array"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "architecture": {
-                                                "properties": {
-                                                    "64bit": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "hash": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "type": "string",
-                                                                    "minLength": 1
-                                                                },
-                                                                "minItems": 1,
-                                                                "errorMessage": "当 architecture.64bit.url 是数组 (array) 时，architecture.64bit.hash 也必须是一个数组 (array)"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "architecture": {
-                                            "properties": {
-                                                "32bit": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "architecture": {
-                                            "properties": {
-                                                "32bit": {
-                                                    "required": [
-                                                        "hash"
-                                                    ],
-                                                    "properties": {
-                                                        "hash": {
-                                                            "type": "string",
-                                                            "minLength": 1,
-                                                            "errorMessage": "当 architecture.32bit.url 是字符串 (string) 时，architecture.32bit.hash 也必须是一个字符串 (string)"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "else": {
-                                    "if": {
-                                        "properties": {
-                                            "architecture": {
-                                                "properties": {
-                                                    "32bit": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "type": "array"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "architecture": {
-                                                "properties": {
-                                                    "32bit": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "hash": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "type": "string",
-                                                                    "minLength": 1
-                                                                },
-                                                                "minItems": 1,
-                                                                "errorMessage": "当 architecture.32bit.url 是数组 (array) 时，architecture.32bit.hash 也必须是一个数组 (array)"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "architecture": {
-                                            "properties": {
-                                                "arm64": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "architecture": {
-                                            "properties": {
-                                                "arm64": {
-                                                    "required": [
-                                                        "hash"
-                                                    ],
-                                                    "properties": {
-                                                        "hash": {
-                                                            "type": "string",
-                                                            "minLength": 1,
-                                                            "errorMessage": "当 architecture.arm64.url 是字符串 (string) 时，architecture.arm64.hash 也必须是一个字符串 (string)"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "else": {
-                                    "if": {
-                                        "properties": {
-                                            "architecture": {
-                                                "properties": {
-                                                    "arm64": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "type": "array"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "architecture": {
-                                                "properties": {
-                                                    "arm64": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "hash": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "type": "string",
-                                                                    "minLength": 1
-                                                                },
-                                                                "minItems": 1,
-                                                                "errorMessage": "当 architecture.arm64.url 是数组 (array) 时，architecture.arm64.hash 也必须是一个数组 (array)"
-                                                            }
-                                                        }
-                                                    }
+                                                "url": {
+                                                    "type": "string"
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
-                        ]
-                    },
-                    "else": {
-                        "if": {
-                            "required": [
-                                "architecture"
-                            ],
-                            "anyOf": [
-                                {
-                                    "properties": {
-                                        "architecture": {
+                        },
+                        "then": {
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|32bit|arm64)$": {
                                             "required": [
-                                                "64bit"
+                                                "hash"
                                             ],
                                             "properties": {
-                                                "64bit": {
-                                                    "required": [
-                                                        "url"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "properties": {
-                                        "architecture": {
-                                            "required": [
-                                                "32bit"
-                                            ],
-                                            "properties": {
-                                                "32bit": {
-                                                    "required": [
-                                                        "url"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "properties": {
-                                        "architecture": {
-                                            "required": [
-                                                "arm64"
-                                            ],
-                                            "properties": {
-                                                "arm64": {
-                                                    "required": [
-                                                        "url"
-                                                    ]
+                                                "hash": {
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "errorMessage": "当 architecture 中的 url 是字符串 (string) 时，architecture 中的 hash 也必须是一个字符串 (string)"
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            ]
+                            }
                         },
                         "else": {
-                            "if": {
-                                "required": [
-                                    "license"
-                                ]
-                            },
-                            "then": {
-                                "required": [
-                                    "url"
-                                ]
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|32bit|arm64)$": {
+                                            "required": [
+                                                "hash"
+                                            ],
+                                            "properties": {
+                                                "hash": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "minLength": 1
+                                                    },
+                                                    "minItems": 1,
+                                                    "errorMessage": "当 architecture 中的 url 是数组 (array) 时，architecture 中的 hash 也必须是一个数组 (array)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -2183,14 +1850,8 @@
             "$ref": "#/definitions/script_validation",
             "properties": {
                 "architecture": {
-                    "properties": {
-                        "64bit": {
-                            "$ref": "#/definitions/script_validation"
-                        },
-                        "32bit": {
-                            "$ref": "#/definitions/script_validation"
-                        },
-                        "arm64": {
+                    "patternProperties": {
+                        "^(64bit|32bit|arm64)$": {
                             "$ref": "#/definitions/script_validation"
                         }
                     }
@@ -2719,7 +2380,7 @@
                                 "properties": {
                                     "replace": {
                                         "pattern": "^deprecated$",
-                                        "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                        "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
                                     }
                                 }
                             }
@@ -2727,6 +2388,65 @@
                     }
                 }
             ]
+        },
+        {
+            "$comment": "abyss 特性: 当 version 为特定内容时，url 必须为指定内容",
+            "if": {
+                "properties": {
+                    "version": {
+                        "pattern": "^pending|renamed|deprecated$"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "architecture": {
+                        "patternProperties": {
+                            "^(64bit|arm64|32bit)$": {
+                                "properties": {
+                                    "url": {
+                                        "type": [
+                                            "string",
+                                            "array"
+                                        ],
+                                        "items": {
+                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                        },
+                                        "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                    },
+                                    "hash": {
+                                        "type": [
+                                            "string",
+                                            "array"
+                                        ],
+                                        "items": {
+                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                        },
+                                        "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "pre_install": {
+                        "if": {
+                            "items": {
+                                "not": {
+                                    "pattern": "^A-Deny-Manifest"
+                                }
+                            }
+                        },
+                        "then": {
+                            "not": true,
+                            "errorMessage": "version 为 pending|renamed|deprecated 时，pre_install 中必须使用 A-Deny-Manifest"
+                        }
+                    }
+                }
+            }
         },
         {
             "$comment": "abyss 特性: 不允许 checkver 使用内置的 github 字段",
