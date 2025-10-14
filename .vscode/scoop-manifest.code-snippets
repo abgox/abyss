@@ -1,5 +1,6 @@
 {
 	"Scoop manifest": {
+		"scope": "json,jsonc",
 		"prefix": "scoop-manifest",
 		"description": "Basic Scoop manifest with pre/post install hooks",
 		"body": [
@@ -62,17 +63,8 @@
 			"}"
 		]
 	},
-	"checkver github release via web page": {
-		"prefix": "checkver-github-release",
-		"body": [
-			"\"checkver\": {",
-			"    \"url\": \"https://github.com/${1:${TM_FILENAME_BASE/(.*)\\.(.*)/$1/}}/${2:${TM_FILENAME_BASE/(.*)\\.(.*)/$2/}}/releases/latest\",",
-			"    \"regex\": \"/tree/(?:v|V)?([^\\\"?]+)\"",
-			"},"
-		],
-		"description": "checkver github release via web page"
-	},
 	"pre_install/post_install/pre_uninstall/post_uninstall": {
+		"scope": "json,jsonc",
 		"prefix": "install-uninstall-scripts",
 		"body": [
 			"\"pre_install\": [",
@@ -99,9 +91,29 @@
 		],
 		"description": "pre_(un)install/post_(un)install 基本模板"
 	},
-	"基于 Winget 获取版本信息的 checkver 和 autoupdate": {
+	"empty file's url and hash": {
 		"scope": "json,jsonc",
-		"prefix": "\"checkver,autoupdate\"",
+		"prefix": "empty-file-url-hash",
+		"body": [
+			"\"url\": \"https://github.com/abgox/abyss/releases/download/empty/empty\",",
+			"\"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\"",
+		],
+		"description": "empty file's url and hash"
+	},
+	"checkver github release via web page": {
+		"scope": "json,jsonc",
+		"prefix": "github-checkver-release",
+		"body": [
+			"\"checkver\": {",
+			"    \"url\": \"https://github.com/${1:${TM_FILENAME_BASE/(.*)\\.(.*)/$1/}}/${2:${TM_FILENAME_BASE/(.*)\\.(.*)/$2/}}/releases/latest\",",
+			"    \"regex\": \"/tree/(?:v|V)?([^\\\"?]+)\"",
+			"},"
+		],
+		"description": "checkver github release via web page"
+	},
+	"checkver and autoupdate base on winget-pkgs": {
+		"scope": "json,jsonc",
+		"prefix": "winget-checkver-autoupdate",
 		"body": [
 			"\"checkver\": {",
 			"    \"script\": [",
@@ -133,6 +145,6 @@
 			"    }",
 			"}",
 		],
-		"description": "基于 Winget 获取版本信息的 checkver 和 autoupdate"
+		"description": "基于 winget-pkgs 的 checkver 和 autoupdate"
 	},
 }
