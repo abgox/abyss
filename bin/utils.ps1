@@ -53,7 +53,7 @@ function A-Test-DeveloperMode {
     #>
     $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
     try {
-        $value = Get-ItemProperty -Path $path -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
+        $value = Get-ItemProperty -LiteralPath $path -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
         return $value.AllowDevelopmentWithoutDevLicense -eq 1
     }
     catch {
@@ -108,7 +108,7 @@ function A-Ensure-Directory {
     param (
         [string]$Path = $persist_dir
     )
-    if (-not (Test-Path $Path)) {
+    if (-not (Test-Path -LiteralPath $Path)) {
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
     }
 }
@@ -134,20 +134,20 @@ function A-Copy-Item {
         [string]$Destination
     )
 
-    if (-not (Test-Path $Path)) {
+    if (-not (Test-Path -LiteralPath $Path)) {
         error "Source path does not exist: $Path"
         A-Exit
     }
 
-    $sourceItem = Get-Item $Path
+    $sourceItem = Get-Item -LiteralPath $Path
     $targetDir = Split-Path $Destination -Parent
 
     A-Ensure-Directory $targetDir
 
     $needCopy = $true
 
-    if (Test-Path $Destination) {
-        $targetItem = Get-Item $Destination
+    if (Test-Path -LiteralPath $Destination) {
+        $targetItem = Get-Item -LiteralPath $Destination
 
         if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
             $needCopy = $false
@@ -160,7 +160,7 @@ function A-Copy-Item {
 
     if ($needCopy) {
         try {
-            Copy-Item -Path $Path -Destination $Destination -Recurse -Force
+            Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
             Write-Host "Copying $Path => $Destination"
         }
         catch {
@@ -204,8 +204,8 @@ function A-New-PersistFile {
         [string]$Encoding = "utf8"
     )
 
-    $itemExists = Test-Path $Path
-    $item = if ($itemExists) { Get-Item $Path } else { $null }
+    $itemExists = Test-Path -LiteralPath $Path
+    $item = if ($itemExists) { Get-Item -LiteralPath $Path } else { $null }
 
     if ($itemExists) {
         # 如果是一个目录，就删除它
@@ -339,7 +339,7 @@ function A-Remove-Link {
         根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
-    if ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc")) {
+    if ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path -LiteralPath "$dir\scoop-install-A-Install-Exe.jsonc")) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
     elseif ($uninstallActionLevel -notlike "*2*") {
@@ -347,11 +347,11 @@ function A-Remove-Link {
     }
 
     @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
-        if (Test-Path $_) {
+        if (Test-Path -LiteralPath $_) {
             $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
 
             foreach ($p in $LinkPaths) {
-                if (Test-Path $p) {
+                if (A-Test-SymbolicLink $p) {
                     try {
                         Write-Host "Unlinking $p"
                         Remove-Item $p -Force -Recurse -ErrorAction Stop
@@ -390,7 +390,7 @@ function A-Remove-TempData {
         return
     }
     foreach ($p in $Paths) {
-        if (Test-Path $p) {
+        if (Test-Path -LiteralPath $p) {
             try {
                 Write-Host "Removing $p"
                 Remove-Item $p -Force -Recurse -ErrorAction Stop
@@ -427,7 +427,7 @@ function A-Stop-Process {
 
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
 
@@ -614,7 +614,7 @@ function A-Install-Exe {
         Uninstaller   = $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
-    if (Test-Path $Installer) {
+    if (Test-Path -LiteralPath $Installer) {
 
         Write-Host "Running the installer: $fileName"
         if ($NoSilent) {
@@ -630,7 +630,7 @@ function A-Install-Exe {
         }
 
         if ($null -eq $fileExists) {
-            $process = Start-Process $Installer -ArgumentList $ArgumentList -WindowStyle Hidden -Wait -PassThru
+            $process = Start-Process $Installer -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
             try {
                 $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
                 return
@@ -660,14 +660,14 @@ function A-Install-Exe {
 
                     if ($Uninstaller) {
                         if ($SuccessFile) {
-                            $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
+                            $fileExists = (Test-Path -LiteralPath $SuccessFile) -and (Test-Path -LiteralPath $Uninstaller)
                         }
                         else {
-                            $fileExists = Test-Path $Uninstaller
+                            $fileExists = Test-Path -LiteralPath $Uninstaller
                         }
                     }
                     else {
-                        $fileExists = Test-Path $SuccessFile
+                        $fileExists = Test-Path -LiteralPath $SuccessFile
                     }
                     if ($fileExists) {
                         break
@@ -738,7 +738,7 @@ function A-Uninstall-Exe {
 
     $InstallerInfoPath = "$dir\scoop-install-A-Install-Exe.jsonc"
 
-    if (Test-Path $InstallerInfoPath) {
+    if (Test-Path -LiteralPath $InstallerInfoPath) {
         $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
     }
     else {
@@ -773,7 +773,7 @@ function A-Uninstall-Exe {
         return
     }
 
-    if (Test-Path $Uninstaller) {
+    if (Test-Path -LiteralPath $Uninstaller) {
 
         Write-Host "Running the uninstaller: $fileName"
         if ($NoSilent) {
@@ -816,7 +816,7 @@ function A-Uninstall-Exe {
                 while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
                     Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
 
-                    $fileExists = Test-Path $FailureFile
+                    $fileExists = Test-Path -LiteralPath $FailureFile
                     if ($fileExists) {
                         try {
                             Remove-Item $FailureFile -Force -Recurse -ErrorAction SilentlyContinue
@@ -896,7 +896,7 @@ function A-Add-Font {
     )
 
     if (!$FontType) {
-        $fontFile = Get-ChildItem -Path $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
         $FontType = $fontFile.Extension.TrimStart(".")
     }
 
@@ -934,7 +934,7 @@ function A-Add-Font {
     }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter -Recurse | ForEach-Object {
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
         New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
         Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force
@@ -959,7 +959,7 @@ function A-Remove-Font {
     )
 
     if (!$FontType) {
-        $fontFile = Get-ChildItem -Path $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
         $FontType = $fontFile.Extension.TrimStart(".")
     }
 
@@ -972,8 +972,8 @@ function A-Remove-Font {
     }
 
     $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
-    Get-ChildItem $dir -Filter $filter -Recurse | ForEach-Object {
-        Get-ChildItem $fontInstallDir -Filter $_.Name | ForEach-Object {
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
+        Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name | ForEach-Object {
             try {
                 Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
             }
@@ -985,7 +985,7 @@ function A-Remove-Font {
     }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter -Recurse | ForEach-Object {
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
@@ -1004,14 +1004,14 @@ function A-Add-PowerToysRunPlugin {
     $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
 
     try {
-        if (Test-Path -Path $PluginPath) {
+        if (Test-Path -LiteralPath $PluginPath) {
             Write-Host "Removing $PluginPath"
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
-        $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
+        $CopyingPath = if (Test-Path -LiteralPath "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
         A-Ensure-Directory (Split-Path $PluginPath -Parent)
         Write-Host "Copying $CopyingPath => $PluginPath"
-        Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
+        Copy-Item -LiteralPath $CopyingPath -Destination $PluginPath -Recurse -Force
 
         @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
@@ -1027,7 +1027,7 @@ function A-Remove-PowerToysRunPlugin {
     $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
 
     try {
-        if (Test-Path -Path $OutFile) {
+        if (Test-Path -LiteralPath $OutFile) {
             $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
             $PluginPath = "$PluginsDir\$PluginName"
         }
@@ -1035,7 +1035,7 @@ function A-Remove-PowerToysRunPlugin {
             return
         }
 
-        if (Test-Path -Path $PluginPath) {
+        if (Test-Path -LiteralPath $PluginPath) {
             Write-Host "Removing $PluginPath"
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
@@ -1194,6 +1194,22 @@ function A-Get-ProductCode {
         [string]$AppNamePattern
     )
 
+    $code = A-Get-UninstallEntryByAppName $AppNamePattern | Select-Object -ExpandProperty "PSChildName"
+
+    if ($code) {
+        return $code
+    }
+
+    error "Cannot find product code of '$app'"
+
+    return $null
+}
+
+function A-Get-UninstallEntryByAppName {
+    param (
+        [string]$AppNamePattern
+    )
+
     # 搜索注册表位置
     $registryPaths = @(
         "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
@@ -1206,12 +1222,10 @@ function A-Get-ProductCode {
 
         foreach ($item in $uninstallItems) {
             if ($null -ne $item.DisplayName -and $item.DisplayName -match $AppNamePattern) {
-                return $item.PSChildName
+                return $item
             }
         }
     }
-
-    error "Cannot find product code of '$app'"
 
     return $null
 }
@@ -1509,10 +1523,23 @@ function A-Test-DirectoryNotEmpty {
     param(
         [string]$Path
     )
-    if (-not (Test-Path -Path $Path -PathType Container)) {
+    if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
         return $false
     }
-    return [bool](Get-ChildItem -Path $Path -Force | Select-Object -First 1)
+    return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
+}
+
+function A-Test-SymbolicLink {
+    param(
+        [string]$Path
+    )
+    try {
+        $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+        return ($null -ne $item.LinkType)
+    }
+    catch {
+        return $false
+    }
 }
 
 #region 废弃
@@ -1583,12 +1610,12 @@ function A-New-Link {
             $linkTarget = $LinkTargets[$i]
             $installData.LinkPaths += $linkPath
             $installData.LinkTargets += $linkTarget
-            if ((Test-Path $linkPath) -and !(Get-Item $linkPath -ErrorAction SilentlyContinue).LinkType) {
-                if (!(Test-Path $linkTarget)) {
+            if ((Test-Path -LiteralPath $linkPath) -and !(Get-Item -LiteralPath $linkPath -ErrorAction SilentlyContinue).LinkType) {
+                if (!(Test-Path -LiteralPath $linkTarget)) {
                     A-Ensure-Directory (Split-Path $linkTarget -Parent)
                     Write-Host "Copying $linkPath => $linkTarget"
                     try {
-                        Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
+                        Copy-Item -LiteralPath $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
                     }
                     catch {
                         Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
@@ -1676,7 +1703,7 @@ function A-Remove-AppxPackage {
 
     $OutFile = "$dir\scoop-install-A-Add-AppxPackage.jsonc"
 
-    if (Test-Path $OutFile) {
+    if (Test-Path -LiteralPath $OutFile) {
         $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
 
         $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
