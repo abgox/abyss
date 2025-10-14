@@ -1,0 +1,87 @@
+{
+    "version": "pending",
+    "description": "新一代基于搜索引擎技术的中文拼音输入法，特别适合中国互联网用户 | A new generation of Chinese Pinyin input method based on search engine technology, especially suitable for Chinese Internet users.",
+    "homepage": "https://shurufa.sogou.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://pinyin.sogou.com/help.php?list=9&q=1"
+    },
+    "notes": [
+        "When uninstalling it, you need to run the uninstall command multiple times.",
+        "After running the uninstall command for the first time, you need to restart the system and then run the uninstall command again."
+    ],
+    "notes-cn": [
+        "卸载它的时候需要运行多次卸载命令",
+        "第一次运行卸载命令后，需要重启系统，然后再次运行卸载命令"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        },
+        "arm64": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Deny-Manifest",
+        "A-Require-Admin",
+        "A-Install-Exe",
+        "A-Hold-App"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Deny-Update",
+        "A-Require-Admin",
+        "$uninstallerDir = Get-ChildItem $dir -Directory -Recurse -Include Uninstall | Select-Object -First 1",
+        "$uninstaller = Get-ChildItem $uninstallerDir -Filter Uninstall.exe | Select-Object -First 1",
+        "A-Uninstall-Exe -Uninstaller $uninstaller.FullName",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Sogou.SogouInput' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+        "replace": "pending"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
