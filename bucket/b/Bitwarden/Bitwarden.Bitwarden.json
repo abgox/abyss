@@ -1,0 +1,60 @@
+{
+    "version": "2025.9.0",
+    "description": "适用于个人、团队和企业组织的密码管理解决方案 | Password management solutions for individuals, teams, and business organizations",
+    "homepage": "https://bitwarden.com/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/bitwarden/clients/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/bitwarden/clients/releases/download/desktop-v2025.9.0/Bitwarden-Installer-2025.9.0.exe",
+            "hash": "b8a389296fa075c8de23a05779e353913234635b6ab7b4635731884b138fb28d"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Bitwarden.exe",
+            "Bitwarden"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Bitwarden\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Bitwarden.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/bitwarden/clients/releases",
+        "regex": "/tree/desktop-(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/bitwarden/clients/releases/download/desktop-v$version/Bitwarden-Installer-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
