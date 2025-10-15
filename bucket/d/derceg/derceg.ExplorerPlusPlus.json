@@ -1,0 +1,60 @@
+{
+    "version": "1.4.0",
+    "description": "一款适用于 Windows 系统的轻量且快速的文件管理器 | A lightweight and fast file manager for Windows.",
+    "homepage": "https://explorerplusplus.com/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/derceg/explorerplusplus/blob/master/LICENSE"
+    },
+    "notes": "Due to Scoop's naming limit, 'derceg.Explorer++' is named 'derceg.ExplorerPlusPlus'",
+    "notes-cn": "由于 Scoop 的命名限制, 'derceg.Explorer++' 被命名为 'derceg.ExplorerPlusPlus'",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/derceg/explorerplusplus/releases/download/version-1.4.0/explorerpp_x64.zip",
+            "hash": "81ec54586dfef888b886d409afa22e31f22d4f6ba35d52d93074b4ee64b79b0c"
+        }
+    },
+    "shortcuts": [
+        [
+            "Explorer++.exe",
+            "Explorer++"
+        ]
+    ],
+    "persist": "config.xml",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-PersistFile \"$persist_dir\\config.xml\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/derceg/explorerplusplus/releases/latest",
+        "regex": "/tree/version-(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/derceg/explorerplusplus/releases/download/version-$version/explorerpp_x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
