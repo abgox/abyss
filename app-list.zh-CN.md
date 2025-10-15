@@ -59,7 +59,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (324)|Tag|Description|
+|App (325)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|123 云盘，一款云存储服务产品|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具|
@@ -180,6 +180,7 @@
 |[Flow-Launcher.Flow-Launcher](https://www.flowlauncher.com/ "点击访问仓库或主页")|<a href="./bucket/f/Flow-Launcher/Flow-Launcher.Flow-Launcher.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|适用于 Windows 的快速文件搜索和应用程序启动器|
 |[Fly-io.flyctl](https://fly.io/ "点击访问仓库或主页")|<a href="./bucket/f/Fly-io/Fly-io.flyctl.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a>|为 fly.io 服务提供的命令行工具|
 |[flyingpie.windows-terminal-quake](https://github.com/flyingpie/windows-terminal-quake "点击访问仓库或主页")|<a href="./bucket/f/flyingpie/flyingpie.windows-terminal-quake.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|将任何应用程序转变为类似 Quake 风格的可切换应用程序|
+|[Fossil.Fossil](https://www.fossil-scm.org/ "点击访问仓库或主页")|<a href="./bucket/f/Fossil/Fossil.Fossil.json" title="它还处于 pending 状态，无法安装或更新"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个简单、高可靠性的分布式版本控制系统|
 |[Foundry376.Mailspring](https://github.com/Foundry376/Mailspring "点击访问仓库或主页")|<a href="./bucket/f/Foundry376/Foundry376.Mailspring.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个漂亮，快速，完全开源的邮件客户端|
 |[Freelensapp.Freelens](https://freelensapp.github.io/ "点击访问仓库或主页")|<a href="./bucket/f/Freelensapp/Freelensapp.Freelens.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一个免费且开源的用户界面，专为管理 Kubernetes 集群而设计|
 |[Freeplane.Freeplane](https://freeplane.org/ "点击访问仓库或主页")|<a href="./bucket/f/Freeplane/Freeplane.Freeplane.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款免费/自由开源软件，支持思维整理、信息共享以及工作学习与家庭事务的高效管理|
