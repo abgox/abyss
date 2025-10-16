@@ -146,20 +146,14 @@ foreach ($path in $PathList) {
         }
 
         ## RequireAdmin
-        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-New-LinkFile|A-Stop-Service.+?-RequireAdmin)'
-        $label = if ($isCN) { '<code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires administrator permission to install, update, or uninstall">RequireAdmin</code>' }
+        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)'
+        $label = if ($isCN) { '<code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>' } else { '<code title="Requires admin permission to install, update, or uninstall">RequireAdmin</code>' }
         if ($RequireAdmin) { $tag += $label }
 
-        ## NoSilentInstall
-        $NoSilentInstall = Test-ScriptPattern $json '(?<!#.*)A-Install-Exe.*-NoSilent'
-        $label = if ($isCN) { '<code title="在安装时可能需要用户交互">NoSilentInstall</code>' } else { '<code title="May require user interaction during installation">NoSilentInstall</code>' }
-        if ($NoSilentInstall) { $tag += $label }
-
-        ## NoSilentUninstall
-        $NoSilentUninstall = Test-ScriptPattern $json '(?<!#.*)A-Uninstall-Exe.*-NoSilent'
-        $label = if ($isCN) { '<code title="在卸载时可能需要用户交互">NoSilentUninstall</code>' } else { '<code title="May require user interaction during uninstallation">NoSilentUninstall</code>' }
-        if ($NoSilentUninstall) { $tag += $label }
-
+        ## RequireAdminOrDevMode
+        $RequireAdminOrDevMode = Test-ScriptPattern $json '(?<!#.*)A-New-LinkFile'
+        $label = if ($isCN) { '<code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code>' } else { '<code title="Requires admin permission or developer mode to create SymbolicLink">RequireAdminOrDevMode</code>' }
+        if ($RequireAdminOrDevMode) { $tag += $label }
 
         ## DenyUpdate
         $DenyUpdate = Test-ScriptPattern $json '(?<!#.*)A-Deny-Update'
@@ -171,6 +165,11 @@ foreach ($path in $PathList) {
             $label = '<code title="Deny update, only can uninstall and install again.">DenyUpdate</code>'
         }
         if ($DenyUpdate) { $tag += $label }
+
+        ## UninstallByHand
+        $UninstallByHand = Test-ScriptPattern $json '(?<!#.*)A-Uninstall-ExeByHand'
+        $label = if ($isCN) { '<code title="需要你先手动卸载">UninstallByHand</code>' } else { '<code title="Requires you to uninstall it manually">UninstallByHand</code>' }
+        if ($UninstallByHand) { $tag += $label }
 
         ## NoUpdate
         if ($isCN) {
