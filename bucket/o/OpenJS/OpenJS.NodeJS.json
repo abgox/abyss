@@ -26,12 +26,18 @@
             "hash": "7a274b502f4d304849f5b07c92b88a0976288217bfc5c554e85c6e2cf3fd337a"
         }
     },
+    "shortcuts": [
+        [
+            "$env:ProgramFiles\\nodejs\\node.exe",
+            "Node.js"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive') -SuccessFile \"$env:ProgramFiles\\nodejs\\node.exe\""
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -44,7 +50,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "$ProductCode = A-Get-ProductCode '^Node.js$'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:ProgramFiles\\nodejs\\node.exe\""
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive')"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

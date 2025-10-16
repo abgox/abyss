@@ -6,6 +6,14 @@
         "identifier": "BSD-3-Clause",
         "url": "https://github.com/golang/go/blob/master/LICENSE"
     },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Go",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: $env:ProgramFiles\\Go",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
     "architecture": {
         "64bit": {
             "url": "https://go.dev/dl/go1.25.3.windows-amd64.msi#/dl.msi_",
@@ -35,8 +43,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "$ProductCode = A-Get-ProductCode '^Go Programming Language (amd64|arm64) go[\\d\\.]+'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:ProgramFiles\\Go\\bin\\go.exe\"",
-        "A-Remove-Link"
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive')"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

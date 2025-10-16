@@ -6,6 +6,14 @@
         "identifier": "MIT",
         "url": "https://github.com/microsoft/PowerToys/blob/main/LICENSE"
     },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\PowerToys",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: $env:LocalAppData\\PowerToys",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/microsoft/PowerToys/releases/download/v0.94.2/PowerToysUserSetup-0.94.2-x64.exe",
@@ -16,6 +24,12 @@
             "hash": "1ad77d7d60d3d353c9f6a391759b4596f43f4f21549625bb8b22ef21cf7e1b55"
         }
     },
+    "shortcuts": [
+        [
+            "$env:LocalAppData\\PowerToys\\PowerToys.exe",
+            "PowerToys (Preview)"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -41,7 +55,7 @@
         "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
         "A-Remove-Link",
         "$ProductCode = A-Get-ProductCode '^PowerToys*'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:LocalAppData\\PowerToys\\PowerToys.exe\""
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive')"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
