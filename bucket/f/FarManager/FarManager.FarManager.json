@@ -1,0 +1,85 @@
+{
+    "version": "3.0.6565",
+    "description": "一个用于在 Windows 操作系统中管理文件和档案的程序，Far Manager 以文本模式运行，并为执行大多数必要操作提供简单直观的界面 | A program for managing files and archives in Windows operating systems. Far Manager works in text mode and provides a simple and intuitive interface for performing most of the necessary actions.",
+    "homepage": "https://www.farmanager.com/",
+    "license": {
+        "identifier": "BSD-3-Clause",
+        "url": "https://github.com/FarGroup/FarManager/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.farmanager.com/files/Far30b6565.x64.20251001.msi#/dl.msi_",
+            "hash": "fab90aade9250bac4bad5daa94d0d1465ee8710627c97d62bb09fa5bb452035e"
+        },
+        "arm64": {
+            "url": "https://www.farmanager.com/files/Far30b6565.ARM64.20251001.msi#/dl.msi_",
+            "hash": "7e7b1ff6ebc25da34e7b9ca54e3956c6fd2e19baa10027186f09868c53f1e172"
+        }
+    },
+    "bin": "$env:ProgramFiles\\Far Manager\\Far.exe",
+    "shortcuts": [
+        [
+            "$env:ProgramFiles\\Far Manager\\Far.exe",
+            "Far Manager"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-PersistFile \"$env:ProgramFiles\\Far Manager\\Far.exe.ini\"",
+        "A-New-LinkDirectory @(\"$env:AppData\\Far Manager\",\"$env:LocalAppData\\Far Manager\")",
+        "A-New-LinkFile @(\"$env:ProgramFiles\\Far Manager\\Far.exe.ini\")",
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:ProgramFiles\\Far Manager\"",
+        "A-Remove-Link",
+        "$ProductCode = A-Get-ProductCode '^Far Manager'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'FarManager.FarManager' 'msi'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.msi_",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64#/dl.msi_",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
