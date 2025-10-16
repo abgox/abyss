@@ -73,7 +73,7 @@
 >
 > 请确保使用 `abyss` 作为 bucket 的名称，避免部分清单在解析 depends 时找不到 `abyss` bucket
 
-1. 添加 [abyss](https://abyss.abgox.com) (使用 [Github](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss) 仓库)
+1. 添加 [abyss](https://abyss.abgox.com) ([Github](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss))
 
    ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
@@ -103,7 +103,7 @@
    scoop install abyss/abgox.scoop-i18n
    ```
 
-### 如果你无法访问 Github
+### 如果你无法访问 Github 资源
 
 - 可以使用 [scoop-tools](https://scoop-tools.abgox.com)，它允许你临时使用替换之后的代理 url 来下载安装包，以解决下载问题
   - Github: https://github.com/abgox/scoop-tools
@@ -186,8 +186,8 @@
   - 如果卸载时使用了 `-p/--purge` 参数，`D:\scoop\persist\abgox.PSCompletions` 目录才会被删除
 
 - 这是 Scoop 最强大的特性，可以快速的恢复应用环境
-  - `abyss` 中的一些应用使用了 [Link](#link)，无法通过 `scoop reset` 正确重置
-  - 建议通过 `scoop update --force <app>` 强制更新应用
+  - `abyss` 中的一些应用使用了 [Link](#link)，通过 `scoop reset` 重置会出现问题
+  - 应该通过 `scoop update --force <app>` 强制更新应用
 
 ### Link
 
@@ -208,12 +208,6 @@
   - 它会进行链接:
     - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
     - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
-
-> [!Warning]
->
-> - 部分应用的数据通过文件而不是目录进行存储，需要使用 SymbolicLink 进行链接
-> - SymbolicLink 需要管理员权限或者启用 [开发人员模式](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging)
-> - 在 [应用列表](#应用列表) 中这些应用会被添加 `RequireAdmin` 标签
 
 ---
 

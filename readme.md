@@ -73,7 +73,7 @@
 >
 > Please use `abyss` as the bucket name to avoid "bucket not found" errors when parsing "depends" in some manifests.
 
-1.  Add [abyss](https://abyss.abgox.com) with [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss) repository.
+1.  Add [abyss](https://abyss.abgox.com) with [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
 
     ```shell
     scoop bucket add abyss https://github.com/abgox/abyss
@@ -103,7 +103,7 @@
     scoop install abyss/abgox.scoop-i18n
     ```
 
-### If you cannot access Github
+### If you cannot access Github resources
 
 - You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy url to download the installation package.
   - Github: https://github.com/abgox/scoop-tools
@@ -185,7 +185,7 @@
 
 - This is the most powerful feature of Scoop, which can quickly restore your app environment.
   - Some apps in `abyss` use [Link](#link), which cannot be reset correctly by `scoop reset`.
-  - It is recommended to force update the app by `scoop update --force <app>`.
+  - You should force update the app by `scoop update --force <app>`.
 
 ### Link
 
@@ -206,12 +206,6 @@
   - It will link:
     - `$env:UserProfile\AppData\Roaming\Code` => `$persist_dir\AppData\Roaming\Code`
     - `$env:UserProfile\.vscode` => `$persist_dir\.vscode`
-
-> [!Warning]
->
-> - Some apps store data as files instead of directories, requiring SymbolicLink to link.
-> - SymbolicLink requires administrator permission or [Developer Mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging).
-> - these apps will be added with the `RequireAdmin` tag in the [App List](#app-list).
 
 ---
 
