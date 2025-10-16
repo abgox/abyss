@@ -272,7 +272,7 @@ function A-New-LinkFile {
 
     if (!$isAdmin -and !$isDevMode) {
         error "$app requires admin permission or developer mode to create SymbolicLink."
-        error "Reference: https://abyss.abgox.com/faq/symboliclink-need-admin-or-dev-mode"
+        error "Reference: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
         A-Exit
     }
 
