@@ -1,0 +1,71 @@
+{
+    "version": "2025.9",
+    "description": "一款用 Rust 编写的开源 IRC 客户端，采用 Iced 图形用户界面库 | An open-source IRC client written in Rust, with the Iced GUI library.",
+    "homepage": "https://halloy.chat/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/squidowl/halloy/blob/main/LICENSE"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Halloy",
+        "Scoop only manages data, installation, update, and uninstallation operations."
+    ],
+    "notes-cn": [
+        "实际安装目录: $env:ProgramFiles\\Halloy",
+        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/squidowl/halloy/releases/download/2025.9/halloy-installer.msi#/dl.msi_",
+            "hash": "194f7340ca1d87bed8b0eac8a111d3758c557c63493f128f6477ad2fc010334c"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:ProgramFiles\\Halloy\\halloy.exe",
+            "Halloy"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\halloy\")",
+        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:ProgramFiles\\Halloy\"",
+        "A-Remove-Link",
+        "$ProductCode = A-Get-ProductCode '^Halloy$'",
+        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/squidowl/halloy/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/squidowl/halloy/releases/download/$version/halloy-installer.msi#/dl.msi_"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
