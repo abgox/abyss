@@ -1,0 +1,63 @@
+{
+    "version": "2.7.2",
+    "description": "将任何文件拖放到局域网内的任何设备上 | Drop any files to any devices on your LAN",
+    "homepage": "https://landrop.app/",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://releases.landrop.app/landrop-v2-electron/LANDrop-2.7.2-win-x64-setup.exe",
+            "hash": "dbf7ea811d80c59a9b6a127fe7707b6a0990aad52796c5535c60e21250cf73fc"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\LANDrop.exe",
+            "LANDrop"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall LANDrop.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'SkyArc.LANDrop' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
