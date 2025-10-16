@@ -26,11 +26,13 @@
 
     - <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
 
-      - It has been deprecated, and any installation or update will fail.
+      - It has been deprecated, and cannot be installed.
+      - If the installation is completed before `deprecated`, it cannot be updated via Scoop.
 
     - <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
 
-      - It is pending and cannot be installed temporarily.
+      - It is pending, and cannot be installed.
+      - If the installation is completed before `pending`, it cannot be updated via Scoop.
 
     - <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
 
@@ -41,9 +43,13 @@
   - Notes
 
     - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
-    - `NoSilentInstall`: May require user interaction during installation.
-    - `NoSilentUninstall`: May require user interaction during uninstallation.
+    - `RequireAdminOrDevMode`: Requires admin permission or [Developer Mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging).
+      - Some apps store data as files instead of directories, requiring `SymbolicLink` to link.
     - `DenyUpdate`: Deny update, only can uninstall and install again.
+    - `UninstallByHand`: Requires you to uninstall it manually.
+      - The uninstallation of some apps cannot be done silently.
+      - You need to uninstall it manually. (use the system's uninstall function or other methods)
+      - The uninstallation operation in Scoop can only be completed after the manual uninstallation is finished.
     - `NoUpdate` : `json.autoupdate` are not configured, and it cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
 
   - App Types

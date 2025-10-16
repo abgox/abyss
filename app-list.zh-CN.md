@@ -26,11 +26,13 @@
 
     - <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
 
-      - 它已被弃用，安装或更新都会失败
+      - 它已被弃用，无法安装
+      - 如果在 `deprecated` 之前完成安装，则无法通过 Scoop 更新
 
     - <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
 
-      - 它是待定的，暂时无法安装
+      - 它是待定的，无法安装
+      - 如果在 `pending` 之前完成安装，则无法通过 Scoop 更新
 
     - <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
 
@@ -41,9 +43,13 @@
   - 注意
 
     - `RequireAdmin`：在安装、更新或卸载时需要管理员权限
-    - `NoSilentInstall`：在安装过程中可能需要用户交互
-    - `NoSilentUninstall`：在卸载过程中可能需要用户交互
+    - `RequireAdminOrDevMode`: 需要管理员权限或 [开发者模式](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging)
+      - 部分应用的数据通过文件而不是目录进行存储，需要使用 `SymbolicLink` 进行链接
     - `DenyUpdate`: 使用 Scoop 更新会被拒绝，只能先卸载再安装
+    - `UninstallByHand`: 需要你先手动卸载
+      - 部分应用的卸载无法静默化
+      - 需要你手动卸载它(系统中的卸载或者其他卸载方式)
+      - 只有卸载完成后，才能完成 Scoop 中的卸载操作
     - `NoUpdate`：没有配置 `json.autoupdate`，无法通过 [Github Actions](./.github/workflows/excavator.yml) 自动更新清单
 
   - 应用类型
