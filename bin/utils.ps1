@@ -24,6 +24,7 @@ try {
         }
         if ($bucket -ne 'abyss') {
             error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
+            error "Reference: https://abyss.abgox.com/faq/bucket-name"
         }
     }
 }
@@ -90,7 +91,10 @@ function A-Complete-Install {
 }
 
 function A-Start-Uninstall {
-
+    # 如果新版本为 pending 或 deprecated，拒绝更新
+    if ($version -in @('pending', 'deprecated')) {
+        A-Deny-Update
+    }
 }
 
 function A-Complete-Uninstall {
@@ -136,6 +140,7 @@ function A-Copy-Item {
 
     if (-not (Test-Path -LiteralPath $Path)) {
         error "Source path does not exist: $Path"
+        error "Please contact the bucket maintainer!"
         A-Exit
     }
 
@@ -165,6 +170,7 @@ function A-Copy-Item {
         }
         catch {
             error $_.Exception.Message
+            error "Please contact the bucket maintainer!"
             A-Exit
         }
     }
@@ -215,6 +221,7 @@ function A-New-PersistFile {
             }
             catch {
                 error $_.Exception.Message
+                error "Please contact the bucket maintainer!"
                 A-Exit
             }
         }
@@ -264,7 +271,8 @@ function A-New-LinkFile {
     )
 
     if (!$isAdmin -and !$isDevMode) {
-        error "$app requires admin permission to create SymbolicLink."
+        error "$app requires admin permission or developer mode to create SymbolicLink."
+        error "Reference: https://abyss.abgox.com/faq/symboliclink-need-admin-or-dev-mode"
         A-Exit
     }
 
@@ -452,6 +460,7 @@ function A-Stop-Process {
                     continue
                 }
                 error $_.Exception.Message
+                error "Please contact the bucket maintainer!"
                 A-Exit
             }
         }
@@ -470,6 +479,7 @@ function A-Stop-Process {
                     continue
                 }
                 error $_.Exception.Message
+                error "Please contact the bucket maintainer!"
                 A-Exit
             }
         }
@@ -499,6 +509,7 @@ function A-Stop-Service {
     }
     catch {
         error $_.Exception.Message
+        error "Please contact the bucket maintainer!"
         A-Exit
     }
 
@@ -521,6 +532,7 @@ function A-Remove-Service {
         }
         catch {
             error $_.Exception.Message
+            error "Please contact the bucket maintainer!"
             A-Exit
         }
     }
@@ -533,19 +545,28 @@ function A-Install-Exe {
         [string]$Installer,
         [array]$ArgumentList,
 
-        # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
-        [string]$SuccessFile,
-
-        # $Uninstaller 和 $SuccessFile 作用一致，不过它必须指定软件的卸载程序
         # 当指定它后，A-Uninstall-Exe 会默认使用它作为卸载程序路径
-        [string]$Uninstaller,
-
-        # 仅用于标识，表示可能需要用户交互
-        [switch]$NoSilent,
-
-        # 超时时间（秒）
-        [string]$Timeout = 300
+        [string]$Uninstaller
     )
+
+    if ($PSBoundParameters.ContainsKey('Installer')) {
+        $Installer = A-Get-AbsolutePath $Installer
+    }
+    else {
+        # $fname 由 Scoop 提供，即下载的文件名
+        $Installer = Join-Path $dir ($fname | Select-Object -First 1)
+    }
+
+    if (!$Installer) {
+        error "Please contact the bucket maintainer!"
+        A-Exit
+    }
+
+    if (!(Test-Path -LiteralPath $Installer)) {
+        error "'$Installer' not found."
+        error "Please contact the bucket maintainer!"
+        A-Exit
+    }
 
     if ($InstallerType -eq "inno") {
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
@@ -573,36 +594,7 @@ function A-Install-Exe {
         }
     }
 
-    if ($PSBoundParameters.ContainsKey('Installer')) {
-        $Installer = A-Get-AbsolutePath $Installer
-    }
-    else {
-        # $fname 由 Scoop 提供，即下载的文件名
-        $Installer = Join-Path $dir ($fname | Select-Object -First 1)
-    }
-
-    if (!$Installer) {
-        error "Please contact the bucket maintainer!"
-        A-Exit
-    }
-
-    $fileName = Split-Path $Installer -Leaf
-
-    if (!$PSBoundParameters.ContainsKey('SuccessFile')) {
-        try {
-            $SuccessFile = $manifest.shortcuts[0][0]
-        }
-        catch {
-            try {
-                $SuccessFile = $manifest.architecture.$architecture.shortcuts[0][0]
-            }
-            catch {
-                $SuccessFile = $null
-            }
-        }
-        $SuccessFile = Invoke-Expression "`"$SuccessFile`""
-    }
-    $SuccessFile = A-Get-AbsolutePath $SuccessFile
+    $InstallerFileName = Split-Path $Installer -Leaf
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
@@ -610,130 +602,43 @@ function A-Install-Exe {
         InstallerType = $InstallerType
         Installer     = $Installer
         ArgumentList  = $ArgumentList
-        SuccessFile   = $SuccessFile
         Uninstaller   = $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
-    if (Test-Path -LiteralPath $Installer) {
+    Write-Host "Running the installer: $InstallerFileName"
 
-        Write-Host "Running the installer: $fileName"
-        if ($NoSilent) {
-            warn "The installer may require some manual operations."
-        }
-        warn "It will be aborted if times out: $Timeout seconds"
+    try {
+        $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru -WindowStyle Hidden
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
 
-        if ($Uninstaller -or $SuccessFile) {
-            $fileExists = $false
-        }
-        else {
-            $fileExists = $null
-        }
+    Start-Sleep -Seconds 1
 
-        if ($null -eq $fileExists) {
-            $process = Start-Process $Installer -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
-            try {
-                $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
-                return
-            }
-            catch {
-                error $_.Exception.Message
-                $process | Stop-Process -Force -ErrorAction SilentlyContinue
-                A-Exit
-            }
-        }
+    if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
+        error "'$Uninstaller' not found."
+        error "Please contact the bucket maintainer!"
+        A-Exit
+    }
 
+    if ($Installer -like "$dir*") {
         try {
-            # 在后台作业中运行安装程序
-            $job = Start-Job -ScriptBlock {
-                param($Installer, $ArgumentList)
-
-                Start-Process $Installer -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
-
-            } -ArgumentList $Installer, $ArgumentList
-
-            $startTime = Get-Date
-            $seconds = 1
-
-            try {
-                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
-
-                    if ($Uninstaller) {
-                        if ($SuccessFile) {
-                            $fileExists = (Test-Path -LiteralPath $SuccessFile) -and (Test-Path -LiteralPath $Uninstaller)
-                        }
-                        else {
-                            $fileExists = Test-Path -LiteralPath $Uninstaller
-                        }
-                    }
-                    else {
-                        $fileExists = Test-Path -LiteralPath $SuccessFile
-                    }
-                    if ($fileExists) {
-                        break
-                    }
-                    Start-Sleep -Seconds 1
-                    $seconds += 1
-                }
-                Microsoft.PowerShell.Utility\Write-Host
-
-                if ($Installer -notmatch "^C:\\Windows\\System32\\") {
-                    $null = Start-Job -ScriptBlock {
-                        param($Installer, $job)
-                        # 30 秒后再删除安装程序
-                        Start-Sleep -Seconds 30
-
-                        $job | Stop-Job -ErrorAction SilentlyContinue
-
-                        Get-Process | Where-Object { $_.Path -eq $Installer } | Stop-Process -Force -ErrorAction SilentlyContinue
-
-                        Remove-Item $Installer -Force -ErrorAction SilentlyContinue
-
-                    } -ArgumentList $Installer, $job
-                }
-            }
-            catch {
-                error $_.Exception.Message
-            }
-            finally {
-                if (!$fileExists) {
-                    A-Exit
-                }
-            }
+            Remove-Item $Installer -Force -ErrorAction Stop
         }
         catch {
             error $_.Exception.Message
-            A-Exit
         }
-    }
-    else {
-        error "'$Installer' not found."
-        A-Exit
     }
 }
 
 function A-Uninstall-Exe {
     param(
         [string]$Uninstaller,
-        [array]$ArgumentList,
-
-        # 如果存在这个 FailureFile 指定的文件或路径，则认定为卸载失败
-        # 如果未指定，默认使用 $Uninstaller
-        [string]$FailureFile,
-
-        # 仅用于标识，表示可能需要用户交互
-        [switch]$NoSilent,
-
-        # 超时时间（秒）
-        [string]$Timeout = 300,
-
-        # 是否等待卸载程序完成
-        # 它会忽略超时时间，一直等待卸载程序结束
-        # 除非确定卸载程序会自动结束，否则不要使用
-        [switch]$Wait,
-
-        # 是否需要隐藏卸载程序窗口
-        [switch]$Hidden
+        [array]$ArgumentList
     )
 
     $InstallerInfoPath = "$dir\scoop-install-A-Install-Exe.jsonc"
@@ -767,81 +672,57 @@ function A-Uninstall-Exe {
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
     if ($Uninstaller) {
-        $fileName = Split-Path $Uninstaller -Leaf
+        $UninstallerFileName = Split-Path $Uninstaller -Leaf
     }
     else {
         return
     }
 
-    if (Test-Path -LiteralPath $Uninstaller) {
+    if (!(Test-Path -LiteralPath $Uninstaller)) {
+        error "'$Uninstaller' not found."
+        error "Please contact the bucket maintainer!"
+        return
+    }
 
-        Write-Host "Running the uninstaller: $fileName"
-        if ($NoSilent) {
-            warn "The uninstaller may require some manual operations."
-        }
-        warn "It will be aborted if times out: $Timeout seconds"
+    Write-Host "Running the uninstaller: $UninstallerFileName"
 
-        if (!$PSBoundParameters.ContainsKey('FailureFile')) {
-            $FailureFile = $Uninstaller
-        }
+    $paramList = @{
+        FilePath     = $Uninstaller
+        ArgumentList = $ArgumentList
+        WindowStyle  = "Hidden"
+        PassThru     = $true
+    }
+    $process = Start-Process @paramList
 
-        try {
-            $paramList = @{
-                FilePath     = $Uninstaller
-                ArgumentList = $ArgumentList
-                WindowStyle  = if ($Hidden) { "Hidden" }else { "Normal" }
-                Wait         = $Wait
-                PassThru     = $true
-            }
+    try {
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
 
-            $startTime = Get-Date
-            $process = Start-Process @paramList
+    Start-Sleep -Seconds 1
+}
 
-            try {
-                $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
-            }
-            catch {
-                error $_.Exception.Message
-                $process | Stop-Process -Force -ErrorAction SilentlyContinue
-                A-Exit
-            }
+function A-Uninstall-ExeByHand {
+    param(
+        [array]$Path
+    )
 
-            if (!$FailureFile) {
-                return
-            }
-
-            $fileExists = $true
-            $seconds = 1
-            try {
-                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
-
-                    $fileExists = Test-Path -LiteralPath $FailureFile
-                    if ($fileExists) {
-                        try {
-                            Remove-Item $FailureFile -Force -Recurse -ErrorAction SilentlyContinue
-                        }
-                        catch {}
-                    }
-                    else {
-                        break
-                    }
-                    Start-Sleep -Seconds 1
-                    $seconds += 1
+    foreach ($p in $Path) {
+        $p = A-Get-AbsolutePath $p
+        if (Test-Path -LiteralPath $p) {
+            if ((Get-ChildItem -LiteralPath $p -File -Recurse).Count -eq 0) {
+                try {
+                    Remove-Item $p -Force -Recurse -ErrorAction Stop
+                    return
                 }
-                Microsoft.PowerShell.Utility\Write-Host
+                catch {}
             }
-            catch {
-                error $_.Exception.Message
-            }
-            finally {
-                if ($fileExists) {
-                    A-Exit
-                }
-            }
-        }
-        catch {
-            error $_.Exception.Message
+            error "It requires you to uninstall it manually."
+            error "Reference: https://abyss.abgox.com/faq/uninstall-manually"
             A-Exit
         }
     }
@@ -1017,6 +898,7 @@ function A-Add-PowerToysRunPlugin {
     }
     catch {
         error $_.Exception.Message
+        error "Please contact the bucket maintainer!"
         A-Exit
     }
 }
@@ -1042,6 +924,7 @@ function A-Remove-PowerToysRunPlugin {
     }
     catch {
         error $_.Exception.Message
+        error "Please contact the bucket maintainer!"
         A-Exit
     }
 }
@@ -1086,6 +969,7 @@ function A-Deny-Update {
     #>
     if ($cmd -eq "update") {
         error "'$app' does not allow update by Scoop."
+        error "Reference: https://abyss.abgox.com/faq/deny-update"
         A-Exit
     }
 }
@@ -1148,6 +1032,7 @@ function A-Deny-Manifest {
     }
 
     error $msg
+    error "Reference: https://abyss.abgox.com/faq/deny-manifest"
 
     A-Exit
 }
@@ -1560,7 +1445,7 @@ function A-Start-PostUninstall {
 
 #endregion
 
-#region 以下的函数不应该被直接使用。请使用文件开头列出的可用函数。
+#region 以下的函数不应该被直接使用。
 function A-New-Link {
     <#
     .SYNOPSIS
@@ -1620,6 +1505,7 @@ function A-New-Link {
                     catch {
                         Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
                         error $_.Exception.Message
+                        error "Please contact the bucket maintainer!"
                         A-Exit
                     }
                 }
@@ -1629,12 +1515,13 @@ function A-New-Link {
                 }
                 catch {
                     error $_.Exception.Message
+                    error "Please contact the bucket maintainer!"
                     A-Exit
                 }
             }
             A-Ensure-Directory $linkTarget
 
-            if ((Get-Service -Name cexecsvc -ErrorAction SilentlyContinue)) {
+            if ((Get-Service -Name cexecsvc -ErrorAction Ignore)) {
                 # test if this script is being executed inside a docker container
                 if ($ItemType -eq "Junction") {
                     cmd.exe /d /c "mklink /j `"$linkPath`" `"$linkTarget`""
@@ -1681,6 +1568,7 @@ function A-Add-AppxPackage {
     }
     catch {
         error $_.Exception.Message
+        error "Please contact the bucket maintainer!"
         A-Exit
     }
 
@@ -1790,6 +1678,7 @@ function script:Add-Path {
         [switch]$Quiet
     )
     #region 新增: 支持使用 $env:xxx 变量
+    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
     $Path = $Path | ForEach-Object {
         Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
     }
@@ -1824,6 +1713,7 @@ function script:Remove-Path {
         [switch]$PassThru
     )
     #region 新增: 支持使用 $env:xxx 变量
+    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
     $Path = $Path | ForEach-Object {
         Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
     }
@@ -1848,6 +1738,32 @@ function script:Remove-Path {
     }
     if ($PassThru) {
         return $inPath
+    }
+}
+
+function script:create_shims($manifest, $dir, $global, $arch) {
+    $shims = @(arch_specific 'bin' $manifest $arch)
+    $shims | Where-Object { $_ -ne $null } | ForEach-Object {
+        $target, $name, $arg = shim_def $_
+        Write-Output "Creating shim for '$name'."
+
+        #region 新增: 支持使用 $env:xxx 变量
+        # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
+        $target = Invoke-Expression "`"$target`""
+        #endregion
+
+        if (Test-Path "$dir\$target" -PathType leaf) {
+            $bin = "$dir\$target"
+        }
+        elseif (Test-Path $target -PathType leaf) {
+            $bin = $target
+        }
+        else {
+            $bin = (Get-Command $target).Source
+        }
+        if (!$bin) { abort "Can't shim '$target': File doesn't exist." }
+
+        shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
     }
 }
 
@@ -1949,6 +1865,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     }
 
     # 支持在 shortcuts 中使用以 $env:xxx 环境变量开头的路径
+    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
     $filename = $target.FullName
     if ($filename -match '\$env:[a-zA-Z_].*') {
         $filename = $filename.Replace("$dir\", '')
