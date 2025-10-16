@@ -25,7 +25,7 @@
         "A-Require-Admin",
         "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\QQMusic\")",
         "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
-        "A-Install-Exe -Uninstaller \"app\\QQMusic\\QQMusicUninst.exe\" -ArgumentList @('silence=1', 'runafterinstall=no', \"installdir=$InstallLocation\")"
+        "A-Install-Exe -ArgumentList @('silence=1', 'runafterinstall=no', \"installdir=$InstallLocation\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,10 +36,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
-        "A-Stop-Process \"${env:ProgramFiles(x86)}\\Tencent\\QQMusic\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe -NoSilent -UninstallerProcess QQMusicUninst"
+        "A-Uninstall-ExeByHand 'app'"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

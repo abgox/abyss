@@ -24,7 +24,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")",
-        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\123pan\\uninst.exe\" -ArgumentList @('/S') -SuccessFile \"$env:LocalAppData\\123pan\\123pan.exe\""
+        "A-Install-Exe -ArgumentList @('/S')"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,10 +35,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
-        "A-Stop-Process \"$env:LocalAppData\\123pan\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe",
+        "A-Uninstall-ExeByHand \"$env:LocalAppData\\123pan\"",
         "A-Remove-TempData @(\"$env:AppData\\123pan\")"
     ],
     "post_uninstall": [

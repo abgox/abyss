@@ -8,11 +8,11 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Tencent\\WeType",
-        "Scoop only manages installation and uninstallation, and cannot update via Scoop."
+        "Scoop only manages installation."
     ],
     "notes-cn": [
         "实际安装目录: $env:ProgramFiles\\Tencent\\WeType",
-        "Scoop 只管理它的安装和卸载操作，无法通过 Scoop 更新"
+        "Scoop 只管理它的安装操作"
     ],
     "architecture": {
         "64bit": {
@@ -29,7 +29,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\" -ArgumentList @('/s') -SuccessFile \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\"",
+        "A-Install-Exe -ArgumentList @('/s')",
         "A-Hold-App"
     ],
     "post_install": [
@@ -42,8 +42,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Deny-Update",
-        "A-Require-Admin",
-        "A-Uninstall-Exe -ArgumentList @() -NoSilent"
+        "A-Uninstall-ExeByHand \"$env:ProgramFiles\\Tencent\\WeType\""
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

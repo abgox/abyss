@@ -8,11 +8,11 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Tencent\\QQNT",
-        "Scoop only manages data, installation, update, and uninstallation operations."
+        "Scoop only manages data and installation operations."
     ],
     "notes-cn": [
         "实际安装目录: $env:ProgramFiles\\Tencent\\QQNT",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+        "Scoop 只管理数据(通过 Link) 和安装操作"
     ],
     "architecture": {
         "64bit": {
@@ -40,7 +40,7 @@
         "$SubDir | ForEach-Object { $LinkPaths += Join-Path $DataDir \"$_\\nt_qq\" }",
         "$LinkPaths += Join-Path $DataDir \"nt_qq\"",
         "A-New-LinkDirectory $LinkPaths",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')",
+        "A-Install-Exe -ArgumentList @('/S')",
         "A-Hold-App"
     ],
     "post_install": [
@@ -53,10 +53,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Deny-Update",
-        "A-Require-Admin",
-        "A-Stop-Process @(\"$env:ProgramFiles\\Tencent\\QQNT\")",
-        "A-Uninstall-Exe -NoSilent",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-ExeByHand \"$env:ProgramFiles\\Tencent\\QQNT\""
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
