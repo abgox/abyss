@@ -31,7 +31,7 @@
         "A-New-PersistFile \"$env:ProgramFiles\\Far Manager\\Far.exe.ini\"",
         "A-New-LinkDirectory @(\"$env:AppData\\Far Manager\",\"$env:LocalAppData\\Far Manager\")",
         "A-New-LinkFile @(\"$env:ProgramFiles\\Far Manager\\Far.exe.ini\")",
-        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')"
+        "A-Install-Exe msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,10 +43,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Far Manager\"",
-        "A-Remove-Link",
         "$ProductCode = A-Get-ProductCode '^Far Manager'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive')"
+        "A-Uninstall-Exe $ProductCode",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
