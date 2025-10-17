@@ -2606,62 +2606,92 @@
         },
         {
             "$comment": "abyss 特性: 当 version 为特定内容时，url 必须为指定内容",
-            "if": {
-                "properties": {
-                    "version": {
-                        "pattern": "^pending|renamed|deprecated$"
-                    }
-                }
-            },
-            "then": {
-                "properties": {
-                    "architecture": {
-                        "patternProperties": {
-                            "^(64bit|arm64|32bit)$": {
-                                "properties": {
-                                    "url": {
-                                        "type": [
-                                            "string",
-                                            "array"
-                                        ],
-                                        "items": {
-                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                        },
-                                        "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                    },
-                                    "hash": {
-                                        "type": [
-                                            "string",
-                                            "array"
-                                        ],
-                                        "items": {
-                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                        },
-                                        "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                    }
-                                }
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "version": {
+                                "pattern": "^pending|renamed|deprecated$"
                             }
                         }
                     },
-                    "pre_install": {
-                        "if": {
-                            "items": {
-                                "not": {
-                                    "pattern": "^A-Deny-Manifest"
+                    "then": {
+                        "properties": {
+                            "architecture": {
+                                "patternProperties": {
+                                    "^(64bit|arm64|32bit)$": {
+                                        "properties": {
+                                            "url": {
+                                                "type": [
+                                                    "string",
+                                                    "array"
+                                                ],
+                                                "items": {
+                                                    "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                },
+                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                            },
+                                            "hash": {
+                                                "type": [
+                                                    "string",
+                                                    "array"
+                                                ],
+                                                "items": {
+                                                    "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                },
+                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 必须为 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "pre_install": {
+                                "if": {
+                                    "items": {
+                                        "not": {
+                                            "pattern": "^A-Deny-Manifest"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "not": true,
+                                    "errorMessage": "version 为 pending|renamed|deprecated 时，pre_install 中必须使用 A-Deny-Manifest"
                                 }
                             }
-                        },
-                        "then": {
-                            "not": true,
-                            "errorMessage": "version 为 pending|renamed|deprecated 时，pre_install 中必须使用 A-Deny-Manifest"
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "version": {
+                                "pattern": "^renamed$"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "pre_install": {
+                                "if": {
+                                    "items": {
+                                        "not": {
+                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "not": true,
+                                    "errorMessage": "version 为 renamed 时，A-Deny-Manifest 必须指定新的清单名称"
+                                }
+                            }
                         }
                     }
                 }
-            }
+            ]
         },
         {
             "$comment": "abyss 特性: 不允许 checkver 使用内置的 github 字段",
