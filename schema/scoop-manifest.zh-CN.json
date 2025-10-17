@@ -1015,6 +1015,7 @@
                                             "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\xxx\" \"$persist_dir\\xxx\"",
                                             "A-Expand-SetupExe",
                                             "A-Install-Exe inno",
+                                            "A-Install-Exe msi",
                                             "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
                                             "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
                                             "A-Require-Admin",
@@ -1037,6 +1038,7 @@
                                             "函数\n- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`",
                                             "函数\n- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`",
                                             "函数\n- 使用 innosetup 安装程序",
+                                            "函数\n- 使用 msi 安装程序",
                                             "函数\n- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数",
                                             "函数\n- 使用安装程序安装应用",
                                             "函数\n- 要求以管理员权限运行",
@@ -1136,7 +1138,9 @@
                                             "A-Deny-Update",
                                             "A-Uninstall-Exe",
                                             "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')",
-                                            "A-Uninstall-ExeByHand 'app'"
+                                            "A-Uninstall-ExeByHand 'app'",
+                                            "$ProductCode = A-Get-ProductCode '^xxx$'",
+                                            "A-Uninstall-Exe $ProductCode"
                                         ],
                                         "markdownEnumDescriptions": [
                                             "脚本\n- 获取 $bucket 变量",
@@ -1156,7 +1160,9 @@
                                             "函数\n- 禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用",
                                             "函数\n- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数",
                                             "函数\n- 使用卸载程序卸载应用",
-                                            "函数\n- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作"
+                                            "函数\n- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作",
+                                            "函数\n- 获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`",
+                                            "函数\n- 使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-Exe $ProductCode`"
                                         ]
                                     }
                                 ]
@@ -2057,7 +2063,7 @@
             }
         },
         {
-            "$comment": "abyss 特性: 如果在 pre_install 中使用了 A-Install-Exe，则 bin 和 shortcuts 路径必须以 app\\ 或 $env: 或 ${env: 开头",
+            "$comment": "abyss 特性: 如果在 pre_install 中使用了 A-Install-Exe，则 env_add_path 和 bin 等路径必须以 app\\ 或 $env: 或 ${env: 开头",
             "if": {
                 "properties": {
                     "pre_install": {
@@ -2071,7 +2077,11 @@
             },
             "then": {
                 "properties": {
-                    "bin": {
+                    "env_add_path": {
+                        "type": [
+                            "string",
+                            "array"
+                        ],
                         "anyOf": [
                             {
                                 "type": "string",
@@ -2095,6 +2105,59 @@
                             {
                                 "type": "array",
                                 "items": {
+                                    "type": "string",
+                                    "if": {
+                                        "not": {
+                                            "anyOf": [
+                                                {
+                                                    "pattern": "^app\\\\"
+                                                },
+                                                {
+                                                    "pattern": "^\\$\\{?env:"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "then": {
+                                        "not": true,
+                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "bin": {
+                        "type": [
+                            "string",
+                            "array"
+                        ],
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "if": {
+                                    "not": {
+                                        "anyOf": [
+                                            {
+                                                "pattern": "^app\\\\"
+                                            },
+                                            {
+                                                "pattern": "^\\$\\{?env:"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "then": {
+                                    "not": true,
+                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                }
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": [
+                                        "string",
+                                        "array"
+                                    ],
                                     "anyOf": [
                                         {
                                             "type": "string",
@@ -2264,7 +2327,7 @@
                                 "contains": {
                                     "pattern": "(?<!#.*)(A-Uninstall-Exe|Remove-AppPackage)"
                                 },
-                                "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe"
+                                "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeByHand 或 Remove-AppPackage"
                             }
                         }
                     }
@@ -2394,7 +2457,7 @@
                                 "contains": {
                                     "pattern": "(?<!#.*)A-Install-Exe"
                                 },
-                                "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe，而 pre_install 中缺少 A-Install-Exe 或 A-Uninstall-ExeByHand"
+                                "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeByHand，而 pre_install 中缺少 A-Install-Exe"
                             }
                         }
                     }
