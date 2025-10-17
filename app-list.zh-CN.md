@@ -65,7 +65,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (334)|Tag|Description|
+|App (335)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code><br /><code title="需要你先手动卸载">UninstallByHand</code>|123 云盘，一款云存储服务产品|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具|
@@ -198,6 +198,7 @@
 |[Giorgiotani.Peazip](https://peazip.github.io/ "点击访问仓库或主页")|<a href="./bucket/g/Giorgiotani/Giorgiotani.Peazip.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code>|一款免费的文件归档工具和 rar 解压缩器|
 |[Git.Git](https://gitforwindows.org/ "点击访问仓库或主页")|<a href="./bucket/g/Git/Git.Git.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br /><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code>|一个分布式版本控制系统|
 |[GitExtensionsTeam.GitExtensions](https://gitextensions.github.io/ "点击访问仓库或主页")|<a href="./bucket/g/GitExtensionsTeam/GitExtensionsTeam.GitExtensions.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Scoop 官方的 persist">persist</code>|一个用于管理 Git 仓库的独立用户界面工具|
+|[GitHub.GitHubDesktop](https://desktop.github.com/ "点击访问仓库或主页")|<a href="./bucket/g/GitHub/GitHub.GitHubDesktop.json" title="它还处于 pending 状态，无法安装或更新"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" /></a>|Github Desktop 是 GitHub 官方的客户端|
 |[GnuPG.Gpg4win](https://www.gpg4win.org/ "点击访问仓库或主页")|<a href="./bucket/g/GnuPG/GnuPG.Gpg4win.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|GNU Privacy Guard 是一款用于文件和电子邮件的加密软件，适用于 Windows 系统|
 |[GoLang.Go](https://go.dev/ "点击访问仓库或主页")|<a href="./bucket/g/GoLang/GoLang.Go.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|一个开源的编程语言，它能让构建安全、可扩展的系统变得简单|
 |[Google.Chrome.Beta.EXE](https://www.google.com/intl/zh-CN/chrome/ "点击访问仓库或主页")|<a href="./bucket/g/Google/Google.Chrome.Beta.EXE.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br /><code title="使用 Link 进行数据持久化">Link</code><br /><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|(Beta 版本)<br />谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造|
