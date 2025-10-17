@@ -540,7 +540,7 @@ function A-Remove-Service {
 
 function A-Install-Exe {
     param(
-        [ValidateSet("inno")]
+        [ValidateSet("inno", "msi")]
         [string]$InstallerType,
         [string]$Installer,
         [array]$ArgumentList,
@@ -555,17 +555,6 @@ function A-Install-Exe {
     else {
         # $fname 由 Scoop 提供，即下载的文件名
         $Installer = Join-Path $dir ($fname | Select-Object -First 1)
-    }
-
-    if (!$Installer) {
-        error "Please contact the bucket maintainer!"
-        A-Exit
-    }
-
-    if (!(Test-Path -LiteralPath $Installer)) {
-        error "'$Installer' not found."
-        error "Please contact the bucket maintainer!"
-        A-Exit
     }
 
     if ($InstallerType -eq "inno") {
@@ -584,14 +573,46 @@ function A-Install-Exe {
             $Uninstaller = 'app\unins000.exe'
         }
     }
-    # elseif () {
+    elseif ($InstallerType -eq "msi") {
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            $msiFile = Join-Path $dir ($fname | Select-Object -First 1)
 
-    # }
+            $ArgumentList = @(
+                '/i',
+                "`"$msiFile`"",
+                # '/passive',
+                '/quiet',
+                '/norestart'
+            )
+        }
+        if (!$PSBoundParameters.ContainsKey('Installer')) {
+            $Installer = if ([Environment]::Is64BitOperatingSystem) {
+                'C:\Windows\SysWOW64\msiexec.exe'
+            }
+            else {
+                'C:\Windows\System32\msiexec.exe'
+            }
+        }
+        if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
+            $Uninstaller = $Installer
+        }
+    }
     else {
         # 如果没有传递安装参数，则使用默认参数
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
             $ArgumentList = @('/S', "/D=$dir\app")
         }
+    }
+
+    if (!$Installer) {
+        error "Please contact the bucket maintainer!"
+        A-Exit
+    }
+
+    if (!(Test-Path -LiteralPath $Installer)) {
+        error "'$Installer' not found."
+        error "Please contact the bucket maintainer!"
+        A-Exit
     }
 
     $InstallerFileName = Split-Path $Installer -Leaf
@@ -625,18 +646,22 @@ function A-Install-Exe {
         A-Exit
     }
 
-    if ($Installer -like "$dir*") {
-        try {
-            Remove-Item $Installer -Force -ErrorAction Stop
+    $removeFile = if ($InstallerType -eq "msi") { $msiFile } else { $Installer }
+
+    try {
+        if ($removeFile) {
+            Remove-Item $removeFile -Force -ErrorAction Stop
         }
-        catch {
-            error $_.Exception.Message
-        }
+    }
+    catch {
+        error $_.Exception.Message
     }
 }
 
 function A-Uninstall-Exe {
     param(
+        # 仅安装时的安装程序类型为 msi 时才需要
+        [string]$ProductCode,
         [string]$Uninstaller,
         [array]$ArgumentList
     )
@@ -655,9 +680,24 @@ function A-Uninstall-Exe {
             $ArgumentList = @('/VerySilent')
         }
     }
-    # elseif () {
+    elseif ($InstallerInfo.InstallerType -eq "msi") {
+        # msi 直接覆盖安装，无需卸载
+        if ($cmd -eq "update") {
+            return
+        }
 
-    # }
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            if (!$ProductCode) {
+                return
+            }
+            $ArgumentList = @(
+                '/x',
+                "`"$ProductCode`"",
+                '/quiet',
+                '/norestart'
+            )
+        }
+    }
     else {
         # 如果没有传递卸载参数，则使用默认参数
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
@@ -679,8 +719,7 @@ function A-Uninstall-Exe {
     }
 
     if (!(Test-Path -LiteralPath $Uninstaller)) {
-        error "'$Uninstaller' not found."
-        error "Please contact the bucket maintainer!"
+        warn "'$Uninstaller' not found."
         return
     }
 
