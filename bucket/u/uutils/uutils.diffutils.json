@@ -1,0 +1,51 @@
+{
+    "version": "0.4.2",
+    "description": "用 Rust 实现的 diffutils 替代品 | Drop-in replacement of diffutils in Rust",
+    "homepage": "https://uutils.github.io/diffutils/",
+    "license": {
+        "identifier": "MIT|Apache-2.0",
+        "url": "https://github.com/uutils/diffutils/blob/main/LICENSE-MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/uutils/diffutils/releases/download/v0.4.2/diffutils-x86_64-pc-windows-msvc.zip",
+            "hash": "ea31c273600bb343a3626e2c44a86ab1dff729b69ad2b6f0a7096475386166cf"
+        }
+    },
+    "bin": "diffutils.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/uutils/diffutils/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/uutils/diffutils/releases/download/v$version/diffutils-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
