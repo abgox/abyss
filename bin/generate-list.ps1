@@ -120,14 +120,14 @@ foreach ($path in $PathList) {
             }
         }
 
-        ## persist
+        ## Persist
         $isPersist = $json.persist
         if ($isPersist) {
             if ($isCN) {
-                $label = '<code title="使用 Scoop 官方的 persist">persist</code>'
+                $label = '<code title="使用 Scoop 官方的 persist">Persist</code>'
             }
             else {
-                $label = '<code title="Use Scoop official persist">persist</code>'
+                $label = '<code title="Use Scoop official persist">Persist</code>'
             }
             $tag += $label
         }
@@ -210,14 +210,14 @@ foreach ($path in $PathList) {
         }
         if ($isMsix) { $tag += $label }
 
-        $info += $tag -join '<br />'
+        $info += $tag -join '<br/>'
 
         ## description
         $description = $json.description -split ' \| '
 
         for ($i = 0; $i -lt $description.Count; $i++) {
             if ($description[$i] -match '^\(([^)]+)\)\s*(.*)') {
-                $description[$i] = @("($($matches[1]))", $matches[2].Trim()) -join '<br />'
+                $description[$i] = @("($($matches[1]))", $matches[2].Trim()) -join '<br/>'
             }
         }
 
