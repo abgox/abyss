@@ -1,0 +1,71 @@
+{
+    "version": "pending",
+    "description": "百度网盘 | Baidu Netdisk for windows.",
+    "homepage": "https://pan.baidu.com/download",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\BaiduNetdisk.exe",
+            "百度网盘"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\users",
+            "users"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Deny-Manifest"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-TempData @(\"$env:AppData\\PLogs\",\"$env:AppData\\BaiduYunKernel\",\"$env:AppData\\BaiduYunGuanjia\",\"$env:AppData\\Baidu\\BaiduNetdisk\",\"$env:AppData\\Baidu\\BaiduYunKernel\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Baidu.BaiduNetdisk' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+        "replace": "pending"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX86#/dl.7z",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
