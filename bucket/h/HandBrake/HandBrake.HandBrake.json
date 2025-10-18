@@ -1,0 +1,62 @@
+{
+    "version": "1.10.2",
+    "description": "一款由志愿者开发的开源工具，可将几乎任何格式的视频转换为多种现代且广泛支持的编码格式 | A open-source tool, built by volunteers, for converting video from nearly any format to a selection of modern, widely supported codecs.",
+    "homepage": "https://handbrake.fr/",
+    "license": {
+        "identifier": "GPL-2.0",
+        "url": "https://github.com/HandBrake/HandBrake/blob/master/COPYING"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/HandBrake/HandBrake/releases/download/1.10.2/HandBrake-1.10.2-x86_64-Win_GUI.exe",
+            "hash": "ff868bb43c19a4fd8bec8f4b9d83a756f6818cf4b229012715f35eb2416673cd"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\HandBrake.exe",
+            "HandBrake"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\HandBrake\")",
+        "A-Install-Exe -Uninstaller 'app\\uninst.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/HandBrake/HandBrake/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/HandBrake/HandBrake/releases/download/$version/HandBrake-$version-x86_64-Win_GUI.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
