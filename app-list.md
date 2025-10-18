@@ -11,12 +11,12 @@
 
 - **`Tag`**
 
-  - Data
+  - [Data Persistence](https://abyss.abgox.com/features/data-persistence)
 
-    - `Persist`: Uses Scoop's official [Persist](./readme.zh-CN.md#persist).
-    - `Link`: Use `New-Item -ItemType Junction` to persist. Refer to [Link](./readme.md#link) for details.
+    - `Persist`: Define the `persist` field in the manifest. It's Scoop's official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data).
+    - `Link`: Use `New-Item -ItemType Junction` or `New-Item -ItemType SymbolicLink`.
 
-  - Manifest Status
+  - [Manifest State](https://abyss.abgox.com/features/manifest-state-control)
 
     > Click on the badge to view the manifest json file.
 
@@ -38,7 +38,7 @@
 
       - It has been renamed and will fail to install or update.
       - The new name will be displayed in the error message, and you should use the new name for installation
-      - If there is data from [Persist](./readme.zh-CN.md#persist) or [Link](./readme.zh-CN.md#link), it will be migrated automatically.
+      - If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.
 
   - Notes
 

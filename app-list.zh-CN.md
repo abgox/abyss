@@ -11,12 +11,12 @@
 
 - **`Tag`**：标签
 
-  - 数据
+  - [数据持久化](https://abyss.abgox.com/features/data-persistence)
 
-    - `Persist`：使用 Scoop 官方的 [Persist](./readme.zh-CN.md#persist) 实现数据持久化
-    - `Link`：使用 `New-Item -ItemType Junction` 实现数据持久化, 详情参考 [Link](./readme.zh-CN.md#link)
+    - `Persist`: 在清单中定义 `persist` 字段，这是 Scoop 官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data)
+    - `Link`: 使用 `New-Item -ItemType Junction` 或 `New-Item -ItemType SymbolicLink`
 
-  - 清单状态
+  - [清单状态](https://abyss.abgox.com/features/manifest-state-control)
 
     > 点击徽章可查看对应的 json 文件
 
@@ -38,7 +38,7 @@
 
       - 它已被重命名，安装或更新都会失败
       - 在错误信息中会显示新的名称，你应该使用新的名称进行安装
-      - 如果存在 [Persist](./readme.zh-CN.md#persist) 或 [Link](./readme.zh-CN.md#link) 的数据，会自动迁移
+      - 如果存在 [Persist](https://abyss.abgox.com/features/data-persistence#persist) 或 [Link](https://abyss.abgox.com/features/data-persistence#link) 的数据，会自动迁移
 
   - 注意
 
