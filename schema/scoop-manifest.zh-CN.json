@@ -1030,6 +1030,10 @@
                     "markdownDescription": "当前版本为 0.0.0"
                 },
                 {
+                    "const": "nightly",
+                    "markdownDescription": "当前版本为 nightly"
+                },
+                {
                     "const": "pending",
                     "markdownDescription": "[abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `pending`"
                 },
@@ -1052,8 +1056,24 @@
             "examples": [
                 "描述 | description"
             ],
-            "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
-            "errorMessage": "不符合指定格式：中文描述 | English description\n注意: | 左右各只有一个空格"
+            "allOf": [
+                {
+                    "not": {
+                        "const": "描述 | Description"
+                    },
+                    "errorMessage": "请修改描述"
+                },
+                {
+                    "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                    "errorMessage": "不符合指定格式：中文描述 | English description\n注意: | 左右各只有一个空格"
+                },
+                {
+                    "not": {
+                        "pattern": "\\|.*\\|"
+                    },
+                    "errorMessage": "只能有一个 | 符号，它用于分隔中文和英文描述"
+                }
+            ]
         },
         "homepage": {
             "title": "软件主页",
