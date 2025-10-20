@@ -1,0 +1,73 @@
+{
+    "version": "1.4.2",
+    "description": "芙芙工具箱是一个集合许多小工具的 Windows 工具箱 | Fufu Tools is a toolbox with a collection of gadgets.",
+    "homepage": "https://duckduckstudio.github.io/yazicbs.github.io/Tools/Fufu_Tools/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/DuckDuckStudio/Fufu_Tools/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DuckDuckStudio/Fufu_Tools/releases/download/v1.4.2/Fufu_Tools_Setup.v1.4.2.exe",
+            "hash": "4a6a0e138c67565eb859f04ba626a2bdfa3ba000be906f01a8c4e7c73cf5f36b"
+        },
+        "arm64": {
+            "url": "https://github.com/DuckDuckStudio/Fufu_Tools/releases/download/v1.4.2/Fufu_Tools_Setup.v1.4.2.exe",
+            "hash": "4a6a0e138c67565eb859f04ba626a2bdfa3ba000be906f01a8c4e7c73cf5f36b"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\芙芙工具箱.exe",
+            "芙芙工具箱"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\config.ini",
+            "config.ini"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/DuckDuckStudio/Fufu_Tools/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DuckDuckStudio/Fufu_Tools/releases/download/v$version/Fufu_Tools_Setup.v$version.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/DuckDuckStudio/Fufu_Tools/releases/download/v$version/Fufu_Tools_Setup.v$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
