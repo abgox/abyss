@@ -1466,6 +1466,83 @@ function A-Test-SymbolicLink {
     }
 }
 
+#region 处理一些兼容性变更
+
+if ($cmd) {
+    switch ($app) {
+        # 从 2025-10 开始，在未来合适的时机移除 astral-sh.uv，Yarn.Yarn，JohannesMillan.superProductivity
+        'astral-sh.uv' {
+            if (Test-Path -LiteralPath $persist_dir) {
+                @(
+                    @{
+                        old = "data\python"
+                        new = "AppData\Roaming\uv\python"
+                    },
+                    @{
+                        old = "data\tools"
+                        new = "AppData\Roaming\uv\tools"
+                    },
+                    @{
+                        old = "data\cache"
+                        new = "AppData\Local\uv\cache"
+                    }
+                ) | ForEach-Object {
+                    $old_dir = Join-Path $persist_dir $_.old
+                    $new_dir = Join-Path $persist_dir $_.new
+
+                    if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
+                        A-Ensure-Directory (Split-Path $new_dir -Parent)
+                        Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
+                    }
+                    if ((Get-Item "$persist_dir\data").Count -eq 0) {
+                        Remove-Item "$persist_dir\data" -Force -Recurse -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+        }
+        'Yarn.Yarn' {
+            if (Test-Path -LiteralPath $persist_dir) {
+                @(
+                    @{
+                        old = "global"
+                        new = "AppData\Local\Yarn\Data\global"
+                    },
+                    @{
+                        old = "AppData\Local\Yarn\Data\global\bin"
+                        new = "AppData\Local\Yarn\bin"
+                    },
+                    @{
+                        old = "cache"
+                        new = "AppData\Local\Yarn\cache"
+                    },
+                    @{
+                        old = "mirror"
+                        new = "AppData\Local\Yarn\mirror"
+                    }
+                ) | ForEach-Object {
+                    $old_dir = Join-Path $persist_dir $_.old
+                    $new_dir = Join-Path $persist_dir $_.new
+
+                    if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
+                        A-Ensure-Directory (Split-Path $new_dir -Parent)
+                        Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+        }
+        'JohannesMillan.superProductivity' {
+            $old_dir = Join-Path $persist_dir 'SuperProductivity'
+            $new_dir = Join-Path $persist_dir 'AppData\Roaming\SuperProductivity'
+            if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
+                A-Ensure-Directory (Split-Path $new_dir -Parent)
+                Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+
+#endregion
+
 #region 废弃
 
 function A-Start-PreUninstall {
