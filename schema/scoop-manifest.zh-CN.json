@@ -1814,473 +1814,421 @@
                 }
             },
             {
-                "$comment": "abyss 特性: 必须使用 architecture 明确指定架构",
-                "if": {
-                    "required": [
-                        "url"
-                    ]
-                },
-                "then": {
-                    "properties": {
-                        "url": {
-                            "not": true,
-                            "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "abyss 特性: 如果定义了 notes，则必须定义 notes-cn",
+                "$comment": "abyss 特性",
                 "allOf": [
                     {
+                        "$comment": "必须使用 architecture 明确指定架构",
                         "if": {
                             "required": [
-                                "notes"
+                                "url"
                             ]
                         },
                         "then": {
-                            "if": {
-                                "required": [
-                                    "notes-cn"
-                                ]
-                            },
-                            "else": {
-                                "properties": {
-                                    "notes": {
-                                        "not": true,
-                                        "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
-                                    }
+                            "properties": {
+                                "url": {
+                                    "not": true,
+                                    "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
                                 }
                             }
                         }
                     },
                     {
+                        "$comment": "如果定义了 notes，则必须定义 notes-cn",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": [
+                                        "notes"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "required": [
+                                            "notes-cn"
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "notes": {
+                                                "not": true,
+                                                "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": [
+                                        "notes-cn"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "required": [
+                                            "notes"
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "notes-cn": {
+                                                "not": true,
+                                                "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "脚本校验",
+                        "properties": {
+                            "pre_install": {
+                                "examples": [
+                                    [
+                                        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "A-Start-Install"
+                                    ]
+                                ],
+                                "type": "array",
+                                "minItems": 3,
+                                "items": [
+                                    {
+                                        "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        "markdownDescription": "获取 `$bucket` 变量"
+                                    },
+                                    {
+                                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                    },
+                                    {
+                                        "const": "A-Start-Install",
+                                        "markdownDescription": "- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                    }
+                                ],
+                                "allOf": [
+                                    {
+                                        "items": {
+                                            "anyOf": [
+                                                {},
+                                                {
+                                                    "const": "A-Deny-Manifest",
+                                                    "markdownDescription": "- 拒绝安装或更新此清单\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
+                                                },
+                                                {
+                                                    "const": "A-Deny-Manifest 'newName'",
+                                                    "markdownDescription": "- 拒绝安装或更新此清单\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
+                                                },
+                                                {
+                                                    "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
+                                                    "markdownDescription": "- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                },
+                                                {
+                                                    "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\xxx\" \"$persist_dir\\xxx\"",
+                                                    "markdownDescription": "- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
+                                                },
+                                                {
+                                                    "const": "A-Expand-SetupExe",
+                                                    "markdownDescription": "- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
+                                                },
+                                                {
+                                                    "const": "A-Install-Exe inno",
+                                                    "markdownDescription": "使用 innosetup 安装程序"
+                                                },
+                                                {
+                                                    "const": "A-Install-Exe msi",
+                                                    "markdownDescription": "使用 msi 安装程序"
+                                                },
+                                                {
+                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
+                                                    "markdownDescription": "- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                },
+                                                {
+                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
+                                                    "markdownDescription": "使用安装程序安装应用"
+                                                },
+                                                {
+                                                    "const": "A-Require-Admin",
+                                                    "markdownDescription": "要求以管理员权限运行"
+                                                },
+                                                {
+                                                    "const": "A-Test-Admin",
+                                                    "markdownDescription": "检查是否以管理员权限运行"
+                                                },
+                                                {
+                                                    "const": "A-Ensure-Directory 'xxx'",
+                                                    "markdownDescription": "确保指定目录路径存在"
+                                                },
+                                                {
+                                                    "const": "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
+                                                    "markdownDescription": "- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`"
+                                                },
+                                                {
+                                                    "const": "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
+                                                    "markdownDescription": "- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`"
+                                                },
+                                                {
+                                                    "const": "A-Add-Font",
+                                                    "markdownDescription": "安装字体"
+                                                },
+                                                {
+                                                    "const": "$PackageFamilyName = A-Add-MsixPackage 'PackageFamilyName'",
+                                                    "markdownDescription": "- 安装 AppX/Msix 包\n- 示例: `$PackageFamilyName = A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                },
+                                                {
+                                                    "const": "A-Add-PowerToysRunPlugin 'xxx'",
+                                                    "markdownDescription": "- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                },
+                                                {
+                                                    "const": "A-Hold-App",
+                                                    "markdownDescription": "- 安装完成后，自动 hold 应用程序，阻止 Scoop 更新它\n- 它通常与 `pre_uninstall` 中的 `A-Deny-Update` 搭配使用"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "post_install": {
+                                "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                                "type": "array",
+                                "minItems": 3,
+                                "examples": [
+                                    [
+                                        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "A-Complete-Install"
+                                    ]
+                                ],
+                                "$comment": "这里的 if 实现可以很巧妙的限制数组的最后一位",
+                                "if": {
+                                    "oneOf": [
+                                        {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                                    "markdownDescription": "- 获取 `$bucket` 变量"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                },
+                                                {
+                                                    "const": "A-Complete-Install",
+                                                    "markdownDescription": "- 表示安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "minItems": 4
+                                        }
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Install"
+                                }
+                            },
+                            "pre_uninstall": {
+                                "examples": [
+                                    [
+                                        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "A-Start-Uninstall",
+                                        "A-Stop-Process"
+                                    ]
+                                ],
+                                "type": "array",
+                                "minItems": 3,
+                                "items": [
+                                    {
+                                        "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        "markdownDescription": "获取 `$bucket` 变量"
+                                    },
+                                    {
+                                        "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                    },
+                                    {
+                                        "const": "A-Start-Uninstall",
+                                        "markdownDescription": "- 表示卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                    }
+                                ],
+                                "allOf": [
+                                    {
+                                        "items": {
+                                            "anyOf": [
+                                                {},
+                                                {
+                                                    "const": "A-Stop-Process",
+                                                    "markdownDescription": "尝试暂停安装目录下的应用进程，以确保能正常卸载"
+                                                },
+                                                {
+                                                    "const": "A-Stop-Service 'xxx' -RequireAdmin",
+                                                    "markdownDescription": "尝试停止指定的应用服务，以确保能正常卸载"
+                                                },
+                                                {
+                                                    "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
+                                                    "markdownDescription": "尝试停止并移除指定的应用服务，以确保能正常卸载"
+                                                },
+                                                {
+                                                    "const": "A-Remove-Link",
+                                                    "markdownDescription": "移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction"
+                                                },
+                                                {
+                                                    "const": "A-Remove-Font",
+                                                    "markdownDescription": "移除字体"
+                                                },
+                                                {
+                                                    "const": "A-Remove-MsixPackage",
+                                                    "markdownDescription": "卸载 AppX/Msix 包"
+                                                },
+                                                {
+                                                    "const": "A-Remove-PowerToysRunPlugin",
+                                                    "markdownDescription": "移除 PowerToys Run 插件"
+                                                },
+                                                {
+                                                    "const": "A-Remove-TempData",
+                                                    "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                },
+                                                {
+                                                    "const": "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
+                                                    "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成"
+                                                },
+                                                {
+                                                    "const": "A-Require-Admin",
+                                                    "markdownDescription": "要求以管理员权限运行"
+                                                },
+                                                {
+                                                    "const": "A-Test-Admin",
+                                                    "markdownDescription": "检查是否以管理员权限运行"
+                                                },
+                                                {
+                                                    "const": "A-Deny-Update",
+                                                    "markdownDescription": "- 禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用"
+                                                },
+                                                {
+                                                    "const": "A-Uninstall-Exe",
+                                                    "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                },
+                                                {
+                                                    "const": "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')",
+                                                    "markdownDescription": "使用卸载程序卸载应用"
+                                                },
+                                                {
+                                                    "const": "A-Uninstall-ExeByHand 'app'",
+                                                    "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作"
+                                                },
+                                                {
+                                                    "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
+                                                    "markdownDescription": "- 获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
+                                                },
+                                                {
+                                                    "const": "A-Uninstall-Exe $ProductCode",
+                                                    "markdownDescription": "- 使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-Exe $ProductCode`"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "post_uninstall": {
+                                "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`\n---\n- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                                "type": "array",
+                                "minItems": 3,
+                                "examples": [
+                                    [
+                                        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                        "A-Complete-Uninstall"
+                                    ]
+                                ],
+                                "if": {
+                                    "oneOf": [
+                                        {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                                    "markdownDescription": "- 获取 `$bucket` 变量"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+                                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                },
+                                                {
+                                                    "const": "A-Complete-Uninstall",
+                                                    "markdownDescription": "- 表示卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "minItems": 4
+                                        }
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Uninstall"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "$comment": "必须使用 pre_install、post_install、pre_uninstall、post_uninstall",
                         "if": {
                             "required": [
-                                "notes-cn"
+                                "pre_install",
+                                "post_install",
+                                "pre_uninstall",
+                                "post_uninstall"
                             ]
                         },
                         "then": {
-                            "if": {
-                                "required": [
-                                    "notes"
-                                ]
-                            },
-                            "else": {
-                                "properties": {
-                                    "notes-cn": {
-                                        "not": true,
-                                        "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "$comment": "abyss 特性: 脚本校验",
-                "properties": {
-                    "pre_install": {
-                        "examples": [
-                            [
-                                "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "A-Start-Install"
-                            ]
-                        ],
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                "markdownDescription": "获取 `$bucket` 变量"
-                            },
-                            {
-                                "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                            },
-                            {
-                                "const": "A-Start-Install",
-                                "markdownDescription": "- 表示安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
-                            }
-                        ],
-                        "allOf": [
-                            {
-                                "items": {
-                                    "anyOf": [
-                                        {},
-                                        {
-                                            "const": "A-Deny-Manifest",
-                                            "markdownDescription": "- 拒绝安装或更新此清单\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
-                                        },
-                                        {
-                                            "const": "A-Deny-Manifest 'newName'",
-                                            "markdownDescription": "- 拒绝安装或更新此清单\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
-                                        },
-                                        {
-                                            "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
-                                            "markdownDescription": "- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
-                                        },
-                                        {
-                                            "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\xxx\" \"$persist_dir\\xxx\"",
-                                            "markdownDescription": "- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
-                                        },
-                                        {
-                                            "const": "A-Expand-SetupExe",
-                                            "markdownDescription": "- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
-                                        },
-                                        {
-                                            "const": "A-Install-Exe inno",
-                                            "markdownDescription": "使用 innosetup 安装程序"
-                                        },
-                                        {
-                                            "const": "A-Install-Exe msi",
-                                            "markdownDescription": "使用 msi 安装程序"
-                                        },
-                                        {
-                                            "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
-                                            "markdownDescription": "- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
-                                        },
-                                        {
-                                            "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
-                                            "markdownDescription": "使用安装程序安装应用"
-                                        },
-                                        {
-                                            "const": "A-Require-Admin",
-                                            "markdownDescription": "要求以管理员权限运行"
-                                        },
-                                        {
-                                            "const": "A-Test-Admin",
-                                            "markdownDescription": "检查是否以管理员权限运行"
-                                        },
-                                        {
-                                            "const": "A-Ensure-Directory 'xxx'",
-                                            "markdownDescription": "确保指定目录路径存在"
-                                        },
-                                        {
-                                            "const": "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
-                                            "markdownDescription": "- 为文件创建 SymbolicLink\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`"
-                                        },
-                                        {
-                                            "const": "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
-                                            "markdownDescription": "- 为目录创建 Junction\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`"
-                                        },
-                                        {
-                                            "const": "A-Add-Font",
-                                            "markdownDescription": "安装字体"
-                                        },
-                                        {
-                                            "const": "$PackageFamilyName = A-Add-MsixPackage 'PackageFamilyName'",
-                                            "markdownDescription": "- 安装 AppX/Msix 包\n- 示例: `$PackageFamilyName = A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
-                                        },
-                                        {
-                                            "const": "A-Add-PowerToysRunPlugin 'xxx'",
-                                            "markdownDescription": "- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
-                                        },
-                                        {
-                                            "const": "A-Hold-App",
-                                            "markdownDescription": "- 安装完成后，自动 hold 应用程序，阻止 Scoop 更新它\n- 它通常与 `pre_uninstall` 中的 `A-Deny-Update` 搭配使用"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "post_install": {
-                        "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
-                        "type": "array",
-                        "minItems": 3,
-                        "examples": [
-                            [
-                                "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "A-Complete-Install"
-                            ]
-                        ],
-                        "$comment": "这里的 if 实现可以很巧妙的限制数组的最后一位",
-                        "if": {
-                            "oneOf": [
+                            "allOf": [
                                 {
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                            "markdownDescription": "- 获取 `$bucket` 变量"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                            "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                        },
-                                        {
-                                            "const": "A-Complete-Install",
-                                            "markdownDescription": "- 表示安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "minItems": 4
-                                }
-                            ]
-                        },
-                        "else": {
-                            "not": true,
-                            "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Install"
-                        }
-                    },
-                    "pre_uninstall": {
-                        "examples": [
-                            [
-                                "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "A-Start-Uninstall",
-                                "A-Stop-Process"
-                            ]
-                        ],
-                        "type": "array",
-                        "minItems": 3,
-                        "items": [
-                            {
-                                "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                "markdownDescription": "获取 `$bucket` 变量"
-                            },
-                            {
-                                "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                            },
-                            {
-                                "const": "A-Start-Uninstall",
-                                "markdownDescription": "- 表示卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
-                            }
-                        ],
-                        "allOf": [
-                            {
-                                "items": {
-                                    "anyOf": [
-                                        {},
-                                        {
-                                            "const": "A-Stop-Process",
-                                            "markdownDescription": "尝试暂停安装目录下的应用进程，以确保能正常卸载"
-                                        },
-                                        {
-                                            "const": "A-Stop-Service 'xxx' -RequireAdmin",
-                                            "markdownDescription": "尝试停止指定的应用服务，以确保能正常卸载"
-                                        },
-                                        {
-                                            "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
-                                            "markdownDescription": "尝试停止并移除指定的应用服务，以确保能正常卸载"
-                                        },
-                                        {
-                                            "const": "A-Remove-Link",
-                                            "markdownDescription": "移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction"
-                                        },
-                                        {
-                                            "const": "A-Remove-Font",
-                                            "markdownDescription": "移除字体"
-                                        },
-                                        {
-                                            "const": "A-Remove-MsixPackage",
-                                            "markdownDescription": "卸载 AppX/Msix 包"
-                                        },
-                                        {
-                                            "const": "A-Remove-PowerToysRunPlugin",
-                                            "markdownDescription": "移除 PowerToys Run 插件"
-                                        },
-                                        {
-                                            "const": "A-Remove-TempData",
-                                            "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
-                                        },
-                                        {
-                                            "const": "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                                            "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成"
-                                        },
-                                        {
-                                            "const": "A-Require-Admin",
-                                            "markdownDescription": "要求以管理员权限运行"
-                                        },
-                                        {
-                                            "const": "A-Test-Admin",
-                                            "markdownDescription": "检查是否以管理员权限运行"
-                                        },
-                                        {
-                                            "const": "A-Deny-Update",
-                                            "markdownDescription": "- 禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用"
-                                        },
-                                        {
-                                            "const": "A-Uninstall-Exe",
-                                            "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
-                                        },
-                                        {
-                                            "const": "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')",
-                                            "markdownDescription": "使用卸载程序卸载应用"
-                                        },
-                                        {
-                                            "const": "A-Uninstall-ExeByHand 'app'",
-                                            "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作"
-                                        },
-                                        {
-                                            "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
-                                            "markdownDescription": "- 获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
-                                        },
-                                        {
-                                            "const": "A-Uninstall-Exe $ProductCode",
-                                            "markdownDescription": "- 使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-Exe $ProductCode`"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "post_uninstall": {
-                        "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`\n---\n- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果值为$true，则全局安装\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
-                        "type": "array",
-                        "minItems": 3,
-                        "examples": [
-                            [
-                                "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                "A-Complete-Uninstall"
-                            ]
-                        ],
-                        "if": {
-                            "oneOf": [
-                                {
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                            "markdownDescription": "- 获取 `$bucket` 变量"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                            "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                        },
-                                        {
-                                            "const": "A-Complete-Uninstall",
-                                            "markdownDescription": "- 表示卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "minItems": 4
-                                }
-                            ]
-                        },
-                        "else": {
-                            "not": true,
-                            "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Uninstall"
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "abyss 特性: 必须使用 pre_install、post_install、pre_uninstall、post_uninstall",
-                "if": {
-                    "required": [
-                        "pre_install",
-                        "post_install",
-                        "pre_uninstall",
-                        "post_uninstall"
-                    ]
-                },
-                "then": {
-                    "allOf": [
-                        {
-                            "$comment": "abyss 特性: 如果在 pre_install 中使用了 A-Install-Exe，则 env_add_path 和 bin 等路径必须以 app\\ 或 $env: 或 ${env: 开头",
-                            "if": {
-                                "properties": {
-                                    "pre_install": {
-                                        "type": "array",
-                                        "contains": {
-                                            "type": "string",
-                                            "pattern": "^A-Install-Exe"
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "env_add_path": {
-                                        "type": [
-                                            "string",
-                                            "array"
-                                        ],
-                                        "anyOf": [
-                                            {
-                                                "$ref": "#/definitions/str",
-                                                "if": {
-                                                    "not": {
-                                                        "anyOf": [
-                                                            {
-                                                                "pattern": "^app\\\\"
-                                                            },
-                                                            {
-                                                                "pattern": "^\\$\\{?env:"
-                                                            }
-                                                        ]
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
-                                                }
-                                            },
-                                            {
+                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe，则 env_add_path 和 bin 等路径必须以 app\\ 或 $env: 或 ${env: 开头",
+                                    "if": {
+                                        "properties": {
+                                            "pre_install": {
                                                 "type": "array",
-                                                "items": {
-                                                    "$ref": "#/definitions/str",
-                                                    "if": {
-                                                        "not": {
-                                                            "anyOf": [
-                                                                {
-                                                                    "pattern": "^app\\\\"
-                                                                },
-                                                                {
-                                                                    "pattern": "^\\$\\{?env:"
-                                                                }
-                                                            ]
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
-                                                    }
+                                                "contains": {
+                                                    "type": "string",
+                                                    "pattern": "^A-Install-Exe"
                                                 }
                                             }
-                                        ]
+                                        }
                                     },
-                                    "bin": {
-                                        "type": [
-                                            "string",
-                                            "array"
-                                        ],
-                                        "anyOf": [
-                                            {
-                                                "$ref": "#/definitions/str",
-                                                "if": {
-                                                    "not": {
-                                                        "anyOf": [
-                                                            {
-                                                                "pattern": "^app\\\\"
-                                                            },
-                                                            {
-                                                                "pattern": "^\\$\\{?env:"
+                                    "then": {
+                                        "properties": {
+                                            "env_add_path": {
+                                                "type": [
+                                                    "string",
+                                                    "array"
+                                                ],
+                                                "anyOf": [
+                                                    {
+                                                        "$ref": "#/definitions/str",
+                                                        "if": {
+                                                            "not": {
+                                                                "anyOf": [
+                                                                    {
+                                                                        "pattern": "^app\\\\"
+                                                                    },
+                                                                    {
+                                                                        "pattern": "^\\$\\{?env:"
+                                                                    }
+                                                                ]
                                                             }
-                                                        ]
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
-                                                }
-                                            },
-                                            {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": [
-                                                        "string",
-                                                        "array"
-                                                    ],
-                                                    "anyOf": [
-                                                        {
+                                                        },
+                                                        "then": {
+                                                            "not": true,
+                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "array",
+                                                        "items": {
                                                             "$ref": "#/definitions/str",
                                                             "if": {
                                                                 "not": {
@@ -2298,13 +2246,46 @@
                                                                 "not": true,
                                                                 "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
                                                             }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "bin": {
+                                                "type": [
+                                                    "string",
+                                                    "array"
+                                                ],
+                                                "anyOf": [
+                                                    {
+                                                        "$ref": "#/definitions/str",
+                                                        "if": {
+                                                            "not": {
+                                                                "anyOf": [
+                                                                    {
+                                                                        "pattern": "^app\\\\"
+                                                                    },
+                                                                    {
+                                                                        "pattern": "^\\$\\{?env:"
+                                                                    }
+                                                                ]
+                                                            }
                                                         },
-                                                        {
-                                                            "type": "array",
-                                                            "items": [
+                                                        "then": {
+                                                            "not": true,
+                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "anyOf": [
                                                                 {
+                                                                    "$ref": "#/definitions/str",
                                                                     "if": {
-                                                                        "type": "string",
                                                                         "not": {
                                                                             "anyOf": [
                                                                                 {
@@ -2320,51 +2301,40 @@
                                                                         "not": true,
                                                                         "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
                                                                     }
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    "shortcuts": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "array",
-                                            "items": [
-                                                {
-                                                    "if": {
-                                                        "type": "string",
-                                                        "not": {
-                                                            "anyOf": [
-                                                                {
-                                                                    "pattern": "^app\\\\"
                                                                 },
                                                                 {
-                                                                    "pattern": "^\\$\\{?env:"
+                                                                    "type": "array",
+                                                                    "items": [
+                                                                        {
+                                                                            "if": {
+                                                                                "type": "string",
+                                                                                "not": {
+                                                                                    "anyOf": [
+                                                                                        {
+                                                                                            "pattern": "^app\\\\"
+                                                                                        },
+                                                                                        {
+                                                                                            "pattern": "^\\$\\{?env:"
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            },
+                                                                            "then": {
+                                                                                "not": true,
+                                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                                            }
+                                                                        }
+                                                                    ]
                                                                 }
                                                             ]
                                                         }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
                                                     }
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "persist": {
-                                        "if": {
-                                            "type": "array"
-                                        },
-                                        "then": {
-                                            "items": {
-                                                "if": {
-                                                    "type": "array"
-                                                },
-                                                "then": {
+                                                ]
+                                            },
+                                            "shortcuts": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "array",
                                                     "items": [
                                                         {
                                                             "if": {
@@ -2373,608 +2343,640 @@
                                                                     "anyOf": [
                                                                         {
                                                                             "pattern": "^app\\\\"
+                                                                        },
+                                                                        {
+                                                                            "pattern": "^\\$\\{?env:"
                                                                         }
                                                                     ]
                                                                 }
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
                                                             }
                                                         }
                                                     ]
+                                                }
+                                            },
+                                            "persist": {
+                                                "if": {
+                                                    "type": "array"
+                                                },
+                                                "then": {
+                                                    "items": {
+                                                        "if": {
+                                                            "type": "array"
+                                                        },
+                                                        "then": {
+                                                            "items": [
+                                                                {
+                                                                    "if": {
+                                                                        "type": "string",
+                                                                        "not": {
+                                                                            "anyOf": [
+                                                                                {
+                                                                                    "pattern": "^app\\\\"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "then": {
+                                                                        "not": true,
+                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 开头"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "else": {
+                                                            "not": true,
+                                                            "errorMessage": "由于使用了 A-Install-Exe，必须使用数组格式"
+                                                        }
+                                                    }
                                                 },
                                                 "else": {
                                                     "not": true,
                                                     "errorMessage": "由于使用了 A-Install-Exe，必须使用数组格式"
                                                 }
                                             }
-                                        },
-                                        "else": {
-                                            "not": true,
-                                            "errorMessage": "由于使用了 A-Install-Exe，必须使用数组格式"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "$comment": "如果没有使用 A-Install-Exe, A-Add-MsixPackage, A-Add-Font, A-Add-PowerToysRunPlugin, 则需要指定 extract_to",
-                            "if": {
-                                "properties": {
-                                    "pre_install": {
-                                        "contains": {
-                                            "pattern": "(?<!#.*)(A-Install-Exe|A-Add-MsixPackage|A-Add-Font|A-Add-PowerToysRunPlugin)"
-                                        }
-                                    }
-                                }
-                            },
-                            "else": {
-                                "if": {
-                                    "required": [
-                                        "extract_to"
-                                    ]
-                                },
-                                "else": {
-                                    "not": true,
-                                    "errorMessage": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录，通常为 app"
-                                }
-                            }
-                        },
-                        {
-                            "$comment": "abyss 特性: 根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "allOf": [
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "A-Remove-Link"
-                                                        },
-                                                        "errorMessage": "pre_install 中使用了 A-New-LinkFile 或 A-New-LinkDirectory，而 pre_uninstall 中缺少 A-Remove-Link"
-                                                    },
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "^A-Remove-Link$"
-                                                        },
-                                                        "errorMessage": "A-Remove-Link 必须单独一行，不能包含额外内容"
-                                                    }
-                                                ]
-                                            }
                                         }
                                     }
                                 },
                                 {
-                                    "if": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Install-Exe"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)(A-Uninstall-Exe|Remove-AppPackage)"
-                                                },
-                                                "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeByHand 或 Remove-AppPackage"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Add-MsixPackage"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "allOf": [
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "A-Remove-MsixPackage"
-                                                        },
-                                                        "errorMessage": "pre_install 中使用了 A-Add-MsixPackage，而 pre_uninstall 中缺少 A-Remove-MsixPackage"
-                                                    },
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "^A-Remove-MsixPackage$"
-                                                        },
-                                                        "errorMessage": "A-Remove-MsixPackage 必须单独一行，不能包含额外内容"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Add-Font"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Remove-Font"
-                                                },
-                                                "errorMessage": "pre_install 中使用了 A-Add-Font，而 pre_uninstall 中缺少 A-Remove-Font"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "allOf": [
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "A-Remove-PowerToysRunPlugin"
-                                                        },
-                                                        "errorMessage": "pre_install 中使用了 A-Add-PowerToysRunPlugin，而 pre_uninstall 中缺少 A-Remove-PowerToysRunPlugin"
-                                                    },
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "^A-Remove-PowerToysRunPlugin$"
-                                                        },
-                                                        "errorMessage": "A-Remove-PowerToysRunPlugin 必须单独一行，不能包含额外内容"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "$comment": "abyss 特性: 根据 pre_uninstall 使用的函数，检查 pre_install 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "^A-Remove-Link$"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
-                                                },
-                                                "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而 pre_install 中缺少 A-New-LinkFile 或 A-New-LinkDirectory"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Uninstall-Exe"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Install-Exe"
-                                                },
-                                                "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeByHand，而 pre_install 中缺少 A-Install-Exe"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "^A-Remove-MsixPackage$"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Add-MsixPackage"
-                                                },
-                                                "errorMessage": "pre_uninstall 中使用了 A-Remove-MsixPackage，而 pre_install 中缺少 A-Add-MsixPackage"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Remove-Font"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Add-Font"
-                                                },
-                                                "errorMessage": "pre_uninstall 中使用了 A-Remove-Font，而 pre_install 中缺少 A-Add-Font"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "pre_uninstall": {
-                                                "contains": {
-                                                    "pattern": "^A-Remove-PowerToysRunPlugin$"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
-                                                },
-                                                "errorMessage": "pre_uninstall 中使用了 A-Remove-PowerToysRunPlugin，而 pre_install 中缺少 A-Add-PowerToysRunPlugin"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                "else": {
-                    "not": true,
-                    "errorMessage": "abyss 中必须使用 pre_install、post_install、pre_uninstall、post_uninstall"
-                }
-            },
-            {
-                "$comment": "abyss 特性: 不允许在 architecture 中使用 pre_install 和 post_install，如果需要，应该在顶层定义，并通过 $architecture 区分不同架构",
-                "if": {
-                    "required": [
-                        "architecture"
-                    ]
-                },
-                "then": {
-                    "properties": {
-                        "architecture": {
-                            "patternProperties": {
-                                "^(64bit|32bit|arm64)$": {
+                                    "$comment": "根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
                                     "allOf": [
                                         {
-                                            "not": {
-                                                "required": [
-                                                    "pre_install"
-                                                ]
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
+                                                        }
+                                                    }
+                                                }
                                             },
-                                            "errorMessage": "abyss 中不允许在 architecture 中使用 pre_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "allOf": [
+                                                            {
+                                                                "contains": {
+                                                                    "pattern": "A-Remove-Link"
+                                                                },
+                                                                "errorMessage": "pre_install 中使用了 A-New-LinkFile 或 A-New-LinkDirectory，而 pre_uninstall 中缺少 A-Remove-Link"
+                                                            },
+                                                            {
+                                                                "contains": {
+                                                                    "pattern": "^A-Remove-Link$"
+                                                                },
+                                                                "errorMessage": "A-Remove-Link 必须单独一行，不能包含额外内容"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
                                         },
                                         {
-                                            "not": {
-                                                "required": [
-                                                    "post_install"
-                                                ]
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Exe"
+                                                        }
+                                                    }
+                                                }
                                             },
-                                            "errorMessage": "abyss 中不允许在 architecture 中使用 post_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-Uninstall-Exe|Remove-AppPackage)"
+                                                        },
+                                                        "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeByHand 或 Remove-AppPackage"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Add-MsixPackage"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "allOf": [
+                                                            {
+                                                                "contains": {
+                                                                    "pattern": "A-Remove-MsixPackage"
+                                                                },
+                                                                "errorMessage": "pre_install 中使用了 A-Add-MsixPackage，而 pre_uninstall 中缺少 A-Remove-MsixPackage"
+                                                            },
+                                                            {
+                                                                "contains": {
+                                                                    "pattern": "^A-Remove-MsixPackage$"
+                                                                },
+                                                                "errorMessage": "A-Remove-MsixPackage 必须单独一行，不能包含额外内容"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Add-Font"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Remove-Font"
+                                                        },
+                                                        "errorMessage": "pre_install 中使用了 A-Add-Font，而 pre_uninstall 中缺少 A-Remove-Font"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "allOf": [
+                                                            {
+                                                                "contains": {
+                                                                    "pattern": "A-Remove-PowerToysRunPlugin"
+                                                                },
+                                                                "errorMessage": "pre_install 中使用了 A-Add-PowerToysRunPlugin，而 pre_uninstall 中缺少 A-Remove-PowerToysRunPlugin"
+                                                            },
+                                                            {
+                                                                "contains": {
+                                                                    "pattern": "^A-Remove-PowerToysRunPlugin$"
+                                                                },
+                                                                "errorMessage": "A-Remove-PowerToysRunPlugin 必须单独一行，不能包含额外内容"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "$comment": "根据 pre_uninstall 使用的函数，检查 pre_install 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
+                                    "allOf": [
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "^A-Remove-Link$"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而 pre_install 中缺少 A-New-LinkFile 或 A-New-LinkDirectory"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Uninstall-Exe"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Exe"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeByHand，而 pre_install 中缺少 A-Install-Exe"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "^A-Remove-MsixPackage$"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Add-MsixPackage"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-MsixPackage，而 pre_install 中缺少 A-Add-MsixPackage"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Remove-Font"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Add-Font"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-Font，而 pre_install 中缺少 A-Add-Font"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "^A-Remove-PowerToysRunPlugin$"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-PowerToysRunPlugin，而 pre_install 中缺少 A-Add-PowerToysRunPlugin"
+                                                    }
+                                                }
+                                            }
                                         }
                                     ]
                                 }
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "abyss 特性: 当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
-                "allOf": [
-                    {
-                        "properties": {
-                            "version": {
-                                "$ref": "#/definitions/str"
-                            }
+                            ]
+                        },
+                        "else": {
+                            "not": true,
+                            "errorMessage": "abyss 中必须使用 pre_install、post_install、pre_uninstall、post_uninstall"
                         }
                     },
                     {
+                        "$comment": "不允许在 architecture 中使用 pre_install 和 post_install，如果需要，应该在顶层定义，并通过 $architecture 区分不同架构",
                         "if": {
-                            "properties": {
-                                "version": {
-                                    "pattern": "^pending$"
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "replace"
-                                    ],
-                                    "properties": {
-                                        "replace": {
-                                            "pattern": "^pending$",
-                                            "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "version": {
-                                    "pattern": "^renamed$"
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "replace"
-                                    ],
-                                    "properties": {
-                                        "replace": {
-                                            "pattern": "^renamed$",
-                                            "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "version": {
-                                    "pattern": "^deprecated$"
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "replace"
-                                    ],
-                                    "properties": {
-                                        "replace": {
-                                            "pattern": "^deprecated$",
-                                            "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "$comment": "abyss 特性: 当 version 为特定内容时，url 必须为指定内容",
-                "allOf": [
-                    {
-                        "if": {
-                            "properties": {
-                                "version": {
-                                    "pattern": "^pending|renamed|deprecated$"
-                                }
-                            }
+                            "required": [
+                                "architecture"
+                            ]
                         },
                         "then": {
                             "properties": {
                                 "architecture": {
                                     "patternProperties": {
-                                        "^(64bit|arm64|32bit)$": {
+                                        "^(64bit|32bit|arm64)$": {
+                                            "allOf": [
+                                                {
+                                                    "not": {
+                                                        "required": [
+                                                            "pre_install"
+                                                        ]
+                                                    },
+                                                    "errorMessage": "abyss 中不允许在 architecture 中使用 pre_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                },
+                                                {
+                                                    "not": {
+                                                        "required": [
+                                                            "post_install"
+                                                        ]
+                                                    },
+                                                    "errorMessage": "abyss 中不允许在 architecture 中使用 post_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
+                        "if": {
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|32bit|arm64)$": {
                                             "properties": {
                                                 "url": {
                                                     "type": [
                                                         "string",
                                                         "array"
                                                     ],
+                                                    "pattern": "\\.(zip|7z|msi)$",
                                                     "items": {
-                                                        "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                    },
-                                                    "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                },
-                                                "hash": {
-                                                    "type": [
-                                                        "string",
-                                                        "array"
-                                                    ],
-                                                    "items": {
-                                                        "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                                    },
-                                                    "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                        "pattern": "\\.(zip|7z|msi)$"
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                },
-                                "pre_install": {
-                                    "if": {
-                                        "minItems": 3,
-                                        "maxItems": 3
-                                    },
-                                    "then": {
-                                        "not": true,
-                                        "errorMessage": "version 为 pending|renamed|deprecated 时，数组的第四项必须使用 A-Deny-Manifest"
-                                    },
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                        },
-                                        {
-                                            "const": "A-Start-Install"
-                                        },
-                                        {
-                                            "if": {
-                                                "not": {
-                                                    "pattern": "^A-Deny-Manifest"
-                                                }
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "version 为 pending|renamed|deprecated 时，此项必须使用 A-Deny-Manifest"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "version": {
-                                    "pattern": "^pending|deprecated$"
                                 }
                             }
                         },
                         "then": {
-                            "properties": {
-                                "pre_install": {
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                        },
-                                        {
-                                            "const": "A-Start-Install"
-                                        },
-                                        {
-                                            "if": {
-                                                "not": {
-                                                    "pattern": "^A-Deny-Manifest$"
-                                                }
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "version 为 pending|deprecated 时，此项只能是 A-Deny-Manifest"
-                                            }
-                                        }
-                                    ]
-                                }
+                            "if": {
+                                "required": [
+                                    "extract_to"
+                                ]
+                            },
+                            "else": {
+                                "not": true,
+                                "errorMessage": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录，通常为 app"
                             }
                         }
                     },
                     {
-                        "if": {
-                            "properties": {
-                                "version": {
-                                    "pattern": "^renamed$"
+                        "$comment": "当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "version": {
+                                        "$ref": "#/definitions/str"
+                                    }
                                 }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "pre_install": {
-                                    "items": [
-                                        {
-                                            "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                        },
-                                        {
-                                            "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                        },
-                                        {
-                                            "const": "A-Start-Install"
-                                        },
-                                        {
-                                            "if": {
-                                                "not": {
-                                                    "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
-                                                }
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "version 为 renamed 时，此项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
-                                            }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending$"
                                         }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "$comment": "abyss 特性: 为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
-                "allOf": [
-                    {
-                        "properties": {
-                            "architecture": {
-                                "$ref": "#/definitions/architecture_example",
-                                "not": {
-                                    "required": [
-                                        "32bit"
-                                    ]
+                                    }
                                 },
-                                "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^pending$",
+                                                    "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^renamed$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^renamed$",
+                                                    "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^deprecated$",
+                                                    "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        }
+                        ]
                     },
                     {
-                        "properties": {
-                            "autoupdate": {
+                        "$comment": "当 version 为特定内容时，url 必须为指定内容",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending|renamed|deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "items": {
+                                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                            },
+                                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                        },
+                                                        "hash": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "items": {
+                                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                            },
+                                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "pre_install": {
+                                            "if": {
+                                                "minItems": 3,
+                                                "maxItems": 3
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "version 为 pending|renamed|deprecated 时，数组的第四项必须使用 A-Deny-Manifest"
+                                            },
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，此项必须使用 A-Deny-Manifest"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending|deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest$"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "version 为 pending|deprecated 时，此项只能是 A-Deny-Manifest"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^renamed$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "version 为 renamed 时，此项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
+                        "allOf": [
+                            {
                                 "properties": {
                                     "architecture": {
+                                        "$ref": "#/definitions/architecture_example",
                                         "not": {
                                             "required": [
                                                 "32bit"
@@ -2983,53 +2985,69 @@
                                         "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
                                     }
                                 }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "$comment": "abyss 特性: 限制 checkver 的可用字段",
-                "properties": {
-                    "checkver": {
-                        "allOf": [
-                            {
-                                "if": {
-                                    "type": "string",
-                                    "const": "github"
-                                },
-                                "then": {
-                                    "not": true,
-                                    "errorMessage": "abyss 中不允许使用 github 字段"
-                                }
                             },
                             {
                                 "properties": {
-                                    "github": {
-                                        "not": true,
-                                        "errorMessage": "abyss 中不允许使用 github 字段"
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "re": {
-                                        "not": true,
-                                        "errorMessage": "abyss 中不允许使用 re 字段，请使用 regex 字段"
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "jp": {
-                                        "not": true,
-                                        "errorMessage": "abyss 中不允许使用 jp 字段，请使用 jsonpath 字段"
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "not": {
+                                                    "required": [
+                                                        "32bit"
+                                                    ]
+                                                },
+                                                "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
+                                            }
+                                        }
                                     }
                                 }
                             }
                         ]
+                    },
+                    {
+                        "$comment": "限制 checkver 的可用字段",
+                        "properties": {
+                            "checkver": {
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "type": "string",
+                                            "const": "github"
+                                        },
+                                        "then": {
+                                            "not": true,
+                                            "errorMessage": "abyss 中不允许使用 github 字段"
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "github": {
+                                                "not": true,
+                                                "errorMessage": "abyss 中不允许使用 github 字段"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "re": {
+                                                "not": true,
+                                                "errorMessage": "abyss 中不允许使用 re 字段，请使用 regex 字段"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "properties": {
+                                            "jp": {
+                                                "not": true,
+                                                "errorMessage": "abyss 中不允许使用 jp 字段，请使用 jsonpath 字段"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
                     }
-                }
+                ]
             }
         ]
     }
