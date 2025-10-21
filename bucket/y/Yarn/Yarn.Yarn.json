@@ -6,22 +6,6 @@
         "identifier": "BSD-2-Clause",
         "url": "https://github.com/yarnpkg/yarn/blob/master/LICENSE"
     },
-    "notes-cn": [
-        "你需要运行以下命令更新 Yarn 配置，以确保数据被 Scoop 持久化 (persist):",
-        " ",
-        "yarn config set prefix \"$dir\\global\"",
-        "yarn config set cache-folder \"$dir\\cache\"",
-        "yarn config set global-folder \"$dir\\global\"",
-        "yarn config set yarn-offline-mirror \"$dir\\mirror\""
-    ],
-    "notes": [
-        "You need to run the following commands to update Yarn configuration to ensure that data is persisted (persist):",
-        " ",
-        "yarn config set prefix \"$dir\\global\"",
-        "yarn config set cache-folder \"$dir\\cache\"",
-        "yarn config set global-folder \"$dir\\global\"",
-        "yarn config set yarn-offline-mirror \"$dir\\mirror\""
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/yarnpkg/yarn/releases/download/v1.22.22/yarn-1.22.22.msi",
@@ -29,14 +13,28 @@
         }
     },
     "extract_dir": "Yarn",
+    "extract_to": "app",
     "env_add_path": [
         "bin",
-        "global\\bin"
+        "app\\bin"
     ],
     "persist": [
-        "global",
-        "cache",
-        "mirror"
+        [
+            "bin",
+            "AppData\\Local\\Yarn\\bin"
+        ],
+        [
+            "global",
+            "AppData\\Local\\Yarn\\Data\\global"
+        ],
+        [
+            "cache",
+            "AppData\\Local\\Yarn\\cache"
+        ],
+        [
+            "mirror",
+            "AppData\\Local\\Yarn\\mirror"
+        ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -48,6 +46,10 @@
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "yarn config set prefix \"$dir\\bin\"",
+        "yarn config set global-folder \"$dir\\global\"",
+        "yarn config set cache-folder \"$dir\\cache\"",
+        "yarn config set yarn-offline-mirror \"$dir\\mirror\"",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
