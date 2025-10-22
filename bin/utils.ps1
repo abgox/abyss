@@ -1494,9 +1494,9 @@ if ($cmd) {
                         A-Ensure-Directory (Split-Path $new_dir -Parent)
                         Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
                     }
-                    if ((Get-Item "$persist_dir\data").Count -eq 0) {
-                        Remove-Item "$persist_dir\data" -Force -Recurse -ErrorAction SilentlyContinue
-                    }
+                }
+                if ((Get-ChildItem "$persist_dir\data" -ErrorAction SilentlyContinue).Count -eq 0) {
+                    Remove-Item "$persist_dir\data" -Force -Recurse -ErrorAction SilentlyContinue
                 }
             }
         }
