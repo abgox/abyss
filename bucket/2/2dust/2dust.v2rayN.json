@@ -18,14 +18,24 @@
             "extract_dir": "v2rayN-windows-arm64"
         }
     },
-    "bin": "v2rayN.exe",
+    "extract_to": "app",
+    "bin": "app\\v2rayN.exe",
     "shortcuts": [
         [
-            "v2rayN.exe",
+            "app\\v2rayN.exe",
             "v2rayN"
         ]
     ],
-    "persist": "guiConfigs",
+    "persist": [
+        [
+            "app\\guiConfigs",
+            "guiConfigs"
+        ],
+        [
+            "app\\binConfigs",
+            "binConfigs"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
