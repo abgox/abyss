@@ -193,29 +193,22 @@
                     "if": {
                         "required": [
                             "identifier"
-                        ]
+                        ],
+                        "properties": {
+                            "identifier": {
+                                "pattern": "^(Freeware|Proprietary|Public Domain|Shareware|Freemium|Unknown)$"
+                            }
+                        }
                     },
                     "then": {
-                        "if": {
-                            "properties": {
-                                "identifier": {
-                                    "pattern": "^(Freeware|Proprietary|Public Domain|Shareware|Freemium|Unknown)$"
-                                }
-                            }
-                        },
-                        "then": {
+                        "not": {
                             "not": {
                                 "required": [
-                                    "identifier"
-                                ],
-                                "not": {
-                                    "required": [
-                                        "url"
-                                    ]
-                                }
-                            },
-                            "errorMessage": "license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个，此时必须提供 url，否则请使用字符串而非对象"
-                        }
+                                    "url"
+                                ]
+                            }
+                        },
+                        "errorMessage": "license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个，此时必须提供 url，否则请使用字符串而非对象"
                     }
                 }
             ]
@@ -461,7 +454,11 @@
             "then": {
                 "patternProperties": {
                     "^.+$": {
-                        "$ref": "#/definitions/string_or_string_array"
+                        "$ref": "#/definitions/string_or_string_array",
+                        "examples": [
+                            "",
+                            []
+                        ]
                     }
                 },
                 "minProperties": 1,
@@ -2187,7 +2184,7 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe，则 env_add_path 和 bin 等路径必须以 app\\ 或 $env: 或 ${env: 开头",
+                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
@@ -2223,7 +2220,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                         }
                                                     },
                                                     {
@@ -2244,7 +2241,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                             }
                                                         }
                                                     }
@@ -2272,7 +2269,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                         }
                                                     },
                                                     {
@@ -2299,7 +2296,7 @@
                                                                     },
                                                                     "then": {
                                                                         "not": true,
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                                     }
                                                                 },
                                                                 {
@@ -2321,7 +2318,7 @@
                                                                             },
                                                                             "then": {
                                                                                 "not": true,
-                                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                                             }
                                                                         }
                                                                     ]
@@ -2352,7 +2349,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                             }
                                                         }
                                                     ]
@@ -2382,7 +2379,7 @@
                                                                     },
                                                                     "then": {
                                                                         "not": true,
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，路径应该以 app\\ 开头"
+                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe，可能需要以 app\\ 开头"
                                                                     }
                                                                 }
                                                             ]
@@ -2727,6 +2724,219 @@
                             "else": {
                                 "not": true,
                                 "errorMessage": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录，通常为 app"
+                            }
+                        }
+                    },
+                    {
+                        "$comment": "如果指定了 extract_to 为 app，则 env_add_path 和 bin 等路径可能需要以 app\\ 开头",
+                        "if": {
+                            "required": [
+                                "extract_to"
+                            ],
+                            "properties": {
+                                "extract_to": {
+                                    "type": "string",
+                                    "const": "app"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "env_add_path": {
+                                    "type": [
+                                        "string",
+                                        "array"
+                                    ],
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/definitions/str",
+                                            "if": {
+                                                "not": {
+                                                    "pattern": "^app\\\\"
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                            }
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/str",
+                                                "if": {
+                                                    "not": {
+                                                        "pattern": "^app\\\\"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "not": true,
+                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "env_set": {
+                                    "patternProperties": {
+                                        "^.+$": {
+                                            "$ref": "#/definitions/string_or_string_array",
+                                            "type": [
+                                                "string",
+                                                "array"
+                                            ],
+                                            "examples": [
+                                                "",
+                                                []
+                                            ],
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/definitions/str",
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "\\\\app"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/definitions/str",
+                                                        "if": {
+                                                            "not": {
+                                                                "pattern": "\\\\app"
+                                                            }
+                                                        },
+                                                        "then": {
+                                                            "not": true,
+                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "minProperties": 1,
+                                    "additionalProperties": false,
+                                    "errorMessage": "不允许属性名为空字符串"
+                                },
+                                "bin": {
+                                    "type": [
+                                        "string",
+                                        "array"
+                                    ],
+                                    "anyOf": [
+                                        {
+                                            "$ref": "#/definitions/str",
+                                            "if": {
+                                                "not": {
+                                                    "pattern": "^app\\\\"
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                            }
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": [
+                                                    "string",
+                                                    "array"
+                                                ],
+                                                "anyOf": [
+                                                    {
+                                                        "$ref": "#/definitions/str",
+                                                        "if": {
+                                                            "not": {
+                                                                "pattern": "^app\\\\"
+                                                            }
+                                                        },
+                                                        "then": {
+                                                            "not": true,
+                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "array",
+                                                        "items": [
+                                                            {
+                                                                "if": {
+                                                                    "not": {
+                                                                        "pattern": "^app\\\\"
+                                                                    }
+                                                                },
+                                                                "then": {
+                                                                    "not": true,
+                                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "shortcuts": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": [
+                                            {
+                                                "if": {
+                                                    "not": {
+                                                        "pattern": "^app\\\\"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "not": true,
+                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "persist": {
+                                    "if": {
+                                        "type": "array"
+                                    },
+                                    "then": {
+                                        "items": {
+                                            "if": {
+                                                "type": "array"
+                                            },
+                                            "then": {
+                                                "items": [
+                                                    {
+                                                        "if": {
+                                                            "not": {
+                                                                "pattern": "^app\\\\"
+                                                            }
+                                                        },
+                                                        "then": {
+                                                            "not": true,
+                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "else": {
+                                                "not": true,
+                                                "errorMessage": "由于指定了 extract_to 为 app，必须使用数组格式"
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "not": true,
+                                        "errorMessage": "由于指定了 extract_to 为 app，必须使用数组格式"
+                                    }
+                                }
                             }
                         }
                     },
