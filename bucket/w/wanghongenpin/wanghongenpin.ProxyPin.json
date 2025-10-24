@@ -1,0 +1,62 @@
+{
+    "version": "1.2.1",
+    "description": "开源免费的 HTTP(S) 流量捕获软件 | Open source free capture HTTP(S) traffic software",
+    "homepage": "https://github.com/wanghongenpin/proxypin",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/wanghongenpin/proxypin/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/wanghongenpin/proxypin/releases/download/v1.2.1/proxypin-windows-setup.exe",
+            "hash": "e25c0cdc83481fcb5805f5645e1ce2b694638e8b7ef4f96a75c432e2e1c0025a"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\ProxyPin.exe",
+            "ProxyPin"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.proxy.pin\\ProxyPin\")",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/wanghongenpin/proxypin/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/wanghongenpin/proxypin/releases/download/v$version/proxypin-windows-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
