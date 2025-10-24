@@ -1,0 +1,74 @@
+{
+    "version": "0.9.3",
+    "description": "在你的 shell 历史中快速穿梭 | Fly through your shell history.",
+    "homepage": "https://github.com/cantino/mcfly",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/cantino/mcfly/blob/master/LICENSE"
+    },
+    "notes": [
+        "To start:",
+        "  mcfly --help     # Check command help",
+        "  mcfly -V         # Check version",
+        " ",
+        "In PowerShell:",
+        "  mcfly init powershell | Out-String | Invoke-Expression",
+        " ",
+        "For more information, visit: https://github.com/cantino/mcfly"
+    ],
+    "notes-cn": [
+        "开始使用:",
+        "  mcfly --help     # 查看命令帮助",
+        "  mcfly -V         # 查看版本",
+        " ",
+        "在 PowerShell 中使用:",
+        "  mcfly init powershell | Out-String | Invoke-Expression",
+        " ",
+        "更多信息，请访问：https://github.com/cantino/mcfly"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cantino/mcfly/releases/download/v0.9.3/mcfly-v0.9.3-x86_64-pc-windows-msvc.zip",
+            "hash": "a9b8fa50d6e27dbdad3443b5c2849102ec20df93257061ed92d2bd8aa2609255"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\mcfly.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\McFly\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/cantino/mcfly/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cantino/mcfly/releases/download/v$version/mcfly-v$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
