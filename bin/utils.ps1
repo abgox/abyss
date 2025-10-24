@@ -351,7 +351,10 @@ function A-Remove-Link {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
     elseif ($uninstallActionLevel -notlike "*2*") {
-        return
+        # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
+        if (-not $purge) {
+            return
+        }
     }
 
     @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
@@ -363,6 +366,12 @@ function A-Remove-Link {
                     try {
                         Write-Host "Unlinking $p"
                         Remove-Item $p -Force -Recurse -ErrorAction Stop
+
+                        $parent = Split-Path $p -Parent
+                        if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                            Write-Host "Removing $parent"
+                            Remove-Item $parent -Force -Recurse -ErrorAction Stop
+                        }
                     }
                     catch {
                         error $_.Exception.Message
@@ -395,13 +404,22 @@ function A-Remove-TempData {
     )
 
     if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
-        return
+        # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
+        if (-not $purge) {
+            return
+        }
     }
     foreach ($p in $Paths) {
         if (Test-Path -LiteralPath $p) {
             try {
                 Write-Host "Removing $p"
                 Remove-Item $p -Force -Recurse -ErrorAction Stop
+
+                $parent = Split-Path $p -Parent
+                if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                    Write-Host "Removing $parent"
+                    Remove-Item $parent -Force -Recurse -ErrorAction Stop
+                }
             }
             catch {
                 error $_.Exception.Message
@@ -984,9 +1002,9 @@ function A-Expand-SetupExe {
     else {
         $7z = $all7z[0].FullName
     }
-    Expand-7zipArchive $7z $dir
+    Expand-7zipArchive $7z (Join-Path $dir 'app')
 
-    Remove-Item "$dir\`$*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item "$dir\app\`$*" -Recurse -Force -ErrorAction SilentlyContinue
 }
 
 function A-Require-Admin {
