@@ -392,8 +392,8 @@
         },
         "extract_to": {
             "title": "提取内容到指定目录",
-            "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 会将所有内容提取到 `extract_to` 定义的指定目录中\n    - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`",
-            "description": "如果 url 属性的值指向一个压缩包(.zip/.7z/.tar/.gz/.lzma/.lzh)，Scoop 会将所有内容提取到 extract_to 定义的指定目录中",
+            "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 会将所有内容提取到 `extract_to` 定义的指定目录中\n  - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果 url 是一个数组，有多个压缩包，则 `extract_to` 也应该是一个数组，并且与 url 数组的顺序一致",
+            "description": "- 如果 url 属性的值指向一个压缩包(.zip/.7z/.tar/.gz/.lzma/.lzh)，Scoop 会将所有内容提取到 extract_to 定义的指定目录中\n - 如果 url 是一个数组，有多个压缩包，则 extract_to 也应该是一个数组，并且与 url 数组的顺序一致",
             "$ref": "#/definitions/string_or_string_array",
             "examples": [
                 "app"
@@ -1928,7 +1928,7 @@
                                                 },
                                                 {
                                                     "const": "A-Expand-SetupExe",
-                                                    "markdownDescription": "- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
+                                                    "markdownDescription": "- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
                                                 },
                                                 {
                                                     "const": "A-Install-Exe inno",
@@ -1953,6 +1953,10 @@
                                                 {
                                                     "const": "A-Test-Admin",
                                                     "markdownDescription": "检查是否以管理员权限运行"
+                                                },
+                                                {
+                                                    "const": "A-Ensure-Directory",
+                                                    "markdownDescription": "确保 `$persist_dir`路径存在"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory 'xxx'",
@@ -2184,14 +2188,14 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
+                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
                                                 "type": "array",
                                                 "contains": {
                                                     "type": "string",
-                                                    "pattern": "^A-Install-Exe"
+                                                    "pattern": "(?<!#.*)(A-Install-Exe|A-Expand-SetupExe)"
                                                 }
                                             }
                                         }
@@ -2694,26 +2698,69 @@
                     {
                         "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
                         "if": {
-                            "properties": {
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|32bit|arm64)$": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        {
                                             "properties": {
-                                                "url": {
-                                                    "type": [
-                                                        "string",
-                                                        "array"
-                                                    ],
-                                                    "pattern": "\\.(zip|7z|msi)$",
-                                                    "items": {
-                                                        "pattern": "\\.(zip|7z|msi)$"
+                                                "architecture": {
+                                                    "patternProperties": {
+                                                        "^(64bit|32bit|arm64)$": {
+                                                            "properties": {
+                                                                "url": {
+                                                                    "type": [
+                                                                        "string",
+                                                                        "array"
+                                                                    ],
+                                                                    "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
+                                                                    "items": {
+                                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "required": [
+                                                "innosetup"
+                                            ],
+                                            "properties": {
+                                                "innosetup": {
+                                                    "const": true
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "if": {
+                                        "required": [
+                                            "pre_install"
+                                        ]
+                                    },
+                                    "then": {
+                                        "not": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font|A-Add-MsixPackage)"
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                },
+                                {
+                                    "not": {
+                                        "required": [
+                                            "psmodule"
+                                        ]
+                                    }
                                 }
-                            }
+                            ]
                         },
                         "then": {
                             "if": {
@@ -2723,12 +2770,12 @@
                             },
                             "else": {
                                 "not": true,
-                                "errorMessage": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录，通常为 app"
+                                "errorMessage": "需要使用 extract_to 指定目录，通常为 app"
                             }
                         }
                     },
                     {
-                        "$comment": "如果指定了 extract_to 为 app，则 env_add_path 和 bin 等路径可能需要以 app\\ 开头",
+                        "$comment": "如果指定了 extract_to 为 app，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
                         "if": {
                             "required": [
                                 "extract_to"
@@ -2752,12 +2799,19 @@
                                             "$ref": "#/definitions/str",
                                             "if": {
                                                 "not": {
-                                                    "pattern": "^app\\\\"
+                                                    "anyOf": [
+                                                        {
+                                                            "pattern": "^app\\\\"
+                                                        },
+                                                        {
+                                                            "pattern": "^\\$\\{?env:"
+                                                        }
+                                                    ]
                                                 }
                                             },
                                             "then": {
                                                 "not": true,
-                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                             }
                                         },
                                         {
@@ -2766,12 +2820,19 @@
                                                 "$ref": "#/definitions/str",
                                                 "if": {
                                                     "not": {
-                                                        "pattern": "^app\\\\"
+                                                        "anyOf": [
+                                                            {
+                                                                "pattern": "^app\\\\"
+                                                            },
+                                                            {
+                                                                "pattern": "^\\$\\{?env:"
+                                                            }
+                                                        ]
                                                     }
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                 }
                                             }
                                         }
@@ -2794,12 +2855,19 @@
                                                     "$ref": "#/definitions/str",
                                                     "if": {
                                                         "not": {
-                                                            "pattern": "\\\\app"
+                                                            "anyOf": [
+                                                                {
+                                                                    "pattern": "\\\\app"
+                                                                },
+                                                                {
+                                                                    "pattern": "^\\$\\{?env:"
+                                                                }
+                                                            ]
                                                         }
                                                     },
                                                     "then": {
                                                         "not": true,
-                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录"
+                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录或环境变量($env:xxx 或 ${env:xxx})"
                                                     }
                                                 },
                                                 {
@@ -2808,12 +2876,19 @@
                                                         "$ref": "#/definitions/str",
                                                         "if": {
                                                             "not": {
-                                                                "pattern": "\\\\app"
+                                                                "anyOf": [
+                                                                    {
+                                                                        "pattern": "\\\\app"
+                                                                    },
+                                                                    {
+                                                                        "pattern": "^\\$\\{?env:"
+                                                                    }
+                                                                ]
                                                             }
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录"
+                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录或环境变量($env:xxx 或 ${env:xxx})"
                                                         }
                                                     }
                                                 }
@@ -2834,12 +2909,19 @@
                                             "$ref": "#/definitions/str",
                                             "if": {
                                                 "not": {
-                                                    "pattern": "^app\\\\"
+                                                    "anyOf": [
+                                                        {
+                                                            "pattern": "^app\\\\"
+                                                        },
+                                                        {
+                                                            "pattern": "^\\$\\{?env:"
+                                                        }
+                                                    ]
                                                 }
                                             },
                                             "then": {
                                                 "not": true,
-                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                             }
                                         },
                                         {
@@ -2854,12 +2936,19 @@
                                                         "$ref": "#/definitions/str",
                                                         "if": {
                                                             "not": {
-                                                                "pattern": "^app\\\\"
+                                                                "anyOf": [
+                                                                    {
+                                                                        "pattern": "^app\\\\"
+                                                                    },
+                                                                    {
+                                                                        "pattern": "^\\$\\{?env:"
+                                                                    }
+                                                                ]
                                                             }
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                         }
                                                     },
                                                     {
@@ -2868,12 +2957,19 @@
                                                             {
                                                                 "if": {
                                                                     "not": {
-                                                                        "pattern": "^app\\\\"
+                                                                        "anyOf": [
+                                                                            {
+                                                                                "pattern": "^app\\\\"
+                                                                            },
+                                                                            {
+                                                                                "pattern": "^\\$\\{?env:"
+                                                                            }
+                                                                        ]
                                                                     }
                                                                 },
                                                                 "then": {
                                                                     "not": true,
-                                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                                 }
                                                             }
                                                         ]
@@ -2891,12 +2987,19 @@
                                             {
                                                 "if": {
                                                     "not": {
-                                                        "pattern": "^app\\\\"
+                                                        "anyOf": [
+                                                            {
+                                                                "pattern": "^app\\\\"
+                                                            },
+                                                            {
+                                                                "pattern": "^\\$\\{?env:"
+                                                            }
+                                                        ]
                                                     }
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
                                                 }
                                             }
                                         ]
