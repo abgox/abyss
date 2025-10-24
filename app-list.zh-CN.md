@@ -65,7 +65,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (359)|Tag|Description|
+|App (360)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br/><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code><br/><code title="需要你先手动卸载">UninstallByHand</code>|123 云盘，一款云存储服务产品|
 |[1zilc.FishingFunds](https://ff.1zilc.top/ "点击访问仓库或主页")|<a href="./bucket/1/1zilc/1zilc.FishingFunds.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|一款跨平台的基金股票行情监控工具|
@@ -97,6 +97,7 @@
 |[amir1376.ABDownloadManager](https://abdownloadmanager.com/ "点击访问仓库或主页")|<a href="./bucket/a/amir1376/amir1376.ABDownloadManager.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|一款能加快你下载速度的下载管理器|
 |[amzxyz.rime_wanxiang](https://github.com/amzxyz/rime_wanxiang "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a>|Rime 小狼毫配置: 万象拼音输入方案|
 |[amzxyz.rime_wanxiang.model](https://github.com/amzxyz/RIME-LMDG "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.model.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|Rime 小狼毫配置: 万象语法模型|
+|[AndrewCantino.McFly](https://github.com/cantino/mcfly "点击访问仓库或主页")|<a href="./bucket/a/AndrewCantino/AndrewCantino.McFly.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|在你的 shell 历史中快速穿梭|
 |[Anthropic.ClaudeCode](https://www.anthropic.com/claude-code "点击访问仓库或主页")|<a href="./bucket/a/Anthropic/Anthropic.ClaudeCode.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|在终端中直接释放 Claude 的强大功能|
 |[Anxcye.AnxReader](https://anx.anxcye.com/ "点击访问仓库或主页")|<a href="./bucket/a/Anxcye/Anxcye.AnxReader.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|一款为书迷精心打造的电子书阅读器|
 |[Anydo.Anydo](https://www.any.do/ "点击访问仓库或主页")|<a href="./bucket/a/Anydo/Anydo.Anydo.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|Any.do - 一款简洁的待办事项应用|
