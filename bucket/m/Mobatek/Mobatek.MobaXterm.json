@@ -12,19 +12,25 @@
             "hash": "5c8d9b4034c928c3542b502ae11c914caa9710b49ae384ce0c4f1eaa1405735b"
         }
     },
-    "bin": "MobaXterm.exe",
+    "extract_to": "app",
+    "bin": "app\\MobaXterm.exe",
     "shortcuts": [
         [
-            "MobaXterm.exe",
+            "app\\MobaXterm.exe",
             "MobaXterm Personal"
         ]
     ],
-    "persist": "MobaXterm.ini",
+    "persist": [
+        [
+            "app\\MobaXterm.ini",
+            "MobaXterm.ini"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "Get-ChildItem $dir 'mobaxterm*.exe' | Select-Object -First 1 | Rename-Item -NewName 'MobaXterm.exe'",
+        "Get-ChildItem $dir 'mobaxterm*.exe' -Recurse | Select-Object -First 1 | Rename-Item -NewName 'MobaXterm.exe'",
         "A-New-PersistFile \"$persist_dir\\MobaXterm.ini\""
     ],
     "post_install": [

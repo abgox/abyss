@@ -17,34 +17,35 @@
         }
     },
     "extract_dir": "scoop-i18n-51603ab67441a138ffbe8b9e2ba86fdad6233a67",
+    "extract_to": "app",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Ensure-Directory \"$dir\\original\"",
-        "A-Ensure-Directory \"$dir\\shims\"",
+        "A-Ensure-Directory \"$dir\\app\\original\"",
+        "A-Ensure-Directory \"$dir\\app\\shims\"",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extras\\$app\" | ForEach-Object {",
-        "    Move-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\original\"",
+        "    Move-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\app\\original\"",
         "    $content = Get-Content $_.FullName -Raw",
         "    $content = $content.Replace('${scoop.ps1}', \"$scoopdir\\apps\\scoop\\current\\bin\\scoop.ps1\")",
-        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$scoopdir\\apps\\$app\\current\\scoop-i18n.ps1\")",
-        "    [System.IO.File]::WriteAllText(\"$dir\\shims\\$($_.Name)\", ($content -join [System.Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))",
+        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$scoopdir\\apps\\$app\\current\\app\\scoop-i18n.ps1\")",
+        "    [System.IO.File]::WriteAllText(\"$dir\\app\\shims\\$($_.Name)\", ($content -join [System.Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))",
         "}",
-        "Get-ChildItem \"$dir\\shims\" | ForEach-Object {",
+        "Get-ChildItem \"$dir\\app\\shims\" | ForEach-Object {",
         "    Copy-Item $_.FullName \"$scoopdir\\shims\" -Force",
         "}"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "@{ configFile = $configFile } | ConvertTo-Json -Depth 100 | Out-File \"$dir\\data.json\" -Encoding utf8 -Force",
+        "@{ configFile = $configFile } | ConvertTo-Json -Depth 100 | Out-File \"$dir\\app\\data.json\" -Encoding utf8 -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "Get-ChildItem \"$dir\\original\" | ForEach-Object {",
+        "Get-ChildItem \"$dir\\app\\original\" | ForEach-Object {",
         "    Move-Item $_.FullName \"$scoopdir\\shims\" -Force",
         "}"
     ],

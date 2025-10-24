@@ -32,21 +32,28 @@
             "extract_dir": "frp_0.65.0_windows_arm64"
         }
     },
+    "extract_to": "app",
     "bin": [
         [
-            "frpc.exe",
+            "app\\frpc.exe",
             "frpc",
-            "-c \"$dir\\frpc.toml\""
+            "-c \"$dir\\app\\frpc.toml\""
         ],
         [
-            "frps.exe",
+            "app\\frps.exe",
             "frps",
-            "-c \"$dir\\frps.toml\""
+            "-c \"$dir\\app\\frps.toml\""
         ]
     ],
     "persist": [
-        "frpc.toml",
-        "frps.toml"
+        [
+            "app\\frpc.toml",
+            "frpc.toml"
+        ],
+        [
+            "app\\frps.toml",
+            "frps.toml"
+        ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

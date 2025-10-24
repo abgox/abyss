@@ -13,11 +13,17 @@
             "extract_dir": "ripgrep-15.1.0-x86_64-pc-windows-msvc"
         }
     },
+    "extract_to": "app",
     "env_set": {
-        "RIPGREP_CONFIG_PATH": "$dir\\.ripgreprc"
+        "RIPGREP_CONFIG_PATH": "$dir\\app\\.ripgreprc"
     },
-    "bin": "rg.exe",
-    "persist": ".ripgreprc",
+    "bin": "app\\rg.exe",
+    "persist": [
+        [
+            "app\\.ripgreprc",
+            ".ripgreprc"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",

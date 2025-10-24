@@ -12,16 +12,23 @@
             "hash": "fc354f1e9b9d2984099d4da93b4c569866dfe9bf1f590c1313e85e07f41224d3"
         }
     },
+    "extract_to": "app",
     "innosetup": true,
     "shortcuts": [
         [
-            "Ditto.exe",
+            "app\\Ditto.exe",
             "Ditto"
         ]
     ],
     "persist": [
-        "Ditto.db",
-        "Ditto.Settings"
+        [
+            "app\\Ditto.db",
+            "Ditto.db"
+        ],
+        [
+            "app\\Ditto.Settings",
+            "Ditto.Settings"
+        ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -29,8 +36,8 @@
         "A-Start-Install",
         "# A-New-LinkDirectory @(\"$env:AppData\\Ditto\")",
         "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\Ditto.db\" \"$persist_dir\\Ditto.db\"",
-        "if (!(Test-Path \"$dir\\Ditto.Settings\")) {",
-        "    @('[Ditto]', \"DBPath3=Ditto.db\") | Set-Content \"$dir\\Ditto.Settings\" -Encoding Ascii",
+        "if (!(Test-Path \"$persist_dir\\Ditto.Settings\")) {",
+        "    @('[Ditto]', \"DBPath3=Ditto.db\") | Set-Content \"$persist_dir\\Ditto.Settings\" -Encoding Ascii",
         "}"
     ],
     "post_install": [

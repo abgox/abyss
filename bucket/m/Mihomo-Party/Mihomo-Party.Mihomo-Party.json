@@ -18,13 +18,19 @@
             "hash": "48c261684482a4932a1ea7135d9777c7157a96ca4df6c48cc4ce66e2388293a6"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "Clash Party.exe",
+            "app\\Clash Party.exe",
             "Clash Party"
         ]
     ],
-    "persist": "data",
+    "persist": [
+        [
+            "app\\data",
+            "data"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -33,10 +39,10 @@
         "# 安装完成后自动启动一次，以解决首次启动必须使用管理员权限的问题",
         "$null = Start-Job -ScriptBlock {",
         "    param($dir)",
-        "    While (!(Test-Path \"$dir\\data\")) {",
+        "    While (!(Test-Path \"$dir\\app\\data\")) {",
         "        Start-Sleep -Milliseconds 100",
         "    }",
-        "    Start-Process \"$dir\\Clash Party.exe\"",
+        "    Start-Process \"$dir\\app\\Clash Party.exe\"",
         "} -ArgumentList $dir"
     ],
     "post_install": [

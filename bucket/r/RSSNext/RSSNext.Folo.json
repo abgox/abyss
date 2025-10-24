@@ -12,9 +12,10 @@
             "hash": "2c0914b9b0a6a7d282395d3b1efd6fefb6d30e3112dbe214d27bd7f62fe78a10"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "Folo.exe",
+            "app\\Folo.exe",
             "Folo"
         ]
     ],
@@ -24,7 +25,7 @@
         "A-Start-Install",
         "A-New-LinkDirectory @(\"$env:AppData\\Folo\")",
         "Get-ChildItem \"$dir\\*\" -Exclude 'Folo-*nupkg' | Remove-Item",
-        "Expand-7zipArchive \"$dir\\Folo-*-full.nupkg\" -ExtractDir 'lib\\net45' -Removal"
+        "Expand-7zipArchive \"$dir\\app\\Folo-*-full.nupkg\" \"$dir\\app\" -ExtractDir 'lib\\net45' -Removal"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
