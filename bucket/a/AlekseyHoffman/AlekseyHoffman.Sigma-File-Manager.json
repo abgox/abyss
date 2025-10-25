@@ -1,0 +1,61 @@
+{
+    "version": "1.7.0",
+    "description": "一款免费、开源、快速发展的现代文件管理器 (explorer) 应用程序 | A free, open-source, quickly evolving, modern file manager (explorer) app.",
+    "homepage": "https://sigma-file-manager.vercel.app/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/aleksey-hoffman/sigma-file-manager/blob/main/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v1.7.0/Sigma-File-Manager-1.7.0-Windows-Setup.exe",
+            "hash": "418285100afe0b9a2624740b94f1fa7d483bd24d88327fb99d930aef26805a3f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Sigma file manager.exe",
+            "Sigma file manager"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Sigma file manager\",\"$env:UserProfile\\.sigma-file-manager\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Sigma file manager.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\sigma-file-manager-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v$version/Sigma-File-Manager-$version-Windows-Setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
