@@ -65,7 +65,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (370)|Tag|Description|
+|App (371)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br/><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code><br/><code title="需要你先手动卸载">UninstallByHand</code>|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code>|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -274,6 +274,7 @@
 |[Levminer.Authme](https://authme.levminer.com/ "点击访问仓库或主页")|<a href="./bucket/l/Levminer/Levminer.Authme.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code>|适用于桌面端的简单跨平台双因素 (2FA) 认证器应用程序|
 |[LiErHeXun.Quicker](https://getquicker.net/ "点击访问仓库或主页")|<a href="./bucket/l/LiErHeXun/LiErHeXun.Quicker.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|指尖工具箱, Windows 效率工具|
 |[lin-ycv.PowerToysRun-Everything](https://github.com/lin-ycv/EverythingPowerToys "点击访问仓库或主页")|<a href="./bucket/l/lin-ycv/lin-ycv.PowerToysRun-Everything.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a>|PowerToys Run 中的 Everything 插件|
+|[liule.Snipaste](https://www.snipaste.com/ "点击访问仓库或主页")|<a href="./bucket/l/liule/liule.Snipaste.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Scoop 官方的 persist">Persist</code><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code>|一款简单却功能强大的截图工具，旨在提高工作效率|
 |[LiveKit.LiveKitCLI](https://livekit.io/ "点击访问仓库或主页")|<a href="./bucket/l/LiveKit/LiveKit.LiveKitCLI.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a>|LiveKit 的命令行界面|
 |[LocalSend.LocalSend](https://localsend.org/ "点击访问仓库或主页")|<a href="./bucket/l/LocalSend/LocalSend.LocalSend.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Scoop 官方的 persist">Persist</code>|一款免费的开源应用程序，它允许你在无需互联网连接的情况下，通过本地网络安全地与附近设备共享文件和消息|
 |[lyswhut.lx-music-desktop](https://github.com/lyswhut/lx-music-desktop "点击访问仓库或主页")|<a href="./bucket/l/lyswhut/lyswhut.lx-music-desktop.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|一个基于 electron 的音乐软件|
