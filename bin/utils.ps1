@@ -253,10 +253,7 @@ function A-New-LinkFile {
 
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
-        可忽略，将根据 LinkPaths 自动生成
-        生成规则:
-            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
-            否则，去掉盘符
+        通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
         A-New-LinkFile @("$env:UserProfile\.config\starship.toml")
@@ -267,27 +264,13 @@ function A-New-LinkFile {
     #>
     param (
         [array]$LinkPaths,
-        [System.Collections.Generic.List[string]]$LinkTargets = @()
+        [array]$LinkTargets = @()
     )
 
     if (!$isAdmin -and !$isDevMode) {
         error "$app requires admin permission or developer mode to create SymbolicLink."
         error "Reference: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
         A-Exit
-    }
-
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $LinkPath = $LinkPaths[$i]
-        $LinkTarget = $LinkTargets[$i]
-
-        if (!$LinkTargets[$i]) {
-            $path = $LinkPath.replace($env:UserProfile, $persist_dir)
-            # 如果不在 $env:UserProfile 目录下，则去掉盘符
-            if ($path -notlike "$persist_dir*") {
-                $path = $path -replace '^[a-zA-Z]:', $persist_dir
-            }
-            $LinkTargets.Add($path)
-        }
     }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
@@ -303,10 +286,7 @@ function A-New-LinkDirectory {
 
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
-        可忽略，将根据 LinkPaths 自动生成
-        生成规则:
-            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
-            否则，去掉盘符
+        通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
         A-New-LinkDirectory @("$env:AppData\Code","$env:UserProfile\.vscode")
@@ -317,22 +297,8 @@ function A-New-LinkDirectory {
     #>
     param (
         [array]$LinkPaths,
-        [System.Collections.Generic.List[string]]$LinkTargets = @()
+        [array]$LinkTargets = @()
     )
-
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $LinkPath = $LinkPaths[$i]
-        $LinkTarget = $LinkTargets[$i]
-
-        if (!$LinkTarget) {
-            $path = $LinkPath.replace($env:UserProfile, $persist_dir)
-            # 如果不在 $env:UserProfile 目录下，则去掉盘符
-            if ($path -notlike "$persist_dir*") {
-                $path = $path -replace '^[a-zA-Z]:', $persist_dir
-            }
-            $LinkTargets.Add($path)
-        }
-    }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
 }
@@ -809,7 +775,7 @@ function A-Add-MsixPackage {
 
     A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
 
-    return $PackageFamilyName
+    # return $PackageFamilyName
 }
 
 function A-Remove-MsixPackage {
@@ -1594,6 +1560,11 @@ function A-New-Link {
 
     .PARAMETER linkTargets
         链接指向的目标路径数组
+        通常忽略它，让它根据 LinkPaths 自动生成
+        生成规则:
+            如果 LinkPaths 包含 $dir\app，则替换为 $persist_dir
+            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
+            否则，去掉盘符
 
     .PARAMETER ItemType
         链接类型，可选值为 SymbolicLink/Junction
@@ -1613,65 +1584,62 @@ function A-New-Link {
         [string]$OutFile
     )
 
-    if ($LinkPaths.Count -ne $LinkTargets.Count) {
-        error "Please contact the bucket maintainer!"
-        A-Exit
-    }
-
     $installData = @{
         LinkPaths   = @()
         LinkTargets = @()
     }
 
-    if ($LinkPaths.Count) {
-        for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-            $linkPath = $LinkPaths[$i]
+    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+        $linkPath = $LinkPaths[$i]
+        if ($LinkTargets[$i]) {
             $linkTarget = $LinkTargets[$i]
-            $installData.LinkPaths += $linkPath
-            $installData.LinkTargets += $linkTarget
-            if ((Test-Path -LiteralPath $linkPath) -and !(Get-Item -LiteralPath $linkPath -ErrorAction SilentlyContinue).LinkType) {
-                if (!(Test-Path -LiteralPath $linkTarget)) {
-                    A-Ensure-Directory (Split-Path $linkTarget -Parent)
-                    Write-Host "Copying $linkPath => $linkTarget"
-                    try {
-                        Copy-Item -LiteralPath $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
-                    }
-                    catch {
-                        Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-                        error $_.Exception.Message
-                        error "Please contact the bucket maintainer!"
-                        A-Exit
-                    }
+        }
+        else {
+            if ($LinkPath -like "$dir\app\*") {
+                # abyss 中的应用清单会额外添加一个 app 目录，因此需要替换 $dir\app
+                $linkTarget = $LinkPath.replace("$dir\app", $persist_dir)
+            }
+            else {
+                $linkTarget = $LinkPath.replace($env:UserProfile, $persist_dir)
+                # 如果不在 $env:UserProfile 目录下，则去掉盘符
+                if ($linkTarget -notlike "$persist_dir*") {
+                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
                 }
+            }
+        }
+        $installData.LinkPaths += $linkPath
+        $installData.LinkTargets += $linkTarget
+        if ((Test-Path -LiteralPath $linkPath) -and !(Get-Item -LiteralPath $linkPath -ErrorAction SilentlyContinue).LinkType) {
+            if (!(Test-Path -LiteralPath $linkTarget)) {
+                A-Ensure-Directory (Split-Path $linkTarget -Parent)
+                Write-Host "Copying $linkPath => $linkTarget"
                 try {
-                    Write-Host "Removing $linkPath"
-                    Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
+                    Copy-Item -LiteralPath $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
                 }
                 catch {
+                    Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
                     error $_.Exception.Message
                     error "Please contact the bucket maintainer!"
                     A-Exit
                 }
             }
-            A-Ensure-Directory $linkTarget
-
-            if ((Get-Service -Name cexecsvc -ErrorAction Ignore)) {
-                # test if this script is being executed inside a docker container
-                if ($ItemType -eq "Junction") {
-                    cmd.exe /d /c "mklink /j `"$linkPath`" `"$linkTarget`""
-                }
-                else {
-                    # SymbolicLink
-                    cmd.exe /d /c "mklink `"$linkPath`" `"$linkTarget`""
-                }
+            try {
+                Write-Host "Removing $linkPath"
+                Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
             }
-            else {
-                New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+            catch {
+                error $_.Exception.Message
+                error "Please contact the bucket maintainer!"
+                A-Exit
             }
-            Write-Host "Linking $linkPath => $linkTarget"
         }
-        $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+        A-Ensure-Directory $linkTarget
+
+        New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+
+        Write-Host "Linking $linkPath => $linkTarget"
     }
+    $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 }
 
 function A-Add-AppxPackage {
