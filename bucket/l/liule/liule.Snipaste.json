@@ -1,0 +1,67 @@
+{
+    "version": "2.10.8",
+    "description": "一款简单却功能强大的截图工具，旨在提高工作效率 | A simple but powerful snipping tool designed to boost productivity.",
+    "homepage": "https://www.snipaste.com/",
+    "license": {
+        "identifier": "Freemium",
+        "url": "https://docs.snipaste.com/pro"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.snipaste.com/archives/Snipaste-2.10.8-x64.zip",
+            "hash": "sha1:92c0de0761e62aeba465dd4bf5c33f7f014e7611"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Snipaste.exe",
+            "Snipaste"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\history",
+            "history"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\config.ini\" \"$persist_dir\\config.ini\"",
+        "# config.ini 只能使用 A-New-LinkFile，使用 persist 字段定义会被 Snipaste 覆盖",
+        "A-New-LinkFile @(\"$dir\\app\\config.ini\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.snipaste.com/versions",
+        "jsonpath": "$.win_desktop_version"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://download.snipaste.com/archives/Snipaste-$version-x64.zip"
+            }
+        },
+        "hash": {
+            "url": "https://dl.snipaste.com/sha-1.txt"
+        }
+    }
+}
