@@ -1,0 +1,67 @@
+{
+    "version": "0.8.109",
+    "description": "一款免费的开源应用程序，可模拟初代微软 Xbox 游戏机，让人们能够在 Windows、macOS 和 Linux 系统上玩初代 Xbox 游戏 | A free and open-source application that emulates the original Microsoft Xbox game console, enabling people to play their original Xbox games on Windows, macOS, and Linux systems.",
+    "homepage": "https://xemu.app/",
+    "license": {
+        "identifier": "GPL-2.0",
+        "url": "https://github.com/xemu-project/xemu/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xemu-project/xemu/releases/download/v0.8.109/xemu-win-x86_64-release.zip",
+            "hash": "52bfc502cfbc3b990a77f3699f1d457ccf6612dd12d6fa168527c49665b57ab6"
+        },
+        "arm64": {
+            "url": "https://github.com/xemu-project/xemu/releases/download/v0.8.109/xemu-win-aarch64-release.zip",
+            "hash": "981012fe393c9beaa3f19b63d57eaed15fea4653cbe90ebfd6c82c82ee6a5a1a"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\xemu.exe",
+    "shortcuts": [
+        [
+            "app\\xemu.exe",
+            "xemu"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\xemu\\xemu\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/xemu-project/xemu/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xemu-project/xemu/releases/download/v$version/xemu-win-x86_64-release.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/xemu-project/xemu/releases/download/v$version/xemu-win-aarch64-release.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
