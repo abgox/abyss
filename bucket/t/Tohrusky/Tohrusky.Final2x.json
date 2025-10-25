@@ -1,0 +1,67 @@
+{
+    "version": "4.0.0",
+    "description": "一款跨平台图像超分辨率工具 | A cross-platform image super-resolution tool",
+    "homepage": "https://github.com/EutropicAI/Final2x",
+    "license": {
+        "identifier": "BSD-3-Clause",
+        "url": "https://github.com/EutropicAI/Final2x/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/EutropicAI/Final2x/releases/download/v4.0.0/Final2x-windows-x64-unpacked.7z",
+            "hash": "9b724efbd37611c2f7ead1278a0d450d4413b831851d0a1fe7d9f7017384571e"
+        },
+        "arm64": {
+            "url": "https://github.com/EutropicAI/Final2x/releases/download/v4.0.0/Final2x-windows-arm64-unpacked.7z",
+            "hash": "9c54011cd4ad5f2baca2ae952860b055e514b9e40923efc7971b7ffa66511366"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\final2x.exe",
+    "shortcuts": [
+        [
+            "app\\final2x.exe",
+            "Final2x"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Final2x\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/EutropicAI/Final2x/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/EutropicAI/Final2x/releases/download/v$version/Final2x-windows-x64-unpacked.7z"
+            },
+            "arm64": {
+                "url": "https://github.com/EutropicAI/Final2x/releases/download/v$version/Final2x-windows-arm64-unpacked.7z"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
