@@ -1,0 +1,62 @@
+{
+    "version": "3.4.1",
+    "description": "一个基于 Web 技术构建的终端 | A terminal built on web technologies.",
+    "homepage": "https://hyper.is/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/vercel/hyper/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/vercel/hyper/releases/download/v3.4.1/Hyper-Setup-3.4.1.exe",
+            "hash": "917fb88da238d3e2cbca9173a2ba1c9b4d298e94b283b480489e327051ee7b4f"
+        }
+    },
+    "bin": "app\\Hyper.exe",
+    "shortcuts": [
+        [
+            "app\\Hyper.exe",
+            "Hyper"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Hyper\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Hyper.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\hyper-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/vercel/hyper/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/vercel/hyper/releases/download/v$version/Hyper-Setup-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
