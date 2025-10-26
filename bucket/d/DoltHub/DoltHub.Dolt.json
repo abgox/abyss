@@ -1,0 +1,55 @@
+{
+    "version": "1.76.2",
+    "description": "一个 SQL 数据库，您可以像 Git 存储库一样对其进行分叉、克隆、分支、合并、推送和拉取 | A SQL database that you can fork, clone, branch, merge, push and pull just like a Git repository.",
+    "homepage": "https://www.dolthub.com/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/dolthub/dolt/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dolthub/dolt/releases/download/v1.76.2/dolt-windows-amd64.zip",
+            "hash": "645251823177c4fa4365c2d54c20942e014ec4ffb082ba57d367ecc6758d7c68",
+            "extract_dir": "dolt-windows-amd64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\bin\\dolt.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.dolt\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/dolthub/dolt/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dolthub/dolt/releases/download/v$version/dolt-windows-amd64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
