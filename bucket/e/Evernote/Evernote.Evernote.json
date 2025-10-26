@@ -1,0 +1,77 @@
+{
+    "version": "10.159.4",
+    "description": "在一处记住所有内容，并通过笔记、任务和日程处理一切 | Remember everything and tackle any project with your notes, tasks, and schedule all in one place.",
+    "homepage": "https://evernote.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://evernote.com/legal/terms-of-service"
+    },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\Programs\\Evernote",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "notes-cn": [
+        "安装目录: $env:LocalAppData\\Programs\\Evernote",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://win.desktop.evernote.com/builds/Evernote-10.159.4-win-ddl-stage-20251022090921-62d67d7f13bc4b004ec126990fa2a613c0a7a2b2-setup.exe",
+            "hash": "e33549d30437ad2b7f4df04b689dcf1f8760dafdd7088809ea123d5886e146b0"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:LocalAppData\\Programs\\Evernote\\Evernote.exe",
+            "Evernote"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Evernote\")",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\Programs\\Evernote\\Uninstall Evernote.exe\" -ArgumentList @('/CurrentUser','/S')"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process \"$env:LocalAppData\\Programs\\Evernote\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\evernote-client-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Evernote.Evernote' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
