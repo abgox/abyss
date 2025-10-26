@@ -1,0 +1,63 @@
+{
+    "version": "2.7.2",
+    "description": "一个围绕模糊查找工具 fzf 的 PowerShell 包装器 | A PowerShell wrapper around the fuzzy finder fzf",
+    "homepage": "https://github.com/kelleyma49/PSFzf",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/kelleyma49/PSFzf/blob/master/LICENSE"
+    },
+    "suggest": {
+        "fzf": [
+            "fzf",
+            "abyss/junegunn.fzf"
+        ]
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/psfzf.2.7.2.nupkg",
+            "hash": "c375eea95f4ad1ba993917bd3fc633a6b599077b381fe9369e26715aae3e9142"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/psfzf.2.7.2.nupkg",
+            "hash": "c375eea95f4ad1ba993917bd3fc633a6b599077b381fe9369e26715aae3e9142"
+        }
+    },
+    "psmodule": {
+        "name": "PSFzf"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/psfzf",
+        "regex": "<h2>([\\d\\.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/psfzf.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/psfzf.$version.nupkg"
+            }
+        }
+    }
+}
