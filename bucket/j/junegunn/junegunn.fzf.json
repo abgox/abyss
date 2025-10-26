@@ -1,0 +1,59 @@
+{
+    "version": "0.66.1",
+    "description": "一款通用的命令行模糊查找工具 | A general-purpose command-line fuzzy finder.",
+    "homepage": "https://junegunn.github.io/fzf/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/junegunn/fzf/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/junegunn/fzf/releases/download/v0.66.1/fzf-0.66.1-windows_amd64.zip",
+            "hash": "f88dee72cff13dbdfb41a049b6fb92bcf71eecc4a3504494e8f82607fc96cbe7"
+        },
+        "arm64": {
+            "url": "https://github.com/junegunn/fzf/releases/download/v0.66.1/fzf-0.66.1-windows_arm64.zip",
+            "hash": "eb937aa0f9a57f7e11c90c31fe48b30988c2b80c6cf7edc173168949534e0143"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\fzf.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/junegunn/fzf/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/junegunn/fzf/releases/download/v$version/fzf-$version-windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/junegunn/fzf/releases/download/v$version/fzf-$version-windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
