@@ -4,63 +4,30 @@
 
 ---
 
-- **`App`** : App package name. `Publisher.PackageIdentifier`
+> [!Tip]
+>
+> - Here are some badges for [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control).
+> - Click on the badge to view the manifest json file.
 
-  - Click to view the repository or homepage.
-  - Sort by first letter: 0-9a-z
+- <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
 
-- **`Tag`**
+  - It is available and can be installed or updated normally.
 
-  - [Data Persistence](https://abyss.abgox.com/features/data-persistence)
+- <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
 
-    - `Persist`: Define the `persist` field in the manifest. It's Scoop's official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data).
-    - `Link`: Use `New-Item -ItemType Junction` or `New-Item -ItemType SymbolicLink`.
+  - It has been deprecated, and cannot be installed.
+  - If the installation is completed before `deprecated`, it cannot be updated via Scoop.
 
-  - [Manifest State](https://abyss.abgox.com/features/manifest-state-control)
+- <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
 
-    > Click on the badge to view the manifest json file.
+  - It is pending, and cannot be installed.
+  - If the installation is completed before `pending`, it cannot be updated via Scoop.
 
-    - <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
+- <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
 
-      - It is available and can be installed or updated normally.
-
-    - <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
-
-      - It has been deprecated, and cannot be installed.
-      - If the installation is completed before `deprecated`, it cannot be updated via Scoop.
-
-    - <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
-
-      - It is pending, and cannot be installed.
-      - If the installation is completed before `pending`, it cannot be updated via Scoop.
-
-    - <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
-
-      - It has been renamed and will fail to install or update.
-      - The new name will be displayed in the error message, and you should use the new name for installation
-      - If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.
-
-  - Notes
-
-    - `RequireAdmin`: Requires administrator permission to install, update, or uninstall.
-    - `RequireAdminOrDevMode`: Requires admin permission or [Developer Mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging).
-      - Some apps store data as files instead of directories, requiring `SymbolicLink` to link.
-    - `DenyUpdate`: Deny update, only can uninstall and install again.
-    - `UninstallByHand`: Requires you to uninstall it manually.
-      - The uninstallation of some apps cannot be done silently.
-      - You need to uninstall it manually. (use the system's uninstall function or other methods)
-      - The uninstallation operation in Scoop can only be completed after the manual uninstallation is finished.
-    - `NoUpdate` : `json.autoupdate` are not configured, and it cannot automatically update the manifest with [Github Actions](./.github/workflows/excavator.yml).
-
-  - App Types
-
-    - `Font` : A font.
-    - `PSModule` : A [PowerShell Module](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules).
-    - `Msix`: An app packaged by [Msix](https://learn.microsoft.com/windows/msix/overview).
-      - The installation directory is not in Scoop.
-      - Scoop only manages the data that may exist and installation, uninstallation, and update.
-
-- **`Description`** : App Description.
+  - It has been renamed and will fail to install or update.
+  - The new name will be displayed in the error message, and you should use the new name for installation
+  - If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.
 
 ---
 

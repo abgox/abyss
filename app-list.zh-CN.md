@@ -4,63 +4,30 @@
 
 ---
 
-- **`App`**：应用包的名称 `Publisher.PackageIdentifier`
+> [!Tip]
+>
+> - 以下是一些 [清单状态控制](https://abyss.abgox.com/features/manifest-state-control) 的徽章
+> - 点击徽章可查看对应的 json 文件
 
-  - 点击查看仓库或官网
-  - 按照首字母(数字)排序：0-9a-z
+- <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
 
-- **`Tag`**：标签
+  - 它是可用的，可以正常安装或更新
 
-  - [数据持久化](https://abyss.abgox.com/features/data-persistence)
+- <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
 
-    - `Persist`: 在清单中定义 `persist` 字段，这是 Scoop 官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data)
-    - `Link`: 使用 `New-Item -ItemType Junction` 或 `New-Item -ItemType SymbolicLink`
+  - 它已被弃用，无法安装
+  - 如果在 `deprecated` 之前完成安装，则无法通过 Scoop 更新
 
-  - [清单状态](https://abyss.abgox.com/features/manifest-state-control)
+- <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
 
-    > 点击徽章可查看对应的 json 文件
+  - 它是待定的，无法安装
+  - 如果在 `pending` 之前完成安装，则无法通过 Scoop 更新
 
-    - <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
+- <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
 
-      - 它是可用的，可以正常安装或更新
-
-    - <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
-
-      - 它已被弃用，无法安装
-      - 如果在 `deprecated` 之前完成安装，则无法通过 Scoop 更新
-
-    - <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
-
-      - 它是待定的，无法安装
-      - 如果在 `pending` 之前完成安装，则无法通过 Scoop 更新
-
-    - <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
-
-      - 它已被重命名，安装或更新都会失败
-      - 在错误信息中会显示新的名称，你应该使用新的名称进行安装
-      - 如果存在 [Persist](https://abyss.abgox.com/features/data-persistence#persist) 或 [Link](https://abyss.abgox.com/features/data-persistence#link) 的数据，会自动迁移
-
-  - 注意
-
-    - `RequireAdmin`：在安装、更新或卸载时需要管理员权限
-    - `RequireAdminOrDevMode`: 需要管理员权限或 [开发者模式](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging)
-      - 部分应用的数据通过文件而不是目录进行存储，需要使用 `SymbolicLink` 进行链接
-    - `DenyUpdate`: 使用 Scoop 更新会被拒绝，只能先卸载再安装
-    - `UninstallByHand`: 需要你先手动卸载
-      - 部分应用的卸载无法静默化
-      - 需要你手动卸载它(系统中的卸载或者其他卸载方式)
-      - 只有卸载完成后，才能完成 Scoop 中的卸载操作
-    - `NoUpdate`：没有配置 `json.autoupdate`，无法通过 [Github Actions](./.github/workflows/excavator.yml) 自动更新清单
-
-  - 应用类型
-
-    - `Font`：字体
-    - `PSModule`：一个 [PowerShell 模块](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_modules)
-    - `Msix`：通过 [Msix](https://learn.microsoft.com/windows/msix/overview) 打包的应用
-      - 它的安装目录不在 Scoop 中
-      - Scoop 只管理数据(如果存在)，应用的安装、更新以及卸载操作。
-
-- **`Description`**：应用描述
+  - 它已被重命名，安装或更新都会失败
+  - 在错误信息中会显示新的名称，你应该使用新的名称进行安装
+  - 如果存在 [Persist](https://abyss.abgox.com/features/data-persistence#persist) 或 [Link](https://abyss.abgox.com/features/data-persistence#link) 的数据，会自动迁移
 
 ---
 
