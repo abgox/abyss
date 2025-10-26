@@ -3344,6 +3344,53 @@
                         ]
                     },
                     {
+                        "$comment": "限制 depends 和 suggest 的写法",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": [
+                                        "depends"
+                                    ]
+                                },
+                                "then": {
+                                    "properties": {
+                                        "depends": {
+                                            "pattern": "^abyss/",
+                                            "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx",
+                                            "items": {
+                                                "pattern": "^abyss/",
+                                                "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": [
+                                        "suggest"
+                                    ]
+                                },
+                                "then": {
+                                    "properties": {
+                                        "suggest": {
+                                            "patternProperties": {
+                                                "^.+$": {
+                                                    "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
+                                                    "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx",
+                                                    "items": {
+                                                        "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
+                                                        "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
                         "$comment": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
                         "allOf": [
                             {
