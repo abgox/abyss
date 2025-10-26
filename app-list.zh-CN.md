@@ -65,7 +65,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (373)|Tag|Description|
+|App (374)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="在安装、更新或卸载时需要管理员权限">RequireAdmin</code><br/><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code><br/><code title="需要你先手动卸载">UninstallByHand</code>|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="需要管理员权限或开发者模式去创建 SymbolicLink">RequireAdminOrDevMode</code>|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -359,6 +359,7 @@
 |[Ruihu.Apifox](https://apifox.com/ "点击访问仓库或主页")|<a href="./bucket/r/Ruihu/Ruihu.Apifox.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|API 设计、开发、测试一体化协作平台|
 |[ruslanlap.PowerToysRun-Pomodoro](https://github.com/ruslanlap/PowerToysRun-Pomodoro "点击访问仓库或主页")|<a href="./bucket/r/ruslanlap/ruslanlap.PowerToysRun-Pomodoro.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a>|一个 PowerToys Run 插件，用于管理你的生产力会话|
 |[RustDesk.RustDesk](https://github.com/rustdesk/rustdesk "点击访问仓库或主页")|<a href="./bucket/r/RustDesk/RustDesk.RustDesk.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|一个安全的远程桌面访问工具，用 Rust 语言编写|
+|[SamsidParty.TopNotify](https://www.samsidparty.com/software/topnotify "点击访问仓库或主页")|<a href="./bucket/s/SamsidParty/SamsidParty.TopNotify.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|适用于 Windows 的终极通知自定义工具|
 |[Schniz.fnm](https://github.com/Schniz/fnm "点击访问仓库或主页")|<a href="./bucket/s/Schniz/Schniz.fnm.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|快速、简单的 Node.js 版本管理器，采用 Rust 内建|
 |[Seelen.SeelenUI](https://github.com/eythaann/Seelen-UI "点击访问仓库或主页")|<a href="./bucket/s/Seelen/Seelen.SeelenUI.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code><br/><code title="通过 Msix 安装，安装目录不在 Scoop 中，Scoop 只管理数据(如果存在)、安装、卸载、更新">Msix</code>|适用于 Windows 的完全可定制的桌面环境|
 |[sharkdp.bat](https://github.com/sharkdp/bat "点击访问仓库或主页")|<a href="./bucket/s/sharkdp/sharkdp.bat.json" title="它是可用的，可以正常安装或更新"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" /></a><br/><code title="使用 Link 进行数据持久化">Link</code>|一个具有语法高亮和 Git 集成功能的 cat(1) 克隆版本|
