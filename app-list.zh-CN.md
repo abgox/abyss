@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (375)|Tag|Description|
+|App (376)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -144,6 +144,7 @@
 |[DenoLand.Deno](https://deno.com/ "点击访问仓库或主页")|<a href="./bucket/d/DenoLand/DenoLand.Deno.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个适用于 JavaScript 和 TypeScript 的现代运行时环境|
 |[derceg.ExplorerPlusPlus](https://explorerplusplus.com/ "点击访问仓库或主页")|<a href="./bucket/d/derceg/derceg.ExplorerPlusPlus.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款适用于 Windows 系统的轻量且快速的文件管理器|
 |[DevToys-app.DevToys](https://devtoys.app/ "点击访问仓库或主页")|<a href="./bucket/d/DevToys-app/DevToys-app.DevToys.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开发人员的瑞士军刀|
+|[digitalguy99.syntax-highlighting](https://github.com/digitalguy99/pwsh-syntax-highlighting "点击访问仓库或主页")|<a href="./bucket/d/digitalguy99/digitalguy99.syntax-highlighting.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|PowerShell 的语法高亮显示|
 |[DigitalScholar.Zotero](https://www.zotero.org/ "点击访问仓库或主页")|<a href="./bucket/d/DigitalScholar/DigitalScholar.Zotero.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费，易于使用的工具，可帮助您收集，组织，注释，引用和共享研究|
 |[dinoDanic.diny](https://diny-cli.vercel.app/ "点击访问仓库或主页")|<a href="./bucket/d/dinoDanic/dinoDanic.diny.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|根据 git diff 生成有意义的提交信息|
 |[Ditto.Ditto](https://sabrogden.github.io/Ditto/ "点击访问仓库或主页")|<a href="./bucket/d/Ditto/Ditto.Ditto.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个 Windows 剪贴板的扩展工具|
