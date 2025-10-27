@@ -1,0 +1,60 @@
+{
+    "version": "5.0.4",
+    "description": "给图片添加水印, 防止被恶意使用 | Your pictures, your signature.",
+    "homepage": "https://www.picguard.app/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/picguard/picguard/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/picguard/picguard/releases/download/v5.0.4/picguard-pro-5.0.4-windows-setup-x64.exe",
+            "hash": "d3ba079ca95beabd6aa0a1539f782bd08dc42259a054179e85b26b45d08f82ed"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\PicGuardPro.exe",
+            "PicGuard Pro"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Insco\\PicGuardPro\")",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/picguard/picguard/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/picguard/picguard/releases/download/v$version/picguard-pro-$version-windows-setup-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
