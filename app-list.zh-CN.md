@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (385)|Tag|Description|
+|App (386)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -209,6 +209,7 @@
 |[iDvel.rime-ice](https://github.com/iDvel/rime-ice "点击访问仓库或主页")|<a href="./bucket/i/iDvel/iDvel.rime-ice.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 雾凇拼音输入方案|
 |[ImputNet.Helium](https://helium.computer/ "点击访问仓库或主页")|<a href="./bucket/i/ImputNet/ImputNet.Helium.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|这款基于 Chromium 的网页浏览器是为用户精心打造的。它默认具备出色的隐私保护功能，拥有公正的广告拦截能力，没有冗余内容，也不会带来干扰|
 |[InkTimeRecord.TTime](https://ttime.timerecord.cn/ "点击访问仓库或主页")|<a href="./bucket/i/InkTimeRecord/InkTimeRecord.TTime.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款简洁、高效、高颜值的输入、截图、划词翻译软件|
+|[Insco.FaFaRunner](https://www.fafarunner.com/ "点击访问仓库或主页")|<a href="./bucket/i/Insco/Insco.FaFaRunner.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|发发跑酷 - 享受流畅的游戏体验、惊艳的画面和无尽的乐趣|
 |[Insco.PicGuard](https://www.picguard.app/ "点击访问仓库或主页")|<a href="./bucket/i/Insco/Insco.PicGuard.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|给图片添加水印, 防止被恶意使用|
 |[Insco.PicGuard.Pro](https://www.picguard.app/ "点击访问仓库或主页")|<a href="./bucket/i/Insco/Insco.PicGuard.Pro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|给图片添加水印, 防止被恶意使用|
 |[Insomnia.Insomnia](https://insomnia.rest/ "点击访问仓库或主页")|<a href="./bucket/i/Insomnia/Insomnia.Insomnia.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的跨平台 API 客户端，适用于 GraphQL、REST、WebSockets、SSE 和 gRPC，具有 Cloud、Local 和 Git 存储|
