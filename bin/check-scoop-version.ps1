@@ -3,7 +3,7 @@
 $parameters = @{
     'Uri'                      = "https://api.github.com/repos/scoopinstaller/scoop/releases/latest"
     'ConnectionTimeoutSeconds' = 10
-    'OperationTimeoutSeconds'  = 15
+    'OperationTimeoutSeconds'  = 30
 }
 if ($env:GITHUB_TOKEN) {
     $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })

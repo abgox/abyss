@@ -140,7 +140,7 @@ function A-Copy-Item {
 
     if (-not (Test-Path -LiteralPath $Path)) {
         error "Source path does not exist: $Path"
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -170,7 +170,7 @@ function A-Copy-Item {
         }
         catch {
             error $_.Exception.Message
-            error "Please contact the bucket maintainer!"
+            A-Show-IssueCreationPrompt
             A-Exit
         }
     }
@@ -221,7 +221,7 @@ function A-New-PersistFile {
             }
             catch {
                 error $_.Exception.Message
-                error "Please contact the bucket maintainer!"
+                A-Show-IssueCreationPrompt
                 A-Exit
             }
         }
@@ -444,7 +444,7 @@ function A-Stop-Process {
                     continue
                 }
                 error $_.Exception.Message
-                error "Please contact the bucket maintainer!"
+                A-Show-IssueCreationPrompt
                 A-Exit
             }
         }
@@ -463,7 +463,7 @@ function A-Stop-Process {
                     continue
                 }
                 error $_.Exception.Message
-                error "Please contact the bucket maintainer!"
+                A-Show-IssueCreationPrompt
                 A-Exit
             }
         }
@@ -493,7 +493,7 @@ function A-Stop-Service {
     }
     catch {
         error $_.Exception.Message
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -516,7 +516,7 @@ function A-Remove-Service {
         }
         catch {
             error $_.Exception.Message
-            error "Please contact the bucket maintainer!"
+            A-Show-IssueCreationPrompt
             A-Exit
         }
     }
@@ -589,13 +589,13 @@ function A-Install-Exe {
     }
 
     if (!$Installer) {
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -618,6 +618,7 @@ function A-Install-Exe {
     }
     catch {
         error $_.Exception.Message
+        A-Show-IssueCreationPrompt
         $process | Stop-Process -Force -ErrorAction SilentlyContinue
         A-Exit
     }
@@ -626,7 +627,7 @@ function A-Install-Exe {
 
     if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
         error "'$Uninstaller' not found."
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -722,6 +723,7 @@ function A-Uninstall-Exe {
     }
     catch {
         error $_.Exception.Message
+        A-Show-IssueCreationPrompt
         $process | Stop-Process -Force -ErrorAction SilentlyContinue
         A-Exit
     }
@@ -769,7 +771,7 @@ function A-Add-MsixPackage {
     }
 
     if (!$path) {
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -921,7 +923,7 @@ function A-Add-PowerToysRunPlugin {
     }
     catch {
         error $_.Exception.Message
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 }
@@ -947,7 +949,7 @@ function A-Remove-PowerToysRunPlugin {
     }
     catch {
         error $_.Exception.Message
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 }
@@ -1245,8 +1247,8 @@ function A-Get-InstallerInfoFromWinget {
     try {
         $parameters = @{
             Uri                      = $url
-            ConnectionTimeoutSeconds = 10
-            OperationTimeoutSeconds  = 15
+            ConnectionTimeoutSeconds = 15
+            OperationTimeoutSeconds  = 120
             UseBasicParsing          = $true
             ErrorAction              = 'Stop'
         }
@@ -1300,8 +1302,8 @@ function A-Get-InstallerInfoFromWinget {
     try {
         $parameters = @{
             Uri                      = $url
-            ConnectionTimeoutSeconds = 10
-            OperationTimeoutSeconds  = 15
+            ConnectionTimeoutSeconds = 15
+            OperationTimeoutSeconds  = 120
             UseBasicParsing          = $true
             ErrorAction              = 'Stop'
         }
@@ -1545,7 +1547,7 @@ function A-Start-PostUninstall {
 
 #endregion
 
-#region 以下的函数不应该被直接使用。
+#region 以下的函数不应该在外部调用
 function A-New-Link {
     <#
     .SYNOPSIS
@@ -1619,7 +1621,7 @@ function A-New-Link {
                 catch {
                     Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
                     error $_.Exception.Message
-                    error "Please contact the bucket maintainer!"
+                    A-Show-IssueCreationPrompt
                     A-Exit
                 }
             }
@@ -1629,11 +1631,12 @@ function A-New-Link {
             }
             catch {
                 error $_.Exception.Message
-                error "Please contact the bucket maintainer!"
+                A-Show-IssueCreationPrompt
                 A-Exit
             }
         }
         A-Ensure-Directory $linkTarget
+        A-Ensure-Directory (Split-Path $linkPath -Parent)
 
         New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
 
@@ -1670,7 +1673,7 @@ function A-Add-AppxPackage {
     }
     catch {
         error $_.Exception.Message
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -1729,6 +1732,12 @@ function A-Get-AbsolutePath {
     }
 
     return Join-Path $dir $path
+}
+
+function A-Show-IssueCreationPrompt {
+    # Write-Host "Please contact the bucket maintainer!" -ForegroundColor Red -NoNewline
+    Write-Host "Something went wrong here." -ForegroundColor Red -NoNewline
+    Write-Host "`nPlease try again or create a new issue by using the following link and paste your console output:`nhttps://github.com/abgox/abyss/issues/new?template=bug-report.yml" -ForegroundColor Red
 }
 #endregion
 
