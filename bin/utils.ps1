@@ -1364,8 +1364,8 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    # 写入到 bin\scoop-auto-check-update-temp-data.jsonc，用于后续读取
-    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
+    # 写入到 temp-autoupdate.json，用于后续读取
+    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\..\temp-autoupdate.json" -Force -Encoding utf8
 
     $installerInfo
 }
