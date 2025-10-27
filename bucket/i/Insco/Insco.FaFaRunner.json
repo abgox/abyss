@@ -1,0 +1,58 @@
+{
+    "version": "2.5.6",
+    "description": "发发跑酷 - 享受流畅的游戏体验、惊艳的画面和无尽的乐趣 | FaFa Runner - Enjoy smooth gameplay, stunning graphics, and endless fun.",
+    "homepage": "https://www.fafarunner.com/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/fafarunner/fafarunner/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/fafarunner/fafarunner/releases/download/v2.5.6/fafarunner-2.5.6-windows-setup-x64.exe",
+            "hash": "1165d519b452d2cf8dc98c7f04eac9918dfa9e5ce395c20cc47083a0bdb0e687"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\FaFaRunner.exe",
+            "FaFa Runner"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/fafarunner/fafarunner/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/fafarunner/fafarunner/releases/download/v$version/fafarunner-$version-windows-setup-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
