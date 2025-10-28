@@ -34,10 +34,12 @@
   <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
 </p>
 
-> [!Warning]
+> [!Tip]
 >
-> - `abyss` 中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
-> - 它们包含 Scoop 官方规范之外的 [特性](#特性)，其他 bucket 不应该合并它们，以避免冲突和错误
+> - [abyss](https://abyss.abgox.com) 是一个非常特别的 Scoop bucket 仓库
+> - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
+> - 其中的应用清单是基于 [bin/utils.ps1](./bin/utils.ps1) 编写的
+> - 它们包含一些 [特性](#特性)，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ### 特性
 

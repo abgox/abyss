@@ -34,10 +34,12 @@
   <strong>Star ⭐️ or <a href="https://abgox.com/donate">Donate 💰</a> if you like it!</strong>
 </p>
 
-> [!Warning]
+> [!Tip]
 >
-> - Manifests in `abyss` are based on [bin/utils.ps1](./bin/utils.ps1).
-> - They contain some [features](#features) outside of the official Scoop specification, and other buckets should not merge them to avoid conflicts and errors.
+> - [abyss](https://abyss.abgox.com) is a very special Scoop bucket repository.
+> - It aims to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
+> - Manifests are based on [bin/utils.ps1](./bin/utils.ps1).
+> - They contain some [features](#features), and other buckets should not merge them to avoid conflicts and errors.
 
 ### Features
 
