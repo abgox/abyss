@@ -1,0 +1,131 @@
+{
+    "version": "9.1.1882",
+    "description": "一个高度可配置的文本编辑器，可高效创建和更改任何类型的文本 | A highly configurable text editor built to make creating and changing any kind of text very efficient.",
+    "homepage": "https://www.vim.org/",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/vim/vim-win32-installer/releases/download/v9.1.1882/gvim_9.1.1882_x64.zip",
+            "hash": "d9c1533ec80b373405b8f07193b460e4f19f836594b8d70e9f3bc9471d5e8a95"
+        },
+        "arm64": {
+            "url": "https://github.com/vim/vim-win32-installer/releases/download/v9.1.1882/gvim_9.1.1882_arm64.zip",
+            "hash": "23907fca7493f2b05a6c0bb88e8df7b1002dc63e5774c6c3f72c45b6a7e3c281"
+        }
+    },
+    "extract_dir": "vim/vim91",
+    "extract_to": "app",
+    "bin": [
+        "app\\vim.exe",
+        [
+            "app\\vim.exe",
+            "vi"
+        ],
+        [
+            "app\\vim.exe",
+            "ex",
+            "-e"
+        ],
+        [
+            "app\\vim.exe",
+            "view",
+            "-R"
+        ],
+        [
+            "app\\vim.exe",
+            "rvim",
+            "-Z"
+        ],
+        [
+            "app\\vim.exe",
+            "rview",
+            "-RZ"
+        ],
+        [
+            "app\\vim.exe",
+            "vimdiff",
+            "-d"
+        ],
+        "app\\gvim.exe",
+        [
+            "app\\gvim.exe",
+            "gview",
+            "-R"
+        ],
+        [
+            "app\\gvim.exe",
+            "evim",
+            "-y"
+        ],
+        [
+            "app\\gvim.exe",
+            "eview",
+            "-Ry"
+        ],
+        [
+            "app\\gvim.exe",
+            "rgvim",
+            "-Z"
+        ],
+        [
+            "app\\gvim.exe",
+            "rgview",
+            "-RZ"
+        ],
+        [
+            "app\\gvim.exe",
+            "gvimdiff",
+            "-d"
+        ],
+        "app\\xxd.exe"
+    ],
+    "shortcuts": [
+        [
+            "app\\gvim.exe",
+            "gVim"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\vimfiles\")",
+        "A-New-PersistFile \"$persist_dir\\_vimrc\"",
+        "A-New-LinkFile @(\"$env:UserProfile\\_vimrc\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/vim/vim-win32-installer/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/vim/vim-win32-installer/releases/download/v$version/gvim_$version_x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/vim/vim-win32-installer/releases/download/v$version/gvim_$version_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "extract_dir": "vim\\vim$majorVersion$minorVersion"
+    }
+}
