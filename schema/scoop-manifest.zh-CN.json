@@ -3412,6 +3412,71 @@
                         ]
                     },
                     {
+                        "$comment": "如果 checkver 通过 script 字段使用了 A-Get-InstallerInfoFromWinget",
+                        "if": {
+                            "required": [
+                                "checkver"
+                            ],
+                            "properties": {
+                                "checkver": {
+                                    "required": [
+                                        "script"
+                                    ],
+                                    "properties": {
+                                        "script": {
+                                            "items": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "autoupdate": {
+                                    "properties": {
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "required": [
+                                                        "hash"
+                                                    ],
+                                                    "properties": {
+                                                        "hash": {
+                                                            "properties": {
+                                                                "url": {
+                                                                    "const": "temp-autoupdate.json",
+                                                                    "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 temp-autoupdate.json"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "checkver": {
+                                "properties": {
+                                    "url": {
+                                        "not": {
+                                            "pattern": "/:owner/:repo/"
+                                        },
+                                        "errorMessage": ":owner 和 :repo 是占位符"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
                         "$comment": "限制 checkver 的可用字段",
                         "properties": {
                             "checkver": {
