@@ -2145,16 +2145,20 @@
                                                     "markdownDescription": "- 禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用"
                                                 },
                                                 {
+                                                    "const": "A-Uninstall-ExeManually 'app'",
+                                                    "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作"
+                                                },
+                                                {
+                                                    "pattern": "A-Uninstall-ExeManually",
+                                                    "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作"
+                                                },
+                                                {
                                                     "const": "A-Uninstall-Exe",
                                                     "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')",
                                                     "markdownDescription": "- 使用卸载程序卸载应用"
-                                                },
-                                                {
-                                                    "const": "A-Uninstall-ExeByHand 'app'",
-                                                    "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才会完成 Scoop 的卸载操作"
                                                 },
                                                 {
                                                     "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
@@ -2495,7 +2499,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)(A-Uninstall-Exe|Remove-AppPackage)"
                                                         },
-                                                        "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeByHand 或 Remove-AppPackage"
+                                                        "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeManually 或 Remove-AppPackage"
                                                     }
                                                 }
                                             }
@@ -2625,7 +2629,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Install-Exe"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeByHand，而 pre_install 中缺少 A-Install-Exe"
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeManually，而 pre_install 中缺少 A-Install-Exe"
                                                     }
                                                 }
                                             }

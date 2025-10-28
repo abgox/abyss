@@ -731,7 +731,7 @@ function A-Uninstall-Exe {
     Start-Sleep -Seconds 1
 }
 
-function A-Uninstall-ExeByHand {
+function A-Uninstall-ExeManually {
     param(
         [array]$Path
     )
@@ -1543,6 +1543,13 @@ function A-Start-PostUninstall {
     .SYNOPSIS
         由于 abyss 中的应用会在 pre_uninstall 阶段完成自定义卸载脚本，所以此函数可以当做卸载阶段的结束
     #>
+}
+
+function A-Uninstall-ExeByHand {
+    param(
+        [array]$Path
+    )
+    A-Uninstall-ExeManually $Path
 }
 
 #endregion

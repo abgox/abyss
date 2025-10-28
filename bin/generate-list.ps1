@@ -147,7 +147,7 @@ foreach ($path in $PathList) {
         }
 
         ## UninstallManually
-        $UninstallManually = Test-ScriptPattern $json '(?<!#.*)A-Uninstall-ExeByHand'
+        $UninstallManually = Test-ScriptPattern $json '(?<!#.*)A-Uninstall-ExeManually'
         if ($UninstallManually) {
             $tag += '[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)'
         }
