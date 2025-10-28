@@ -4,6 +4,11 @@ on:
   schedule:
     # At minute 20 past every 4th hour.
     - cron: "20 */4 * * *"
+
+concurrency:
+  group: excavator-workflow-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   excavate:
     name: Excavate
@@ -11,6 +16,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+      - name: Get latest changes
+        run: git pull
 
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
