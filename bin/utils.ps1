@@ -1233,7 +1233,7 @@ function A-Get-InstallerInfoFromWinget {
             Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
         }
         catch {
-            Write-Host "::error::安装并导入 powershell-yaml 模块失败" -ForegroundColor Red
+            Write-Host "::error::安装并导入 powershell-yaml 模块失败: $_" -ForegroundColor Red
         }
     }
 
@@ -1260,7 +1260,7 @@ function A-Get-InstallerInfoFromWinget {
         $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
-        Write-Host "::warning::访问 $url 失败" -ForegroundColor Yellow
+        Write-Host "::warning::访问 $url 失败: $_" -ForegroundColor Yellow
         Write-Host
 
         $url = "https://github.com/microsoft/winget-pkgs/tree/master/manifests/$rootDir/$PackagePath"
@@ -1268,7 +1268,7 @@ function A-Get-InstallerInfoFromWinget {
             $page = Invoke-WebRequest $url -UseBasicParsing -ErrorAction Stop
         }
         catch {
-            Write-Host "::warning::访问 $url 失败" -ForegroundColor Yellow
+            Write-Host "::warning::访问 $url 失败: $_" -ForegroundColor Yellow
             Write-Host
             return
         }
@@ -1313,7 +1313,7 @@ function A-Get-InstallerInfoFromWinget {
         $installerYaml = Invoke-WebRequest @parameters
     }
     catch {
-        Write-Host "::error::访问 $url 失败" -ForegroundColor Red
+        Write-Host "::error::访问 $url 失败: $_" -ForegroundColor Red
         Write-Host
         return
     }
