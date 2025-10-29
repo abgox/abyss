@@ -8,12 +8,10 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.pixpin.cn/PixPin_2.0.0.3.zip",
-            "hash": "b50edd16fc4ced4599d5bb7e80448d325e8f7adc348ae9bcd790a85ad43f241f"
+            "url": "https://download.pixpin.cn/PixPin_2.0.0.3.exe",
+            "hash": "5af3c96e4cc74f96a18aa9e5a64eca87e8c108c3ef92245277eb3bfe74286e2c"
         }
     },
-    "extract_dir": "PixPin",
-    "extract_to": "app",
     "bin": "app\\PixPin.exe",
     "shortcuts": [
         [
@@ -21,24 +19,12 @@
             "PixPin"
         ]
     ],
-    "persist": [
-        [
-            "app\\History",
-            "History"
-        ],
-        [
-            "app\\Data",
-            "Data"
-        ],
-        [
-            "app\\Config",
-            "Config"
-        ]
-    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\PixPin\")",
+        "A-Install-Exe inno"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -49,7 +35,9 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -63,7 +51,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://download.pixpin.cn/PixPin_$version.zip"
+                "url": "https://download.pixpin.cn/PixPin_$version.exe"
             }
         }
     }
