@@ -1,0 +1,59 @@
+{
+    "version": "2.7.5",
+    "description": "一款用于终端的小型且简单的文本编辑器 | A small and simple text editor for use on the terminal.",
+    "homepage": "https://www.nano-editor.org/",
+    "license": {
+        "identifier": "GPL-3.0-or-later",
+        "url": "https://www.nano-editor.org/dist/latest/README"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.nano-editor.org/dist/win32-support/nano-v2.7.5-55-g0d9a73472439.exe#/nano.exe",
+            "hash": "41a90ed2072cc0b1debfceecd3ab4273e06c5ffa7e5e06bdbc54965eaa27fb89"
+        }
+    },
+    "bin": "nano.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'GNU.Nano' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.neutral_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/nano.exe",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.neutral_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
