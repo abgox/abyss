@@ -1,0 +1,71 @@
+{
+    "version": "7.2-22.1",
+    "description": "一款用于终端的小型且简单的文本编辑器 | A small and simple text editor for use on the terminal.",
+    "homepage": "https://github.com/okibcn/nano-for-windows",
+    "license": {
+        "identifier": "GPL-3.0-or-later",
+        "url": "https://github.com/okibcn/nano-for-windows/blob/releases/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/okibcn/nano-for-windows/releases/download/v7.2-22.1/nano-for-windows_win64_v7.2-22.1.zip",
+            "hash": "ce50a799a5fae37ac36ff2d7f3680968ca4af11a808edad96bcce746c13ccd20"
+        },
+        "arm64": {
+            "url": "https://github.com/okibcn/nano-for-windows/releases/download/v7.2-22.1/nano-for-windows_arm64_v7.2-22.1.zip",
+            "hash": "30977c243c8eb97d35559b13d742190c2c1d2812cd7691e7e3f3e026ed6de205"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        [
+            "app\\nano.exe",
+            "nano",
+            "--rcfile \"$dir\\app\\.nanorc\""
+        ]
+    ],
+    "persist": [
+        [
+            "app\\.nanorc",
+            ".nanorc"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/okibcn/nano-for-windows/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/okibcn/nano-for-windows/releases/download/v$version/nano-for-windows_win64_v$version.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/okibcn/nano-for-windows/releases/download/v$version/nano-for-windows_arm64_v$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
