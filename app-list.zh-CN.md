@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (401)|Tag|Description|
+|App (402)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -349,6 +349,7 @@
 |[RustDesk.RustDesk](https://github.com/rustdesk/rustdesk "点击访问仓库或主页")|<a href="./bucket/r/RustDesk/RustDesk.RustDesk.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个安全的远程桌面访问工具，用 Rust 语言编写|
 |[SamsidParty.TopNotify](https://www.samsidparty.com/software/topnotify "点击访问仓库或主页")|<a href="./bucket/s/SamsidParty/SamsidParty.TopNotify.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Msix](https://abyss.abgox.com/faq/msix)|适用于 Windows 的终极通知自定义工具|
 |[SatoshiLabs.trezor-suite](https://github.com/trezor/trezor-suite "点击访问仓库或主页")|<a href="./bucket/s/SatoshiLabs/SatoshiLabs.trezor-suite.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于管理 Trezor 硬件钱包的桌面应用程序|
+|[SchneeHertz.exhentai-manga-manager](https://github.com/SchneeHertz/exhentai-manga-manager "点击访问仓库或主页")|<a href="./bucket/s/SchneeHertz/SchneeHertz.exhentai-manga-manager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|ExHentai 本地漫画标签管理阅读应用|
 |[Schniz.fnm](https://github.com/Schniz/fnm "点击访问仓库或主页")|<a href="./bucket/s/Schniz/Schniz.fnm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|快速、简单的 Node.js 版本管理器，采用 Rust 内建|
 |[sedwards2009.extraterm](https://extraterm.org/ "点击访问仓库或主页")|<a href="./bucket/s/sedwards2009/sedwards2009.extraterm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|终端模拟器的终极利器|
 |[Seelen.SeelenUI](https://github.com/eythaann/Seelen-UI "点击访问仓库或主页")|<a href="./bucket/s/Seelen/Seelen.SeelenUI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|适用于 Windows 的完全可定制的桌面环境|
