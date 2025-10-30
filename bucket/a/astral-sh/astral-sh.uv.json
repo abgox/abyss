@@ -18,9 +18,9 @@
     "extract_to": "app",
     "env_add_path": "$env:UserProfile\\.local\\bin",
     "env_set": {
-        "UV_PYTHON_INSTALL_DIR": "$dir\\python",
-        "UV_TOOL_DIR": "$dir\\tools",
-        "UV_CACHE_DIR": "$dir\\cache"
+        "UV_PYTHON_INSTALL_DIR": "$dir\\app\\python",
+        "UV_TOOL_DIR": "$dir\\app\\tools",
+        "UV_CACHE_DIR": "$dir\\app\\cache"
     },
     "bin": [
         "app\\uv.exe",
@@ -29,23 +29,22 @@
     ],
     "persist": [
         [
-            "python",
+            "app\\python",
             "AppData\\Roaming\\uv\\python"
         ],
         [
-            "tools",
+            "app\\tools",
             "AppData\\Roaming\\uv\\tools"
         ],
         [
-            "cache",
+            "app\\cache",
             "AppData\\Local\\uv\\cache"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\uv\")"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -56,8 +55,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
