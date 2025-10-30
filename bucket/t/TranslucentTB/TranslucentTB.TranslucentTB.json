@@ -1,6 +1,6 @@
 {
     "version": "2025.1",
-    "description": "一个轻量级的实用程序，使 Windows 任务栏半透明/透明。A lightweight utility that makes the Windows taskbar translucent/transparent.",
+    "description": "一个轻量级的实用程序，使 Windows 任务栏半透明/透明 | A lightweight utility that makes the Windows taskbar translucent/transparent.",
     "homepage": "https://github.com/TranslucentTB/TranslucentTB",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -16,8 +16,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "$PackageFamilyName = A-Add-MsixPackage '28017CharlesMilette.TranslucentTB_v826wp6bftszj'",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\")"
+        "A-Add-MsixPackage '28017CharlesMilette.TranslucentTB_v826wp6bftszj'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\28017CharlesMilette.TranslucentTB_v826wp6bftszj\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -37,12 +37,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/TranslucentTB/TranslucentTB/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/$version/bundle.msixbundle"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

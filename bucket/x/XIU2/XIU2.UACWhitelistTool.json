@@ -1,0 +1,59 @@
+{
+    "version": "1.8.2",
+    "description": "一个可以添加 UAC 白名单的小工具 | A small tool that can add UAC whitelists.",
+    "homepage": "https://github.com/XIU2/UACWhitelistTool",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/XIU2/UACWhitelistTool/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/XIU2/UACWhitelistTool/releases/download/v1.8.2/UACWhitelistTool_v1.8.2.zip",
+            "hash": "475cd7fa1ddebf06c924f8b6cc683ac777c3888d38ffb1e9f39293a9e6de980e"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\UAC白名单小工具.exe",
+            "UAC 白名单小工具"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/XIU2/UACWhitelistTool/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/XIU2/UACWhitelistTool/releases/download/v$version/UACWhitelistTool_v$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

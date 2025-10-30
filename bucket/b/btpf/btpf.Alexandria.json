@@ -1,0 +1,67 @@
+{
+    "version": "0.13.1",
+    "description": "一款简约的跨平台电子书阅读器 | A minimalistic cross-platform eBook reader.",
+    "homepage": "https://github.com/btpf/Alexandria",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/btpf/Alexandria/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/btpf/Alexandria/releases/download/v0.13.1/Alexandria_0.13.1_x64-setup.exe",
+            "hash": "d2bd1ec329919fc77e935e93a2e57924d5a3a985bf47f906aa19636cb1f62fef"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Alexandria.exe",
+            "Alexandria"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\Alexandria_Data",
+            "Alexandria_Data"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\Alexandria_Data\" \"$persist_dir\\Alexandria_Data\"",
+        "A-Ensure-Directory \"$persist_dir\\Alexandria_Data\\books\"",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.btpf.alexandria\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/btpf/Alexandria/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/btpf/Alexandria/releases/download/v$version/Alexandria_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

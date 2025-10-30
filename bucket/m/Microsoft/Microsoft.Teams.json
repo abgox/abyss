@@ -1,6 +1,6 @@
 {
-    "version": "25241.203.3947.4411",
-    "description": "使用更快、更简单、更智能和更灵活的 Teams，更有效地进行协作。Collaborate more effectively with a faster, simpler, smarter, and more flexible Teams.",
+    "version": "25275.2601.4002.2815",
+    "description": "使用更快、更简单、更智能和更灵活的 Teams，更有效地进行协作 | Collaborate more effectively with a faster, simpler, smarter, and more flexible Teams.",
     "homepage": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/Microsoft/Teams",
     "license": {
         "identifier": "Freemium",
@@ -8,20 +8,20 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://installer.teams.static.microsoft/production-windows-x64/25241.203.3947.4411/MSTeams-x64.msix",
-            "hash": "eaca151b62265173600178c810c48059c34acf62e2164c455cf291452a1cbe4f"
+            "url": "https://installer.teams.static.microsoft/production-windows-x64/25275.2601.4002.2815/MSTeams-x64.msix",
+            "hash": "826a157d6e2690a53c215ed2d286311d8153cf840eab2f1921e660a7576ee28d"
         },
         "arm64": {
-            "url": "https://installer.teams.static.microsoft/production-windows-arm64/25241.203.3947.4411/MSTeams-arm64.msix",
-            "hash": "bc25120dbb1ed2cabc0cbe1df5e312064f9200e690fbb8135390498931ab2f79"
+            "url": "https://installer.teams.static.microsoft/production-windows-arm64/25275.2601.4002.2815/MSTeams-arm64.msix",
+            "hash": "2f61be264d7ee3d6e0a267ec68d063b83f9dc46ce4abaf9667efcb03ba5a9460"
         }
     },
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "$PackageFamilyName = A-Add-MsixPackage 'MSTeams_8wekyb3d8bbwe'",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\\LocalCache\\Microsoft\\MSTeams\")"
+        "A-Add-MsixPackage 'MSTeams_8wekyb3d8bbwe'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\MSTeams_8wekyb3d8bbwe\\LocalCache\\Microsoft\\MSTeams\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -57,14 +57,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }

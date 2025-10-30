@@ -1,6 +1,6 @@
 {
     "version": "2.5.4",
-    "description": "适用于 Windows 的极其轻量级的开源媒体播放器。An extremely light-weight, open source media player for Windows.",
+    "description": "适用于 Windows 的极其轻量级的开源媒体播放器 | An extremely light-weight, open source media player for Windows.",
     "homepage": "https://github.com/clsid2/mpc-hc",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -12,12 +12,27 @@
             "hash": "5e641e0417b0187d99e2774544c16ef7d0c2eccd944bf7b0312c75c93af6a853",
             "shortcuts": [
                 [
-                    "mpc-hc64.exe",
+                    "app\\mpc-hc64.exe",
                     "MPC-HC"
                 ]
             ]
         }
     },
+    "extract_to": "app",
+    "persist": [
+        [
+            "app\\mpc-hc64.ini",
+            "mpc-hc64.ini"
+        ],
+        [
+            "app\\mpc-hc.ini",
+            "mpc-hc.ini"
+        ],
+        [
+            "app\\default.mpcpl",
+            "default.mpcpl"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -42,17 +57,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "mpc-hc64.ini",
-        "mpc-hc.ini",
-        "default.mpcpl"
-    ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/clsid2/mpc-hc/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/clsid2/mpc-hc/releases/download/$version/MPC-HC.$version.x64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

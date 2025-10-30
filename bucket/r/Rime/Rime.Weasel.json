@@ -1,6 +1,6 @@
 {
     "version": "0.17.4",
-    "description": "小狼毫输入法 - 一个模块化、可扩展且可定制的输入法引擎。A modular, extensible, and customizable input method engine.",
+    "description": "小狼毫输入法 - 一个模块化、可扩展且可定制的输入法引擎 | A modular, extensible, and customizable input method engine.",
     "homepage": "https://rime.im/",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -15,15 +15,17 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Rime",
-        "Scoop only manages data, installation, update, and uninstallation operations.",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories",
+        " ",
         "You can install an input scheme to get started quickly.",
         "  - Wanxiang Pinyin: abyss/amzxyz.rime_wanxiang",
         "  - Ice Pinyin: abyss/iDvel.rime-ice",
         "You can install the Wanxiang syntax model: abyss/amzxyz.rime_wanxiang.model"
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\Rime",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作",
+        "安装目录: $env:ProgramFiles\\Rime",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories",
+        " ",
         "你可以直接安装一种输入方案以快速上手",
         "  - 万象拼音输入方案: abyss/amzxyz.rime_wanxiang",
         "  - 雾凇拼音输入方案: abyss/iDvel.rime-ice",
@@ -46,8 +48,8 @@
         "A-Require-Admin",
         "$Uninstaller = \"$env:ProgramFiles\\Rime\\weasel-$version\\uninstall.exe\"",
         "if (Test-Path $Uninstaller) { A-Uninstall-Exe -Uninstaller $Uninstaller }",
-        "A-Install-Exe -Uninstaller $Uninstaller -SuccessFile \"$env:ProgramFiles\\Rime\\weasel-$version\\WeaselServer.exe\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\Rime\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Rime\")",
+        "A-Install-Exe -Uninstaller $Uninstaller"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -68,7 +70,8 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/rime/weasel"
+        "url": "https://github.com/rime/weasel/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -78,6 +81,9 @@
             "arm64": {
                 "url": "https://github.com/rime/weasel/releases/download/$version/weasel-$version.0-installer.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

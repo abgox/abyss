@@ -1,21 +1,21 @@
 {
-    "version": "1.17.2",
-    "description": "哔哩哔哩 Bilibili 的 Windows 桌面客户端程序。A windows client for Bilibili.",
+    "version": "1.17.3",
+    "description": "哔哩哔哩 Bilibili 的 Windows 桌面客户端程序 | A windows client for Bilibili.",
     "homepage": "https://app.bilibili.com/",
     "license": "Freemium",
     "architecture": {
         "64bit": {
-            "url": "https://dl.hdslb.com/mobile/pack/bili_win/20861482/public/bilibili-setup-v1.17.2.exe",
-            "hash": "20c467ef36d9e92bbd8bfbbe0a45a2ac7cf4a5fb66a414477b73188ffbef9f49"
+            "url": "https://dl.hdslb.com/mobile/pack/bili_win/21104969/public/bilibili-setup-v1.17.3.exe",
+            "hash": "5ea245f8094acf47f34318be3e34598b2f24087cf94bb4c5ed69df29bff5018d"
         },
         "arm64": {
-            "url": "https://dl.hdslb.com/mobile/pack/bili_win/20861482/public/bilibili-setup-v1.17.2.exe",
-            "hash": "20c467ef36d9e92bbd8bfbbe0a45a2ac7cf4a5fb66a414477b73188ffbef9f49"
+            "url": "https://dl.hdslb.com/mobile/pack/bili_win/21104969/public/bilibili-setup-v1.17.3.exe",
+            "hash": "5ea245f8094acf47f34318be3e34598b2f24087cf94bb4c5ed69df29bff5018d"
         }
     },
     "shortcuts": [
         [
-            "bilibili\\哔哩哔哩.exe",
+            "app\\bilibili\\哔哩哔哩.exe",
             "Bilibili 哔哩哔哩"
         ]
     ],
@@ -24,8 +24,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller 'bilibili\\卸载哔哩哔哩.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\bilibili\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\bilibili\")",
+        "A-Install-Exe -Uninstaller 'app\\bilibili\\卸载哔哩哔哩.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -63,14 +63,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_machine.InstallerSha256"
                 }
             }

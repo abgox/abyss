@@ -1,17 +1,17 @@
 {
-    "version": "9.31.5",
-    "description": "一款适用于 Windows 的现代 SSH 客户端和终端。A modern SSH client and terminal for Windows.",
+    "version": "9.32.3",
+    "description": "一款适用于 Windows 的现代 SSH 客户端和终端 | A modern SSH client and terminal for Windows.",
     "homepage": "https://termius.com/",
     "license": "Freemium",
     "architecture": {
         "64bit": {
             "url": "https://autoupdate.termius.com/windows/Install%20Termius.exe",
-            "hash": "32eb58c410cf09bd0cb00af19bdf719c1611349f54fa921fbdf8f463065a794f"
+            "hash": "c9eeef0077f66d5380134b545bc6462b5c277f3a9fa7fd58a2ebc7ce248d613d"
         }
     },
     "shortcuts": [
         [
-            "Termius.exe",
+            "app\\Termius.exe",
             "Termius"
         ]
     ],
@@ -19,8 +19,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall Termius.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\Termius\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Termius\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Termius.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -54,7 +54,7 @@
             "64bit": {
                 "url": "https://autoupdate.termius.com/windows/Install%20Termius.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             }

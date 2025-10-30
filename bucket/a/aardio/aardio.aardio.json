@@ -1,29 +1,35 @@
 {
-    "version": "40.42.11",
-    "description": "灵活而强大的动态语言。A flexible and powerful dynamic language.",
-    "homepage": "https://www.aardio.com",
+    "version": "40.43.18",
+    "description": "灵活而强大的动态语言 | A flexible and powerful dynamic language.",
+    "homepage": "https://www.aardio.com/",
     "license": "Freeware",
     "architecture": {
         "64bit": {
             "url": "https://www.aardio.com/download/ide/aardio.7z",
-            "hash": "e22d30449d226debd72a4b651121d065daedeb08d446e92cc159d572ff71ccb2"
+            "hash": "2c7c5b0719c5db1e06eb019b7ef8073d7ba7d0faebf00e011de666e3cf8d244d"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "aardio.exe",
+            "app\\aardio.exe",
             "aardio"
         ]
     ],
     "persist": [
-        "config",
-        "project"
+        [
+            "app\\config",
+            "config"
+        ],
+        [
+            "app\\project",
+            "project"
+        ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install",
-        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +41,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link",
         "A-Remove-TempData @(\"$env:LocalAppData\\aardio\")"
     ],
     "post_uninstall": [
@@ -45,7 +50,7 @@
     ],
     "checkver": {
         "url": "https://ide.update.aardio.com/log/",
-        "regex": "aardio v([\\d\\.]+)"
+        "regex": "aardio v([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {

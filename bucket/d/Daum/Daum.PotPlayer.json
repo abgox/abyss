@@ -1,7 +1,7 @@
 {
     "version": "250909",
-    "description": "高度可定制的媒体播放器。Highly customizable media player.",
-    "homepage": "https://potplayer.daum.net",
+    "description": "高度可定制的媒体播放器 | Highly customizable media player.",
+    "homepage": "https://potplayer.daum.net/",
     "license": {
         "identifier": "Freeware",
         "url": "https://potplayer.daum.net/publicRelation"
@@ -9,37 +9,82 @@
     "architecture": {
         "64bit": {
             "url": "https://t1.daumcdn.net/potplayer/PotPlayer/Version/250909/PotPlayerSetup64.exe#/dl.7z",
-            "hash": "583508299aee189f1a1e0b2c2e6c833381195ef8e02bd31fdfd081cc4d104da0",
+            "hash": "1063f1159fc846acb54223a1055df024b51639ede61fd3ebd5a0e6fdddb497e7",
             "shortcuts": [
                 [
-                    "PotPlayer64.exe",
+                    "app\\PotPlayer64.exe",
                     "PotPlayer"
                 ],
                 [
-                    "PotPlayerMini64.exe",
+                    "app\\PotPlayerMini64.exe",
                     "PotPlayer Mini"
                 ]
             ]
         }
     },
+    "extract_to": "app",
+    "persist": [
+        [
+            "app\\Capture",
+            "Capture"
+        ],
+
+        [
+            "app\\Engine",
+            "Engine"
+        ],
+        [
+            "app\\Extension",
+            "Extension"
+        ],
+        [
+            "app\\Logos",
+            "Logos"
+        ],
+        [
+            "app\\Menus",
+            "Menus"
+        ],
+        [
+            "app\\Model",
+            "Model"
+        ],
+        [
+            "app\\Module",
+            "Module"
+        ],
+        [
+            "app\\Playlist",
+            "Playlist"
+        ],
+        [
+            "app\\PxShader",
+            "PxShader"
+        ],
+        [
+            "app\\Skins",
+            "Skins"
+        ],
+        [
+            "app\\UrlList",
+            "UrlList"
+        ],
+        [
+            "app\\PotPlayer64.ini",
+            "PotPlayer64.ini"
+        ],
+        [
+            "app\\PotPlayerMini64.ini",
+            "PotPlayerMini64.ini"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "Remove-Item \"$dir\\`$*\" -Force -Recurse",
-        "$CONT = @(",
-        "    '[Settings]'",
-        "    'AutoUpdateStart=0'",
-        "    'CheckAutoUpdate=0'",
-        "    'FastAutoUpdate=0'",
-        ")",
-        "    # Set Configs for all executables",
-        "foreach ($f in @('PotPlayerMini64.ini', 'PotPlayerMini.ini', 'PotPlayer64.ini', 'PotPlayer.ini')) {",
-        "    if (-not (Test-Path \"$persist_dir\\$f\")) {",
-        "        Write-Host 'File' $f 'does not exists. Creating' -f Yellow",
-        "        Set-Content \"$dir\\$f\" $CONT -Encoding Ascii",
-        "    }",
-        "}"
+        "Remove-Item -Path \"$dir\\app\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue",
+        "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\PotPlayer.ini\" \"$persist_dir\\PotPlayer64.ini\"",
+        "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\PotPlayer.ini\" \"$persist_dir\\PotPlayerMini64.ini\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -56,22 +101,6 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
-    ],
-    "persist": [
-        "Capture",
-        "Extension",
-        "Extention",
-        "IconPack",
-        "Logos",
-        "Module",
-        "Playlist",
-        "PxShader",
-        "Skins",
-        "UrlList",
-        "PotPlayer.ini",
-        "PotPlayer64.ini",
-        "PotPlayerMini.ini",
-        "PotPlayerMini64.ini"
     ],
     "checkver": {
         "url": "https://t1.daumcdn.net/potplayer/PotPlayer/v4/Update2/UpdateEng.html",

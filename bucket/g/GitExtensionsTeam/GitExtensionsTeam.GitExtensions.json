@@ -1,6 +1,6 @@
 {
-    "version": "6.0.1.18231",
-    "description": "一个用于管理 Git 仓库的独立用户界面工具。A standalone UI tool for managing git repositories.",
+    "version": "6.0.2.18262",
+    "description": "一个用于管理 Git 仓库的独立用户界面工具 | A standalone UI tool for managing git repositories.",
     "homepage": "https://gitextensions.github.io/",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -8,21 +8,28 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/gitextensions/gitextensions/releases/download/v6.0.1/GitExtensions-Portable-x64-6.0.1.18231-d1a20a6e8.zip",
-            "hash": "c8219e319ffb1d9f517c91e0324707cf7c2694c12beaf740d279ae18b6f685d5"
+            "url": "https://github.com/gitextensions/gitextensions/releases/download/v6.0.2/GitExtensions-Portable-x64-6.0.2.18262-f02a06bf5.zip",
+            "hash": "6d86adf465c4911520e100b0f72aff595e6647656074ec504af57d4188f45837"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "GitExtensions.exe",
+            "app\\GitExtensions.exe",
             "GitExtensions"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\GitExtensions.settings",
+            "AppData\\Roaming\\GitExtensions\\GitExtensions\\GitExtensions.settings"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-PersistFile \"$persist_dir\\GitExtensions.settings\""
+        "A-New-PersistFile \"$persist_dir\\AppData\\Roaming\\GitExtensions\\GitExtensions\\GitExtensions.settings\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,7 +47,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "GitExtensions.settings",
     "checkver": {
         "url": "https://api.github.com/repositories/85953/releases",
         "jsonpath": "$..browser_download_url",
@@ -51,6 +57,9 @@
             "64bit": {
                 "url": "https://github.com/gitextensions/gitextensions/releases/download/v$matchTag/GitExtensions-Portable-x64-$version-$matchCommit.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

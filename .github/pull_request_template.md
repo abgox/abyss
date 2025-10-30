@@ -8,8 +8,10 @@
   Read the contributing guide first to save both your and our time.
 -->
 
-Closes #XXXX
-<!-- or -->
-Relates to #XXXX
+Closes #XXX
 
-- [ ] I have read the [Contributing Guide](https://github.com/ScoopInstaller/.github/blob/main/.github/CONTRIBUTING.md).
+<!-- or -->
+
+Relates to #XXX
+
+- [ ] I have read the [Contributing Guide](https://abyss.abgox.com/contributing/).

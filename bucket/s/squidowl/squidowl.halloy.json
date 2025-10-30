@@ -1,0 +1,70 @@
+{
+    "version": "2025.11",
+    "description": "一款用 Rust 编写的开源 IRC 客户端，采用 Iced 图形用户界面库 | An open-source IRC client written in Rust, with the Iced GUI library.",
+    "homepage": "https://halloy.chat/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/squidowl/halloy/blob/main/LICENSE"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Halloy",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "notes-cn": [
+        "安装目录: $env:ProgramFiles\\Halloy",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/squidowl/halloy/releases/download/2025.11/halloy-installer.msi#/dl.msi_",
+            "hash": "5aff5c09c99f4badbf83fec63a9202efff0a6f2b85b14396005ac095487bfa3f"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:ProgramFiles\\Halloy\\halloy.exe",
+            "Halloy"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\halloy\")",
+        "A-Install-Exe msi"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "$ProductCode = A-Get-ProductCode '^Halloy$'",
+        "A-Uninstall-Exe $ProductCode",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/squidowl/halloy/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/squidowl/halloy/releases/download/$version/halloy-installer.msi#/dl.msi_"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.1",
-    "description": "JetBrains 的 IDE 产品，用于数据分析、数据科学和机器学习。A IDE by JetBrains for data analysis, data science and machine learning.",
+    "version": "2025.2.2",
+    "description": "JetBrains 的 IDE 产品，用于数据分析、数据科学和机器学习 | A IDE by JetBrains for data analysis, data science and machine learning.",
     "homepage": "https://www.jetbrains.com/dataspell/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/python/dataspell-2025.2.1.exe",
-            "hash": "785de50e4621519561d277bd5e23d0ffb22b8467c8e4db79e52eb3687bf71a29"
+            "url": "https://download.jetbrains.com/python/dataspell-2025.2.2.exe",
+            "hash": "8e42ca5e66d19436623c170285f296c9aa156cf7953653a4b183a6a19c6ce405"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/python/dataspell-2025.2.1-aarch64.exe",
-            "hash": "b3772558c8fe981532d31acd3d7fadd8c62ef5e3e5445271ec58877ee16112a0"
+            "url": "https://download.jetbrains.com/python/dataspell-2025.2.2-aarch64.exe",
+            "hash": "f2e92d67a05005ce23480c9c154e5e3505d34edbe74b8b845f9df3f9eed61bfb"
         }
     },
     "bin": [
         [
-            "App\\bin\\dataspell64.exe",
+            "app\\bin\\dataspell64.exe",
             "DataSpell"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\dataspell64.exe",
-            "DataSpell 2025.2.1"
+            "app\\bin\\dataspell64.exe",
+            "DataSpell 2025.2.2"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"DataSpell$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/python/dataspell-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/python/dataspell-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\dataspell64.exe",
+                "app\\bin\\dataspell64.exe",
                 "DataSpell $version"
             ]
         ]

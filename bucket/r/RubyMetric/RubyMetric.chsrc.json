@@ -1,0 +1,51 @@
+{
+    "version": "0.2.3",
+    "description": "为每个软件在所有地方更换源 | Change Source everywhere for every software",
+    "homepage": "https://chsrc.run/",
+    "license": {
+        "identifier": "MIT|GPL-3.0-only",
+        "url": "https://github.com/RubyMetric/chsrc/blob/main/LICENSE-MIT.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/RubyMetric/chsrc/releases/download/v0.2.3/chsrc-x64-windows.exe#/chsrc.exe",
+            "hash": "e8282eb647594a35217e53c85a55c0070ea71d98c775df19b3ac9de4dc3c6115"
+        }
+    },
+    "bin": "chsrc.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/RubyMetric/chsrc/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/RubyMetric/chsrc/releases/download/v$version/chsrc-x64-windows.exe#/chsrc.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

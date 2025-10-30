@@ -1,6 +1,9 @@
 {
-    "version": "deprecated",
-    "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发。Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries.",
+    "##": [
+        "pending: 如果数据目录变成一个软链接，会出现运行问题"
+    ],
+    "version": "pending",
+    "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发 | Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries.",
     "homepage": "https://www.mozilla.org/firefox",
     "license": {
         "identifier": "MPL-2.0",
@@ -16,9 +19,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "# 废弃: 如果数据目录变成一个软链接，会出现运行问题",
         "A-Deny-Manifest",
-        "$PackageFamilyName = A-Add-MsixPackage 'Mozilla.MozillaFirefox_jag0gd4e3s9p2'",
+        "A-Add-MsixPackage 'Mozilla.MozillaFirefox_jag0gd4e3s9p2'",
         "A-New-LinkDirectory @(\"$env:AppData\\Mozilla\\Firefox\")"
     ],
     "post_install": [
@@ -49,14 +51,14 @@
             "\"arm64:$($InstallerInfo.arm64.InstallerUrl);\""
         ],
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
-        "replace": "deprecated"
+        "replace": "pending"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64.InstallerSha256"
                 }
             }

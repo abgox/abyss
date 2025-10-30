@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "JetBrains 的 IDE 产品，用于 C 和 C++ 开发。A IDE by JetBrains for C and C++ development.",
+    "version": "2025.2.4",
+    "description": "JetBrains 的 IDE 产品，用于 C 和 C++ 开发 | A IDE by JetBrains for C and C++ development.",
     "homepage": "https://www.jetbrains.com/clion/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/cpp/CLion-2025.2.2.exe",
-            "hash": "89f0e2294eb1ca4e990f81833234948e2bb345eec0f5c671cb052bb6a878b97c"
+            "url": "https://download.jetbrains.com/cpp/CLion-2025.2.4.exe",
+            "hash": "a0d5c2e8000d87133cfebaf326f237d316562a49f4d23ec4ceaa0ea615d8b3ee"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/cpp/CLion-2025.2.2-aarch64.exe",
-            "hash": "79446e2e6fa12f9ad67bcc2c2a09c2c4484597cff0ee6f041451e12b768b45f2"
+            "url": "https://download.jetbrains.com/cpp/CLion-2025.2.4-aarch64.exe",
+            "hash": "0d7ddcd0264f22039bbaf1c8ab6324e809fe75d9ac5f288c47e0cd678abfb32d"
         }
     },
     "bin": [
         [
-            "App\\bin\\clion64.exe",
+            "app\\bin\\clion64.exe",
             "CLion"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\clion64.exe",
-            "CLion 2025.2.2"
+            "app\\bin\\clion64.exe",
+            "CLion 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"CLion$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/cpp/CLion-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/cpp/CLion-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\clion64.exe",
+                "app\\bin\\clion64.exe",
                 "CLion $version"
             ]
         ]

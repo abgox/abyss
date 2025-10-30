@@ -1,0 +1,68 @@
+{
+    "version": "2025.37",
+    "description": "为 git 用户提供的开源图形用户界面客户端 | Open-source GUI client for git users.",
+    "homepage": "https://github.com/sourcegit-scm/sourcegit",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/sourcegit-scm/sourcegit/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sourcegit-scm/sourcegit/releases/download/v2025.37/sourcegit_2025.37.win-x64.zip",
+            "hash": "f9943b40fe871ea6c20dbc87579302f205d061479b9a195bef754c8f60e5892a"
+        },
+        "arm64": {
+            "url": "https://github.com/sourcegit-scm/sourcegit/releases/download/v2025.37/sourcegit_2025.37.win-arm64.zip",
+            "hash": "44d07b30d8f1d35edcc3244db16a19eedd1522dcb3cf698d7fed0bbb6fcd99bd"
+        }
+    },
+    "extract_dir": "SourceGit",
+    "extract_to": "app",
+    "bin": "app\\SourceGit.exe",
+    "shortcuts": [
+        [
+            "app\\SourceGit.exe",
+            "SourceGit"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\SourceGit\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/sourcegit-scm/sourcegit/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sourcegit-scm/sourcegit/releases/download/v$version/sourcegit_$version.win-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/sourcegit-scm/sourcegit/releases/download/v$version/sourcegit_$version.win-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

@@ -1,6 +1,6 @@
 {
     "version": "1.16.0",
-    "description": "一个漂亮，快速，完全开源的邮件客户端。A beautiful, fast and fully open source mail client.",
+    "description": "一个漂亮，快速，完全开源的邮件客户端 | A beautiful, fast and fully open source mail client.",
     "homepage": "https://github.com/Foundry376/Mailspring",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -8,11 +8,11 @@
     },
     "notes": [
         "The installation directory: $env:LocalAppData\\Mailspring",
-        "Scoop only manages data, installation, update, and uninstallation operations."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: $env:LocalAppData\\Mailspring",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+        "安装目录: $env:LocalAppData\\Mailspring",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
@@ -30,8 +30,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\Mailspring\\Update.exe\" -ArgumentList @('--silent')",
-        "A-New-LinkDirectory @(\"$env:AppData\\Mailspring\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Mailspring\")",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\Mailspring\\Update.exe\" -ArgumentList @('--silent')"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -42,7 +42,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Uninstall-Exe -ArgumentList @('--uninstall') -FailureFile \"$env:LocalAppData\\Mailspring\\mailspring.exe\"",
+        "A-Uninstall-Exe -ArgumentList @('--uninstall')",
         "A-Remove-Link",
         "A-Remove-TempData @(\"$env:LocalAppData\\Mailspring\")"
     ],
@@ -51,12 +51,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/Foundry376/Mailspring/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/Foundry376/Mailspring/releases/download/$version/MailspringSetup.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

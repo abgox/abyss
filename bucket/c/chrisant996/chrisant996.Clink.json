@@ -1,6 +1,6 @@
 {
-    "version": "1.8.4",
-    "description": "Bash 在 cmd.exe 中强大的命令行编辑功能。Powerful Bash-style command line editing for cmd.exe.",
+    "version": "1.8.7",
+    "description": "Bash 在 cmd.exe 中强大的命令行编辑功能 | Powerful Bash-style command line editing for cmd.exe.",
     "homepage": "https://chrisant996.github.io/clink/",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -16,11 +16,12 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/chrisant996/clink/releases/download/v1.8.4/clink.1.8.4.72da93.zip",
-            "hash": "7c27008e12c23307a4478725b03aa834cab103fb70c1f7a5ed8f373e5c3fce30"
+            "url": "https://github.com/chrisant996/clink/releases/download/v1.8.7/clink.1.8.7.147071.zip",
+            "hash": "e26f5fd27f1a6e92859983eb4e9c9a41542b90500e5f5a8fba41744aa6443c9a"
         }
     },
-    "bin": "clink.bat",
+    "extract_to": "app",
+    "bin": "app\\clink.bat",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -45,7 +46,7 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/chrisant996/clink",
+        "url": "https://api.github.com/repos/chrisant996/clink/releases/latest",
         "regex": "/v(?<tag>[\\d.]+)/clink\\.([\\d.]+)\\.(?<commit>[\\w.]+)\\.zip"
     },
     "autoupdate": {
@@ -53,6 +54,9 @@
             "64bit": {
                 "url": "https://github.com/chrisant996/clink/releases/download/v$matchTag/clink.$version.$matchCommit.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

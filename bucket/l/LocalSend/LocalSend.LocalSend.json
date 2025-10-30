@@ -1,6 +1,6 @@
 {
     "version": "1.17.0",
-    "description": "一款免费的开源应用程序，它允许你在无需互联网连接的情况下，通过本地网络安全地与附近设备共享文件和消息。A free, open-source app that allows you to securely share files and messages with nearby devices over your local network without needing an internet connection.",
+    "description": "一款免费的开源应用程序，它允许你在无需互联网连接的情况下，通过本地网络安全地与附近设备共享文件和消息 | A free, open-source app that allows you to securely share files and messages with nearby devices over your local network without needing an internet connection.",
     "homepage": "https://localsend.org/",
     "license": {
         "identifier": "Apache-2.0",
@@ -12,16 +12,23 @@
             "hash": "a4ffb41fcbc3bd0f2f0cbd30b62a58d9a478eaf1da63eb410886886064abe70c"
         }
     },
+    "extract_to": "app",
     "bin": [
         [
-            "localsend_app.exe",
+            "app\\localsend_app.exe",
             "localsend"
         ]
     ],
     "shortcuts": [
         [
-            "localsend_app.exe",
+            "app\\localsend_app.exe",
             "LocalSend"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\settings.json",
+            "AppData\\Roaming\\LocalSend\\settings.json"
         ]
     ],
     "pre_install": [
@@ -45,15 +52,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "settings.json",
     "checkver": {
-        "github": "https://github.com/localsend/localsend"
+        "url": "https://github.com/localsend/localsend/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/localsend/localsend/releases/download/v$version/LocalSend-$version-windows-x86-64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

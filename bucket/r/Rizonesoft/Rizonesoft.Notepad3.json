@@ -1,6 +1,6 @@
 {
     "version": "6.25.822.1",
-    "description": "一个快速、轻量级的基于 Scintilla 的文本编辑器。A fast and light-weight Scintilla-based text editor.",
+    "description": "一个快速、轻量级的基于 Scintilla 的文本编辑器 | A fast and light-weight Scintilla-based text editor.",
     "homepage": "https://github.com/rizonesoft/Notepad3",
     "license": {
         "identifier": "Unknown",
@@ -8,28 +8,31 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_6.25.822.1/Notepad3_6.25.822.1_x64_Portable.zip",
-            "hash": "53cd1fc21b2aadde6cb008a86dc814c607ee0246323cd6a34a6d725a84d5b8eb"
+            "url": "https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_6.25.822.1/Notepad3_6.25.822.1_x64_Setup.exe",
+            "hash": "ba90c7b43e0463bd5ae44f5b0f12b162f599c23547d8940366520c94600d48e7"
         }
     },
     "bin": [
-        "Notepad3.exe",
-        "minipath.exe"
+        "app\\Notepad3.exe",
+        "app\\minipath.exe"
     ],
     "shortcuts": [
         [
-            "Notepad3.exe",
+            "app\\Notepad3.exe",
             "Notepad3"
         ],
         [
-            "minipath.exe",
+            "app\\minipath.exe",
             "minipath"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\Rizonesoft\\Notepad3\")",
+        "A-Install-Exe inno"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,18 +43,15 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
-    ],
-    "persist": [
-        "Favorites",
-        "Themes",
-        "minipath.ini",
-        "Notepad3.ini"
     ],
     "checkver": {
         "url": "https://github.com/rizonesoft/Notepad3/releases/latest",
@@ -60,8 +60,11 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_$version/Notepad3_$version_x64_Portable.zip"
+                "url": "https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_$version/Notepad3_$version_x64_Setup.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

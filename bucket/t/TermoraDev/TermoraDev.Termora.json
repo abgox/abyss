@@ -1,6 +1,6 @@
 {
     "version": "1.0.17",
-    "description": "一个终端模拟器和 SSH 客户端。A terminal emulator and SSH client.",
+    "description": "一个终端模拟器和 SSH 客户端 | A terminal emulator and SSH client.",
     "homepage": "https://github.com/TermoraDev/termora",
     "license": {
         "identifier": "AGPL-3.0-only",
@@ -17,10 +17,11 @@
         }
     },
     "extract_dir": "Termora",
-    "bin": "Termora.exe",
+    "extract_to": "app",
+    "bin": "app\\Termora.exe",
     "shortcuts": [
         [
-            "Termora.exe",
+            "app\\Termora.exe",
             "Termora"
         ]
     ],
@@ -47,7 +48,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/TermoraDev/termora/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -56,6 +60,9 @@
             "arm64": {
                 "url": "https://github.com/TermoraDev/termora/releases/download/$version/termora-$version-windows-aarch64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

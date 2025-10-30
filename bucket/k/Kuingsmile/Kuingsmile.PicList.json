@@ -1,6 +1,6 @@
 {
     "version": "3.0.5",
-    "description": "一款基于 PicGo 的图片上传与管理工具。An image upload and manage tool, base on PicGo.",
+    "description": "一款基于 PicGo 的图片上传与管理工具 | An image upload and manage tool, base on PicGo.",
     "homepage": "https://piclist.cn/",
     "license": {
         "identifier": "MIT",
@@ -14,7 +14,7 @@
     },
     "shortcuts": [
         [
-            "PicList.exe",
+            "app\\PicList.exe",
             "PicList"
         ]
     ],
@@ -22,8 +22,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall PicList.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\piclist\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\piclist\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall PicList.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,13 +45,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/Kuingsmile/PicList"
+        "url": "https://github.com/Kuingsmile/PicList/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/Kuingsmile/PicList/releases/download/v$version/PicList-Setup-$version-x64.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

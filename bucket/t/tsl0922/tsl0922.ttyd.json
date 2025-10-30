@@ -1,0 +1,51 @@
+{
+    "version": "1.7.7",
+    "description": "一个用于在整个网络上共享你的终端的命令行应用程序 | A cli appication for sharing your terminal all over the web.",
+    "homepage": "https://tsl0922.github.io/ttyd",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/tsl0922/ttyd/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.win32.exe#/ttyd.exe",
+            "hash": "e33a27501b10b96981335bcba938b1145c7f52551a343e72160f00ab71832b37"
+        }
+    },
+    "bin": "ttyd.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/tsl0922/ttyd/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tsl0922/ttyd/releases/download/$version/ttyd.win32.exe#/ttyd.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

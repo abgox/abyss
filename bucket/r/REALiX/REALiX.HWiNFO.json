@@ -1,12 +1,12 @@
 {
-    "version": "8.30",
-    "description": "适用于 Windows 和 DOS 的全面硬件分析、监测与报告。Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS.",
+    "version": "8.32",
+    "description": "适用于 Windows 和 DOS 的全面硬件分析、监测与报告 | Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS.",
     "homepage": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/r/REALiX/HWiNFO",
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://sourceforge.net/projects/hwinfo/files/Windows_Installer/hwi64_830.exe/download",
-            "hash": "1dd4a0db8a6180a1d1efc0fb68706673dedd5b7de997b4af14b141ff2268e267",
+            "url": "https://sourceforge.net/projects/hwinfo/files/Windows_Installer/hwi64_832.exe/download",
+            "hash": "d4b584d7df64a2fe423d64199a1e8c95813e3e0ba31712a301f0816a4f7a9464",
             "bin": [
                 [
                     "HWiNFO64.exe",
@@ -21,8 +21,8 @@
             ]
         },
         "arm64": {
-            "url": "https://sourceforge.net/projects/hwinfo/files/Windows_Installer/hwi64_830.exe/download",
-            "hash": "1dd4a0db8a6180a1d1efc0fb68706673dedd5b7de997b4af14b141ff2268e267",
+            "url": "https://sourceforge.net/projects/hwinfo/files/Windows_Installer/hwi64_832.exe/download",
+            "hash": "d4b584d7df64a2fe423d64199a1e8c95813e3e0ba31712a301f0816a4f7a9464",
             "bin": [
                 [
                     "HWiNFO_ARM64.exe",
@@ -37,6 +37,11 @@
             ]
         }
     },
+    "persist": [
+        "HWiNFO64.INI",
+        "HWiNFO32.INI",
+        "HWiNFO_ARM64.INI"
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -72,11 +77,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "HWiNFO64.INI",
-        "HWiNFO32.INI",
-        "HWiNFO_ARM64.INI"
-    ],
     "checkver": {
         "script": [
             ". \"$pwd\\bin\\utils.ps1\"",
@@ -93,14 +93,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64.InstallerSha256"
                 }
             }

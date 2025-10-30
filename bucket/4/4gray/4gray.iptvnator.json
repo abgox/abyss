@@ -1,7 +1,7 @@
 {
     "version": "0.16.0",
-    "description": "一个支持 IPTV 播放列表播放 (m3u、m3u8) 的视频播放器应用程序。A video player application that provides support for the playback of IPTV playlists (m3u, m3u8).",
-    "homepage": "https://github.com/4gray/iptvnator",
+    "description": "一个支持 IPTV 播放列表播放 (m3u、m3u8) 的视频播放器应用程序 | A video player application that provides support for the playback of IPTV playlists (m3u, m3u8).",
+    "homepage": "https://iptvnator.vercel.app/",
     "license": {
         "identifier": "MIT",
         "url": "https://github.com/4gray/iptvnator/blob/master/LICENSE.md"
@@ -14,7 +14,7 @@
     },
     "shortcuts": [
         [
-            "iptvnator.exe",
+            "app\\iptvnator.exe",
             "IPTVnator"
         ]
     ],
@@ -22,8 +22,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall IPTVnator.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\iptvnator\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\iptvnator\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall IPTVnator.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -44,12 +44,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/4gray/iptvnator/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/4gray/iptvnator/releases/download/v$version/iptvnator-Setup-$version.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -1,0 +1,61 @@
+{
+    "version": "0.7.5",
+    "description": "一款通用的版本管理器，适用于数千个 SDK，其终端用户界面（TUI）灵感源自 lazygit | A general version manager for thousands of SDKs with TUI inspired by lazygit.",
+    "homepage": "http://vdocs.vmr.dpdns.org/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/gvcgo/version-manager/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gvcgo/version-manager/releases/download/v0.7.5/vmr_windows-amd64.zip",
+            "hash": "8eee6c8b2e8af68184239cbc5fa3f2a49d1352b4e9e28a74206c5b374a42eef7"
+        },
+        "arm64": {
+            "url": "https://github.com/gvcgo/version-manager/releases/download/v0.7.5/vmr_windows-arm64.zip",
+            "hash": "3d9febab6a3bb68808f098a65fd26637d5b6fe402ece258d79fc124104c14725"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\vmr.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.vmr\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/gvcgo/version-manager/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gvcgo/version-manager/releases/download/v$version/vmr_windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/gvcgo/version-manager/releases/download/v$version/vmr_windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

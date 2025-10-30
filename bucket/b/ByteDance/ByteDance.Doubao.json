@@ -1,17 +1,17 @@
 {
-    "version": "1.74.5",
-    "description": "豆包，字节跳动的 AI 聊天智能对话问答助手，写作文案翻译情感陪伴编程全能工具。DouBao is a chatbot AI assistant by ByteDance. It can answer questions, write essays, translate text, and provide programming support.",
+    "version": "1.77.8",
+    "description": "豆包，字节跳动的 AI 聊天智能对话问答助手，写作文案翻译情感陪伴编程全能工具 | DouBao is a chatbot AI assistant by ByteDance. It can answer questions, write essays, translate text, and provide programming support.",
     "homepage": "https://www.doubao.com/",
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao_pc/1.74.5/Doubao_installer_1.74.5.exe",
-            "hash": "dcd202e5733838fe808eaace1232eff6a1c3f7dbad674e92e7642a4f4a1777e7"
+            "url": "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao_pc/1.77.8/Doubao_installer_1.77.8.exe",
+            "hash": "2e9e5aa9be21c60460df510216287b1f36192e650372728a15337675c36d393b"
         }
     },
     "shortcuts": [
         [
-            "Doubao\\Doubao.exe",
+            "app\\Doubao\\Doubao.exe",
             "豆包"
         ]
     ],
@@ -19,10 +19,11 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "$InstallLocation = '\"' + \"$dir\" + '\"'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Doubao\")",
+        "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'Doubao\\uninstall.exe' -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Doubao\")"
+        "A-Install-Exe -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
+        "A-Hold-App"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -33,8 +34,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Uninstall-Exe -NoSilent",
+        "A-Uninstall-ExeManually 'app'",
         "A-Remove-Link"
     ],
     "post_uninstall": [
@@ -58,7 +58,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             }

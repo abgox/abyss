@@ -1,6 +1,6 @@
 {
-    "version": "7.5.3",
-    "description": "pwsh - 一个跨平台的 PowerShell Core。pwsh - A cross-platform PowerShell Core.",
+    "version": "7.5.4",
+    "description": "pwsh - 一个跨平台的 PowerShell Core | pwsh - A cross-platform PowerShell Core.",
     "homepage": "https://github.com/PowerShell/PowerShell",
     "license": {
         "identifier": "MIT",
@@ -8,30 +8,33 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/PowerShell-7.5.3.msixbundle",
-            "hash": "b4446d85750062c6560a3e262f832a1ef391c03c8eed52d8508271ba96c7da3c",
-            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.PowerShell_7.5.3.0_x64__8wekyb3d8bbwe"
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4.msixbundle",
+            "hash": "b8eb615a572056659ae8f74f45df8ef4b1c78524fc0f21a752d02a132ebd8c03",
+            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.PowerShell_7.5.4.0_x64__8wekyb3d8bbwe"
         },
         "arm64": {
-            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/PowerShell-7.5.3.msixbundle",
-            "hash": "b4446d85750062c6560a3e262f832a1ef391c03c8eed52d8508271ba96c7da3c",
-            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.PowerShell_7.5.3.0_arm64__8wekyb3d8bbwe"
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4.msixbundle",
+            "hash": "b8eb615a572056659ae8f74f45df8ef4b1c78524fc0f21a752d02a132ebd8c03",
+            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.PowerShell_7.5.4.0_arm64__8wekyb3d8bbwe"
         }
+    },
+    "env_set": {
+        "POWERSHELL_UPDATECHECK": "Off"
     },
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "if ($PSVersionTable.PSEdition -eq 'Core' -and $PSVersionTable.PSVersion -match '^[\\d\\.]+$') {",
+        "if ($PSVersionTable.PSEdition -eq 'Core' -and !$PSVersionTable.PSVersion.PreReleaseLabel) {",
         "    if ($PSUICulture -like 'zh*') {",
-        "       Write-Host \"不能在 PowerShell 中安装、更新、卸载 PowerShell，应该在 Windows PowerShell(powershell.exe) 中进行\" -ForegroundColor Red",
+        "       Write-Host \"不能在 PowerShell 中安装、更新、卸载 PowerShell\" -ForegroundColor Red",
         "    }",
         "    else {",
-        "       Write-Host \"You cannot $cmd PowerShell in PowerShell. You should use Windows PowerShell(powershell.exe)\" -ForegroundColor Red",
+        "       Write-Host \"You cannot $cmd PowerShell in PowerShell.\" -ForegroundColor Red",
         "    }",
         "   exit 1",
         "}",
-        "$PackageFamilyName = A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'",
+        "A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'",
         "A-New-LinkDirectory @(\"$env:UserProfile\\Documents\\PowerShell\")"
     ],
     "post_install": [
@@ -43,12 +46,12 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "if ($PSVersionTable.PSEdition -eq 'Core' -and $PSVersionTable.PSVersion -match '^[\\d\\.]+$') {",
+        "if ($PSVersionTable.PSEdition -eq 'Core' -and !$PSVersionTable.PSVersion.PreReleaseLabel) {",
         "    if ($PSUICulture -like 'zh*') {",
-        "       Write-Host \"不能在 PowerShell 中安装、更新、卸载 PowerShell，应该在 Windows PowerShell(powershell.exe) 中进行\" -ForegroundColor Red",
+        "       Write-Host \"不能在 PowerShell 中安装、更新、卸载 PowerShell\" -ForegroundColor Red",
         "    }",
         "    else {",
-        "       Write-Host \"You cannot $cmd PowerShell in PowerShell. You should use Windows PowerShell(powershell.exe)\" -ForegroundColor Red",
+        "       Write-Host \"You cannot $cmd PowerShell in PowerShell.\" -ForegroundColor Red",
         "    }",
         "   exit 1",
         "}",
@@ -60,7 +63,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/PowerShell/PowerShell/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {

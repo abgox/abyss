@@ -1,0 +1,70 @@
+{
+    "version": "21.92",
+    "description": "QQ音乐，腾讯的音乐平台 | A music platform by Tencent.",
+    "homepage": "https://y.qq.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://y.qq.com/i/user_terms.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://c.y.qq.com/cgi-bin/file_redirect.fcg?bid=dldir&file=ecosfile%2Fmusic_clntupate%2Fpc%2Fother%2FQQMusic_Setup_2192.exe&sign=1-d6866199d19e35c8a07c9faf1eca71659cb525d1a0fd7063015a2fce964162bc-68d8e14c#/dl.exe",
+            "hash": "f6c6d0d41b886590d8a840033b249a1d86d63bf01173a5dc8071790cac092f07"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\QQMusic\\QQMusic.exe",
+            "QQ音乐"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\QQMusic\")",
+        "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
+        "A-Install-Exe -ArgumentList @('silence=1', 'runafterinstall=no', \"installdir=$InstallLocation\")",
+        "A-Hold-App"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Uninstall-ExeManually 'app'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Tencent.QQMusic' ''",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.exe",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

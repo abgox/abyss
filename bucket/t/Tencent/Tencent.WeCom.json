@@ -1,0 +1,80 @@
+{
+    "version": "pending",
+    "description": "企业微信，是腾讯微信团队为企业打造的专业办公管理工具 | WeCom is a professional office management tool created by Tencent WeChat team for companies.",
+    "homepage": "https://work.weixin.qq.com/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://work.weixin.qq.com/nl/eula"
+    },
+    "notes": [
+        "The installation directory: ${env:ProgramFiles(x86)}\\WXWork",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "notes-cn": [
+        "安装目录: ${env:ProgramFiles(x86)}\\WXWork",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        }
+    },
+    "shortcuts": [
+        [
+            "${env:ProgramFiles(x86)}\\WXWork\\WXWork.exe",
+            "企业微信"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Deny-Manifest",
+        "A-Require-Admin",
+        "A-Install-Exe -Uninstaller \"${env:ProgramFiles(x86)}\\WXWork\\Uninstall.exe\" -ArgumentList @('/S')",
+        "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\WXWork\", \"$env:UserProfile\\Documents\\WXWork\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"${env:ProgramFiles(x86)}\\WXWork\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Tencent.WeCom' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+        "replace": "pending"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

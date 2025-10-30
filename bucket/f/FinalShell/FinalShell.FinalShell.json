@@ -1,6 +1,6 @@
 {
-    "version": "deprecated",
-    "description": "SSH 工具、服务器管理、开发运维工具。SSH tool, server management, remote desktop acceleration software.",
+    "version": "pending",
+    "description": "SSH 工具、服务器管理、开发运维工具 | SSH tool, server management, remote desktop acceleration software.",
     "homepage": "https://www.hostbuf.com/t/988.html",
     "license": "Freemium",
     "architecture": {
@@ -11,19 +11,26 @@
     },
     "shortcuts": [
         [
-            "finalshell.exe",
+            "app\\finalshell.exe",
             "FinalShell"
         ]
+    ],
+    "persist": [
+        "conn",
+        "sync",
+        "theme",
+        "config.json",
+        "tconfig.json"
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "# 废弃: 安装后，无法正常运行",
+        "# pending: 安装后，无法正常运行",
         "A-Deny-Manifest",
-        "A-Install-Exe -Uninstaller 'uninstaller.exe'",
         "A-New-PersistFile \"$persist_dir\\config.json\"",
-        "A-New-PersistFile \"$persist_dir\\tconfig.json\""
+        "A-New-PersistFile \"$persist_dir\\tconfig.json\"",
+        "A-Install-Exe -Uninstaller 'app\\uninstaller.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +42,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link",
         "A-Uninstall-Exe"
     ],
     "post_uninstall": [
@@ -43,18 +49,11 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "conn",
-        "sync",
-        "theme",
-        "config.json",
-        "tconfig.json"
-    ],
     "checkver": {
         "url": "https://www.hostbuf.com/downloads/update_config_win.json",
         "jsonpath": "$.version_name",
         "regex": "(.+)",
-        "replace": "deprecated"
+        "replace": "pending"
     },
     "autoupdate": {
         "architecture": {

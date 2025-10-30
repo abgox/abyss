@@ -1,6 +1,6 @@
 {
-    "version": "4.1.1",
-    "description": "将 macOS 的 '快速查看' 功能引入 Windows。Bring macOS 'Quick Look' feature to Windows.",
+    "version": "4.2.2",
+    "description": "将 macOS 的 '快速查看' 功能引入 Windows | Bring macOS 'Quick Look' feature to Windows.",
     "homepage": "https://github.com/QL-Win/QuickLook",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -8,22 +8,28 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/QL-Win/QuickLook/releases/download/4.1.1/QuickLook-4.1.1.zip",
-            "hash": "788a8cf6f846f36ccf77af1e8fe98a15b9b8ce2d6b0950caa7d2c1b0f426bafe"
+            "url": "https://github.com/QL-Win/QuickLook/releases/download/4.2.2/QuickLook-4.2.2.zip",
+            "hash": "4730d085e81a7c3f7d09e528958fc9298a0f5b23df4de219441f5376f3386796"
         }
     },
-    "bin": "QuickLook.exe",
+    "extract_to": "app",
+    "bin": "app\\QuickLook.exe",
     "shortcuts": [
         [
-            "QuickLook.exe",
+            "app\\QuickLook.exe",
             "QuickLook"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\UserData",
+            "AppData\\Roaming\\pooi.moe\\QuickLook"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install",
-        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,15 +40,13 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "UserData",
     "checkver": {
         "url": "https://github.com/QL-Win/QuickLook/releases/latest",
         "regex": "/tree/(?:v|V)?([^\"?]+)"

@@ -1,0 +1,61 @@
+{
+    "version": "0.3.2",
+    "description": "跨平台视频 / 音频下载器桌面应用程序，具有现代用户界面和浏览器集成功能 | Cross-platform Video/Audio Downloader Desktop App with Modern UI and Browser Integration",
+    "homepage": "https://neodlp.neosubhamoy.com/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/neosubhamoy/neodlp/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/neosubhamoy/neodlp/releases/download/v0.3.2/NeoDLP_0.3.2_x64-setup_windows.exe",
+            "hash": "ff23e1e2442d54c1f06ac852d8f1e83cdddb3f502c8ad1dfb4279dce3723bf25"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\neodlp.exe",
+            "NeoDLP"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.neosubhamoy.neodlp\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.neosubhamoy.neodlp\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/neosubhamoy/neodlp/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/neosubhamoy/neodlp/releases/download/v0.3.2/NeoDLP_0.3.2_x64-setup_windows.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

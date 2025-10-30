@@ -1,0 +1,65 @@
+{
+    "version": "0.7.1",
+    "description": "一个基于 Flutter (Dart) 实现的简易本地音乐播放器 | A simple music player implemented using Flutter (Dart)",
+    "homepage": "https://github.com/xiaobaimc/myune_music",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/xiaobaimc/myune_music/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xiaobaimc/myune_music/releases/download/v0.7.1/MyuneMusic_v0.7.1_windows-x64.zip",
+            "hash": "a62847a1645dd55db3c6d5949c857996bfe84439119e8ab43045728012e8f08c"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\myune_music.exe",
+            "MyuneMusic"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\list_data",
+            "list_data"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.example\\myune_music\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/xiaobaimc/myune_music/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xiaobaimc/myune_music/releases/download/v$version/MyuneMusic_v$version_windows-x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

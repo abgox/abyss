@@ -1,17 +1,17 @@
 {
-    "version": "9.1.0.13454",
-    "description": "剪映专业版，一款全能易用的桌面端剪辑软件，让创作更简单。A powerful desktop video editor with a simple interface, making it easy to create videos.",
+    "version": "9.3.0.13547",
+    "description": "剪映专业版，一款全能易用的桌面端剪辑软件，让创作更简单 | A powerful desktop video editor with a simple interface, making it easy to create videos.",
     "homepage": "https://www.capcut.cn/",
     "license": "Freemium",
     "architecture": {
         "64bit": {
-            "url": "https://lf3-package.vlabstatic.com/obj/faceu-packages/Jianying_9_1_0_13454_jianyingpro_0_creatortool.exe",
-            "hash": "054d51b523fb0ab5a7d033597cbb06f075a879726433059e74fb7c4fe2d6a71d"
+            "url": "https://lf3-package.vlabstatic.com/obj/faceu-packages/Jianying_9_3_0_13547_jianyingpro_0_creatortool.exe",
+            "hash": "2bdd3e7a4e7f711db2f2fb59e6d2d4bf7be8d2a8597adf21fd5992bb649acddb"
         }
     },
     "shortcuts": [
         [
-            "JianyingPro.exe",
+            "app\\JianyingPro.exe",
             "剪映专业版"
         ]
     ],
@@ -19,9 +19,10 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "$InstallLocation = '\"' + \"$dir\" + '\"'",
-        "A-Install-Exe -Uninstaller 'uninst.exe' -ArgumentList @('/silent_install=1', \"/install_path=$InstallLocation\")",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\JianyingPro\")"
+        "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\JianyingPro\")",
+        "A-Install-Exe -ArgumentList @('/silent_install=1', \"/install_path=$InstallLocation\")",
+        "A-Hold-App"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -32,9 +33,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Uninstall-Exe -NoSilent"
+        "A-Uninstall-ExeManually 'app'",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -57,7 +57,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             }

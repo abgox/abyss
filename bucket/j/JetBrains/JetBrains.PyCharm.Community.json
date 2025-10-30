@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "(社区版本) JetBrains 的 IDE 产品，用于 Python 开发。(Community Edition) A IDE by JetBrains for Python development.",
+    "version": "2025.2.4",
+    "description": "(社区版本) JetBrains 的 IDE 产品，用于 Python 开发 | (Community Edition) A IDE by JetBrains for Python development.",
     "homepage": "https://www.jetbrains.com/pycharm/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/python/pycharm-community-2025.2.2.exe",
-            "hash": "52fe847817c62df52769ccc1639c8116c41ddf80bff6f6f5e6f254c969221940"
+            "url": "https://download.jetbrains.com/python/pycharm-community-2025.2.4.exe",
+            "hash": "7ea9093ee7cc5ea782d13a9aa73aacff3b95ae196c4d6cc39fe5999b16321642"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/python/pycharm-community-2025.2.2-aarch64.exe",
-            "hash": "e04fd690a547fb72fef434e6b03756f6cc220e6ce26ec17d559a0c318bf93c52"
+            "url": "https://download.jetbrains.com/python/pycharm-community-2025.2.4-aarch64.exe",
+            "hash": "3818156a515782c4e5418858b09923fe16c1517de6489080a45cf018f41dac66"
         }
     },
     "bin": [
         [
-            "App\\bin\\pycharm64.exe",
+            "app\\bin\\pycharm64.exe",
             "PyCharmCE"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\pycharm64.exe",
-            "PyCharm Community Edition 2025.2.2"
+            "app\\bin\\pycharm64.exe",
+            "PyCharm Community Edition 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"PyCharmCE$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/python/pycharm-community-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/python/pycharm-community-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\pycharm64.exe",
+                "app\\bin\\pycharm64.exe",
                 "PyCharm Community Edition $version"
             ]
         ]

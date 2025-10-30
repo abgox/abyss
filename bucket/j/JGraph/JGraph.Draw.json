@@ -1,21 +1,22 @@
 {
-    "version": "28.1.2",
-    "description": "一款基于 Electron 的桌面绘图应用程序，它封装了 draw.io 核心编辑器。A diagramming desktop app based on Electron that wraps the core draw.io editor.",
-    "homepage": "https://www.diagrams.net",
+    "version": "28.2.8",
+    "description": "一款基于 Electron 的桌面绘图应用程序，它封装了 draw.io 核心编辑器 | A diagramming desktop app based on Electron that wraps the core draw.io editor.",
+    "homepage": "https://www.diagrams.net/",
     "license": {
         "identifier": "Apache-2.0",
         "url": "https://github.com/jgraph/drawio-desktop/blob/dev/LICENSE"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/jgraph/drawio-desktop/releases/download/v28.1.2/draw.io-28.1.2-windows.zip",
-            "hash": "9f661ee7db5b23bca0932a7f691e3baa63a4da20a9fab7af7402171e9bc27d8d"
+            "url": "https://github.com/jgraph/drawio-desktop/releases/download/v28.2.8/draw.io-28.2.8-windows.zip",
+            "hash": "18081ae28e94c9405070fba7a9c40c156e18d8edc5bfc93c9d8d12d596539fee"
         }
     },
-    "bin": "draw.io.exe",
+    "extract_to": "app",
+    "bin": "app\\draw.io.exe",
     "shortcuts": [
         [
-            "draw.io.exe",
+            "app\\draw.io.exe",
             "draw.io"
         ]
     ],
@@ -43,13 +44,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/jgraph/drawio-desktop"
+        "url": "https://github.com/jgraph/drawio-desktop/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/jgraph/drawio-desktop/releases/download/v$version/draw.io-$version-windows.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

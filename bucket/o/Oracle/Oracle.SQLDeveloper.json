@@ -1,0 +1,69 @@
+{
+    "version": "pending",
+    "description": "一个免费的集成开发环境，它简化了在传统部署和云部署中对 Oracle 数据库的开发与管理 | A free, integrated development environment that simplifies the development and management of Oracle Database in both traditional and Cloud deployments.",
+    "homepage": "https://www.oracle.com/database/sqldeveloper",
+    "license": {
+        "identifier": "Oracle No-Fee Terms and Conditions",
+        "url": "https://www.oracle.com/downloads/licenses/no-fee-license.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        }
+    },
+    "shortcuts": [
+        [
+            "sqldeveloper\\sqldeveloper.exe",
+            "Oracle SQL Developer"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Deny-Manifest",
+        "A-New-LinkDirectory @(\"$env:AppData\\sqldeveloper\",\"$env:AppData\\SQL Developer\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:AppData\\java\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Oracle.SQLDeveloper' 'zip'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.neutral_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+        "replace": "pending"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.neutral_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

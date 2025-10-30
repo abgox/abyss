@@ -1,6 +1,6 @@
 {
     "version": "1.32.2",
-    "description": "使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动。Graphical Scrcpy to display and control Android, devices powered by Electron.",
+    "description": "使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动 | Graphical Scrcpy to display and control Android, devices powered by Electron.",
     "homepage": "https://github.com/viarotel-org/escrcpy",
     "license": {
         "identifier": "Apache-2.0",
@@ -8,17 +8,17 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-x64.exe",
-            "hash": "62ecbb737f14f51c3ee3fd2f714ea9f87cb09186601564889a9f116ee66835c6"
+            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.32.2/Escrcpy-1.32.2-win-setup-x64.exe",
+            "hash": "52b150ef1d42554f4e7a266a465da737704b37142085d95edb4ac1b300f1ee96"
         },
         "arm64": {
-            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-arm64.exe",
-            "hash": "1606202c1ac547747858a6134b64b826f0576066d37a7553fa98f9699989ee6d"
+            "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.32.2/Escrcpy-1.32.2-win-setup-arm64.exe",
+            "hash": "55a87b9a013d6660a817f19223597146ff322e17fecbcb5fe281ca06b2ebdf5c"
         }
     },
     "shortcuts": [
         [
-            "Escrcpy.exe",
+            "app\\Escrcpy.exe",
             "Escrcpy"
         ]
     ],
@@ -26,8 +26,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe  -Uninstaller 'Uninstall Escrcpy.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\escrcpy\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\escrcpy\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Escrcpy.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -48,15 +48,21 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/viarotel-org/escrcpy/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-x64.exe"
+                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v$version/Escrcpy-$version-win-setup-x64.exe"
             },
             "arm64": {
-                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v1.29.6/Escrcpy-1.29.6-win-setup-arm64.exe"
+                "url": "https://github.com/viarotel-org/escrcpy/releases/download/v$version/Escrcpy-$version-win-setup-arm64.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

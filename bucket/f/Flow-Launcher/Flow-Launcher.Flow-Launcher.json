@@ -1,22 +1,29 @@
 {
-    "version": "2.0.1",
-    "description": "适用于 Windows 的快速文件搜索和应用程序启动器。Quick file searcher and app launcher with community-made plugins.",
-    "homepage": "https://www.flowlauncher.com",
+    "version": "2.0.2",
+    "description": "适用于 Windows 的快速文件搜索和应用程序启动器 | Quick file searcher and app launcher with community-made plugins.",
+    "homepage": "https://www.flowlauncher.com/",
     "license": {
         "identifier": "MIT",
         "url": "https://github.com/Flow-Launcher/Flow.Launcher/blob/master/LICENSE"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Flow-Launcher/Flow.Launcher/releases/download/v2.0.1/Flow-Launcher-Portable.zip",
-            "hash": "8290de783e42fce53f93266b30298841d56c03cc4f4864471aaf9c15ef551842"
+            "url": "https://github.com/Flow-Launcher/Flow.Launcher/releases/download/v2.0.2/Flow-Launcher-Portable.zip",
+            "hash": "5d50b6b6cb50d80e7ce33116fafc04e6b50ba9d0a3219d8ec8b34d7773bdf5ed"
         }
     },
     "extract_dir": "FlowLauncher",
+    "extract_to": "app",
     "shortcuts": [
         [
-            "Flow.Launcher.exe",
+            "app\\Flow.Launcher.exe",
             "Flow Launcher"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\app-2.0.2\\UserData",
+            "AppData\\Roaming\\FlowLauncher"
         ]
     ],
     "pre_install": [
@@ -40,14 +47,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        [
-            "app-2.0.1\\UserData",
-            "UserData"
-        ]
-    ],
     "checkver": {
-        "github": "https://github.com/Flow-Launcher/Flow.Launcher"
+        "url": "https://github.com/Flow-Launcher/Flow.Launcher/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -57,9 +59,12 @@
         },
         "persist": [
             [
-                "app-$version\\UserData",
-                "UserData"
+                "app\\app-$version\\UserData",
+                "AppData\\Roaming\\FlowLauncher"
             ]
-        ]
+        ],
+        "hash": {
+            "mode": "github"
+        }
     }
 }

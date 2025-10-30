@@ -1,7 +1,7 @@
 {
     "version": "1.9.14",
-    "description": "强大的知识库，基于 Markdown 文件。Powerful knowledge base that works on top of a local folder of plain text Markdown files.",
-    "homepage": "https://obsidian.md",
+    "description": "强大的知识库，基于 Markdown 文件 | Powerful knowledge base that works on top of a local folder of plain text Markdown files.",
+    "homepage": "https://obsidian.md/",
     "license": {
         "identifier": "Unknown",
         "url": "https://obsidian.md/eula"
@@ -12,10 +12,10 @@
             "hash": "e6b8f82ccfcda4553a35efdfd17a56935b08543e82078d5aa1404d282cecf9ac"
         }
     },
-    "bin": "obsidian.exe",
+    "bin": "app\\obsidian.exe",
     "shortcuts": [
         [
-            "obsidian.exe",
+            "app\\obsidian.exe",
             "Obsidian"
         ]
     ],
@@ -23,8 +23,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall Obsidian.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\obsidian\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\obsidian\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Obsidian.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -46,13 +46,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/obsidianmd/obsidian-releases"
+        "url": "https://github.com/obsidianmd/obsidian-releases/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/Obsidian-$version.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

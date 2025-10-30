@@ -1,6 +1,6 @@
 {
     "version": "3.0.7",
-    "description": "一个跨平台的划词翻译和 OCR 软件。A cross-platform software for text translation and OCR.",
+    "description": "一个跨平台的划词翻译和 OCR 软件 | A cross-platform software for text translation and OCR.",
     "homepage": "https://pot-app.com/",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -12,10 +12,11 @@
             "hash": "0a6ac5309bfc41234d58cf6615a779c66d167d3a0da5542a0de2ea118fc6bc56"
         }
     },
-    "bin": "pot.exe",
+    "extract_to": "app",
+    "bin": "app\\pot.exe",
     "shortcuts": [
         [
-            "pot.exe",
+            "app\\pot.exe",
             "Pot"
         ]
     ],
@@ -23,7 +24,6 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "Remove-Item \"$dir\\`$PLUGINSDIR\" -Force -Recurse",
         "A-New-LinkDirectory @(\"$env:AppData\\com.pot-app.desktop\")"
     ],
     "post_install": [
@@ -45,13 +45,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/pot-app/pot-desktop"
+        "url": "https://github.com/pot-app/pot-desktop/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/pot-app/pot-desktop/releases/download/$version/pot_$version_x64-setup.exe#/dl.7z"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

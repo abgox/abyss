@@ -1,6 +1,6 @@
 {
-    "version": "1.2.0",
-    "description": "一款满足简单需求的 TUI 文本编辑器，由微软开发。A simple TUI text editor for simple needs by Microsoft.",
+    "version": "1.2.1",
+    "description": "一款满足简单需求的 TUI 文本编辑器，由微软开发 | A simple TUI text editor for simple needs by Microsoft.",
     "homepage": "https://github.com/microsoft/edit/",
     "license": {
         "identifier": "MIT",
@@ -8,17 +8,18 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-x86_64-windows.zip",
-            "hash": "49f52065bf88f01928e2911b04705b34a0c20d9ec09eb6241452c9d5dd166fc4",
-            "extract_dir": "edit-1.2.0-x86_64-windows"
+            "url": "https://github.com/microsoft/edit/releases/download/v1.2.1/edit-1.2.1-x86_64-windows.zip",
+            "hash": "be3affb7e5e0cd856fc0fb9c8b2004e9fbbc364e69797f7c2e9d8fcc94bfc4ff",
+            "extract_dir": "edit-1.2.1-x86_64-windows"
         },
         "arm64": {
-            "url": "https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-aarch64-windows.zip",
-            "hash": "ffac3e86ba77fea3fef0220942c5507f9a2a6778f873337e0c91b546df86a4fd",
-            "extract_dir": "edit-1.2.0-aarch64-windows"
+            "url": "https://github.com/microsoft/edit/releases/download/v1.2.1/edit-1.2.1-aarch64-windows.zip",
+            "hash": "7f44bb48b2891163cf5b9c996e8a917c29d82c7a765c07e89e74b47aff542ca9",
+            "extract_dir": "edit-1.2.1-aarch64-windows"
         }
     },
-    "bin": "edit.exe",
+    "extract_to": "app",
+    "bin": "app\\edit.exe",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -42,7 +43,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/microsoft/edit/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -53,6 +57,9 @@
                 "url": "https://github.com/microsoft/edit/releases/download/v$version/edit-$version-aarch64-windows.zip",
                 "extract_dir": "edit-$version-aarch64-windows"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

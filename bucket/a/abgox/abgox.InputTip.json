@@ -1,6 +1,6 @@
 {
-    "version": "2025.10.01",
-    "description": "(exe 版本) 一个输入法状态管理工具: 实时提示(鼠标方案/符号方案) + 状态切换(窗口触发/热键触发)。(exe version) An input method state management tool: real-time tip(mouse scheme/symbol scheme) + state switching (window trigger/hotkey trigger)",
+    "version": "2025.10.09",
+    "description": "(exe 版本) 一个输入法状态管理工具: 实时提示(鼠标方案/符号方案) + 状态切换(窗口触发/热键触发) | (exe version) An input method state management tool: real-time tip(mouse scheme/symbol scheme) + state switching (window trigger/hotkey trigger)",
     "homepage": "https://inputtip.abgox.com/",
     "license": {
         "identifier": "AGPL-3.0-only",
@@ -9,7 +9,7 @@
     "notes": [
         "It is recommended to use abgox.InputTip-zip.",
         "abgox.InputTip is the exe version and is not recommended for use.",
-        "Refer to: https://inputtip.abgox.com/FAQ/zip-vs-exe"
+        "Reference: https://inputtip.abgox.com/FAQ/zip-vs-exe"
     ],
     "notes-cn": [
         "推荐使用 abgox.InputTip-zip",
@@ -18,15 +18,35 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/InputTip/releases/download/v2025.10.01/InputTip.exe",
-            "hash": "f26479149275debeb5013039ead14a1c3c3b42a934d5b169e009fe33a02c1b29"
+            "url": "https://github.com/abgox/InputTip/releases/download/v2025.10.09/InputTip.exe",
+            "hash": "bff668107c12dcc6b565b0427817f266a7b70c7a6b70481294185a4c9a9c25eb"
         }
     },
-    "bin": "InputTip.exe",
+    "extract_to": "app",
+    "bin": "app\\InputTip.exe",
     "shortcuts": [
         [
-            "InputTip.exe",
+            "app\\InputTip.exe",
             "InputTip"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\InputTip.ini",
+            "InputTip.ini"
+        ],
+
+        [
+            "app\\InputTipSymbol",
+            "InputTipSymbol"
+        ],
+        [
+            "app\\InputTipCursor",
+            "InputTipCursor"
+        ],
+        [
+            "app\\InputTipIcon",
+            "InputTipIcon"
         ]
     ],
     "pre_install": [
@@ -52,12 +72,6 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
-    ],
-    "persist": [
-        "InputTip.ini",
-        "InputTipSymbol",
-        "InputTipCursor",
-        "InputTipIcon"
     ],
     "checkver": {
         "url": "https://github.com/abgox/InputTip/releases/latest",

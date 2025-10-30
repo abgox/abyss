@@ -1,7 +1,7 @@
 {
     "version": "9.3.2.520",
-    "description": "一个轻量级的、多功能的图像查看器。A lightweight, versatile image viewer.",
-    "homepage": "https://imageglass.org",
+    "description": "一个轻量级的、多功能的图像查看器 | A lightweight, versatile image viewer.",
+    "homepage": "https://imageglass.org/",
     "license": {
         "identifier": "GPL-3.0-only|...",
         "url": "https://github.com/d2phap/ImageGlass/blob/develop/LICENSE"
@@ -18,18 +18,29 @@
             "extract_dir": "ImageGlass_9.3.2.520_arm64"
         }
     },
-    "bin": "ImageGlass.exe",
+    "extract_to": "app",
+    "bin": "app\\ImageGlass.exe",
     "shortcuts": [
         [
-            "ImageGlass.exe",
+            "app\\ImageGlass.exe",
             "ImageGlass"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\Themes",
+            "AppData\\Local\\ImageGlass\\Themes"
+        ],
+        [
+            "app\\igconfig.json",
+            "AppData\\Local\\ImageGlass\\igconfig.json"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-PersistFile \"$persist_dir\\igconfig.json\" -Content '{\"AutoUpdate\":0}'"
+        "A-New-PersistFile \"$persist_dir\\AppData\\Local\\ImageGlass\\igconfig.json\" -Content '{\"AutoUpdate\":0}'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,20 +51,16 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-TempData @(\"$env:LocalAppData\\ImageGlass\")"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        "Themes",
-        "igconfig.json"
-    ],
     "checkver": {
-        "github": "https://github.com/d2phap/ImageGlass"
+        "url": "https://github.com/d2phap/ImageGlass/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -65,6 +72,9 @@
                 "url": "https://github.com/d2phap/ImageGlass/releases/download/$version/ImageGlass_$version_arm64.zip",
                 "extract_dir": "ImageGlass_$version_arm64"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

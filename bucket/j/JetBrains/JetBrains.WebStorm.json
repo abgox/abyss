@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "JetBrains 的 IDE 产品，用于 Web 开发 (JavaScript，TypeScript)。A IDE by JetBrains for web development (JavaScript, TypeScript).",
+    "version": "2025.2.4",
+    "description": "JetBrains 的 IDE 产品，用于 Web 开发 (JavaScript，TypeScript) | A IDE by JetBrains for web development (JavaScript, TypeScript).",
     "homepage": "https://www.jetbrains.com/webstorm/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.2.2.exe",
-            "hash": "6663aff8b7108371d513415ebcf6a37a54d5b9c45bb4efd7ff3a56a263ca8651"
+            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.2.4.exe",
+            "hash": "9a017d406fff65d886cb513a11ebbf4431bd8eed206e1e7f026f58149f179c5a"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.2.2-aarch64.exe",
-            "hash": "a58746dc9640d1983735058a4441e9a31155f14856933b447e1562f8da0f8e35"
+            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.2.4-aarch64.exe",
+            "hash": "fe46f4381c0b36d3d6b4383807302210f5fc8f78615f4fb0dd83f675e3181916"
         }
     },
     "bin": [
         [
-            "App\\bin\\webstorm64.exe",
+            "app\\bin\\webstorm64.exe",
             "WebStorm"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\webstorm64.exe",
-            "WebStorm 2025.2.2"
+            "app\\bin\\webstorm64.exe",
+            "WebStorm 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"WebStorm$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/webstorm/WebStorm-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/webstorm/WebStorm-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\webstorm64.exe",
+                "app\\bin\\webstorm64.exe",
                 "WebStorm $version"
             ]
         ]

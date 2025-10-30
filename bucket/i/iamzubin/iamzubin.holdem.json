@@ -1,0 +1,58 @@
+{
+    "version": "0.2.3",
+    "description": "一款开源应用程序，它提供了一个临时的拖放存放区域，以便在桌面上更轻松地进行文件管理和多任务处理 | An open-source app that provides a temporary drag-and-drop holding area for easier file management and multitasking on desktop.",
+    "homepage": "https://github.com/iamzubin/holdem",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/iamzubin/holdem/releases/download/0.2.3/holdem_0.2.3_x64-setup.exe",
+            "hash": "304487dab475da6d53f85ee59956212bf8b78b9d90b1108c9082b24dc908db4f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\holdem.exe",
+            "Holdem"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.holdem.app\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.holdem.app\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/iamzubin/holdem/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/iamzubin/holdem/releases/download/$version/holdem_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

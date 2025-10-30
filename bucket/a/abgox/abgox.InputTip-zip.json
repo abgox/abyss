@@ -1,31 +1,54 @@
 {
-    "version": "2025.10.01",
-    "description": "(zip 版本) 一个输入法状态管理工具: 实时提示(鼠标方案/符号方案) + 状态切换(窗口触发/热键触发)。(zip version) An input method state management tool: real-time tip(mouse scheme/symbol scheme) + state switching (window trigger/hotkey trigger)",
-    "homepage": "https://inputtip.abgox.com",
+    "version": "2025.10.09-d3f608e",
+    "description": "(zip 版本) 一个输入法状态管理工具: 实时提示(鼠标方案/符号方案) + 状态切换(窗口触发/热键触发) | (zip version) An input method state management tool: real-time tip(mouse scheme/symbol scheme) + state switching (window trigger/hotkey trigger)",
+    "homepage": "https://inputtip.abgox.com/",
     "license": {
         "identifier": "AGPL-3.0-only",
         "url": "https://github.com/abgox/InputTip/blob/main/LICENSE"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/InputTip/archive/2c4b97ed363ef65df59161abdc0d9f1285964afe.zip#/InputTip-main.zip",
-            "hash": "e46fe0e30e99c37aed33fa3151304f45b1f7cebc33a2d426fa8075c930036781"
+            "url": "https://github.com/abgox/InputTip/archive/d3f608e70b16f42c2778f15836258aa6c88c9d3d.zip",
+            "hash": "292fbe9d533466bc8af86de404e3a892ae716ab5a8d97d7d31a2bbb5792147f9"
         }
     },
-    "extract_dir": "InputTip-2c4b97ed363ef65df59161abdc0d9f1285964afe",
+    "extract_dir": "InputTip-d3f608e70b16f42c2778f15836258aa6c88c9d3d",
+    "extract_to": "app",
     "bin": [
         [
-            "src\\AutoHotkey\\AutoHotkey64.exe",
+            "app\\src\\AutoHotkey\\AutoHotkey64.exe",
             "InputTip",
-            "$dir\\src\\InputTip.ahk"
+            "$dir\\app\\src\\InputTip.ahk"
         ]
     ],
     "shortcuts": [
         [
-            "src\\AutoHotkey\\AutoHotkey64.exe",
+            "app\\src\\AutoHotkey\\AutoHotkey64.exe",
             "InputTip",
-            "\"$dir\\src\\InputTip.ahk\"",
-            "src\\InputTipIcon\\default\\app.ico"
+            "\"$dir\\app\\src\\InputTip.ahk\"",
+            "app\\src\\InputTipIcon\\default\\app.ico"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\src\\InputTip.ini",
+            "InputTip.ini"
+        ],
+        [
+            "app\\src\\InputTipSymbol",
+            "InputTipSymbol"
+        ],
+        [
+            "app\\src\\InputTipCursor",
+            "InputTipCursor"
+        ],
+        [
+            "app\\src\\InputTipIcon",
+            "InputTipIcon"
+        ],
+        [
+            "app\\src\\plugins",
+            "plugins"
         ]
     ],
     "pre_install": [
@@ -50,36 +73,19 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": [
-        [
-            "src\\InputTip.ini",
-            "InputTip.ini"
-        ],
-        [
-            "src\\InputTipSymbol",
-            "InputTipSymbol"
-        ],
-        [
-            "src\\InputTipCursor",
-            "InputTipCursor"
-        ],
-        [
-            "src\\InputTipIcon",
-            "InputTipIcon"
-        ],
-        [
-            "src\\plugins",
-            "plugins"
-        ]
-    ],
     "checkver": {
-        "url": "https://api.github.com/repos/abgox/InputTip/commits?path=src/version-zip.txt&page=1&per_page=5",
-        "regex": "sha\":\"(?<sha>\\w+)\".*?message\":\".*?(?<version>[\\d\\.]+)\""
+        "script": [
+            "$version = Invoke-RestMethod -Uri 'https://github.com/abgox/InputTip/raw/refs/heads/main/src/version-zip.txt'",
+            "$commit = Invoke-RestMethod -Uri 'https://api.github.com/repos/abgox/InputTip/commits?page=1&per_page=3'",
+            "\"ver:$($version.Trim())-$($commit[0].sha.substring(0, 7));\"",
+            "\"sha:$($commit[0].sha);\""
+        ],
+        "regex": "ver:(?<version>[^;]+).*?sha:(?<sha>[^;]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/abgox/InputTip/archive/$matchSha.zip#/InputTip-main.zip"
+                "url": "https://github.com/abgox/InputTip/archive/$matchSha.zip"
             }
         },
         "extract_dir": "InputTip-$matchSha"

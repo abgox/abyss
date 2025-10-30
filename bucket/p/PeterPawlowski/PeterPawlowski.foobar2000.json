@@ -1,0 +1,82 @@
+{
+    "version": "2.25.2",
+    "description": "一款适用于 Windows 平台的高级免费音频播放器 | An advanced freeware audio player for the Windows platform.",
+    "homepage": "https://www.foobar2000.org/",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.foobar2000.org/license"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.foobar2000.org/files/foobar2000-x64_v2.25.2.exe",
+            "hash": "2b1863a038d386ce9d81ec7efe9c0acb80652435db56c9598bc1d88e16c1d6f4"
+        },
+        "arm64": {
+            "url": "https://www.foobar2000.org/files/foobar2000-arm64ec_v2.25.2.exe",
+            "hash": "8a7dd9172fc2788f914718f8a8e31aba7d77fceafac15c84d30806a74d964f28"
+        }
+    },
+    "bin": "app\\foobar2000.exe",
+    "shortcuts": [
+        [
+            "app\\foobar2000.exe",
+            "Foobar2000"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\foobar2000-v2\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'PeterPawlowski.foobar2000' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

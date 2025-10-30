@@ -1,26 +1,33 @@
 {
-    "version": "1.0.227",
-    "description": "一个现代终端。A terminal for a more modern age.",
-    "homepage": "https://tabby.sh",
+    "version": "1.0.228",
+    "description": "一个现代终端 | A terminal for a more modern age.",
+    "homepage": "https://tabby.sh/",
     "license": {
         "identifier": "MIT",
         "url": "https://github.com/Eugeny/tabby/blob/master/LICENSE"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.227/tabby-1.0.227-portable-x64.zip",
-            "hash": "7609c1d1efff0e41cf73fdc73c3021710ac84ddb100f2b17ac6a632c856805be"
+            "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.228/tabby-1.0.228-portable-x64.zip",
+            "hash": "f9c0a379e94d8a329580a8fa389f7b1b209dfff9b5fca0e9a241fb0debe24793"
         },
         "arm64": {
-            "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.227/tabby-1.0.227-portable-arm64.zip",
-            "hash": "9c88f9608dfb723bb28f6bb1891cb465626f31c525c951e547103bdc85417906"
+            "url": "https://github.com/Eugeny/tabby/releases/download/v1.0.228/tabby-1.0.228-portable-arm64.zip",
+            "hash": "a7c44d48c65fb1d5285b773c58f887c7b0cea3d052a557f508cf66183a78199a"
         }
     },
-    "bin": "Tabby.exe",
+    "extract_to": "app",
+    "bin": "app\\Tabby.exe",
     "shortcuts": [
         [
-            "Tabby.exe",
+            "app\\Tabby.exe",
             "Tabby"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\data",
+            "AppData\\Roaming\\tabby"
         ]
     ],
     "pre_install": [
@@ -44,9 +51,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "data",
     "checkver": {
-        "github": "https://github.com/Eugeny/tabby"
+        "url": "https://github.com/Eugeny/tabby/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -56,6 +63,9 @@
             "arm64": {
                 "url": "https://github.com/Eugeny/tabby/releases/download/v$version/tabby-$version-portable-arm64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

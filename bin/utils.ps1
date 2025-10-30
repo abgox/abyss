@@ -12,9 +12,6 @@ try {
     if ($scoopdir -and $ScoopConfig.root_path -ne $scoopdir) {
         scoop config 'root_path' $scoopdir
     }
-    if ($globaldir -and $ScoopConfig.global_path -ne $globaldir) {
-        scoop config 'global_path' $globaldir
-    }
 
     # 卸载时的操作行为。
     $uninstallActionLevel = $ScoopConfig.'abgox-abyss-app-uninstall-action'
@@ -27,6 +24,7 @@ try {
         }
         if ($bucket -ne 'abyss') {
             error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
+            error "Reference: https://abyss.abgox.com/faq/bucket-name"
         }
     }
 }
@@ -50,10 +48,13 @@ function A-Test-DeveloperMode {
     <#
     .SYNOPSIS
         检查开发者模式是否启用
+
+    .LINK
+        https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging
     #>
     $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
     try {
-        $value = Get-ItemProperty -Path $path -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
+        $value = Get-ItemProperty -LiteralPath $path -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
         return $value.AllowDevelopmentWithoutDevLicense -eq 1
     }
     catch {
@@ -90,7 +91,10 @@ function A-Complete-Install {
 }
 
 function A-Start-Uninstall {
-
+    # 如果新版本为 pending 或 deprecated，拒绝更新
+    if ($version -in @('pending', 'deprecated')) {
+        A-Deny-Update
+    }
 }
 
 function A-Complete-Uninstall {
@@ -103,19 +107,12 @@ function A-Ensure-Directory {
         确保指定目录路径存在
 
     .PARAMETER Path
-        需要确保存在的目录路径
-
-    .EXAMPLE
-        A-Ensure-Directory
-        确保 $persist_dir 目录存在
-
-    .EXAMPLE
-        A-Ensure-Directory "D:\scoop\persist\VSCode"
+        目录路径，默认使用 $persist_dir
     #>
     param (
         [string]$Path = $persist_dir
     )
-    if (!(Test-Path $Path)) {
+    if (-not (Test-Path -LiteralPath $Path)) {
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
     }
 }
@@ -133,25 +130,49 @@ function A-Copy-Item {
         A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" "$persist_dir\InputTip.ini"
 
     .NOTES
-        文件名必须一一对应，不允许使用以下写法
+        文件或目录名必须对应，以下是错误写法
         A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" $persist_dir
     #>
     param (
-        [string]$From,
-        [string]$To
+        [string]$Path,
+        [string]$Destination
     )
 
-    A-Ensure-Directory (Split-Path $To -Parent)
+    if (-not (Test-Path -LiteralPath $Path)) {
+        error "Source path does not exist: $Path"
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
 
-    if (Test-Path $To) {
-        # 如果是错误的文件类型，需要删除重建
-        if ((Get-Item $From).PSIsContainer -ne (Get-Item $To).PSIsContainer) {
-            Remove-Item $To -Recurse -Force
-            Copy-Item -Path $From -Destination $To -Recurse -Force
+    $sourceItem = Get-Item -LiteralPath $Path
+    $targetDir = Split-Path $Destination -Parent
+
+    A-Ensure-Directory $targetDir
+
+    $needCopy = $true
+
+    if (Test-Path -LiteralPath $Destination) {
+        $targetItem = Get-Item -LiteralPath $Destination
+
+        if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
+            $needCopy = $false
+        }
+        else {
+            Remove-Item $Destination -Recurse -Force
+            $needCopy = $true
         }
     }
-    else {
-        Copy-Item -Path $From -Destination $To -Recurse -Force
+
+    if ($needCopy) {
+        try {
+            Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
+            Write-Host "Copying $Path => $Destination"
+        }
+        catch {
+            error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
     }
 }
 
@@ -167,50 +188,57 @@ function A-New-PersistFile {
         文件内容。如果指定了此参数，则写入文件内容，否则创建空文件
 
     .PARAMETER Encoding
-        文件编码（默认: utf8），此参数仅在指定了 -content 参数时有效
-
-    .PARAMETER Force
-        强制创建文件，即使文件已存在。
+        文件编码，默认为 utf8
+        此参数仅在指定了 -Content 参数时有效
 
     .EXAMPLE
-        A-New-PersistFile -path "$persist_dir\data.json" -content "{}"
+        A-New-PersistFile "$persist_dir\data.json" -Content "{}"
         创建文件并指定内容
 
     .EXAMPLE
-        A-New-PersistFile -path "$persist_dir\data.ini" -content @('[Settings]', 'AutoUpdate=0')
+        A-New-PersistFile "$persist_dir\data.ini" -Content @('[Settings]', 'AutoUpdate=0')
         创建文件并指定内容，传入数组会被写入多行
 
     .EXAMPLE
-        A-New-PersistFile -path "$persist_dir\data.ini"
+        A-New-PersistFile "$persist_dir\data.ini"
         创建空文件
     #>
     param (
         [string]$Path,
-        [string]$Copy,
         [array]$Content,
         [ValidateSet("utf8", "utf8Bom", "utf8NoBom", "unicode", "ansi", "ascii", "bigendianunicode", "bigendianutf32", "oem", "utf7", "utf32")]
-        [string]$Encoding = "utf8",
-        [switch]$Force
+        [string]$Encoding = "utf8"
     )
 
-    if (Test-Path $Path) {
-        # 如果是一个错误的目录，也要删除重建
-        $isDir = (Get-Item $Path).PSIsContainer
-        if ($Force -or $isDir) {
-            Remove-Item $Path -Force -ErrorAction SilentlyContinue
+    $itemExists = Test-Path -LiteralPath $Path
+    $item = if ($itemExists) { Get-Item -LiteralPath $Path } else { $null }
+
+    if ($itemExists) {
+        # 如果是一个目录，就删除它
+        if ($item.PSIsContainer) {
+            try {
+                Remove-Item $Path -Recurse -Force
+            }
+            catch {
+                error $_.Exception.Message
+                A-Show-IssueCreationPrompt
+                A-Exit
+            }
         }
         else {
             return
         }
     }
 
-    if ($PSBoundParameters.ContainsKey('content')) {
-        # 当明确传递了 content 参数时（包括空字符串或 $null）
-        A-Ensure-Directory (Split-Path $Path -Parent)
+    $parentDir = Split-Path $Path -Parent
+    A-Ensure-Directory $parentDir
+
+    if ($PSBoundParameters.ContainsKey('Content')) {
+        # 当明确传递了 Content 参数时（包括空字符串或 $null）
         Set-Content -Path $Path -Value $Content -Encoding $Encoding -Force
     }
     else {
-        # 当没有传递 content 参数时
+        # 当没有传递 Content 参数时
         New-Item -ItemType File -Path $Path -Force | Out-Null
     }
 }
@@ -225,10 +253,10 @@ function A-New-LinkFile {
 
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
-        可忽略，将根据 LinkPaths 自动生成
+        通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkFile -LinkPaths @("$env:UserProfile\.config\starship.toml")
+        A-New-LinkFile @("$env:UserProfile\.config\starship.toml")
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -236,26 +264,13 @@ function A-New-LinkFile {
     #>
     param (
         [array]$LinkPaths,
-        [System.Collections.Generic.List[string]]$LinkTargets = @()
+        [array]$LinkTargets = @()
     )
 
     if (!$isAdmin -and !$isDevMode) {
-        error "$app requires admin permission to create SymbolicLink."
+        error "$app requires admin permission or developer mode to create SymbolicLink."
+        error "Reference: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
         A-Exit
-    }
-
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $LinkPath = $LinkPaths[$i]
-        $LinkTarget = $LinkTargets[$i]
-
-        if (!$LinkTargets[$i]) {
-            $path = $LinkPath.replace($env:UserProfile, $persist_dir)
-            # 如果不在 $env:UserProfile 目录下，则去掉盘符
-            if ($path -notlike "$persist_dir*") {
-                $path = $path -replace '^[a-zA-Z]:', $persist_dir
-            }
-            $LinkTargets.Add($path)
-        }
     }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
@@ -271,10 +286,10 @@ function A-New-LinkDirectory {
 
     .PARAMETER LinkTargets
         链接指向的目标路径数组 (链接指向的位置)
-        可忽略，将根据 LinkPaths 自动生成
+        通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkDirectory -LinkPaths @("$env:LocalAppData\nvim","$env:LocalAppData\nvim-data")
+        A-New-LinkDirectory @("$env:AppData\Code","$env:UserProfile\.vscode")
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -282,22 +297,8 @@ function A-New-LinkDirectory {
     #>
     param (
         [array]$LinkPaths,
-        [System.Collections.Generic.List[string]]$LinkTargets = @()
+        [array]$LinkTargets = @()
     )
-
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $LinkPath = $LinkPaths[$i]
-        $LinkTarget = $LinkTargets[$i]
-
-        if (!$LinkTarget) {
-            $path = $LinkPath.replace($env:UserProfile, $persist_dir)
-            # 如果不在 $env:UserProfile 目录下，则去掉盘符
-            if ($path -notlike "$persist_dir*") {
-                $path = $path -replace '^[a-zA-Z]:', $persist_dir
-            }
-            $LinkTargets.Add($path)
-        }
-    }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
 }
@@ -309,24 +310,34 @@ function A-Remove-Link {
 
     .DESCRIPTION
         该函数用于删除在应用安装过程中创建的 SymbolicLink 和 Junction
+        根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
-    if ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc")) {
+    if ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path -LiteralPath "$dir\scoop-install-A-Install-Exe.jsonc")) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
-    elseif ($cmd -eq "update" -or $uninstallActionLevel -notlike "*2*") {
-        return
+    elseif ($uninstallActionLevel -notlike "*2*") {
+        # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
+        if (-not $purge) {
+            return
+        }
     }
 
     @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
-        if (Test-Path $_) {
+        if (Test-Path -LiteralPath $_) {
             $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
 
             foreach ($p in $LinkPaths) {
-                if (Test-Path $p) {
+                if (A-Test-SymbolicLink $p) {
                     try {
                         Write-Host "Unlinking $p"
                         Remove-Item $p -Force -Recurse -ErrorAction Stop
+
+                        $parent = Split-Path $p -Parent
+                        if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                            Write-Host "Removing $parent"
+                            Remove-Item $parent -Force -Recurse -ErrorAction Stop
+                        }
                     }
                     catch {
                         error $_.Exception.Message
@@ -343,11 +354,11 @@ function A-Remove-TempData {
         删除临时数据目录或文件
 
     .DESCRIPTION
-        该函数用于递归删除指定的临时数据目录或文件。
+        该函数用于删除指定的临时数据目录或文件。
         根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
 
     .PARAMETER Paths
-        要删除的临时数据路径数组，支持通过管道传入。
+        要删除的临时数据路径数组。
         可以包含文件或目录路径。
 
     .EXAMPLE
@@ -359,13 +370,22 @@ function A-Remove-TempData {
     )
 
     if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
-        return
+        # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
+        if (-not $purge) {
+            return
+        }
     }
     foreach ($p in $Paths) {
-        if (Test-Path $p) {
+        if (Test-Path -LiteralPath $p) {
             try {
                 Write-Host "Removing $p"
                 Remove-Item $p -Force -Recurse -ErrorAction Stop
+
+                $parent = Split-Path $p -Parent
+                if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                    Write-Host "Removing $parent"
+                    Remove-Item $parent -Force -Recurse -ErrorAction Stop
+                }
             }
             catch {
                 error $_.Exception.Message
@@ -397,29 +417,14 @@ function A-Stop-Process {
         [string[]]$ExtraProcessNames
     )
 
-    $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
-    $Paths += $ExtraPaths
-
-    if ($ExtraProcessNames) {
-        foreach ($processName in $ExtraProcessNames) {
-            $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
-            if ($p) {
-                try {
-                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
-                    Stop-Process -Id $p.Id -Force -ErrorAction Stop
-                }
-                catch {
-                    error $_.Exception.Message
-                    A-Exit
-                }
-            }
-        }
-    }
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
+
+    $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
+    $Paths += $ExtraPaths
 
     $processes = Get-Process
 
@@ -434,7 +439,31 @@ function A-Stop-Process {
                 }
             }
             catch {
+                if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
+                    # 进程已经不存在，无需处理
+                    continue
+                }
                 error $_.Exception.Message
+                A-Show-IssueCreationPrompt
+                A-Exit
+            }
+        }
+    }
+
+    foreach ($processName in $ExtraProcessNames) {
+        $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
+        if ($p) {
+            try {
+                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                Stop-Process -Id $p.Id -Force -ErrorAction Stop
+            }
+            catch {
+                if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
+                    # 进程已经不存在，无需处理
+                    continue
+                }
+                error $_.Exception.Message
+                A-Show-IssueCreationPrompt
                 A-Exit
             }
         }
@@ -444,74 +473,73 @@ function A-Stop-Process {
 }
 
 function A-Stop-Service {
-    <#
-    .SYNOPSIS
-        停止并删除 Windows 服务
-
-    .DESCRIPTION
-        该函数尝试停止并删除指定的 Windows 服务。
-
-    .PARAMETER ServiceName
-        要停止和删除的 Windows 服务名称
-
-    .PARAMETER NoRemove
-        不删除服务，仅停止服务。
-
-    .EXAMPLE
-        A-Stop-Service -ServiceName "Everything"
-    #>
     param(
         [string]$ServiceName,
-        [switch]$NoRemove
+        [switch]$RequireAdmin
     )
 
-    $isExist = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
-    if (!$isExist) {
+    if (-not $isAdmin -and $RequireAdmin) {
+        A-Require-Admin
+    }
+
+    $service = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
+    if (-not $service) {
         return
     }
 
     try {
-        Write-Host "Stopping the service: $ServiceName"
-        Stop-Service -Name $ServiceName -ErrorAction Stop
+        Write-Host "Stopping the service: $($service.Name)"
+        $service | Stop-Service -ErrorAction Stop -Force
     }
     catch {
         error $_.Exception.Message
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
-    if ($NoRemove) {
-        return
-    }
+    return $service
+}
 
-    try {
-        Remove-Service -Name $ServiceName -ErrorAction Stop
-    }
-    catch {
-        error $_.Exception.Message
-        A-Exit
+function A-Remove-Service {
+    param(
+        [Parameter(ValueFromPipeline)]
+        $InputObject
+    )
+
+    process {
+        $service = $_
+        if (-not $service) { return }
+
+        try {
+            Write-Host "Removing the service: $($service.Name)"
+            $service | Remove-Service -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
     }
 }
 
 function A-Install-Exe {
     param(
-        [ValidateSet("inno")]
+        [ValidateSet("inno", "msi")]
         [string]$InstallerType,
         [string]$Installer,
         [array]$ArgumentList,
 
-        # 表示安装成功的标志文件，如果此路径或文件存在，则认为安装成功
-        [string]$SuccessFile,
-
-        # $Uninstaller 和 $SuccessFile 作用一致，不过它必须指定软件的卸载程序
         # 当指定它后，A-Uninstall-Exe 会默认使用它作为卸载程序路径
-        [string]$Uninstaller,
-
-        # 仅用于标识，表示可能需要用户交互
-        [switch]$NoSilent,
-
-        # 超时时间（秒）
-        [string]$Timeout = 300
+        [string]$Uninstaller
     )
+
+    if ($PSBoundParameters.ContainsKey('Installer')) {
+        $Installer = A-Get-AbsolutePath $Installer
+    }
+    else {
+        # $fname 由 Scoop 提供，即下载的文件名
+        $Installer = Join-Path $dir ($fname | Select-Object -First 1)
+    }
 
     if ($InstallerType -eq "inno") {
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
@@ -522,159 +550,139 @@ function A-Install-Exe {
                 '/NoRestart',
                 '/SP-',
                 "/Log=$dir\$app-install.log",
-                "/Dir=`"$dir`""
+                "/Dir=`"$dir\app`""
             )
         }
         if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
-            $Uninstaller = 'unins000.exe'
+            $Uninstaller = 'app\unins000.exe'
         }
     }
-    # elseif () {
+    elseif ($InstallerType -eq "msi") {
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            $msiFile = Join-Path $dir ($fname | Select-Object -First 1)
 
-    # }
+            $ArgumentList = @(
+                '/i',
+                "`"$msiFile`"",
+                # '/passive',
+                '/quiet',
+                '/norestart'
+            )
+        }
+        if (!$PSBoundParameters.ContainsKey('Installer')) {
+            $Installer = if ([Environment]::Is64BitOperatingSystem) {
+                'C:\Windows\SysWOW64\msiexec.exe'
+            }
+            else {
+                'C:\Windows\System32\msiexec.exe'
+            }
+        }
+        if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
+            $Uninstaller = $Installer
+        }
+    }
     else {
         # 如果没有传递安装参数，则使用默认参数
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @('/S', "/D=$dir")
+            $ArgumentList = @('/S', "/D=$dir\app")
         }
     }
 
-    if ($PSBoundParameters.ContainsKey('Installer')) {
-        $path = A-Get-AbsolutePath $Installer
-    }
-    else {
-        # $fname 由 Scoop 提供，即下载的文件名
-        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
-    }
-
-    if (!$path) {
-        error "Please contact the bucket maintainer!"
+    if (!$Installer) {
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
-    $fileName = Split-Path $path -Leaf
-
-    if (!$PSBoundParameters.ContainsKey('SuccessFile')) {
-        $SuccessFile = try { $manifest.shortcuts[0][0] }catch { $manifest.architecture.$architecture.shortcuts[0][0] }
-        $SuccessFile = Invoke-Expression "`"$SuccessFile`""
+    if (!(Test-Path -LiteralPath $Installer)) {
+        error "'$Installer' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
     }
-    $SuccessFile = A-Get-AbsolutePath $SuccessFile
+
+    $InstallerFileName = Split-Path $Installer -Leaf
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
     $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
     @{
         InstallerType = $InstallerType
-        Installer     = $path
+        Installer     = $Installer
         ArgumentList  = $ArgumentList
-        SuccessFile   = $SuccessFile
         Uninstaller   = $Uninstaller
     } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
-    if (Test-Path $path) {
+    Write-Host "Running the installer: $InstallerFileName"
 
-        Write-Host "Running the installer: $fileName"
-        if ($NoSilent) {
-            warn "The installer may require some manual operations."
-        }
-        warn "It will be aborted if times out: $Timeout seconds"
+    try {
+        $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru -WindowStyle Hidden
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
 
-        try {
-            # 在后台作业中运行安装程序，强制停止进程的时机更晚
-            $job = Start-Job -ScriptBlock {
-                param($path, $ArgumentList)
+    Start-Sleep -Seconds 1
 
-                Start-Process $path -ArgumentList $ArgumentList -WindowStyle Hidden -PassThru
+    if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
+        error "'$Uninstaller' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
 
-            } -ArgumentList $path, $ArgumentList
+    $removeFile = if ($InstallerType -eq "msi") { $msiFile } else { $Installer }
 
-            $startTime = Get-Date
-            $seconds = 1
-            if ($Uninstaller) {
-                $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
-            }
-            else {
-                $fileExists = Test-Path $SuccessFile
-            }
-
-            try {
-                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
-
-                    if ($Uninstaller) {
-                        $fileExists = (Test-Path $SuccessFile) -and (Test-Path $Uninstaller)
-                    }
-                    else {
-                        $fileExists = Test-Path $SuccessFile
-                    }
-                    if ($fileExists) {
-                        break
-                    }
-                    Start-Sleep -Seconds 1
-                    $seconds += 1
-                }
-                Microsoft.PowerShell.Utility\Write-Host
-
-                if ($path -notmatch "^C:\\Windows\\System32\\") {
-                    $null = Start-Job -ScriptBlock {
-                        param($path, $job)
-                        # 30 秒后再删除安装程序
-                        Start-Sleep -Seconds 30
-
-                        $job | Stop-Job -ErrorAction SilentlyContinue
-
-                        Get-Process | Where-Object { $_.Path -eq $path } | Stop-Process -Force -ErrorAction SilentlyContinue
-
-                        Remove-Item $path -Force -ErrorAction SilentlyContinue
-
-                    } -ArgumentList $path, $job
-                }
-            }
-            finally {
-                if (!$fileExists) {
-                    A-Exit
-                }
-            }
-        }
-        catch {
-            error $_.Exception.Message
-            A-Exit
+    try {
+        if ($removeFile) {
+            Remove-Item $removeFile -Force -ErrorAction Stop
         }
     }
-    else {
-        error "'$path' not found."
-        A-Exit
+    catch {
+        error $_.Exception.Message
     }
 }
 
 function A-Uninstall-Exe {
     param(
+        # 仅安装时的安装程序类型为 msi 时才需要
+        [string]$ProductCode,
         [string]$Uninstaller,
-        [array]$ArgumentList,
-        # 仅用于标识，表示可能需要用户交互
-        [switch]$NoSilent,
-        # 超时时间（秒）
-        [string]$Timeout = 300,
-        # 如果存在这个 FailureFile 指定的文件或路径，则认定为卸载失败
-        # 如果未指定，默认使用 $Uninstaller
-        [string]$FailureFile,
-        # 是否等待卸载程序完成
-        # 它会忽略超时时间，一直等待卸载程序结束
-        # 除非确定卸载程序会自动结束，否则不要使用
-        [switch]$Wait,
-        # 是否需要隐藏卸载程序窗口
-        [switch]$Hidden
+        [array]$ArgumentList
     )
 
-    $installerInfo = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json
+    $InstallerInfoPath = "$dir\scoop-install-A-Install-Exe.jsonc"
 
-    if ($installerInfo.InstallerType -eq "inno") {
+    if (Test-Path -LiteralPath $InstallerInfoPath) {
+        $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+    }
+    else {
+        return
+    }
+
+    if ($InstallerInfo.InstallerType -eq "inno") {
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
             $ArgumentList = @('/VerySilent')
         }
     }
-    # elseif () {
+    elseif ($InstallerInfo.InstallerType -eq "msi") {
+        # msi 直接覆盖安装，无需卸载
+        if ($cmd -eq "update") {
+            return
+        }
 
-    # }
+        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+            if (!$ProductCode) {
+                return
+            }
+            $ArgumentList = @(
+                '/x',
+                "`"$ProductCode`"",
+                '/quiet',
+                '/norestart'
+            )
+        }
+    }
     else {
         # 如果没有传递卸载参数，则使用默认参数
         if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
@@ -683,84 +691,63 @@ function A-Uninstall-Exe {
     }
 
     if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
-        if (Test-Path "$dir\scoop-install-A-Install-Exe.jsonc") {
-            $Uninstaller = Get-Content "$dir\scoop-install-A-Install-Exe.jsonc" -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Uninstaller"
-        }
-        else {
-            return
-        }
+        $Uninstaller = $InstallerInfo.Uninstaller
     }
 
-    $path = A-Get-AbsolutePath $Uninstaller
+    $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
-    if ($path) {
-        $fileName = Split-Path $path -Leaf
+    if ($Uninstaller) {
+        $UninstallerFileName = Split-Path $Uninstaller -Leaf
+    }
+    else {
+        return
     }
 
-    if (Test-Path $path) {
+    if (!(Test-Path -LiteralPath $Uninstaller)) {
+        warn "'$Uninstaller' not found."
+        return
+    }
 
-        Write-Host "Running the uninstaller: $fileName"
-        if ($NoSilent) {
-            warn "The uninstaller may require some manual operations."
-        }
-        warn "It will be aborted if times out: $Timeout seconds"
+    Write-Host "Running the uninstaller: $UninstallerFileName"
 
-        if (!$PSBoundParameters.ContainsKey('FailureFile')) {
-            $FailureFile = $path
-        }
+    $paramList = @{
+        FilePath     = $Uninstaller
+        ArgumentList = $ArgumentList
+        WindowStyle  = "Hidden"
+        PassThru     = $true
+    }
+    $process = Start-Process @paramList
 
-        try {
-            $paramList = @{
-                FilePath     = $path
-                ArgumentList = $ArgumentList
-                WindowStyle  = if ($Hidden) { "Hidden" }else { "Normal" }
-                Wait         = $Wait
-                PassThru     = $true
-            }
+    try {
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
 
-            $startTime = Get-Date
-            $process = Start-Process @paramList
+    Start-Sleep -Seconds 1
+}
 
-            try {
-                $process | Wait-Process -Timeout $Timeout -ErrorAction Stop
-            }
-            catch {
-                error $_.Exception.Message
+function A-Uninstall-ExeManually {
+    param(
+        [array]$Path
+    )
 
-                $process | Stop-Process -Force -ErrorAction SilentlyContinue
-
-                A-Exit
-            }
-
-            $fileExists = Test-Path $FailureFile
-            $seconds = 1
-            try {
-                while ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -lt $Timeout) {
-                    Write-Host -NoNewline "`rWaiting: $seconds seconds" -ForegroundColor Yellow
-
-                    $fileExists = Test-Path $FailureFile
-                    if ($fileExists) {
-                        try {
-                            Remove-Item $FailureFile -Force -Recurse -ErrorAction SilentlyContinue
-                        }
-                        catch {}
-                    }
-                    else {
-                        break
-                    }
-                    Start-Sleep -Seconds 1
-                    $seconds += 1
+    foreach ($p in $Path) {
+        $p = A-Get-AbsolutePath $p
+        if (Test-Path -LiteralPath $p) {
+            if ((Get-ChildItem -LiteralPath $p -File -Recurse).Count -eq 0) {
+                try {
+                    Remove-Item $p -Force -Recurse -ErrorAction Stop
+                    continue
                 }
-                Microsoft.PowerShell.Utility\Write-Host
+                catch {}
             }
-            finally {
-                if ($fileExists) {
-                    A-Exit
-                }
-            }
-        }
-        catch {
-            error $_.Exception.Message
+            error "It requires you to uninstall it manually."
+            error "Reference: https://abyss.abgox.com/faq/uninstall-manually"
             A-Exit
         }
     }
@@ -780,17 +767,17 @@ function A-Add-MsixPackage {
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
-        $path = if ($fname -is [array]) { "$dir\$($fname[0])" }else { "$dir\$fname" }
+        $path = Join-Path $dir ($fname | Select-Object -First 1)
     }
 
     if (!$path) {
-        error "Please contact the bucket maintainer!"
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
     A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
 
-    return $PackageFamilyName
+    # return $PackageFamilyName
 }
 
 function A-Remove-MsixPackage {
@@ -807,12 +794,17 @@ function A-Add-Font {
 
     .PARAMETER FontType
         字体类型，支持 ttf, otf, ttc
-        默认为 ttf
+        如果未指定字体类型，则根据字体文件扩展名自动判断
     #>
     param(
         [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType = "ttf"
+        [string]$FontType
     )
+
+    if (!$FontType) {
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
+        $FontType = $fontFile.Extension.TrimStart(".")
+    }
 
     $filter = "*.$($FontType)"
 
@@ -834,7 +826,7 @@ function A-Add-Font {
         Microsoft.PowerShell.Utility\Write-Host
         A-Exit
     }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
     if (!$global) {
         # Ensure user font install directory exists and has correct permission settings
         # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
@@ -848,10 +840,10 @@ function A-Add-Font {
     }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
         New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
-        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir
+        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force
     }
 }
 
@@ -865,12 +857,17 @@ function A-Remove-Font {
 
     .PARAMETER FontType
         字体类型，支持 ttf, otf, ttc
-        默认为 ttf
+        如果未指定字体类型，则根据字体文件扩展名自动判断
     #>
     param(
         [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType = "ttf"
+        [string]$FontType
     )
+
+    if (!$FontType) {
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
+        $FontType = $fontFile.Extension.TrimStart(".")
+    }
 
     $filter = "*.$($FontType)"
 
@@ -880,9 +877,9 @@ function A-Remove-Font {
         ".ttc" = "TrueType"
     }
 
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
-        Get-ChildItem $fontInstallDir -Filter $_.Name | ForEach-Object {
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
+        Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name | ForEach-Object {
             try {
                 Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
             }
@@ -892,10 +889,9 @@ function A-Remove-Font {
             }
         }
     }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem $dir -Filter $filter | ForEach-Object {
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
@@ -909,35 +905,36 @@ function A-Add-PowerToysRunPlugin {
         [string]$PluginName
     )
 
-    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+    $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
     $PluginPath = "$PluginsDir\$PluginName"
     $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
 
     try {
-        if (Test-Path -Path $PluginPath) {
+        if (Test-Path -LiteralPath $PluginPath) {
             Write-Host "Removing $PluginPath"
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
-        $CopyingPath = if (Test-Path -Path "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
+        $CopyingPath = if (Test-Path -LiteralPath "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
         A-Ensure-Directory (Split-Path $PluginPath -Parent)
         Write-Host "Copying $CopyingPath => $PluginPath"
-        Copy-Item -Path $CopyingPath -Destination $PluginPath -Recurse -Force
+        Copy-Item -LiteralPath $CopyingPath -Destination $PluginPath -Recurse -Force
 
         @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
     }
     catch {
         error $_.Exception.Message
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 }
 
 function A-Remove-PowerToysRunPlugin {
-    $PluginsDir = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins"
+    $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
 
     $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
 
     try {
-        if (Test-Path -Path $OutFile) {
+        if (Test-Path -LiteralPath $OutFile) {
             $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
             $PluginPath = "$PluginsDir\$PluginName"
         }
@@ -945,13 +942,14 @@ function A-Remove-PowerToysRunPlugin {
             return
         }
 
-        if (Test-Path -Path $PluginPath) {
+        if (Test-Path -LiteralPath $PluginPath) {
             Write-Host "Removing $PluginPath"
             Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
         }
     }
     catch {
         error $_.Exception.Message
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 }
@@ -972,9 +970,9 @@ function A-Expand-SetupExe {
     else {
         $7z = $all7z[0].FullName
     }
-    Expand-7zipArchive $7z $dir
+    Expand-7zipArchive $7z (Join-Path $dir 'app')
 
-    Remove-Item "$dir\`$*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item "$dir\app\`$*" -Recurse -Force -ErrorAction SilentlyContinue
 }
 
 function A-Require-Admin {
@@ -996,6 +994,7 @@ function A-Deny-Update {
     #>
     if ($cmd -eq "update") {
         error "'$app' does not allow update by Scoop."
+        error "Reference: https://abyss.abgox.com/faq/deny-update"
         A-Exit
     }
 }
@@ -1021,7 +1020,7 @@ function A-Hold-App {
             if ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -ge $Timeout) {
                 break
             }
-            if ((scoop list).Name | Where-Object { $_ -eq $app }) {
+            if ((scoop list $app).Name | Where-Object { $_ -eq $app }) {
                 $can = $true
                 break
             }
@@ -1042,15 +1041,23 @@ function A-Deny-Manifest {
     param(
         [string]$NewManifestName
     )
-
-    if ($NewManifestName) {
-        $msg = "'$app' is renamed to '$NewManifestName'."
-    }
-    else {
-        $msg = "'$app' is deprecated."
+    switch ($manifest.version) {
+        deprecated {
+            $msg = "'$app' is deprecated."
+        }
+        pending {
+            $msg = "'$app' is pending."
+        }
+        renamed {
+            $msg = "'$app' is renamed to '$NewManifestName'."
+        }
+        Default {
+            $msg = "'$app' is deprecated."
+        }
     }
 
     error $msg
+    error "Reference: https://abyss.abgox.com/faq/deny-manifest"
 
     A-Exit
 }
@@ -1071,7 +1078,7 @@ function A-Move-PersistDirectory {
         [array]$OldNames
     )
 
-    if (Test-Path $persist_dir) {
+    if (A-Test-DirectoryNotEmpty $persist_dir) {
         return
     }
 
@@ -1080,7 +1087,7 @@ function A-Move-PersistDirectory {
     foreach ($oldName in $OldNames) {
         $old = "$dir\$oldName"
 
-        if (Test-Path $old) {
+        if (A-Test-DirectoryNotEmpty $old) {
             try {
                 Rename-Item -Path $old -NewName $app -Force -ErrorAction Stop
                 break
@@ -1097,6 +1104,22 @@ function A-Get-ProductCode {
         [string]$AppNamePattern
     )
 
+    $code = A-Get-UninstallEntryByAppName $AppNamePattern | Select-Object -ExpandProperty "PSChildName"
+
+    if ($code) {
+        return $code
+    }
+
+    error "Cannot find product code of '$app'"
+
+    return $null
+}
+
+function A-Get-UninstallEntryByAppName {
+    param (
+        [string]$AppNamePattern
+    )
+
     # 搜索注册表位置
     $registryPaths = @(
         "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
@@ -1109,15 +1132,10 @@ function A-Get-ProductCode {
 
         foreach ($item in $uninstallItems) {
             if ($null -ne $item.DisplayName -and $item.DisplayName -match $AppNamePattern) {
-                if ($item.UninstallString -match '\{[0-9A-Fa-f\-]{36}\}') {
-                    # 返回匹配到的第一个 ProductCode GUID
-                    return $Matches[0]
-                }
+                return $item
             }
         }
     }
-
-    error "Cannot find product code of '$app'"
 
     return $null
 }
@@ -1215,7 +1233,7 @@ function A-Get-InstallerInfoFromWinget {
             Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
         }
         catch {
-            Write-Host "::error::安装并导入 powershell-yaml 模块失败" -ForegroundColor Red
+            Write-Host "::error::安装并导入 powershell-yaml 模块失败: $_" -ForegroundColor Red
         }
     }
 
@@ -1229,8 +1247,8 @@ function A-Get-InstallerInfoFromWinget {
     try {
         $parameters = @{
             Uri                      = $url
-            ConnectionTimeoutSeconds = 10
-            OperationTimeoutSeconds  = 15
+            ConnectionTimeoutSeconds = 15
+            OperationTimeoutSeconds  = 120
             UseBasicParsing          = $true
             ErrorAction              = 'Stop'
         }
@@ -1242,7 +1260,7 @@ function A-Get-InstallerInfoFromWinget {
         $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
-        Write-Host "::warning::访问 $url 失败" -ForegroundColor Yellow
+        Write-Host "::warning::访问 $url 失败: $_" -ForegroundColor Yellow
         Write-Host
 
         $url = "https://github.com/microsoft/winget-pkgs/tree/master/manifests/$rootDir/$PackagePath"
@@ -1250,7 +1268,7 @@ function A-Get-InstallerInfoFromWinget {
             $page = Invoke-WebRequest $url -UseBasicParsing -ErrorAction Stop
         }
         catch {
-            Write-Host "::warning::访问 $url 失败" -ForegroundColor Yellow
+            Write-Host "::warning::访问 $url 失败: $_" -ForegroundColor Yellow
             Write-Host
             return
         }
@@ -1284,8 +1302,8 @@ function A-Get-InstallerInfoFromWinget {
     try {
         $parameters = @{
             Uri                      = $url
-            ConnectionTimeoutSeconds = 10
-            OperationTimeoutSeconds  = 15
+            ConnectionTimeoutSeconds = 15
+            OperationTimeoutSeconds  = 120
             UseBasicParsing          = $true
             ErrorAction              = 'Stop'
         }
@@ -1295,7 +1313,7 @@ function A-Get-InstallerInfoFromWinget {
         $installerYaml = Invoke-WebRequest @parameters
     }
     catch {
-        Write-Host "::error::访问 $url 失败" -ForegroundColor Red
+        Write-Host "::error::访问 $url 失败: $_" -ForegroundColor Red
         Write-Host
         return
     }
@@ -1346,8 +1364,8 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    # 写入到 bin\scoop-auto-check-update-temp-data.jsonc，用于后续读取
-    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\scoop-auto-check-update-temp-data.jsonc" -Force -Encoding utf8
+    # 写入到 temp-autoupdate.json，用于后续读取
+    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\..\temp-autoupdate.json" -Force -Encoding utf8
 
     $installerInfo
 }
@@ -1411,6 +1429,106 @@ function A-Compare-Version {
     return 0
 }
 
+function A-Test-DirectoryNotEmpty {
+    param(
+        [string]$Path
+    )
+    if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
+        return $false
+    }
+    return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
+}
+
+function A-Test-SymbolicLink {
+    param(
+        [string]$Path
+    )
+    try {
+        $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+        return ($null -ne $item.LinkType)
+    }
+    catch {
+        return $false
+    }
+}
+
+#region 处理一些兼容性变更
+
+if ($cmd) {
+    switch ($app) {
+        # 从 2025-10 开始，在未来合适的时机移除 astral-sh.uv，Yarn.Yarn，JohannesMillan.superProductivity
+        'astral-sh.uv' {
+            if (Test-Path -LiteralPath $persist_dir) {
+                @(
+                    @{
+                        old = "data\python"
+                        new = "AppData\Roaming\uv\python"
+                    },
+                    @{
+                        old = "data\tools"
+                        new = "AppData\Roaming\uv\tools"
+                    },
+                    @{
+                        old = "data\cache"
+                        new = "AppData\Local\uv\cache"
+                    }
+                ) | ForEach-Object {
+                    $old_dir = Join-Path $persist_dir $_.old
+                    $new_dir = Join-Path $persist_dir $_.new
+
+                    if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
+                        A-Ensure-Directory (Split-Path $new_dir -Parent)
+                        Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
+                    }
+                }
+                if ((Get-ChildItem "$persist_dir\data" -ErrorAction SilentlyContinue).Count -eq 0) {
+                    Remove-Item "$persist_dir\data" -Force -Recurse -ErrorAction SilentlyContinue
+                }
+            }
+        }
+        'Yarn.Yarn' {
+            if (Test-Path -LiteralPath $persist_dir) {
+                @(
+                    @{
+                        old = "global"
+                        new = "AppData\Local\Yarn\Data\global"
+                    },
+                    @{
+                        old = "AppData\Local\Yarn\Data\global\bin"
+                        new = "AppData\Local\Yarn\bin"
+                    },
+                    @{
+                        old = "cache"
+                        new = "AppData\Local\Yarn\cache"
+                    },
+                    @{
+                        old = "mirror"
+                        new = "AppData\Local\Yarn\mirror"
+                    }
+                ) | ForEach-Object {
+                    $old_dir = Join-Path $persist_dir $_.old
+                    $new_dir = Join-Path $persist_dir $_.new
+
+                    if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
+                        A-Ensure-Directory (Split-Path $new_dir -Parent)
+                        Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
+                    }
+                }
+            }
+        }
+        'JohannesMillan.superProductivity' {
+            $old_dir = Join-Path $persist_dir 'SuperProductivity'
+            $new_dir = Join-Path $persist_dir 'AppData\Roaming\SuperProductivity'
+            if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
+                A-Ensure-Directory (Split-Path $new_dir -Parent)
+                Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+
+#endregion
+
 #region 废弃
 
 function A-Start-PreUninstall {
@@ -1427,9 +1545,16 @@ function A-Start-PostUninstall {
     #>
 }
 
+function A-Uninstall-ExeByHand {
+    param(
+        [array]$Path
+    )
+    A-Uninstall-ExeManually $Path
+}
+
 #endregion
 
-#region 以下的函数不应该被直接使用。请使用文件开头列出的可用函数。
+#region 以下的函数不应该在外部调用
 function A-New-Link {
     <#
     .SYNOPSIS
@@ -1444,6 +1569,11 @@ function A-New-Link {
 
     .PARAMETER linkTargets
         链接指向的目标路径数组
+        通常忽略它，让它根据 LinkPaths 自动生成
+        生成规则:
+            如果 LinkPaths 包含 $dir\app，则替换为 $persist_dir
+            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
+            否则，去掉盘符
 
     .PARAMETER ItemType
         链接类型，可选值为 SymbolicLink/Junction
@@ -1463,63 +1593,63 @@ function A-New-Link {
         [string]$OutFile
     )
 
-    if ($LinkPaths.Count -ne $LinkTargets.Count) {
-        error "Please contact the bucket maintainer!"
-        A-Exit
-    }
-
     $installData = @{
         LinkPaths   = @()
         LinkTargets = @()
     }
 
-    if ($LinkPaths.Count) {
-        for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-            $linkPath = $LinkPaths[$i]
+    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
+        $linkPath = $LinkPaths[$i]
+        if ($LinkTargets[$i]) {
             $linkTarget = $LinkTargets[$i]
-            $installData.LinkPaths += $linkPath
-            $installData.LinkTargets += $linkTarget
-            if ((Test-Path $linkPath) -and !(Get-Item $linkPath -ErrorAction SilentlyContinue).LinkType) {
-                if (!(Test-Path $linkTarget)) {
-                    A-Ensure-Directory (Split-Path $linkTarget -Parent)
-                    Write-Host "Copying $linkPath => $linkTarget"
-                    try {
-                        Copy-Item -Path $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
-                    }
-                    catch {
-                        Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-                        error $_.Exception.Message
-                        A-Exit
-                    }
+        }
+        else {
+            if ($LinkPath -like "$dir\app\*") {
+                # abyss 中的应用清单会额外添加一个 app 目录，因此需要替换 $dir\app
+                $linkTarget = $LinkPath.replace("$dir\app", $persist_dir)
+            }
+            else {
+                $linkTarget = $LinkPath.replace($env:UserProfile, $persist_dir)
+                # 如果不在 $env:UserProfile 目录下，则去掉盘符
+                if ($linkTarget -notlike "$persist_dir*") {
+                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
                 }
+            }
+        }
+        $installData.LinkPaths += $linkPath
+        $installData.LinkTargets += $linkTarget
+        if ((Test-Path -LiteralPath $linkPath) -and !(Get-Item -LiteralPath $linkPath -ErrorAction SilentlyContinue).LinkType) {
+            if (!(Test-Path -LiteralPath $linkTarget)) {
+                A-Ensure-Directory (Split-Path $linkTarget -Parent)
+                Write-Host "Copying $linkPath => $linkTarget"
                 try {
-                    Write-Host "Removing $linkPath"
-                    Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
+                    Copy-Item -LiteralPath $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
                 }
                 catch {
+                    Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
                     error $_.Exception.Message
+                    A-Show-IssueCreationPrompt
                     A-Exit
                 }
             }
-            A-Ensure-Directory $linkTarget
-
-            if ((Get-Service -Name cexecsvc -ErrorAction SilentlyContinue)) {
-                # test if this script is being executed inside a docker container
-                if ($ItemType -eq "Junction") {
-                    cmd.exe /d /c "mklink /j `"$linkPath`" `"$linkTarget`""
-                }
-                else {
-                    # SymbolicLink
-                    cmd.exe /d /c "mklink `"$linkPath`" `"$linkTarget`""
-                }
+            try {
+                Write-Host "Removing $linkPath"
+                Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
             }
-            else {
-                New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+            catch {
+                error $_.Exception.Message
+                A-Show-IssueCreationPrompt
+                A-Exit
             }
-            Write-Host "Linking $linkPath => $linkTarget"
         }
-        $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+        A-Ensure-Directory $linkTarget
+        A-Ensure-Directory (Split-Path $linkPath -Parent)
+
+        New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+
+        Write-Host "Linking $linkPath => $linkTarget"
     }
+    $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 }
 
 function A-Add-AppxPackage {
@@ -1535,7 +1665,7 @@ function A-Add-AppxPackage {
         应用程序包的 PackageFamilyName
 
     .PARAMETER Path
-        要安装的 AppX/Msix 包的文件路径。支持管道输入。
+        要安装的 AppX/Msix 包的文件路径。
 
     .EXAMPLE
         A-Add-AppxPackage -Path "D:\dl.msixbundle"
@@ -1550,6 +1680,7 @@ function A-Add-AppxPackage {
     }
     catch {
         error $_.Exception.Message
+        A-Show-IssueCreationPrompt
         A-Exit
     }
 
@@ -1572,9 +1703,17 @@ function A-Remove-AppxPackage {
 
     $OutFile = "$dir\scoop-install-A-Add-AppxPackage.jsonc"
 
-    if (Test-Path $OutFile) {
+    if (Test-Path -LiteralPath $OutFile) {
         $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
-        Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1 | Remove-AppxPackage
+
+        $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
+
+        if ($package) {
+            if ($package.InstallLocation) {
+                Get-Process | Where-Object { $_.Path -and $_.Path -like "*$($package.InstallLocation)*" } | Stop-Process -Force -ErrorAction SilentlyContinue
+            }
+            $package | Remove-AppxPackage
+        }
     }
 }
 
@@ -1601,6 +1740,12 @@ function A-Get-AbsolutePath {
 
     return Join-Path $dir $path
 }
+
+function A-Show-IssueCreationPrompt {
+    # Write-Host "Please contact the bucket maintainer!" -ForegroundColor Red -NoNewline
+    Write-Host "Something went wrong here." -ForegroundColor Red -NoNewline
+    Write-Host "`nPlease try again or create a new issue by using the following link and paste your console output:`nhttps://github.com/abgox/abyss/issues/new?template=bug-report.yml" -ForegroundColor Red
+}
 #endregion
 
 
@@ -1610,6 +1755,8 @@ $ScoopVersion = "0.5.3"
 
 #region 扩展 Scoop 部分功能
 
+
+# TODO: 等待合并后移除此函数: https://github.com/ScoopInstaller/Scoop/pull/6460
 function script:env_set($manifest, $global, $arch) {
     $env_set = arch_specific 'env_set' $manifest $arch
     if ($env_set) {
@@ -1625,6 +1772,7 @@ function script:env_set($manifest, $global, $arch) {
     }
 }
 
+# TODO: 等待合并后移除此函数: https://github.com/ScoopInstaller/Scoop/pull/6460
 function script:env_rm($manifest, $global, $arch) {
     $env_set = arch_specific 'env_set' $manifest $arch
     if ($env_set) {
@@ -1648,6 +1796,7 @@ function script:Add-Path {
         [switch]$Quiet
     )
     #region 新增: 支持使用 $env:xxx 变量
+    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
     $Path = $Path | ForEach-Object {
         Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
     }
@@ -1682,6 +1831,7 @@ function script:Remove-Path {
         [switch]$PassThru
     )
     #region 新增: 支持使用 $env:xxx 变量
+    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
     $Path = $Path | ForEach-Object {
         Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
     }
@@ -1706,6 +1856,32 @@ function script:Remove-Path {
     }
     if ($PassThru) {
         return $inPath
+    }
+}
+
+function script:create_shims($manifest, $dir, $global, $arch) {
+    $shims = @(arch_specific 'bin' $manifest $arch)
+    $shims | Where-Object { $_ -ne $null } | ForEach-Object {
+        $target, $name, $arg = shim_def $_
+        Write-Output "Creating shim for '$name'."
+
+        #region 新增: 支持使用 $env:xxx 变量
+        # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
+        $target = Invoke-Expression "`"$target`""
+        #endregion
+
+        if (Test-Path "$dir\$target" -PathType leaf) {
+            $bin = "$dir\$target"
+        }
+        elseif (Test-Path $target -PathType leaf) {
+            $bin = $target
+        }
+        else {
+            $bin = (Get-Command $target).Source
+        }
+        if (!$bin) { abort "Can't shim '$target': File doesn't exist." }
+
+        shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
     }
 }
 
@@ -1782,11 +1958,32 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     if ($shortcutsActionLevel -eq '0') {
         return
     }
-    if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '.*A-Install-Exe.*')) {
-        return
+    if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-Exe.*')) {
+        $locations = @(
+            "$env:AppData\Microsoft\Windows\Start Menu\Programs",
+            "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",
+            "$env:ProgramData\Microsoft\Windows\Start Menu\Programs",
+            "$env:UserProfile\Desktop",
+            "$env:Public\Desktop"
+        )
+
+        if ($PSVersionTable.PSVersion.Major -ge 7) {
+            $found = $locations | ForEach-Object -Parallel {
+                $result = Get-ChildItem $_ -Filter "$using:shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                if ($result) { $result.FullName }
+            } | Select-Object -First 1
+            if ($found) { return }
+        }
+        else {
+            foreach ($location in $locations) {
+                $found = Get-ChildItem $location -Filter "$shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                if ($found) { return }
+            }
+        }
     }
 
     # 支持在 shortcuts 中使用以 $env:xxx 环境变量开头的路径
+    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
     $filename = $target.FullName
     if ($filename -match '\$env:[a-zA-Z_].*') {
         $filename = $filename.Replace("$dir\", '')

@@ -1,17 +1,17 @@
 {
-    "version": "6.6.2",
-    "description": "抖音，字节跳动的一个短视频平台。A short video platform by ByteDance.",
+    "version": "6.7.0",
+    "description": "抖音，字节跳动的一个短视频平台 | A short video platform by ByteDance.",
     "homepage": "https://www.douyin.com/",
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/221087162/6.6.2/win32-ia32/douyin-v6.6.2-win32-ia32-default.exe",
-            "hash": "9c9c94ff36586001713942eede64ae19e9501698fc043bbfd9449963c803c5b6"
+            "url": "https://lf-douyin-pc-web.douyinstatic.com/obj/douyin-pc-web/douyin-pc-client/7044145585217083655/releases/237387207/6.7.0/win32-ia32/douyin-v6.7.0-win32-ia32-default.exe",
+            "hash": "d04210a5dd7f9e79b069b9ce5042bcfecce79659e12faa134b22a7af0fb56f71"
         }
     },
     "shortcuts": [
         [
-            "douyin\\douyin.exe",
+            "app\\douyin\\douyin.exe",
             "抖音"
         ]
     ],
@@ -20,8 +20,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller 'douyin\\uninst.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\douyin\",\"$env:AppData\\douyin_widget\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\douyin\",\"$env:AppData\\douyin_widget\")",
+        "A-Install-Exe -Uninstaller 'app\\douyin\\uninst.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -56,7 +56,7 @@
             "64bit": {
                 "url": "$matchX86",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x86_machine.InstallerSha256"
                 }
             }

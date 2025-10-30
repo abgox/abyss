@@ -1,6 +1,6 @@
 {
-    "version": "22.20.0",
-    "description": "一个免费、开源、跨平台的 JavaScript 运行时环境。A free, open-source, cross-platform JavaScript runtime environment.",
+    "version": "24.11.0",
+    "description": "一个免费、开源、跨平台的 JavaScript 运行时环境 | A free, open-source, cross-platform JavaScript runtime environment.",
     "homepage": "https://nodejs.org/",
     "license": {
         "identifier": "Freeware",
@@ -8,30 +8,38 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\nodejs",
-        "Scoop only manages installation, update, and uninstallation operations.",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories",
+        " ",
         "If you install multiple versions of OpenJS.NodeJS, they will overwrite each other, keeping only the highest version."
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\nodejs",
-        "Scoop 只管理安装、更新和卸载操作",
+        "安装目录: $env:ProgramFiles\\nodejs",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories",
+        " ",
         "如果同时安装 OpenJS.NodeJS 的多个版本，会相互覆盖，仅保留最高版本"
     ],
     "architecture": {
         "64bit": {
-            "url": "https://nodejs.org/dist/v22.20.0/node-v22.20.0-x64.msi#/dl.exe",
-            "hash": "d6429513d63a6fba90428d6508a194212ecd7c5fd76923de91306879d28cc3e1"
+            "url": "https://nodejs.org/dist/v24.11.0/node-v24.11.0-x64.msi#/dl.msi_",
+            "hash": "2d411f63490613d51e6047752bc2fae99a8e5fabdf20d5267c9851eab4c67528"
         },
         "arm64": {
-            "url": "https://nodejs.org/dist/v22.20.0/node-v22.20.0-arm64.msi#/dl.exe",
-            "hash": "0567888a9467b1a412fd5b5df0609d5cbccbc4c8a35ab0ce57428ad622338467"
+            "url": "https://nodejs.org/dist/v24.11.0/node-v24.11.0-arm64.msi#/dl.msi_",
+            "hash": "00371d745402d2bf315afe3db785a30be63654529bcde455646d9d9d0cfeb88f"
         }
     },
+    "shortcuts": [
+        [
+            "$env:ProgramFiles\\nodejs\\node.exe",
+            "Node.js"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive') -SuccessFile \"$env:ProgramFiles\\nodejs\\node.exe\""
+        "A-Install-Exe msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -44,7 +52,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "$ProductCode = A-Get-ProductCode '^Node.js$'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:ProgramFiles\\nodejs\\node.exe\""
+        "A-Uninstall-Exe $ProductCode"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -54,15 +62,15 @@
     "checkver": {
         "url": "https://nodejs.org/dist/index.json",
         "jsonpath": "$..[?(@.lts != false)].version",
-        "regex": "v([\\d\\.]+).*"
+        "regex": "v([\\d.]+).*"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://nodejs.org/dist/v$version/node-v$version-x64.msi#/dl.exe"
+                "url": "https://nodejs.org/dist/v$version/node-v$version-x64.msi#/dl.msi_"
             },
             "arm64": {
-                "url": "https://nodejs.org/dist/v$version/node-v$version-arm64.msi#/dl.exe"
+                "url": "https://nodejs.org/dist/v$version/node-v$version-arm64.msi#/dl.msi_"
             }
         }
     }

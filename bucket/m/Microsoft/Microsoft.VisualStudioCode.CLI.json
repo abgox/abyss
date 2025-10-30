@@ -1,27 +1,27 @@
 {
-    "version": "1.104.2",
-    "description": "vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器。vscode - A lightweight but powerful source code editor.",
-    "homepage": "https://code.visualstudio.com",
+    "version": "1.105.1",
+    "description": "vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器 | vscode - A lightweight but powerful source code editor.",
+    "homepage": "https://code.visualstudio.com/",
     "license": {
         "identifier": "Microsoft Software License",
         "url": "https://code.visualstudio.com/License/"
     },
     "architecture": {
         "64bit": {
-            "url": "https://vscode.download.prss.microsoft.com/dbazure/download/stable/e3a5acfb517a443235981655413d566533107e92/vscode_cli_win32_x64_cli.zip",
-            "hash": "f8aee18b38a4ce10d36ef230194b9bb0b6980d08bae82542412919fb01202071"
+            "url": "https://vscode.download.prss.microsoft.com/dbazure/download/stable/7d842fb85a0275a4a8e4d7e040d2625abbf7f084/vscode_cli_win32_x64_cli.zip",
+            "hash": "478ac1e284eebdc43acf2cb1a212bdf7e7115ff35b9eb3cd9a7270bb9ebfb575"
         },
         "arm64": {
-            "url": "https://vscode.download.prss.microsoft.com/dbazure/download/stable/e3a5acfb517a443235981655413d566533107e92/vscode_cli_win32_arm64_cli.zip",
-            "hash": "a7565723d17798dfe0344c573d70a021f2e31e99d17e198ec6d968c8f6e88955"
+            "url": "https://vscode.download.prss.microsoft.com/dbazure/download/stable/7d842fb85a0275a4a8e4d7e040d2625abbf7f084/vscode_cli_win32_arm64_cli.zip",
+            "hash": "dcb57a94110f9ddaa6d7f54a2f3b0c6012857dac647c3ace2a665d24045aabd8"
         }
     },
-    "bin": "code.exe",
+    "extract_to": "app",
+    "bin": "app\\code.exe",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install",
-        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -32,8 +32,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -56,14 +55,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_machine.InstallerSha256"
                 }
             }

@@ -1,6 +1,6 @@
 {
     "version": "1.6.1",
-    "description": "一个B站(bilibili)视频下载工具。A bilibili video download tool.",
+    "description": "一个B站(bilibili)视频下载工具 | A bilibili video download tool.",
     "homepage": "https://github.com/leiurayer/downkyi",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -12,11 +12,18 @@
             "hash": "d809c230c9dd9ab18a7cbafc413db2d93eca25e45c4df5fa6aaad3f253015986"
         }
     },
-    "bin": "DownKyi.exe",
+    "extract_to": "app",
+    "bin": "app\\DownKyi.exe",
     "shortcuts": [
         [
-            "DownKyi.exe",
+            "app\\DownKyi.exe",
             "DownKyi"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\config",
+            "config"
         ]
     ],
     "pre_install": [
@@ -40,13 +47,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "config",
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/leiurayer/downkyi/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/leiurayer/downkyi/releases/download/v$version/DownKyi-$version.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -1,0 +1,59 @@
+{
+    "version": "0.4.0",
+    "description": "根据 git diff 生成有意义的提交信息 | Generate meaningful commit messages from git diff",
+    "homepage": "https://diny-cli.vercel.app/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/dinoDanic/diny/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dinoDanic/diny/releases/download/v0.4.0/diny_Windows_x86_64.zip",
+            "hash": "26e7e91a8601ddbab312ec39366b88531bb9c7fd2ba4a7e9edc5940d4c614035"
+        },
+        "arm64": {
+            "url": "https://github.com/dinoDanic/diny/releases/download/v0.4.0/diny_Windows_arm64.zip",
+            "hash": "468b57f315aa6084e1971781f99b104cef651676e3c250adcbbd465c41d4afb3"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\diny.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/dinoDanic/diny/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dinoDanic/diny/releases/download/v0.4.0/diny_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/dinoDanic/diny/releases/download/v0.4.0/diny_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

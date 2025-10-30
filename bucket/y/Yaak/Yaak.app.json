@@ -1,0 +1,61 @@
+{
+    "version": "2025.7.3",
+    "description": "一款快速、注重隐私的API客户端，支持REST、GraphQL、SSE、WebSocket和gRPC | A fast, privacy-first API client for REST, GraphQL, SSE, WebSocket, and gRPC.",
+    "homepage": "https://yaak.app/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/mountain-loop/yaak/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mountain-loop/yaak/releases/download/v2025.7.3/Yaak_2025.7.3_x64-setup.exe",
+            "hash": "33f2e94d667647c36f4f16a2e09b774444a218d81d45347595f12c2bc39b2bf5"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\yaak-app.exe",
+            "Yaak"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\app.yaak.desktop\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\app.yaak.desktop\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/mountain-loop/yaak/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mountain-loop/yaak/releases/download/v$version/Yaak_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

@@ -1,6 +1,6 @@
 {
     "version": "2025.2.4",
-    "description": "JetBrains 的 IDE 产品，用于处理数据库。A IDE by JetBrains for database processing.",
+    "description": "JetBrains 的 IDE 产品，用于处理数据库 | A IDE by JetBrains for database processing.",
     "homepage": "https://www.jetbrains.com/datagrip/",
     "license": {
         "identifier": "Unknown",
@@ -18,13 +18,13 @@
     },
     "bin": [
         [
-            "App\\bin\\datagrip64.exe",
+            "app\\bin\\datagrip64.exe",
             "DataGrip"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\datagrip64.exe",
+            "app\\bin\\datagrip64.exe",
             "DataGrip 2025.2.4"
         ]
     ],
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"DataGrip$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/datagrip/datagrip-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/datagrip/datagrip-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\datagrip64.exe",
+                "app\\bin\\datagrip64.exe",
                 "DataGrip $version"
             ]
         ]

@@ -1,6 +1,6 @@
 {
     "version": "2.4.2",
-    "description": "一款基于 Tauri 的现代图形用户界面客户端，提供定制化的代理体验。A modern GUI client based on Tauri for tailored proxy experience.",
+    "description": "一款基于 Tauri 的现代图形用户界面客户端，提供定制化的代理体验 | A modern GUI client based on Tauri for tailored proxy experience.",
     "homepage": "https://github.com/clash-verge-rev/clash-verge-rev",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -18,7 +18,7 @@
     },
     "shortcuts": [
         [
-            "clash-verge.exe",
+            "app\\clash-verge.exe",
             "Clash Verge"
         ]
     ],
@@ -27,8 +27,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller 'uninstall.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\io.github.clash-verge-rev.clash-verge-rev\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\io.github.clash-verge-rev.clash-verge-rev\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -50,7 +50,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -59,6 +62,9 @@
             "arm64": {
                 "url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/download/v$version/Clash.Verge_$version_arm64-setup.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

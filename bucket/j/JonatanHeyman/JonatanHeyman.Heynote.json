@@ -1,6 +1,6 @@
 {
-    "version": "2.5.0",
-    "description": "为开发人员提供的专用便签本。A dedicated scratchpad for developers.",
+    "version": "2.6.2",
+    "description": "为开发人员提供的专用便签本 | A dedicated scratchpad for developers.",
     "homepage": "https://heynote.com/",
     "license": {
         "identifier": "MIT",
@@ -8,13 +8,13 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/heyman/heynote/releases/download/v2.5.0/Heynote_2.5.0.exe",
-            "hash": "fbbb7cc0fe0bc0acfbca3f604ad2d95688e2e3455c654cf53ce65779e01b655e"
+            "url": "https://github.com/heyman/heynote/releases/download/v2.6.2/Heynote_2.6.2.exe",
+            "hash": "4f074ec6214c3d3088732825de1004d6948238257b373c2012d428027d9b3437"
         }
     },
     "shortcuts": [
         [
-            "Heynote.exe",
+            "app\\Heynote.exe",
             "Heynote"
         ]
     ],
@@ -22,8 +22,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall Heynote.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\Heynote\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Heynote\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Heynote.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,13 +45,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/heyman/heynote"
+        "url": "https://github.com/heyman/heynote/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/heyman/heynote/releases/download/v$version/Heynote_$version.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

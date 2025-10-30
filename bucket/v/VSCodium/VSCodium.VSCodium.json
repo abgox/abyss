@@ -1,0 +1,68 @@
+{
+    "version": "1.105.17075",
+    "description": "Visual Studio Code 的自由及开放源代码软件二进制文件 | Free/Libre Open Source Software Binaries of Visual Studio Code.",
+    "homepage": "https://vscodium.com/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/VSCodium/vscodium/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/VSCodium/vscodium/releases/download/1.105.17075/VSCodiumUserSetup-x64-1.105.17075.exe",
+            "hash": "498a9d5c810cbd3f12ef695e918eaed83764c7420b193d345cf626e6ff6eb436"
+        },
+        "arm64": {
+            "url": "https://github.com/VSCodium/vscodium/releases/download/1.105.17075/VSCodiumUserSetup-arm64-1.105.17075.exe",
+            "hash": "61add0090534f79e05843a0d4add37fa6c8f9c60107c4002c968ebd566f99247"
+        }
+    },
+    "env_add_path": "app\\bin",
+    "shortcuts": [
+        [
+            "app\\VSCodium.exe",
+            "VSCodium"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\VSCodium\",\"$env:UserProfile\\.vscode-oss\")",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/VSCodium/vscodium/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/VSCodium/vscodium/releases/download/$version/VSCodiumUserSetup-x64-$version.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/VSCodium/vscodium/releases/download/$version/VSCodiumUserSetup-arm64-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

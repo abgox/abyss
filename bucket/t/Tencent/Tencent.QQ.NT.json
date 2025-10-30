@@ -1,6 +1,6 @@
 {
-    "version": "9.9.21.39038",
-    "description": "(NT 版本) QQ，腾讯的一款聊天通讯工具。(NT version) A chat communication tool by Tencent.",
+    "version": "9.9.22.40990",
+    "description": "(NT 版本) QQ，腾讯的一款聊天通讯工具 | (NT version) A chat communication tool by Tencent.",
     "homepage": "https://im.qq.com/",
     "license": {
         "identifier": "Unknown",
@@ -8,16 +8,16 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Tencent\\QQNT",
-        "Scoop only manages data, installation, update, and uninstallation operations."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\Tencent\\QQNT",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+        "安装目录: $env:ProgramFiles\\Tencent\\QQNT",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
-            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.21_250904_x64_01.exe",
-            "hash": "55fb4684d01316ecdbfcbd5ba82eceda5a6e4d6fc4aa8b0b3d2515c3d41a21d1"
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.22_251023_x64_01.exe",
+            "hash": "1a9d21156fe0faf84dca70a87ab6419f90ab25b5b13faf2fc6e0466854c684b2"
         }
     },
     "shortcuts": [
@@ -31,7 +31,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\QQNT\\Uninstall.exe\" -ArgumentList @('/S')",
         "$DataDir = \"$env:UserProfile\\Documents\\Tencent Files\"",
         "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
         "$PersistDir = $DataDir.Replace($env:UserProfile, $persist_dir)",
@@ -40,7 +39,9 @@
         "$LinkPaths = @()",
         "$SubDir | ForEach-Object { $LinkPaths += Join-Path $DataDir \"$_\\nt_qq\" }",
         "$LinkPaths += Join-Path $DataDir \"nt_qq\"",
-        "A-New-LinkDirectory $LinkPaths"
+        "A-New-LinkDirectory $LinkPaths",
+        "A-Install-Exe -ArgumentList @('/S')",
+        "A-Hold-App"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,9 +52,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
-        "A-Stop-Process @(\"$env:ProgramFiles\\Tencent\\QQNT\")",
-        "A-Uninstall-Exe -NoSilent",
+        "A-Deny-Update",
+        "A-Uninstall-ExeManually \"$env:ProgramFiles\\Tencent\\QQNT\"",
         "A-Remove-Link"
     ],
     "post_uninstall": [
@@ -77,7 +77,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }

@@ -1,6 +1,6 @@
 {
     "version": "0.1.22",
-    "description": "一款免费开源的 RSS 阅读器。A free and open-source feed reader.",
+    "description": "一款免费开源的 RSS 阅读器 | A free and open-source feed reader.",
     "homepage": "https://github.com/zhanglun/lettura",
     "license": "Unknown",
     "architecture": {
@@ -11,7 +11,7 @@
     },
     "shortcuts": [
         [
-            "Lettura.exe",
+            "app\\Lettura.exe",
             "Lettura"
         ]
     ],
@@ -19,8 +19,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'uninstall.exe'",
-        "A-New-LinkDirectory @(\"$env:UserProfile\\.lettura\")"
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.lettura\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -41,12 +41,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/zhanglun/lettura/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/zhanglun/lettura/releases/download/v$version/Lettura_$version_x64-setup.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

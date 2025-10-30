@@ -1,0 +1,71 @@
+{
+    "version": "2.0.3",
+    "description": "PowerShell 的语法高亮显示 | Syntax highlighting for PowerShell",
+    "homepage": "https://github.com/digitalguy99/pwsh-syntax-highlighting",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/digitalguy99/pwsh-syntax-highlighting/blob/main/LICENSE"
+    },
+    "notes": [
+        "It conflicts with the PSCompletions module.",
+        "If they need to be used together, the following import order must be followed.",
+        " ",
+        " Import-Module syntax-highlighting",
+        " Import-Module PSCompletions"
+    ],
+    "notes-cn": [
+        "它与 PSCompletions 模块存在冲突",
+        "如果需要一起使用，必须遵循以下导入顺序",
+        " ",
+        " Import-Module syntax-highlighting",
+        " Import-Module PSCompletions"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/syntax-highlighting.2.0.3.nupkg",
+            "hash": "decdc411505d4d7ba1113fdcad8b1d5cbdfa141c3b191a45e6e999e24c58b849"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/syntax-highlighting.2.0.3.nupkg",
+            "hash": "decdc411505d4d7ba1113fdcad8b1d5cbdfa141c3b191a45e6e999e24c58b849"
+        }
+    },
+    "psmodule": {
+        "name": "syntax-highlighting"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/syntax-highlighting",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/syntax-highlighting.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/syntax-highlighting.$version.nupkg"
+            }
+        }
+    }
+}

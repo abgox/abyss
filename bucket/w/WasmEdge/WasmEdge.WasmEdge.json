@@ -1,0 +1,55 @@
+{
+    "version": "0.15.0",
+    "description": "一个轻量级、高性能且可扩展的 WebAssembly 运行时 | A lightweight, high-performance, and extensible WebAssembly runtime.",
+    "homepage": "https://wasmedge.org/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/WasmEdge/WasmEdge/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/WasmEdge/WasmEdge/releases/download/0.15.0/WasmEdge-0.15.0-windows-msvc.zip",
+            "hash": "00c2bd0bedd520aed7303fb410b8c9b1ab72a420a6684427bc70ff89d4aba297"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\bin\\wasmedge.exe",
+        "app\\bin\\wasmedgec.exe"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/WasmEdge/WasmEdge/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/WasmEdge/WasmEdge/releases/download/$version/WasmEdge-$version-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

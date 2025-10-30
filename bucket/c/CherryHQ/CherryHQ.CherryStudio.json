@@ -1,24 +1,24 @@
 {
-    "version": "1.6.2",
-    "description": "一款支持多个大语言模型 (LLM) 供应商的桌面客户端。A desktop client that supports for multiple LLM providers.",
-    "homepage": "https://cherry-ai.com",
+    "version": "1.6.5",
+    "description": "一款支持多个大语言模型 (LLM) 供应商的桌面客户端 | A desktop client that supports for multiple LLM providers.",
+    "homepage": "https://cherry-ai.com/",
     "license": {
         "identifier": "Unknown",
         "url": "https://github.com/CherryHQ/cherry-studio/blob/main/LICENSE"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.6.2/Cherry-Studio-1.6.2-x64-setup.exe",
-            "hash": "999fbd32af59d2541a37abef3e1dd37dc59126a28e4921bec2dcb5ffbd1020f9"
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.6.5/Cherry-Studio-1.6.5-x64-setup.exe",
+            "hash": "f8a4e724e65d5e22b39b75ee732c13dee34a34f9a2151f449eda92b48530203b"
         },
         "arm64": {
-            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.6.2/Cherry-Studio-1.6.2-arm64-setup.exe",
-            "hash": "9d67f539e0e0ef2443414bf925842fa11801a4b30894e4ab3e6f852c6a76fbff"
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v1.6.5/Cherry-Studio-1.6.5-arm64-setup.exe",
+            "hash": "ca45381e077348a76061c3f9e468d0455bda9821bc2b7acabae9a65ad7c40f97"
         }
     },
     "shortcuts": [
         [
-            "Cherry Studio.exe",
+            "app\\Cherry Studio.exe",
             "Cherry Studio"
         ]
     ],
@@ -26,8 +26,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall Cherry Studio.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\CherryStudio\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\CherryStudio\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Cherry Studio.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -49,7 +49,8 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/CherryHQ/cherry-studio"
+        "url": "https://github.com/CherryHQ/cherry-studio/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
@@ -59,6 +60,9 @@
             "arm64": {
                 "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-arm64-setup.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

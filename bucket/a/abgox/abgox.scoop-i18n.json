@@ -1,50 +1,51 @@
 {
-    "version": "2025.10.02.005249",
-    "description": "Scoop 的国际化解决方案(语言包)，提升不同语言的用户使用 Scoop 时的体验。An internationalization tool (language pack) for Scoop helps users of different languages use Scoop more easily.",
-    "homepage": "https://scoop-i18n.abgox.com",
+    "version": "2025.10.26.044549",
+    "description": "Scoop 的国际化解决方案(语言包)，提升不同语言的用户使用 Scoop 时的体验 | An internationalization tool (language pack) for Scoop helps users of different languages use Scoop more easily.",
+    "homepage": "https://scoop-i18n.abgox.com/",
     "license": {
         "identifier": "MIT",
         "url": "https://github.com/abgox/scoop-i18n/blob/main/license"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/scoop-i18n/archive/892f70e922279b4f023614ede11ae7cdeea765b9.zip",
-            "hash": "e7dcfc260ea588e4e072f7189d1dde9590fc5a65f289082ab30aec1d3f676863"
+            "url": "https://github.com/abgox/scoop-i18n/archive/35e3009aae2a330c62b2f327957c983b10e8e85c.zip",
+            "hash": "a8648d7481083d0840bc8f0821c30fa34c224d40b4c9f8d473b9773bfd7d46ca"
         },
         "arm64": {
-            "url": "https://github.com/abgox/scoop-i18n/archive/892f70e922279b4f023614ede11ae7cdeea765b9.zip",
-            "hash": "e7dcfc260ea588e4e072f7189d1dde9590fc5a65f289082ab30aec1d3f676863"
+            "url": "https://github.com/abgox/scoop-i18n/archive/35e3009aae2a330c62b2f327957c983b10e8e85c.zip",
+            "hash": "a8648d7481083d0840bc8f0821c30fa34c224d40b4c9f8d473b9773bfd7d46ca"
         }
     },
-    "extract_dir": "scoop-i18n-892f70e922279b4f023614ede11ae7cdeea765b9",
+    "extract_dir": "scoop-i18n-35e3009aae2a330c62b2f327957c983b10e8e85c",
+    "extract_to": "app",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Ensure-Directory \"$dir\\original\"",
-        "A-Ensure-Directory \"$dir\\shims\"",
+        "A-Ensure-Directory \"$dir\\app\\original\"",
+        "A-Ensure-Directory \"$dir\\app\\shims\"",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extras\\$app\" | ForEach-Object {",
-        "    Move-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\original\"",
+        "    Move-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\app\\original\"",
         "    $content = Get-Content $_.FullName -Raw",
         "    $content = $content.Replace('${scoop.ps1}', \"$scoopdir\\apps\\scoop\\current\\bin\\scoop.ps1\")",
-        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$scoopdir\\apps\\$app\\current\\scoop-i18n.ps1\")",
-        "    [System.IO.File]::WriteAllText(\"$dir\\shims\\$($_.Name)\", ($content -join [System.Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))",
+        "    $content = $content.Replace('${scoop-i18n.ps1}', \"$scoopdir\\apps\\$app\\current\\app\\scoop-i18n.ps1\")",
+        "    [System.IO.File]::WriteAllText(\"$dir\\app\\shims\\$($_.Name)\", ($content -join [System.Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))",
         "}",
-        "Get-ChildItem \"$dir\\shims\" | ForEach-Object {",
+        "Get-ChildItem \"$dir\\app\\shims\" | ForEach-Object {",
         "    Copy-Item $_.FullName \"$scoopdir\\shims\" -Force",
         "}"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "@{ configFile = $configFile } | ConvertTo-Json -Depth 100 | Out-File \"$dir\\data.json\" -Encoding utf8 -Force",
+        "@{ configFile = $configFile } | ConvertTo-Json -Depth 100 | Out-File \"$dir\\app\\data.json\" -Encoding utf8 -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "Get-ChildItem \"$dir\\original\" | ForEach-Object {",
+        "Get-ChildItem \"$dir\\app\\original\" | ForEach-Object {",
         "    Move-Item $_.FullName \"$scoopdir\\shims\" -Force",
         "}"
     ],

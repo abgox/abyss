@@ -1,6 +1,6 @@
 {
     "version": "1.5.0.6",
-    "description": "在 Windows 上统计软件使用时长和网站浏览时长。Count the duration of software usage and website browsing on Windows.",
+    "description": "在 Windows 上统计软件使用时长和网站浏览时长 | Count the duration of software usage and website browsing on Windows.",
     "homepage": "https://github.com/Planshit/Tai",
     "license": {
         "identifier": "MIT",
@@ -12,10 +12,17 @@
             "hash": "7d55788ab79ecf7893ee5e160496698bc772511d9600336524d1858369766327"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "Tai.exe",
+            "app\\Tai.exe",
             "Tai"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\Data",
+            "Data"
         ]
     ],
     "pre_install": [
@@ -32,8 +39,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -44,7 +50,6 @@
         "url": "https://github.com/Planshit/Tai/releases/latest",
         "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
-    "persist": "Data",
     "autoupdate": {
         "architecture": {
             "64bit": {

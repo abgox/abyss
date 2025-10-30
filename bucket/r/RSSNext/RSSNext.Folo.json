@@ -1,0 +1,61 @@
+{
+    "version": "0.9.0",
+    "description": "在一个地方关注所有事情 | Follow everything in one place",
+    "homepage": "https://follow.is/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/RSSNext/Folo/blob/dev/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/RSSNext/Folo/releases/download/desktop/v0.9.0/Folo-0.9.0-windows-x64.exe#/dl.7z",
+            "hash": "ca9f04a59b0005373fa70c916d219b6c48cf6f86f0b5ac24f083f9b87e3705c7"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Folo.exe",
+            "Folo"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Folo\")",
+        "Get-ChildItem \"$dir\\*\" -Exclude 'Folo-*nupkg' | Remove-Item",
+        "Expand-7zipArchive \"$dir\\app\\Folo-*-full.nupkg\" \"$dir\\app\" -ExtractDir 'lib\\net45' -Removal"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/RSSNext/Folo/releases/latest",
+        "regex": "/tree/desktop/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/RSSNext/Folo/releases/download/desktop/v$version/Folo-$version-windows-x64.exe#/dl.7z"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

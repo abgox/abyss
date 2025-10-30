@@ -1,6 +1,6 @@
 {
     "version": "1.1.0",
-    "description": "一种用于执行、可视化和警报 shell 命令的工具。A tool for shell commands execution, visualization and alerting.",
+    "description": "一种用于执行、可视化和警报 shell 命令的工具 | A tool for shell commands execution, visualization and alerting.",
     "homepage": "https://github.com/sqshq/sampler",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -19,6 +19,7 @@
             "-c \"$dir\\config.yml\""
         ]
     ],
+    "persist": "config.yml",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -41,13 +42,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "config.yml",
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/sqshq/sampler/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/sqshq/sampler/releases/download/v$version/sampler-$version-windows-amd64.exe#/sampler.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

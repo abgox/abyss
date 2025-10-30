@@ -1,22 +1,23 @@
 {
-    "version": "1.4.1.1028",
-    "description": "文件搜索工具，基于名称快速定位文件和文件夹。Locate files and folders by name instantly.",
-    "homepage": "https://www.voidtools.com",
+    "version": "1.4.1.1029",
+    "description": "文件搜索工具，基于名称快速定位文件和文件夹 | Locate files and folders by name instantly.",
+    "homepage": "https://www.voidtools.com/",
     "license": {
         "identifier": "Freeware",
         "url": "https://www.voidtools.com/License.txt"
     },
     "architecture": {
         "64bit": {
-            "url": "https://www.voidtools.com/Everything-1.4.1.1028.x64.msi",
-            "hash": "ef9dc58baf3045cc02adc533cf8ae52e0f7be6e069332a6160ca0aae79631443"
+            "url": "https://www.voidtools.com/Everything-1.4.1.1029.x64.msi",
+            "hash": "ef8a9348ab6a37129f042dd295d94e5eef6aca72d0bf6b09ce83c38163e81e0b"
         }
     },
     "extract_dir": "Everything",
-    "bin": "Everything.exe",
+    "extract_to": "app",
+    "bin": "app\\Everything.exe",
     "shortcuts": [
         [
-            "Everything.exe",
+            "app\\Everything.exe",
             "Everything"
         ]
     ],
@@ -35,7 +36,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Service Everything",
+        "A-Stop-Service 'Everything' -RequireAdmin | A-Remove-Service",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Remove-TempData @(\"$env:LocalAppData\\Everything\")"
@@ -45,7 +46,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "Download Everything ([\\d\\.]+)",
+    "checkver": "Download Everything ([\\d.]+)",
     "autoupdate": {
         "architecture": {
             "64bit": {

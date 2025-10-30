@@ -1,6 +1,6 @@
 {
     "version": "1.2.4.869",
-    "description": "简单且强大的代理工具，支持 clash/sing-box 的路由规则。Simple & Powerful proxy utility, Support routing rules for clash/sing-box",
+    "description": "简单且强大的代理工具，支持 clash/sing-box 的路由规则 | Simple & Powerful proxy utility, Support routing rules for clash/sing-box",
     "homepage": "https://github.com/KaringX/karing",
     "license": {
         "identifier": "Unknown",
@@ -12,11 +12,18 @@
             "hash": "c8ac51cfad644db8d35e6e5dfdd7a4db160898d1ae1539c85ec57e6742c39f7c"
         }
     },
+    "extract_to": "app",
     "innosetup": true,
     "shortcuts": [
         [
-            "karing.exe",
+            "app\\karing.exe",
             "Karing"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\profiles",
+            "AppData\\Roaming\\karing\\karing"
         ]
     ],
     "pre_install": [
@@ -33,15 +40,13 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-TempData @(\"$env:AppData\\karing\")"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "profiles",
     "checkver": {
         "script": [
             ". \"$pwd\\bin\\utils.ps1\"",
@@ -58,7 +63,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }

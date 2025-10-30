@@ -1,0 +1,67 @@
+{
+    "version": "1.84.132",
+    "description": "带有广告拦截器的安全、快速且私密的网络浏览器 | Secure, Fast & Private Web Browser with Adblocker",
+    "homepage": "https://brave.com/",
+    "license": {
+        "identifier": "MPL-2.0",
+        "url": "https://github.com/brave/brave-browser/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/brave/brave-browser/releases/download/v1.84.132/brave-v1.84.132-win32-x64.zip",
+            "hash": "f1f6409a6c7a4eb6d7cd085c11b062ddc33fdf35852f1318fd513a36e6ac853d"
+        },
+        "arm64": {
+            "url": "https://github.com/brave/brave-browser/releases/download/v1.84.132/brave-v1.84.132-win32-arm64.zip",
+            "hash": "64f3f3f657d0052a392a91aa80f0e5274849e8a3b1409b26eeb51136e757ce03"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\brave.exe",
+    "shortcuts": [
+        [
+            "app\\brave.exe",
+            "Brave"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\BraveSoftware\\Brave-Browser\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/brave/brave-browser/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/brave/brave-browser/releases/download/v$version/brave-v$version-win32-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/brave/brave-browser/releases/download/v$version/brave-v$version-win32-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

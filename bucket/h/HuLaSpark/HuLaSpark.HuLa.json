@@ -1,0 +1,61 @@
+{
+    "version": "3.0.2",
+    "description": "一款基于 Tauri、Vite、Vue 和 TypeScript 构建的即时通讯系统 | An instant messaging system developed with Tauri, Vite, Vue, and TypeScript.",
+    "homepage": "https://hulaspark.com/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/HuLaSpark/HuLa/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/HuLaSpark/HuLa/releases/download/v3.0.2/HuLa_3.0.2_x64-setup.exe",
+            "hash": "ac6ae06a501cdfdae557d18dfad18767607d27bd8f5905337562e61b8b96cb5e"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\hula.exe",
+            "Hula"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.hula.pc\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.hula.pc\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/HuLaSpark/HuLa/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/HuLaSpark/HuLa/releases/download/v$version/HuLa_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

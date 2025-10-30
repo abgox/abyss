@@ -1,6 +1,6 @@
 {
-    "version": "2.3.36",
-    "description": "开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端。Open-sourced terminal/ssh/telnet/serialport/RDP/VNC/sftp/ftp client.",
+    "version": "2.3.75",
+    "description": "开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端 | Open-sourced terminal/ssh/telnet/serialport/RDP/VNC/sftp/ftp client.",
     "homepage": "https://github.com/electerm/electerm",
     "license": {
         "identifier": "MIT",
@@ -8,14 +8,14 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/electerm/electerm/releases/download/v2.3.36/electerm-2.3.36-win-x64-installer.exe",
-            "hash": "9f2a4238d69f06075a9bb8f947c5341b193438ef597f3b47a77443628e395c6a"
+            "url": "https://github.com/electerm/electerm/releases/download/v2.3.75/electerm-2.3.75-win-x64-installer.exe",
+            "hash": "c78985fac8fdcfaa8b698d839dc256661488187d118834a64e33c0aaba8f9cb8"
         }
     },
-    "bin": "electerm.exe",
+    "bin": "app\\electerm.exe",
     "shortcuts": [
         [
-            "electerm.exe",
+            "app\\electerm.exe",
             "electerm"
         ]
     ],
@@ -23,8 +23,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall electerm.exe' -ArgumentList @('/S','/CURRENTUSER',\"/D=$dir\")",
-        "A-New-LinkDirectory @(\"$env:AppData\\electerm\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\electerm\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall electerm.exe' -ArgumentList @('/CurrentUser','/S',\"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,12 +45,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/electerm/electerm/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/electerm/electerm/releases/download/v$version/electerm-$version-win-x64-installer.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -1,0 +1,68 @@
+{
+    "version": "3.4.0",
+    "description": "FiraCode 字体，Nerd Font 系列 | 'FiraCode' Font family with Nerd Fonts patched.",
+    "homepage": "https://github.com/ryanoasis/nerd-fonts",
+    "license": {
+        "identifier": "MIT|OFL-1.1",
+        "url": "https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE"
+    },
+    "notes": [
+        "Font Name:",
+        "FiraCode Nerd Font",
+        "FiraCode Nerd Font Mono"
+    ],
+    "notes-cn": [
+        "字体名称:",
+        "FiraCode Nerd Font",
+        "FiraCode Nerd Font Mono"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip",
+            "hash": "7cc4ffd8f7a1fc914cdab7b149808298165ff7a7f40e40d82dea9ebe41e8ca0b"
+        },
+        "arm64": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip",
+            "hash": "7cc4ffd8f7a1fc914cdab7b149808298165ff7a7f40e40d82dea9ebe41e8ca0b"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Add-Font"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Remove-Font"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/ryanoasis/nerd-fonts/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/FiraCode.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/FiraCode.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

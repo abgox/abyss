@@ -1,6 +1,6 @@
 {
     "version": "0.12",
-    "description": "Notepad++ 的跨平台重新实现。A cross-platform, reimplementation of Notepad++.",
+    "description": "Notepad++ 的跨平台重新实现 | A cross-platform, reimplementation of Notepad++.",
     "homepage": "https://github.com/dail8859/NotepadNext",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -12,10 +12,11 @@
             "hash": "f1b15378a249ab73f36a0e44486f75029dce6506c6ab3f96885de9bfe9adeb62"
         }
     },
-    "bin": "NotepadNext.exe",
+    "extract_to": "app",
+    "bin": "app\\NotepadNext.exe",
     "shortcuts": [
         [
-            "NotepadNext.exe",
+            "app\\NotepadNext.exe",
             "NotepadNext"
         ]
     ],
@@ -42,12 +43,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/dail8859/NotepadNext/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/dail8859/NotepadNext/releases/download/v$version/NotepadNext-v$version-win64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

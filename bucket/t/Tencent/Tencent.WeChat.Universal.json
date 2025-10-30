@@ -1,6 +1,6 @@
 {
     "version": "4.1.1.19",
-    "description": "微信，腾讯的一款聊天通讯工具。A chat communication tool by Tencent.",
+    "description": "微信，腾讯的一款聊天通讯工具 | A chat communication tool by Tencent.",
     "homepage": "https://www.wechat.com/",
     "license": {
         "identifier": "Unknown",
@@ -8,11 +8,11 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Tencent\\Weixin",
-        "Scoop only manages data, installation, update, and uninstallation operations."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\Tencent\\Weixin",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+        "安装目录: $env:ProgramFiles\\Tencent\\Weixin",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
@@ -32,6 +32,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\Weixin\\Uninstall.exe\" -ArgumentList @('/S')",
+        "# 安装程序会清理 $env:AppData\\Tencent\\xwechat，所以安装完成后再进行链接",
         "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\xwechat\", \"$env:UserProfile\\Documents\\xwechat_files\")"
     ],
     "post_install": [
@@ -46,7 +47,7 @@
         "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\Tencent\\Weixin\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe -NoSilent"
+        "A-Uninstall-Exe"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -69,7 +70,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }

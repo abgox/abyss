@@ -1,0 +1,68 @@
+{
+    "version": "0.5.3",
+    "description": "一款极速、隐私优先的 Windows 智能启动器，精通拼音与模糊匹配；可选本地 AI 语义检索，让错字与意图搜索也能秒速直达 | A Windows smart launcher that understands your typing. It excels at Pinyin and fuzzy matching, and can optionally add AI semantic understanding—so typos and vague queries still get instant results.",
+    "homepage": "https://zerolaunch.ghost-him.com/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/ghost-him/ZeroLaunch-rs/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ghost-him/ZeroLaunch-rs/releases/download/v0.5.3/zerolaunch-rs_0.5.3_x64-setup.exe",
+            "hash": "ea9f37935b4e9a1368cbae22a549f9f44a80667036ff31f9b37670ee2ed90b3f"
+        },
+        "arm64": {
+            "url": "https://github.com/ghost-him/ZeroLaunch-rs/releases/download/v0.5.3/zerolaunch-rs_0.5.3_arm64-setup.exe",
+            "hash": "e9ef68da642d15485af9dbcd2fd3a471ffd1edfb53e74a7e92c95329dd89a2fe"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\zerolaunch-rs.exe",
+            "zerolaunch-rs"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\ZeroLaunch-rs\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.zerolaunch-rs.app\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/ghost-him/ZeroLaunch-rs/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ghost-him/ZeroLaunch-rs/releases/download/v$version/zerolaunch-rs_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/ghost-him/ZeroLaunch-rs/releases/download/v$version/zerolaunch-rs_$version_arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

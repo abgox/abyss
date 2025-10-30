@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "JetBrains 的 IDE 产品，用于 PHP 开发。A IDE by JetBrains for PHP development.",
+    "version": "2025.2.4",
+    "description": "JetBrains 的 IDE 产品，用于 PHP 开发 | A IDE by JetBrains for PHP development.",
     "homepage": "https://www.jetbrains.com/phpstorm/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/webide/PhpStorm-2025.2.2.exe",
-            "hash": "c73b0b0aea3cb3ed6d40b4b13a4904d61d1de6bd8af676a45186dae584a61755"
+            "url": "https://download.jetbrains.com/webide/PhpStorm-2025.2.4.exe",
+            "hash": "87754d5b0afd66c0c5d97ae0d56a29e31ece2e68d7c9f03e5fb8c7c023bfc080"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/webide/PhpStorm-2025.2.2-aarch64.exe",
-            "hash": "4c0267e4fca2388d564890150614dc6685a5d94f94c4d4bfd7a0e0b36c33546d"
+            "url": "https://download.jetbrains.com/webide/PhpStorm-2025.2.4-aarch64.exe",
+            "hash": "1232a76be60f555d1af0c5d6cd32f289fe9bf45fa328b8f3a41aca474c84a927"
         }
     },
     "bin": [
         [
-            "App\\bin\\phpstorm64.exe",
+            "app\\bin\\phpstorm64.exe",
             "PhpStorm"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\phpstorm64.exe",
-            "PhpStorm 2025.2.2"
+            "app\\bin\\phpstorm64.exe",
+            "PhpStorm 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"PhpStorm$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/webide/PhpStorm-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/webide/PhpStorm-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\phpstorm64.exe",
+                "app\\bin\\phpstorm64.exe",
                 "PhpStorm $version"
             ]
         ]

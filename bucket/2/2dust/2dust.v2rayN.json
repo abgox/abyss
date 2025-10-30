@@ -1,6 +1,6 @@
 {
-    "version": "7.14.12",
-    "description": "一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心。A V2Ray client for Windows, support Xray & v2fly core.",
+    "version": "7.15.6",
+    "description": "一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心 | A V2Ray client for Windows, support Xray & v2fly core.",
     "homepage": "https://github.com/2dust/v2rayN",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -8,21 +8,32 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/2dust/v2rayN/releases/download/7.14.12/v2rayN-windows-64-SelfContained.zip",
-            "hash": "543c5ce62f32f4a73526c7fcec4bbab5766803620a5a9b5131c5c425fd9ab388",
+            "url": "https://github.com/2dust/v2rayN/releases/download/7.15.6/v2rayN-windows-64-SelfContained.zip",
+            "hash": "e67b983ea72062b0a3ae9fabd544a96e60c47009cff2ed771d9ea78cc7b9f4f4",
             "extract_dir": "v2rayN-windows-64-SelfContained"
         },
         "arm64": {
-            "url": "https://github.com/2dust/v2rayN/releases/download/7.14.12/v2rayN-windows-arm64.zip",
-            "hash": "ab377ad98284bf244116f2339551e5f4e3cf00229d7dd29744254a8a95b7dd4f",
+            "url": "https://github.com/2dust/v2rayN/releases/download/7.15.6/v2rayN-windows-arm64.zip",
+            "hash": "b7918edb54c64aca234d8f1bd60779f45532269fa73181f1da2c2e0fca46354b",
             "extract_dir": "v2rayN-windows-arm64"
         }
     },
-    "bin": "v2rayN.exe",
+    "extract_to": "app",
+    "bin": "app\\v2rayN.exe",
     "shortcuts": [
         [
-            "v2rayN.exe",
+            "app\\v2rayN.exe",
             "v2rayN"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\guiConfigs",
+            "guiConfigs"
+        ],
+        [
+            "app\\binConfigs",
+            "binConfigs"
         ]
     ],
     "pre_install": [
@@ -46,7 +57,6 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "guiConfigs",
     "checkver": {
         "url": "https://github.com/2dust/v2rayN/releases/latest",
         "regex": "/tree/(?:v|V)?([^\"?]+)"
@@ -59,6 +69,9 @@
             "arm64": {
                 "url": "https://github.com/2dust/v2rayN/releases/download/$version/v2rayN-windows-arm64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

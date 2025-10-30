@@ -1,22 +1,21 @@
 {
-    "version": "0.11.6",
-    "description": "具有超能力的开源终端，集成文件预览、文件编辑、人工智能、网页浏览和工作区组织。An open-source terminal with superpowers, integrating file previews, file editing, AI, web browsing, and workspace organization.",
-    "homepage": "https://www.waveterm.dev",
+    "version": "0.12.1",
+    "description": "具有超能力的开源终端，集成文件预览、文件编辑、人工智能、网页浏览和工作区组织 | An open-source terminal with superpowers, integrating file previews, file editing, AI, web browsing, and workspace organization.",
+    "homepage": "https://www.waveterm.dev/",
     "license": {
         "identifier": "Apache-2.0",
         "url": "https://github.com/wavetermdev/waveterm/blob/main/LICENSE"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi",
-            "hash": "51858b912557f7cfbbcd864f2450eb1fc8e022ba77994079a1b6d3b68dd570de"
+            "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.12.1/Wave-win32-x64-0.12.1.exe",
+            "hash": "0923deb522a15abea43a947339675ba7ec45db1de2cb40373de604eb433c8286"
         }
     },
-    "extract_dir": "waveterm",
-    "bin": "Wave.exe",
+    "bin": "app\\Wave.exe",
     "shortcuts": [
         [
-            "Wave.exe",
+            "app\\Wave.exe",
             "Wave"
         ]
     ],
@@ -24,7 +23,9 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\waveterm\")"
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\waveterm\", \"$env:LocalAppData\\waveterm\")",
+        "A-New-PersistFile \"$env:UserProfile\\.config\\waveterm\\settings.json\" -Content '{\"autoupdate:enabled\": false}'",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Wave.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -37,7 +38,8 @@
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-TempData @(\"$env:AppData\\Wave\")"
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:AppData\\Wave\", \"$env:LocalAppData\\waveterm-updater\")"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,13 +47,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/wavetermdev/waveterm"
+        "url": "https://github.com/wavetermdev/waveterm/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/wavetermdev/waveterm/releases/download/v0.11.3/Wave-win32-x64-0.11.3.msi"
+                "url": "https://github.com/wavetermdev/waveterm/releases/download/v$version/Wave-win32-x64-$version.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

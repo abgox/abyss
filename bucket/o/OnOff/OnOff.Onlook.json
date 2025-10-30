@@ -1,6 +1,6 @@
 {
     "version": "0.2.32",
-    "description": "一款开源的带有视觉氛围的代码编辑器，借助人工智能以可视化方式构建、设计样式并编辑你的应用程序。An Open-Source Visual Vibecoding Editor • Visually build, style, and edit your App with AI",
+    "description": "一款开源的带有视觉氛围的代码编辑器，借助人工智能以可视化方式构建、设计样式并编辑你的应用程序 | An Open-Source Visual Vibecoding Editor • Visually build, style, and edit your App with AI",
     "homepage": "https://onlook.com/",
     "license": {
         "identifier": "Apache-2.0",
@@ -12,10 +12,10 @@
             "hash": "88ce6b5ec85fb971c65b2403f984cf20d1647c3a6f3501c31b125fd9d1753656"
         }
     },
-    "bin": "Onlook.exe",
+    "bin": "app\\Onlook.exe",
     "shortcuts": [
         [
-            "Onlook.exe",
+            "app\\Onlook.exe",
             "Onlook"
         ]
     ],
@@ -23,8 +23,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall Onlook.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\Onlook\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Onlook\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Onlook.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -46,13 +46,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/onlook-dev/onlook/"
+        "url": "https://github.com/onlook-dev/onlook/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/onlook-dev/onlook/releases/download/v$version/Onlook-setup.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

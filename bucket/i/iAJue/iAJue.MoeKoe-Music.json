@@ -1,6 +1,6 @@
 {
-    "version": "1.5.1",
-    "description": "一款开源、简洁、高颜值的酷狗音乐第三方客户端。An open-source, concise, and aesthetically pleasing third-party client for KuGou Music.",
+    "version": "1.5.2",
+    "description": "一款开源、简洁、高颜值的酷狗音乐第三方客户端 | An open-source, concise, and aesthetically pleasing third-party client for KuGou Music.",
     "homepage": "https://music.moekoe.cn/",
     "license": {
         "identifier": "GPL-2.0",
@@ -8,13 +8,13 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/iAJue/MoeKoeMusic/releases/download/v1.5.1/MoeKoe_Music_Setup_v1.5.1.exe",
-            "hash": "4e82abd164597c976e587b0c403aa1b3eca3d1aaff956918007794cf8c2d100e"
+            "url": "https://github.com/iAJue/MoeKoeMusic/releases/download/v1.5.2/MoeKoe_Music_Setup_v1.5.2.exe",
+            "hash": "5415e558cd3c14d29da0020b7137f793bcfc1d237eac04b74dfa847985c04703"
         }
     },
     "shortcuts": [
         [
-            "MoeKoe Music.exe",
+            "app\\MoeKoe Music.exe",
             "MoeKoe Music"
         ]
     ],
@@ -23,8 +23,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller 'Uninstall MoeKoe Music.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\moekoemusic\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\moekoemusic\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall MoeKoe Music.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -47,13 +47,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/iAJue/MoeKoeMusic"
+        "url": "https://github.com/iAJue/MoeKoeMusic/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/iAJue/MoeKoeMusic/releases/download/v$version/MoeKoe_Music_Setup_v$version.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

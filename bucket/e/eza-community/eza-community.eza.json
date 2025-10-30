@@ -1,0 +1,61 @@
+{
+    "version": "0.23.4",
+    "description": "一款针对古老的文件列表命令行程序 ls 的现代替代工具 | A modern alternative for the venerable file-listing command-line program ls.",
+    "homepage": "https://eza.rocks/",
+    "license": {
+        "identifier": "EUPL-1.2",
+        "url": "https://github.com/eza-community/eza/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/eza-community/eza/releases/download/v0.23.4/eza.exe_x86_64-pc-windows-gnu.zip",
+            "hash": "05677fd7c2d1b69ce71df53db74c29f6331ea0b2be5aa3a0fce6976200ee06fc"
+        }
+    },
+    "extract_to": "app",
+    "env_set": {
+        "EZA_CONFIG_DIR": "$dir\\app\\.config\\eza"
+    },
+    "bin": "app\\eza.exe",
+    "persist": [
+        [
+            "app\\.config\\eza",
+            ".config\\eza"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/eza-community/eza/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/eza-community/eza/releases/download/v$version/eza.exe_x86_64-pc-windows-gnu.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

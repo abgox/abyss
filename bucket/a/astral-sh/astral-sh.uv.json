@@ -1,29 +1,45 @@
 {
-    "version": "0.8.22",
-    "description": "一个极其快速的 Python 包和项目管理器，用 Rust 编写。An extremely fast Python package and project manager, written in Rust.",
+    "version": "0.9.6",
+    "description": "一个极其快速的 Python 包和项目管理器，用 Rust 编写 | An extremely fast Python package and project manager, written in Rust.",
     "homepage": "https://docs.astral.sh/uv/",
     "license": {
         "identifier": "Apache-2.0|MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/astral-sh/uv/releases/download/0.8.22/uv-x86_64-pc-windows-msvc.zip",
-            "hash": "5049375aa2a5162f132b2c1cb992e25d42d47d934cab8c174dbe6f60973dcc12"
+            "url": "https://github.com/astral-sh/uv/releases/download/0.9.6/uv-x86_64-pc-windows-msvc.zip",
+            "hash": "4cde4a7907214053320d5ab4b6f9add77b7aca6eb39cc7e4928b61704c1328b1"
         },
         "arm64": {
-            "url": "https://github.com/astral-sh/uv/releases/download/0.8.22/uv-aarch64-pc-windows-msvc.zip",
-            "hash": "dbb3a5bd06d20c9ab8bb9a79c7c4fb5832ca1c7ba5f231a020bc92e5a3c6dcf4"
+            "url": "https://github.com/astral-sh/uv/releases/download/0.9.6/uv-aarch64-pc-windows-msvc.zip",
+            "hash": "57370b6a43b9c7d93064de27e5ef7e068868062473df227a733e2d8a46ea87cf"
         }
     },
+    "extract_to": "app",
+    "env_add_path": "$env:UserProfile\\.local\\bin",
     "env_set": {
-        "UV_CACHE_DIR": "$dir\\data\\cache",
-        "UV_PYTHON_INSTALL_DIR": "$dir\\data\\python",
-        "UV_TOOL_DIR": "$dir\\data\\tools"
+        "UV_PYTHON_INSTALL_DIR": "$dir\\app\\python",
+        "UV_TOOL_DIR": "$dir\\app\\tools",
+        "UV_CACHE_DIR": "$dir\\app\\cache"
     },
     "bin": [
-        "uv.exe",
-        "uvx.exe",
-        "uvw.exe"
+        "app\\uv.exe",
+        "app\\uvx.exe",
+        "app\\uvw.exe"
+    ],
+    "persist": [
+        [
+            "app\\python",
+            "AppData\\Roaming\\uv\\python"
+        ],
+        [
+            "app\\tools",
+            "AppData\\Roaming\\uv\\tools"
+        ],
+        [
+            "app\\cache",
+            "AppData\\Local\\uv\\cache"
+        ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -39,17 +55,16 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "data",
     "checkver": {
-        "github": "https://github.com/astral-sh/uv"
+        "url": "https://github.com/astral-sh/uv/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {

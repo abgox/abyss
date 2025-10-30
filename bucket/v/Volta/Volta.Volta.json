@@ -1,6 +1,6 @@
 {
     "version": "2.0.2",
-    "description": "轻松上手的 JavaScript 工具管理器，它是快速的、可靠的、通用的。The Hassle-Free JavaScript Tool Manager, and it's fast, reliable, and universal.",
+    "description": "轻松上手的 JavaScript 工具管理器，它是快速的、可靠的、通用的 | The Hassle-Free JavaScript Tool Manager, and it's fast, reliable, and universal.",
     "homepage": "https://volta.sh/",
     "license": {
         "identifier": "BSD-2-Clause",
@@ -8,22 +8,22 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Volta",
-        "Scoop only manages data, installation and update operations."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\Volta",
-        "Scoop 只管理数据(通过 Link)，安装、更新操作"
+        "安装目录: $env:ProgramFiles\\Volta",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "suggest": {
         "PSCompletions": "abyss/abgox.PSCompletions"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/volta-cli/volta/releases/download/v2.0.2/volta-2.0.2-windows-x86_64.msi#/dl.exe",
+            "url": "https://github.com/volta-cli/volta/releases/download/v2.0.2/volta-2.0.2-windows-x86_64.msi#/dl.msi_",
             "hash": "104bf5518177990e4c4de78097caa747eb8f64e1149bfdfa9106f4a3d3e5f10b"
         },
         "arm64": {
-            "url": "https://github.com/volta-cli/volta/releases/download/v2.0.2/volta-2.0.2-windows-arm64.msi#/dl.exe",
+            "url": "https://github.com/volta-cli/volta/releases/download/v2.0.2/volta-2.0.2-windows-arm64.msi#/dl.msi_",
             "hash": "90717f282bbffc32bdbf9043bc91f4b00ea6bb02a5a26216eaf691eeabd2a99c"
         }
     },
@@ -35,8 +35,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive') -SuccessFile \"$env:ProgramFiles\\Volta\\volta.exe\"",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Volta\")"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Volta\")",
+        "A-Install-Exe msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -49,7 +49,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "$ProductCode = A-Get-ProductCode '^Volta$'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"$env:ProgramFiles\\Volta\\volta.exe\"",
+        "A-Uninstall-Exe $ProductCode",
         "A-Remove-Link"
     ],
     "post_uninstall": [
@@ -64,11 +64,14 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/volta-cli/volta/releases/download/v$version/volta-$version-windows-x86_64.msi#/dl.exe"
+                "url": "https://github.com/volta-cli/volta/releases/download/v$version/volta-$version-windows-x86_64.msi#/dl.msi_"
             },
             "arm64": {
-                "url": "https://github.com/volta-cli/volta/releases/download/v$version/volta-$version-windows-arm64.msi#/dl.exe"
+                "url": "https://github.com/volta-cli/volta/releases/download/v$version/volta-$version-windows-arm64.msi#/dl.msi_"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

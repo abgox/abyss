@@ -1,17 +1,17 @@
 {
-    "version": "2.7.39",
-    "description": "API 设计、开发、测试一体化协作平台。All-in-one collaboration platform for API documentation, API debugging, API Mock and API test automation.",
-    "homepage": "https://apifox.com",
+    "version": "2.7.45",
+    "description": "API 设计、开发、测试一体化协作平台 | All-in-one collaboration platform for API documentation, API debugging, API Mock and API test automation.",
+    "homepage": "https://apifox.com/",
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://file-assets.apifox.com/download/2.7.39/Apifox-2.7.39.exe",
-            "hash": "eda2099138e703cc36cd83780a6f5bb4d7641240d95c1ac16a3afbd477e58c20"
+            "url": "https://file-assets.apifox.com/download/2.7.45/Apifox-2.7.45.exe",
+            "hash": "8a2db2e953904bddb87d4c329721be07eeb097d9c26f1575150ca595a2c99123"
         }
     },
     "shortcuts": [
         [
-            "Apifox.exe",
+            "app\\Apifox.exe",
             "Apifox"
         ]
     ],
@@ -19,8 +19,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe  -Uninstaller 'Uninstall Apifox.exe' -ArgumentList @('/S','/currentuser',\"/D=$dir\")",
-        "A-New-LinkDirectory @(\"$env:AppData\\apifox\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\apifox\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Apifox.exe' -ArgumentList @('/CurrentUser','/S',\"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -57,7 +57,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             }

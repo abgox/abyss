@@ -1,0 +1,63 @@
+{
+    "version": "7.1.2-3",
+    "description": "带有自定义扩展和增强功能的适用于 Jellyfin 的 FFmpeg | FFmpeg for Jellyfin with custom extensions and enhancements",
+    "homepage": "https://github.com/jellyfin/jellyfin-ffmpeg",
+    "license": {
+        "identifier": "LGPL-3.0-only",
+        "url": "https://github.com/jellyfin/jellyfin-ffmpeg/blob/HEAD/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v7.1.2-3/jellyfin-ffmpeg_7.1.2-3_portable_win64-clang-gpl.zip",
+            "hash": "80f17d4746fc2c88124edb332f5ab0ffc1595988957a552417880e90efc0a218"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\ffmpeg.exe",
+        "app\\ffprobe.exe"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Jellyfin.FFmpeg' 'zip'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

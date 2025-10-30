@@ -1,0 +1,66 @@
+{
+    "version": "8.0",
+    "description": "用于录制、转换和传输音频和视频的完整跨平台解决方案 | A complete, cross-platform solution to record, convert and stream audio and video.",
+    "homepage": "https://www.gyan.dev/ffmpeg/builds/",
+    "license": {
+        "identifier": "LGPL-3.0-only",
+        "url": "https://www.ffmpeg.org/legal.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/GyanD/codexffmpeg/releases/download/8.0/ffmpeg-8.0-full_build.zip",
+            "hash": "48ca5e824d2660a94f89fd55287b7c35129b55bbe680c4330efeed5269c4820f",
+            "extract_dir": "ffmpeg-8.0-full_build"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\bin\\ffmpeg.exe",
+        "app\\bin\\ffplay.exe",
+        "app\\bin\\ffprobe.exe"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Gyan.FFmpeg' 'zip'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                },
+                "extract_dir": "ffmpeg-$version-full_build"
+            }
+        }
+    }
+}

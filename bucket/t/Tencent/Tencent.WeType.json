@@ -1,6 +1,6 @@
 {
     "version": "1.4.2.12",
-    "description": "微信输入法，由腾讯的微信团队开发。An input method developed by the WeChat team of Tencent.",
+    "description": "微信输入法，由腾讯的微信团队开发 | An input method developed by the WeChat team of Tencent.",
     "homepage": "https://z.weixin.qq.com/",
     "license": {
         "identifier": "Unknown",
@@ -8,20 +8,20 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Tencent\\WeType",
-        "Scoop only manages installation and uninstallation, and cannot update via Scoop."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\Tencent\\WeType",
-        "Scoop 只管理它的安装和卸载操作，无法通过 Scoop 更新"
+        "安装目录: $env:ProgramFiles\\Tencent\\WeType",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
             "url": "https://download.z.weixin.qq.com/app/win/WeTypeSetup_1.4.2.12_3.exe",
-            "hash": "29d54ce0b7efd15df257837bda81e5819db74e928b26ce21c38393b025472074"
+            "hash": "32d6bf8f8a45a67439e4cc9036e183de533717034990dc549a7a8bde91aa616f"
         },
         "arm64": {
             "url": "https://download.z.weixin.qq.com/app/win/WeTypeSetup_1.4.2.12_3.exe",
-            "hash": "29d54ce0b7efd15df257837bda81e5819db74e928b26ce21c38393b025472074"
+            "hash": "32d6bf8f8a45a67439e4cc9036e183de533717034990dc549a7a8bde91aa616f"
         }
     },
     "pre_install": [
@@ -29,7 +29,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\" -ArgumentList @('/s') -SuccessFile \"$env:ProgramFiles\\Tencent\\WeType\\$version\\Uninstall.exe\"",
+        "A-Install-Exe -ArgumentList @('/s')",
         "A-Hold-App"
     ],
     "post_install": [
@@ -42,8 +42,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "A-Deny-Update",
-        "A-Require-Admin",
-        "A-Uninstall-Exe -ArgumentList @() -NoSilent"
+        "A-Uninstall-ExeManually \"$env:ProgramFiles\\Tencent\\WeType\""
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -66,14 +65,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_machine.InstallerSha256"
                 }
             }

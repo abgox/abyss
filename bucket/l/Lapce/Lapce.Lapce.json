@@ -1,6 +1,6 @@
 {
     "version": "0.4.5",
-    "description": "用 Rust 编写的快速且强大的代码编辑器。Lightning-fast and Powerful Code Editor written in Rust.",
+    "description": "用 Rust 编写的快速且强大的代码编辑器 | Lightning-fast and Powerful Code Editor written in Rust.",
     "homepage": "http://lapce.dev/",
     "license": {
         "identifier": "Apache-2.0",
@@ -12,11 +12,18 @@
             "hash": "005f8ce61c0fe637dc2a25b633c54fe13ada4410e542c820fc4cd3903fca1bee"
         }
     },
-    "bin": "lapce.exe",
+    "extract_to": "app",
+    "bin": "app\\lapce.exe",
     "shortcuts": [
         [
-            "lapce.exe",
+            "app\\lapce.exe",
             "Lapce"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\lapce-data",
+            "AppData\\Local\\lapce\\Lapce-Stable"
         ]
     ],
     "pre_install": [
@@ -40,15 +47,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "lapce-data",
     "checkver": {
-        "github": "https://github.com/lapce/lapce"
+        "url": "https://github.com/lapce/lapce/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/lapce/lapce/releases/download/v$version/Lapce-windows-portable.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

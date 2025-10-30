@@ -1,6 +1,6 @@
 {
-    "version": "0.42.0",
-    "description": "一款在终端中运行的开源本地编码代理。An open-source local coding agent that runs in your terminal.",
+    "version": "0.50.0",
+    "description": "一款在终端中运行的开源本地编码代理 | An open-source local coding agent that runs in your terminal.",
     "homepage": "https://github.com/openai/codex",
     "license": {
         "identifier": "Apache-2.0",
@@ -8,31 +8,31 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/openai/codex/releases/download/rust-v0.42.0/codex-x86_64-pc-windows-msvc.exe.zip",
-            "hash": "3ee77377d8aaf9f46064c317f55c949119080c76ac07935ff06f0e2371bb9df3",
+            "url": "https://github.com/openai/codex/releases/download/rust-v0.50.0/codex-x86_64-pc-windows-msvc.exe.zip",
+            "hash": "41fd1cbca86c79aee1d9c185ba3d32ec9f9a6a418f5b6d99ccb1644e1ed17a5e",
             "bin": [
                 [
-                    "codex-x86_64-pc-windows-msvc.exe",
+                    "app\\codex-x86_64-pc-windows-msvc.exe",
                     "codex"
                 ]
             ]
         },
         "arm64": {
-            "url": "https://github.com/openai/codex/releases/download/rust-v0.42.0/codex-aarch64-pc-windows-msvc.exe.zip",
-            "hash": "64db71b4a18b817ab2533816311d867570f70390c182e01d73d1730e3b975464",
+            "url": "https://github.com/openai/codex/releases/download/rust-v0.50.0/codex-aarch64-pc-windows-msvc.exe.zip",
+            "hash": "669d300b2b09836329d57442ebd8056e2e60613fbdd223b341c53e6fa876adeb",
             "bin": [
                 [
-                    "codex-aarch64-pc-windows-msvc.exe",
+                    "app\\codex-aarch64-pc-windows-msvc.exe",
                     "codex"
                 ]
             ]
         }
     },
+    "extract_to": "app",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install",
-        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,8 +43,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

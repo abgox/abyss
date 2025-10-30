@@ -4,18 +4,27 @@ on:
   schedule:
     # At minute 20 past every 4th hour.
     - cron: "20 */4 * * *"
+
+concurrency:
+  group: excavator-workflow-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   excavate:
     name: Excavate
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Get latest changes
+        run: git pull
 
       - name: Excavate
-        uses: ScoopInstaller/GithubActions@main
+        uses: abgox/ScoopInstaller-GithubActions@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SCOOP_BRANCH: develop
           SKIP_UPDATED: 1
           THROW_ERROR: 0
 
@@ -29,17 +38,20 @@ jobs:
 
   check-scoop-version:
     runs-on: windows-latest
+    outputs:
+      ScoopNewVersion: ${{ steps.scoop-new-version.outputs.ScoopNewVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check Scoop Version
+        id: scoop-new-version
         shell: pwsh
         run: |
           .\bin\check-scoop-version.ps1
 
       - name: Reopen Issue
-        if: env.ScoopNewVersion != ''
+        if: steps.scoop-new-version.outputs.ScoopNewVersion != ''
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

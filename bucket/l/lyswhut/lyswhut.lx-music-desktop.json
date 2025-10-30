@@ -1,6 +1,6 @@
 {
     "version": "2.11.0",
-    "description": "一个基于 electron 的音乐软件。An electron-based music player.",
+    "description": "一个基于 electron 的音乐软件 | An electron-based music player.",
     "homepage": "https://github.com/lyswhut/lx-music-desktop",
     "license": {
         "identifier": "Apache-2.0",
@@ -16,15 +16,16 @@
             "hash": "388c960e18042b1b38b27b5acf0cc6a8e1e3d03cd6e5a10d39fcf4076f60c419"
         }
     },
+    "extract_to": "app",
     "bin": [
         [
-            "lx-music-desktop.exe",
+            "app\\lx-music-desktop.exe",
             "lx-music"
         ]
     ],
     "shortcuts": [
         [
-            "lx-music-desktop.exe",
+            "app\\lx-music-desktop.exe",
             "lx-music"
         ]
     ],
@@ -51,7 +52,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/lyswhut/lx-music-desktop/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -60,6 +64,9 @@
             "arm64": {
                 "url": "https://github.com/lyswhut/lx-music-desktop/releases/download/v$version/lx-music-desktop-v$version-win_arm64-green.7z"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

@@ -1,7 +1,7 @@
 {
     "version": "3.4.12",
-    "description": "一款免费的开源笔记和待办事项应用程序。A free, open source note taking and to-do application.",
-    "homepage": "https://joplinapp.org",
+    "description": "一款免费的开源笔记和待办事项应用程序 | A free, open source note taking and to-do application.",
+    "homepage": "https://joplinapp.org/",
     "license": {
         "identifier": "Unknown",
         "url": "https://github.com/laurent22/joplin/blob/dev/LICENSE"
@@ -14,7 +14,7 @@
     },
     "shortcuts": [
         [
-            "Joplin.exe",
+            "app\\Joplin.exe",
             "Joplin"
         ]
     ],
@@ -22,8 +22,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall Joplin.exe'",
-        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\joplin-desktop\")"
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\joplin-desktop\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Joplin.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,13 +45,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/laurent22/joplin"
+        "url": "https://github.com/laurent22/joplin/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/laurent22/joplin/releases/download/v$version/Joplin-Setup-$version.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

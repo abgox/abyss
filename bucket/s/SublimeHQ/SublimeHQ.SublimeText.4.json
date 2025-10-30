@@ -1,6 +1,6 @@
 {
     "version": "4.0.0.420000",
-    "description": "一款用于代码、标记和散文的复杂跨平台文本编辑器。A sophisticated cross-platform text editor for code, markup and prose.",
+    "description": "一款用于代码、标记和散文的复杂跨平台文本编辑器 | A sophisticated cross-platform text editor for code, markup and prose.",
     "homepage": "https://www.sublimetext.com/",
     "license": {
         "identifier": "Unknown",
@@ -12,20 +12,25 @@
             "hash": "3d3c70e51aef08f85d7160bcc70793bed9acec250973090ab67d98987bce7c7e"
         }
     },
+    "extract_to": "app",
     "innosetup": true,
-    "bin": "subl.exe",
+    "bin": "app\\subl.exe",
     "shortcuts": [
         [
-            "sublime_text.exe",
+            "app\\sublime_text.exe",
             "Sublime Text 4"
         ]
     ],
-    "persist": "Data",
+    "persist": [
+        [
+            "app\\Data",
+            "AppData\\Roaming\\Sublime Text"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install",
-        "# A-New-LinkDirectory @(\"$env:AppData\\xxx\")"
+        "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,8 +41,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -60,7 +64,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }

@@ -1,17 +1,17 @@
 {
-    "version": "7.52.8",
-    "description": "字节跳动下先进企业协作与管理平台(飞书的国际版本)。A cloud-based enterprise collaboration and management platform developed by ByteDance.",
+    "version": "7.54.9",
+    "description": "字节跳动下先进企业协作与管理平台(飞书的国际版本) | A cloud-based enterprise collaboration and management platform developed by ByteDance.",
     "homepage": "https://www.larksuite.com/",
     "license": "Freemium",
     "architecture": {
         "64bit": {
-            "url": "https://sf16-sg.larksuitecdn.com/obj/lark-artifact-storage/faa7aae8/Lark-win32_ia32-7.52.8-signed.exe",
-            "hash": "b19f7912f1e50ff87e312d2d1db7ed26c3a361ed897c3c926b9ad07ace31aec2"
+            "url": "https://sf16-sg.larksuitecdn.com/obj/lark-artifact-storage/fe84a0bb/Lark-win32_ia32-7.54.9-signed.exe",
+            "hash": "6525e72db2c0b7d730d1b7e30e007acf0e08dd89496e9a208f4263da7e04d972"
         }
     },
     "shortcuts": [
         [
-            "Lark\\Lark.exe",
+            "app\\Lark\\Lark.exe",
             "Lark"
         ]
     ],
@@ -19,10 +19,11 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "$InstallLocation = '\"' + \"$dir\" + '\"'",
+        "A-New-LinkDirectory @(\"$env:AppData\\LarkInternational\")",
+        "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'Lark\\uninstall.exe' -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
-        "A-New-LinkDirectory @(\"$env:AppData\\LarkInternational\")"
+        "A-Install-Exe -ArgumentList @('--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\")",
+        "A-Hold-App"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -33,9 +34,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Uninstall-Exe -NoSilent"
+        "A-Uninstall-ExeManually 'app'",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -58,7 +58,7 @@
             "64bit": {
                 "url": "$matchX86",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x86_user.InstallerSha256"
                 }
             }

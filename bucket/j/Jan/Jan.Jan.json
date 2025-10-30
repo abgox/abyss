@@ -1,0 +1,62 @@
+{
+    "version": "0.7.2",
+    "description": "ChatGPT 的开源替代品，可在计算机上百分百脱机运行 | An open source alternative to ChatGPT that runs 100% offline on your computer.",
+    "homepage": "https://jan.ai/",
+    "license": {
+        "identifier": "AGPL-3.0-only",
+        "url": "https://github.com/menloresearch/jan/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/menloresearch/jan/releases/download/v0.7.2/Jan_0.7.2_x64-setup.exe",
+            "hash": "c80ff1c65a7d53cf8d54bd173ef94b7b87cc3bb28050731da3b9aec44f591f42"
+        }
+    },
+    "bin": "app\\jan.exe",
+    "shortcuts": [
+        [
+            "app\\jan.exe",
+            "Jan"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\jan\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\jan-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/menloresearch/jan/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/menloresearch/jan/releases/download/v$version/Jan_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

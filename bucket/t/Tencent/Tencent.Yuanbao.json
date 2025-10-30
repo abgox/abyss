@@ -1,17 +1,17 @@
 {
-    "version": "2.41.0",
-    "description": "腾讯元宝，腾讯的一款 AI 智能助手。An AI assistant by Tencent.",
+    "version": "2.43.1",
+    "description": "腾讯元宝，腾讯的一款 AI 智能助手 | An AI assistant by Tencent.",
     "homepage": "https://yuanbao.tencent.com/",
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://cdn-hybrid-prod.hunyuan.tencent.com/Desktop/official/f571bfec951d0b9017b22b5c71d10dd3/yuanbao_2.41.0.616_x64.exe",
-            "hash": "65942a395bf1ce12863a6ce94dcae0793410e278e3a29fce087f8d9df9c34a2b"
+            "url": "https://cdn-hybrid-prod.hunyuan.tencent.com/Desktop/official/e1ac6e2f48bd3c1b00d88be396a16bef/yuanbao_2.43.1.625_x64.exe",
+            "hash": "16d7f3af79ca861d9a02761fedc55aadcf1878e131ae39cddeb917be2e9b2fa2"
         }
     },
     "shortcuts": [
         [
-            "Yuanbao\\yuanbao.exe",
+            "app\\Yuanbao\\yuanbao.exe",
             "腾讯元宝"
         ]
     ],
@@ -20,8 +20,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller 'Yuanbao\\uninstall.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\Yuanbao\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\Tencent\\Yuanbao\")",
+        "A-Install-Exe -Uninstaller 'app\\Yuanbao\\uninstall.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -59,7 +59,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }

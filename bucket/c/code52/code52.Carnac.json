@@ -1,6 +1,6 @@
 {
     "version": "2.3.13",
-    "description": "一个键盘按键记录和演示实用程序。A keyboard logging and presentation utility.",
+    "description": "一个键盘按键记录和演示实用程序 | A keyboard logging and presentation utility.",
     "homepage": "http://carnackeys.com/",
     "license": {
         "identifier": "MS-PL",
@@ -13,10 +13,17 @@
         }
     },
     "extract_dir": "lib\\net45",
+    "extract_to": "app",
     "shortcuts": [
         [
-            "Carnac.exe",
+            "app\\Carnac.exe",
             "Carnac"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\Keymaps",
+            "Keymaps"
         ]
     ],
     "pre_install": [
@@ -41,15 +48,18 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "Keymaps",
     "checkver": {
-        "github": "https://github.com/Code52/carnac/"
+        "url": "https://github.com/Code52/carnac/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/Code52/carnac/releases/download/$version/carnac-$version-full.nupkg"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

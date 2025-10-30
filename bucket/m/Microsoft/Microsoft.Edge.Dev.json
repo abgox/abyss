@@ -1,6 +1,6 @@
 {
     "version": "142.0.3581.0",
-    "description": "(Dev 版本) 微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器。(Dev version) Microsoft Edge - A cross-platform web browser created and developed by Microsoft.",
+    "description": "(Dev 版本) 微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器 | (Dev version) Microsoft Edge - A cross-platform web browser created and developed by Microsoft.",
     "homepage": "https://www.microsoft.com/edge",
     "license": {
         "identifier": "Freeware",
@@ -8,19 +8,19 @@
     },
     "notes": [
         "The installation directory: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
-        "Scoop only manages data, installation, update, and uninstallation operations."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+        "安装目录: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
-            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/a9930a1a-2355-43d5-a4cb-6739ef6be877/MicrosoftEdgeDevEnterpriseX64.msi#/dl.exe",
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/a9930a1a-2355-43d5-a4cb-6739ef6be877/MicrosoftEdgeDevEnterpriseX64.msi#/dl.msi_",
             "hash": "136846971b5a2208512eb930758f464acf09f1c8bdd0d967c02c9b1266f0ea3d"
         },
         "arm64": {
-            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/fa788b04-d89b-48e2-a42f-0b92aba7e73d/MicrosoftEdgeDevEnterpriseARM64.msi#/dl.exe",
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/fa788b04-d89b-48e2-a42f-0b92aba7e73d/MicrosoftEdgeDevEnterpriseARM64.msi#/dl.msi_",
             "hash": "cfb1d23b20005cbd0392c13a179df0143546f502ff447aba85242e12e8345230"
         }
     },
@@ -35,8 +35,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Installer 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/i', \"$dir\\$fname\", '/passive')",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\Edge Dev\\User Data\")"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Microsoft\\Edge Dev\\User Data\")",
+        "A-Install-Exe msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -49,7 +49,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "$ProductCode = A-Get-ProductCode '^Microsoft Edge Dev$'",
-        "A-Uninstall-Exe -Uninstaller 'C:\\Windows\\System32\\msiexec.exe' -ArgumentList @('/x', $ProductCode, '/passive') -FailureFile \"${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev\\Application\\msedge.exe\"",
+        "A-Uninstall-Exe $ProductCode",
         "A-Remove-Link"
     ],
     "post_uninstall": [
@@ -71,16 +71,16 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64#/dl.exe",
+                "url": "$matchX64#/dl.msi_",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             },
             "arm64": {
-                "url": "$matchArm64#/dl.exe",
+                "url": "$matchArm64#/dl.msi_",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_machine.InstallerSha256"
                 }
             }

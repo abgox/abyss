@@ -1,31 +1,27 @@
 {
-    "version": "2.51.0",
-    "description": "一个分布式版本控制系统。A distributed version control system.",
+    "version": "2.51.2",
+    "description": "一个分布式版本控制系统 | A distributed version control system.",
     "homepage": "https://gitforwindows.org/",
     "license": {
         "identifier": "Freeware",
         "url": "https://github.com/git-for-windows/git/blob/main/COPYING"
     },
     "notes": [
-        "abyss/Git.Git is different from main/git.",
-        "It follows WinGet's approach to Git installation, using the standard installer for silent installation rather than a portable setup.",
-        "It automatically integrates Git into Windows Terminal and configures Git environment variables.",
-        "Git is installed to $env:ProgramFiles\\Git, not the Scoop directory."
+        "The installation directory: $env:ProgramFiles\\Git",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "abyss/Git.Git 与 main/git 的安装方式完全不同。",
-        "它参考 WinGet 安装 Git 的方式，使用正常的安装程序进行静默安装，而非便捷式。",
-        "它会自动将 Git 注入到 Windows 终端(Windows Terminal)，并设置 Git 环境变量。",
-        "Git 安装目录会保留在 $env:ProgramFiles\\Git，而不是 Scoop 目录中。"
+        "安装目录: $env:ProgramFiles\\Git",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-64-bit.exe",
-            "hash": "843037416371600a7f289be8fe2b2224afe1c1bb0736bbab7b3ff393e6a7aaf2"
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.51.2.windows.1/Git-2.51.2-64-bit.exe",
+            "hash": "ebd318e1d3ee0cc1ac8ead026f1edf8678dcb42c7d74d757b8e2fa8a1be0b25f"
         },
         "arm64": {
-            "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-arm64.exe",
-            "hash": "739673a52a2ea5a3ac23ef1a74985647fd21a758e5e177fed2d995dd897a1600"
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.51.2.windows.1/Git-2.51.2-arm64.exe",
+            "hash": "cfa59dc9ca121844a9346224e856ee11916ebd606b211d4291f8b97aa482dd94"
         }
     },
     "env_add_path": "$env:ProgramFiles\\Git\\bin",
@@ -34,10 +30,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar') -SuccessFile \"$env:ProgramFiles\\Git\\unins000.exe\"",
         "A-New-PersistFile \"$persist_dir\\.gitconfig\"",
         "A-New-PersistFile \"$persist_dir\\.gitmessage\"",
-        "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")"
+        "A-New-LinkFile @(\"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\")",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList @('/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar')"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -74,14 +70,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }

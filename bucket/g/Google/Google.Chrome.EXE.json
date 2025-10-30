@@ -1,6 +1,6 @@
 {
-    "version": "141.0.7390.55",
-    "description": "谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造。Chrome Browser - Fast, secure, and free web browser, built for the modern web.",
+    "version": "141.0.7390.123",
+    "description": "谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造 | Chrome Browser - Fast, secure, and free web browser, built for the modern web.",
     "homepage": "https://www.google.com/intl/zh-CN/chrome/",
     "license": {
         "identifier": "Freeware",
@@ -8,20 +8,20 @@
     },
     "notes": [
         "The installation directory: $env:ProgramFiles\\Google\\Chrome",
-        "Scoop only manages data, installation, update, and uninstallation operations."
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "notes-cn": [
-        "实际安装目录: $env:ProgramFiles\\Google\\Chrome",
-        "Scoop 只管理数据(通过 Link)，安装、更新、卸载操作"
+        "安装目录: $env:ProgramFiles\\Google\\Chrome",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
     ],
     "architecture": {
         "64bit": {
-            "url": "https://dl.google.com/release2/chrome/js54dpxs55azpenbpm56mqvpeq_141.0.7390.55/141.0.7390.55_chrome_installer_uncompressed.exe",
-            "hash": "d3b512ac5e9c0706785ad250e63d2c749eb52553ae4839b80e5c01cc56678b41"
+            "url": "https://dl.google.com/release2/chrome/adjsb3iilfaqd6frclcpo67wthmq_141.0.7390.123/141.0.7390.123_chrome_installer_uncompressed.exe",
+            "hash": "97ec35615b31ec1b5feed78e77ef05b220d4854f95dced032d716b0c7b4428da"
         },
         "arm64": {
-            "url": "https://dl.google.com/release2/chrome/bzlnhwechdw47wri4vkikk3qwi_141.0.7390.55/141.0.7390.55_chrome_installer_uncompressed.exe",
-            "hash": "1fabf22c1cde6fb597152febdb1702df02092dd69a886594be3f4379ef65001a"
+            "url": "https://dl.google.com/release2/chrome/adaapdxca5nxq4zi4iivl2kzba3q_141.0.7390.123/141.0.7390.123_chrome_installer_uncompressed.exe",
+            "hash": "07a54ddede991465d8c25d09ec0101f90e5dd20bdc88d8bd3fe2babf8d209db4"
         }
     },
     "shortcuts": [
@@ -35,8 +35,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Google\\Chrome\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--system-level','--do-not-launch-chrome')",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome\\User Data\")"
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Google\\Chrome\\User Data\")",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Google\\Chrome\\Application\\$version\\Installer\\setup.exe\" -ArgumentList @('--system-level','--do-not-launch-chrome')"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -72,14 +72,14 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }

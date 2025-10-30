@@ -1,0 +1,62 @@
+{
+    "version": "1.4.3",
+    "description": "一个 WinGet 相关的工具，帮您更方便地移除清单、修改清单、分析验证错误等 | A tool related to WinGet that assists you in more conveniently removing manifests, modifying manifests, and analyzing validation errors, and more.",
+    "homepage": "https://github.com/DuckDuckStudio/Sundry",
+    "license": {
+        "identifier": "AGPL-3.0-only",
+        "url": "https://github.com/DuckDuckStudio/Sundry/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/1.4.3/Sundry.zip",
+            "hash": "42a29a8e95021bbc446043d87d8cd033cf08f4726ca4cf4050f5ef9111dfd633"
+        },
+        "arm64": {
+            "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/1.4.3/Sundry.zip",
+            "hash": "42a29a8e95021bbc446043d87d8cd033cf08f4726ca4cf4050f5ef9111dfd633"
+        }
+    },
+    "extract_dir": "Release\\pack",
+    "extract_to": "app",
+    "bin": "app\\sundry.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\DuckStudio\\Sundry\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/DuckDuckStudio/Sundry/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/$version/Sundry.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/$version/Sundry.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

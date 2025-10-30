@@ -1,6 +1,6 @@
 {
     "version": "1.18.7",
-    "description": "一个密码管理器用于浏览器和桌面，与 KeePass 兼容。A browser and desktop password manager compatible with KeePass.",
+    "description": "一个密码管理器用于浏览器和桌面，与 KeePass 兼容 | A browser and desktop password manager compatible with KeePass.",
     "homepage": "https://github.com/keeweb/keeweb",
     "license": {
         "identifier": "MIT",
@@ -16,9 +16,10 @@
             "hash": "d75fb871120c25a8dbb576c51af9c59f4aaca35d6184b46872bcc8d2dde865e4"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "KeeWeb.exe",
+            "app\\KeeWeb.exe",
             "KeeWeb"
         ]
     ],
@@ -45,7 +46,10 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://github.com/keeweb/keeweb/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -54,6 +58,9 @@
             "arm64": {
                 "url": "https://github.com/keeweb/keeweb/releases/download/v$version/KeeWeb-$version.win.arm64.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

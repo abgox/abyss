@@ -1,0 +1,70 @@
+{
+    "version": "11.3.124.0",
+    "description": "一款免费提供个人、教育、慈善、政府和商业用途的 Windows 备份软件 | Windows Backup Software that is free for personal, educational, charity, government, and commercial use.",
+    "homepage": "https://www.2brightsparks.com/download-syncbackfree.html",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://www.2brightsparks.com/terms.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.2brightsparks.com/assets/software/SyncBack/SyncBack_Setup.11.3.124.0.exe",
+            "hash": "e60212a5f77320b06aac34699a8c07c4e113df2c37ed98056748e3f7733dfcc0"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\SyncBackFree.exe",
+            "SyncBackFree"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\2BrightSparks\\SyncBackFree\",\"$env:LocalAppData\\2BrightSparks\\SyncBackFree\")",
+        "A-Install-Exe -Uninstaller 'app\\unins000.exe' -ArgumentList @('/NoRestart','/VerySilent',\"/Dir=$dir\\app\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget '2BrightSparks.SyncBackFree' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

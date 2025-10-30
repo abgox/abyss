@@ -1,26 +1,33 @@
 {
-    "version": "2.16",
-    "description": "系统信息软件。System information software.",
+    "version": "2.17",
+    "description": "系统信息软件 | System information software.",
     "homepage": "https://www.cpuid.com/softwares/cpu-z.html",
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://download.cpuid.com/cpu-z/cpu-z_2.16-cn.zip",
-            "hash": "02cba5c55962177647bbc49d60ed590ca81a22ec641d854314b9d57992843178",
+            "url": "https://download.cpuid.com/cpu-z/cpu-z_2.17-cn.zip",
+            "hash": "74fbf612bac7e40661e33473a1ff6c43a4e4a3f33a37b44174b0b568bf92ee0a",
             "bin": [
                 [
-                    "cpuz_x64.exe",
+                    "app\\cpuz_x64.exe",
                     "cpuz"
                 ]
             ],
             "shortcuts": [
                 [
-                    "cpuz_x64.exe",
+                    "app\\cpuz_x64.exe",
                     "CPU-Z"
                 ]
             ]
         }
     },
+    "extract_to": "app",
+    "persist": [
+        [
+            "app\\cpuz.ini",
+            "cpuz.ini"
+        ]
+    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
@@ -42,8 +49,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
-    "persist": "cpuz.ini",
-    "checkver": "Version ([\\d.]+) for windows",
+    "checkver": {
+        "regex": "Version ([\\d.]+) for windows"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {

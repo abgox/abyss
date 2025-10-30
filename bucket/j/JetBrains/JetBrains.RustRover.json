@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "JetBrains 的 IDE 产品，用于 Rust 开发。A IDE by JetBrains for Rust development.",
+    "version": "2025.2.4",
+    "description": "JetBrains 的 IDE 产品，用于 Rust 开发 | A IDE by JetBrains for Rust development.",
     "homepage": "https://www.jetbrains.com/rust/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/rustrover/RustRover-2025.2.2.exe",
-            "hash": "1a82959532b465782263e49bfea7cf58e0e98a9a083db195b7b573f95e7e341b"
+            "url": "https://download.jetbrains.com/rustrover/RustRover-2025.2.4.exe",
+            "hash": "330ace74a6c012e1bfca2fd5da48d0a83575d623b2e9521a0d32e65c29cfe4a2"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/rustrover/RustRover-2025.2.2-aarch64.exe",
-            "hash": "67f1e180e62ef3f56ac51828240f2621f2a6cbf41fab5e84a5a62acb175fef8c"
+            "url": "https://download.jetbrains.com/rustrover/RustRover-2025.2.4-aarch64.exe",
+            "hash": "c955049c43024674115e043d5c3e889b3290b29187093863cf4d3d5bd7788e87"
         }
     },
     "bin": [
         [
-            "App\\bin\\rustrover64.exe",
+            "app\\bin\\rustrover64.exe",
             "RustRover"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\rustrover64.exe",
-            "RustRover 2025.2.2"
+            "app\\bin\\rustrover64.exe",
+            "RustRover 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"RustRover$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/rustrover/RustRover-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/rustrover/RustRover-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\rustrover64.exe",
+                "app\\bin\\rustrover64.exe",
                 "RustRover $version"
             ]
         ]

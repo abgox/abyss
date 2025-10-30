@@ -1,0 +1,61 @@
+{
+    "version": "2.7.3",
+    "description": "一款极简主义的护眼提醒应用，旨在减轻长时间使用屏幕时的眼睛疲劳 | A minimalist eye-care reminder app designed to reduce eye strain during extended screen usage.",
+    "homepage": "https://blinkeye.app/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/nomandhoni-cs/blink-eye/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nomandhoni-cs/blink-eye/releases/download/v2.7.3/Blink.Eye_2.7.3_x64-setup.exe",
+            "hash": "34047fbf8a5202f77d6abd7777118d6982a275fa49f41d0f52ffa80064b3e271"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Blink-Eye.exe",
+            "Blink Eye"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.blinkeye.app\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.blinkeye.app\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/nomandhoni-cs/blink-eye/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nomandhoni-cs/blink-eye/releases/download/v$version/Blink.Eye_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

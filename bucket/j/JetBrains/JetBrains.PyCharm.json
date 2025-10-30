@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "JetBrains 的 IDE 产品，用于 Python 开发。A IDE by JetBrains for Python development.",
+    "version": "2025.2.4",
+    "description": "JetBrains 的 IDE 产品，用于 Python 开发 | A IDE by JetBrains for Python development.",
     "homepage": "https://www.jetbrains.com/pycharm/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/python/pycharm-2025.2.2.exe",
-            "hash": "0112915ac545179f8a66728fbf9da99342a73372f440737d0f2cfae6a9bcf88e"
+            "url": "https://download.jetbrains.com/python/pycharm-2025.2.4.exe",
+            "hash": "4dff588b47c866b54d782cbfb896437eff92a5b016bc45ef086cc7a283301695"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/python/pycharm-2025.2.2-aarch64.exe",
-            "hash": "9deb4f363b62be77b74977c6e04c93b55f4a2aec8d63b509f09bc27246fc7fed"
+            "url": "https://download.jetbrains.com/python/pycharm-2025.2.4-aarch64.exe",
+            "hash": "64ae501b639004b341c0440ac4f0f40899024f62c462764968cc775394fba6d2"
         }
     },
     "bin": [
         [
-            "App\\bin\\pycharm64.exe",
+            "app\\bin\\pycharm64.exe",
             "PyCharm"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\pycharm64.exe",
-            "PyCharm 2025.2.2"
+            "app\\bin\\pycharm64.exe",
+            "PyCharm 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"PyCharm$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/python/pycharm-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/python/pycharm-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\pycharm64.exe",
+                "app\\bin\\pycharm64.exe",
                 "PyCharm $version"
             ]
         ]

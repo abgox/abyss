@@ -1,6 +1,6 @@
 {
-    "version": "2025.2.2",
-    "description": "JetBrains 的 IDE 产品，用于 Golang 开发。A IDE by JetBrains for Golang development.",
+    "version": "2025.2.4",
+    "description": "JetBrains 的 IDE 产品，用于 Golang 开发 | A IDE by JetBrains for Golang development.",
     "homepage": "https://www.jetbrains.com/go/",
     "license": {
         "identifier": "Unknown",
@@ -8,24 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/go/goland-2025.2.2.exe",
-            "hash": "1094c40d2ddb564019deb37cf0d7d4a14e542761cef7754c7cea450a4433f275"
+            "url": "https://download.jetbrains.com/go/goland-2025.2.4.exe",
+            "hash": "f8f507b487014ae8f501ccca241b7353a5cd220078bc7aa2dd5e62074c0812ad"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/go/goland-2025.2.2-aarch64.exe",
-            "hash": "db794c4918000c5ded28e4f3258a8c606eba56dc8344b3b1fe787b44059ddfd2"
+            "url": "https://download.jetbrains.com/go/goland-2025.2.4-aarch64.exe",
+            "hash": "2a3552a78a5c5c156b4ae9dbaaecdf4696e40f29c87b8879fe908267ccd825a9"
         }
     },
     "bin": [
         [
-            "App\\bin\\goland64.exe",
+            "app\\bin\\goland64.exe",
             "GoLand"
         ]
     ],
     "shortcuts": [
         [
-            "App\\bin\\goland64.exe",
-            "GoLand 2025.2.2"
+            "app\\bin\\goland64.exe",
+            "GoLand 2025.2.4"
         ]
     ],
     "pre_install": [
@@ -33,12 +33,12 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'App\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\App\") -Timeout 600",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"GoLand$versionShort\"",
-        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\JetBrains\\$DataDir\")",
+        "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
+        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList @('/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -76,21 +76,21 @@
             "64bit": {
                 "url": "https://download.jetbrains.com/go/goland-$version.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/go/goland-$version-aarch64.exe",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }
         },
         "shortcuts": [
             [
-                "App\\bin\\goland64.exe",
+                "app\\bin\\goland64.exe",
                 "GoLand $version"
             ]
         ]

@@ -1,6 +1,6 @@
 {
-    "version": "1.24.2682.0",
-    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验。The new Windows Terminal, a tabbed command line experience for Windows.",
+    "version": "1.24.2812.0",
+    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验 | The new Windows Terminal, a tabbed command line experience for Windows.",
     "homepage": "https://github.com/microsoft/terminal",
     "license": {
         "identifier": "MIT",
@@ -8,14 +8,14 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/microsoft/terminal/releases/download/v1.24.2682.0/Microsoft.WindowsTerminalPreview_1.24.2682.0_8wekyb3d8bbwe.msixbundle",
-            "hash": "857d8f9c68c65792cd261e99b3db62c77c19b20a53360c7b03cd990882901251",
-            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.WindowsTerminalPreview_1.24.2682.0_x64__8wekyb3d8bbwe"
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.24.2812.0/Microsoft.WindowsTerminalPreview_1.24.2812.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "1f55a244702eb290ba81b8030556c5626817cf1f96d101bdd9e4ed97c7a8df29",
+            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.WindowsTerminalPreview_1.24.2812.0_x64__8wekyb3d8bbwe"
         },
         "arm64": {
-            "url": "https://github.com/microsoft/terminal/releases/download/v1.24.2682.0/Microsoft.WindowsTerminalPreview_1.24.2682.0_8wekyb3d8bbwe.msixbundle",
-            "hash": "857d8f9c68c65792cd261e99b3db62c77c19b20a53360c7b03cd990882901251",
-            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.WindowsTerminalPreview_1.24.2682.0_arm64__8wekyb3d8bbwe"
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.24.2812.0/Microsoft.WindowsTerminalPreview_1.24.2812.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "1f55a244702eb290ba81b8030556c5626817cf1f96d101bdd9e4ed97c7a8df29",
+            "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.WindowsTerminalPreview_1.24.2812.0_arm64__8wekyb3d8bbwe"
         }
     },
     "pre_install": [
@@ -33,8 +33,8 @@
         "    }",
         "   exit 1",
         "}",
-        "$PackageFamilyName = A-Add-MsixPackage 'Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe'",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\$PackageFamilyName\\LocalState\")"
+        "A-Add-MsixPackage 'Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe'",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Packages\\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\\LocalState\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -81,7 +81,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64.InstallerSha256"
                 },
                 "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.WindowsTerminalPreview_$version_x64__8wekyb3d8bbwe"
@@ -89,7 +89,7 @@
             "arm64": {
                 "url": "$matchArm64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64.InstallerSha256"
                 },
                 "env_add_path": "$env:ProgramFiles\\WindowsApps\\Microsoft.WindowsTerminalPreview_$version_arm64__8wekyb3d8bbwe"

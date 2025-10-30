@@ -1,0 +1,99 @@
+{
+    "version": "2.3.0",
+    "description": "一款适用于 Windows 系统的免费、轻量级图像和动画查看器 | A free, lightweight image and animation viewer for Windows.",
+    "homepage": "https://www.nyam.pe.kr/dev/imagine/",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.nyam.pe.kr/dev/imagine/#license"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://raw.githubusercontent.com/nyam1003/imagine/main/x64/Imagine_2.3.0_x64_Unicode_Full.zip",
+            "hash": "c7b5712e9f42f0f1035e76ff4e65e88cec815e483f66ad15eebfe8ce13ffb1b2",
+            "bin": [
+                "app\\Imagine64.exe",
+                [
+                    "app\\Imagine64.exe",
+                    "Imagine"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\Imagine64.exe",
+                    "Imagine"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://raw.githubusercontent.com/nyam1003/imagine/main/arm64/Imagine_2.3.0_arm64_Unicode_Full.zip",
+            "hash": "217564c32164c409a5c890185ea9fa0cd0340ecf9cf7f0f4db8ed8b524a8ee2f",
+            "bin": [
+                "app\\ImagineA64.exe",
+                [
+                    "app\\ImagineA64.exe",
+                    "Imagine"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\ImagineA64.exe",
+                    "Imagine"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "persist": [
+        [
+            "app\\Imagine.ini",
+            "Imagine.ini"
+        ],
+        [
+            "app\\PlugInst.inf",
+            "PlugInst.inf"
+        ],
+        [
+            "app\\Plugin",
+            "Plugin"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-PersistFile \"$persist_dir\\Imagine.ini\"",
+        "A-New-PersistFile \"$persist_dir\\PlugInst.inf\"",
+        "A-New-LinkDirectory @(\"$env:AppData\\Imagine\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.nyam.pe.kr/dev/imagine/",
+        "regex": "v(\\d[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://raw.githubusercontent.com/nyam1003/imagine/main/x64/Imagine_2.3.0_x64_Unicode_Full.zip"
+            },
+            "arm64": {
+                "url": "https://raw.githubusercontent.com/nyam1003/imagine/main/arm64/Imagine_2.3.0_arm64_Unicode_Full.zip"
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 {
     "version": "2.3.1",
-    "description": "由 vue-cli-electron-builder 构建的简洁美观的图片上传工具。A simple & beautiful tool for pictures uploading built by vue-cli-electron-builder.",
+    "description": "由 vue-cli-electron-builder 构建的简洁美观的图片上传工具 | A simple & beautiful tool for pictures uploading built by vue-cli-electron-builder.",
     "homepage": "https://molunerfinn.com/PicGo/",
     "license": {
         "identifier": "MIT",
@@ -14,7 +14,7 @@
     },
     "shortcuts": [
         [
-            "PicGo.exe",
+            "app\\PicGo.exe",
             "PicGo"
         ]
     ],
@@ -22,8 +22,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Install-Exe -Uninstaller 'Uninstall PicGo.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\picgo\")"
+        "A-New-LinkDirectory @(\"$env:AppData\\picgo\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall PicGo.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,13 +45,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "github": "https://github.com/Molunerfinn/PicGo"
+        "url": "https://github.com/Molunerfinn/PicGo/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/Molunerfinn/PicGo/releases/download/v$version/PicGo-Setup-$version-x64.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

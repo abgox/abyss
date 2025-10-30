@@ -1,6 +1,6 @@
 {
-    "version": "2.5.5.0",
-    "description": "123 云盘，一款云存储服务产品。A cloud storage service product.",
+    "version": "2.5.7.0",
+    "description": "123 云盘，一款云存储服务产品 | A cloud storage service product.",
     "homepage": "https://www.123pan.com/",
     "license": {
         "identifier": "Freemium",
@@ -8,13 +8,13 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://app.123957.com/pc-pro/windows/255/123pan_2.5.5.exe",
-            "hash": "c8879761d88424a70e3a687858cde43fc4fb87777dc59476e23db657758846f6"
+            "url": "https://app.123957.com/pc-pro/windows/257/123pan_2.5.7.exe",
+            "hash": "15b2b9224a9bf2f39b5a9d6937c32c275c97aa61edd29085fcd9a9ab75266f38"
         }
     },
     "shortcuts": [
         [
-            "123pan\\123pan.exe",
+            "$env:LocalAppData\\123pan\\123pan.exe",
             "123云盘"
         ]
     ],
@@ -23,8 +23,9 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -Uninstaller '123pan\\uninst.exe'",
-        "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")"
+        "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")",
+        "A-Install-Exe -ArgumentList @('/S')",
+        "A-Hold-App"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,10 +36,8 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
-        "A-Stop-Process",
+        "A-Uninstall-ExeManually \"$env:LocalAppData\\123pan\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe -ArgumentList @() -NoSilent",
         "A-Remove-TempData @(\"$env:AppData\\123pan\")"
     ],
     "post_uninstall": [
@@ -62,7 +61,7 @@
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "bin/scoop-auto-check-update-temp-data.jsonc",
+                    "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }
