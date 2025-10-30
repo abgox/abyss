@@ -16,12 +16,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run Validation
         uses: ScoopInstaller/GithubActions@main
         if: |
-          github.event_name == 'pull_request_target' || 
+          github.event_name == 'pull_request_target' ||
           (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/verify'))
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SCOOP_BRANCH: develop
