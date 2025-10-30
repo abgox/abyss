@@ -29,18 +29,18 @@
     "persist": [
         [
             "app\\Themes",
-            "Themes"
+            "AppData\\Local\\ImageGlass\\Themes"
         ],
         [
             "app\\igconfig.json",
-            "igconfig.json"
+            "AppData\\Local\\ImageGlass\\igconfig.json"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-PersistFile \"$persist_dir\\igconfig.json\" -Content '{\"AutoUpdate\":0}'"
+        "A-New-PersistFile \"$persist_dir\\AppData\\Local\\ImageGlass\\igconfig.json\" -Content '{\"AutoUpdate\":0}'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,8 +51,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process",
-        "A-Remove-TempData @(\"$env:LocalAppData\\ImageGlass\")"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

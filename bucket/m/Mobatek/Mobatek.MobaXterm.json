@@ -8,30 +8,20 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.mobatek.net/2532025092512146/MobaXterm_Portable_v25.3.zip",
-            "hash": "5c8d9b4034c928c3542b502ae11c914caa9710b49ae384ce0c4f1eaa1405735b"
+            "url": "https://download.mobatek.net/2532025092512146/MobaXterm_Installer_v25.3.zip",
+            "hash": "17efd554dff3a01e991a891ab7ae66c135a5a3438e1a790bf8e44096c47b220f"
         }
     },
     "extract_to": "app",
-    "bin": "app\\MobaXterm.exe",
-    "shortcuts": [
-        [
-            "app\\MobaXterm.exe",
-            "MobaXterm Personal"
-        ]
-    ],
-    "persist": [
-        [
-            "app\\MobaXterm.ini",
-            "MobaXterm.ini"
-        ]
-    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "Get-ChildItem $dir 'mobaxterm*.exe' -Recurse | Select-Object -First 1 | Rename-Item -NewName 'MobaXterm.exe'",
-        "A-New-PersistFile \"$persist_dir\\MobaXterm.ini\""
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\MobaXterm\")",
+        "$msi = Get-ChildItem $dir '*.msi' -Recurse | Select-Object -First 1",
+        "$fname = Join-Path 'app' $msi.Name",
+        "A-Install-Exe msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -42,7 +32,11 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "$ProductCode = A-Get-ProductCode '^MobaXterm'",
+        "A-Uninstall-Exe $ProductCode"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -55,7 +49,7 @@
             "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Mobatek.MobaXterm' 'zip'",
             "\"ver:$($InstallerInfo.PackageVersion);\"",
             "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl.Replace('Installer','Portable'));\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
             "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
         ],
         "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
@@ -63,7 +57,11 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX86"
+                "url": "$matchX86",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
             }
         }
     }
