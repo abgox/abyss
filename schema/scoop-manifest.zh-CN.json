@@ -617,10 +617,13 @@
             "minItems": 1,
             "uniqueItems": true,
             "examples": [
-                "",
+                "app\\xxx.exe",
                 [],
                 [
-                    []
+                    [
+                        "app\\xxx.exe",
+                        "xxx"
+                    ]
                 ]
             ],
             "title": "一个程序(可执行文件或脚本)的字符串或字符串数组",
@@ -632,7 +635,10 @@
             "markdownDescription": "- 指定添加到开始菜单的快捷方式，它们会被放在 `Scoop Apps` 目录中\n- 每个数组中可以包含四个值\n    1. 必需值: 目标文件的路径\n    2. 必需值: 快捷方式的名称，支持子目录: `aaa\\bbb`\n    3. 可选值: 启动参数\n    4. 可选值: 图标文件的路径",
             "examples": [
                 [
-                    []
+                    [
+                        "app\\xxx.exe",
+                        "xxx"
+                    ]
                 ]
             ],
             "items": {
@@ -2387,6 +2393,9 @@
                                                     "string",
                                                     "array"
                                                 ],
+                                                "examples": [
+                                                    "app\\xxx.exe"
+                                                ],
                                                 "anyOf": [
                                                     {
                                                         "$ref": "#/definitions/str",
@@ -2465,6 +2474,14 @@
                                             },
                                             "shortcuts": {
                                                 "type": "array",
+                                                "examples": [
+                                                    [
+                                                        [
+                                                            "app\\xxx.exe",
+                                                            "xxx"
+                                                        ]
+                                                    ]
+                                                ],
                                                 "items": {
                                                     "type": "array",
                                                     "items": [
@@ -3035,6 +3052,9 @@
                                         "string",
                                         "array"
                                     ],
+                                    "examples": [
+                                        "app\\xxx.exe"
+                                    ],
                                     "anyOf": [
                                         {
                                             "$ref": "#/definitions/str",
@@ -3112,6 +3132,14 @@
                                 },
                                 "shortcuts": {
                                     "type": "array",
+                                    "examples": [
+                                        [
+                                            [
+                                                "app\\xxx.exe",
+                                                "xxx"
+                                            ]
+                                        ]
+                                    ],
                                     "items": {
                                         "type": "array",
                                         "items": [
@@ -3496,6 +3524,16 @@
                         ]
                     },
                     {
+                        "properties": {
+                            "checkver": {
+                                "not": {
+                                    "type": "string"
+                                },
+                                "errorMessage": "checkver 必须是对象"
+                            }
+                        }
+                    },
+                    {
                         "$comment": "如果 checkver 通过 script 字段使用了 A-Get-InstallerInfoFromWinget",
                         "if": {
                             "required": [
@@ -3508,10 +3546,8 @@
                                     ],
                                     "properties": {
                                         "script": {
-                                            "items": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
-                                                }
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
                                             }
                                         }
                                     }
