@@ -742,7 +742,7 @@ function A-Uninstall-ExeManually {
             if ((Get-ChildItem -LiteralPath $p -File -Recurse).Count -eq 0) {
                 try {
                     Remove-Item $p -Force -Recurse -ErrorAction Stop
-                    return
+                    continue
                 }
                 catch {}
             }
