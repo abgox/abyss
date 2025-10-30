@@ -1,0 +1,61 @@
+{
+    "version": "0.7.35",
+    "description": "一款现代化、快速且以生产力为导向的 SQL 客户端，注重用户体验 (UX) | A modern, fast and productivity driven SQL client with a focus in UX",
+    "homepage": "https://antares-sql.app/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/antares-sql/antares/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/antares-sql/antares/releases/download/v0.7.35/Antares-0.7.35-win_x64.exe",
+            "hash": "3bf2fd3182cc941d5e156b58a966bb9197b4689d0690fc8d1ce35068b0b153b1"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Antares.exe",
+            "Antares"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Antares\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Antares.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\antares-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/antares-sql/antares/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/antares-sql/antares/releases/download/v$version/Antares-$version-win_x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
