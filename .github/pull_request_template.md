@@ -8,12 +8,10 @@
   Read the contributing guide first to save both your and our time.
 -->
 
-<!--
 Closes #XXX
--->
 
-<!--
+<!-- or -->
+
 Relates to #XXX
--->
 
 - [ ] I have read the [Contributing Guide](https://abyss.abgox.com/contributing/).
