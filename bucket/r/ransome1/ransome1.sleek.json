@@ -1,0 +1,68 @@
+{
+    "version": "2.0.21",
+    "description": "一款基于 todo.txt 语法的开源待办事项管理器 | An open-source todo manager based on the todo.txt syntax.",
+    "homepage": "https://github.com/ransome1/sleek",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/ransome1/sleek/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ransome1/sleek/releases/download/v2.0.21/sleek-2.0.21-win-x64-Setup.exe",
+            "hash": "64ef00b0061740b6f69ae164e37e47e80c555ac3fc7d68c49f14914e1074e7c4"
+        },
+        "arm64": {
+            "url": "https://github.com/ransome1/sleek/releases/download/v2.0.21/sleek-2.0.21-win-arm64-Setup.exe",
+            "hash": "633c1a86d19c40b67ecc0c97da1363555cfc5632e0be113b23bc84aa1059f5a0"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\sleek.exe",
+            "sleek"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\sleek\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall sleek.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\sleek-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/ransome1/sleek/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ransome1/sleek/releases/download/v$version/sleek-$version-win-x64-Setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/ransome1/sleek/releases/download/v$version/sleek-$version-win-arm64-Setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
