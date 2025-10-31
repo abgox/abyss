@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (408)|Tag|Description|
+|App (409)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -338,6 +338,7 @@
 |[Quriz.PowerToysRun-Scoop](https://github.com/Quriz/PowerToysRunScoop "点击访问仓库或主页")|<a href="./bucket/q/Quriz/Quriz.PowerToysRun-Scoop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 PowerToys Run 插件，用于从 Scoop 包管理器中搜索、安装、更新和卸载软件包|
 |[ransome1.sleek](https://github.com/ransome1/sleek "点击访问仓库或主页")|<a href="./bucket/r/ransome1/ransome1.sleek.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于 todo.txt 语法的开源待办事项管理器|
 |[Rayen.RyTuneX](https://rayenghanmi.github.io/rytunex "点击访问仓库或主页")|<a href="./bucket/r/Rayen/Rayen.RyTuneX.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款采用 WinUI 3 框架打造的尖端优化器，旨在提升 Windows 设备的性能|
+|[RClone-Manager.rclone-manager](https://zarestia-dev.github.io/rclone-manager/ "点击访问仓库或主页")|<a href="./bucket/r/RClone-Manager/RClone-Manager.rclone-manager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款功能强大的跨平台图形用户界面，可轻松且美观地管理 Rclone remotes|
 |[Rclone.Rclone](https://rclone.org/ "点击访问仓库或主页")|<a href="./bucket/r/Rclone/Rclone.Rclone.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个用于在不同云存储提供商之间同步文件和目录的命令行程序|
 |[Readest.Readest](https://readest.com/ "点击访问仓库或主页")|<a href="./bucket/r/Readest/Readest.Readest.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款专为沉浸式深度阅读体验而设计的开源电子书阅读器|
 |[REALiX.HWiNFO](https://github.com/microsoft/winget-pkgs/tree/master/manifests/r/REALiX/HWiNFO "点击访问仓库或主页")|<a href="./bucket/r/REALiX/REALiX.HWiNFO.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|适用于 Windows 和 DOS 的全面硬件分析、监测与报告|
