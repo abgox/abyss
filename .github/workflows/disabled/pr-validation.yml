@@ -1,6 +1,7 @@
 name: PR Validation
 
 # 自动校验 PR 中提交的 manifest 文件是否符合规范
+# abyss 拥有非常全面的本地校验提示，PR 中再次校验有点多余
 
 on:
   # 触发条件 1：PR 被打开时
@@ -19,6 +20,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Run Validation
+        # uses: ScoopInstaller/GithubActions@main
         uses: abgox/ScoopInstaller-GithubActions@main
         if: github.event_name == 'pull_request_target' || (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/verify'))
         env:
