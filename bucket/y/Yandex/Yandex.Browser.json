@@ -1,0 +1,79 @@
+{
+    "version": "25.8.5.983",
+    "description": "Yandex 浏览器内置 Alice，可跨设备同步密码、书签和银行卡，浏览速度快且安全 | Yandex Browser delivers fast and secure browsing with built-in Alice and the ability to sync passwords, bookmarks, and bank cards across devices.",
+    "homepage": "https://browser.yandex.com/",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://yandex.com/legal/browser_agreement/"
+    },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\Yandex\\YandexBrowser",
+        "Reference: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "notes-cn": [
+        "安装目录: $env:LocalAppData\\Yandex\\YandexBrowser",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://download.cdn.yandex.net/browser/int/25_8_5_983_91174/en/Yandex.exe",
+            "hash": "b6a55986d054ada72583cfb2a92a7e344c796e6c1109175069dcdfb2f4168836"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:LocalAppData\\Yandex\\YandexBrowser\\Application\\browser.exe",
+            "Yandex"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\Yandex\\YandexBrowser\\User Data\")",
+        "A-Install-Exe -ArgumentList @('--silent','--do-not-launch-browser')"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:LocalAppData\\Yandex\\YandexBrowser\"",
+        "$Uninstaller = Get-ChildItem \"$env:LocalAppData\\Yandex\\YandexBrowser\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
+        "A-Uninstall-Exe -Uninstaller $Uninstaller.FullName -ArgumentList @('--uninstall', '--force-uninstall')",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\Yandex\\YandexBrowser\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Yandex.Browser' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
