@@ -1,0 +1,68 @@
+{
+    "version": "0.1.5",
+    "description": "一款功能强大的跨平台图形用户界面，可轻松且美观地管理 Rclone remotes | A powerful, cross-platform GUI for managing Rclone remotes with style and ease.",
+    "homepage": "https://zarestia-dev.github.io/rclone-manager/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/Zarestia-Dev/rclone-manager/blob/master/ISSUES.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Zarestia-Dev/rclone-manager/releases/download/v0.1.5/RClone.Manager_0.1.5_x64-setup_windows.exe",
+            "hash": "68f4eb48e28811b94cae6dd1ec2a0ae57c513e50abe7a88191f0dc38c3fb1e3d"
+        },
+        "arm64": {
+            "url": "https://github.com/Zarestia-Dev/rclone-manager/releases/download/v0.1.5/RClone.Manager_0.1.5_arm64-setup_windows.exe",
+            "hash": "4a57be4bd9bb882d62572f2123d675d69244b737260434df107b4e3a062ec92d"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\rclone-manager.exe",
+            "RClone Manager"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.rclone.manager\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process @() @('rclone')",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.rclone.manager\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Zarestia-Dev/rclone-manager/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Zarestia-Dev/rclone-manager/releases/download/v$version/RClone.Manager_$version_x64-setup_windows.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/Zarestia-Dev/rclone-manager/releases/download/v$version/RClone.Manager_$version_arm64-setup_windows.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
