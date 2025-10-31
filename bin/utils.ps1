@@ -983,6 +983,7 @@ function A-Require-Admin {
 
     if (!$isAdmin) {
         error "It requires admin permission. Please try again with admin permission."
+        error "Reference: https://abyss.abgox.com/faq/require-admin"
         A-Exit
     }
 }
