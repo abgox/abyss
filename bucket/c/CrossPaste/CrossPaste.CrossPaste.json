@@ -1,0 +1,59 @@
+{
+    "version": "1.2.2.1640",
+    "description": "跨设备的通用粘贴板 | Universal Pasteboard Across Devices",
+    "homepage": "https://crosspaste.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only",
+        "url": "https://github.com/CrossPaste/crosspaste-desktop/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CrossPaste/crosspaste-desktop/releases/download/1.2.2.1640/crosspaste-1.2.2-1640-windows-amd64.zip",
+            "hash": "6fe6aebb28548232e3366e8af178f4034b347235dd6e098d41904f961ed01cba"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\bin\\CrossPaste.exe",
+            "CrossPaste"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.crosspaste\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/CrossPaste/crosspaste-desktop/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CrossPaste/crosspaste-desktop/releases/download/$matchHead.$buildVersion/crosspaste-$matchHead-$buildVersion-windows-amd64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
