@@ -1,8 +1,8 @@
 {
-    "$comment": "请使用 vscode，否则 markdownDescription 可能无效",
+    "$comment": "Please use vscode; otherwise, markdownDescription may not work.",
     "$schema": "http://json-schema.org/draft-07/schema",
-    "title": "abyss bucket 的清单(manifest)格式定义",
-    "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
+    "title": "JSON Schema of the manifest for the abyss bucket",
+    "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
     "type": "object",
     "required": [
         "version",
@@ -37,32 +37,32 @@
             "anyOf": [
                 {
                     "const": "Unknown",
-                    "markdownDescription": "- 使用 `Unknown`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示无法确定许可证(unable to determine the license)"
+                    "markdownDescription": "- Use `Unknown`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the license cannot be determined."
                 },
                 {
                     "const": "Freeware",
-                    "markdownDescription": "- 使用 `Freeware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费软件(free to use forever)"
+                    "markdownDescription": "- Use `Freeware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to use forever."
                 },
                 {
                     "const": "Proprietary",
-                    "markdownDescription": "- 使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)\n- 在 [abyss](https://abyss.abgox.com) bucket 中，它的含义有所变化:\n  - 一个专业性强的、专有的商业软件，无论是否免费\n  - 在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 被指定为 `Proprietary` 的软件"
+                    "markdownDescription": "- Use `Proprietary`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is a paid software(must pay to use)\n- In the [abyss](https://abyss.abgox.com) bucket, its meaning has changed:\n  - A professional, proprietary commercial software, whether free or not\n  - Software specified as `Proprietary` in [winget-pkgs](https://github.com/microsoft/winget-pkgs)"
                 },
                 {
                     "const": "Public Domain",
-                    "markdownDescription": "- 使用 `Public Domain`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个属于公有领域的软件(Public Domain)"
+                    "markdownDescription": "- Use `Public Domain`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software belongs to the public domain."
                 },
                 {
                     "const": "Shareware",
-                    "markdownDescription": "- 使用 `Shareware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)"
+                    "markdownDescription": "- Use `Shareware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to try, but must pay eventually."
                 },
                 {
                     "const": "Freemium",
-                    "markdownDescription": "- 使用 `Freemium`，这是由 [abyss](https://abyss.abgox.com) 定义的特殊字段: 基础功能免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
+                    "markdownDescription": "- Use `Freemium`，This is a special field defined by [abyss](https://abyss.abgox.com): free to use, must pay to unlock advanced features"
                 }
             ]
         },
         "license_identifier": {
-            "$comment": "在此处添加已知的许可证，以便验证器可以提供更好的错误信息",
+            "$comment": "Add known licenses here to provide better error messages for the validator",
             "anyOf": [
                 {
                     "const": "MIT",
@@ -203,8 +203,8 @@
             ]
         },
         "license": {
-            "title": "软件许可证",
-            "markdownDescription": "- 指定软件的许可证或类型字段\n- 如果不同的文件具有不同的许可证，请使用逗号 `,` 分隔许可证。如果整个应用程序是双重许可的 ，则使用 `|`\n- https://opensource.org/license\n- https://spdx.org/licenses",
+            "title": "Software License",
+            "markdownDescription": "- Specify the license or type field of the software\n- If different files have different licenses, separate the licenses with a comma `,`\n- If the entire application is dual-licensed, use `|`\n- https://spdx.org/licenses\n- https://opensource.org/license",
             "type": [
                 "string",
                 "object"
@@ -229,8 +229,8 @@
                 "additionalProperties": false,
                 "properties": {
                     "identifier": {
-                        "title": "许可证标识符",
-                        "markdownDescription": "- 指定软件的许可证或类型字段\n- 如果不同的文件具有不同的许可证，请使用逗号 `,` 分隔许可证。如果整个应用程序是双重许可的 ，则使用 `|`\n- https://opensource.org/license\n- https://spdx.org/licenses",
+                        "title": "License Identifier",
+                        "markdownDescription": "- Specify the license of the software\n- If different files have different licenses, separate the licenses with a comma `,`\n- If the entire application is dual-licensed, use `|`\n- https://spdx.org/licenses\n- https://opensource.org/license",
                         "$ref": "#/definitions/str",
                         "anyOf": [
                             {
@@ -256,8 +256,8 @@
                                 "$ref": "#/definitions/url_validation"
                             }
                         ],
-                        "title": "许可证 URL",
-                        "markdownDescription": "- 软件许可证的 URL 地址。"
+                        "title": "License URL",
+                        "markdownDescription": "- Specify the URL of the software license."
                     }
                 }
             },
@@ -281,28 +281,28 @@
                                 ]
                             }
                         },
-                        "errorMessage": "license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个，此时必须提供 url，否则请使用字符串而非对象"
+                        "errorMessage": "The object used by the license, and the identifier is one of Freeware, Proprietary, Public Domain, Shareware, Freemium, or Unknown.\nIn this case, the url must be provided; otherwise, a string should be used instead of an object."
                     }
                 }
             ]
         },
         "notes": {
-            "title": "软件提示信息",
-            "markdownDescription": "- 安装软件之后的英文提示信息。",
+            "title": "Notes",
+            "markdownDescription": "- English notes after installing the software.",
             "$ref": "#/definitions/string_or_string_array"
         },
         "notes-cn": {
-            "title": "软件提示信息",
-            "markdownDescription": "- 安装软件之后的中文提示信息。\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
+            "title": "Notes (Chinese)",
+            "markdownDescription": "- Chinese notes after installing the software.\n- It is a special field of [abyss](https://abyss.abgox.com)",
             "$ref": "#/definitions/string_or_string_array"
         },
         "url_validation": {
             "pattern": "^https?://",
-            "errorMessage": "必须是一个有效的 http/https URL"
+            "errorMessage": "It must be a valid http/https URL"
         },
         "url": {
-            "title": "软件下载地址",
-            "markdownDescription": "- 要下载的文件的 URL\n- 如果有多个 URL，可以使用数组\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/dl.7z`，例如:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取",
+            "title": "Download URL",
+            "markdownDescription": "- The URL of the file to be downloaded\n- If there are multiple URLs, an array can be used.\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- If you need to change the file name of the download URL, you can add `#/dl.7z` at the end of the URL. For example:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop will download program.exe, but save it as dl.7z, and then automatically extract it using 7-Zip.",
             "examples": [
                 "https://github.com/abgox/abyss/releases/download/empty/empty"
             ],
@@ -328,8 +328,8 @@
             }
         },
         "hash": {
-            "title": "软件安装包的 hash 值",
-            "markdownDescription": "- hash 值默认是 `SHA256`\n- 也可以通过在字符串前加上 `sha512:` `sha1:` 或 `md5:` 来使用 `SHA512`、`SHA1` 或 `MD5`",
+            "title": "Hash of the download file",
+            "markdownDescription": "- The hash of the downloaded file.\n- The default is `SHA256`.\n- You can also use `SHA512`, `SHA1`, or `MD5` by prefixing the string with `sha512:`, `sha1:`, or `md5:`, respectively.",
             "examples": [
                 "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
             ],
@@ -345,10 +345,10 @@
                     "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
                 ],
                 "pattern": "^([a-fA-F0-9]{64}|(sha1|sha256|sha512|md5):([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}))$",
-                "errorMessage": "不是一个正确的 hash"
+                "errorMessage": "It must be a valid hash"
             },
             "pattern": "^([a-fA-F0-9]{64}|(sha1|sha256|sha512|md5):([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}))$",
-            "errorMessage": "不是一个正确的 hash"
+            "errorMessage": "It must be a valid hash"
         },
         "architecture_example": {
             "examples": [
@@ -386,7 +386,7 @@
                     "$ref": "#/definitions/checkver"
                 },
                 "env_add_path": {
-                    "$comment": "此属性官方文档中未说明，但实际可用",
+                    "$comment": "This property is not officially documented, but it is actually available",
                     "$ref": "#/definitions/env_add_path"
                 },
                 "extract_dir": {
@@ -412,8 +412,8 @@
             "additionalProperties": false
         },
         "architecture": {
-            "title": "架构信息",
-            "markdownDescription": "- 程序的架构信息\n- 架构可以用来包装差异",
+            "title": "Architecture information",
+            "markdownDescription": "- The architecture information of the program.\n- Architecture can be used to wrap differences",
             "type": "object",
             "$ref": "#/definitions/architecture_example",
             "if": {
@@ -437,40 +437,40 @@
             },
             "else": {
                 "not": true,
-                "errorMessage": "architecture 中至少包含 64bit、32bit 或 arm64 其中一个"
+                "errorMessage": "At least one of 64bit, 32bit, or arm64 must be defined in the architecture."
             },
             "additionalProperties": false,
             "properties": {
                 "64bit": {
-                    "markdownDescription": "- 64位架构",
+                    "markdownDescription": "- 64bit architecture",
                     "$ref": "#/definitions/architecture_property"
                 },
                 "32bit": {
-                    "markdownDescription": "- 32位架构",
+                    "markdownDescription": "- 32bit architecture",
                     "$ref": "#/definitions/architecture_property"
                 },
                 "arm64": {
-                    "markdownDescription": "- arm64架构",
+                    "markdownDescription": "- arm64 architecture",
                     "$ref": "#/definitions/architecture_property"
                 }
             }
         },
         "extract_dir": {
-            "title": "仅提取指定目录",
-            "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 默认会提取所有内容\n    - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果存在 `extract_dir` 属性，Scoop 将只提取 `extract_dir` 定义的指定目录",
+            "title": "Extract specified directory only",
+            "markdownDescription": "- If the value of the url property points to a compressed package, Scoop will extract all content by default.\n  - Compressed package types: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- If the `extract_dir` property is defined, Scoop will only extract the specified directory defined in `extract_dir`.",
             "$ref": "#/definitions/string_or_string_array"
         },
         "extract_to": {
-            "title": "提取内容到指定目录",
-            "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 会将所有内容提取到 `extract_to` 定义的指定目录中\n  - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果 url 是一个数组，有多个压缩包，则 `extract_to` 也应该是一个数组，并且与 url 数组的顺序一致",
+            "title": "Extract content to specified directory",
+            "markdownDescription": "- If the value of the url property points to a compressed package, Scoop will extract all content to the directory defined by `extract_to`\n  - Compressed package types: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- If url is an array with multiple compressed packages, `extract_to` should also be an array with the same order as url",
             "$ref": "#/definitions/string_or_string_array",
             "examples": [
                 "app"
             ]
         },
         "env_add_path": {
-            "title": "添加到环境变量 PATH 中的路径",
-            "markdownDescription": "- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中",
+            "title": "Add the specified directory to the PATH environment variable",
+            "markdownDescription": "- Add the specified directory to the PATH environment variable (current user)\n- If the `--global` or `-g` parameter is used during installation, the directory will be added to the PATH environment variable (system level)",
             "type": [
                 "string",
                 "array"
@@ -490,7 +490,7 @@
                     },
                     "then": {
                         "not": true,
-                        "errorMessage": "不能使用 $dir，请用 . 代替"
+                        "errorMessage": "Cannot use $dir, please use . instead"
                     }
                 },
                 {
@@ -502,15 +502,15 @@
                         },
                         "then": {
                             "not": true,
-                            "errorMessage": "不能使用 $dir，请用 . 代替"
+                            "errorMessage": "Cannot use $dir, please use . instead"
                         }
                     }
                 }
             ]
         },
         "env_set": {
-            "title": "设置环境变量",
-            "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中",
+            "title": "Set environment variables",
+            "markdownDescription": "- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)",
             "type": "object",
             "examples": [
                 {}
@@ -530,12 +530,12 @@
                 },
                 "minProperties": 1,
                 "additionalProperties": false,
-                "errorMessage": "不允许属性名为空字符串"
+                "errorMessage": "Property names cannot be empty strings"
             }
         },
         "psmodule": {
-            "title": "PowerShell 模块",
-            "markdownDescription": "- 作为 PowerShell 模块安装在 `$scoopdir/modules` 中",
+            "title": "PowerShell module",
+            "markdownDescription": "- Install as PowerShell module in `$scoopdir/modules`",
             "type": "object",
             "required": [
                 "name"
@@ -547,8 +547,8 @@
             ],
             "properties": {
                 "name": {
-                    "title": "模块名称",
-                    "markdownDescription": "- 模块的名称，它应该与提取目录中的至少一个文件匹配，以便 PowerShell 将其识别为模块",
+                    "title": "Module name",
+                    "markdownDescription": "- The name of the module, which should match at least one file in the extract directory for PowerShell to recognize it as a module",
                     "$ref": "#/definitions/str"
                 }
             },
@@ -575,13 +575,13 @@
                             {
                                 "items": [
                                     {
-                                        "markdownDescription": "- 程序名"
+                                        "markdownDescription": "- Required: program name"
                                     },
                                     {
-                                        "markdownDescription": "- 别名 (shim)"
+                                        "markdownDescription": "- Required: alias (shim)"
                                     },
                                     {
-                                        "markdownDescription": "- 参数，它是可选的"
+                                        "markdownDescription": "- Optional: parameters"
                                     }
                                 ]
                             },
@@ -592,7 +592,7 @@
                                 },
                                 "then": {
                                     "not": true,
-                                    "errorMessage": "缺少第二个必需值: 别名 (shim)"
+                                    "errorMessage": "Missing second required value: alias (shim)"
                                 }
                             },
                             {
@@ -601,7 +601,7 @@
                                 },
                                 "then": {
                                     "not": true,
-                                    "errorMessage": "缺少两个必需值: 程序名、别名 (shim)"
+                                    "errorMessage": "Missing two required values: program name, alias (shim)"
                                 }
                             }
                         ],
@@ -626,13 +626,13 @@
                     ]
                 ]
             ],
-            "title": "一个程序(可执行文件或脚本)的字符串或字符串数组",
-            "markdownDescription": "- 一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用\n- 可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件\n- 二维数组应该包含最多三个字符串：程序名,别名,参数(可选)\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```"
+            "title": "Program (executable or script) string or string array",
+            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```"
         },
         "shortcuts": {
             "type": "array",
-            "title": "添加到开始菜单的快捷方式",
-            "markdownDescription": "- 指定添加到开始菜单的快捷方式，它们会被放在 `Scoop Apps` 目录中\n- 每个数组中可以包含四个值\n    1. 必需值: 目标文件的路径\n    2. 必需值: 快捷方式的名称，支持子目录: `aaa\\bbb`\n    3. 可选值: 启动参数\n    4. 可选值: 图标文件的路径",
+            "title": "Some shortcuts added to the Start menu",
+            "markdownDescription": "- Specifies shortcuts to be added to the Start menu, placed in the `Scoop Apps` folder\n- Each array can contain up to four values:\n    1. Required: path to the target file\n    2. Required: name of the shortcut; subdirectories are supported: `aaa\\bbb`\n    3. Optional: launch arguments\n    4. Optional: path to the icon file",
             "examples": [
                 [
                     [
@@ -650,16 +650,16 @@
                     {
                         "items": [
                             {
-                                "markdownDescription": "- 目标文件的路径"
+                                "markdownDescription": "- Required: path to the target file"
                             },
                             {
-                                "markdownDescription": "- 快捷方式的名称，支持子目录: `aaa\\bbb`"
+                                "markdownDescription": "- Required: name of the shortcut; subdirectories are supported: `aaa\\bbb`"
                             },
                             {
-                                "markdownDescription": "- 启动参数，它是可选的"
+                                "markdownDescription": "- Optional: launch arguments"
                             },
                             {
-                                "markdownDescription": "- 图标文件的路径，它是可选的"
+                                "markdownDescription": "- Optional: path to the icon file"
                             }
                         ]
                     },
@@ -670,7 +670,7 @@
                         },
                         "then": {
                             "not": true,
-                            "errorMessage": "缺少第二个必需值: 快捷方式名称"
+                            "errorMessage": "Missing second required value: shortcut name"
                         }
                     },
                     {
@@ -679,7 +679,7 @@
                         },
                         "then": {
                             "not": true,
-                            "errorMessage": "缺少两个必需值: 目标文件路径、快捷方式名称"
+                            "errorMessage": "Missing two required values: target file path, shortcut name"
                         }
                     }
                 ],
@@ -690,8 +690,8 @@
             "uniqueItems": true
         },
         "persist": {
-            "title": "持久化数据",
-            "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$env:UserProfile\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```",
+            "title": "Persisted data",
+            "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$env:UserProfile\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")`\n- Lay the foundation for possible seamless migration in the future\n---- Scoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```",
             "type": [
                 "string",
                 "array"
@@ -712,10 +712,10 @@
                             {
                                 "items": [
                                     {
-                                        "markdownDescription": "- persist 的原始文件或目录"
+                                        "markdownDescription": "- Original file or directory to persist"
                                     },
                                     {
-                                        "markdownDescription": "- persist 的目标位置，支持子目录: `aaa\\bbb`"
+                                        "markdownDescription": "- Target location for the persisted data, supports subdirectories: `aaa\\bbb`"
                                     }
                                 ]
                             },
@@ -726,7 +726,7 @@
                                 },
                                 "then": {
                                     "not": true,
-                                    "errorMessage": "缺少第二个必需值: persist 的目标位置"
+                                    "errorMessage": "Missing second required value: target location for the persisted data"
                                 }
                             },
                             {
@@ -735,7 +735,7 @@
                                 },
                                 "then": {
                                     "not": true,
-                                    "errorMessage": "缺少两个必需值: 需要 persist 的原始文件或目录、persist 的目标位置"
+                                    "errorMessage": "Missing two required values: original file or directory to persist, target location for the persisted data"
                                 }
                             }
                         ],
@@ -759,13 +759,13 @@
             ]
         },
         "pre_install": {
-            "title": "预安装脚本",
-            "markdownDescription": "- 用于在安装应用程序之前执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+            "title": "Pre-install script",
+            "markdownDescription": "- Commands to be executed before installing the application\n- Execution order: `pre_install` -> `installer` -> `post_install`\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, such as 64bit/32bit/arm64\n    - $cmd: Currently running subcommand, such as uninstall/update/install\n    - $fname: Downloaded file name (may be multiple files, needs to be treated as an array unless you are sure url is not an array)\n    - $global: If the value is $true, it is installed globally\n    - $manifest: Deserialized manifest (PowerShell object), such as @{version=1.2.3; description=xxx;...}\n    - $version: Version being installed, such as 1.2.3\n    - $dir: Application installation directory (actual version number directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, such as D:\\scoop\\buckets\n    - $bucket: Name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop directory",
             "$ref": "#/definitions/string_or_string_array"
         },
         "installer": {
-            "title": "安装程序配置",
-            "markdownDescription": "- 运行非 MSI 安装程序的配置\n- 在 scoop install 和 scoop update 期间调用\n- 执行顺序: `pre_install` -> `installer` -> `post_install`",
+            "title": "Installer configuration",
+            "markdownDescription": "- Configuration for running non-MSI installers\n- Called during scoop install and scoop update\n- Execution order: `pre_install` -> `installer` -> `post_install`",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
@@ -774,40 +774,40 @@
             ],
             "properties": {
                 "file": {
-                    "markdownDescription": "- 安装程序可执行文件\n- 对于 installer，默认为最后下载的 URL\n- 如果指定了它， uninstaller 中也需要指定",
+                    "markdownDescription": "- Executable file for the installer\n- Defaults to the last downloaded URL if not specified\n- Required if specified in uninstaller",
                     "$ref": "#/definitions/str"
                 },
                 "script": {
-                    "markdownDescription": "- 作为安装程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 下载的文件(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
+                    "markdownDescription": "- Execute as an installer instead of a file\n- Available variables in the script:\n    - $fname: downloaded file(s) (may be an array; treat as array unless you are sure url is not an array)\n    - $manifest: validated manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
                     "$ref": "#/definitions/string_or_string_array"
                 },
                 "args": {
                     "type": "array",
-                    "markdownDescription": "- 传递给安装程序的参数数组\n- 它是一个可选的属性",
+                    "markdownDescription": "- Array of arguments to pass to the installer\n- Optional property",
                     "items": {
                         "$ref": "#/definitions/str"
                     },
                     "minItems": 1
                 },
                 "keep": {
-                    "markdownDescription": "- 如果安装程序在运行后应该保留(例如，用于将来的卸载)，则设置为 true\n- 如果忽略或设置为任何其他值，安装程序将在运行后被删除",
+                    "markdownDescription": "- Set to true if the installer should be kept after running (e.g., for future uninstallation)\n- If omitted or set to any other value, the installer will be deleted after running",
                     "$ref": "#/definitions/bool"
                 }
             }
         },
         "post_install": {
-            "title": "后安装脚本",
-            "markdownDescription": "- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+            "title": "Post-install script",
+            "markdownDescription": "- Commands executed after the application is installed\n- Execution order: `pre_install` -> `installer` -> `post_install`\n- Note: At this point, Scoop has already completed persist, so if you need to create files for persist, do it before this (in pre_install)\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, e.g. 64bit/32bit/arm64\n    - $cmd: Current running subcommand, e.g. uninstall/update/install\n    - $fname: Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)\n    - $cfg: Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: If value is $true, then it's a global installation\n    - $manifest: Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}\n    - $version: Version being installed, e.g. 1.2.3\n    - $dir: Application installation directory (current directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, e.g. D:\\scoop\\buckets\n    - $bucket: Name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop installation directory",
             "$ref": "#/definitions/string_or_string_array"
         },
         "pre_uninstall": {
-            "title": "预卸载脚本",
-            "markdownDescription": "- 用于在卸载应用程序之前执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+            "title": "Pre-uninstall script",
+            "markdownDescription": "- Execute commands before uninstalling the application\n- Execution order: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, such as 64bit/32bit/arm64\n    - $cmd: Currently running subcommand, such as uninstall/update/install\n    - $global: If the value is $true, it is globally installed\n    - $manifest: Deserialized manifest (PowerShell object), such as @{version=1.2.3; description=xxx;...}\n    - $version: Version being installed, such as 1.2.3\n    - $dir: Application installation directory (actual version number directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, such as D:\\scoop\\buckets\n    - $bucket: Name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop installation directory",
             "$ref": "#/definitions/string_or_string_array"
         },
         "uninstaller": {
-            "title": "卸载程序配置",
-            "markdownDescription": "- 运行非 MSI 卸载程序的配置\n- 在 scoop uninstall 和 scoop update 期间调用\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
+            "title": "Uninstaller configuration",
+            "markdownDescription": "- Configuration for running non-MSI uninstallers\n- Called during scoop uninstall and scoop update\n- Execution order: `pre_uninstall` -> `uninstaller` -> `post_uninstall`",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
@@ -816,16 +816,16 @@
             ],
             "properties": {
                 "file": {
-                    "markdownDescription": "- 卸载程序可执行文件",
+                    "markdownDescription": "- Uninstall the program executable file",
                     "$ref": "#/definitions/str"
                 },
                 "script": {
-                    "markdownDescription": "- 作为卸载程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 下载的文件(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
+                    "markdownDescription": "- Execute as an uninstaller rather than a file\n- Variables available in the script: \n    - $fname: downloaded file (there may be multiple files, which need to be handled as an array unless you are sure the url is not an array)\n    - $manifest: verified manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
                     "$ref": "#/definitions/string_or_string_array"
                 },
                 "args": {
                     "type": "array",
-                    "markdownDescription": "- 传递给卸载程序的参数数组\n- 它是一个可选的属性",
+                    "markdownDescription": "- Array of arguments to pass to the uninstaller\n- Optional property",
                     "items": {
                         "$ref": "#/definitions/str"
                     },
@@ -834,13 +834,13 @@
             }
         },
         "post_uninstall": {
-            "title": "后卸载脚本",
-            "markdownDescription": "- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+            "title": "Post-uninstall script",
+            "markdownDescription": "- Used to execute commands after uninstalling the application\n- Execution order: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \\\"$(appdir otherapp)\\\\current\\\\otherapp.exe\\\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, such as 64bit/32bit/arm64\n    - $cmd: The currently running subcommand, such as uninstall/update/install\n    - $cfg: Scoop configuration (PowerShell object), such as {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: If the value is $true, it is installed globally\n    - $manifest: Deserialized manifest (PowerShell object), such as @{version=1.2.3; description=xxx;...}\n    - $version: The version being installed, such as 1.2.3\n    - $dir: Application installation directory (actual version number directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, such as D:\\scoop\\buckets\n    - $bucket: The name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop directory",
             "$ref": "#/definitions/string_or_string_array"
         },
         "checkver": {
-            "title": "版本检查配置",
-            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置",
+            "title": "Version check configuration",
+            "markdownDescription": "- Application maintainers and developers can use the bin/checkver tool to check for updates to the application\n- String: RegEx to find the version on the homepage\n- Object: More rich configuration",
             "type": [
                 "string",
                 "object"
@@ -857,11 +857,11 @@
                     "additionalProperties": false,
                     "properties": {
                         "url": {
-                            "markdownDescription": "- 版本所在页面",
+                            "markdownDescription": "- URL of the page where the version is located",
                             "$ref": "#/definitions/str"
                         },
                         "github": {
-                            "markdownDescription": "- 应用的 github 仓库地址",
+                            "markdownDescription": "- GitHub repository of the application",
                             "$ref": "#/definitions/str",
                             "if": {
                                 "type": "string"
@@ -872,66 +872,66 @@
                                 "not": {
                                     "pattern": "\\.git(\\/|$)"
                                 },
-                                "errorMessage": "github 仓库地址格式错误，请使用正确格式，如: https://github.com/abgox/abyss"
+                                "errorMessage": "GitHub repository format error, such as: https://github.com/abgox/abyss"
                             }
                         },
                         "re": {
-                            "markdownDescription": "- re 是 regex 的别名\n查找版本的 RegEx (正则表达式)",
+                            "markdownDescription": "- re is an alias for regex\n- RegEx to find the version on the homepage",
                             "$ref": "#/definitions/str"
                         },
                         "regex": {
-                            "markdownDescription": "- 查找版本的 RegEx (正则表达式)",
+                            "markdownDescription": "- RegEx to find the version on the homepage",
                             "$ref": "#/definitions/str"
                         },
                         "jsonpath": {
-                            "markdownDescription": "- 使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。",
+                            "markdownDescription": "- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
                             "$ref": "#/definitions/str"
                         },
                         "jp": {
-                            "markdownDescription": "- jp 是 jsonpath 的别名\n使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。",
+                            "markdownDescription": "- jp is an alias for jsonpath\n- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
                             "$ref": "#/definitions/str"
                         },
                         "xpath": {
-                            "markdownDescription": "- 查找版本的 XPath 表达式",
+                            "markdownDescription": "- XPath expression to find the version on the homepage",
                             "$ref": "#/definitions/str"
                         },
                         "reverse": {
-                            "markdownDescription": "- 如果设置为 true, 则匹配最后一次出现(默认为匹配第一次出现)",
+                            "markdownDescription": "- If set to true, it matches the last occurrence (default is the first occurrence)",
                             "$ref": "#/definitions/bool"
                         },
                         "replace": {
-                            "markdownDescription": "- 用计算值替换匹配值",
+                            "markdownDescription": "- Replace the matched value with the computed value",
                             "$ref": "#/definitions/str",
                             "anyOf": [
                                 {},
                                 {
                                     "const": "${1}.${2}.${3}.${4}${5}${6}",
-                                    "markdownDescription": "- 将匹配值替换为 `${1}.${2}.${3}.${4}${5}${6}`，其中 `${1}` 表示第一个匹配组，`${2}` 表示第二个匹配组，以此类推。"
+                                    "markdownDescription": "- Replace the matched value with `${1}.${2}.${3}.${4}${5}${6}`, where `${1}` represents the first match group, `${2}` represents the second match group, and so on."
                                 },
                                 {
                                     "const": "pending",
-                                    "markdownDescription": "- 确保检查更新时，新版本为 `pending`"
+                                    "markdownDescription": "- Ensure that when checking for updates, the new version is `pending`"
                                 },
                                 {
                                     "const": "renamed",
-                                    "markdownDescription": "- 确保检查更新时，新版本为 `renamed`"
+                                    "markdownDescription": "- Ensure that when checking for updates, the new version is `renamed`"
                                 },
                                 {
                                     "const": "deprecated",
-                                    "markdownDescription": "- 确保检查更新时，新版本为 `deprecated`"
+                                    "markdownDescription": "- Ensure that when checking for updates, the new version is `deprecated`"
                                 }
                             ]
                         },
                         "useragent": {
-                            "markdownDescription": "- 用于获取网页内容的 User-Agent",
+                            "markdownDescription": "- User-Agent used to fetch the webpage content",
                             "$ref": "#/definitions/str"
                         },
                         "script": {
-                            "markdownDescription": "- 可包含 PowerShell 命令的字符串或字符串数组，用于跟踪多个链接",
+                            "markdownDescription": "- PowerShell script to track multiple links",
                             "$ref": "#/definitions/string_or_string_array"
                         },
                         "sourceforge": {
-                            "markdownDescription": "- SourceForge 项目的版本检查配置",
+                            "markdownDescription": "- SourceForge project version check configuration",
                             "$ref": "#/definitions/str"
                         }
                     },
@@ -943,15 +943,15 @@
                         {},
                         {
                             "const": "github",
-                            "markdownDescription": "- 如果 homepage 是 github 仓库主页，就可以直接使用 \"github\" 字符串作为 checkver 配置"
+                            "markdownDescription": "- If the homepage is a GitHub repository homepage, you can use the \"github\" string as the checkver configuration"
                         }
                     ]
                 }
             ]
         },
         "autoupdate_url": {
-            "title": "软件的下载地址",
-            "markdownDescription": "- 它通常是动态的，会包含一些版本变量，如: `$version` 等\n- 例如: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`",
+            "title": "Software download URL",
+            "markdownDescription": "- It is usually dynamic and includes version variables such as: `$version`\n- For example: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`",
             "type": [
                 "string",
                 "array"
@@ -967,74 +967,74 @@
             }
         },
         "autoupdate_hash": {
-            "markdownDescription": "- 定义 hash 的获取",
+            "markdownDescription": "- Define how to get the hash for the software download",
             "type": "object",
             "additionalProperties": false,
             "minProperties": 1,
             "properties": {
                 "url": {
-                    "markdownDescription": "- 用于下载 RDF/JSON 文件或提取 hash 的 URL 模板",
+                    "markdownDescription": "- URL template to download the RDF/JSON file or extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "regex": {
-                    "markdownDescription": "- 别名：find\nRegEx 表达式来提取 hash",
+                    "markdownDescription": "- Alias: find\nRegEx expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "find": {
-                    "markdownDescription": "- 别名：regex\nRegEx 表达式来提取 hash",
+                    "markdownDescription": "- Alias: regex\nRegEx expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "mode": {
-                    "title": "获取 hash 的模式",
+                    "title": "Hash retrieval mode",
                     "oneOf": [
                         {
                             "const": "github",
-                            "markdownDescription": "- 获取 Github 自动生成的 hash，详情查看 [Github blog](https://github.blog/changelog/2025-06-03-releases-now-expose-digests-for-release-assets/)"
+                            "markdownDescription": "- Get the hash generated by GitHub automatically, for more details, please refer to [GitHub blog](https://github.blog/changelog/2025-06-03-releases-now-expose-digests-for-release-assets/)"
                         },
                         {
                             "const": "extract",
-                            "markdownDescription": "- 通过 RegEx 从纯文本文件或网页中提取(默认，可省略)"
+                            "markdownDescription": "- Extract the hash from a plain text file or web page using RegEx (default, can be omitted)"
                         },
                         {
                             "const": "json",
-                            "markdownDescription": "- 通过 JSONPath 从 JSON 文件中提取"
+                            "markdownDescription": "- Extract the hash from a JSON file using JSONPath"
                         },
                         {
                             "const": "xpath",
-                            "markdownDescription": "- 通过 XML 文件提取"
+                            "markdownDescription": "- Extract the hash from an XML file using XPath"
                         },
                         {
                             "const": "rdf",
-                            "markdownDescription": "- 从 RDF 文件中提取"
+                            "markdownDescription": "- Extract the hash from an RDF file"
                         },
                         {
                             "const": "metalink",
-                            "markdownDescription": "- 从 Metalink 的头文件或 .meta4 文件中提取"
+                            "markdownDescription": "- Extract the hash from a Metalink header file or .meta4 file"
                         },
                         {
                             "const": "fosshub",
-                            "markdownDescription": "- 为 FossHub 预定义"
+                            "markdownDescription": "- Predefined for FossHub"
                         },
                         {
                             "const": "sourceforge",
-                            "markdownDescription": "- 为 SourceForge 预定义"
+                            "markdownDescription": "- Predefined for SourceForge"
                         },
                         {
                             "const": "download",
-                            "markdownDescription": "- 下载应用程序文件并在本地对其进行散列(回退)"
+                            "markdownDescription": "- Download the application file and hash it locally (fallback)"
                         }
                     ]
                 },
                 "jp": {
-                    "markdownDescription": "- 别名：jsonpath\nJSONPath 表达式提取 hash",
+                    "markdownDescription": "- Alias: jsonpath\nJSONPath expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "jsonpath": {
-                    "markdownDescription": "- 别名：jp\nJSONPath 表达式提取 hash",
+                    "markdownDescription": "- Alias: jp\nJSONPath expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "xpath": {
-                    "markdownDescription": "- XPath 表达式来提取 hash 值",
+                    "markdownDescription": "- XPath expression to extract the hash value",
                     "$ref": "#/definitions/str"
                 }
             }
@@ -1057,7 +1057,7 @@
                     "$ref": "#/definitions/checkver"
                 },
                 "env_add_path": {
-                    "$comment": "此属性官方规范中未说明，但实际可用",
+                    "$comment": "This property is not officially documented, but it is actually available",
                     "$ref": "#/definitions/env_add_path"
                 },
                 "extract_dir": {
@@ -1085,13 +1085,13 @@
     },
     "properties": {
         "##": {
-            "title": "注释",
-            "markdownDescription": "- 给此清单的读者或维护者的注释。",
+            "title": "Comment",
+            "markdownDescription": "- Comment for readers or maintainers of this manifest.",
             "$ref": "#/definitions/string_or_string_array"
         },
         "version": {
-            "title": "软件版本",
-            "markdownDescription": "- 软件的版本号\n- [abyss](https://abyss.abgox.com) 提供了特殊字段用来实现 [清单状态控制](https://abyss.abgox.com/features/manifest-state-control): `pending`、`renamed`、`deprecated`",
+            "title": "Version",
+            "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special fields to control manifest status: `pending`, `renamed`, `deprecated`",
             "$ref": "#/definitions/str",
             "examples": [
                 "0.0.0"
@@ -1100,29 +1100,29 @@
                 {},
                 {
                     "const": "0.0.0",
-                    "markdownDescription": "- 当前版本为 0.0.0"
+                    "markdownDescription": "- Current version is 0.0.0"
                 },
                 {
                     "const": "nightly",
-                    "markdownDescription": "- 当前版本为 nightly"
+                    "markdownDescription": "- Current version is nightly"
                 },
                 {
                     "const": "pending",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `pending`\n- 详情参考: [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)"
+                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `pending`\n- Details: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 },
                 {
                     "const": "renamed",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `renamed`\n- 详情参考: [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)"
+                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `renamed`\n- Details: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 },
                 {
                     "const": "deprecated",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `deprecated`\n- 详情参考: [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)"
+                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `deprecated`\n- Details: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 }
             ]
         },
         "description": {
-            "title": "软件描述",
-            "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
+            "title": "App Description",
+            "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
             "type": "string",
             "minLength": 1,
             "examples": [
@@ -1133,23 +1133,23 @@
                     "not": {
                         "const": "描述 | Description"
                     },
-                    "errorMessage": "请修改描述"
+                    "errorMessage": "Please modify the description"
                 },
                 {
                     "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
-                    "errorMessage": "不符合指定格式：中文描述 | English description\n注意: | 左右各只有一个空格"
+                    "errorMessage": "It does not conform to the specified format: Chinese description | English description\nNote: There should be only one space on each side of the | symbol"
                 },
                 {
                     "not": {
                         "pattern": "\\|.*\\|"
                     },
-                    "errorMessage": "只能有一个 | 符号，它用于分隔中文和英文描述"
+                    "errorMessage": "It can only have one | symbol, which is used to separate Chinese and English descriptions"
                 }
             ]
         },
         "homepage": {
-            "title": "软件主页",
-            "markdownDescription": "- 软件的主页或仓库地址",
+            "title": "Homepage",
+            "markdownDescription": "- Homepage or repository URL of the app",
             "examples": [
                 ""
             ],
@@ -1166,20 +1166,20 @@
             },
             "then": {
                 "not": true,
-                "errorMessage": "如果是官网根域名，请以 '/' 结尾"
+                "errorMessage": "If it is the root domain of the official website, please end with '/'"
             }
         },
         "license": {
             "$ref": "#/definitions/license"
         },
         "depends": {
-            "title": "依赖项",
-            "markdownDescription": "- 应用程序的必要依赖项\n- 未安装的依赖项将在应用程序安装前自动安装\n- 如果依赖项是可选的，请使用 `suggest` 属性",
+            "title": "Dependencies",
+            "markdownDescription": "- Dependencies of the app\n- Missing dependencies will be automatically installed before the app is installed\n- If a dependency is optional, please use the `suggest` property",
             "$ref": "#/definitions/string_or_string_array"
         },
         "suggest": {
-            "title": "建议的依赖项",
-            "markdownDescription": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为 **已实现**，用户不会看到任何建议",
+            "title": "Suggested Dependencies",
+            "markdownDescription": "- Suggested dependencies of the app\n- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions",
             "type": "object",
             "if": {
                 "type": "object"
@@ -1187,13 +1187,13 @@
             "then": {
                 "patternProperties": {
                     "^.+$": {
-                        "markdownDescription": "- 当指定的建议已经安装，则不会显示该建议。\n- 如果是一个数组，它表示只要数组中任意一个建议被安装，则不会显示该建议",
+                        "markdownDescription": "- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions\n- If it is an array, it means that if any of the dependencies in the array are installed, the feature will be considered as **implemented**",
                         "$ref": "#/definitions/string_or_string_array"
                     }
                 },
                 "minProperties": 1,
                 "additionalProperties": false,
-                "errorMessage": "不允许属性名为空字符串"
+                "errorMessage": "Property names are not allowed to be empty strings."
             }
         },
         "notes": {
@@ -1224,7 +1224,7 @@
             "$ref": "#/definitions/env_set"
         },
         "innosetup": {
-            "markdownDescription": "- 如果安装程序基于 `InnoSetup`，则设置为 `true`",
+            "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`",
             "$ref": "#/definitions/bool"
         },
         "psmodule": {
@@ -1261,8 +1261,8 @@
             "$ref": "#/definitions/checkver"
         },
         "autoupdate": {
-            "title": "自动更新",
-            "markdownDescription": "- 它将通过 [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
+            "title": "Auto Update",
+            "markdownDescription": "- It will automatically update the manifest via [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml)\n - Scoop can install specific versions using `scoop install AppName@1.2.3`\n - The prerequisite is that `url` in the `autoupdate` of the manifest can only contain the following [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
             "type": "object",
             "additionalProperties": false,
             "minProperties": 1,
@@ -1281,19 +1281,19 @@
             "properties": {
                 "architecture": {
                     "type": "object",
-                    "title": "自动更新架构",
-                    "markdownDescription": "- 定义自动更新的架构\n- 架构可以用来包装差异",
+                    "title": "Auto Update Architecture",
+                    "markdownDescription": "- Define the architecture for auto update\n- Architecture can be used to wrap differences",
                     "properties": {
                         "64bit": {
-                            "markdownDescription": "- 64位架构",
+                            "markdownDescription": "- 64bit architecture",
                             "$ref": "#/definitions/autoupdate_architecture"
                         },
                         "32bit": {
-                            "markdownDescription": "- 32位架构",
+                            "markdownDescription": "- 32bit architecture",
                             "$ref": "#/definitions/autoupdate_architecture"
                         },
                         "arm64": {
-                            "markdownDescription": "- arm64架构",
+                            "markdownDescription": "- arm64 architecture",
                             "$ref": "#/definitions/autoupdate_architecture"
                         }
                     },
@@ -1359,7 +1359,7 @@
     "then": {
         "allOf": [
             {
-                "$comment": "如果定义了 checkver，就必须定义 autoupdate",
+                "$comment": "If 'checkver' is set, 'autoupdate' must be set.",
                 "allOf": [
                     {
                         "if": {
@@ -1377,7 +1377,7 @@
                                 "properties": {
                                     "checkver": {
                                         "not": true,
-                                        "errorMessage": "如果定义了 checkver，就必须定义 autoupdate"
+                                        "errorMessage": "If 'checkver' is set, 'autoupdate' must be set."
                                     }
                                 }
                             }
@@ -1399,7 +1399,7 @@
                                 "properties": {
                                     "autoupdate": {
                                         "not": true,
-                                        "errorMessage": "如果定义了 autoupdate，就必须定义 checkver"
+                                        "errorMessage": "If 'autoupdate' is set, 'checkver' must be set."
                                     }
                                 }
                             }
@@ -1408,7 +1408,7 @@
                 ]
             },
             {
-                "$comment": "如果 url 是 github releases 链接，则需要指定 hash 模式为 github",
+                "$comment": "If 'url' is a GitHub releases link, 'mode.hash' must be set to 'github'.",
                 "properties": {
                     "autoupdate": {
                         "type": "object",
@@ -1499,7 +1499,7 @@
                 }
             },
             {
-                "$comment": "如果存在 license，但不存在 url 或 architecture 就触发警告",
+                "$comment": "If 'license' is set but 'url' or 'architecture' is not set, a warning is triggered.",
                 "if": {
                     "not": {
                         "anyOf": [
@@ -1535,11 +1535,11 @@
                             }
                         ]
                     },
-                    "errorMessage": "缺少 url 或 architecture 属性"
+                    "errorMessage": "Missing property 'url' or 'architecture'"
                 }
             },
             {
-                "$comment": "如果存在 url，则需要 hash，且不能在 architecture 中继续定义 url",
+                "$comment": "If 'url' is set, 'hash' must be set, and 'url' in 'architecture' cannot be set.",
                 "if": {
                     "required": [
                         "url"
@@ -1571,7 +1571,7 @@
                                                             "url"
                                                         ]
                                                     },
-                                                    "errorMessage": "architecture 中的 url 和顶层的 url 冲突，你只能选择其中一种方式"
+                                                    "errorMessage": "Property 'url' in 'architecture' conflicts with the top-level 'url'. You can only choose one way."
                                                 },
                                                 {
                                                     "not": {
@@ -1579,7 +1579,7 @@
                                                             "hash"
                                                         ]
                                                     },
-                                                    "errorMessage": "当存在顶层 url 时，禁止定义 architecture 中的 hash"
+                                                    "errorMessage": "When the top-level 'url' is set, 'hash' in 'architecture' cannot be set."
                                                 }
                                             ]
                                         }
@@ -1605,7 +1605,7 @@
                 }
             },
             {
-                "$comment": "如果存在 url，当 url 是字符串时，hash 必须是字符串，当 url 是数组时，hash 必须是数组",
+                "$comment": "If 'url' is set, when 'url' is a string, 'hash' must be a string, and when 'url' is an array, 'hash' must be an array.",
                 "allOf": [
                     {
                         "if": {
@@ -1625,7 +1625,7 @@
                                 "properties": {
                                     "hash": {
                                         "$ref": "#/definitions/str",
-                                        "errorMessage": "当 url 是字符串 (string) 时，hash 也必须是一个字符串 (string)"
+                                        "errorMessage": "When 'url' is a string, 'hash' must be a string."
                                     }
                                 }
                             },
@@ -1640,7 +1640,7 @@
                                             []
                                         ],
                                         "minItems": 1,
-                                        "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
+                                        "errorMessage": "When 'url' is an array, 'hash' must be an array."
                                     }
                                 }
                             }
@@ -1651,7 +1651,7 @@
                                     "properties": {
                                         "hash": {
                                             "not": true,
-                                            "errorMessage": "当不存在 url 时，禁止定义 hash"
+                                            "errorMessage": "When the top-level 'url' is not set, the top-level 'hash' cannot be set."
                                         }
                                     }
                                 }
@@ -1691,7 +1691,7 @@
                                                 "properties": {
                                                     "hash": {
                                                         "$ref": "#/definitions/str",
-                                                        "errorMessage": "当 architecture 中的 url 是字符串 (string) 时，architecture 中的 hash 也必须是一个字符串 (string)"
+                                                        "errorMessage": "When 'url' in 'architecture' is a string, 'hash' in 'architecture' must be a string."
                                                     }
                                                 }
                                             }
@@ -1714,7 +1714,7 @@
                                                             "$ref": "#/definitions/str"
                                                         },
                                                         "minItems": 1,
-                                                        "errorMessage": "当 architecture 中的 url 是数组 (array) 时，architecture 中的 hash 也必须是一个数组 (array)"
+                                                        "errorMessage": "When 'url' in 'architecture' is an array, 'hash' in 'architecture' must be an array."
                                                     }
                                                 }
                                             }
@@ -1727,7 +1727,7 @@
                 ]
             },
             {
-                "$comment": "确保 architecture 和 autoupdate 中的 architecture 相对应",
+                "$comment": "Ensure that the 'architecture' and 'autoupdate.architecture' are consistent.",
                 "if": {
                     "required": [
                         "autoupdate"
@@ -1777,7 +1777,7 @@
                                             "properties": {
                                                 "64bit": {
                                                     "not": true,
-                                                    "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
+                                                    "errorMessage": "When 'autoupdate.architecture' does not set '64bit', 'architecture' must not set '64bit'."
                                                 }
                                             }
                                         }
@@ -1820,7 +1820,7 @@
                                             "properties": {
                                                 "32bit": {
                                                     "not": true,
-                                                    "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
+                                                    "errorMessage": "When 'autoupdate.architecture' does not set '32bit', 'architecture' must not set '32bit'."
                                                 }
                                             }
                                         }
@@ -1863,7 +1863,7 @@
                                             "properties": {
                                                 "arm64": {
                                                     "not": true,
-                                                    "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
+                                                    "errorMessage": "When 'autoupdate.architecture' does not set 'arm64', 'architecture' must not set 'arm64'."
                                                 }
                                             }
                                         }
@@ -1875,10 +1875,10 @@
                 }
             },
             {
-                "$comment": "abyss 特性",
+                "$comment": "Some features of abyss",
                 "allOf": [
                     {
-                        "$comment": "必须使用 architecture 明确指定架构",
+                        "$comment": "Must use 'architecture'.",
                         "if": {
                             "required": [
                                 "url"
@@ -1888,13 +1888,13 @@
                             "properties": {
                                 "url": {
                                     "not": true,
-                                    "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
+                                    "errorMessage": "In abyss, the 'url' field is not allowed. Please use 'architecture'."
                                 }
                             }
                         }
                     },
                     {
-                        "$comment": "如果定义了 notes，则必须定义 notes-cn",
+                        "$comment": "If 'notes' is set, then 'notes-cn' must be set.",
                         "allOf": [
                             {
                                 "if": {
@@ -1912,7 +1912,7 @@
                                         "properties": {
                                             "notes": {
                                                 "not": true,
-                                                "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
+                                                "errorMessage": "In abyss, if 'notes' is set, then 'notes-cn' must be set."
                                             }
                                         }
                                     }
@@ -1934,7 +1934,7 @@
                                         "properties": {
                                             "notes-cn": {
                                                 "not": true,
-                                                "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
+                                                "errorMessage": "In abyss, if 'notes-cn' is set, then 'notes' must be set."
                                             }
                                         }
                                     }
@@ -1943,7 +1943,7 @@
                         ]
                     },
                     {
-                        "$comment": "脚本校验",
+                        "$comment": "Script validation.",
                         "properties": {
                             "pre_install": {
                                 "examples": [
@@ -1958,15 +1958,15 @@
                                 "items": [
                                     {
                                         "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                        "markdownDescription": "- 获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
+                                        "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                     },
                                     {
                                         "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
                                     },
                                     {
                                         "const": "A-Start-Install",
-                                        "markdownDescription": "- 安装过程的开始\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                        "markdownDescription": "- The start of install.\n- Install process: `pre_install` -> `installer` -> `post_install`"
                                     }
                                 ],
                                 "allOf": [
@@ -1976,119 +1976,119 @@
                                                 {},
                                                 {
                                                     "const": "A-Deny-Manifest",
-                                                    "markdownDescription": "- 拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
+                                                    "markdownDescription": "- Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated."
                                                 },
                                                 {
                                                     "const": "A-Deny-Manifest 'newName'",
-                                                    "markdownDescription": "- 拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
+                                                    "markdownDescription": "- Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated."
                                                 },
                                                 {
                                                     "pattern": "A-Deny-Manifest",
-                                                    "markdownDescription": "- 拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用"
+                                                    "markdownDescription": "- Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated."
                                                 },
                                                 {
                                                     "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
-                                                    "markdownDescription": "- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "markdownDescription": "- Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
                                                     "pattern": "A-New-PersistFile",
-                                                    "markdownDescription": "- 创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "markdownDescription": "- Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
                                                     "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\xxx\" \"$persist_dir\\xxx\"",
-                                                    "markdownDescription": "- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
+                                                    "markdownDescription": "- Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
                                                 },
                                                 {
                                                     "pattern": "A-Copy-Item",
-                                                    "markdownDescription": "- 复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
+                                                    "markdownDescription": "- Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extras\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
                                                 },
                                                 {
                                                     "const": "A-Expand-SetupExe",
-                                                    "markdownDescription": "- 用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
+                                                    "markdownDescription": "- Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-Exe`.\n- Use `A-Expand-SetupExe` when `A-Install-Exe` needs admin privilege or it is more suitable for `A-Expand-SetupExe`."
                                                 },
                                                 {
                                                     "const": "A-Install-Exe inno",
-                                                    "markdownDescription": "- 使用 innosetup 安装程序"
+                                                    "markdownDescription": "- Use `innosetup` installer."
                                                 },
                                                 {
                                                     "const": "A-Install-Exe msi",
-                                                    "markdownDescription": "- 使用 msi 安装程序"
+                                                    "markdownDescription": "- Use `msi` installer."
                                                 },
                                                 {
                                                     "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "- Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
-                                                    "markdownDescription": "- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "- Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "pattern": "A-Install-Exe",
-                                                    "markdownDescription": "- 使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "- Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
-                                                    "markdownDescription": "- 要求以管理员权限运行"
+                                                    "markdownDescription": "- Require admin permission to run"
                                                 },
                                                 {
                                                     "const": "A-Test-Admin",
-                                                    "markdownDescription": "- 检查是否以管理员权限运行"
+                                                    "markdownDescription": "- Check if running with admin permission"
                                                 },
                                                 {
                                                     "const": "A-Test-DeveloperMode",
-                                                    "markdownDescription": "- 检查是否启用了 [开发者模式](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging)"
+                                                    "markdownDescription": "- Check if [developer mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging) is enabled"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory",
-                                                    "markdownDescription": "- 确保指定目录路径存在\n- 如果不传递参数，则确保 `$persist_dir` 路径存在\n- 例如: `A-Ensure-Directory 'xxx'`"
+                                                    "markdownDescription": "- Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory 'xxx'",
-                                                    "markdownDescription": "- 确保指定目录路径存在\n- 如果不传递参数，则确保 `$persist_dir` 路径存在\n- 例如: `A-Ensure-Directory 'xxx'`"
+                                                    "markdownDescription": "- Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
                                                     "pattern": "A-Ensure-Directory",
-                                                    "markdownDescription": "- 确保指定目录路径存在\n- 如果不传递参数，则确保 `$persist_dir` 路径存在\n- 例如: `A-Ensure-Directory 'xxx'`"
+                                                    "markdownDescription": "- Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
                                                     "const": "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
-                                                    "markdownDescription": "- 使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "- Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkFile",
-                                                    "markdownDescription": "- 使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "- Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "const": "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
-                                                    "markdownDescription": "- 使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "- Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkDirectory",
-                                                    "markdownDescription": "- 使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "- Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "const": "A-Add-Font",
-                                                    "markdownDescription": "- 安装字体"
+                                                    "markdownDescription": "- Install font"
                                                 },
                                                 {
                                                     "const": "A-Add-MsixPackage 'PackageFamilyName'",
-                                                    "markdownDescription": "- 安装 AppX/Msix 包\n- 示例: `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                    "markdownDescription": "- Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-MsixPackage",
-                                                    "markdownDescription": "- 安装 AppX/Msix 包\n- 示例: `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                    "markdownDescription": "- Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
                                                 },
                                                 {
                                                     "const": "A-Add-PowerToysRunPlugin 'xxx'",
-                                                    "markdownDescription": "- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "- Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-PowerToysRunPlugin",
-                                                    "markdownDescription": "- 添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "- Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "const": "A-Hold-App",
-                                                    "markdownDescription": "- 安装完成后，自动 hold 应用程序，阻止 Scoop 更新它\n- 它通常与 `pre_uninstall` 中的 `A-Deny-Update` 搭配使用"
+                                                    "markdownDescription": "- After installation, automatically hold the application, preventing Scoop from updating it\n- It is typically used in conjunction with `A-Deny-Update` in `pre_uninstall`"
                                                 }
                                             ]
                                         }
@@ -2096,7 +2096,8 @@
                                 ]
                             },
                             "post_install": {
-                                "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                                "markdownDescription": "- For [abyss](https://abyss.abgox.com), it should be a specified fixed array usually.\n- If it is necessary to add installation logic in `post_install`, it must be ensured that the last item is `A-Complete-Install`\n---\n- Commands executed after the application is installed\n- Execution order: `pre_install` -> `installer` -> `post_install`\n- Note: At this point, Scoop has already completed persist, so if you need to create files for persist, do it before this (in pre_install)\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, e.g. 64bit/32bit/arm64\n    - $cmd: Current running subcommand, e.g. uninstall/update/install\n    - $fname: Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)\n    - $cfg: Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: If value is $true, then it's a global installation\n    - $manifest: Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}\n    - $version: Version being installed, e.g. 1.2.3\n    - $dir: Application installation directory (current directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, e.g. D:\\scoop\\buckets\n    - $bucket: Name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop installation directory",
+
                                 "type": "array",
                                 "minItems": 3,
                                 "examples": [
@@ -2106,22 +2107,22 @@
                                         "A-Complete-Install"
                                     ]
                                 ],
-                                "$comment": "这里的 if 实现可以很巧妙的限制数组的最后一位",
+                                "$comment": "The implementation of 'if' here can cleverly restrict the last element of the array.",
                                 "if": {
                                     "oneOf": [
                                         {
                                             "items": [
                                                 {
                                                     "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                    "markdownDescription": "- 获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
+                                                    "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                                 },
                                                 {
                                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Complete-Install",
-                                                    "markdownDescription": "- 安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                                    "markdownDescription": "- The end of install.\n- Any custom installation logic should be placed before it.\n- Installation process: `pre_install` -> `installer` -> `post_install`"
                                                 }
                                             ]
                                         },
@@ -2132,7 +2133,7 @@
                                 },
                                 "else": {
                                     "not": true,
-                                    "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Install"
+                                    "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be A-Complete-Uninstall"
                                 }
                             },
                             "pre_uninstall": {
@@ -2149,15 +2150,15 @@
                                 "items": [
                                     {
                                         "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                        "markdownDescription": "- 获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
+                                        "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                     },
                                     {
                                         "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
                                     },
                                     {
                                         "const": "A-Start-Uninstall",
-                                        "markdownDescription": "- 卸载过程的开始\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                        "markdownDescription": "- The start of uninstall.\n- Uninstallation process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
                                     }
                                 ],
                                 "allOf": [
@@ -2167,103 +2168,103 @@
                                                 {},
                                                 {
                                                     "const": "A-Stop-Process",
-                                                    "markdownDescription": "- 尝试暂停安装目录下的应用进程，以确保能正常卸载"
+                                                    "markdownDescription": "- Try to stop processes in the installation directory to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Process",
-                                                    "markdownDescription": "- 尝试暂停安装目录下的应用进程，以确保能正常卸载"
+                                                    "markdownDescription": "- Try to stop processes in the installation directory to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
-                                                    "markdownDescription": "- 尝试停止并移除指定的应用服务，以确保能正常卸载"
+                                                    "markdownDescription": "- Try to stop and remove specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Service .* -RequireAdmin | A-Remove-Service",
-                                                    "markdownDescription": "- 尝试停止并移除指定的应用服务，以确保能正常卸载"
+                                                    "markdownDescription": "- Try to stop and remove specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "const": "A-Stop-Service 'xxx' -RequireAdmin",
-                                                    "markdownDescription": "- 尝试停止指定的应用服务，以确保能正常卸载"
+                                                    "markdownDescription": "- Try to stop specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Service .* -RequireAdmin",
-                                                    "markdownDescription": "- 尝试停止指定的应用服务，以确保能正常卸载"
+                                                    "markdownDescription": "- Try to stop specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "const": "A-Remove-Link",
-                                                    "markdownDescription": "- 移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction"
+                                                    "markdownDescription": "- Remove SymbolicLink or Junction created by `A-New-LinkFile` and `A-New-LinkDirectory`."
                                                 },
                                                 {
                                                     "const": "A-Remove-Font",
-                                                    "markdownDescription": "- 移除字体"
+                                                    "markdownDescription": "- Remove fonts."
                                                 },
                                                 {
                                                     "const": "A-Remove-MsixPackage",
-                                                    "markdownDescription": "- 卸载 AppX/Msix 包"
+                                                    "markdownDescription": "- Remove AppX/Msix packages."
                                                 },
                                                 {
                                                     "const": "A-Remove-PowerToysRunPlugin",
-                                                    "markdownDescription": "- 移除 PowerToys Run 插件"
+                                                    "markdownDescription": "- Remove the plugins of PowerToys Run"
                                                 },
                                                 {
                                                     "const": "A-Remove-TempData",
-                                                    "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "- Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
                                                 },
                                                 {
                                                     "const": "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                                                    "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "- Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
                                                 },
                                                 {
                                                     "pattern": "A-Remove-TempData",
-                                                    "markdownDescription": "- 移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "- Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
-                                                    "markdownDescription": "- 要求以管理员权限运行"
+                                                    "markdownDescription": "- Require running with administrator permission."
                                                 },
                                                 {
                                                     "const": "A-Test-Admin",
-                                                    "markdownDescription": "- 检查是否以管理员权限运行"
+                                                    "markdownDescription": "- Check if running with administrator permission."
                                                 },
                                                 {
                                                     "const": "A-Deny-Update",
-                                                    "markdownDescription": "- 禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用"
+                                                    "markdownDescription": "- Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`."
                                                 },
                                                 {
                                                     "const": "A-Uninstall-ExeManually 'app'",
-                                                    "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作"
+                                                    "markdownDescription": "- Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally."
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-ExeManually",
-                                                    "markdownDescription": "- 需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作"
+                                                    "markdownDescription": "- Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally."
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe",
-                                                    "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/VerySilent', '/Force')",
-                                                    "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
-                                                    "markdownDescription": "- 获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
+                                                    "markdownDescription": "- Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
                                                 },
                                                 {
                                                     "pattern": "\\$ProductCode = A-Get-ProductCode",
-                                                    "markdownDescription": "- 获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
+                                                    "markdownDescription": "- Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe $ProductCode",
-                                                    "markdownDescription": "- 使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-Exe $ProductCode`"
+                                                    "markdownDescription": "- Uninstall the application using the product code (`msi`)\n- It requires a product code as a parameter\n- For example: `A-Uninstall-Exe $ProductCode`"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-Exe",
-                                                    "markdownDescription": "- 使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 }
                                             ]
                                         }
@@ -2271,7 +2272,7 @@
                                 ]
                             },
                             "post_uninstall": {
-                                "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_uninstall 添加卸载逻辑，必须确保最后一项为 `A-Complete-Uninstall`\n---\n- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(实际版本号目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                                "markdownDescription": "- For [abyss](https://abyss.abgox.com), it should be a specified fixed array usually.\n- If it is necessary to add installation logic in `post_uninstall`, it must be ensured that the last item is `A-Complete-Uninstall`\n---\n- Execute commands before uninstalling the application\n- Execution order: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, such as 64bit/32bit/arm64\n    - $cmd: Currently running subcommand, such as uninstall/update/install\n    - $global: If the value is $true, it is globally installed\n    - $manifest: Deserialized manifest (PowerShell object), such as @{version=1.2.3; description=xxx;...}\n    - $version: Version being installed, such as 1.2.3\n    - $dir: Application installation directory (actual version number directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, such as D:\\scoop\\buckets\n    - $bucket: Name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop installation directory",
                                 "type": "array",
                                 "minItems": 3,
                                 "examples": [
@@ -2287,15 +2288,15 @@
                                             "items": [
                                                 {
                                                     "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                    "markdownDescription": "- 获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
+                                                    "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                                 },
                                                 {
                                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Complete-Uninstall",
-                                                    "markdownDescription": "- 卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                    "markdownDescription": "- The end of the uninstall. Any custom uninstall logic should be placed before it.\n- Uninstall process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
                                                 }
                                             ]
                                         },
@@ -2306,13 +2307,13 @@
                                 },
                                 "else": {
                                     "not": true,
-                                    "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Uninstall"
+                                    "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be A-Complete-Uninstall"
                                 }
                             }
                         }
                     },
                     {
-                        "$comment": "必须使用 pre_install、post_install、pre_uninstall、post_uninstall",
+                        "$comment": "Required: pre_install、post_install、pre_uninstall、post_uninstall",
                         "if": {
                             "required": [
                                 "pre_install",
@@ -2324,7 +2325,7 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
+                                    "$comment": "If A-Install-Exe or A-Expand-SetupExe is used in pre_install, then env_add_path and bin may need to start with app\\\\ or $env: or ${env:",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
@@ -2360,7 +2361,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                         }
                                                     },
                                                     {
@@ -2381,7 +2382,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                             }
                                                         }
                                                     }
@@ -2412,7 +2413,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                         }
                                                     },
                                                     {
@@ -2439,7 +2440,7 @@
                                                                     },
                                                                     "then": {
                                                                         "not": true,
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                                        "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                                     }
                                                                 },
                                                                 {
@@ -2461,7 +2462,7 @@
                                                                             },
                                                                             "then": {
                                                                                 "not": true,
-                                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                                                "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                                             }
                                                                         }
                                                                     ]
@@ -2500,7 +2501,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                             }
                                                         }
                                                     ]
@@ -2530,27 +2531,27 @@
                                                                     },
                                                                     "then": {
                                                                         "not": true,
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 开头"
+                                                                        "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                                     }
                                                                 }
                                                             ]
                                                         },
                                                         "else": {
                                                             "not": true,
-                                                            "errorMessage": "由于使用了 A-Install-Exe 或 A-Expand-SetupExe，需要使用数组格式"
+                                                            "errorMessage": "Since A-Install-Exe or A-Expand-SetupExe is used，it need to use array"
                                                         }
                                                     }
                                                 },
                                                 "else": {
                                                     "not": true,
-                                                    "errorMessage": "由于使用了 A-Install-Exe 或 A-Expand-SetupExe，必须使用数组格式"
+                                                    "errorMessage": "Since A-Install-Exe or A-Expand-SetupExe is used，it need to use array"
                                                 }
                                             }
                                         }
                                     }
                                 },
                                 {
-                                    "$comment": "根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
+                                    "$comment": "Check whether the corresponding functions in pre_uninstall exist according to the functions used in pre_install, such as A-Install-Exe/A-Uninstall-Exe",
                                     "allOf": [
                                         {
                                             "if": {
@@ -2570,13 +2571,13 @@
                                                                 "contains": {
                                                                     "pattern": "A-Remove-Link"
                                                                 },
-                                                                "errorMessage": "pre_install 中使用了 A-New-LinkFile 或 A-New-LinkDirectory，而 pre_uninstall 中缺少 A-Remove-Link"
+                                                                "errorMessage": "A-New-LinkFile or A-New-LinkDirectory is used in pre_install, while A-Remove-Link is missing in pre_uninstall"
                                                             },
                                                             {
                                                                 "contains": {
                                                                     "pattern": "^A-Remove-Link$"
                                                                 },
-                                                                "errorMessage": "A-Remove-Link 必须单独一行，不能包含额外内容"
+                                                                "errorMessage": "A-Remove-Link must be on a separate line and must not contain any additional content"
                                                             }
                                                         ]
                                                     }
@@ -2599,7 +2600,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)(A-Uninstall-Exe|Remove-AppPackage)"
                                                         },
-                                                        "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeManually 或 Remove-AppPackage"
+                                                        "errorMessage": "A-Install-Exe is used in pre_install, while A-Uninstall-Exe, A-Uninstall-ExeManually, or Remove-AppPackage is missing in pre_uninstall."
                                                     }
                                                 }
                                             }
@@ -2622,13 +2623,13 @@
                                                                 "contains": {
                                                                     "pattern": "A-Remove-MsixPackage"
                                                                 },
-                                                                "errorMessage": "pre_install 中使用了 A-Add-MsixPackage，而 pre_uninstall 中缺少 A-Remove-MsixPackage"
+                                                                "errorMessage": "A-Add-MsixPackage is used in pre_install, while A-Remove-MsixPackage is missing in pre_uninstall"
                                                             },
                                                             {
                                                                 "contains": {
                                                                     "pattern": "^A-Remove-MsixPackage$"
                                                                 },
-                                                                "errorMessage": "A-Remove-MsixPackage 必须单独一行，不能包含额外内容"
+                                                                "errorMessage": "A-Remove-MsixPackage must be on a separate line and must not contain any additional content"
                                                             }
                                                         ]
                                                     }
@@ -2651,7 +2652,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Remove-Font"
                                                         },
-                                                        "errorMessage": "pre_install 中使用了 A-Add-Font，而 pre_uninstall 中缺少 A-Remove-Font"
+                                                        "errorMessage": "A-Add-Font is used in pre_install, while A-Remove-Font is missing in pre_uninstall"
                                                     }
                                                 }
                                             }
@@ -2674,13 +2675,13 @@
                                                                 "contains": {
                                                                     "pattern": "A-Remove-PowerToysRunPlugin"
                                                                 },
-                                                                "errorMessage": "pre_install 中使用了 A-Add-PowerToysRunPlugin，而 pre_uninstall 中缺少 A-Remove-PowerToysRunPlugin"
+                                                                "errorMessage": "A-Add-PowerToysRunPlugin is used in pre_install, while A-Remove-PowerToysRunPlugin is missing in pre_uninstall"
                                                             },
                                                             {
                                                                 "contains": {
                                                                     "pattern": "^A-Remove-PowerToysRunPlugin$"
                                                                 },
-                                                                "errorMessage": "A-Remove-PowerToysRunPlugin 必须单独一行，不能包含额外内容"
+                                                                "errorMessage": "A-Remove-PowerToysRunPlugin must be on a separate line and must not contain any additional content"
                                                             }
                                                         ]
                                                     }
@@ -2690,7 +2691,7 @@
                                     ]
                                 },
                                 {
-                                    "$comment": "根据 pre_uninstall 使用的函数，检查 pre_install 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
+                                    "$comment": "Check whether the corresponding functions in pre_install exist according to the functions used in pre_uninstall, such as A-Install-Exe/A-Uninstall-Exe",
                                     "allOf": [
                                         {
                                             "if": {
@@ -2708,7 +2709,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而 pre_install 中缺少 A-New-LinkFile 或 A-New-LinkDirectory"
+                                                        "errorMessage": "A-Remove-Link is used in pre_uninstall, while A-New-LinkFile or A-New-LinkDirectory is missing in pre_install"
                                                     }
                                                 }
                                             }
@@ -2729,7 +2730,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Install-Exe"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeManually，而 pre_install 中缺少 A-Install-Exe"
+                                                        "errorMessage": "A-Uninstall-Exe or A-Uninstall-ExeManually is used in pre_uninstall, while A-Install-Exe is missing in pre_install"
                                                     }
                                                 }
                                             }
@@ -2750,7 +2751,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Add-MsixPackage"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-MsixPackage，而 pre_install 中缺少 A-Add-MsixPackage"
+                                                        "errorMessage": "A-Remove-MsixPackage is used in pre_uninstall, while A-Add-MsixPackage is missing in pre_install"
                                                     }
                                                 }
                                             }
@@ -2771,7 +2772,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Add-Font"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-Font，而 pre_install 中缺少 A-Add-Font"
+                                                        "errorMessage": "A-Remove-Font is used in pre_uninstall, while A-Add-Font is missing in pre_install"
                                                     }
                                                 }
                                             }
@@ -2792,7 +2793,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-PowerToysRunPlugin，而 pre_install 中缺少 A-Add-PowerToysRunPlugin"
+                                                        "errorMessage": "A-Remove-PowerToysRunPlugin is used in pre_uninstall, while A-Add-PowerToysRunPlugin is missing in pre_install"
                                                     }
                                                 }
                                             }
@@ -2803,11 +2804,11 @@
                         },
                         "else": {
                             "not": true,
-                            "errorMessage": "abyss 中必须使用 pre_install、post_install、pre_uninstall、post_uninstall"
+                            "errorMessage": "In abyss, pre_install, post_install, pre_uninstall, and post_uninstall must be used."
                         }
                     },
                     {
-                        "$comment": "不允许在 architecture 中使用 pre_install 和 post_install，如果需要，应该在顶层定义，并通过 $architecture 区分不同架构",
+                        "$comment": "It is not allowed to use pre_install and post_install in architecture. If necessary, they should be defined at the top level and different architectures should be distinguished through $architecture.",
                         "if": {
                             "required": [
                                 "architecture"
@@ -2825,7 +2826,7 @@
                                                             "pre_install"
                                                         ]
                                                     },
-                                                    "errorMessage": "abyss 中不允许在 architecture 中使用 pre_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                    "errorMessage": "In abyss, it is not allowed to use pre_install in architecture.\nIf needed, it should be defined at the top level and different architectures should be distinguished through the $architecture variable."
                                                 },
                                                 {
                                                     "not": {
@@ -2833,7 +2834,7 @@
                                                             "post_install"
                                                         ]
                                                     },
-                                                    "errorMessage": "abyss 中不允许在 architecture 中使用 post_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                    "errorMessage": "In abyss, the use of post_install in architecture is not allowed.\nIf needed, it should be defined at the top level and different architectures should be distinguished through the $architecture variable."
                                                 }
                                             ]
                                         }
@@ -2843,7 +2844,7 @@
                         }
                     },
                     {
-                        "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
+                        "$comment": "Since the manifest is installed through decompression and extraction, it is necessary to use extract_to to specify the directory.",
                         "if": {
                             "allOf": [
                                 {
@@ -2917,12 +2918,12 @@
                             },
                             "else": {
                                 "not": true,
-                                "errorMessage": "需要使用 extract_to 指定目录，通常为 app"
+                                "errorMessage": "It is necessary to use extract_to to specify the directory, which is usually \"app\""
                             }
                         }
                     },
                     {
-                        "$comment": "如果指定了 extract_to 为 app，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
+                        "$comment": "If extract_to is specified as app, paths such as env_add_path and bin may need to start with app\\\\, $env:, or ${env:",
                         "if": {
                             "required": [
                                 "extract_to"
@@ -2958,7 +2959,7 @@
                                             },
                                             "then": {
                                                 "not": true,
-                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                             }
                                         },
                                         {
@@ -2979,7 +2980,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                    "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                                 }
                                             }
                                         }
@@ -3014,7 +3015,7 @@
                                                     },
                                                     "then": {
                                                         "not": true,
-                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录或环境变量($env:xxx 或 ${env:xxx})"
+                                                        "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                                     }
                                                 },
                                                 {
@@ -3035,7 +3036,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录或环境变量($env:xxx 或 ${env:xxx})"
+                                                            "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                                         }
                                                     }
                                                 }
@@ -3044,7 +3045,7 @@
                                     },
                                     "minProperties": 1,
                                     "additionalProperties": false,
-                                    "errorMessage": "不允许属性名为空字符串"
+                                    "errorMessage": "Property names are not allowed to be empty strings."
                                 },
                                 "bin": {
                                     "type": [
@@ -3071,7 +3072,7 @@
                                             },
                                             "then": {
                                                 "not": true,
-                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                             }
                                         },
                                         {
@@ -3098,7 +3099,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                                         }
                                                     },
                                                     {
@@ -3119,7 +3120,7 @@
                                                                 },
                                                                 "then": {
                                                                     "not": true,
-                                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                                    "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                                                 }
                                                             }
                                                         ]
@@ -3157,7 +3158,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                    "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
                                                 }
                                             }
                                         ]
@@ -3182,27 +3183,27 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
+                                                            "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\"
                                                         }
                                                     }
                                                 ]
                                             },
                                             "else": {
                                                 "not": true,
-                                                "errorMessage": "由于指定了 extract_to 为 app，需要使用数组格式"
+                                                "errorMessage": "Since extract_to is specified as \"app\", it need to use array"
                                             }
                                         }
                                     },
                                     "else": {
                                         "not": true,
-                                        "errorMessage": "由于指定了 extract_to 为 app，需要使用数组格式"
+                                        "errorMessage": "Since extract_to is specified as \"app\", it need to use array"
                                     }
                                 }
                             }
                         }
                     },
                     {
-                        "$comment": "当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
+                        "$comment": "When the version is specific content, the corresponding replace must be defined in checkver.",
                         "allOf": [
                             {
                                 "properties": {
@@ -3228,7 +3229,7 @@
                                             "properties": {
                                                 "replace": {
                                                     "pattern": "^pending$",
-                                                    "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                                    "errorMessage": "When the version is 'pending', it must be defined as 'pending' in checkver."
                                                 }
                                             }
                                         }
@@ -3252,7 +3253,7 @@
                                             "properties": {
                                                 "replace": {
                                                     "pattern": "^renamed$",
-                                                    "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
+                                                    "errorMessage": "When the version is 'renamed', it must be defined as 'renamed' in checkver"
                                                 }
                                             }
                                         }
@@ -3276,7 +3277,7 @@
                                             "properties": {
                                                 "replace": {
                                                     "pattern": "^deprecated$",
-                                                    "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
+                                                    "errorMessage": "When the version is 'deprecated', it must be defined as 'deprecated' in checkver."
                                                 }
                                             }
                                         }
@@ -3286,7 +3287,7 @@
                         ]
                     },
                     {
-                        "$comment": "当 version 为特定内容时，url 必须为指定内容",
+                        "$comment": "When the version is specific content, the url must be the specified content",
                         "allOf": [
                             {
                                 "if": {
@@ -3309,10 +3310,10 @@
                                                             ],
                                                             "items": {
                                                                 "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             },
                                                             "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                            "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                         },
                                                         "hash": {
                                                             "type": [
@@ -3321,10 +3322,10 @@
                                                             ],
                                                             "items": {
                                                                 "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             },
                                                             "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                            "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                         }
                                                     }
                                                 }
@@ -3337,7 +3338,7 @@
                                             },
                                             "then": {
                                                 "not": true,
-                                                "errorMessage": "version 为 pending|renamed|deprecated 时，数组的第四项必须使用 A-Deny-Manifest"
+                                                "errorMessage": "When the version is pending|renamed|deprecated, the fourth item in the array must use A-Deny-Manifest"
                                             },
                                             "items": [
                                                 {
@@ -3357,7 +3358,7 @@
                                                     },
                                                     "then": {
                                                         "not": true,
-                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，此项必须使用 A-Deny-Manifest"
+                                                        "errorMessage": "When the version is pending|renamed|deprecated, it must use A-Deny-Manifest"
                                                     }
                                                 }
                                             ]
@@ -3394,7 +3395,7 @@
                                                     },
                                                     "then": {
                                                         "not": true,
-                                                        "errorMessage": "version 为 pending|deprecated 时，此项只能是 A-Deny-Manifest"
+                                                        "errorMessage": "When the version is pending|deprecated, it must use A-Deny-Manifest"
                                                     }
                                                 }
                                             ]
@@ -3431,7 +3432,7 @@
                                                     },
                                                     "then": {
                                                         "not": true,
-                                                        "errorMessage": "version 为 renamed 时，此项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
+                                                        "errorMessage": "When the version is renamed, it must be \"A-Deny-Manifest 'xxx'\"\nHere 'xxx' is the new manifest name"
                                                     }
                                                 }
                                             ]
@@ -3442,7 +3443,7 @@
                         ]
                     },
                     {
-                        "$comment": "限制 depends 和 suggest 的写法",
+                        "$comment": "To limit the depends and suggest properties",
                         "allOf": [
                             {
                                 "if": {
@@ -3454,10 +3455,10 @@
                                     "properties": {
                                         "depends": {
                                             "pattern": "^abyss/",
-                                            "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx",
+                                            "errorMessage": "Only abyss bucket applications are allowed as dependencies, such as: abyss/xxx",
                                             "items": {
                                                 "pattern": "^abyss/",
-                                                "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx"
+                                                "errorMessage": "Only abyss bucket applications are allowed as dependencies, such as: abyss/xxx"
                                             }
                                         }
                                     }
@@ -3475,10 +3476,10 @@
                                             "patternProperties": {
                                                 "^.+$": {
                                                     "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
-                                                    "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx",
+                                                    "errorMessage": "Only applications in abyss or main bucket are allowed as suggestions, such as: abyss/xxx or xxx",
                                                     "items": {
                                                         "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
-                                                        "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx"
+                                                        "errorMessage": "Only applications in abyss or main bucket are allowed as suggestions, such as: abyss/xxx or xxx"
                                                     }
                                                 }
                                             }
@@ -3489,7 +3490,7 @@
                         ]
                     },
                     {
-                        "$comment": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
+                        "$comment": "To avoid potential manifest update issues in abyss, 32bit is not allowed to be used",
                         "allOf": [
                             {
                                 "properties": {
@@ -3500,7 +3501,7 @@
                                                 "32bit"
                                             ]
                                         },
-                                        "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
+                                        "errorMessage": "To avoid potential manifest update issues in abyss, 32bit is not allowed to be used"
                                     }
                                 }
                             },
@@ -3514,7 +3515,7 @@
                                                         "32bit"
                                                     ]
                                                 },
-                                                "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
+                                                "errorMessage": "To avoid potential manifest update issues in abyss, 32bit is not allowed to be used"
                                             }
                                         }
                                     }
@@ -3528,12 +3529,12 @@
                                 "not": {
                                     "type": "string"
                                 },
-                                "errorMessage": "checkver 必须是对象"
+                                "errorMessage": "It must be object"
                             }
                         }
                     },
                     {
-                        "$comment": "如果 checkver 通过 script 字段使用了 A-Get-InstallerInfoFromWinget",
+                        "$comment": "If checkver uses A-Get-InstallerInfoFromWinget through the script field",
                         "if": {
                             "required": [
                                 "checkver"
@@ -3568,7 +3569,7 @@
                                                             "properties": {
                                                                 "url": {
                                                                     "const": "temp-autoupdate.json",
-                                                                    "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 temp-autoupdate.json"
+                                                                    "errorMessage": "Since A-Get-InstallerInfoFromWinget is used, 'hash.url' must be temp-autoupdate.json"
                                                                 }
                                                             }
                                                         }
@@ -3589,14 +3590,14 @@
                                         "not": {
                                             "pattern": "/:owner/:repo/"
                                         },
-                                        "errorMessage": ":owner 和 :repo 是占位符"
+                                        "errorMessage": "':owner' and ':repo' are placeholders"
                                     }
                                 }
                             }
                         }
                     },
                     {
-                        "$comment": "限制 checkver 的可用字段",
+                        "$comment": "To limit the available fields of checkver",
                         "properties": {
                             "checkver": {
                                 "allOf": [
@@ -3607,14 +3608,14 @@
                                         },
                                         "then": {
                                             "not": true,
-                                            "errorMessage": "abyss 中不允许使用 github 字段"
+                                            "errorMessage": "In abyss, the 'github' field is not allowed to be used"
                                         }
                                     },
                                     {
                                         "properties": {
                                             "github": {
                                                 "not": true,
-                                                "errorMessage": "abyss 中不允许使用 github 字段"
+                                                "errorMessage": "In abyss, the 'github' field is not allowed to be used"
                                             }
                                         }
                                     },
@@ -3622,7 +3623,7 @@
                                         "properties": {
                                             "re": {
                                                 "not": true,
-                                                "errorMessage": "abyss 中不允许使用 re 字段，请使用 regex 字段"
+                                                "errorMessage": "In abyss, the 're' field is not allowed to be used, please use 'regex' field"
                                             }
                                         }
                                     },
@@ -3630,7 +3631,7 @@
                                         "properties": {
                                             "jp": {
                                                 "not": true,
-                                                "errorMessage": "abyss 中不允许使用 jp 字段，请使用 jsonpath 字段"
+                                                "errorMessage": "In abyss, the 'jp' field is not allowed to be used, please use 'jsonpath' field"
                                             }
                                         }
                                     }
