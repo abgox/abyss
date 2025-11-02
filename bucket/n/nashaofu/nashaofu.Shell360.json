@@ -1,0 +1,68 @@
+{
+    "version": "0.1.13",
+    "description": "一款跨平台的 SSH 和 SFTP 客户端 | A cross-platform SSH and SFTP client.",
+    "homepage": "https://nashaofu.github.io/shell360/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/nashaofu/shell360/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nashaofu/shell360/releases/download/v0.1.13/Shell360_0.1.13_x64-setup.exe",
+            "hash": "ac13031ca97da3b7c76320d17357364bbef3a32923a767f732db612d9992c2b0"
+        },
+        "arm64": {
+            "url": "https://github.com/nashaofu/shell360/releases/download/v0.1.13/Shell360_0.1.13_arm64-setup.exe",
+            "hash": "a9e4de446ca2973e144bc2ca8be4075d2de3aab4a131f401de2fca4242365b1f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\shell360.exe",
+            "Shell360"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.nashaofu.shell360\",\"$env:LocalAppData\\com.nashaofu.shell360\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.nashaofu.shell360\\EBWebView\",\"$env:LocalAppData\\com.nashaofu.shell360\\logs\")",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/nashaofu/shell360/releases/latest",
+        "regex": "/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nashaofu/shell360/releases/download/v$version/Shell360_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/nashaofu/shell360/releases/download/v$version/Shell360_$version_arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
