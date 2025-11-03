@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (413)|Tag|Description|
+|App (414)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -127,6 +127,7 @@
 |[clsid2.mpc-hc](https://github.com/clsid2/mpc-hc "点击访问仓库或主页")|<a href="./bucket/c/clsid2/clsid2.mpc-hc.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|适用于 Windows 的极其轻量级的开源媒体播放器|
 |[code52.Carnac](http://carnackeys.com/ "点击访问仓库或主页")|<a href="./bucket/c/code52/code52.Carnac.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个键盘按键记录和演示实用程序|
 |[Codeium.Windsurf](https://windsurf.com/ "点击访问仓库或主页")|<a href="./bucket/c/Codeium/Codeium.Windsurf.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个强大的 AI IDE|
+|[codexu.NoteGen](https://notegen.top/ "点击访问仓库或主页")|<a href="./bucket/c/codexu/codexu.NoteGen.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款跨平台的 Markdown AI 笔记软件|
 |[CologneCodeCompany.XYplorer](https://www.xyplorer.com/index.php "点击访问仓库或主页")|<a href="./bucket/c/CologneCodeCompany/CologneCodeCompany.XYplorer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个 Windows 上的第三方文件管理器|
 |[CologneCodeCompany.XYplorerFree](https://www.xyplorer.com/free.php "点击访问仓库或主页")|<a href="./bucket/c/CologneCodeCompany/CologneCodeCompany.XYplorerFree.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[NoUpdate](https://abyss.abgox.com/faq/no-update)|(Free 版本)<br/>一个 Windows 上的第三方文件管理器|
 |[Comfy.ComfyUI-Desktop](https://comfy.org/ "点击访问仓库或主页")|<a href="./bucket/c/Comfy/Comfy.ComfyUI-Desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|ComfyUI 的桌面应用程序。ComfyUI 是一款强大的模块化扩散模型 GUI、API 和后台，具有图形/节点界面|
