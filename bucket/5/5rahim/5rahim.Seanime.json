@@ -1,5 +1,5 @@
 {
-    "version": "2.9.10",
+    "version": "3.0.0",
     "description": "免费开源的媒体服务器，为动漫爱好者提供丰富功能 | Free and open-source media server packed with features for anime and manga enthusiasts.",
     "homepage": "https://seanime.rahim.app/",
     "license": {
@@ -8,22 +8,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/5rahim/seanime/releases/download/v2.9.10/seanime-desktop-2.9.10_Windows_x86_64.exe#/dl.7z",
-            "hash": "fa28ffd4e9b1987badb13e5368050e20c62e7b19fa48d2f558fecbf97847a295"
+            "url": "https://github.com/5rahim/seanime/releases/download/v3.0.0/seanime-denshi-3.0.0_Windows_x64.exe",
+            "hash": "c1a717a64b69ea0a1e5ed29dc248e76dd7a9826c337d232da82bc632e06078b4"
         }
     },
     "extract_to": "app",
     "shortcuts": [
         [
-            "app\\seanime-desktop.exe",
-            "Seanime"
+            "app\\Seanime Denshi.exe",
+            "Seanime Denshi"
         ]
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\Seanime\")"
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\Seanime\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Seanime Denshi.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,9 +36,11 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-TempData @(\"$env:LocalAppData\\app.seanime.desktop\")"
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:AppData\\seanime-denshi\",\"$env:LocalAppData\\app.seanime.desktop\")"
     ],
     "post_uninstall": [
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -50,7 +54,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/5rahim/seanime/releases/download/v$version/seanime-desktop-$version_Windows_x86_64.exe#/dl.7z"
+                "url": "https://github.com/5rahim/seanime/releases/download/v$version/seanime-denshi-$version_Windows_x64.exe"
             }
         },
         "hash": {
