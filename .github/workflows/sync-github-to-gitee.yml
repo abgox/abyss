@@ -14,26 +14,12 @@ concurrency:
 
 jobs:
   sync-repos:
-    runs-on: windows-latest
-    env:
-      REPO: ${{ github.repository }}
-      USER_NAME: "abgox"
-      USER_EMAIL: "abgohxf@outlook.com"
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: wearerequired/git-mirror-action@v1
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+          # SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
         with:
-          fetch-depth: 0
-
-      - name: Configure Git
-        shell: pwsh
-        run: |
-          git config --global user.name $env:USER_NAME
-          git config --global user.email $env:USER_EMAIL
-
-      - name: Push to Gitee
-        shell: pwsh
-        run: |
-          git remote add gitee https://oauth2:${{ secrets.PAT_TOKEN_GITEE }}@gitee.com/$env:REPO.git
-          git push gitee --force
-          # git push gitee --tags --force
+          source-repo: git@github.com:abgox/abyss.git
+          destination-repo: git@gitee.com:abgox/abyss.git
