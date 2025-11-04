@@ -1,0 +1,86 @@
+{
+    "version": "0.1.38",
+    "description": "一款适用于 Windows 系统的平铺式窗口管理器 | A tiling window manager for Windows",
+    "homepage": "https://lgug2z.github.io/komorebi",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/LGUG2Z/komorebi/blob/master/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LGUG2Z/komorebi/releases/download/v0.1.38/komorebi-0.1.38-x86_64-pc-windows-msvc.zip",
+            "hash": "e61b8609bf1577d76a1d7c3a7e5025f0a2cc87c5c5442b361412e5c22b92fb30"
+        },
+        "arm64": {
+            "url": "https://github.com/LGUG2Z/komorebi/releases/download/v0.1.38/komorebi-0.1.38-aarch64-pc-windows-msvc.zip",
+            "hash": "e3edcab0fc93e4c98d4a0fd05275f5711d466d975f705123dbcbf5fd06787e39"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        [
+            "app\\komorebi.exe",
+            "komorebi"
+        ],
+        [
+            "app\\komorebic.exe",
+            "komorebic"
+        ],
+        [
+            "app\\komorebic-no-console.exe",
+            "komorebic-no-console"
+        ],
+        [
+            "app\\komorebi-gui.exe",
+            "komorebi-gui"
+        ],
+        [
+            "app\\komorebi-bar.exe",
+            "komorebi-bar"
+        ],
+        [
+            "app\\komorebi-shortcuts.exe",
+            "komorebi-shortcuts"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\komorebi\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/LGUG2Z/komorebi/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LGUG2Z/komorebi/releases/download/v$version/komorebi-$version-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/LGUG2Z/komorebi/releases/download/v$version/komorebi-$version-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
