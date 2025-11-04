@@ -260,31 +260,7 @@
                         "markdownDescription": "- Specify the URL of the software license."
                     }
                 }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "required": [
-                            "identifier"
-                        ],
-                        "properties": {
-                            "identifier": {
-                                "pattern": "^(Freeware|Proprietary|Public Domain|Shareware|Freemium|Unknown)$"
-                            }
-                        }
-                    },
-                    "then": {
-                        "not": {
-                            "not": {
-                                "required": [
-                                    "url"
-                                ]
-                            }
-                        },
-                        "errorMessage": "The object used by the license, and the identifier is one of Freeware, Proprietary, Public Domain, Shareware, Freemium, or Unknown.\nIn this case, the url must be provided; otherwise, a string should be used instead of an object."
-                    }
-                }
-            ]
+            }
         },
         "notes": {
             "title": "Notes",
@@ -858,7 +834,10 @@
                     "properties": {
                         "url": {
                             "markdownDescription": "- URL of the page where the version is located",
-                            "$ref": "#/definitions/str"
+                            "$ref": "#/definitions/str",
+                            "examples": [
+                                "https://github.com/:owner/:repo/releases/latest"
+                            ]
                         },
                         "github": {
                             "markdownDescription": "- GitHub repository of the application",
@@ -881,7 +860,10 @@
                         },
                         "regex": {
                             "markdownDescription": "- RegEx to find the version on the homepage",
-                            "$ref": "#/definitions/str"
+                            "$ref": "#/definitions/str",
+                            "examples": [
+                                "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+                            ]
                         },
                         "jsonpath": {
                             "markdownDescription": "- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
@@ -1359,116 +1341,514 @@
     "then": {
         "allOf": [
             {
-                "$comment": "If 'checkver' is set, 'autoupdate' must be set.",
+                "$comment": "Standard Specifications",
                 "allOf": [
                     {
-                        "if": {
-                            "required": [
-                                "checkver"
-                            ]
-                        },
-                        "then": {
-                            "if": {
-                                "required": [
-                                    "autoupdate"
-                                ]
+                        "$comment": "If 'checkver' is set, 'autoupdate' must be set.",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": [
+                                        "checkver"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "required": [
+                                            "autoupdate"
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "checkver": {
+                                                "not": true,
+                                                "errorMessage": "If 'checkver' is set, 'autoupdate' must be set."
+                                            }
+                                        }
+                                    }
+                                }
                             },
-                            "else": {
-                                "properties": {
-                                    "checkver": {
-                                        "not": true,
-                                        "errorMessage": "If 'checkver' is set, 'autoupdate' must be set."
+                            {
+                                "if": {
+                                    "required": [
+                                        "autoupdate"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "required": [
+                                            "checkver"
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "not": true,
+                                                "errorMessage": "If 'autoupdate' is set, 'checkver' must be set."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "If 'url' is a GitHub releases link, 'mode.hash' must be set to 'github'.",
+                        "properties": {
+                            "autoupdate": {
+                                "type": "object",
+                                "if": {
+                                    "oneOf": [
+                                        {
+                                            "required": [
+                                                "url"
+                                            ],
+                                            "properties": {
+                                                "url": {
+                                                    "$ref": "#/definitions/str",
+                                                    "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "required": [
+                                                "architecture"
+                                            ],
+                                            "properties": {
+                                                "architecture": {
+                                                    "type": "object",
+                                                    "anyOf": [
+                                                        {
+                                                            "required": [
+                                                                "64bit"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "32bit"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "arm64"
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "patternProperties": {
+                                                        "^(64bit|arm64|32bit)$": {
+                                                            "required": [
+                                                                "url"
+                                                            ],
+                                                            "properties": {
+                                                                "url": {
+                                                                    "oneOf": [
+                                                                        {
+                                                                            "$ref": "#/definitions/str",
+                                                                            "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                                        },
+                                                                        {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "$ref": "#/definitions/str",
+                                                                                "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "then": {
+                                    "required": [
+                                        "hash"
+                                    ],
+                                    "properties": {
+                                        "hash": {
+                                            "required": [
+                                                "mode"
+                                            ],
+                                            "properties": {
+                                                "mode": {
+                                                    "const": "github"
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     },
                     {
+                        "$comment": "If 'license' is set but 'url' or 'architecture' is not set, a warning is triggered.",
+                        "if": {
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "url"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "architecture"
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "then": {
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "not": {
+                                            "required": [
+                                                "url"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "not": {
+                                            "required": [
+                                                "architecture"
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "errorMessage": "Missing property 'url' or 'architecture'"
+                        }
+                    },
+                    {
+                        "$comment": "If 'url' is set, 'hash' must be set, and 'url' in 'architecture' cannot be set.",
                         "if": {
                             "required": [
-                                "autoupdate"
+                                "url"
                             ]
                         },
                         "then": {
-                            "if": {
-                                "required": [
-                                    "checkver"
-                                ]
-                            },
-                            "else": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "not": true,
-                                        "errorMessage": "If 'autoupdate' is set, 'checkver' must be set."
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "$comment": "If 'url' is a GitHub releases link, 'mode.hash' must be set to 'github'.",
-                "properties": {
-                    "autoupdate": {
-                        "type": "object",
-                        "if": {
-                            "oneOf": [
+                            "allOf": [
                                 {
                                     "required": [
-                                        "url"
+                                        "hash"
                                     ],
                                     "properties": {
-                                        "url": {
-                                            "$ref": "#/definitions/str",
-                                            "pattern": "^https://github\\.com/.+?/releases/download/"
+                                        "hash": {
+                                            "examples": [
+                                                "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                            ]
                                         }
                                     }
                                 },
                                 {
-                                    "required": [
-                                        "architecture"
-                                    ],
                                     "properties": {
                                         "architecture": {
-                                            "type": "object",
-                                            "anyOf": [
-                                                {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "allOf": [
+                                                        {
+                                                            "not": {
+                                                                "required": [
+                                                                    "url"
+                                                                ]
+                                                            },
+                                                            "errorMessage": "Property 'url' in 'architecture' conflicts with the top-level 'url'. You can only choose one way."
+                                                        },
+                                                        {
+                                                            "not": {
+                                                                "required": [
+                                                                    "hash"
+                                                                ]
+                                                            },
+                                                            "errorMessage": "When the top-level 'url' is set, 'hash' in 'architecture' cannot be set."
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "architecture": {
+                                    "$ref": "#/definitions/architecture_example",
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "required": [
+                                                "url"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "$comment": "If 'url' is set, when 'url' is a string, 'hash' must be a string, and when 'url' is an array, 'hash' must be an array.",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "properties": {
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "hash": {
+                                                "$ref": "#/definitions/str",
+                                                "errorMessage": "When 'url' is a string, 'hash' must be a string."
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "hash": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/definitions/hash"
+                                                },
+                                                "examples": [
+                                                    []
+                                                ],
+                                                "minItems": 1,
+                                                "errorMessage": "When 'url' is an array, 'hash' must be an array."
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "hash": {
+                                                    "not": true,
+                                                    "errorMessage": "When the top-level 'url' is not set, the top-level 'hash' cannot be set."
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": [
+                                        "architecture"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "required": [
+                                                            "hash"
+                                                        ],
+                                                        "properties": {
+                                                            "hash": {
+                                                                "$ref": "#/definitions/str",
+                                                                "errorMessage": "When 'url' in 'architecture' is a string, 'hash' in 'architecture' must be a string."
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "required": [
+                                                            "hash"
+                                                        ],
+                                                        "properties": {
+                                                            "hash": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "$ref": "#/definitions/str"
+                                                                },
+                                                                "minItems": 1,
+                                                                "errorMessage": "When 'url' in 'architecture' is an array, 'hash' in 'architecture' must be an array."
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "Ensure that the 'architecture' and 'autoupdate.architecture' are consistent.",
+                        "if": {
+                            "required": [
+                                "autoupdate"
+                            ],
+                            "properties": {
+                                "autoupdate": {
+                                    "required": [
+                                        "architecture"
+                                    ]
+                                }
+                            }
+                        },
+                        "then": {
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "required": [
+                                                            "64bit"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "required": [
+                                                    "64bit"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "if": {
                                                     "required": [
                                                         "64bit"
                                                     ]
                                                 },
-                                                {
+                                                "then": {
+                                                    "properties": {
+                                                        "64bit": {
+                                                            "not": true,
+                                                            "errorMessage": "When 'autoupdate.architecture' does not set '64bit', 'architecture' must not set '64bit'."
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "required": [
+                                                            "32bit"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "required": [
+                                                    "32bit"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "if": {
                                                     "required": [
                                                         "32bit"
                                                     ]
                                                 },
-                                                {
+                                                "then": {
+                                                    "properties": {
+                                                        "32bit": {
+                                                            "not": true,
+                                                            "errorMessage": "When 'autoupdate.architecture' does not set '32bit', 'architecture' must not set '32bit'."
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "required": [
+                                                            "arm64"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "required": [
+                                                    "arm64"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "if": {
                                                     "required": [
                                                         "arm64"
                                                     ]
-                                                }
-                                            ],
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "required": [
-                                                        "url"
-                                                    ],
+                                                },
+                                                "then": {
                                                     "properties": {
-                                                        "url": {
-                                                            "oneOf": [
-                                                                {
-                                                                    "$ref": "#/definitions/str",
-                                                                    "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                                },
-                                                                {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "$ref": "#/definitions/str",
-                                                                        "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                                    }
-                                                                }
-                                                            ]
+                                                        "arm64": {
+                                                            "not": true,
+                                                            "errorMessage": "When 'autoupdate.architecture' does not set 'arm64', 'architecture' must not set 'arm64'."
                                                         }
                                                     }
                                                 }
@@ -1477,418 +1857,113 @@
                                     }
                                 }
                             ]
-                        },
-                        "then": {
-                            "required": [
-                                "hash"
-                            ],
-                            "properties": {
-                                "hash": {
-                                    "required": [
-                                        "mode"
-                                    ],
-                                    "properties": {
-                                        "mode": {
-                                            "const": "github"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "If 'license' is set but 'url' or 'architecture' is not set, a warning is triggered.",
-                "if": {
-                    "not": {
-                        "anyOf": [
-                            {
-                                "required": [
-                                    "url"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "architecture"
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "then": {
-                    "not": {
-                        "anyOf": [
-                            {
-                                "not": {
-                                    "required": [
-                                        "url"
-                                    ]
-                                }
-                            },
-                            {
-                                "not": {
-                                    "required": [
-                                        "architecture"
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "errorMessage": "Missing property 'url' or 'architecture'"
-                }
-            },
-            {
-                "$comment": "If 'url' is set, 'hash' must be set, and 'url' in 'architecture' cannot be set.",
-                "if": {
-                    "required": [
-                        "url"
-                    ]
-                },
-                "then": {
-                    "allOf": [
-                        {
-                            "required": [
-                                "hash"
-                            ],
-                            "properties": {
-                                "hash": {
-                                    "examples": [
-                                        "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "properties": {
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|32bit|arm64)$": {
-                                            "allOf": [
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "url"
-                                                        ]
-                                                    },
-                                                    "errorMessage": "Property 'url' in 'architecture' conflicts with the top-level 'url'. You can only choose one way."
-                                                },
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "hash"
-                                                        ]
-                                                    },
-                                                    "errorMessage": "When the top-level 'url' is set, 'hash' in 'architecture' cannot be set."
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                },
-                "else": {
-                    "properties": {
-                        "architecture": {
-                            "$ref": "#/definitions/architecture_example",
-                            "patternProperties": {
-                                "^(64bit|32bit|arm64)$": {
-                                    "required": [
-                                        "url"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "If 'url' is set, when 'url' is a string, 'hash' must be a string, and when 'url' is an array, 'hash' must be an array.",
-                "allOf": [
-                    {
-                        "if": {
-                            "required": [
-                                "url"
-                            ]
-                        },
-                        "then": {
-                            "if": {
-                                "properties": {
-                                    "url": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "hash": {
-                                        "$ref": "#/definitions/str",
-                                        "errorMessage": "When 'url' is a string, 'hash' must be a string."
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "hash": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/definitions/hash"
-                                        },
-                                        "examples": [
-                                            []
-                                        ],
-                                        "minItems": 1,
-                                        "errorMessage": "When 'url' is an array, 'hash' must be an array."
-                                    }
-                                }
-                            }
-                        },
-                        "else": {
-                            "allOf": [
-                                {
-                                    "properties": {
-                                        "hash": {
-                                            "not": true,
-                                            "errorMessage": "When the top-level 'url' is not set, the top-level 'hash' cannot be set."
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "if": {
-                            "required": [
-                                "architecture"
-                            ]
-                        },
-                        "then": {
-                            "if": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|32bit|arm64)$": {
-                                                "properties": {
-                                                    "url": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|32bit|arm64)$": {
-                                                "required": [
-                                                    "hash"
-                                                ],
-                                                "properties": {
-                                                    "hash": {
-                                                        "$ref": "#/definitions/str",
-                                                        "errorMessage": "When 'url' in 'architecture' is a string, 'hash' in 'architecture' must be a string."
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|32bit|arm64)$": {
-                                                "required": [
-                                                    "hash"
-                                                ],
-                                                "properties": {
-                                                    "hash": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "$ref": "#/definitions/str"
-                                                        },
-                                                        "minItems": 1,
-                                                        "errorMessage": "When 'url' in 'architecture' is an array, 'hash' in 'architecture' must be an array."
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
                 ]
             },
             {
-                "$comment": "Ensure that the 'architecture' and 'autoupdate.architecture' are consistent.",
-                "if": {
-                    "required": [
-                        "autoupdate"
-                    ],
-                    "properties": {
-                        "autoupdate": {
-                            "required": [
-                                "architecture"
-                            ]
-                        }
-                    }
-                },
-                "then": {
-                    "allOf": [
-                        {
-                            "if": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "required": [
-                                                    "64bit"
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "required": [
-                                            "64bit"
-                                        ]
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "if": {
-                                            "required": [
-                                                "64bit"
-                                            ]
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "64bit": {
-                                                    "not": true,
-                                                    "errorMessage": "When 'autoupdate.architecture' does not set '64bit', 'architecture' must not set '64bit'."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "required": [
-                                                    "32bit"
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "required": [
-                                            "32bit"
-                                        ]
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "if": {
-                                            "required": [
-                                                "32bit"
-                                            ]
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "32bit": {
-                                                    "not": true,
-                                                    "errorMessage": "When 'autoupdate.architecture' does not set '32bit', 'architecture' must not set '32bit'."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "required": [
-                                                    "arm64"
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "required": [
-                                            "arm64"
-                                        ]
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "if": {
-                                            "required": [
-                                                "arm64"
-                                            ]
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "arm64": {
-                                                    "not": true,
-                                                    "errorMessage": "When 'autoupdate.architecture' does not set 'arm64', 'architecture' must not set 'arm64'."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                }
-            },
-            {
                 "$comment": "Some features of abyss",
                 "allOf": [
                     {
-                        "$comment": "Must use 'architecture'.",
-                        "if": {
-                            "required": [
-                                "url"
-                            ]
-                        },
-                        "then": {
-                            "properties": {
-                                "url": {
-                                    "not": true,
-                                    "errorMessage": "In abyss, the 'url' field is not allowed. Please use 'architecture'."
+                        "properties": {
+                            "license": {
+                                "not": {
+                                    "type": "string"
+                                },
+                                "errorMessage": "In abyss, it must be an object."
+                            },
+                            "url": {
+                                "not": true,
+                                "errorMessage": "In abyss, it is not allowed. Please use 'architecture'."
+                            },
+                            "depends": {
+                                "pattern": "^abyss/",
+                                "errorMessage": "Only abyss bucket applications are allowed as dependencies, such as: abyss/xxx",
+                                "items": {
+                                    "pattern": "^abyss/",
+                                    "errorMessage": "Only abyss bucket applications are allowed as dependencies, such as: abyss/xxx"
+                                }
+                            },
+                            "suggest": {
+                                "patternProperties": {
+                                    "^.+$": {
+                                        "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
+                                        "errorMessage": "Only applications in abyss or main bucket are allowed as suggestions, such as: abyss/xxx or xxx",
+                                        "items": {
+                                            "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
+                                            "errorMessage": "Only applications in abyss or main bucket are allowed as suggestions, such as: abyss/xxx or xxx"
+                                        }
+                                    }
+                                }
+                            },
+                            "architecture": {
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "32bit": {
+                                                "not": true,
+                                                "errorMessage": "In abyss, the '32bit' architecture is not allowed."
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "not": true,
+                                                        "errorMessage": "In abyss, it is not allowed to use pre_install in architecture.\nIf needed, it should be defined at the top level and different architectures should be distinguished through the $architecture variable."
+                                                    },
+                                                    "post_install": {
+                                                        "not": true,
+                                                        "errorMessage": "In abyss, it is not allowed to use post_install in architecture.\nIf needed, it should be defined at the top level and different architectures should be distinguished through the $architecture variable."
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "checkver": {
+                                "not": {
+                                    "type": "string"
+                                },
+                                "errorMessage": "It must be object",
+                                "properties": {
+                                    "url": {
+                                        "not": {
+                                            "pattern": "/:owner/:repo/"
+                                        },
+                                        "errorMessage": "':owner' and ':repo' are placeholders"
+                                    },
+                                    "github": {
+                                        "not": true,
+                                        "errorMessage": "In abyss, the 'github' field is not allowed to be used"
+                                    },
+                                    "re": {
+                                        "not": true,
+                                        "errorMessage": "In abyss, the 're' field is not allowed to be used, please use 'regex' field"
+                                    },
+                                    "jp": {
+                                        "not": true,
+                                        "errorMessage": "In abyss, the 'jp' field is not allowed to be used, please use 'jsonpath' field"
+                                    }
+                                }
+                            },
+                            "autoupdate": {
+                                "properties": {
+                                    "url": {
+                                        "not": true,
+                                        "errorMessage": "In abyss, the 'url' field is not allowed. Please use 'architecture'."
+                                    },
+                                    "architecture": {
+                                        "properties": {
+                                            "32bit": {
+                                                "not": true,
+                                                "errorMessage": "In abyss, the '32bit' architecture is not allowed."
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1962,7 +2037,7 @@
                                     },
                                     {
                                         "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
+                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                     },
                                     {
                                         "const": "A-Start-Install",
@@ -2118,7 +2193,7 @@
                                                 },
                                                 {
                                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
+                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Complete-Install",
@@ -2154,7 +2229,7 @@
                                     },
                                     {
                                         "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
+                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                     },
                                     {
                                         "const": "A-Start-Uninstall",
@@ -2292,7 +2367,7 @@
                                                 },
                                                 {
                                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in abyss are implemented based on it."
+                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Complete-Uninstall",
@@ -2808,117 +2883,286 @@
                         }
                     },
                     {
-                        "$comment": "It is not allowed to use pre_install and post_install in architecture. If necessary, they should be defined at the top level and different architectures should be distinguished through $architecture.",
-                        "if": {
-                            "required": [
-                                "architecture"
-                            ]
-                        },
-                        "then": {
-                            "properties": {
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|32bit|arm64)$": {
-                                            "allOf": [
+                        "$comment": "When the version is specific content, the corresponding replace must be defined in checkver.",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "version": {
+                                        "$ref": "#/definitions/str"
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^pending$",
+                                                    "errorMessage": "When the version is 'pending', it must be defined as 'pending' in checkver."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^renamed$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^renamed$",
+                                                    "errorMessage": "When the version is 'renamed', it must be defined as 'renamed' in checkver"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^deprecated$",
+                                                    "errorMessage": "When the version is 'deprecated', it must be defined as 'deprecated' in checkver."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "When the version is specific content, the url must be the specified content",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending|renamed|deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "items": {
+                                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                            },
+                                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                            "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                        },
+                                                        "hash": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "items": {
+                                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                            },
+                                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                            "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "pre_install": {
+                                            "if": {
+                                                "minItems": 3,
+                                                "maxItems": 3
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "When the version is pending|renamed|deprecated, the fourth item in the array must use A-Deny-Manifest"
+                                            },
+                                            "items": [
                                                 {
-                                                    "not": {
-                                                        "required": [
-                                                            "pre_install"
-                                                        ]
-                                                    },
-                                                    "errorMessage": "In abyss, it is not allowed to use pre_install in architecture.\nIf needed, it should be defined at the top level and different architectures should be distinguished through the $architecture variable."
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
                                                 },
                                                 {
-                                                    "not": {
-                                                        "required": [
-                                                            "post_install"
-                                                        ]
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest"
+                                                        }
                                                     },
-                                                    "errorMessage": "In abyss, the use of post_install in architecture is not allowed.\nIf needed, it should be defined at the top level and different architectures should be distinguished through the $architecture variable."
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "When the version is pending|renamed|deprecated, it must use A-Deny-Manifest"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending|deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest$"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "When the version is pending|deprecated, it must use A-Deny-Manifest"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^renamed$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "When the version is renamed, it must be \"A-Deny-Manifest 'xxx'\"\nHere 'xxx' is the new manifest name"
+                                                    }
                                                 }
                                             ]
                                         }
                                     }
                                 }
                             }
-                        }
+                        ]
                     },
                     {
                         "$comment": "Since the manifest is installed through decompression and extraction, it is necessary to use extract_to to specify the directory.",
                         "if": {
-                            "allOf": [
-                                {
-                                    "anyOf": [
-                                        {
-                                            "properties": {
-                                                "architecture": {
-                                                    "patternProperties": {
-                                                        "^(64bit|32bit|arm64)$": {
-                                                            "properties": {
-                                                                "url": {
-                                                                    "type": [
-                                                                        "string",
-                                                                        "array"
-                                                                    ],
-                                                                    "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
-                                                                    "items": {
-                                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "required": [
-                                                "innosetup"
-                                            ],
-                                            "properties": {
-                                                "innosetup": {
-                                                    "const": true
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "if": {
-                                        "required": [
-                                            "pre_install"
-                                        ]
-                                    },
-                                    "then": {
-                                        "not": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font|A-Add-MsixPackage)"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "not": {
-                                        "required": [
-                                            "psmodule"
-                                        ]
-                                    }
-                                }
-                            ]
-                        },
-                        "then": {
-                            "if": {
+                            "not": {
                                 "required": [
                                     "extract_to"
                                 ]
-                            },
-                            "else": {
-                                "not": true,
-                                "errorMessage": "It is necessary to use extract_to to specify the directory, which is usually \"app\""
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "innosetup": {
+                                    "not": {
+                                        "const": true
+                                    },
+                                    "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
+                                },
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "properties": {
+                                                "url": {
+                                                    "type": [
+                                                        "string",
+                                                        "array"
+                                                    ],
+                                                    "if": {
+                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
+                                                        "items": {
+                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
@@ -3203,333 +3447,65 @@
                         }
                     },
                     {
-                        "$comment": "When the version is specific content, the corresponding replace must be defined in checkver.",
-                        "allOf": [
-                            {
-                                "properties": {
-                                    "version": {
-                                        "$ref": "#/definitions/str"
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^pending$",
-                                                    "errorMessage": "When the version is 'pending', it must be defined as 'pending' in checkver."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^renamed$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^renamed$",
-                                                    "errorMessage": "When the version is 'renamed', it must be defined as 'renamed' in checkver"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^deprecated$",
-                                                    "errorMessage": "When the version is 'deprecated', it must be defined as 'deprecated' in checkver."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "When the version is specific content, the url must be the specified content",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending|renamed|deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": [
-                                                                "string",
-                                                                "array"
-                                                            ],
-                                                            "items": {
-                                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                            },
-                                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                            "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                        },
-                                                        "hash": {
-                                                            "type": [
-                                                                "string",
-                                                                "array"
-                                                            ],
-                                                            "items": {
-                                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                            },
-                                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                            "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "pre_install": {
-                                            "if": {
-                                                "minItems": 3,
-                                                "maxItems": 3
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "When the version is pending|renamed|deprecated, the fourth item in the array must use A-Deny-Manifest"
-                                            },
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "When the version is pending|renamed|deprecated, it must use A-Deny-Manifest"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending|deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_install": {
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest$"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "When the version is pending|deprecated, it must use A-Deny-Manifest"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^renamed$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_install": {
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "When the version is renamed, it must be \"A-Deny-Manifest 'xxx'\"\nHere 'xxx' is the new manifest name"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "To limit the depends and suggest properties",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "required": [
-                                        "depends"
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "depends": {
-                                            "pattern": "^abyss/",
-                                            "errorMessage": "Only abyss bucket applications are allowed as dependencies, such as: abyss/xxx",
-                                            "items": {
-                                                "pattern": "^abyss/",
-                                                "errorMessage": "Only abyss bucket applications are allowed as dependencies, such as: abyss/xxx"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "suggest"
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "suggest": {
-                                            "patternProperties": {
-                                                "^.+$": {
-                                                    "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
-                                                    "errorMessage": "Only applications in abyss or main bucket are allowed as suggestions, such as: abyss/xxx or xxx",
-                                                    "items": {
-                                                        "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
-                                                        "errorMessage": "Only applications in abyss or main bucket are allowed as suggestions, such as: abyss/xxx or xxx"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "To avoid potential manifest update issues in abyss, 32bit is not allowed to be used",
-                        "allOf": [
-                            {
-                                "properties": {
-                                    "architecture": {
-                                        "$ref": "#/definitions/architecture_example",
-                                        "not": {
-                                            "required": [
-                                                "32bit"
-                                            ]
-                                        },
-                                        "errorMessage": "To avoid potential manifest update issues in abyss, 32bit is not allowed to be used"
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "32bit"
-                                                    ]
-                                                },
-                                                "errorMessage": "To avoid potential manifest update issues in abyss, 32bit is not allowed to be used"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
                         "properties": {
                             "checkver": {
-                                "not": {
-                                    "type": "string"
-                                },
-                                "errorMessage": "It must be object"
+                                "properties": {
+                                    "script": {
+                                        "type": "array",
+                                        "minItems": 2,
+                                        "items": [
+                                            {
+                                                "const": ". \"$pwd\\bin\\utils.ps1\"",
+                                                "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                            }
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {},
+                                                        {
+                                                            "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                            "markdownDescription": "- Get installer information of specified application in Winget."
+                                                        },
+                                                        {
+                                                            "pattern": "$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                            "markdownDescription": "- Get installer information of specified application in Winget."
+                                                        },
+                                                        {
+                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                            "markdownDescription": "- Output version number of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output x64 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output x64 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output x86 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output x86 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output arm64 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output arm64 installer URL of specified application."
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
                             }
                         }
                     },
@@ -3556,6 +3532,14 @@
                         },
                         "then": {
                             "properties": {
+                                "checkver": {
+                                    "properties": {
+                                        "regex": {
+                                            "const": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+                                            "errorMessage": "Since A-Get-InstallerInfoFromWinget is used, it must be \"ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?\""
+                                        }
+                                    }
+                                },
                                 "autoupdate": {
                                     "properties": {
                                         "architecture": {
@@ -3585,57 +3569,52 @@
                     {
                         "properties": {
                             "checkver": {
-                                "properties": {
-                                    "url": {
-                                        "not": {
-                                            "pattern": "/:owner/:repo/"
-                                        },
-                                        "errorMessage": "':owner' and ':repo' are placeholders"
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ],
+                                    "properties": {
+                                        "url": {
+                                            "pattern": "https://github.com/[^/]+/[^/]+/releases[/]"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "regex": {
+                                            "if": {
+                                                "pattern": "^href=\\\"/[^/]+/[^/]+/tree/.*?\\(\\?:v\\|V\\)\\?\\(\\[\\^\\\"\\?\\]\\+\\)$"
+                                            },
+                                            "else": {
+                                                "not": true,
+                                                "errorMessage": "'url' uses GitHub Releases, regex must be \"href=\\\"/.+/.+/tree/(?:v|V)?([^\\\"?]+)\"\nOr based on it with a version prefix after /tree/, such as: \"href=\\\"/.+/.+/tree/desktop-(?:v|V)?([^\\\"?]+)\""
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     },
                     {
-                        "$comment": "To limit the available fields of checkver",
                         "properties": {
-                            "checkver": {
-                                "allOf": [
-                                    {
-                                        "if": {
-                                            "type": "string",
-                                            "const": "github"
-                                        },
-                                        "then": {
-                                            "not": true,
-                                            "errorMessage": "In abyss, the 'github' field is not allowed to be used"
-                                        }
-                                    },
-                                    {
-                                        "properties": {
-                                            "github": {
-                                                "not": true,
-                                                "errorMessage": "In abyss, the 'github' field is not allowed to be used"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "properties": {
-                                            "re": {
-                                                "not": true,
-                                                "errorMessage": "In abyss, the 're' field is not allowed to be used, please use 'regex' field"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "properties": {
-                                            "jp": {
-                                                "not": true,
-                                                "errorMessage": "In abyss, the 'jp' field is not allowed to be used, please use 'jsonpath' field"
+                            "autoupdate": {
+                                "required": [
+                                    "architecture"
+                                ],
+                                "properties": {
+                                    "architecture": {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "pattern": "\\$.+",
+                                                        "errorMessage": "It does not use dynamic version variables like $version. Please check carefully."
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                ]
+                                }
                             }
                         }
                     }

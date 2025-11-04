@@ -260,31 +260,7 @@
                         "markdownDescription": "- 软件许可证的 URL 地址。"
                     }
                 }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "required": [
-                            "identifier"
-                        ],
-                        "properties": {
-                            "identifier": {
-                                "pattern": "^(Freeware|Proprietary|Public Domain|Shareware|Freemium|Unknown)$"
-                            }
-                        }
-                    },
-                    "then": {
-                        "not": {
-                            "not": {
-                                "required": [
-                                    "url"
-                                ]
-                            }
-                        },
-                        "errorMessage": "license 使用对象，且 identifier 是 Freeware、Proprietary、Public Domain、Shareware、Freemium、Unknown 其中一个，此时必须提供 url，否则请使用字符串而非对象"
-                    }
-                }
-            ]
+            }
         },
         "notes": {
             "title": "软件提示信息",
@@ -858,7 +834,10 @@
                     "properties": {
                         "url": {
                             "markdownDescription": "- 版本所在页面",
-                            "$ref": "#/definitions/str"
+                            "$ref": "#/definitions/str",
+                            "examples": [
+                                "https://github.com/:owner/:repo/releases/latest"
+                            ]
                         },
                         "github": {
                             "markdownDescription": "- 应用的 github 仓库地址",
@@ -881,7 +860,10 @@
                         },
                         "regex": {
                             "markdownDescription": "- 查找版本的 RegEx (正则表达式)",
-                            "$ref": "#/definitions/str"
+                            "$ref": "#/definitions/str",
+                            "examples": [
+                                "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+                            ]
                         },
                         "jsonpath": {
                             "markdownDescription": "- 使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。",
@@ -1359,116 +1341,514 @@
     "then": {
         "allOf": [
             {
-                "$comment": "如果定义了 checkver，就必须定义 autoupdate",
+                "$comment": "标准规范",
                 "allOf": [
                     {
-                        "if": {
-                            "required": [
-                                "checkver"
-                            ]
-                        },
-                        "then": {
-                            "if": {
-                                "required": [
-                                    "autoupdate"
-                                ]
+                        "$comment": "如果定义了 checkver，就必须定义 autoupdate",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": [
+                                        "checkver"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "required": [
+                                            "autoupdate"
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "checkver": {
+                                                "not": true,
+                                                "errorMessage": "如果定义了 checkver，就必须定义 autoupdate"
+                                            }
+                                        }
+                                    }
+                                }
                             },
-                            "else": {
-                                "properties": {
-                                    "checkver": {
-                                        "not": true,
-                                        "errorMessage": "如果定义了 checkver，就必须定义 autoupdate"
+                            {
+                                "if": {
+                                    "required": [
+                                        "autoupdate"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "required": [
+                                            "checkver"
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "not": true,
+                                                "errorMessage": "如果定义了 autoupdate，就必须定义 checkver"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "如果 url 是 github releases 链接，则需要指定 hash 模式为 github",
+                        "properties": {
+                            "autoupdate": {
+                                "type": "object",
+                                "if": {
+                                    "oneOf": [
+                                        {
+                                            "required": [
+                                                "url"
+                                            ],
+                                            "properties": {
+                                                "url": {
+                                                    "$ref": "#/definitions/str",
+                                                    "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "required": [
+                                                "architecture"
+                                            ],
+                                            "properties": {
+                                                "architecture": {
+                                                    "type": "object",
+                                                    "anyOf": [
+                                                        {
+                                                            "required": [
+                                                                "64bit"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "32bit"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "arm64"
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "patternProperties": {
+                                                        "^(64bit|arm64|32bit)$": {
+                                                            "required": [
+                                                                "url"
+                                                            ],
+                                                            "properties": {
+                                                                "url": {
+                                                                    "oneOf": [
+                                                                        {
+                                                                            "$ref": "#/definitions/str",
+                                                                            "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                                        },
+                                                                        {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "$ref": "#/definitions/str",
+                                                                                "pattern": "^https://github\\.com/.+?/releases/download/"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "then": {
+                                    "required": [
+                                        "hash"
+                                    ],
+                                    "properties": {
+                                        "hash": {
+                                            "required": [
+                                                "mode"
+                                            ],
+                                            "properties": {
+                                                "mode": {
+                                                    "const": "github"
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     },
                     {
+                        "$comment": "如果存在 license，但不存在 url 或 architecture 就触发警告",
+                        "if": {
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "url"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "architecture"
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "then": {
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "not": {
+                                            "required": [
+                                                "url"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "not": {
+                                            "required": [
+                                                "architecture"
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            "errorMessage": "缺少 url 或 architecture 属性"
+                        }
+                    },
+                    {
+                        "$comment": "如果存在 url，则需要 hash，且不能在 architecture 中继续定义 url",
                         "if": {
                             "required": [
-                                "autoupdate"
+                                "url"
                             ]
                         },
                         "then": {
-                            "if": {
-                                "required": [
-                                    "checkver"
-                                ]
-                            },
-                            "else": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "not": true,
-                                        "errorMessage": "如果定义了 autoupdate，就必须定义 checkver"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "$comment": "如果 url 是 github releases 链接，则需要指定 hash 模式为 github",
-                "properties": {
-                    "autoupdate": {
-                        "type": "object",
-                        "if": {
-                            "oneOf": [
+                            "allOf": [
                                 {
                                     "required": [
-                                        "url"
+                                        "hash"
                                     ],
                                     "properties": {
-                                        "url": {
-                                            "$ref": "#/definitions/str",
-                                            "pattern": "^https://github\\.com/.+?/releases/download/"
+                                        "hash": {
+                                            "examples": [
+                                                "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                            ]
                                         }
                                     }
                                 },
                                 {
-                                    "required": [
-                                        "architecture"
-                                    ],
                                     "properties": {
                                         "architecture": {
-                                            "type": "object",
-                                            "anyOf": [
-                                                {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "allOf": [
+                                                        {
+                                                            "not": {
+                                                                "required": [
+                                                                    "url"
+                                                                ]
+                                                            },
+                                                            "errorMessage": "architecture 中的 url 和顶层的 url 冲突，你只能选择其中一种方式"
+                                                        },
+                                                        {
+                                                            "not": {
+                                                                "required": [
+                                                                    "hash"
+                                                                ]
+                                                            },
+                                                            "errorMessage": "当存在顶层 url 时，禁止定义 architecture 中的 hash"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "architecture": {
+                                    "$ref": "#/definitions/architecture_example",
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "required": [
+                                                "url"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "$comment": "如果存在 url，当 url 是字符串时，hash 必须是字符串，当 url 是数组时，hash 必须是数组",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "properties": {
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "hash": {
+                                                "$ref": "#/definitions/str",
+                                                "errorMessage": "当 url 是字符串 (string) 时，hash 也必须是一个字符串 (string)"
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "hash": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/definitions/hash"
+                                                },
+                                                "examples": [
+                                                    []
+                                                ],
+                                                "minItems": 1,
+                                                "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "hash": {
+                                                    "not": true,
+                                                    "errorMessage": "当不存在 url 时，禁止定义 hash"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": [
+                                        "architecture"
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "required": [
+                                                            "hash"
+                                                        ],
+                                                        "properties": {
+                                                            "hash": {
+                                                                "$ref": "#/definitions/str",
+                                                                "errorMessage": "当 architecture 中的 url 是字符串 (string) 时，architecture 中的 hash 也必须是一个字符串 (string)"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "required": [
+                                                            "hash"
+                                                        ],
+                                                        "properties": {
+                                                            "hash": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "$ref": "#/definitions/str"
+                                                                },
+                                                                "minItems": 1,
+                                                                "errorMessage": "当 architecture 中的 url 是数组 (array) 时，architecture 中的 hash 也必须是一个数组 (array)"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "确保 architecture 和 autoupdate 中的 architecture 相对应",
+                        "if": {
+                            "required": [
+                                "autoupdate"
+                            ],
+                            "properties": {
+                                "autoupdate": {
+                                    "required": [
+                                        "architecture"
+                                    ]
+                                }
+                            }
+                        },
+                        "then": {
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "required": [
+                                                            "64bit"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "required": [
+                                                    "64bit"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "if": {
                                                     "required": [
                                                         "64bit"
                                                     ]
                                                 },
-                                                {
+                                                "then": {
+                                                    "properties": {
+                                                        "64bit": {
+                                                            "not": true,
+                                                            "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "required": [
+                                                            "32bit"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "required": [
+                                                    "32bit"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "if": {
                                                     "required": [
                                                         "32bit"
                                                     ]
                                                 },
-                                                {
+                                                "then": {
+                                                    "properties": {
+                                                        "32bit": {
+                                                            "not": true,
+                                                            "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "autoupdate": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "required": [
+                                                            "arm64"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "architecture": {
+                                                "required": [
+                                                    "arm64"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "if": {
                                                     "required": [
                                                         "arm64"
                                                     ]
-                                                }
-                                            ],
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "required": [
-                                                        "url"
-                                                    ],
+                                                },
+                                                "then": {
                                                     "properties": {
-                                                        "url": {
-                                                            "oneOf": [
-                                                                {
-                                                                    "$ref": "#/definitions/str",
-                                                                    "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                                },
-                                                                {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "$ref": "#/definitions/str",
-                                                                        "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                                    }
-                                                                }
-                                                            ]
+                                                        "arm64": {
+                                                            "not": true,
+                                                            "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
                                                         }
                                                     }
                                                 }
@@ -1477,418 +1857,113 @@
                                     }
                                 }
                             ]
-                        },
-                        "then": {
-                            "required": [
-                                "hash"
-                            ],
-                            "properties": {
-                                "hash": {
-                                    "required": [
-                                        "mode"
-                                    ],
-                                    "properties": {
-                                        "mode": {
-                                            "const": "github"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "如果存在 license，但不存在 url 或 architecture 就触发警告",
-                "if": {
-                    "not": {
-                        "anyOf": [
-                            {
-                                "required": [
-                                    "url"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "architecture"
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "then": {
-                    "not": {
-                        "anyOf": [
-                            {
-                                "not": {
-                                    "required": [
-                                        "url"
-                                    ]
-                                }
-                            },
-                            {
-                                "not": {
-                                    "required": [
-                                        "architecture"
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "errorMessage": "缺少 url 或 architecture 属性"
-                }
-            },
-            {
-                "$comment": "如果存在 url，则需要 hash，且不能在 architecture 中继续定义 url",
-                "if": {
-                    "required": [
-                        "url"
-                    ]
-                },
-                "then": {
-                    "allOf": [
-                        {
-                            "required": [
-                                "hash"
-                            ],
-                            "properties": {
-                                "hash": {
-                                    "examples": [
-                                        "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "properties": {
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|32bit|arm64)$": {
-                                            "allOf": [
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "url"
-                                                        ]
-                                                    },
-                                                    "errorMessage": "architecture 中的 url 和顶层的 url 冲突，你只能选择其中一种方式"
-                                                },
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "hash"
-                                                        ]
-                                                    },
-                                                    "errorMessage": "当存在顶层 url 时，禁止定义 architecture 中的 hash"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                },
-                "else": {
-                    "properties": {
-                        "architecture": {
-                            "$ref": "#/definitions/architecture_example",
-                            "patternProperties": {
-                                "^(64bit|32bit|arm64)$": {
-                                    "required": [
-                                        "url"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "$comment": "如果存在 url，当 url 是字符串时，hash 必须是字符串，当 url 是数组时，hash 必须是数组",
-                "allOf": [
-                    {
-                        "if": {
-                            "required": [
-                                "url"
-                            ]
-                        },
-                        "then": {
-                            "if": {
-                                "properties": {
-                                    "url": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "hash": {
-                                        "$ref": "#/definitions/str",
-                                        "errorMessage": "当 url 是字符串 (string) 时，hash 也必须是一个字符串 (string)"
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "hash": {
-                                        "type": "array",
-                                        "items": {
-                                            "$ref": "#/definitions/hash"
-                                        },
-                                        "examples": [
-                                            []
-                                        ],
-                                        "minItems": 1,
-                                        "errorMessage": "当 url 是数组 (array) 时，hash 也必须是一个数组 (array)"
-                                    }
-                                }
-                            }
-                        },
-                        "else": {
-                            "allOf": [
-                                {
-                                    "properties": {
-                                        "hash": {
-                                            "not": true,
-                                            "errorMessage": "当不存在 url 时，禁止定义 hash"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "if": {
-                            "required": [
-                                "architecture"
-                            ]
-                        },
-                        "then": {
-                            "if": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|32bit|arm64)$": {
-                                                "properties": {
-                                                    "url": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|32bit|arm64)$": {
-                                                "required": [
-                                                    "hash"
-                                                ],
-                                                "properties": {
-                                                    "hash": {
-                                                        "$ref": "#/definitions/str",
-                                                        "errorMessage": "当 architecture 中的 url 是字符串 (string) 时，architecture 中的 hash 也必须是一个字符串 (string)"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|32bit|arm64)$": {
-                                                "required": [
-                                                    "hash"
-                                                ],
-                                                "properties": {
-                                                    "hash": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "$ref": "#/definitions/str"
-                                                        },
-                                                        "minItems": 1,
-                                                        "errorMessage": "当 architecture 中的 url 是数组 (array) 时，architecture 中的 hash 也必须是一个数组 (array)"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
                 ]
             },
             {
-                "$comment": "确保 architecture 和 autoupdate 中的 architecture 相对应",
-                "if": {
-                    "required": [
-                        "autoupdate"
-                    ],
-                    "properties": {
-                        "autoupdate": {
-                            "required": [
-                                "architecture"
-                            ]
-                        }
-                    }
-                },
-                "then": {
-                    "allOf": [
-                        {
-                            "if": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "required": [
-                                                    "64bit"
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "required": [
-                                            "64bit"
-                                        ]
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "if": {
-                                            "required": [
-                                                "64bit"
-                                            ]
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "64bit": {
-                                                    "not": true,
-                                                    "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "required": [
-                                                    "32bit"
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "required": [
-                                            "32bit"
-                                        ]
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "if": {
-                                            "required": [
-                                                "32bit"
-                                            ]
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "32bit": {
-                                                    "not": true,
-                                                    "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "if": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "required": [
-                                                    "arm64"
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "architecture": {
-                                        "required": [
-                                            "arm64"
-                                        ]
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "if": {
-                                            "required": [
-                                                "arm64"
-                                            ]
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "arm64": {
-                                                    "not": true,
-                                                    "errorMessage": "autoupdate 中的 architecture 没有定义对应的架构"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                }
-            },
-            {
                 "$comment": "abyss 特性",
                 "allOf": [
                     {
-                        "$comment": "必须使用 architecture 明确指定架构",
-                        "if": {
-                            "required": [
-                                "url"
-                            ]
-                        },
-                        "then": {
-                            "properties": {
-                                "url": {
-                                    "not": true,
-                                    "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
+                        "properties": {
+                            "license": {
+                                "not": {
+                                    "type": "string"
+                                },
+                                "errorMessage": "abyss 中它必须是一个对象"
+                            },
+                            "url": {
+                                "not": true,
+                                "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
+                            },
+                            "depends": {
+                                "pattern": "^abyss/",
+                                "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx",
+                                "items": {
+                                    "pattern": "^abyss/",
+                                    "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx"
+                                }
+                            },
+                            "suggest": {
+                                "patternProperties": {
+                                    "^.+$": {
+                                        "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
+                                        "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx",
+                                        "items": {
+                                            "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
+                                            "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx"
+                                        }
+                                    }
+                                }
+                            },
+                            "architecture": {
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "32bit": {
+                                                "not": true,
+                                                "errorMessage": "abyss 中不允许使用 32bit 架构"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "not": true,
+                                                        "errorMessage": "abyss 中不允许在 architecture 中使用 pre_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                    },
+                                                    "post_install": {
+                                                        "not": true,
+                                                        "errorMessage": "abyss 中不允许在 architecture 中使用 post_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "checkver": {
+                                "not": {
+                                    "type": "string"
+                                },
+                                "errorMessage": "checkver 必须是对象",
+                                "properties": {
+                                    "url": {
+                                        "not": {
+                                            "pattern": "/:owner/:repo/"
+                                        },
+                                        "errorMessage": ":owner 和 :repo 是占位符"
+                                    },
+                                    "github": {
+                                        "not": true,
+                                        "errorMessage": "abyss 中不允许使用 github 字段"
+                                    },
+                                    "re": {
+                                        "not": true,
+                                        "errorMessage": "abyss 中不允许使用 re 字段，请使用 regex 字段"
+                                    },
+                                    "jp": {
+                                        "not": true,
+                                        "errorMessage": "abyss 中不允许使用 jp 字段，请使用 jsonpath 字段"
+                                    }
+                                }
+                            },
+                            "autoupdate": {
+                                "properties": {
+                                    "url": {
+                                        "not": true,
+                                        "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
+                                    },
+                                    "architecture": {
+                                        "properties": {
+                                            "32bit": {
+                                                "not": true,
+                                                "errorMessage": "abyss 中不允许使用 32bit 架构"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -2807,117 +2882,286 @@
                         }
                     },
                     {
-                        "$comment": "不允许在 architecture 中使用 pre_install 和 post_install，如果需要，应该在顶层定义，并通过 $architecture 区分不同架构",
-                        "if": {
-                            "required": [
-                                "architecture"
-                            ]
-                        },
-                        "then": {
-                            "properties": {
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|32bit|arm64)$": {
-                                            "allOf": [
+                        "$comment": "当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "version": {
+                                        "$ref": "#/definitions/str"
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^pending$",
+                                                    "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^renamed$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^renamed$",
+                                                    "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "checkver": {
+                                            "required": [
+                                                "replace"
+                                            ],
+                                            "properties": {
+                                                "replace": {
+                                                    "pattern": "^deprecated$",
+                                                    "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "$comment": "当 version 为特定内容时，url 必须为指定内容",
+                        "allOf": [
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending|renamed|deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "items": {
+                                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                            },
+                                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                        },
+                                                        "hash": {
+                                                            "type": [
+                                                                "string",
+                                                                "array"
+                                                            ],
+                                                            "items": {
+                                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                            },
+                                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "pre_install": {
+                                            "if": {
+                                                "minItems": 3,
+                                                "maxItems": 3
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "version 为 pending|renamed|deprecated 时，数组的第四项必须使用 A-Deny-Manifest"
+                                            },
+                                            "items": [
                                                 {
-                                                    "not": {
-                                                        "required": [
-                                                            "pre_install"
-                                                        ]
-                                                    },
-                                                    "errorMessage": "abyss 中不允许在 architecture 中使用 pre_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
                                                 },
                                                 {
-                                                    "not": {
-                                                        "required": [
-                                                            "post_install"
-                                                        ]
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest"
+                                                        }
                                                     },
-                                                    "errorMessage": "abyss 中不允许在 architecture 中使用 post_install，如果需要，应该在顶层定义，并通过 $architecture 变量区分不同架构"
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，此项必须使用 A-Deny-Manifest"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^pending|deprecated$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest$"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "version 为 pending|deprecated 时，此项只能是 A-Deny-Manifest"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "version": {
+                                            "pattern": "^renamed$"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "items": [
+                                                {
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
+                                                },
+                                                {
+                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
+                                                },
+                                                {
+                                                    "const": "A-Start-Install"
+                                                },
+                                                {
+                                                    "if": {
+                                                        "not": {
+                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "version 为 renamed 时，此项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
+                                                    }
                                                 }
                                             ]
                                         }
                                     }
                                 }
                             }
-                        }
+                        ]
                     },
                     {
                         "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
                         "if": {
-                            "allOf": [
-                                {
-                                    "anyOf": [
-                                        {
-                                            "properties": {
-                                                "architecture": {
-                                                    "patternProperties": {
-                                                        "^(64bit|32bit|arm64)$": {
-                                                            "properties": {
-                                                                "url": {
-                                                                    "type": [
-                                                                        "string",
-                                                                        "array"
-                                                                    ],
-                                                                    "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
-                                                                    "items": {
-                                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "required": [
-                                                "innosetup"
-                                            ],
-                                            "properties": {
-                                                "innosetup": {
-                                                    "const": true
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "if": {
-                                        "required": [
-                                            "pre_install"
-                                        ]
-                                    },
-                                    "then": {
-                                        "not": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font|A-Add-MsixPackage)"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "not": {
-                                        "required": [
-                                            "psmodule"
-                                        ]
-                                    }
-                                }
-                            ]
-                        },
-                        "then": {
-                            "if": {
+                            "not": {
                                 "required": [
                                     "extract_to"
                                 ]
-                            },
-                            "else": {
-                                "not": true,
-                                "errorMessage": "需要使用 extract_to 指定目录，通常为 app"
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "innosetup": {
+                                    "not": {
+                                        "const": true
+                                    },
+                                    "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app"
+                                },
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "properties": {
+                                                "url": {
+                                                    "type": [
+                                                        "string",
+                                                        "array"
+                                                    ],
+                                                    "if": {
+                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
+                                                        "items": {
+                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
@@ -3202,333 +3446,65 @@
                         }
                     },
                     {
-                        "$comment": "当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
-                        "allOf": [
-                            {
-                                "properties": {
-                                    "version": {
-                                        "$ref": "#/definitions/str"
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^pending$",
-                                                    "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^renamed$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^renamed$",
-                                                    "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^deprecated$",
-                                                    "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "当 version 为特定内容时，url 必须为指定内容",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending|renamed|deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": [
-                                                                "string",
-                                                                "array"
-                                                            ],
-                                                            "items": {
-                                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                            },
-                                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                        },
-                                                        "hash": {
-                                                            "type": [
-                                                                "string",
-                                                                "array"
-                                                            ],
-                                                            "items": {
-                                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                                            },
-                                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "pre_install": {
-                                            "if": {
-                                                "minItems": 3,
-                                                "maxItems": 3
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "version 为 pending|renamed|deprecated 时，数组的第四项必须使用 A-Deny-Manifest"
-                                            },
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，此项必须使用 A-Deny-Manifest"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending|deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_install": {
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest$"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "version 为 pending|deprecated 时，此项只能是 A-Deny-Manifest"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^renamed$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_install": {
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "version 为 renamed 时，此项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "限制 depends 和 suggest 的写法",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "required": [
-                                        "depends"
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "depends": {
-                                            "pattern": "^abyss/",
-                                            "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx",
-                                            "items": {
-                                                "pattern": "^abyss/",
-                                                "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "suggest"
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "suggest": {
-                                            "patternProperties": {
-                                                "^.+$": {
-                                                    "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
-                                                    "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx",
-                                                    "items": {
-                                                        "pattern": "^(?=abyss/|[^/\\\\]+$).+$",
-                                                        "errorMessage": "只能建议 abyss 或 main 中的应用清单，如: abyss/xxx 或 xxx"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit",
-                        "allOf": [
-                            {
-                                "properties": {
-                                    "architecture": {
-                                        "$ref": "#/definitions/architecture_example",
-                                        "not": {
-                                            "required": [
-                                                "32bit"
-                                            ]
-                                        },
-                                        "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "32bit"
-                                                    ]
-                                                },
-                                                "errorMessage": "为了避免后续可能的清单更新问题，abyss 中不允许去适配 32bit"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
                         "properties": {
                             "checkver": {
-                                "not": {
-                                    "type": "string"
-                                },
-                                "errorMessage": "checkver 必须是对象"
+                                "properties": {
+                                    "script": {
+                                        "type": "array",
+                                        "minItems": 2,
+                                        "items": [
+                                            {
+                                                "const": ". \"$pwd\\bin\\utils.ps1\"",
+                                                "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                            }
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {},
+                                                        {
+                                                            "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                            "markdownDescription": "- 获取 Winget 中指定应用的安装信息"
+                                                        },
+                                                        {
+                                                            "pattern": "$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                            "markdownDescription": "- 获取 Winget 中指定应用的安装信息"
+                                                        },
+                                                        {
+                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                            "markdownDescription": "- 输出应用的版本号"
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 x64 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 x64 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 x86 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 x86 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 arm64 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 arm64 安装程序 URL"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
                             }
                         }
                     },
@@ -3555,6 +3531,14 @@
                         },
                         "then": {
                             "properties": {
+                                "checkver": {
+                                    "properties": {
+                                        "regex": {
+                                            "const": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
+                                            "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，regex 只能是 \"ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?\""
+                                        }
+                                    }
+                                },
                                 "autoupdate": {
                                     "properties": {
                                         "architecture": {
@@ -3584,57 +3568,52 @@
                     {
                         "properties": {
                             "checkver": {
-                                "properties": {
-                                    "url": {
-                                        "not": {
-                                            "pattern": "/:owner/:repo/"
-                                        },
-                                        "errorMessage": ":owner 和 :repo 是占位符"
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ],
+                                    "properties": {
+                                        "url": {
+                                            "pattern": "https://github.com/[^/]+/[^/]+/releases[/]"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "regex": {
+                                            "if": {
+                                                "pattern": "^href=\\\"/[^/]+/[^/]+/tree/.*?\\(\\?:v\\|V\\)\\?\\(\\[\\^\\\"\\?\\]\\+\\)$"
+                                            },
+                                            "else": {
+                                                "not": true,
+                                                "errorMessage": "url 使用了 GitHub Releases，regex 只能是 \"href=\\\"/.+/.+/tree/(?:v|V)?([^\\\"?]+)\"\n或者基于它在 /tree/ 后接版本前缀，如: \"href=\\\"/.+/.+/tree/desktop-(?:v|V)?([^\\\"?]+)\""
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     },
                     {
-                        "$comment": "限制 checkver 的可用字段",
                         "properties": {
-                            "checkver": {
-                                "allOf": [
-                                    {
-                                        "if": {
-                                            "type": "string",
-                                            "const": "github"
-                                        },
-                                        "then": {
-                                            "not": true,
-                                            "errorMessage": "abyss 中不允许使用 github 字段"
-                                        }
-                                    },
-                                    {
-                                        "properties": {
-                                            "github": {
-                                                "not": true,
-                                                "errorMessage": "abyss 中不允许使用 github 字段"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "properties": {
-                                            "re": {
-                                                "not": true,
-                                                "errorMessage": "abyss 中不允许使用 re 字段，请使用 regex 字段"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "properties": {
-                                            "jp": {
-                                                "not": true,
-                                                "errorMessage": "abyss 中不允许使用 jp 字段，请使用 jsonpath 字段"
+                            "autoupdate": {
+                                "required": [
+                                    "architecture"
+                                ],
+                                "properties": {
+                                    "architecture": {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "pattern": "\\$.+",
+                                                        "errorMessage": "它没有使用 $version 这样的动态版本变量，请仔细检查"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                ]
+                                }
                             }
                         }
                     }
