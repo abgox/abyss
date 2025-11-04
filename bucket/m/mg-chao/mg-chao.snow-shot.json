@@ -1,0 +1,63 @@
+{
+    "version": "0.7.5-beta",
+    "description": "功能强大的截图工具 | Powerful screenshot tool",
+    "homepage": "https://snowshot.top/",
+    "license": {
+        "identifier": "Apache-2.0|GPL-3.0-only",
+        "url": "https://github.com/mg-chao/snow-shot/blob/main/LICENSE-NonCommercial"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mg-chao/snow-shot/releases/download/v0.7.5-beta/Snow.Shot_0.7.5-beta_x64-setup_windows.exe",
+            "hash": "35abfa53dc309e1e9ec0583bc2d35bf7206a3799c2c6d5a261f0a252cabbf2ce"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\snowshot.exe",
+            "Snow Shot"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.chao.snowshot\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.chao.snowshot\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/mg-chao/snow-shot/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mg-chao/snow-shot/releases/download/v$version/Snow.Shot_$version_x64-setup_windows.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
