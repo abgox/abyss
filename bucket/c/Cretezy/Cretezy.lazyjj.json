@@ -1,0 +1,52 @@
+{
+    "version": "0.5.0",
+    "description": "Jujutsu/jj 的终端用户界面 (TUI) | TUI for Jujutsu/jj.",
+    "homepage": "https://github.com/Cretezy/lazyjj",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/Cretezy/lazyjj/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Cretezy/lazyjj/releases/download/v0.5.0/lazyjj-v0.5.0-x86_64-pc-windows-msvc.zip",
+            "hash": "787bcf5f6975c445d191985e2da053ff62d1209cfa76185b51bba096304e8a5c"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\lazyjj.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Cretezy/lazyjj/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Cretezy/lazyjj/releases/download/v$version/lazyjj-v$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
