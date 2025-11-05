@@ -1113,9 +1113,21 @@
             "allOf": [
                 {
                     "not": {
-                        "const": "描述 | Description"
+                        "const": "描述 | description"
                     },
                     "errorMessage": "Please modify the description"
+                },
+                {
+                    "not": {
+                        "pattern": "^描述 \\|"
+                    },
+                    "errorMessage": "Please modify the Chinese description"
+                },
+                {
+                    "not": {
+                        "pattern": "\\| description$"
+                    },
+                    "errorMessage": "Please modify the English description"
                 },
                 {
                     "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
@@ -1475,6 +1487,20 @@
                                             "properties": {
                                                 "mode": {
                                                     "const": "github"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "hash": {
+                                            "properties": {
+                                                "mode": {
+                                                    "not": {
+                                                        "const": "github"
+                                                    },
+                                                    "errorMessage": "'url' is not a standard Github Releases, so cannot use 'github'."
                                                 }
                                             }
                                         }
@@ -3477,12 +3503,12 @@
                                                             "markdownDescription": "- Output version number of specified application."
                                                         },
                                                         {
-                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
                                                             "markdownDescription": "- Output x64 installer URL of specified application."
                                                         },
                                                         {
-                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "- Output x64 installer URL of specified application."
+                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- Output x64 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                         },
                                                         {
                                                             "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
@@ -3490,7 +3516,7 @@
                                                         },
                                                         {
                                                             "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- Output x86 installer URL of specified application."
+                                                            "markdownDescription": "- Output x86 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                         },
                                                         {
                                                             "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
@@ -3498,7 +3524,7 @@
                                                         },
                                                         {
                                                             "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- Output arm64 installer URL of specified application."
+                                                            "markdownDescription": "- Output arm64 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                         }
                                                     ]
                                                 }
@@ -3549,11 +3575,29 @@
                                                         "hash"
                                                     ],
                                                     "properties": {
+                                                        "url": {
+                                                            "examples": [
+                                                                "$matchX64",
+                                                                "$matchArm64",
+                                                                "$matchX86"
+                                                            ]
+                                                        },
                                                         "hash": {
                                                             "properties": {
                                                                 "url": {
                                                                     "const": "temp-autoupdate.json",
                                                                     "errorMessage": "Since A-Get-InstallerInfoFromWinget is used, 'hash.url' must be temp-autoupdate.json"
+                                                                },
+                                                                "jsonpath": {
+                                                                    "enum": [
+                                                                        "$.x64_machine.InstallerSha256",
+                                                                        "$.arm64_machine.InstallerSha256",
+                                                                        "$.x86_machine.InstallerSha256",
+                                                                        "$.x64_user.InstallerSha256",
+                                                                        "$.arm64_user.InstallerSha256",
+                                                                        "$.x86_user.InstallerSha256"
+                                                                    ],
+                                                                    "markdownDescription": "hash\n- If no clear scope, use `machine`."
                                                                 }
                                                             }
                                                         }

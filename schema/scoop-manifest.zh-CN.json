@@ -1113,9 +1113,21 @@
             "allOf": [
                 {
                     "not": {
-                        "const": "描述 | Description"
+                        "const": "描述 | description"
                     },
                     "errorMessage": "请修改描述"
+                },
+                {
+                    "not": {
+                        "pattern": "^描述 \\|"
+                    },
+                    "errorMessage": "请修改中文描述"
+                },
+                {
+                    "not": {
+                        "pattern": "\\| description$"
+                    },
+                    "errorMessage": "请修改英文描述"
                 },
                 {
                     "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
@@ -1475,6 +1487,20 @@
                                             "properties": {
                                                 "mode": {
                                                     "const": "github"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "hash": {
+                                            "properties": {
+                                                "mode": {
+                                                    "not": {
+                                                        "const": "github"
+                                                    },
+                                                    "errorMessage": "url 不是标准的 Github Releases，不能使用 github"
                                                 }
                                             }
                                         }
@@ -3476,12 +3502,12 @@
                                                             "markdownDescription": "- 输出应用的版本号"
                                                         },
                                                         {
-                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
                                                             "markdownDescription": "- 输出应用的 x64 安装程序 URL"
                                                         },
                                                         {
-                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 x64 安装程序 URL"
+                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "- 输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
                                                         },
                                                         {
                                                             "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
@@ -3489,7 +3515,7 @@
                                                         },
                                                         {
                                                             "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 x86 安装程序 URL"
+                                                            "markdownDescription": "- 输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
                                                         },
                                                         {
                                                             "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
@@ -3497,7 +3523,7 @@
                                                         },
                                                         {
                                                             "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 arm64 安装程序 URL"
+                                                            "markdownDescription": "- 输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
                                                         }
                                                     ]
                                                 }
@@ -3548,11 +3574,29 @@
                                                         "hash"
                                                     ],
                                                     "properties": {
+                                                        "url": {
+                                                            "examples": [
+                                                                "$matchX64",
+                                                                "$matchArm64",
+                                                                "$matchX86"
+                                                            ]
+                                                        },
                                                         "hash": {
                                                             "properties": {
                                                                 "url": {
                                                                     "const": "temp-autoupdate.json",
                                                                     "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 temp-autoupdate.json"
+                                                                },
+                                                                "jsonpath": {
+                                                                    "enum": [
+                                                                        "$.x64_machine.InstallerSha256",
+                                                                        "$.arm64_machine.InstallerSha256",
+                                                                        "$.x86_machine.InstallerSha256",
+                                                                        "$.x64_user.InstallerSha256",
+                                                                        "$.arm64_user.InstallerSha256",
+                                                                        "$.x86_user.InstallerSha256"
+                                                                    ],
+                                                                    "markdownDescription": "指定 hash\n- 如果没有明确的 scope，需要使用 machine"
                                                                 }
                                                             }
                                                         }
