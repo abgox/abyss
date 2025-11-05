@@ -9,17 +9,17 @@ on:
     types: [completed]
 
 concurrency:
-  group: sync-gitee-${{ github.ref }}
-  cancel-in-progress: false
+  group: sync-gitee
 
 jobs:
   sync-repos:
     runs-on: ubuntu-latest
     steps:
-      - uses: wearerequired/git-mirror-action@v1
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
-          # SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      - uses: Yikun/hub-mirror-action@master
         with:
-          source-repo: https://github.com/abgox/abyss.git
-          destination-repo: git@gitee.com:abgox/abyss.git
+          src: github/abgox
+          dst: gitee/abgox
+          dst_key: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+          dst_token: ""
+          force_update: true
+          static_list: "abyss"
