@@ -1,5 +1,5 @@
 {
-    "version": "2.0.0.3",
+    "version": "2.1.8.4",
     "description": "一个功能强大使用简单的截图/贴图/录屏工具 | A powerful and simple screenshot/stick/screen recording tool.",
     "homepage": "https://pixpin.cn/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.pixpin.cn/PixPin_2.0.0.3.exe",
-            "hash": "5af3c96e4cc74f96a18aa9e5a64eca87e8c108c3ef92245277eb3bfe74286e2c"
+            "url": "https://download.pixpinapp.com/PixPin_cn_zh-cn_2.1.8.4.exe",
+            "hash": "b8d88e6bab886a0b28ae133f2cb1d167253067d9a691b7137ae123baf13e3a40"
         }
     },
     "bin": "app\\PixPin.exe",
@@ -23,6 +23,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-Require-Admin",
         "A-New-LinkDirectory @(\"$env:LocalAppData\\PixPin\")",
         "A-Install-Exe inno"
     ],
@@ -35,6 +36,7 @@
         "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')"
@@ -45,13 +47,24 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://api.viewdepth.cn/app_info?app_id=pixpin&update_type=0&sys=win&ver=0",
-        "jsonpath": "$.ver_info.version"
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'PixPin.PixPin' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://download.pixpin.cn/PixPin_$version.exe"
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
             }
         }
     }
