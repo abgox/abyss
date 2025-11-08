@@ -1,0 +1,61 @@
+{
+    "version": "1.4.7",
+    "description": "一个跨平台的音乐播放器应用，提供插件运行框架与播放功能 | A cross-platform music player application that provides a plug-in running framework and playback functions.",
+    "homepage": "https://ceru.docs.shiqianjiang.cn/",
+    "license": {
+        "identifier": "Apache-2.0",
+        "url": "https://github.com/timeshiftsauce/CeruMusic/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/timeshiftsauce/CeruMusic/releases/download/v1.4.7/ceru-music-1.4.7-win-x64-setup.exe",
+            "hash": "a2c9561232c557a1577c12d26a3b895f779f11885aa500cf369224662a764074"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\ceru-music.exe",
+            "澜音"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\ceru-music\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall ceru-music.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\ceru-music-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/timeshiftsauce/CeruMusic/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/timeshiftsauce/CeruMusic/releases/download/v$version/ceru-music-$version-win-x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
