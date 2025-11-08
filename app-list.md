@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (420)|Tag|Description|
+|App (421)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "Click to access the repository or homepage")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|A cloud storage service product.|
 |[1History.1History](https://github.com/1History/1History "Click to access the repository or homepage")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|A command line tool to backup your different browser histories into one file, and visualize them.|
@@ -453,6 +453,7 @@
 |[zhanglun.Lettura](https://github.com/zhanglun/lettura "Click to access the repository or homepage")|<a href="./bucket/z/zhanglun/zhanglun.Lettura.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open-source feed reader.|
 |[zhongyang219.MusicPlayer2](https://github.com/zhongyang219/MusicPlayer2 "Click to access the repository or homepage")|<a href="./bucket/z/zhongyang219/zhongyang219.MusicPlayer2.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Audio player which supports music collection playback, lyrics display, format conversion and many other functions.|
 |[zhongyang219.TrafficMonitor.Full](https://github.com/zhongyang219/TrafficMonitor "Click to access the repository or homepage")|<a href="./bucket/z/zhongyang219/zhongyang219.TrafficMonitor.Full.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A desktop widget that displays current network speed, CPU and memory usage, and supports taskbar display. It also supports skin replacement.|
+|[Zoid.Meru](https://meru.so/ "Click to access the repository or homepage")|<a href="./bucket/z/Zoid/Zoid.Meru.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open-source desktop application that brings your Gmail experience out of the browser and onto your desktop.|
 |[zufuliu.notepad4](https://github.com/zufuliu/notepad4 "Click to access the repository or homepage")|<a href="./bucket/z/zufuliu/zufuliu.notepad4.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Light-weight Scintilla based text editor.|
 
 <!-- prettier-ignore-end -->

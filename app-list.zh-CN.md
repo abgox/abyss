@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (420)|Tag|Description|
+|App (421)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -453,6 +453,7 @@
 |[zhanglun.Lettura](https://github.com/zhanglun/lettura "点击访问仓库或主页")|<a href="./bucket/z/zhanglun/zhanglun.Lettura.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费开源的 RSS 阅读器|
 |[zhongyang219.MusicPlayer2](https://github.com/zhongyang219/MusicPlayer2 "点击访问仓库或主页")|<a href="./bucket/z/zhongyang219/zhongyang219.MusicPlayer2.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款集音乐播放、歌词显示、格式转换等众多功能于一身的音频播放软件|
 |[zhongyang219.TrafficMonitor.Full](https://github.com/zhongyang219/TrafficMonitor "点击访问仓库或主页")|<a href="./bucket/z/zhongyang219/zhongyang219.TrafficMonitor.Full.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个用于显示当前网速、CPU及内存利用率的桌面悬浮窗软件，并支持任务栏显示，支持更换皮肤|
+|[Zoid.Meru](https://meru.so/ "点击访问仓库或主页")|<a href="./bucket/z/Zoid/Zoid.Meru.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源桌面应用程序，它将您的 Gmail 使用体验从浏览器带到桌面|
 |[zufuliu.notepad4](https://github.com/zufuliu/notepad4 "点击访问仓库或主页")|<a href="./bucket/z/zufuliu/zufuliu.notepad4.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个轻量级的基于 Scintilla 的文本编辑器|
 
 <!-- prettier-ignore-end -->
