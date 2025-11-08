@@ -3163,32 +3163,44 @@
                                     "not": {
                                         "const": true
                                     },
-                                    "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
-                                },
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|arm64|32bit)$": {
-                                            "properties": {
-                                                "url": {
-                                                    "type": [
-                                                        "string",
-                                                        "array"
-                                                    ],
-                                                    "if": {
-                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
-                                                        "items": {
-                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": {
-                                                            "not": {
-                                                                "required": [
-                                                                    "psmodule"
-                                                                ]
+                                    "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\"",
+                                    "examples": [
+                                        true
+                                    ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "psmodule"
+                                ]
+                            },
+                            "else": {
+                                "properties": {
+                                    "architecture": {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": [
+                                                            "string",
+                                                            "array"
+                                                        ],
+                                                        "if": {
+                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
+                                                            "items": {
+                                                                "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
                                                             }
                                                         },
-                                                        "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
+                                                        "then": {
+                                                            "not": {
+                                                                "not": {
+                                                                    "required": [
+                                                                        "psmodule"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
+                                                        }
                                                     }
                                                 }
                                             }

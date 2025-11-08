@@ -3162,29 +3162,32 @@
                                     "not": {
                                         "const": true
                                     },
-                                    "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app"
-                                },
-                                "architecture": {
-                                    "patternProperties": {
-                                        "^(64bit|arm64|32bit)$": {
-                                            "properties": {
-                                                "url": {
-                                                    "type": [
-                                                        "string",
-                                                        "array"
-                                                    ],
-                                                    "if": {
-                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
-                                                        "items": {
-                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
-                                                        }
-                                                    },
-                                                    "then": {
+                                    "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app",
+                                    "examples": [
+                                        true
+                                    ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "psmodule"
+                                ]
+                            },
+                            "else": {
+                                "properties": {
+                                    "architecture": {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": [
+                                                            "string",
+                                                            "array"
+                                                        ],
                                                         "not": {
-                                                            "not": {
-                                                                "required": [
-                                                                    "psmodule"
-                                                                ]
+                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
+                                                            "items": {
+                                                                "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
                                                             }
                                                         },
                                                         "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app"
