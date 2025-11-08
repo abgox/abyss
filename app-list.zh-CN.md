@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (421)|Tag|Description|
+|App (422)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -163,6 +163,7 @@
 |[DuckStudio.Sundry](https://github.com/DuckDuckStudio/Sundry "点击访问仓库或主页")|<a href="./bucket/d/DuckStudio/DuckStudio.Sundry.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个 WinGet 相关的工具，帮您更方便地移除清单、修改清单、分析验证错误等|
 |[DuongDieuPhap.ImageGlass](https://imageglass.org/ "点击访问仓库或主页")|<a href="./bucket/d/DuongDieuPhap/DuongDieuPhap.ImageGlass.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个轻量级的、多功能的图像查看器|
 |[dyad-sh.dyad](https://dyad.sh/ "点击访问仓库或主页")|<a href="./bucket/d/dyad-sh/dyad-sh.dyad.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个本地的开源人工智能应用构建工具。它速度快、注重隐私，且完全在你的掌控之中 —— 就像 Lovable、v0 或 Bolt 一样，但能直接在你的设备上运行|
+|[Dystroy.broot](https://dystroy.org/broot "点击访问仓库或主页")|<a href="./bucket/d/Dystroy/Dystroy.broot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一种查看和浏览目录树的新方式|
 |[e2eSoft.iVCam](https://www.e2esoft.com/ "点击访问仓库或主页")|<a href="./bucket/e/e2eSoft/e2eSoft.iVCam.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a>|iVCam 可将你的手机/平板电脑变成适用于 Windows 电脑的高清网络摄像头|
 |[EcoPaste.EcoPaste](https://github.com/EcoPasteHub/EcoPaste "点击访问仓库或主页")|<a href="./bucket/e/EcoPaste/EcoPaste.EcoPaste.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台的开源剪贴板管理工具|
 |[electerm.electerm](https://github.com/electerm/electerm "点击访问仓库或主页")|<a href="./bucket/e/electerm/electerm.electerm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端|
