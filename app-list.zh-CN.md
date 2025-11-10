@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (423)|Tag|Description|
+|App (424)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -123,6 +123,7 @@
 |[charmbracelet.vhs](https://github.com/charmbracelet/vhs "点击访问仓库或主页")|<a href="./bucket/c/charmbracelet/charmbracelet.vhs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|将终端 GIF 动图编写为代码，用于集成测试和演示你的命令行界面工具|
 |[CherryHQ.CherryStudio](https://cherry-ai.com/ "点击访问仓库或主页")|<a href="./bucket/c/CherryHQ/CherryHQ.CherryStudio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款支持多个大语言模型 (LLM) 供应商的桌面客户端|
 |[chrisant996.Clink](https://chrisant996.github.io/clink/ "点击访问仓库或主页")|<a href="./bucket/c/chrisant996/chrisant996.Clink.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Bash 在 cmd.exe 中强大的命令行编辑功能|
+|[ChrisKlimas.Twine](https://twinery.org/ "点击访问仓库或主页")|<a href="./bucket/c/ChrisKlimas/ChrisKlimas.Twine.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款用于创作交互式非线性故事的开源工具，支持变量、条件逻辑、图像、CSS 和 JavaScript|
 |[ClashVergeRev.ClashVergeRev](https://github.com/clash-verge-rev/clash-verge-rev "点击访问仓库或主页")|<a href="./bucket/c/ClashVergeRev/ClashVergeRev.ClashVergeRev.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款基于 Tauri 的现代图形用户界面客户端，提供定制化的代理体验|
 |[cloudbase.powershell-yaml](https://www.powershellgallery.com/packages/powershell-yaml "点击访问仓库或主页")|<a href="./bucket/c/cloudbase/cloudbase.powershell-yaml.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个用于解析 YAML 的 PowerShell 模块|
 |[clsid2.mpc-hc](https://github.com/clsid2/mpc-hc "点击访问仓库或主页")|<a href="./bucket/c/clsid2/clsid2.mpc-hc.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|适用于 Windows 的极其轻量级的开源媒体播放器|
