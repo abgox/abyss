@@ -45,7 +45,7 @@
                 },
                 {
                     "const": "Proprietary",
-                    "markdownDescription": "- 使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)\n- 在 [abyss](https://abyss.abgox.com) bucket 中，它的含义有所变化:\n  - 一个专业性强的、专有的商业软件，无论是否免费\n  - 在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 被指定为 `Proprietary` 的软件"
+                    "markdownDescription": "- 使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)\n- 在 [abyss](https://abyss.abgox.com) bucket 中，它的含义有所变化:\n  - 一个专业性强的、专有的商业软件，无论是否免费\n  - 在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中被指定为 `Proprietary` 的软件"
                 },
                 {
                     "const": "Public Domain",
@@ -2239,7 +2239,7 @@
                             "pre_uninstall": {
                                 "examples": [
                                     [
-                                        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                         "A-Start-Uninstall",
                                         "A-Stop-Process"
@@ -2249,7 +2249,7 @@
                                 "minItems": 3,
                                 "items": [
                                     {
-                                        "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                         "markdownDescription": "- 获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
                                     },
                                     {
@@ -2377,7 +2377,7 @@
                                 "minItems": 3,
                                 "examples": [
                                     [
-                                        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
                                         "A-Complete-Uninstall"
                                     ]
@@ -2387,7 +2387,7 @@
                                         {
                                             "items": [
                                                 {
-                                                    "const": "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
                                                     "markdownDescription": "- 获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
                                                 },
                                                 {
@@ -3486,58 +3486,52 @@
                                 "properties": {
                                     "script": {
                                         "type": "array",
-                                        "minItems": 2,
-                                        "items": [
-                                            {
-                                                "const": ". \"$pwd\\bin\\utils.ps1\"",
-                                                "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                            }
-                                        ],
-                                        "allOf": [
-                                            {
-                                                "items": {
-                                                    "anyOf": [
-                                                        {},
-                                                        {
-                                                            "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                            "markdownDescription": "- 获取 Winget 中指定应用的安装信息"
-                                                        },
-                                                        {
-                                                            "pattern": "$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                            "markdownDescription": "- 获取 Winget 中指定应用的安装信息"
-                                                        },
-                                                        {
-                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                            "markdownDescription": "- 输出应用的版本号"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 x64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 x86 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 arm64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "- 输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                        }
-                                                    ]
+                                        "minItems": 1,
+                                        "items": {
+                                            "anyOf": [
+                                                {},
+                                                {
+                                                    "const": ". \"$pwd\\bin\\utils.ps1\"",
+                                                    "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                },
+                                                {
+                                                    "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                    "markdownDescription": "- 获取 Winget 中指定应用的安装信息"
+                                                },
+                                                {
+                                                    "pattern": "$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                    "markdownDescription": "- 获取 Winget 中指定应用的安装信息"
+                                                },
+                                                {
+                                                    "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                    "markdownDescription": "- 输出应用的版本号"
+                                                },
+                                                {
+                                                    "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                    "markdownDescription": "- 输出应用的 x64 安装程序 URL"
+                                                },
+                                                {
+                                                    "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                    "markdownDescription": "- 输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                },
+                                                {
+                                                    "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                    "markdownDescription": "- 输出应用的 x86 安装程序 URL"
+                                                },
+                                                {
+                                                    "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                    "markdownDescription": "- 输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                },
+                                                {
+                                                    "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                    "markdownDescription": "- 输出应用的 arm64 安装程序 URL"
+                                                },
+                                                {
+                                                    "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                    "markdownDescription": "- 输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
                                                 }
-                                            }
-                                        ]
+                                            ]
+                                        }
                                     }
                                 }
                             }

@@ -40,7 +40,7 @@
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
         "if($PSUICulture -like 'zh*') {",
@@ -54,7 +54,7 @@
         "(Get-ChildItem \"$dir\\rime-ice\" -Recurse).FullName.Replace(\"$dir\\rime-ice\", $RimeDataDir) | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
-        "$bucket = if ($install.bucket) { $install.bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Complete-Uninstall"
     ],
