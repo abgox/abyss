@@ -1756,38 +1756,6 @@ $ScoopVersion = "0.5.3"
 
 #region 扩展 Scoop 部分功能
 
-
-# TODO: 等待合并后移除此函数: https://github.com/ScoopInstaller/Scoop/pull/6460
-function script:env_set($manifest, $global, $arch) {
-    $env_set = arch_specific 'env_set' $manifest $arch
-    if ($env_set) {
-        $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
-            $name = $_.Name
-            $val = $ExecutionContext.InvokeCommand.ExpandString($env_set.$($name))
-            #region 新增: 环境变量输出
-            Write-Output "Setting $(if($global){'system'}else{'user'}) environment variable: $name = $val"
-            #endregion
-            Set-EnvVar -Name $name -Value $val -Global:$global
-            Set-Content env:\$name $val
-        }
-    }
-}
-
-# TODO: 等待合并后移除此函数: https://github.com/ScoopInstaller/Scoop/pull/6460
-function script:env_rm($manifest, $global, $arch) {
-    $env_set = arch_specific 'env_set' $manifest $arch
-    if ($env_set) {
-        $env_set | Get-Member -MemberType NoteProperty | ForEach-Object {
-            $name = $_.Name
-            #region 新增: 环境变量输出
-            Write-Output "Removing $(if($global){'system'}else{'user'}) environment variable: $name"
-            #endregion
-            Set-EnvVar -Name $name -Value $null -Global:$global
-            if (Test-Path env:\$name) { Remove-Item env:\$name }
-        }
-    }
-}
-
 function script:Add-Path {
     param(
         [string[]]$Path,
