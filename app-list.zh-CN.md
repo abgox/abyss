@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (422)|Tag|Description|
+|App (423)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -64,6 +64,7 @@
 |[Alibaba.Qoder](https://qoder.com/ "点击访问仓库或主页")|<a href="./bucket/a/Alibaba/Alibaba.Qoder.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于现实软件的自主智能编程平台|
 |[Alibaba.Yuque](https://www.yuque.com/ "点击访问仓库或主页")|<a href="./bucket/a/Alibaba/Alibaba.Yuque.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|语雀，阿里巴巴的笔记与文档知识库|
 |[altair-graphql.altair](https://altairgraphql.dev/ "点击访问仓库或主页")|<a href="./bucket/a/altair-graphql/altair-graphql.altair.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于所有平台、功能丰富的 GraphQL 客户端|
+|[Amazon.Kiro](https://kiro.dev/ "点击访问仓库或主页")|<a href="./bucket/a/Amazon/Amazon.Kiro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款智能代理 IDE，助您高效工作，具备规范制定、方向引导和钩子功能等特性。|
 |[amir1376.ABDownloadManager](https://abdownloadmanager.com/ "点击访问仓库或主页")|<a href="./bucket/a/amir1376/amir1376.ABDownloadManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款能加快你下载速度的下载管理器|
 |[amzxyz.rime_wanxiang](https://github.com/amzxyz/rime_wanxiang "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案|
 |[amzxyz.rime_wanxiang.model](https://github.com/amzxyz/RIME-LMDG "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.model.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Rime 小狼毫配置: 万象语法模型|
