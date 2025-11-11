@@ -1,0 +1,60 @@
+{
+    "version": "0.8.0",
+    "description": "一款类似 Typora 的文档编辑器，拥有更快的性能、智能 AI 辅助和 Git 集成。 | A Typora-like document editor with faster performance, smart AI assistance, and Git integration.",
+    "homepage": "https://www.zditor.com/",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zditor/zditor-docs/releases/download/zditor-v0.8.0/zditor_0.8.0_x64-setup_windows.exe",
+            "hash": "790d2eb3999600bbf8186c33fe95e260ad2c2c612ce414ba60a47dcf725be9d2"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\zditor.exe",
+            "zditor"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.zditor.app\")",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.zditor.app\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/zditor/zditor-docs/releases/latest",
+        "regex": "href=\"/.+/.+/tree/zditor-(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zditor/zditor-docs/releases/download/zditor-v$version/zditor_$version_x64-setup_windows.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
