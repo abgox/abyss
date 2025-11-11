@@ -1,0 +1,61 @@
+{
+    "version": "2.6.1",
+    "description": "Windows 上的一个 sudo 替代品，提供和 Unix/Linux 上的 sudo 相似的用户体验。 | A sudo equivalent for Windows, with a similar user-experience as the original Unix/Linux sudo.",
+    "homepage": "https://gerardog.github.io/gsudo/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/gerardog/gsudo/blob/master/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gerardog/gsudo/releases/download/v2.6.1/gsudo.portable.zip",
+            "hash": "21130bf178d7b9891207f00bff56f05b6b363ce9cec7b2d084e45fb12ee51f44",
+            "extract_dir": "x64"
+        },
+        "arm64": {
+            "url": "https://github.com/gerardog/gsudo/releases/download/v2.6.1/gsudo.portable.zip",
+            "hash": "21130bf178d7b9891207f00bff56f05b6b363ce9cec7b2d084e45fb12ee51f44",
+            "extract_dir": "arm64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gsudo.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/gerardog/gsudo/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gerardog/gsudo/releases/download/v$version/gsudo.portable.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/gerardog/gsudo/releases/download/v$version/gsudo.portable.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
