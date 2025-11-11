@@ -1,0 +1,65 @@
+{
+    "version": "3.0",
+    "description": "Servy 能让你将任何应用程序作为原生 Windows 服务运行，并能完全控制工作目录、启动类型、进程优先级、日志记录、健康检查、启动前脚本和参数 | Servy lets you run any app as a native Windows service with full control over working directory, startup type, process priority, logging, health checks, pre-launch scripts and parameters.",
+    "homepage": "https://servy-win.github.io/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/aelassas/servy/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/aelassas/servy/releases/download/v3.0/servy-3.0-x64-installer.exe",
+            "hash": "a26738f051587a6d3048d0a9fd046b48e416242ddaae96e1c63dfaa0127cb2d1"
+        }
+    },
+    "bin": "app\\servy-cli.exe",
+    "shortcuts": [
+        [
+            "app\\Servy.exe",
+            "Servy"
+        ],
+        [
+            "app\\Servy.Manager.exe",
+            "Servy Manager"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/aelassas/servy/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/aelassas/servy/releases/download/v$version/servy-$version-x64-installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
