@@ -1,0 +1,62 @@
+{
+    "version": "4.0.14",
+    "description": "Subtitle Edit 是一款免费开源的视频字幕编辑器。 | Subtitle Edit is a free and open source editor for video subtitles.",
+    "homepage": "http://www.nikse.dk/SubtitleEdit/Help",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/SubtitleEdit/subtitleedit/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/SubtitleEdit/subtitleedit/releases/download/4.0.14/SubtitleEdit-4.0.14-Setup.exe",
+            "hash": "8b013143a18008487ffc9af453afc6eac80915f161c0801f4d21a205da110e1a"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\SubtitleEdit.exe",
+            "Subtitle Edit"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\Subtitle Edit\")",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/SubtitleEdit/subtitleedit/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/SubtitleEdit/subtitleedit/releases/download/$version/SubtitleEdit-$version-Setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
