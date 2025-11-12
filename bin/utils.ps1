@@ -1648,7 +1648,7 @@ function A-New-Link {
 
         New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
 
-        Write-Host "Linking $linkPath => $linkTarget"
+        Write-Host "Persisting (Link) $linkPath => $linkTarget"
     }
     $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 }
