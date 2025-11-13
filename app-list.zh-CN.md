@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (430)|Tag|Description|
+|App (431)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -334,6 +334,7 @@
 |[okibcn.nano](https://github.com/okibcn/nano-for-windows "点击访问仓库或主页")|<a href="./bucket/o/okibcn/okibcn.nano.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款用于终端的小型且简单的文本编辑器|
 |[oldj.switchhosts](https://switchhosts.vercel.app/ "点击访问仓库或主页")|<a href="./bucket/o/oldj/oldj.switchhosts.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个管理、切换多个 hosts 方案的工具，快速切换 hosts|
 |[OnOff.Onlook](https://onlook.com/ "点击访问仓库或主页")|<a href="./bucket/o/OnOff/OnOff.Onlook.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款开源的带有视觉氛围的代码编辑器，借助人工智能以可视化方式构建、设计样式并编辑你的应用程序|
+|[open-ani.animeko](https://animeko.org/ "点击访问仓库或主页")|<a href="./bucket/o/open-ani/open-ani.animeko.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|集找番、追番、看番的一站式弹幕追番平台|
 |[OpenAI.Codex](https://github.com/openai/codex "点击访问仓库或主页")|<a href="./bucket/o/OpenAI/OpenAI.Codex.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款在终端中运行的开源本地编码代理|
 |[OpenJS.NodeJS](https://nodejs.org/ "点击访问仓库或主页")|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个免费、开源、跨平台的 JavaScript 运行时环境|
 |[OpenJS.NodeJS.LTS](https://nodejs.org/ "点击访问仓库或主页")|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.LTS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个免费、开源、跨平台的 JavaScript 运行时环境|
