@@ -1,0 +1,51 @@
+{
+    "version": "0.6.1",
+    "description": "Rust 实现的 JSONSchema 校验 (draft 2020-12, draft 2019-09, draft-7, draft-6, draft-4) | JSONSchema (draft 2020-12, draft 2019-09, draft-7, draft-6, draft-4) Validation in Rust",
+    "homepage": "https://github.com/santhosh-tekuri/boon",
+    "license": {
+        "identifier": "MIT|Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/santhosh-tekuri/boon/releases/download/v0.6.1/boon-x86_64-pc-windows-msvc.zip",
+            "hash": "40dc1f95e3d10ae3827c6e6bd4353a02bbf11454c672935357b27c1bc265b279"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\boon.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/santhosh-tekuri/boon/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/santhosh-tekuri/boon/releases/download/v$version/boon-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
