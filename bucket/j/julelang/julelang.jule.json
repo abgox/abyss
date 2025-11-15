@@ -1,0 +1,60 @@
+{
+    "version": "0.1.7",
+    "description": "一种高效的编程语言，能够用于构建高效、快速、可靠且安全的软件，同时保持简洁性。 | An effective programming language to build efficient, fast, reliable and safe software while maintaining simplicity.",
+    "homepage": "https://jule.dev/",
+    "license": {
+        "identifier": "BSD-3-Clause",
+        "url": "https://github.com/julelang/jule/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/julelang/jule/releases/download/jule0.1.7/jule0.1.7-windows-amd64.zip",
+            "hash": "90d7d4a3d499e31af8cda39545c606724db59d2c57924af50d22159d1cbd7397"
+        },
+        "arm64": {
+            "url": "https://github.com/julelang/jule/releases/download/jule0.1.7/jule0.1.7-windows-arm64.zip",
+            "hash": "fa23711ab569b7af671f1917671b07f3718d4578e83a8c5c246e184bf0964719"
+        }
+    },
+    "extract_dir": "jule",
+    "extract_to": "app",
+    "env_add_path": "app\\bin",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/julelang/jule/releases/latest",
+        "regex": "href=\"/.+/.+/tree/jule(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/julelang/jule/releases/download/jule$version/jule$version-windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/julelang/jule/releases/download/jule$version/jule$version-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
