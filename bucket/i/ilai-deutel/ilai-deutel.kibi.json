@@ -1,0 +1,55 @@
+{
+    "version": "0.3.1",
+    "description": "一个用 Rust 编写、代码行数不超过 1024 行的文本编辑器 | A text editor in ≤1024 lines of code, written in Rust",
+    "homepage": "https://github.com/ilai-deutel/kibi",
+    "license": {
+        "identifier": "MIT|Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ilai-deutel/kibi/releases/download/v0.3.1/kibi-v0.3.1-x86_64-pc-windows-msvc.zip",
+            "hash": "00e778e0804e406bab8af5e68637e50d54f1f16c2fd20e71ef84c27273f2757f",
+            "extract_dir": "kibi-v0.3.1-x86_64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\kibi.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Kibi\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/ilai-deutel/kibi/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ilai-deutel/kibi/releases/download/v$version/kibi-v$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "kibi-v$version-x86_64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
