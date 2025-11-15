@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (431)|Tag|Description|
+|App (432)|Tag|Description|
 |-|:-:|-|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
 |[1History.1History](https://github.com/1History/1History "点击访问仓库或主页")|<a href="./bucket/1/1History/1History.1History.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款命令行工具，可将不同的浏览器历史记录备份到一个文件中，并将其可视化|
@@ -305,6 +305,7 @@
 |[MikeFarah.yq](https://mikefarah.gitbook.io/yq/ "点击访问仓库或主页")|<a href="./bucket/m/MikeFarah/MikeFarah.yq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款便携式的命令行YAML、JSON、XML、CSV、TOML和properties处理器|
 |[MindMapTeam.SimpleMindMap](https://github.com/wanglin2/mind-map "点击访问仓库或主页")|<a href="./bucket/m/MindMapTeam/MindMapTeam.SimpleMindMap.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个还算强大的Web思维导图|
 |[Mobatek.MobaXterm](https://mobaxterm.mobatek.net/ "点击访问仓库或主页")|<a href="./bucket/m/Mobatek/Mobatek.MobaXterm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|适用于 Windows 的增强型终端，配备 X11 服务器、多标签 SSH 客户端、网络工具等诸多功能|
+|[moonbitlang.moonbit](https://www.moonbitlang.com/ "点击访问仓库或主页")|<a href="./bucket/m/moonbitlang/moonbitlang.moonbit.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|MoonBit 是一种类似 Rust 的语言（支持垃圾回收），也是一个为 WebAssembly 体验优化的工具链。|
 |[moonrepo.proto](https://moonrepo.dev/proto "点击访问仓库或主页")|<a href="./bucket/m/moonrepo/moonrepo.proto.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可插拔的多语言版本管理器|
 |[MoonshotAI.Kimi](https://www.kimi.com/ "点击访问仓库或主页")|<a href="./bucket/m/MoonshotAI/MoonshotAI.Kimi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个 AI 助手|
 |[mosheng1.QuickClipboard](https://quickclipboard.cn/ "点击访问仓库或主页")|<a href="./bucket/m/mosheng1/mosheng1.QuickClipboard.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个功能强大的剪贴板管理工具，帮助你更高效地管理和使用剪贴板内容|
