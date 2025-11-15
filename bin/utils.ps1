@@ -1140,6 +1140,72 @@ function A-Get-UninstallEntryByAppName {
 
     return $null
 }
+function A-Get-VersionFromGithubApi {
+    param(
+        [switch]$IncludePrerelease
+    )
+    $userAgent = A-Get-UserAgent
+
+    if ($env:GITHUB_ACTIONS) {
+        $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
+        if (-not $order) {
+            $order = 1
+            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+        }
+
+        $token = Invoke-Expression "`$Env:TOKEN_$order"
+        if (-not $token -and $env:GITHUB_ACTIONS) {
+            Write-Error "'TOKEN_$order' not set."
+            return ''
+        }
+    }
+
+    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)', 'https://api.github.com/repos/$1/$2/releases/latest'
+
+    if ($IncludePrerelease) {
+        $url = $url -Replace '/latest$', ''
+    }
+
+    try {
+        $headers = @{
+            'User-Agent' = $userAgent
+        }
+
+        if ($env:GITHUB_ACTIONS) {
+            $headers.Add('Authorization', "token $token")
+        }
+
+        $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+        return $releaseInfo.tag_name -replace '^[vV](?=\d+\.)', ''
+    }
+    catch {
+        Write-Error $_.Exception.Message
+
+        if (-not $env:GITHUB_ACTIONS) {
+            return ''
+        }
+
+        if ($_.Exception.Message -like "*rate limit*") {
+            Write-Host "Switch to 'TOKEN_$order'"
+
+            $order++
+            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+
+            $token = Invoke-Expression "`$Env:TOKEN_$order"
+            if (-not $token) {
+                Write-Error "'TOKEN_$order' not set."
+                return ''
+            }
+
+            $headers = @{
+                'User-Agent'    = $userAgent
+                'Authorization' = "token $token"
+            }
+            $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+            return $releaseInfo.tag_name -replace '^[vV](?=\d+\.)', ''
+        }
+    }
+}
 
 function A-Get-VersionFromPage {
     <#
@@ -1307,9 +1373,6 @@ function A-Get-InstallerInfoFromWinget {
             OperationTimeoutSeconds  = 120
             UseBasicParsing          = $true
             ErrorAction              = 'Stop'
-        }
-        if ($env:GITHUB_TOKEN) {
-            $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
         }
         $installerYaml = Invoke-WebRequest @parameters
     }
@@ -1749,6 +1812,11 @@ function A-Show-IssueCreationPrompt {
     Write-Host "Something went wrong here." -ForegroundColor Red -NoNewline
     Write-Host "`nPlease try again or create a new issue by using the following link and paste your console output:`nhttps://github.com/abgox/abyss/issues/new?template=bug-report.yml" -ForegroundColor Red
 }
+
+function A-Get-UserAgent {
+    return "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
+}
+
 #endregion
 
 
