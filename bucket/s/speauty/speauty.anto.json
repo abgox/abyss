@@ -1,0 +1,66 @@
+{
+    "version": "3.7.0",
+    "description": "Windows 上的字幕文件(srt)翻译工具 | A subtitle(srt) translator for Windows.",
+    "homepage": "https://github.com/speauty/anto",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/speauty/anto/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/speauty/anto/releases/download/v3.7.0/anto-v3.7.0-windows.exe",
+            "hash": "d7eeaa770ee3f2998df226aaec60bd29686117ede50063831f54a660a073d963"
+        }
+    },
+    "shortcuts": [
+        [
+            "anto-v3.7.0-windows.exe",
+            "Anto"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/speauty/anto",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/speauty/anto/releases/download/v$version/anto-v$version-windows.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "shortcuts": [
+            [
+                "anto-v$version-windows.exe",
+                "Anto"
+            ]
+        ]
+    }
+}
