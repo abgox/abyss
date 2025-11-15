@@ -45,13 +45,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://github.com/codexu/note-gen/releases/latest",
-        "regex": "href=\"/.+/.+/tree/note-gen-(?:v|V)?([^\"?]+)"
+        "url": "https://github.com/codexu/note-gen",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "note-gen-(?:v|V)?(.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/codexu/note-gen/releases/download/note-gen-v0.22.3/NoteGen_0.22.3_x64-setup.exe"
+                "url": "https://github.com/codexu/note-gen/releases/download/note-gen-v$version/NoteGen_$version_x64-setup.exe"
             }
         },
         "hash": {
