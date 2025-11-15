@@ -1,5 +1,5 @@
 {
-    "version": "-d3f608e",
+    "version": "2025.10.09",
     "description": "(zip 版本) 一个输入法状态管理工具: 实时提示(鼠标方案/符号方案) + 状态切换(窗口触发/热键触发) | (zip version) An input method state management tool: real-time tip(mouse scheme/symbol scheme) + state switching (window trigger/hotkey trigger)",
     "homepage": "https://inputtip.abgox.com/",
     "license": {
@@ -8,11 +8,11 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/InputTip/archive/d3f608e70b16f42c2778f15836258aa6c88c9d3d.zip",
-            "hash": "292fbe9d533466bc8af86de404e3a892ae716ab5a8d97d7d31a2bbb5792147f9"
+            "url": "https://github.com/abgox/InputTip/releases/download/v2025.10.09/InputTip.zip",
+            "hash": "ca8c82378b871154fb4f1b4f12c1cb5dcff71338a2b35674db8fe7a6e918e137"
         }
     },
-    "extract_dir": "InputTip-d3f608e70b16f42c2778f15836258aa6c88c9d3d",
+    "extract_dir": "InputTip-main",
     "extract_to": "app",
     "bin": [
         [
@@ -74,20 +74,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            "$version = Invoke-RestMethod -Uri 'https://github.com/abgox/InputTip/raw/refs/heads/main/src/version-zip.txt'",
-            "$commit = Invoke-RestMethod -Uri 'https://api.github.com/repos/abgox/InputTip/commits?page=1&per_page=3'",
-            "\"ver:$($version.Trim())-$($commit[0].sha.substring(0, 7));\"",
-            "\"sha:$($commit[0].sha);\""
-        ],
-        "regex": "ver:(?<version>[^;]+).*?sha:(?<sha>[^;]+)"
+        "url": "https://github.com/abgox/InputTip/releases/latest",
+        "regex": "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/abgox/InputTip/archive/$matchSha.zip"
+                "url": "https://github.com/abgox/InputTip/releases/download/v$version/InputTip.zip"
             }
         },
-        "extract_dir": "InputTip-$matchSha"
+        "hash": {
+            "mode": "github"
+        }
     }
 }
