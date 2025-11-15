@@ -836,7 +836,7 @@
                             "markdownDescription": "- 版本所在页面",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "https://github.com/:owner/:repo/releases/latest"
+                                "https://github.com/:owner/:repo"
                             ]
                         },
                         "github": {
@@ -862,7 +862,7 @@
                             "markdownDescription": "- 查找版本的 RegEx (正则表达式)",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+                                "(.+)"
                             ]
                         },
                         "jsonpath": {
@@ -1958,7 +1958,7 @@
                                 "properties": {
                                     "url": {
                                         "not": {
-                                            "pattern": "/:owner/:repo/"
+                                            "pattern": "/:owner/:repo"
                                         },
                                         "errorMessage": ":owner 和 :repo 是占位符"
                                     },
@@ -3486,6 +3486,12 @@
                                 "properties": {
                                     "script": {
                                         "type": "array",
+                                        "examples": [
+                                            [
+                                                ". \"$pwd\\bin\\utils.ps1\"",
+                                                "A-Get-VersionFromGithubApi"
+                                            ]
+                                        ],
                                         "minItems": 1,
                                         "items": {
                                             "anyOf": [
@@ -3493,6 +3499,10 @@
                                                 {
                                                     "const": ". \"$pwd\\bin\\utils.ps1\"",
                                                     "markdownDescription": "- 引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                },
+                                                {
+                                                    "const": "A-Get-VersionFromGithubApi",
+                                                    "markdownDescription": "- 从 GitHub 仓库获取应用的最新版本"
                                                 },
                                                 {
                                                     "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
@@ -3614,35 +3624,6 @@
                     },
                     {
                         "properties": {
-                            "checkver": {
-                                "if": {
-                                    "required": [
-                                        "url"
-                                    ],
-                                    "properties": {
-                                        "url": {
-                                            "pattern": "https://github.com/[^/]+/[^/]+/releases[/]"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "regex": {
-                                            "if": {
-                                                "pattern": "^href=\\\"/[^/]+/[^/]+/tree/.*?\\(\\?:v\\|V\\)\\?\\(\\[\\^\\\"\\?\\]\\+\\)$"
-                                            },
-                                            "else": {
-                                                "not": true,
-                                                "errorMessage": "url 使用了 GitHub Releases，regex 只能是 \"href=\\\"/.+/.+/tree/(?:v|V)?([^\\\"?]+)\"\n或者基于它在 /tree/ 后接版本前缀，如: \"href=\\\"/.+/.+/tree/desktop-(?:v|V)?([^\\\"?]+)\""
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "properties": {
                             "autoupdate": {
                                 "required": [
                                     "architecture"
@@ -3654,7 +3635,7 @@
                                                 "properties": {
                                                     "url": {
                                                         "pattern": "\\$.+",
-                                                        "errorMessage": "它没有使用 $version 这样的动态版本变量，请仔细检查"
+                                                        "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确"
                                                     }
                                                 }
                                             }

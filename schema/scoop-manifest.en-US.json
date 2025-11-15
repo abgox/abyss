@@ -836,7 +836,7 @@
                             "markdownDescription": "- URL of the page where the version is located",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "https://github.com/:owner/:repo/releases/latest"
+                                "https://github.com/:owner/:repo"
                             ]
                         },
                         "github": {
@@ -862,7 +862,7 @@
                             "markdownDescription": "- RegEx to find the version on the homepage",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "href=\"/.+/.+/tree/(?:v|V)?([^\"?]+)"
+                                "(.+)"
                             ]
                         },
                         "jsonpath": {
@@ -1958,7 +1958,7 @@
                                 "properties": {
                                     "url": {
                                         "not": {
-                                            "pattern": "/:owner/:repo/"
+                                            "pattern": "/:owner/:repo"
                                         },
                                         "errorMessage": "':owner' and ':repo' are placeholders"
                                     },
@@ -3496,6 +3496,12 @@
                                 "properties": {
                                     "script": {
                                         "type": "array",
+                                        "examples": [
+                                            [
+                                                ". \"$pwd\\bin\\utils.ps1\"",
+                                                "A-Get-VersionFromGithubApi"
+                                            ]
+                                        ],
                                         "minItems": 1,
                                         "items": {
                                             "anyOf": [
@@ -3503,6 +3509,10 @@
                                                 {
                                                     "const": ". \"$pwd\\bin\\utils.ps1\"",
                                                     "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                                },
+                                                {
+                                                    "const": "A-Get-VersionFromGithubApi",
+                                                    "markdownDescription": "- Get the latest version from the GitHub repository"
                                                 },
                                                 {
                                                     "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
@@ -3615,35 +3625,6 @@
                                                         }
                                                     }
                                                 }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "properties": {
-                            "checkver": {
-                                "if": {
-                                    "required": [
-                                        "url"
-                                    ],
-                                    "properties": {
-                                        "url": {
-                                            "pattern": "https://github.com/[^/]+/[^/]+/releases[/]"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "regex": {
-                                            "if": {
-                                                "pattern": "^href=\\\"/[^/]+/[^/]+/tree/.*?\\(\\?:v\\|V\\)\\?\\(\\[\\^\\\"\\?\\]\\+\\)$"
-                                            },
-                                            "else": {
-                                                "not": true,
-                                                "errorMessage": "'url' uses GitHub Releases, regex must be \"href=\\\"/.+/.+/tree/(?:v|V)?([^\\\"?]+)\"\nOr based on it with a version prefix after /tree/, such as: \"href=\\\"/.+/.+/tree/desktop-(?:v|V)?([^\\\"?]+)\""
                                             }
                                         }
                                     }
