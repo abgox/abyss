@@ -1365,6 +1365,8 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
+    $installerInfo.PackageVersion = $installerInfo.PackageVersion -replace '^(v|V)', ''
+
     # 写入到 temp-autoupdate.json，用于后续读取
     $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\..\temp-autoupdate.json" -Force -Encoding utf8
 
