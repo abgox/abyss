@@ -1,0 +1,64 @@
+{
+    "version": "0.8.0",
+    "description": "一个基于 Flutter 构建的简单 Jellyfin 前端。 | A Simple Jellyfin frontend built on top of Flutter.",
+    "homepage": "https://github.com/DonutWare/Fladder",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/DonutWare/Fladder/blob/develop/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DonutWare/Fladder/releases/download/v0.8.0/Fladder-Windows-0.8.0.zip",
+            "hash": "464b64d04e5af640ae006e0fa3f5ea9fd50f92d5a3080a8b50f655103fb64988"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\fladder.exe",
+            "Fladder"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\DonutWare\\fladder\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\DonutWare\\fladder\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/DonutWare/Fladder",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DonutWare/Fladder/releases/download/v$version/Fladder-Windows-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
