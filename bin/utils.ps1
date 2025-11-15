@@ -1176,7 +1176,7 @@ function A-Get-VersionFromGithubApi {
         }
 
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-        return $releaseInfo.tag_name -replace '^[vV](?=\d+\.)', ''
+        return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
     }
     catch {
         Write-Error $_.Exception.Message
@@ -1202,7 +1202,7 @@ function A-Get-VersionFromGithubApi {
                 'Authorization' = "token $token"
             }
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-            return $releaseInfo.tag_name -replace '^[vV](?=\d+\.)', ''
+            return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
         }
     }
 }
