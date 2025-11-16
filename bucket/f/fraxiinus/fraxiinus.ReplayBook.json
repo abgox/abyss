@@ -1,0 +1,75 @@
+{
+    "version": "1.7.9",
+    "description": "播放、管理和查看英雄联盟(LOL) 的回放 | Play, manage, and inspect League of Legends replays",
+    "homepage": "https://www.fraxiinus.dev/ReplayBook/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/fraxiinus/ReplayBook/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/fraxiinus/ReplayBook/releases/download/1.7.9/ReplayBook.zip",
+            "hash": "0e47df230f81eede7afbb56c1f6c7245ce2e4a4d2e169041464c0518d0203bb0"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\ReplayBook.exe",
+            "ReplayBook"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\appsettings.json",
+            "appsettings.json"
+        ],
+        [
+            "app\\data",
+            "data"
+        ],
+        [
+            "app\\cache",
+            "cache"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/fraxiinus/ReplayBook",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/fraxiinus/ReplayBook/releases/download/$version/ReplayBook.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
