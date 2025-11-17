@@ -1,0 +1,57 @@
+{
+    "version": "0.8.0",
+    "description": "一款命令行代码打字游戏，能将你的源代码转化为打字挑战 | A CLI code-typing game that turns your source code into typing challenges",
+    "homepage": "https://github.com/unhappychoice/gittype",
+    "license": {
+        "identifier": "MIT|Apache-2.0|..."
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/unhappychoice/gittype/releases/download/v0.8.0/gittype-v0.8.0-x86_64-pc-windows-msvc.zip",
+            "hash": "2b2685902776ea8621f6871026516edf2208a9dac707ee77b09b0511690dc430"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gittype.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.gittype\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/unhappychoice/gittype",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/unhappychoice/gittype/releases/download/v$version/gittype-v$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
