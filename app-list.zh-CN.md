@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (443)|Tag|Description|
+|App (444)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -55,6 +55,7 @@
 |[abgox.scoop-i18n](https://scoop-i18n.abgox.com/ "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.scoop-i18n.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Scoop 的国际化解决方案(语言包)，提升不同语言的用户使用 Scoop 时的体验|
 |[abgox.scoop-install](https://scoop-tools.abgox.com/ "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.scoop-install.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|为 Scoop 提供的工具，在下载应用时替换为指定的代理 URL，以提高下载速度|
 |[abgox.scoop-update](https://scoop-tools.abgox.com/ "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.scoop-update.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|为 Scoop 提供的工具，在更新应用时替换为指定的代理 URL，以提高下载速度|
+|[abgox.SpaceKey](https://spacekey.abgox.com/ "点击访问仓库或主页")|<a href="./bucket/a/abgox/abgox.SpaceKey.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个基于 AutoHotkey 的按键映射方案，用于将空格键与其他键组合起来，优化输入体验|
 |[AdsPower.AdsPower](https://www.adspower.net/ "点击访问仓库或主页")|<a href="./bucket/a/AdsPower/AdsPower.AdsPower.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个指纹浏览器|
 |[Aegisub.Aegisub](https://www.aegisub.org/ "点击访问仓库或主页")|<a href="./bucket/a/Aegisub/Aegisub.Aegisub.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费、跨平台的开源字幕编辑软件|
 |[aelassas.Servy](https://servy-win.github.io/ "点击访问仓库或主页")|<a href="./bucket/a/aelassas/aelassas.Servy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Servy 能让你将任何应用程序作为原生 Windows 服务运行，并能完全控制工作目录、启动类型、进程优先级、日志记录、健康检查、启动前脚本和参数|
