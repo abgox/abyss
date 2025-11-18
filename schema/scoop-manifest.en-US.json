@@ -3558,6 +3558,35 @@
                         }
                     },
                     {
+                        "properties": {
+                            "checkver": {
+                                "if": {
+                                    "required": [
+                                        "script"
+                                    ],
+                                    "properties": {
+                                        "script": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Get-VersionFromGithubApi"
+                                            }
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "url"
+                                    ],
+                                    "properties": {
+                                        "url": {
+                                            "pattern": "^https://github.com/[^/]+/[^/]+$",
+                                            "errorMessage": "Since 'A-Get-VersionFromGithubApi' is used, the URL can only be a Github address.\nFor example: https://github.com/abgox/PSCompletions"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
                         "$comment": "If checkver uses A-Get-InstallerInfoFromWinget through the script field",
                         "if": {
                             "required": [
@@ -3584,7 +3613,7 @@
                                     "properties": {
                                         "regex": {
                                             "const": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
-                                            "errorMessage": "Since A-Get-InstallerInfoFromWinget is used, it must be \"ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?\""
+                                            "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, it must be \"ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?\""
                                         }
                                     }
                                 },
@@ -3608,7 +3637,7 @@
                                                             "properties": {
                                                                 "url": {
                                                                     "const": "temp-autoupdate.json",
-                                                                    "errorMessage": "Since A-Get-InstallerInfoFromWinget is used, 'hash.url' must be temp-autoupdate.json"
+                                                                    "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, 'hash.url' must be temp-autoupdate.json"
                                                                 },
                                                                 "jsonpath": {
                                                                     "enum": [

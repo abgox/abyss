@@ -3548,6 +3548,35 @@
                         }
                     },
                     {
+                        "properties": {
+                            "checkver": {
+                                "if": {
+                                    "required": [
+                                        "script"
+                                    ],
+                                    "properties": {
+                                        "script": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Get-VersionFromGithubApi"
+                                            }
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "url"
+                                    ],
+                                    "properties": {
+                                        "url": {
+                                            "pattern": "^https://github.com/[^/]+/[^/]+$",
+                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubApi，url 只能是 Github 地址\n例如: https://github.com/abgox/PSCompletions"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
                         "$comment": "如果 checkver 通过 script 字段使用了 A-Get-InstallerInfoFromWinget",
                         "if": {
                             "required": [
