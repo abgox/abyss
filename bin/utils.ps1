@@ -1141,9 +1141,6 @@ function A-Get-UninstallEntryByAppName {
     return $null
 }
 function A-Get-VersionFromGithubApi {
-    param(
-        [switch]$IncludePrerelease
-    )
     $userAgent = A-Get-UserAgent
 
     if ($env:GITHUB_ACTIONS) {
@@ -1155,16 +1152,17 @@ function A-Get-VersionFromGithubApi {
 
         $token = Invoke-Expression "`$Env:TOKEN_$order"
         if (-not $token -and $env:GITHUB_ACTIONS) {
-            Write-Error "'TOKEN_$order' not set."
+            Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return ''
         }
     }
 
-    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)', 'https://api.github.com/repos/$1/$2/releases/latest'
-
-    if ($IncludePrerelease) {
-        $url = $url -Replace '/latest$', ''
+    if ($url -notlike 'https://github.com/*') {
+        Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
+        return ''
     }
+
+    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.+)?', 'https://api.github.com/repos/$1/$2/releases/latest'
 
     try {
         $headers = @{
@@ -1193,7 +1191,7 @@ function A-Get-VersionFromGithubApi {
 
             $token = Invoke-Expression "`$Env:TOKEN_$order"
             if (-not $token) {
-                Write-Error "'TOKEN_$order' not set."
+                Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return ''
             }
 
