@@ -1,0 +1,73 @@
+{
+    "version": "25.08.3",
+    "description": "免费开源的视频编辑器 | Free and Open Source Video Editor",
+    "homepage": "https://kdenlive.org/",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://invent.kde.org/multimedia/kdenlive/-/blob/HEAD/COPYING"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.kde.org/stable/kdenlive/25.08/windows/kdenlive-25.08.3.exe",
+            "hash": "cf6479268107396b1a9ba1f73cd96e676c208620525861acd32089fe64aea04f"
+        }
+    },
+    "shortcuts": [
+        [
+            "$env:ProgramFiles\\kdenlive\\bin\\kdenlive.exe",
+            "Kdenlive"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-PersistFile \"$env:LocalAppData\\kdenliverc\"",
+        "A-New-LinkFile @(\"$env:LocalAppData\\kdenliverc\")",
+        "A-New-LinkDirectory @(\"$env:AppData\\kdenlive\")",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\kdenlive\\uninstall.exe\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:ProgramFiles\\kdenlive\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\kdenlive\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'KDE.Kdenlive' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
