@@ -1,0 +1,61 @@
+{
+    "version": "1.1.5-pre6",
+    "description": "使用 Flutter 开发的 BiliBili 第三方客户端 | A third-party BiliBili client developed using Flutter",
+    "homepage": "https://github.com/bggRGjQaUbCoE/PiliPlus",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/bggRGjQaUbCoE/PiliPlus/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/1.1.5-pre6/PiliPlus_windows_1.1.5+4357_x64.zip",
+            "hash": "bd54251fa07cfacbe9ee3ff11c80047281e579bc6915a8ef9221829ea4bd243a"
+        }
+    },
+    "extract_dir": "PiliPlus-Win",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\piliplus.exe",
+            "PiliPlus"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.example\\piliplus\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.example\\piliplus\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/bggRGjQaUbCoE/PiliPlus/releases/latest",
+        "regex": "/download/([^/]+)/PiliPlus_windows_(?<main>[\\d.]+)%2B(?<build>\\d+)_x64.zip"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/$version/PiliPlus_windows_$matchMain+$matchBuild_x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
