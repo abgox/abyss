@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (446)|Tag|Description|
+|App (447)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -101,6 +101,7 @@
 |[beekeeper-studio.beekeeper-studio](https://www.beekeeperstudio.io/ "点击访问仓库或主页")|<a href="./bucket/b/beekeeper-studio/beekeeper-studio.beekeeper-studio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款跨平台的 SQL 编辑器和数据库管理器|
 |[Beeper.Beeper](https://www.beeper.com/ "点击访问仓库或主页")|<a href="./bucket/b/Beeper/Beeper.Beeper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个应用，在 iMessage、WhatsApp 和其它 13 个聊天网络上聊天|
 |[BeyondDimension.Steampp](https://steampp.net/ "点击访问仓库或主页")|<a href="./bucket/b/BeyondDimension/BeyondDimension.Steampp.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个开源跨平台的多功能 Steam 工具箱，包含 Github 网络加速等功能，Watt Toolkit 是它的别名|
+|[bggRGjQaUbCoE.PiliPlus](https://github.com/bggRGjQaUbCoE/PiliPlus "点击访问仓库或主页")|<a href="./bucket/b/bggRGjQaUbCoE/bggRGjQaUbCoE.PiliPlus.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|使用 Flutter 开发的 BiliBili 第三方客户端|
 |[bgreenwell.xleak](https://github.com/bgreenwell/xleak "点击访问仓库或主页")|<a href="./bucket/b/bgreenwell/bgreenwell.xleak.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款带有交互式 TUI 的、快速的终端 Excel 查看器。|
 |[Bilibili.Bilibili](https://app.bilibili.com/ "点击访问仓库或主页")|<a href="./bucket/b/Bilibili/Bilibili.Bilibili.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|哔哩哔哩 Bilibili 的 Windows 桌面客户端程序|
 |[Bin-Huang.Chatbox](https://chatboxai.app/ "点击访问仓库或主页")|<a href="./bucket/b/Bin-Huang/Bin-Huang.Chatbox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可使用 ChatGPT、Claude 和其他 LLM 的桌面客户端|
