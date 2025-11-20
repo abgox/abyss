@@ -34,6 +34,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-Require-Admin",
         "Expand-DarkArchive \"$dir\\$fname\" \"$dir\\.tmp\"",
         "Get-ChildItem $dir -Recurse -Filter '*.msi' | Select-Object -First 1 | ForEach-Object { Move-Item $_.FullName \"$dir\\dl.msi\" -Force }",
         "Remove-Item \"$dir\\.tmp\", \"$dir\\$fname\" -Force -Recurse",
@@ -52,10 +53,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
-        "A-Remove-Link",
-        "$ProductCode = A-Get-ProductCode '^PowerToys*'",
-        "A-Uninstall-Exe $ProductCode"
+        "A-Uninstall-ExeManually \"$env:LocalAppData\\PowerToys\"",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
