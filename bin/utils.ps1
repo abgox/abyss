@@ -988,6 +988,23 @@ function A-Require-Admin {
     }
 }
 
+function A-Deny-IfAppConflict {
+    <#
+    .SYNOPSIS
+        如果应用冲突，则拒绝安装
+    #>
+    param (
+        [string[]]$Apps
+    )
+    $Apps | Where-Object { $_ -ne $app } | ForEach-Object {
+        if (Test-Path (appdir $_)) {
+            error "'$app' conflicts with '$_'."
+            error "Reference: https://abyss.abgox.com/faq/deny-if-app-conflict"
+            A-Exit
+        }
+    }
+}
+
 function A-Deny-Update {
     <#
     .SYNOPSIS
