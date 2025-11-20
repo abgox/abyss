@@ -1,0 +1,67 @@
+{
+    "version": "5.1.3.10",
+    "description": "非官方的 qBittorrent BitTorrent 客户端（增强版） | Unofficial qBittorrent BitTorrent client (Enhanced Edition)",
+    "homepage": "https://github.com/c0re100/qBittorrent-Enhanced-Edition",
+    "license": {
+        "identifier": "GPL-2.0-only|GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/release-5.1.3.10/qbittorrent_enhanced_5.1.3.10_x64_setup.exe",
+            "hash": "ca3b5342a54ca25b1735161c401fef9c9fea8de5c779e53b7b6e62dea9163751"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\qbittorrent.exe",
+            "qBittorrent"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Deny-IfAppConflict @('qBittorrent.qBittorrent','c0re100.qBittorrent-Enhanced-Edition')",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:AppData\\qBittorrent\")",
+        "A-Install-Exe -Uninstaller 'app\\uninst.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\qBittorrent\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/c0re100/qBittorrent-Enhanced-Edition",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "release-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases/download/release-$version/qbittorrent_enhanced_$version_x64_setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
