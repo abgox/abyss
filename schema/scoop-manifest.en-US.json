@@ -551,13 +551,13 @@
                             {
                                 "items": [
                                     {
-                                        "markdownDescription": "- Required: program name"
+                                        "markdownDescription": "Required: program name"
                                     },
                                     {
-                                        "markdownDescription": "- Required: alias (shim)"
+                                        "markdownDescription": "Required: alias (shim)"
                                     },
                                     {
-                                        "markdownDescription": "- Optional: parameters"
+                                        "markdownDescription": "Optional: parameters"
                                     }
                                 ]
                             },
@@ -626,16 +626,16 @@
                     {
                         "items": [
                             {
-                                "markdownDescription": "- Required: path to the target file"
+                                "markdownDescription": "Required: path to the target file"
                             },
                             {
-                                "markdownDescription": "- Required: name of the shortcut; subdirectories are supported: `aaa\\bbb`"
+                                "markdownDescription": "Required: name of the shortcut; subdirectories are supported: `aaa\\bbb`"
                             },
                             {
-                                "markdownDescription": "- Optional: launch arguments"
+                                "markdownDescription": "Optional: launch arguments"
                             },
                             {
-                                "markdownDescription": "- Optional: path to the icon file"
+                                "markdownDescription": "Optional: path to the icon file"
                             }
                         ]
                     },
@@ -688,10 +688,10 @@
                             {
                                 "items": [
                                     {
-                                        "markdownDescription": "- Original file or directory to persist"
+                                        "markdownDescription": "Original file or directory to persist"
                                     },
                                     {
-                                        "markdownDescription": "- Target location for the persisted data, supports subdirectories: `aaa\\bbb`"
+                                        "markdownDescription": "Target location for the persisted data, supports subdirectories: `aaa\\bbb`"
                                     }
                                 ]
                             },
@@ -750,23 +750,23 @@
             ],
             "properties": {
                 "file": {
-                    "markdownDescription": "- Executable file for the installer\n- Defaults to the last downloaded URL if not specified\n- Required if specified in uninstaller",
+                    "markdownDescription": "Executable file for the installer\n- Defaults to the last downloaded URL if not specified\n- Required if specified in uninstaller",
                     "$ref": "#/definitions/str"
                 },
                 "script": {
-                    "markdownDescription": "- Execute as an installer instead of a file\n- Available variables in the script:\n    - $fname: downloaded file(s) (may be an array; treat as array unless you are sure url is not an array)\n    - $manifest: validated manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
+                    "markdownDescription": "Execute as an installer instead of a file\n- Available variables in the script:\n    - $fname: downloaded file(s) (may be an array; treat as array unless you are sure url is not an array)\n    - $manifest: validated manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
                     "$ref": "#/definitions/string_or_string_array"
                 },
                 "args": {
                     "type": "array",
-                    "markdownDescription": "- Array of arguments to pass to the installer\n- Optional property",
+                    "markdownDescription": "Array of arguments to pass to the installer\n- Optional property",
                     "items": {
                         "$ref": "#/definitions/str"
                     },
                     "minItems": 1
                 },
                 "keep": {
-                    "markdownDescription": "- Set to true if the installer should be kept after running (e.g., for future uninstallation)\n- If omitted or set to any other value, the installer will be deleted after running",
+                    "markdownDescription": "Set to true if the installer should be kept after running (e.g., for future uninstallation)\n- If omitted or set to any other value, the installer will be deleted after running",
                     "$ref": "#/definitions/bool"
                 }
             }
@@ -792,16 +792,16 @@
             ],
             "properties": {
                 "file": {
-                    "markdownDescription": "- Uninstall the program executable file",
+                    "markdownDescription": "Uninstall the program executable file",
                     "$ref": "#/definitions/str"
                 },
                 "script": {
-                    "markdownDescription": "- Execute as an uninstaller rather than a file\n- Variables available in the script: \n    - $fname: downloaded file (there may be multiple files, which need to be handled as an array unless you are sure the url is not an array)\n    - $manifest: verified manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
+                    "markdownDescription": "Execute as an uninstaller rather than a file\n- Variables available in the script: \n    - $fname: downloaded file (there may be multiple files, which need to be handled as an array unless you are sure the url is not an array)\n    - $manifest: verified manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
                     "$ref": "#/definitions/string_or_string_array"
                 },
                 "args": {
                     "type": "array",
-                    "markdownDescription": "- Array of arguments to pass to the uninstaller\n- Optional property",
+                    "markdownDescription": "Array of arguments to pass to the uninstaller\n- Optional property",
                     "items": {
                         "$ref": "#/definitions/str"
                     },
@@ -833,14 +833,14 @@
                     "additionalProperties": false,
                     "properties": {
                         "url": {
-                            "markdownDescription": "- URL of the page where the version is located",
+                            "markdownDescription": "URL of the page where the version is located",
                             "$ref": "#/definitions/str",
                             "examples": [
                                 "https://github.com/:owner/:repo"
                             ]
                         },
                         "github": {
-                            "markdownDescription": "- GitHub repository of the application",
+                            "markdownDescription": "GitHub repository of the application",
                             "$ref": "#/definitions/str",
                             "if": {
                                 "type": "string"
@@ -855,65 +855,65 @@
                             }
                         },
                         "re": {
-                            "markdownDescription": "- re is an alias for regex\n- RegEx to find the version on the homepage",
+                            "markdownDescription": "re is an alias for regex\n- RegEx to find the version on the homepage",
                             "$ref": "#/definitions/str"
                         },
                         "regex": {
-                            "markdownDescription": "- RegEx to find the version on the homepage",
+                            "markdownDescription": "RegEx to find the version on the homepage",
                             "$ref": "#/definitions/str",
                             "examples": [
                                 "(.+)"
                             ]
                         },
                         "jsonpath": {
-                            "markdownDescription": "- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
+                            "markdownDescription": "Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
                             "$ref": "#/definitions/str"
                         },
                         "jp": {
-                            "markdownDescription": "- jp is an alias for jsonpath\n- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
+                            "markdownDescription": "jp is an alias for jsonpath\n- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
                             "$ref": "#/definitions/str"
                         },
                         "xpath": {
-                            "markdownDescription": "- XPath expression to find the version on the homepage",
+                            "markdownDescription": "XPath expression to find the version on the homepage",
                             "$ref": "#/definitions/str"
                         },
                         "reverse": {
-                            "markdownDescription": "- If set to true, it matches the last occurrence (default is the first occurrence)",
+                            "markdownDescription": "If set to true, it matches the last occurrence (default is the first occurrence)",
                             "$ref": "#/definitions/bool"
                         },
                         "replace": {
-                            "markdownDescription": "- Replace the matched value with the computed value",
+                            "markdownDescription": "Replace the matched value with the computed value",
                             "$ref": "#/definitions/str",
                             "anyOf": [
                                 {},
                                 {
                                     "const": "${1}.${2}.${3}.${4}${5}${6}",
-                                    "markdownDescription": "- Replace the matched value with `${1}.${2}.${3}.${4}${5}${6}`, where `${1}` represents the first match group, `${2}` represents the second match group, and so on."
+                                    "markdownDescription": "Replace the matched value with `${1}.${2}.${3}.${4}${5}${6}`, where `${1}` represents the first match group, `${2}` represents the second match group, and so on."
                                 },
                                 {
                                     "const": "pending",
-                                    "markdownDescription": "- Ensure that when checking for updates, the new version is `pending`"
+                                    "markdownDescription": "Ensure that when checking for updates, the new version is `pending`"
                                 },
                                 {
                                     "const": "renamed",
-                                    "markdownDescription": "- Ensure that when checking for updates, the new version is `renamed`"
+                                    "markdownDescription": "Ensure that when checking for updates, the new version is `renamed`"
                                 },
                                 {
                                     "const": "deprecated",
-                                    "markdownDescription": "- Ensure that when checking for updates, the new version is `deprecated`"
+                                    "markdownDescription": "Ensure that when checking for updates, the new version is `deprecated`"
                                 }
                             ]
                         },
                         "useragent": {
-                            "markdownDescription": "- User-Agent used to fetch the webpage content",
+                            "markdownDescription": "User-Agent used to fetch the webpage content",
                             "$ref": "#/definitions/str"
                         },
                         "script": {
-                            "markdownDescription": "- PowerShell script to track multiple links",
+                            "markdownDescription": "PowerShell script to track multiple links",
                             "$ref": "#/definitions/string_or_string_array"
                         },
                         "sourceforge": {
-                            "markdownDescription": "- SourceForge project version check configuration",
+                            "markdownDescription": "SourceForge project version check configuration",
                             "$ref": "#/definitions/str"
                         }
                     },
@@ -925,7 +925,7 @@
                         {},
                         {
                             "const": "github",
-                            "markdownDescription": "- If the homepage is a GitHub repository homepage, you can use the \"github\" string as the checkver configuration"
+                            "markdownDescription": "If the homepage is a GitHub repository homepage, you can use the \"github\" string as the checkver configuration"
                         }
                     ]
                 }
@@ -955,15 +955,15 @@
             "minProperties": 1,
             "properties": {
                 "url": {
-                    "markdownDescription": "- URL template to download the RDF/JSON file or extract the hash",
+                    "markdownDescription": "URL template to download the RDF/JSON file or extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "regex": {
-                    "markdownDescription": "- Alias: find\nRegEx expression to extract the hash",
+                    "markdownDescription": "Alias: find\nRegEx expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "find": {
-                    "markdownDescription": "- Alias: regex\nRegEx expression to extract the hash",
+                    "markdownDescription": "Alias: regex\nRegEx expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "mode": {
@@ -1008,15 +1008,15 @@
                     ]
                 },
                 "jp": {
-                    "markdownDescription": "- Alias: jsonpath\nJSONPath expression to extract the hash",
+                    "markdownDescription": "Alias: jsonpath\nJSONPath expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "jsonpath": {
-                    "markdownDescription": "- Alias: jp\nJSONPath expression to extract the hash",
+                    "markdownDescription": "Alias: jp\nJSONPath expression to extract the hash",
                     "$ref": "#/definitions/str"
                 },
                 "xpath": {
-                    "markdownDescription": "- XPath expression to extract the hash value",
+                    "markdownDescription": "XPath expression to extract the hash value",
                     "$ref": "#/definitions/str"
                 }
             }
@@ -1090,15 +1090,15 @@
                 },
                 {
                     "const": "pending",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `pending`\n- Details: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
+                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `pending`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 },
                 {
                     "const": "renamed",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `renamed`\n- Details: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
+                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `renamed`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 },
                 {
                     "const": "deprecated",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `deprecated`\n- Details: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
+                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `deprecated`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 }
             ]
         },
@@ -1218,7 +1218,7 @@
             "$ref": "#/definitions/env_set"
         },
         "innosetup": {
-            "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`",
+            "markdownDescription": "If the installer is based on `InnoSetup`, set it to `true`",
             "$ref": "#/definitions/bool"
         },
         "psmodule": {
@@ -1279,15 +1279,15 @@
                     "markdownDescription": "- Define the architecture for auto update\n- Architecture can be used to wrap differences",
                     "properties": {
                         "64bit": {
-                            "markdownDescription": "- 64bit architecture",
+                            "markdownDescription": "64bit architecture",
                             "$ref": "#/definitions/autoupdate_architecture"
                         },
                         "32bit": {
-                            "markdownDescription": "- 32bit architecture",
+                            "markdownDescription": "32bit architecture",
                             "$ref": "#/definitions/autoupdate_architecture"
                         },
                         "arm64": {
-                            "markdownDescription": "- arm64 architecture",
+                            "markdownDescription": "arm64 architecture",
                             "$ref": "#/definitions/autoupdate_architecture"
                         }
                     },
@@ -1950,6 +1950,11 @@
                                     }
                                 ]
                             },
+                            "innosetup": {
+                                "enum": [
+                                    true
+                                ]
+                            },
                             "checkver": {
                                 "not": {
                                     "type": "string"
@@ -2059,15 +2064,15 @@
                                 "items": [
                                     {
                                         "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                        "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
+                                        "markdownDescription": "Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                     },
                                     {
                                         "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                        "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                     },
                                     {
                                         "const": "A-Start-Install",
-                                        "markdownDescription": "- The start of install.\n- Install process: `pre_install` -> `installer` -> `post_install`"
+                                        "markdownDescription": "The start of install.\n- Install process: `pre_install` -> `installer` -> `post_install`"
                                     }
                                 ],
                                 "allOf": [
@@ -2076,120 +2081,128 @@
                                             "anyOf": [
                                                 {},
                                                 {
+                                                    "const": "A-Deny-IfAppConflict @()",
+                                                    "markdownDescription": "If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Reference: https://abyss.abgox.com/faq/deny-if-app-conflict"
+                                                },
+                                                {
+                                                    "pattern": "A-Deny-IfAppConflict",
+                                                    "markdownDescription": "If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Reference: https://abyss.abgox.com/faq/deny-if-app-conflict"
+                                                },
+                                                {
                                                     "const": "A-Deny-Manifest",
-                                                    "markdownDescription": "- Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated."
+                                                    "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated.\n- Reference: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
                                                     "const": "A-Deny-Manifest 'newName'",
-                                                    "markdownDescription": "- Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated."
+                                                    "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated.\n- Reference: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
                                                     "pattern": "A-Deny-Manifest",
-                                                    "markdownDescription": "- Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated."
+                                                    "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated.\n- Reference: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
                                                     "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
-                                                    "markdownDescription": "- Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
                                                     "pattern": "A-New-PersistFile",
-                                                    "markdownDescription": "- Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
                                                     "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\xxx\" \"$persist_dir\\xxx\"",
-                                                    "markdownDescription": "- Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
+                                                    "markdownDescription": "Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
                                                 },
                                                 {
                                                     "pattern": "A-Copy-Item",
-                                                    "markdownDescription": "- Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
+                                                    "markdownDescription": "Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
                                                 },
                                                 {
                                                     "const": "A-Expand-SetupExe",
-                                                    "markdownDescription": "- Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-Exe`.\n- Use `A-Expand-SetupExe` when `A-Install-Exe` needs admin privilege or it is more suitable for `A-Expand-SetupExe`."
+                                                    "markdownDescription": "Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-Exe`.\n- Use `A-Expand-SetupExe` when `A-Install-Exe` needs admin privilege or it is more suitable for `A-Expand-SetupExe`."
                                                 },
                                                 {
                                                     "const": "A-Install-Exe inno",
-                                                    "markdownDescription": "- Use `innosetup` installer."
+                                                    "markdownDescription": "Use `innosetup` installer."
                                                 },
                                                 {
                                                     "const": "A-Install-Exe msi",
-                                                    "markdownDescription": "- Use `msi` installer."
+                                                    "markdownDescription": "Use `msi` installer."
                                                 },
                                                 {
                                                     "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "- Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
-                                                    "markdownDescription": "- Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "pattern": "A-Install-Exe",
-                                                    "markdownDescription": "- Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
-                                                    "markdownDescription": "- Require admin permission to run"
+                                                    "markdownDescription": "Require admin permission to run\n- Reference: https://abyss.abgox.com/faq/require-admin"
                                                 },
                                                 {
                                                     "const": "A-Test-Admin",
-                                                    "markdownDescription": "- Check if running with admin permission"
+                                                    "markdownDescription": "Check if running with admin permission"
                                                 },
                                                 {
                                                     "const": "A-Test-DeveloperMode",
-                                                    "markdownDescription": "- Check if [developer mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging) is enabled"
+                                                    "markdownDescription": "Check if [developer mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging) is enabled"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory",
-                                                    "markdownDescription": "- Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
+                                                    "markdownDescription": "Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory 'xxx'",
-                                                    "markdownDescription": "- Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
+                                                    "markdownDescription": "Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
                                                     "pattern": "A-Ensure-Directory",
-                                                    "markdownDescription": "- Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
+                                                    "markdownDescription": "Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
                                                     "const": "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
-                                                    "markdownDescription": "- Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkFile",
-                                                    "markdownDescription": "- Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "const": "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
-                                                    "markdownDescription": "- Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkDirectory",
-                                                    "markdownDescription": "- Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "const": "A-Add-Font",
-                                                    "markdownDescription": "- Install font"
+                                                    "markdownDescription": "Install font"
                                                 },
                                                 {
                                                     "const": "A-Add-MsixPackage 'PackageFamilyName'",
-                                                    "markdownDescription": "- Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                    "markdownDescription": "Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-MsixPackage",
-                                                    "markdownDescription": "- Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                    "markdownDescription": "Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
                                                 },
                                                 {
                                                     "const": "A-Add-PowerToysRunPlugin 'xxx'",
-                                                    "markdownDescription": "- Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-PowerToysRunPlugin",
-                                                    "markdownDescription": "- Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "const": "A-Hold-App",
-                                                    "markdownDescription": "- After installation, automatically hold the application, preventing Scoop from updating it\n- It is typically used in conjunction with `A-Deny-Update` in `pre_uninstall`"
+                                                    "markdownDescription": "After installation, automatically hold the application, preventing Scoop from updating it\n- It is typically used in conjunction with `A-Deny-Update` in `pre_uninstall`"
                                                 }
                                             ]
                                         }
@@ -2215,15 +2228,15 @@
                                             "items": [
                                                 {
                                                     "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                    "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
+                                                    "markdownDescription": "Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                                 },
                                                 {
                                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                                    "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Complete-Install",
-                                                    "markdownDescription": "- The end of install.\n- Any custom installation logic should be placed before it.\n- Installation process: `pre_install` -> `installer` -> `post_install`"
+                                                    "markdownDescription": "The end of install.\n- Any custom installation logic should be placed before it.\n- Installation process: `pre_install` -> `installer` -> `post_install`"
                                                 }
                                             ]
                                         },
@@ -2251,15 +2264,15 @@
                                 "items": [
                                     {
                                         "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                        "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
+                                        "markdownDescription": "Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                     },
                                     {
                                         "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                        "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                        "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                     },
                                     {
                                         "const": "A-Start-Uninstall",
-                                        "markdownDescription": "- The start of uninstall.\n- Uninstallation process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                        "markdownDescription": "The start of uninstall.\n- Uninstallation process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
                                     }
                                 ],
                                 "allOf": [
@@ -2269,103 +2282,103 @@
                                                 {},
                                                 {
                                                     "const": "A-Stop-Process",
-                                                    "markdownDescription": "- Try to stop processes in the installation directory to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop processes in the installation directory to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Process",
-                                                    "markdownDescription": "- Try to stop processes in the installation directory to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop processes in the installation directory to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
-                                                    "markdownDescription": "- Try to stop and remove specified application services to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop and remove specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Service .* -RequireAdmin | A-Remove-Service",
-                                                    "markdownDescription": "- Try to stop and remove specified application services to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop and remove specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "const": "A-Stop-Service 'xxx' -RequireAdmin",
-                                                    "markdownDescription": "- Try to stop specified application services to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Service .* -RequireAdmin",
-                                                    "markdownDescription": "- Try to stop specified application services to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop specified application services to ensure successful uninstallation."
                                                 },
                                                 {
                                                     "const": "A-Remove-Link",
-                                                    "markdownDescription": "- Remove SymbolicLink or Junction created by `A-New-LinkFile` and `A-New-LinkDirectory`."
+                                                    "markdownDescription": "Remove SymbolicLink or Junction created by `A-New-LinkFile` and `A-New-LinkDirectory`."
                                                 },
                                                 {
                                                     "const": "A-Remove-Font",
-                                                    "markdownDescription": "- Remove fonts."
+                                                    "markdownDescription": "Remove fonts."
                                                 },
                                                 {
                                                     "const": "A-Remove-MsixPackage",
-                                                    "markdownDescription": "- Remove AppX/Msix packages."
+                                                    "markdownDescription": "Remove AppX/Msix packages."
                                                 },
                                                 {
                                                     "const": "A-Remove-PowerToysRunPlugin",
-                                                    "markdownDescription": "- Remove the plugins of PowerToys Run"
+                                                    "markdownDescription": "Remove the plugins of PowerToys Run"
                                                 },
                                                 {
                                                     "const": "A-Remove-TempData",
-                                                    "markdownDescription": "- Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
                                                 },
                                                 {
                                                     "const": "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                                                    "markdownDescription": "- Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
                                                 },
                                                 {
                                                     "pattern": "A-Remove-TempData",
-                                                    "markdownDescription": "- Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
-                                                    "markdownDescription": "- Require running with administrator permission."
+                                                    "markdownDescription": "Require running with administrator permission.\n- Reference: https://abyss.abgox.com/faq/require-admin"
                                                 },
                                                 {
                                                     "const": "A-Test-Admin",
-                                                    "markdownDescription": "- Check if running with administrator permission."
+                                                    "markdownDescription": "Check if running with administrator permission."
                                                 },
                                                 {
                                                     "const": "A-Deny-Update",
-                                                    "markdownDescription": "- Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`."
+                                                    "markdownDescription": "Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`.\n- Reference: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-ExeManually 'app'",
-                                                    "markdownDescription": "- Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally."
+                                                    "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Reference: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-ExeManually",
-                                                    "markdownDescription": "- Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally."
+                                                    "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Reference: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe",
-                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/VerySilent', '/Force')",
-                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
-                                                    "markdownDescription": "- Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
+                                                    "markdownDescription": "Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
                                                 },
                                                 {
                                                     "pattern": "\\$ProductCode = A-Get-ProductCode",
-                                                    "markdownDescription": "- Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
+                                                    "markdownDescription": "Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe $ProductCode",
-                                                    "markdownDescription": "- Uninstall the application using the product code (`msi`)\n- It requires a product code as a parameter\n- For example: `A-Uninstall-Exe $ProductCode`"
+                                                    "markdownDescription": "Uninstall the application using the product code (`msi`)\n- It requires a product code as a parameter\n- For example: `A-Uninstall-Exe $ProductCode`"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-Exe",
-                                                    "markdownDescription": "- Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 }
                                             ]
                                         }
@@ -2389,15 +2402,15 @@
                                             "items": [
                                                 {
                                                     "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                    "markdownDescription": "- Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
+                                                    "markdownDescription": "Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
                                                 },
                                                 {
                                                     "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                                    "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Complete-Uninstall",
-                                                    "markdownDescription": "- The end of the uninstall. Any custom uninstall logic should be placed before it.\n- Uninstall process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                    "markdownDescription": "The end of the uninstall. Any custom uninstall logic should be placed before it.\n- Uninstall process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
                                                 }
                                             ]
                                         },
@@ -3158,20 +3171,27 @@
                             }
                         },
                         "then": {
-                            "properties": {
-                                "innosetup": {
-                                    "not": {
-                                        "const": true
-                                    },
-                                    "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\"",
-                                    "examples": [
-                                        true
-                                    ]
-                                }
-                            },
                             "if": {
-                                "required": [
-                                    "psmodule"
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "innosetup"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "psmodule"
+                                        ]
+                                    },
+                                    {
+                                        "properties": {
+                                            "pre_install": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-Expand-SetupExe"
+                                                }
+                                            }
+                                        }
+                                    }
                                 ]
                             },
                             "else": {
@@ -3508,47 +3528,47 @@
                                                 {},
                                                 {
                                                     "const": ". \"$pwd\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "- Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                                    "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
                                                 },
                                                 {
                                                     "const": "A-Get-VersionFromGithubApi",
-                                                    "markdownDescription": "- Get the latest version from the GitHub repository"
+                                                    "markdownDescription": "Get the latest version from the GitHub repository"
                                                 },
                                                 {
                                                     "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                    "markdownDescription": "- Get installer information of specified application in Winget."
+                                                    "markdownDescription": "Get installer information of specified application in Winget."
                                                 },
                                                 {
-                                                    "pattern": "$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                    "markdownDescription": "- Get installer information of specified application in Winget."
+                                                    "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                    "markdownDescription": "Get installer information of specified application in Winget."
                                                 },
                                                 {
                                                     "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                    "markdownDescription": "- Output version number of specified application."
+                                                    "markdownDescription": "Output version number of specified application."
                                                 },
                                                 {
                                                     "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "- Output x64 installer URL of specified application."
+                                                    "markdownDescription": "Output x64 installer URL of specified application."
                                                 },
                                                 {
                                                     "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                    "markdownDescription": "- Output x64 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                                    "markdownDescription": "Output x64 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                 },
                                                 {
                                                     "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "- Output x86 installer URL of specified application."
+                                                    "markdownDescription": "Output x86 installer URL of specified application."
                                                 },
                                                 {
                                                     "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                    "markdownDescription": "- Output x86 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                                    "markdownDescription": "Output x86 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                 },
                                                 {
                                                     "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "- Output arm64 installer URL of specified application."
+                                                    "markdownDescription": "Output arm64 installer URL of specified application."
                                                 },
                                                 {
                                                     "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                    "markdownDescription": "- Output arm64 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                                    "markdownDescription": "Output arm64 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                 }
                                             ]
                                         }
