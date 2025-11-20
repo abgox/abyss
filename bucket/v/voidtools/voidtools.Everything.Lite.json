@@ -6,16 +6,6 @@
         "identifier": "Freeware",
         "url": "https://www.voidtools.com/License.txt"
     },
-    "notes": [
-        "voidtools.Everything.Lite does not use Link for data persistence.",
-        "Because it shares the data with voidtools.Everything.",
-        "Reference: https://abyss.abgox.com/faq/shared-data"
-    ],
-    "notes-cn": [
-        "voidtools.Everything.Lite 不使用 Link 进行数据持久化",
-        "因为它和 voidtools.Everything 共用数据",
-        "参考: https://abyss.abgox.com/faq/shared-data"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://www.voidtools.com/Everything-1.4.1.1030.x64.Lite.msi",
@@ -40,7 +30,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "# A-New-LinkDirectory @(\"$env:AppData\\Everything\")"
+        "A-Deny-IfAppConflict @('voidtools.Everything','voidtools.Everything.Lite')",
+        "A-New-LinkDirectory @(\"$env:AppData\\Everything\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -53,7 +44,7 @@
         "A-Start-Uninstall",
         "A-Stop-Service 'Everything' -RequireAdmin | A-Remove-Service",
         "A-Stop-Process",
-        "# A-Remove-Link",
+        "A-Remove-Link",
         "A-Remove-TempData @(\"$env:LocalAppData\\Everything\")"
     ],
     "post_uninstall": [

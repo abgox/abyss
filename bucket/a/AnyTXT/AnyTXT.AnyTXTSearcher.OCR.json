@@ -5,16 +5,6 @@
     "license": {
         "identifier": "Unknown"
     },
-    "notes": [
-        "AnyTXT.AnyTXTSearcher.OCR does not use Link for data persistence.",
-        "Because it shares the data with AnyTXT.AnyTXTSearcher.",
-        "Reference: https://abyss.abgox.com/faq/shared-data"
-    ],
-    "notes-cn": [
-        "AnyTXT.AnyTXTSearcher.OCR 不使用 Link 进行数据持久化",
-        "因为它和 AnyTXT.AnyTXTSearcher 共用数据",
-        "参考: https://abyss.abgox.com/faq/shared-data"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://sourceforge.net/projects/anytxt/files/Anytxt_1.3.2477_Windows_X86_64_OCR.exe/download#/dl.exe",
@@ -31,8 +21,9 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-Deny-IfAppConflict @('AnyTXT.AnyTXTSearcher','AnyTXT.AnyTXTSearcher.OCR')",
         "A-Require-Admin",
-        "# A-New-LinkDirectory @(\"$env:ProgramData\\Anytxt\")",
+        "A-New-LinkDirectory @(\"$env:ProgramData\\Anytxt\")",
         "A-Install-Exe inno"
     ],
     "post_install": [
@@ -46,7 +37,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "A-Stop-Process",
-        "# A-Remove-Link",
+        "A-Remove-Link",
         "A-Uninstall-Exe"
     ],
     "post_uninstall": [
