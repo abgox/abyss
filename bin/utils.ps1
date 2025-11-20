@@ -123,15 +123,15 @@ function A-Copy-Item {
         复制文件或目录
 
     .DESCRIPTION
-        通常用来将 bucket\extras 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
+        通常用来将 bucket\extra 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
         因为部分配置文件，如果直接使用 New-Item 或 Set-Content，会出现编码错误
 
     .EXAMPLE
-        A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" "$persist_dir\InputTip.ini"
+        A-Copy-Item "$bucketsdir\$bucket\extra\$app\InputTip.ini" "$persist_dir\InputTip.ini"
 
     .NOTES
         文件或目录名必须对应，以下是错误写法
-        A-Copy-Item "$bucketsdir\$bucket\extras\$app\InputTip.ini" $persist_dir
+        A-Copy-Item "$bucketsdir\$bucket\extra\$app\InputTip.ini" $persist_dir
     #>
     param (
         [string]$Path,
