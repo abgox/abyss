@@ -1,0 +1,69 @@
+{
+    "version": "0.18.4",
+    "description": "适用于你喜爱的终端的魅力十足的 AI coding agent | The glamourous AI coding agent for your favourite terminal",
+    "homepage": "https://github.com/charmbracelet/crush",
+    "license": {
+        "identifier": "FSL-1.1-MIT",
+        "url": "https://github.com/charmbracelet/crush/blob/main/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/charmbracelet/crush/releases/download/v0.18.4/crush_0.18.4_Windows_x86_64.zip",
+            "hash": "100b85404c3dc99b4bc1ab112d54b65f3c39e1b6c16d0cb1b71c4f1fade3bf3c",
+            "extract_dir": "crush_0.18.4_Windows_x86_64"
+        },
+        "arm64": {
+            "url": "https://github.com/charmbracelet/crush/releases/download/v0.18.4/crush_0.18.4_Windows_arm64.zip",
+            "hash": "d74d7744f28d5345dd1e43d7c1a143b2a2a954fb12855b66c826ec2a9f435110",
+            "extract_dir": "crush_0.18.4_Windows_arm64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\crush.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\crush\",\"$env:LocalAppData\\crush\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/charmbracelet/crush",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/charmbracelet/crush/releases/download/v$version/crush_$version_Windows_x86_64.zip",
+                "extract_dir": "crush_$version_Windows_x86_64"
+            },
+            "arm64": {
+                "url": "https://github.com/charmbracelet/crush/releases/download/v$version/crush_$version_Windows_arm64.zip",
+                "extract_dir": "crush_$version_Windows_arm64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
