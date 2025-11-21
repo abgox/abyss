@@ -1,0 +1,64 @@
+{
+    "version": "4.3.2.204",
+    "description": "具有高级电源管理和背光控制功能的 Windows 电池指示器替代品 | Windows battery indicator replacement with advanced power management and backlight control",
+    "homepage": "https://bmode.tarcode.ru/",
+    "license": {
+        "identifier": "Unknown",
+        "url": "https://github.com/tarcode-apps/BatteryMode/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tarcode-apps/BatteryMode/releases/download/v4.3.2.204/BatteryModeInstaller64.exe",
+            "hash": "db47b73066e0877eb46650654063564a6d6c3f49f94d74a5d4ef94c7b8ac5226",
+            "shortcuts": [
+                [
+                    "app\\BatteryMode64.exe",
+                    "Battery Mode 64-bit"
+                ]
+            ]
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/tarcode-apps/BatteryMode",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tarcode-apps/BatteryMode/releases/download/v$version/BatteryModeInstaller64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
