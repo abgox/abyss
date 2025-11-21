@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (458)|Tag|Description|
+|App (459)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -45,6 +45,7 @@
 |[7zip.7zip](https://7-zip.org/ "点击访问仓库或主页")|<a href="./bucket/7/7zip/7zip.7zip.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个拥有极高压缩比的开源压缩软件|
 |[8LWXpg.PowerToysRun-GitHubRepo](https://github.com/8LWXpg/PowerToysRun-GitHubRepo "点击访问仓库或主页")|<a href="./bucket/8/8LWXpg/8LWXpg.PowerToysRun-GitHubRepo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 PowerToys Run 插件，用于搜索 GitHub 存储库，然后在默认浏览器中打开|
 |[8LWXpg.PowerToysRun-ProcessKiller](https://github.com/8LWXpg/PowerToysRun-ProcessKiller "点击访问仓库或主页")|<a href="./bucket/8/8LWXpg/8LWXpg.PowerToysRun-ProcessKiller.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 PowerToys Run 插件，用于杀死进程|
+|[8LWXpg.ptr](https://github.com/8LWXpg/ptr "点击访问仓库或主页")|<a href="./bucket/8/8LWXpg/8LWXpg.ptr.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一个用于管理 PowerToys Run 插件的命令行工具。它可用于安装、卸载、更新、列出和导入插件。|
 |[aardio.aardio](https://www.aardio.com/ "点击访问仓库或主页")|<a href="./bucket/a/aardio/aardio.aardio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|灵活而强大的动态语言|
 |[aardio.ImTip](https://imtip.aardio.com/ "点击访问仓库或主页")|<a href="./bucket/a/aardio/aardio.ImTip.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|智能桌面助手|
 |[aardio.WubiLex](https://wubi.aardio.com/ "点击访问仓库或主页")|<a href="./bucket/a/aardio/aardio.WubiLex.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|五笔词库助手，让 Win10/Win11 微软五笔更强大|
