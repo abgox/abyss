@@ -1,8 +1,8 @@
 {
     "$comment": "Please use vscode; otherwise, markdownDescription may not work.",
     "$schema": "http://json-schema.org/draft-07/schema",
-    "title": "JSON Schema of the manifest for the abyss bucket",
-    "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
+    "$id": "https://schema.abgox.com/scoop-manifest.en-US.json",
+    "title": "Schema for Scoop manifest",
     "type": "object",
     "required": [
         "version",
@@ -10,7 +10,6 @@
         "homepage",
         "license"
     ],
-    "additionalProperties": false,
     "definitions": {
         "bool": {
             "type": "boolean",
@@ -45,7 +44,7 @@
                 },
                 {
                     "const": "Proprietary",
-                    "markdownDescription": "- Use `Proprietary`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is a paid software(must pay to use)\n- In the [abyss](https://abyss.abgox.com) bucket, its meaning has changed:\n  - A professional, proprietary commercial software, whether free or not\n  - Software specified as `Proprietary` in [winget-pkgs](https://github.com/microsoft/winget-pkgs)"
+                    "markdownDescription": "- Use `Proprietary`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is a paid software(must pay to use)"
                 },
                 {
                     "const": "Public Domain",
@@ -54,10 +53,6 @@
                 {
                     "const": "Shareware",
                     "markdownDescription": "- Use `Shareware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to try, but must pay eventually."
-                },
-                {
-                    "const": "Freemium",
-                    "markdownDescription": "- Use `Freemium`，This is a special field defined by [abyss](https://abyss.abgox.com): free to use, must pay to unlock advanced features"
                 }
             ]
         },
@@ -212,11 +207,15 @@
             "examples": [
                 {}
             ],
-            "minLength": 1,
             "anyOf": [
-                {},
+                {
+                    "minLength": 1
+                },
                 {
                     "$ref": "#/definitions/license_field"
+                },
+                {
+                    "$ref": "#/definitions/license_identifier"
                 }
             ],
             "if": {
@@ -264,12 +263,7 @@
         },
         "notes": {
             "title": "Notes",
-            "markdownDescription": "- English notes after installing the software.",
-            "$ref": "#/definitions/string_or_string_array"
-        },
-        "notes-cn": {
-            "title": "Notes (Chinese)",
-            "markdownDescription": "- Chinese notes after installing the software.\n- It is a special field of [abyss](https://abyss.abgox.com)",
+            "markdownDescription": "- The notes after installing the software.",
             "$ref": "#/definitions/string_or_string_array"
         },
         "url_validation": {
@@ -391,30 +385,7 @@
             "title": "Architecture information",
             "markdownDescription": "- The architecture information of the program.\n- Architecture can be used to wrap differences",
             "type": "object",
-            "$ref": "#/definitions/architecture_example",
-            "if": {
-                "anyOf": [
-                    {
-                        "required": [
-                            "64bit"
-                        ]
-                    },
-                    {
-                        "required": [
-                            "32bit"
-                        ]
-                    },
-                    {
-                        "required": [
-                            "arm64"
-                        ]
-                    }
-                ]
-            },
-            "else": {
-                "not": true,
-                "errorMessage": "At least one of 64bit, 32bit, or arm64 must be defined in the architecture."
-            },
+            "minProperties": 1,
             "additionalProperties": false,
             "properties": {
                 "64bit": {
@@ -439,10 +410,7 @@
         "extract_to": {
             "title": "Extract content to specified directory",
             "markdownDescription": "- If the value of the url property points to a compressed package, Scoop will extract all content to the directory defined by `extract_to`\n  - Compressed package types: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- If url is an array with multiple compressed packages, `extract_to` should also be an array with the same order as url",
-            "$ref": "#/definitions/string_or_string_array",
-            "examples": [
-                "app"
-            ]
+            "$ref": "#/definitions/string_or_string_array"
         },
         "env_add_path": {
             "title": "Add the specified directory to the PATH environment variable",
@@ -592,31 +560,13 @@
             "minLength": 1,
             "minItems": 1,
             "uniqueItems": true,
-            "examples": [
-                "app\\xxx.exe",
-                [],
-                [
-                    [
-                        "app\\xxx.exe",
-                        "xxx"
-                    ]
-                ]
-            ],
             "title": "Program (executable or script) string or string array",
-            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```"
+            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```"
         },
         "shortcuts": {
             "type": "array",
             "title": "Some shortcuts added to the Start menu",
             "markdownDescription": "- Specifies shortcuts to be added to the Start menu, placed in the `Scoop Apps` folder\n- Each array can contain up to four values:\n    1. Required: path to the target file\n    2. Required: name of the shortcut; subdirectories are supported: `aaa\\bbb`\n    3. Optional: launch arguments\n    4. Optional: path to the icon file",
-            "examples": [
-                [
-                    [
-                        "app\\xxx.exe",
-                        "xxx"
-                    ]
-                ]
-            ],
             "items": {
                 "type": "array",
                 "items": {
@@ -667,7 +617,7 @@
         },
         "persist": {
             "title": "Persisted data",
-            "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$env:UserProfile\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")`\n- Lay the foundation for possible seamless migration in the future\n---- Scoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```",
+            "markdownDescription": "- Scoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```",
             "type": [
                 "string",
                 "array"
@@ -834,10 +784,7 @@
                     "properties": {
                         "url": {
                             "markdownDescription": "URL of the page where the version is located",
-                            "$ref": "#/definitions/str",
-                            "examples": [
-                                "https://github.com/:owner/:repo"
-                            ]
+                            "$ref": "#/definitions/str"
                         },
                         "github": {
                             "markdownDescription": "GitHub repository of the application",
@@ -889,18 +836,6 @@
                                 {
                                     "const": "${1}.${2}.${3}.${4}${5}${6}",
                                     "markdownDescription": "Replace the matched value with `${1}.${2}.${3}.${4}${5}${6}`, where `${1}` represents the first match group, `${2}` represents the second match group, and so on."
-                                },
-                                {
-                                    "const": "pending",
-                                    "markdownDescription": "Ensure that when checking for updates, the new version is `pending`"
-                                },
-                                {
-                                    "const": "renamed",
-                                    "markdownDescription": "Ensure that when checking for updates, the new version is `renamed`"
-                                },
-                                {
-                                    "const": "deprecated",
-                                    "markdownDescription": "Ensure that when checking for updates, the new version is `deprecated`"
                                 }
                             ]
                         },
@@ -1063,6 +998,57 @@
             },
             "minProperties": 1,
             "additionalProperties": false
+        },
+        "github_release_url": {
+            "required": [
+                "url"
+            ],
+            "properties": {
+                "url": {
+                    "type": [
+                        "array",
+                        "string"
+                    ],
+                    "pattern": "^https://github\\.com/.+?/releases/download/",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^https://github\\.com/.+?/releases/download/"
+                    }
+                }
+            }
+        },
+        "url_hash_type_match": {
+            "required": [
+                "url",
+                "hash"
+            ],
+            "if": {
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "hash": {
+                        "$ref": "#/definitions/str",
+                        "errorMessage": "The type of 'url' and 'hash' must match"
+                    }
+                }
+            },
+            "else": {
+                "properties": {
+                    "hash": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/hash"
+                        },
+                        "minItems": 1,
+                        "errorMessage": "The type of 'url' and 'hash' must match"
+                    }
+                }
+            }
         }
     },
     "properties": {
@@ -1073,7 +1059,7 @@
         },
         "version": {
             "title": "Version",
-            "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special fields to control manifest status: `pending`, `renamed`, `deprecated`",
+            "markdownDescription": "- Version number of the software.",
             "$ref": "#/definitions/str",
             "examples": [
                 "0.0.0"
@@ -1087,59 +1073,14 @@
                 {
                     "const": "nightly",
                     "markdownDescription": "- Current version is nightly"
-                },
-                {
-                    "const": "pending",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `pending`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
-                },
-                {
-                    "const": "renamed",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `renamed`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
-                },
-                {
-                    "const": "deprecated",
-                    "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `deprecated`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                 }
             ]
         },
         "description": {
             "title": "App Description",
-            "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
+            "markdownDescription": "- A brief description of the software.",
             "type": "string",
-            "minLength": 1,
-            "examples": [
-                "描述 | Description"
-            ],
-            "allOf": [
-                {
-                    "not": {
-                        "const": "描述 | Description"
-                    },
-                    "errorMessage": "Please modify the description"
-                },
-                {
-                    "not": {
-                        "pattern": "^描述 \\|"
-                    },
-                    "errorMessage": "Please modify the Chinese description"
-                },
-                {
-                    "not": {
-                        "pattern": "\\| Description$"
-                    },
-                    "errorMessage": "Please modify the English description"
-                },
-                {
-                    "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
-                    "errorMessage": "It does not conform to the specified format: Chinese description | English description\nNote: There should be only one space on each side of the | symbol"
-                },
-                {
-                    "not": {
-                        "pattern": "\\|.*\\|"
-                    },
-                    "errorMessage": "It can only have one | symbol, which is used to separate Chinese and English descriptions"
-                }
-            ]
+            "minLength": 1
         },
         "homepage": {
             "title": "Homepage",
@@ -1192,9 +1133,6 @@
         },
         "notes": {
             "$ref": "#/definitions/notes"
-        },
-        "notes-cn": {
-            "$ref": "#/definitions/notes-cn"
         },
         "url": {
             "$ref": "#/definitions/url"
@@ -1256,9 +1194,8 @@
         },
         "autoupdate": {
             "title": "Auto Update",
-            "markdownDescription": "- It will automatically update the manifest via [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml)\n - Scoop can install specific versions using `scoop install AppName@1.2.3`\n - The prerequisite is that `url` in the `autoupdate` of the manifest can only contain the following [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
+            "markdownDescription": "- It will automatically update the manifest via [Github Actions](https://github.com/ScoopInstaller/GithubActions)\n - Scoop can install specific versions using `scoop install AppName@1.2.3`\n - The prerequisite is that `url` in the `autoupdate` of the manifest can only contain the following [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
             "type": "object",
-            "additionalProperties": false,
             "minProperties": 1,
             "examples": [
                 {
@@ -1296,9 +1233,6 @@
                 },
                 "notes": {
                     "$ref": "#/definitions/notes"
-                },
-                "notes-cn": {
-                    "$ref": "#/definitions/notes-cn"
                 },
                 "url": {
                     "$ref": "#/definitions/autoupdate_url"
@@ -1353,7 +1287,7 @@
     "then": {
         "allOf": [
             {
-                "$comment": "Standard Specifications",
+                "$comment": "Standard Specifications of Scoop",
                 "allOf": [
                     {
                         "$comment": "If 'checkver' is set, 'autoupdate' must be set.",
@@ -1412,15 +1346,7 @@
                                 "if": {
                                     "oneOf": [
                                         {
-                                            "required": [
-                                                "url"
-                                            ],
-                                            "properties": {
-                                                "url": {
-                                                    "$ref": "#/definitions/str",
-                                                    "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                }
-                                            }
+                                            "$ref": "#/definitions/github_release_url"
                                         },
                                         {
                                             "required": [
@@ -1437,37 +1363,18 @@
                                                         },
                                                         {
                                                             "required": [
-                                                                "32bit"
+                                                                "arm64"
                                                             ]
                                                         },
                                                         {
                                                             "required": [
-                                                                "arm64"
+                                                                "32bit"
                                                             ]
                                                         }
                                                     ],
                                                     "patternProperties": {
                                                         "^(64bit|arm64|32bit)$": {
-                                                            "required": [
-                                                                "url"
-                                                            ],
-                                                            "properties": {
-                                                                "url": {
-                                                                    "oneOf": [
-                                                                        {
-                                                                            "$ref": "#/definitions/str",
-                                                                            "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                                        },
-                                                                        {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "$ref": "#/definitions/str",
-                                                                                "pattern": "^https://github\\.com/.+?/releases/download/"
-                                                                            }
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            }
+                                                            "$ref": "#/definitions/github_release_url"
                                                         }
                                                     }
                                                 }
@@ -1550,55 +1457,40 @@
                         }
                     },
                     {
-                        "$comment": "If 'url' is set, 'hash' must be set, and 'url' in 'architecture' cannot be set.",
+                        "$comment": "Only one of 'url' and 'architecture' can be chosen. The type of 'url' and 'hash' must match.",
                         "if": {
                             "required": [
                                 "url"
                             ]
                         },
                         "then": {
-                            "allOf": [
-                                {
-                                    "required": [
-                                        "hash"
-                                    ],
-                                    "properties": {
-                                        "hash": {
-                                            "examples": [
-                                                "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "allOf": [
+                                                {
+                                                    "not": {
+                                                        "required": [
+                                                            "url"
+                                                        ]
+                                                    },
+                                                    "errorMessage": "Property 'url' in 'architecture' conflicts with the top-level 'url'. You can only choose one way."
+                                                },
+                                                {
+                                                    "not": {
+                                                        "required": [
+                                                            "hash"
+                                                        ]
+                                                    },
+                                                    "errorMessage": "If the top-level 'url' is set, 'hash' in 'architecture' cannot be set."
+                                                }
                                             ]
                                         }
                                     }
-                                },
-                                {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "allOf": [
-                                                        {
-                                                            "not": {
-                                                                "required": [
-                                                                    "url"
-                                                                ]
-                                                            },
-                                                            "errorMessage": "Property 'url' in 'architecture' conflicts with the top-level 'url'. You can only choose one way."
-                                                        },
-                                                        {
-                                                            "not": {
-                                                                "required": [
-                                                                    "hash"
-                                                                ]
-                                                            },
-                                                            "errorMessage": "When the top-level 'url' is set, 'hash' in 'architecture' cannot be set."
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
-                            ]
+                            },
+                            "$ref": "#/definitions/url_hash_type_match"
                         },
                         "else": {
                             "properties": {
@@ -1606,136 +1498,16 @@
                                     "$ref": "#/definitions/architecture_example",
                                     "patternProperties": {
                                         "^(64bit|arm64|32bit)$": {
-                                            "required": [
-                                                "url"
-                                            ]
+                                            "$ref": "#/definitions/url_hash_type_match"
                                         }
                                     }
+                                },
+                                "hash": {
+                                    "not": true,
+                                    "errorMessage": "If 'url' is not set, 'hash' cannot be set."
                                 }
                             }
                         }
-                    },
-                    {
-                        "$comment": "If 'url' is set, when 'url' is a string, 'hash' must be a string, and when 'url' is an array, 'hash' must be an array.",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "required": [
-                                        "url"
-                                    ]
-                                },
-                                "then": {
-                                    "if": {
-                                        "properties": {
-                                            "url": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "hash": {
-                                                "$ref": "#/definitions/str",
-                                                "errorMessage": "When 'url' is a string, 'hash' must be a string."
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "properties": {
-                                            "hash": {
-                                                "type": "array",
-                                                "items": {
-                                                    "$ref": "#/definitions/hash"
-                                                },
-                                                "examples": [
-                                                    []
-                                                ],
-                                                "minItems": 1,
-                                                "errorMessage": "When 'url' is an array, 'hash' must be an array."
-                                            }
-                                        }
-                                    }
-                                },
-                                "else": {
-                                    "allOf": [
-                                        {
-                                            "properties": {
-                                                "hash": {
-                                                    "not": true,
-                                                    "errorMessage": "When the top-level 'url' is not set, the top-level 'hash' cannot be set."
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "architecture"
-                                    ]
-                                },
-                                "then": {
-                                    "if": {
-                                        "properties": {
-                                            "architecture": {
-                                                "patternProperties": {
-                                                    "^(64bit|arm64|32bit)$": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "type": "string"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "architecture": {
-                                                "patternProperties": {
-                                                    "^(64bit|arm64|32bit)$": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "hash": {
-                                                                "$ref": "#/definitions/str",
-                                                                "errorMessage": "When 'url' in 'architecture' is a string, 'hash' in 'architecture' must be a string."
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "properties": {
-                                            "architecture": {
-                                                "patternProperties": {
-                                                    "^(64bit|arm64|32bit)$": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "hash": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "$ref": "#/definitions/str"
-                                                                },
-                                                                "minItems": 1,
-                                                                "errorMessage": "When 'url' in 'architecture' is an array, 'hash' in 'architecture' must be an array."
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
                     },
                     {
                         "$comment": "Ensure that the 'architecture' and 'autoupdate.architecture' are consistent.",
@@ -1779,19 +1551,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "if": {
+                                                "not": {
                                                     "required": [
                                                         "64bit"
                                                     ]
                                                 },
-                                                "then": {
-                                                    "properties": {
-                                                        "64bit": {
-                                                            "not": true,
-                                                            "errorMessage": "When 'autoupdate.architecture' does not set '64bit', 'architecture' must not set '64bit'."
-                                                        }
-                                                    }
-                                                }
+                                                "errorMessage": "The 'architecture' in 'autoupdate' does not set '64bit'."
                                             }
                                         }
                                     }
@@ -1822,19 +1587,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "if": {
+                                                "not": {
                                                     "required": [
                                                         "32bit"
                                                     ]
                                                 },
-                                                "then": {
-                                                    "properties": {
-                                                        "32bit": {
-                                                            "not": true,
-                                                            "errorMessage": "When 'autoupdate.architecture' does not set '32bit', 'architecture' must not set '32bit'."
-                                                        }
-                                                    }
-                                                }
+                                                "errorMessage": "The 'architecture' in 'autoupdate' does not set '32bit'."
                                             }
                                         }
                                     }
@@ -1865,19 +1623,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "if": {
+                                                "not": {
                                                     "required": [
                                                         "arm64"
                                                     ]
                                                 },
-                                                "then": {
-                                                    "properties": {
-                                                        "arm64": {
-                                                            "not": true,
-                                                            "errorMessage": "When 'autoupdate.architecture' does not set 'arm64', 'architecture' must not set 'arm64'."
-                                                        }
-                                                    }
-                                                }
+                                                "errorMessage": "The 'architecture' in 'autoupdate' does not set 'arm64'."
                                             }
                                         }
                                     }
@@ -1888,19 +1639,102 @@
                 ]
             },
             {
-                "$comment": "Some features of abyss",
+                "$comment": "Extended Specifications of abyss",
+                "title": "JSON Schema of the manifest for the abyss bucket",
+                "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
+                "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
+                "propertyNames": {
+                    "pattern": "^(##|version|description|homepage|license|notes|notes-cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
+                    "errorMessage": "Property is not allowed."
+                },
                 "allOf": [
                     {
                         "properties": {
+                            "version": {
+                                "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special fields to control manifest status: `pending`, `renamed`, `deprecated`",
+                                "anyOf": [
+                                    {},
+                                    {
+                                        "const": "pending",
+                                        "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `pending`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
+                                    },
+                                    {
+                                        "const": "renamed",
+                                        "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `renamed`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
+                                    },
+                                    {
+                                        "const": "deprecated",
+                                        "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `deprecated`\n- Reference: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
+                                    }
+                                ]
+                            },
+                            "description": {
+                                "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
+                                "examples": [
+                                    "描述 | Description"
+                                ],
+                                "allOf": [
+                                    {
+                                        "not": {
+                                            "const": "描述 | Description"
+                                        },
+                                        "errorMessage": "Please modify the description"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "^描述 \\|"
+                                        },
+                                        "errorMessage": "Please modify the Chinese description"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "\\| Description$"
+                                        },
+                                        "errorMessage": "Please modify the English description"
+                                    },
+                                    {
+                                        "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                                        "errorMessage": "It does not conform to the specified format: Chinese description | English description\nNote: There should be only one space on each side of the | symbol"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "\\|.*\\|"
+                                        },
+                                        "errorMessage": "It can only have one | symbol, which is used to separate Chinese and English descriptions"
+                                    }
+                                ]
+                            },
                             "license": {
                                 "not": {
                                     "type": "string"
                                 },
-                                "errorMessage": "In abyss, it must be an object."
+                                "errorMessage": "In abyss, it must be an object.",
+                                "properties": {
+                                    "identifier": {
+                                        "anyOf": [
+                                            {
+                                                "minLength": 1
+                                            },
+                                            {
+                                                "const": "Proprietary",
+                                                "markdownDescription": "- Use `Proprietary`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is a paid software(must pay to use)\n- In the [abyss](https://abyss.abgox.com) bucket, its meaning has changed:\n  - A professional, proprietary commercial software, whether free or not\n  - Software specified as `Proprietary` in [winget-pkgs](https://github.com/microsoft/winget-pkgs)"
+                                            },
+                                            {
+                                                "const": "Freemium",
+                                                "markdownDescription": "- Use `Freemium`，This is a special field defined by [abyss](https://abyss.abgox.com): free to use, must pay to unlock advanced features"
+                                            }
+                                        ]
+                                    }
+                                }
                             },
                             "url": {
                                 "not": true,
                                 "errorMessage": "In abyss, it is not allowed. Please use 'architecture'."
+                            },
+                            "notes-cn": {
+                                "title": "Notes (Chinese)",
+                                "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes-cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
+                                "$ref": "#/definitions/string_or_string_array"
                             },
                             "depends": {
                                 "pattern": "^abyss/",
@@ -1950,10 +1784,41 @@
                                     }
                                 ]
                             },
+                            "extract_to": {
+                                "examples": [
+                                    "app"
+                                ]
+                            },
                             "innosetup": {
                                 "enum": [
                                     true
                                 ]
+                            },
+                            "bin": {
+                                "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
+                                "examples": [
+                                    "app\\xxx.exe",
+                                    [],
+                                    [
+                                        [
+                                            "app\\xxx.exe",
+                                            "xxx"
+                                        ]
+                                    ]
+                                ]
+                            },
+                            "shortcuts": {
+                                "examples": [
+                                    [
+                                        [
+                                            "app\\xxx.exe",
+                                            "xxx"
+                                        ]
+                                    ]
+                                ]
+                            },
+                            "persist": {
+                                "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$env:UserProfile\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")`\n- Lay the foundation for possible seamless migration in the future\n----\nScoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
                             },
                             "checkver": {
                                 "not": {
@@ -1965,7 +1830,10 @@
                                         "not": {
                                             "pattern": "/:owner/:repo"
                                         },
-                                        "errorMessage": "':owner' and ':repo' are placeholders"
+                                        "errorMessage": "':owner' and ':repo' are placeholders",
+                                        "examples": [
+                                            "https://github.com/:owner/:repo"
+                                        ]
                                     },
                                     "github": {
                                         "not": true,
@@ -1978,14 +1846,41 @@
                                     "jp": {
                                         "not": true,
                                         "errorMessage": "In abyss, the 'jp' field is not allowed to be used, please use 'jsonpath' field"
+                                    },
+                                    "replace": {
+                                        "anyOf": [
+                                            {},
+                                            {
+                                                "const": "pending",
+                                                "markdownDescription": "Ensure that when checking for updates, the new version is `pending`"
+                                            },
+                                            {
+                                                "const": "renamed",
+                                                "markdownDescription": "Ensure that when checking for updates, the new version is `renamed`"
+                                            },
+                                            {
+                                                "const": "deprecated",
+                                                "markdownDescription": "Ensure that when checking for updates, the new version is `deprecated`"
+                                            }
+                                        ]
                                     }
                                 }
                             },
                             "autoupdate": {
+                                "propertyNames": {
+                                    "pattern": "^(architecture|notes|notes-cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
+                                    "errorMessage": "Property is not allowed."
+                                },
+                                "markdownDescription": "- It will automatically update the manifest via [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml)\n - Scoop can install specific versions using `scoop install AppName@1.2.3`\n - The prerequisite is that `url` in the `autoupdate` of the manifest can only contain the following [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
                                 "properties": {
                                     "url": {
                                         "not": true,
                                         "errorMessage": "In abyss, the 'url' field is not allowed. Please use 'architecture'."
+                                    },
+                                    "notes-cn": {
+                                        "title": "Notes (Chinese)",
+                                        "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes-cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
+                                        "$ref": "#/definitions/string_or_string_array"
                                     },
                                     "architecture": {
                                         "properties": {
@@ -2211,7 +2106,6 @@
                             },
                             "post_install": {
                                 "markdownDescription": "- For [abyss](https://abyss.abgox.com), it should be a specified fixed array usually.\n- If it is necessary to add installation logic in `post_install`, it must be ensured that the last item is `A-Complete-Install`\n---\n- Commands executed after the application is installed\n- Execution order: `pre_install` -> `installer` -> `post_install`\n- Note: At this point, Scoop has already completed persist, so if you need to create files for persist, do it before this (in pre_install)\n- Available functions:\n    - appdir: Reference another exclusive application.\nFor example, to check if another application is installed, you can use \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- Available variables:\n    - $app: Application name (manifest name)\n    - $architecture: CPU architecture of the installed application, e.g. 64bit/32bit/arm64\n    - $cmd: Current running subcommand, e.g. uninstall/update/install\n    - $fname: Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)\n    - $cfg: Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: If value is $true, then it's a global installation\n    - $manifest: Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}\n    - $version: Version being installed, e.g. 1.2.3\n    - $dir: Application installation directory (current directory)\n    - $persist_dir: Data persistence directory\n    - $bucketsdir: Scoop buckets directory, e.g. D:\\scoop\\buckets\n    - $bucket: Name of the bucket to which the currently installed application belongs\n    - $cachedir: Scoop cache directory\n    - $configFile: Path to Scoop configuration\n    - $globaldir: Global installation directory\n    - $modulesdir: Scoop modules directory\n    - $original_dir: Application installation directory (actual version number directory)\n    - $scoopdir: Scoop installation directory",
-
                                 "type": "array",
                                 "minItems": 3,
                                 "examples": [
@@ -3205,22 +3099,13 @@
                                                             "string",
                                                             "array"
                                                         ],
-                                                        "if": {
+                                                        "not": {
                                                             "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
                                                             "items": {
                                                                 "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
                                                             }
                                                         },
-                                                        "then": {
-                                                            "not": {
-                                                                "not": {
-                                                                    "required": [
-                                                                        "psmodule"
-                                                                    ]
-                                                                }
-                                                            },
-                                                            "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
-                                                        }
+                                                        "errorMessage": "Missing property 'extract_to', and it's value is usually \"app\""
                                                     }
                                                 }
                                             }
