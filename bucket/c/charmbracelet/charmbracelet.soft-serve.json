@@ -1,0 +1,58 @@
+{
+    "version": "0.11.1",
+    "description": "一个优秀的、可自托管的命令行 Git 服务器 | A tasty, self-hostable Git server for the command line",
+    "homepage": "https://github.com/charmbracelet/soft-serve",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/charmbracelet/soft-serve/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/charmbracelet/soft-serve/releases/download/v0.11.1/soft-serve_0.11.1_Windows_x86_64.zip",
+            "hash": "47f77b8585098c06e647ee257637744200367aa9c065774b5641432ef1604f54",
+            "extract_dir": "soft-serve_0.11.1_Windows_x86_64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\soft.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/charmbracelet/soft-serve",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/charmbracelet/soft-serve/releases/download/v$version/soft-serve_$version_Windows_x86_64.zip",
+                "extract_dir": "soft-serve_$version_Windows_x86_64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
