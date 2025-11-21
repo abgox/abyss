@@ -1,0 +1,60 @@
+{
+    "version": "0.15.2",
+    "description": "管理和连接所有 SSH 端点的唯一网关 | Your single gateway to manage and connect all SSH endpoints.",
+    "homepage": "https://github.com/charmbracelet/wishlist",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/charmbracelet/wishlist/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/charmbracelet/wishlist/releases/download/v0.15.2/wishlist_0.15.2_Windows_x86_64.zip",
+            "hash": "b0122f03751ba00bbc9678814d31319f823e9b0a3f4e0790f36f7c7e6e11e945",
+            "extract_dir": "wishlist_0.15.2_Windows_x86_64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\wishlist.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\wishlist\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/charmbracelet/wishlist",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/charmbracelet/wishlist/releases/download/v$version/wishlist_$version_Windows_x86_64.zip",
+                "extract_dir": "wishlist_$version_Windows_x86_64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
