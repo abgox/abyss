@@ -1644,7 +1644,7 @@
                 "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
                 "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
                 "propertyNames": {
-                    "pattern": "^(##|version|description|homepage|license|notes|notes-cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
+                    "pattern": "^(##|version|description|homepage|license|depends|suggest|notes|notes-cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
                     "errorMessage": "不允许的属性名"
                 },
                 "allOf": [
@@ -1727,15 +1727,6 @@
                                     }
                                 }
                             },
-                            "url": {
-                                "not": true,
-                                "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
-                            },
-                            "notes-cn": {
-                                "title": "提示信息 (中文)",
-                                "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes-cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
-                                "$ref": "#/definitions/string_or_string_array"
-                            },
                             "depends": {
                                 "pattern": "^abyss/",
                                 "errorMessage": "只能依赖 abyss 中的应用清单，如: abyss/xxx",
@@ -1756,13 +1747,22 @@
                                     }
                                 }
                             },
+                            "notes-cn": {
+                                "title": "提示信息 (中文)",
+                                "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes-cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
+                                "$ref": "#/definitions/string_or_string_array"
+                            },
+                            "url": {
+                                "not": true,
+                                "errorMessage": "abyss 中不允许使用它，请使用 architecture"
+                            },
                             "architecture": {
                                 "allOf": [
                                     {
                                         "properties": {
                                             "32bit": {
                                                 "not": true,
-                                                "errorMessage": "abyss 中不允许使用 32bit 架构"
+                                                "errorMessage": "abyss 中不允许使用它"
                                             }
                                         }
                                     },
@@ -1820,6 +1820,14 @@
                             "persist": {
                                 "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$env:UserProfile\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
                             },
+                            "installer": {
+                                "not": true,
+                                "errorMessage": "abyss 中不允许使用它"
+                            },
+                            "uninstaller": {
+                                "not": true,
+                                "errorMessage": "abyss 中不允许使用它"
+                            },
                             "checkver": {
                                 "not": {
                                     "type": "string"
@@ -1837,15 +1845,15 @@
                                     },
                                     "github": {
                                         "not": true,
-                                        "errorMessage": "abyss 中不允许使用 github 字段"
+                                        "errorMessage": "abyss 中不允许使用它"
                                     },
                                     "re": {
                                         "not": true,
-                                        "errorMessage": "abyss 中不允许使用 re 字段，请使用 regex 字段"
+                                        "errorMessage": "abyss 中不允许使用它，请使用 regex 字段"
                                     },
                                     "jp": {
                                         "not": true,
-                                        "errorMessage": "abyss 中不允许使用 jp 字段，请使用 jsonpath 字段"
+                                        "errorMessage": "abyss 中不允许使用它，请使用 jsonpath 字段"
                                     },
                                     "replace": {
                                         "anyOf": [
@@ -1875,7 +1883,7 @@
                                 "properties": {
                                     "url": {
                                         "not": true,
-                                        "errorMessage": "abyss 中不允许使用 url 字段，请使用 architecture"
+                                        "errorMessage": "abyss 中不允许使用它，请使用 architecture"
                                     },
                                     "notes-cn": {
                                         "title": "提示信息 (中文)",
@@ -1886,7 +1894,7 @@
                                         "properties": {
                                             "32bit": {
                                                 "not": true,
-                                                "errorMessage": "abyss 中不允许使用 32bit 架构"
+                                                "errorMessage": "abyss 中不允许使用它"
                                             }
                                         }
                                     }
