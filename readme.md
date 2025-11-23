@@ -36,29 +36,24 @@
 
 > [!Tip]
 >
-> - [abyss](https://abyss.abgox.com) is a very special Scoop bucket repository.
+> - [abyss](https://abyss.abgox.com) is a very special Scoop bucket.
 > - It aims to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
-> - Manifests are based on [bin/utils.ps1](./bin/utils.ps1).
-> - They contain some [features](#features), and other buckets should not merge them to avoid conflicts and errors.
+> - These manifests based on [utils.ps1](./bin/utils.ps1) contain some extra [features](#features), and other buckets should not merge them to avoid conflicts and errors.
 
-### Features
+## Features
 
 - [Enhanced Data Persistence](https://abyss.abgox.com/features/data-persistence)
 - [Flexible App Installation Solution](https://abyss.abgox.com/features/install-solution)
 - [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)
 - [Extra Features](https://abyss.abgox.com/features/extra-features)
 - Multilingual support powered by [abgox/scoop-i18n](https://scoop-i18n.abgox.com).
-- Inspired by [winget-pkgs](https://github.com/microsoft/winget-pkgs).
-  - Manifest naming format: `Publisher.PackageIdentifier`
-  - Directory structure: `bucket/a/abgox/abgox.scoop-i18n.json`
+- Referenced the naming format of [winget-pkgs](https://github.com/microsoft/winget-pkgs): `Publisher.PackageIdentifier`
 
-### Demo
+## Demo
 
 ![Demo](https://abyss.abgox.com/demo.gif)
 
----
-
-### If you are not using Scoop
+## If you are not using Scoop
 
 > [!Tip]
 >
@@ -70,13 +65,9 @@
 - [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
 - [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
-### If you are using Scoop
+## If you are using Scoop
 
-> [!Warning]
->
-> Please use `abyss` as the bucket name to avoid "bucket not found" errors when parsing "depends" in some manifests.
-
-1.  Add the [abyss](https://abyss.abgox.com) bucket via [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
+1.  Add the [abyss](https://abyss.abgox.com) bucket ([Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss)).
 
     ```shell
     scoop bucket add abyss https://github.com/abgox/abyss
@@ -100,19 +91,20 @@
     psc add scoop
     ```
 
-3.  Install [scoop-i18n](https://scoop-i18n.abgox.com) to enable i18n support.
+3.  Install [scoop-i18n](https://scoop-i18n.abgox.com) to enable multilingual support.
 
     ```shell
     scoop install abyss/abgox.scoop-i18n
     ```
 
-### If you cannot access Github resources
+## If you cannot access Github resources
 
-- You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy url to download the installation package.
-  - Github: https://github.com/abgox/scoop-tools
-  - Gitee: https://gitee.com/abgox/scoop-tools
+You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy url to download the installation package.
 
-### App List
+- Github: https://github.com/abgox/scoop-tools
+- Gitee: https://gitee.com/abgox/scoop-tools
+
+## App List
 
 > [!Tip]
 >
