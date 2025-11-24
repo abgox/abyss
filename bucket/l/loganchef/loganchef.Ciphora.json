@@ -1,0 +1,64 @@
+{
+    "version": "1.3.0",
+    "description": "一个开源、安全、跨平台的密码管理器 | An open-source, secure, and cross-platform password manager",
+    "homepage": "https://github.com/loganchef/Ciphora",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/loganchef/Ciphora/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/loganchef/Ciphora/releases/download/v1.3.0/Ciphora-1.3.0-x64.exe",
+            "hash": "cb5c50b66c1b5c19148f2d85c90fce0146ac46797f09326054baba984ee4f62c"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Ciphora.exe",
+            "Ciphora"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\Ciphora\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Ciphora.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/loganchef/Ciphora",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/loganchef/Ciphora/releases/download/v$version/Ciphora-$version-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
