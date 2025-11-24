@@ -24,7 +24,7 @@ try {
         }
         if ($bucket -ne 'abyss') {
             error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
-            error "Reference: https://abyss.abgox.com/faq/bucket-name"
+            error "Refer to: https://abyss.abgox.com/faq/bucket-name"
         }
     }
 }
@@ -269,7 +269,7 @@ function A-New-LinkFile {
 
     if (!$isAdmin -and !$isDevMode) {
         error "$app requires admin permission or developer mode to create SymbolicLink."
-        error "Reference: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
+        error "Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
         A-Exit
     }
 
@@ -747,7 +747,7 @@ function A-Uninstall-ExeManually {
                 catch {}
             }
             error "It requires you to uninstall it manually."
-            error "Reference: https://abyss.abgox.com/faq/uninstall-manually"
+            error "Refer to: https://abyss.abgox.com/faq/uninstall-manually"
             A-Exit
         }
     }
@@ -983,7 +983,7 @@ function A-Require-Admin {
 
     if (!$isAdmin) {
         error "It requires admin permission. Please try again with admin permission."
-        error "Reference: https://abyss.abgox.com/faq/require-admin"
+        error "Refer to: https://abyss.abgox.com/faq/require-admin"
         A-Exit
     }
 }
@@ -999,7 +999,7 @@ function A-Deny-IfAppConflict {
     $Apps | Where-Object { $_ -ne $app } | ForEach-Object {
         if (Test-Path (appdir $_)) {
             error "'$app' conflicts with '$_'."
-            error "Reference: https://abyss.abgox.com/faq/deny-if-app-conflict"
+            error "Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict"
             A-Exit
         }
     }
@@ -1012,7 +1012,7 @@ function A-Deny-Update {
     #>
     if ($cmd -eq "update") {
         error "'$app' does not allow update by Scoop."
-        error "Reference: https://abyss.abgox.com/faq/deny-update"
+        error "Refer to: https://abyss.abgox.com/faq/deny-update"
         A-Exit
     }
 }
@@ -1075,7 +1075,7 @@ function A-Deny-Manifest {
     }
 
     error $msg
-    error "Reference: https://abyss.abgox.com/faq/deny-manifest"
+    error "Refer to: https://abyss.abgox.com/faq/deny-manifest"
 
     A-Exit
 }
