@@ -1,0 +1,65 @@
+{
+    "version": "1.4.4",
+    "description": "一款基于 Flutter + Rust 的 Material 风格本地音乐播放器 | A Material-style local music player based on Flutter + Rust",
+    "homepage": "https://github.com/Empty-57/ZeroBit-Player",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/Empty-57/ZeroBit-Player/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Empty-57/ZeroBit-Player/releases/download/v1.4.4/zerobit_player.zip",
+            "hash": "24f1eed175f9efd881cd57d2151fa267e32f545b561656c0ec951c2060a610e0"
+        }
+    },
+    "extract_to": "app",
+    "extract_dir": "zerobit_player",
+    "shortcuts": [
+        [
+            "app\\zerobit_player.exe",
+            "ZeroBit Player"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\Documents\\zerobit_config\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:AppData\\com.zerobit\\zerobit_player\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Empty-57/ZeroBit-Player",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Empty-57/ZeroBit-Player/releases/download/v$version/zerobit_player.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
