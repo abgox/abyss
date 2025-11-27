@@ -4,22 +4,25 @@ Set-StrictMode -Off
 
 Microsoft.PowerShell.Utility\Write-Host
 
+# 存储 abyss 相关的变量，避免污染作用域
+$abgox_abyss = @{}
+
 # Github: https://github.com/abgox/abyss#config
 # Gitee: https://gitee.com/abgox/abyss#config
 try {
-    $ScoopConfig = scoop config
+    $abgox_abyss.ScoopConfig = scoop config
 
-    if ($scoopdir -and $ScoopConfig.root_path -ne $scoopdir) {
+    if ($scoopdir -and $abgox_abyss.ScoopConfig.root_path -ne $scoopdir) {
         scoop config 'root_path' $scoopdir
     }
 
     # 卸载时的操作行为。
-    $uninstallActionLevel = $ScoopConfig.'abgox-abyss-app-uninstall-action'
+    $abgox_abyss.uninstallActionLevel = $abgox_abyss.ScoopConfig.'abgox-abyss-app-uninstall-action'
 
     # 本地添加的 abyss 的实际名称
     # https://github.com/abgox/abyss/issues/10
     if ($bucket) {
-        if ($ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
+        if ($abgox_abyss.ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
             scoop config 'abgox-abyss-bucket-name' $bucket
         }
         if ($bucket -ne 'abyss') {
@@ -30,8 +33,35 @@ try {
 }
 catch {}
 
-if ($null -eq $uninstallActionLevel) {
-    $uninstallActionLevel = "1"
+if ($null -eq $abgox_abyss.uninstallActionLevel) {
+    $abgox_abyss.uninstallActionLevel = "1"
+}
+
+if ($cmd) {
+    # 移除 reset 命令生成的错误的环境变量
+    # https://abyss.abgox.com/faq/error-path-in-env
+    if ($global) {
+        $abgox_abyss.dir = $globaldir
+        $abgox_abyss.level = [System.EnvironmentVariableTarget]::Machine
+    }
+    else {
+        $abgox_abyss.dir = $scoopdir
+        $abgox_abyss.level = [System.EnvironmentVariableTarget]::User
+    }
+    $abgox_abyss.allEnvVars = [System.Environment]::GetEnvironmentVariables($abgox_abyss.level)
+    $abgox_abyss.key = if ($abgox_abyss.allEnvVars.Contains('SCOOP_PATH')) { 'SCOOP_PATH' }else { 'PATH' }
+    $abgox_abyss.Path = $abgox_abyss.allEnvVars[$abgox_abyss.key]
+    $abgox_abyss.PathList = $abgox_abyss.Path -split ';'
+
+    $abgox_abyss.errorPath = $abgox_abyss.PathList | Where-Object { $_ -like "$($abgox_abyss.dir)\apps\*\current\`$env:*" }
+    $abgox_abyss.newPath = ($abgox_abyss.PathList | Where-Object { $_ -notin $abgox_abyss.errorPath }) -join ';'
+    if ($abgox_abyss.newPath -and $abgox_abyss.newPath -ne $abgox_abyss.Path) {
+        [System.Environment]::SetEnvironmentVariable($abgox_abyss.key, $abgox_abyss.newPath, $abgox_abyss.level)
+        warn "Refer to: https://abyss.abgox.com/faq/error-path-in-env"
+        foreach ($_ in $abgox_abyss.errorPath) {
+            warn "Removing $_ ($($abgox_abyss.key))"
+        }
+    }
 }
 
 function A-Test-Admin {
@@ -310,13 +340,13 @@ function A-Remove-Link {
 
     .DESCRIPTION
         该函数用于删除在应用安装过程中创建的 SymbolicLink 和 Junction
-        根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
+        根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
     if ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path -LiteralPath "$dir\scoop-install-A-Install-Exe.jsonc")) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
-    elseif ($uninstallActionLevel -notlike "*2*") {
+    elseif ($abgox_abyss.uninstallActionLevel -notlike "*2*") {
         # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
         if (-not $purge) {
             return
@@ -355,7 +385,7 @@ function A-Remove-TempData {
 
     .DESCRIPTION
         该函数用于删除指定的临时数据目录或文件。
-        根据全局变量 $cmd 和 $uninstallActionLevel 的值决定是否执行删除操作。
+        根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
 
     .PARAMETER Paths
         要删除的临时数据路径数组。
@@ -369,7 +399,7 @@ function A-Remove-TempData {
         [array]$Paths
     )
 
-    if ($cmd -eq "update" -or $uninstallActionLevel -notlike "*3*") {
+    if ($cmd -eq "update" -or $abgox_abyss.uninstallActionLevel -notlike "*3*") {
         # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
         if (-not $purge) {
             return
@@ -419,7 +449,7 @@ function A-Stop-Process {
 
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if ($uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    if ($abgox_abyss.uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
 
@@ -1170,13 +1200,13 @@ function A-Get-VersionFromGithubApi {
         $token = Invoke-Expression "`$Env:TOKEN_$order"
         if (-not $token -and $env:GITHUB_ACTIONS) {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
-            return ''
+            return
         }
     }
 
     if ($url -notlike 'https://github.com/*') {
         Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
-        return ''
+        return
     }
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.+)?', 'https://api.github.com/repos/$1/$2/releases/latest'
@@ -1194,10 +1224,10 @@ function A-Get-VersionFromGithubApi {
         return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
     }
     catch {
-        Write-Error $_.Exception.Message
+        Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
 
         if (-not $env:GITHUB_ACTIONS) {
-            return ''
+            return
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
@@ -1209,7 +1239,7 @@ function A-Get-VersionFromGithubApi {
             $token = Invoke-Expression "`$Env:TOKEN_$order"
             if (-not $token) {
                 Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
-                return ''
+                return
             }
 
             $headers = @{
@@ -1319,6 +1349,28 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
+    $userAgent = A-Get-UserAgent
+
+    $headers = @{
+        'User-Agent' = $userAgent
+    }
+
+    if ($env:GITHUB_ACTIONS) {
+        $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
+        if (-not $order) {
+            $order = 1
+            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+        }
+
+        $token = Invoke-Expression "`$Env:TOKEN_$order"
+        if (-not $token -and $env:GITHUB_ACTIONS) {
+            Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
+            return
+        }
+
+        $headers.Add('Authorization', "token $token")
+    }
+
     $rootDir = $Package.ToLower()[0]
 
     $PackageIdentifier = $Package
@@ -1327,39 +1379,32 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     try {
-        $parameters = @{
-            Uri                      = $url
-            ConnectionTimeoutSeconds = 15
-            OperationTimeoutSeconds  = 120
-            UseBasicParsing          = $true
-            ErrorAction              = 'Stop'
-        }
-        if ($env:GITHUB_TOKEN) {
-            $parameters.Add('Headers', @{ 'Authorization' = "token $env:GITHUB_TOKEN" })
-        }
-        $versionList = Invoke-WebRequest @parameters
-
-        $versions = $versionList.Content | ConvertFrom-Json | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+        $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
-        Write-Host "::warning::访问 $url 失败: $_" -ForegroundColor Yellow
-        Write-Host
+        Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
 
-        $url = "https://github.com/microsoft/winget-pkgs/tree/master/manifests/$rootDir/$PackagePath"
-        try {
-            $page = Invoke-WebRequest $url -UseBasicParsing -ErrorAction Stop
-        }
-        catch {
-            Write-Host "::warning::访问 $url 失败: $_" -ForegroundColor Yellow
-            Write-Host
+        if (-not $env:GITHUB_ACTIONS) {
             return
         }
 
-        $versions = [regex]::Matches($page.Content, "manifests/$rootDir/$PackagePath/([^`"]+)") | ForEach-Object {
-            $v = $_.Groups[1].Value
-            if ($v -notmatch '^\.') {
-                $v
+        if ($_.Exception.Message -like "*rate limit*") {
+            Write-Host "Switch to 'TOKEN_$order'"
+
+            $order++
+            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+
+            $token = Invoke-Expression "`$Env:TOKEN_$order"
+            if (-not $token) {
+                Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
+                return
             }
+
+            $headers = @{
+                'User-Agent'    = $userAgent
+                'Authorization' = "token $token"
+            }
+            $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
         }
     }
 
@@ -1382,19 +1427,33 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        $parameters = @{
-            Uri                      = $url
-            ConnectionTimeoutSeconds = 15
-            OperationTimeoutSeconds  = 120
-            UseBasicParsing          = $true
-            ErrorAction              = 'Stop'
-        }
-        $installerYaml = Invoke-WebRequest @parameters
+        $installerYaml = Invoke-WebRequest -Uri $url -Headers $headers
     }
     catch {
-        Write-Host "::error::访问 $url 失败: $_" -ForegroundColor Red
-        Write-Host
-        return
+        Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
+
+        if (-not $env:GITHUB_ACTIONS) {
+            return
+        }
+
+        if ($_.Exception.Message -like "*rate limit*") {
+            Write-Host "Switch to 'TOKEN_$order'"
+
+            $order++
+            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+
+            $token = Invoke-Expression "`$Env:TOKEN_$order"
+            if (-not $token) {
+                Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
+                return
+            }
+
+            $headers = @{
+                'User-Agent'    = $userAgent
+                'Authorization' = "token $token"
+            }
+            $installerYaml = Invoke-WebRequest -Uri $url -Headers $headers
+        }
     }
 
     $installerInfo = ConvertFrom-Yaml $installerYaml.Content
@@ -1994,26 +2053,28 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
         return $patternFound
     }
 
+    $abgox_abyss = @{}
+
     try {
-        $ScoopConfig = scoop config
+        $abgox_abyss.ScoopConfig = scoop config
 
         # 创建快捷方式的操作行为。
         # 0: 不创建清单中定义的快捷方式
         # 1: 创建清单中定义的快捷方式
         # 2: 如果应用使用安装程序进行安装，不创建清单中定义的快捷方式
-        $shortcutsActionLevel = $ScoopConfig.'abgox-abyss-app-shortcuts-action'
+        $abgox_abyss.shortcutsActionLevel = $abgox_abyss.ScoopConfig.'abgox-abyss-app-shortcuts-action'
     }
     catch {}
 
-    if ($null -eq $shortcutsActionLevel) {
-        $shortcutsActionLevel = "1"
+    if ($null -eq $abgox_abyss.shortcutsActionLevel) {
+        $abgox_abyss.shortcutsActionLevel = "1"
     }
 
-    if ($shortcutsActionLevel -eq '0') {
+    if ($abgox_abyss.shortcutsActionLevel -eq '0') {
         return
     }
-    if ($shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-Exe.*')) {
-        $locations = @(
+    if ($abgox_abyss.shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-Exe.*')) {
+        $abgox_abyss.locations = @(
             "$env:AppData\Microsoft\Windows\Start Menu\Programs",
             "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",
             "$env:ProgramData\Microsoft\Windows\Start Menu\Programs",
@@ -2022,16 +2083,16 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
         )
 
         if ($PSVersionTable.PSVersion.Major -ge 7) {
-            $found = $locations | ForEach-Object -Parallel {
+            $abgox_abyss.found = $abgox_abyss.locations | ForEach-Object -Parallel {
                 $result = Get-ChildItem $_ -Filter "$using:shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
                 if ($result) { $result.FullName }
             } | Select-Object -First 1
-            if ($found) { return }
+            if ($abgox_abyss.found) { return }
         }
         else {
-            foreach ($location in $locations) {
-                $found = Get-ChildItem $location -Filter "$shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
-                if ($found) { return }
+            foreach ($_ in $abgox_abyss.locations) {
+                $abgox_abyss.found = Get-ChildItem $_ -Filter "$shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                if ($abgox_abyss.found) { return }
             }
         }
     }
