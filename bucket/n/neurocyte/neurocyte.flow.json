@@ -1,0 +1,71 @@
+{
+    "version": "0.6.0",
+    "description": "Flow Control: 一款程序员的文本编辑器 | Flow Control: A programmer's text editor",
+    "homepage": "https://flow-control.dev/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/neurocyte/flow/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/neurocyte/flow/releases/download/v0.6.0/flow-v0.6.0-windows-x86_64.zip",
+            "hash": "5b81f76549785c2854affb23b69f487d6699469dda465aa12fa421ad55cb8f5f"
+        },
+        "arm64": {
+            "url": "https://github.com/neurocyte/flow/releases/download/v0.6.0/flow-v0.6.0-windows-aarch64.zip",
+            "hash": "e432c8ec1058ebeea05e97557b0d532aa30a20e2683974fbbbccd80d2c49399e"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\flow.exe",
+    "shortcuts": [
+        [
+            "app\\flow-gui.exe",
+            "Flow Control"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\flow\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/neurocyte/flow",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/neurocyte/flow/releases/download/v$version/flow-v$version-windows-x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/neurocyte/flow/releases/download/v$version/flow-v$version-windows-aarch64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
