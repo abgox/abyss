@@ -1,0 +1,75 @@
+{
+    "version": "25.0.0.36",
+    "description": "微软构建的 OpenJDK 是一种全新的免费长期支持发行版，也是微软与 Java 生态系统开展协作和贡献的新方式。 | The Microsoft Build of OpenJDK is a new no-cost long-term supported distribution and Microsoft's new way to collaborate and contribute to the Java ecosystem.",
+    "homepage": "https://www.microsoft.com/openjdk",
+    "license": {
+        "identifier": "GPL2 with Classpath Exception",
+        "url": "https://openjdk.java.net/legal/gplv2+ce.html"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://aka.ms/download-jdk/microsoft-jdk-25.0.0-windows-x64.msi#/dl.msi",
+            "hash": "e3b54d32ad00869a4268e439c4791b0c4a7b28bdfeec440a2c8064f4b46931c4"
+        },
+        "arm64": {
+            "url": "https://aka.ms/download-jdk/microsoft-jdk-25.0.0-windows-aarch64.msi#/dl.msi",
+            "hash": "72cb113b41aa1fc117c8dad9b50dd679fa8395d8ef9aa35c2a2827c46d582e0f"
+        }
+    },
+    "extract_dir": "PFiles64\\Microsoft\\jdk-25.0.0.36-hotspot",
+    "extract_to": "app",
+    "env_add_path": "app\\bin",
+    "env_set": {
+        "JAVA_HOME": "$dir\\app"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.OpenJDK.25' 'msi'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.msi",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64#/dl.msi",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        },
+        "extract_dir": "PFiles64\\Microsoft\\jdk-$version-hotspot"
+    }
+}
