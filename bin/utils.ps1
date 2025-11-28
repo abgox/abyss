@@ -1188,7 +1188,14 @@ function A-Get-UninstallEntryByAppName {
     return $null
 }
 function A-Get-VersionFromGithubApi {
-    $userAgent = A-Get-UserAgent
+    if ($url -notlike 'https://github.com/*') {
+        Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
+        return
+    }
+
+    $headers = @{
+        'User-Agent' = A-Get-UserAgent
+    }
 
     if ($env:GITHUB_ACTIONS) {
         $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
@@ -1198,28 +1205,16 @@ function A-Get-VersionFromGithubApi {
         }
 
         $token = Invoke-Expression "`$Env:TOKEN_$order"
-        if (-not $token -and $env:GITHUB_ACTIONS) {
+        if (-not $token) {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
-    }
-
-    if ($url -notlike 'https://github.com/*') {
-        Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
-        return
+        $headers.Add('Authorization', "token $token")
     }
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.+)?', 'https://api.github.com/repos/$1/$2/releases/latest'
 
     try {
-        $headers = @{
-            'User-Agent' = $userAgent
-        }
-
-        if ($env:GITHUB_ACTIONS) {
-            $headers.Add('Authorization', "token $token")
-        }
-
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
         return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
     }
@@ -1231,8 +1226,6 @@ function A-Get-VersionFromGithubApi {
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
-            Write-Host "Switch to 'TOKEN_$order'"
-
             $order++
             [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
 
@@ -1241,11 +1234,9 @@ function A-Get-VersionFromGithubApi {
                 Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return
             }
+            Write-Host "::notice::Switch to 'TOKEN_$order'"
 
-            $headers = @{
-                'User-Agent'    = $userAgent
-                'Authorization' = "token $token"
-            }
+            $headers['Authorization'] = "token $token"
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
             return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
         }
@@ -1349,10 +1340,8 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    $userAgent = A-Get-UserAgent
-
     $headers = @{
-        'User-Agent' = $userAgent
+        'User-Agent' = A-Get-UserAgent
     }
 
     if ($env:GITHUB_ACTIONS) {
@@ -1363,7 +1352,7 @@ function A-Get-InstallerInfoFromWinget {
         }
 
         $token = Invoke-Expression "`$Env:TOKEN_$order"
-        if (-not $token -and $env:GITHUB_ACTIONS) {
+        if (-not $token) {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
@@ -1389,8 +1378,6 @@ function A-Get-InstallerInfoFromWinget {
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
-            Write-Host "Switch to 'TOKEN_$order'"
-
             $order++
             [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
 
@@ -1399,12 +1386,13 @@ function A-Get-InstallerInfoFromWinget {
                 Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return
             }
+            Write-Host "::notice::Switch to 'TOKEN_$order'"
 
-            $headers = @{
-                'User-Agent'    = $userAgent
-                'Authorization' = "token $token"
-            }
+            $headers['Authorization'] = "token $token"
             $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+        }
+        else {
+            return
         }
     }
 
@@ -1424,10 +1412,13 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    $url = "https://raw.githubusercontent.com/microsoft/winget-pkgs/master/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
+
+    $headers.Add("Accept", "application/vnd.github.v3.raw")
+
+    $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        $installerYaml = Invoke-WebRequest -Uri $url -Headers $headers
+        $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
     }
     catch {
         Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1437,8 +1428,6 @@ function A-Get-InstallerInfoFromWinget {
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
-            Write-Host "Switch to 'TOKEN_$order'"
-
             $order++
             [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
 
@@ -1447,16 +1436,17 @@ function A-Get-InstallerInfoFromWinget {
                 Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return
             }
+            Write-Host "::notice::Switch to 'TOKEN_$order'"
 
-            $headers = @{
-                'User-Agent'    = $userAgent
-                'Authorization' = "token $token"
-            }
-            $installerYaml = Invoke-WebRequest -Uri $url -Headers $headers
+            $headers['Authorization'] = "token $token"
+            $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
+        }
+        else {
+            return
         }
     }
 
-    $installerInfo = ConvertFrom-Yaml $installerYaml.Content
+    $installerInfo = ConvertFrom-Yaml $installerYaml
 
     if (!$installerInfo) {
         return
