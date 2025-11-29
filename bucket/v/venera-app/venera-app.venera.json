@@ -1,0 +1,64 @@
+{
+    "version": "1.6.0",
+    "description": "一款支持阅读本地和网络漫画的漫画阅读器。 | A comic reader that support reading local and network comics.",
+    "homepage": "https://github.com/venera-app/venera",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/venera-app/venera/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/venera-app/venera/releases/download/v1.6.0/Venera-1.6.0-windows.zip",
+            "hash": "9ff19c438fc884b29dee393c3bab2fe160e5ed1001770853d1507a1ab38396d8"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\venera.exe",
+            "Venera"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\com.github.wgh136\\venera\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData @(\"$env:LocalAppData\\com.github.wgh136\\venera\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/venera-app/venera",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/venera-app/venera/releases/download/v$version/Venera-$version-windows.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
