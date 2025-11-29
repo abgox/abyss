@@ -1235,8 +1235,11 @@ function A-Get-VersionFromGithubApi {
                 return
             }
             Write-Host "::notice::Switch to 'TOKEN_$order'"
-
             $headers['Authorization'] = "token $token"
+
+            Start-Sleep -Seconds 5
+            Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
+
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
             return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
         }
@@ -1387,8 +1390,11 @@ function A-Get-InstallerInfoFromWinget {
                 return
             }
             Write-Host "::notice::Switch to 'TOKEN_$order'"
-
             $headers['Authorization'] = "token $token"
+
+            Start-Sleep -Seconds 5
+            Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
+
             $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
         }
         else {
@@ -1437,8 +1443,11 @@ function A-Get-InstallerInfoFromWinget {
                 return
             }
             Write-Host "::notice::Switch to 'TOKEN_$order'"
-
             $headers['Authorization'] = "token $token"
+
+            Start-Sleep -Seconds 5
+            Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
+
             $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
         }
         else {
