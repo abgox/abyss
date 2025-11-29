@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (467)|Tag|Description|
+|App (468)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -461,6 +461,7 @@
 |[Upscayl.Upscayl](https://upscayl.org/ "点击访问仓库或主页")|<a href="./bucket/u/Upscayl/Upscayl.Upscayl.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|免费开源的 AI 图像质量增强器|
 |[uutils.coreutils](https://uutils.github.io/coreutils/ "点击访问仓库或主页")|<a href="./bucket/u/uutils/uutils.coreutils.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个用 Rust 语言对 GNU 核心工具集进行的跨平台重新实现|
 |[uutils.diffutils](https://uutils.github.io/diffutils/ "点击访问仓库或主页")|<a href="./bucket/u/uutils/uutils.diffutils.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用 Rust 实现的 diffutils 替代品|
+|[venera-app.venera](https://github.com/venera-app/venera "点击访问仓库或主页")|<a href="./bucket/v/venera-app/venera-app.venera.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款支持阅读本地和网络漫画的漫画阅读器。|
 |[Vercel.Hyper](https://hyper.is/ "点击访问仓库或主页")|<a href="./bucket/v/Vercel/Vercel.Hyper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个基于 Web 技术构建的终端|
 |[viarotel.Escrcpy](https://github.com/viarotel-org/escrcpy "点击访问仓库或主页")|<a href="./bucket/v/viarotel/viarotel.Escrcpy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动|
 |[VideoLAN.VLC](https://www.videolan.org/vlc "点击访问仓库或主页")|<a href="./bucket/v/VideoLAN/VideoLAN.VLC.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费、开源的跨平台多媒体播放器及框架，可播放大多数多媒体文件，以及 DVD、音频 CD、VCD 及各类流媒体协议|
