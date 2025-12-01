@@ -1,0 +1,65 @@
+{
+    "version": "9.26.0",
+    "description": "跨平台的按键启动器 | Cross-Platform Keystroke Launcher",
+    "homepage": "https://ueli.app/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/oliverschwendener/ueli/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/oliverschwendener/ueli/releases/download/v9.26.0/Ueli-Setup-9.26.0.exe",
+            "hash": "8f45410443795aba735e99807ff5990f9f94eef727c3d44ed558233a5a39f7e4"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Ueli.exe",
+            "Ueli"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\ueli\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Ueli.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\ueli-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/oliverschwendener/ueli",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/oliverschwendener/ueli/releases/download/v$version/Ueli-Setup-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
