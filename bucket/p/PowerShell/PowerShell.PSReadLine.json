@@ -1,0 +1,62 @@
+{
+    "version": "2.4.5",
+    "description": "一个受 bash 启发的 PowerShell readline 实现 | A bash inspired readline implementation for PowerShell",
+    "homepage": "https://github.com/PowerShell/PSReadLine",
+    "license": {
+        "identifier": "BSD-2-Clause",
+        "url": "https://github.com/PowerShell/PSReadLine/blob/master/License.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/psreadline.2.4.5.nupkg",
+            "hash": "cb9390e9733208456c234a7971d1ec4a917886c239502aab68f4b71aa4bba235"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/psreadline.2.4.5.nupkg",
+            "hash": "cb9390e9733208456c234a7971d1ec4a917886c239502aab68f4b71aa4bba235"
+        }
+    },
+    "psmodule": {
+        "name": "PSReadLine"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse -ErrorAction SilentlyContinue"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/PowerShell/PSReadLine",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/psreadline.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/psreadline.$version.nupkg"
+            }
+        }
+    }
+}
