@@ -1,0 +1,64 @@
+{
+    "version": "1.5.2",
+    "description": "简单、快速的命令行界面文件加密工具 | Simple, fast CLI file encryption tool",
+    "homepage": "https://github.com/70sh1/eddy",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/70sh1/eddy/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/70sh1/eddy/releases/download/v1.5.2/eddy-v1.5.2-windows-amd64.zip",
+            "hash": "12fc4ae430e5c8a5128bc98b4496ba7fa94b7c6698e9f76128fc70b1c29418bc"
+        },
+        "arm64": {
+            "url": "https://github.com/70sh1/eddy/releases/download/v1.5.2/eddy-v1.5.2-windows-arm64.zip",
+            "hash": "3badeb8651da10a3014ecc1f28453d779a2ba439b5b4c1c5674e0a3907ac1b57"
+        }
+    },
+    "extract_dir": "eddy",
+    "extract_to": "app",
+    "bin": "app\\eddy.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/70sh1/eddy",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/70sh1/eddy/releases/download/v$version/eddy-v$version-windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/70sh1/eddy/releases/download/v$version/eddy-v$version-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
