@@ -1,0 +1,64 @@
+{
+    "version": "0.3.0",
+    "description": "简单的命令行界面文件 hash 工具 | Simple CLI file hashing tool",
+    "homepage": "https://github.com/70sh1/sum",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/70sh1/sum/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/70sh1/sum/releases/download/v0.3.0/sum-v0.3.0-windows-amd64.zip",
+            "hash": "83ddd77e8d36401f6fbc90aeef19bf37c399966b9c9d8b6b981f7966ed635a16"
+        },
+        "arm64": {
+            "url": "https://github.com/70sh1/sum/releases/download/v0.3.0/sum-v0.3.0-windows-arm64.zip",
+            "hash": "bc859f787010b6f9ce6e6b011bc5896423f513e50d0a7b4d0bddf920d7041538"
+        }
+    },
+    "extract_dir": "sum",
+    "extract_to": "app",
+    "bin": "app\\sum.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/70sh1/sum",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/70sh1/sum/releases/download/v$version/sum-v$version-windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/70sh1/sum/releases/download/v$version/sum-v$version-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
