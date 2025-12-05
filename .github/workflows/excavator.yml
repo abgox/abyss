@@ -2,12 +2,11 @@ name: Excavator
 on:
   workflow_dispatch:
   schedule:
-    # At minute 20 past every 4th hour.
-    - cron: "20 */4 * * *"
+    # At minute 30 past every 4th hour.
+    - cron: "30 */4 * * *"
 
 concurrency:
   group: excavator-workflow-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
   excavate:
@@ -17,6 +16,8 @@ jobs:
       TOKEN_1: ${{ secrets.TOKEN_1 }}
       TOKEN_2: ${{ secrets.TOKEN_2 }}
       TOKEN_3: ${{ secrets.TOKEN_3 }}
+      TOKEN_4: ${{ secrets.TOKEN_4 }}
+      TOKEN_5: ${{ secrets.TOKEN_5 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
