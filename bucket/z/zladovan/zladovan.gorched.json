@@ -1,0 +1,63 @@
+{
+    "version": "1.7",
+    "description": "一款基于终端的游戏，灵感源自 \"The Mother of all games\" Scorched Earth | Terminal based game inspired by \"The Mother of all games\" Scorched Earth",
+    "homepage": "https://github.com/zladovan/gorched",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/zladovan/gorched/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zladovan/gorched/releases/download/v1.7/gorched_1.7_windows_amd64.zip",
+            "hash": "6bd886cba5513017d68da58a1fd68aa5184bb1e018fe97a82af1ba1fc9b808ff"
+        },
+        "arm64": {
+            "url": "https://github.com/zladovan/gorched/releases/download/v1.7/gorched_1.7_windows_arm64.zip",
+            "hash": "9c3f2fd909e6afd443b39b3a9824a912813fa317f9c308552e2b0296596f31cd"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gorched.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/zladovan/gorched",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zladovan/gorched/releases/download/v$version/gorched_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/zladovan/gorched/releases/download/v$version/gorched_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
