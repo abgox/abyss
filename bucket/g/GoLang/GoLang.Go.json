@@ -53,9 +53,12 @@
         "script": [
             ". \"$pwd\\bin\\utils.ps1\"",
             "$InstallerInfo = A-Get-InstallerInfoFromWinget 'GoLang.Go' 'msi'",
-            "$InstallerInfo.PackageVersion"
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
         ],
-        "regex": "(.+)"
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
     },
     "autoupdate": {
         "architecture": {
