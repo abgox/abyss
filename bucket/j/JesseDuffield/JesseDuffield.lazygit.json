@@ -1,0 +1,65 @@
+{
+    "version": "0.57.0",
+    "description": "用于 git 命令的简单终端用户界面。 | Simple terminal UI for git commands.",
+    "homepage": "https://github.com/jesseduffield/lazygit",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/jesseduffield/lazygit/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_Windows_x86_64.zip",
+            "hash": "775a210b3becd262a067d75be33d3d0ecd58cbc2dde3a36ca74e4757b080618c"
+        },
+        "arm64": {
+            "url": "https://github.com/jesseduffield/lazygit/releases/download/v0.57.0/lazygit_0.57.0_Windows_arm64.zip",
+            "hash": "38d53ab577bb29ec6bedbd094a56f45fa01b4f42ba01be21d00416323661d4c6"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\lazygit.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\lazygit\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/jesseduffield/lazygit",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jesseduffield/lazygit/releases/download/v$version/lazygit_$version_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/jesseduffield/lazygit/releases/download/v$version/lazygit_$version_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
