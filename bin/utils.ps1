@@ -1209,7 +1209,8 @@ function A-Get-VersionFromGithubApi {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
-        $headers.Add('Authorization', "token $token")
+        Write-Host "::notice::Switch to 'TOKEN_$order'"
+        $headers['Authorization'] = "token $token"
     }
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.+)?', 'https://api.github.com/repos/$1/$2/releases/latest'
@@ -1219,7 +1220,7 @@ function A-Get-VersionFromGithubApi {
         return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
     }
     catch {
-        Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
 
         if (-not $env:GITHUB_ACTIONS) {
             return
@@ -1330,19 +1331,6 @@ function A-Get-InstallerInfoFromWinget {
         [string]$MaxExclusiveVersion
     )
 
-    $hasCommand = Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue
-    if (!$hasCommand) {
-        try {
-            Write-Host "正在安装并导入 powershell-yaml 模块" -ForegroundColor Green
-            Install-Module powershell-yaml -Repository PSGallery -Force
-            Import-Module -Name powershell-yaml -Force
-            Write-Host "安装并导入 powershell-yaml 模块成功" -ForegroundColor Green
-        }
-        catch {
-            Write-Host "::error::安装并导入 powershell-yaml 模块失败: $_" -ForegroundColor Red
-        }
-    }
-
     $headers = @{
         'User-Agent' = A-Get-UserAgent
     }
@@ -1359,8 +1347,8 @@ function A-Get-InstallerInfoFromWinget {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
-
-        $headers.Add('Authorization', "token $token")
+        Write-Host "::notice::Switch to 'TOKEN_$order'"
+        $headers['Authorization'] = "token $token"
     }
 
     $rootDir = $Package.ToLower()[0]
@@ -1374,7 +1362,7 @@ function A-Get-InstallerInfoFromWinget {
         $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
-        Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
 
         if (-not $env:GITHUB_ACTIONS) {
             return
@@ -1427,7 +1415,7 @@ function A-Get-InstallerInfoFromWinget {
         $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
     }
     catch {
-        Write-Host "::warning::访问 $url 失败: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
 
         if (-not $env:GITHUB_ACTIONS) {
             return
