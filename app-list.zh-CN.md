@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (488)|Tag|Description|
+|App (489)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -74,6 +74,7 @@
 |[altair-graphql.altair](https://altairgraphql.dev/ "点击访问仓库或主页")|<a href="./bucket/a/altair-graphql/altair-graphql.altair.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于所有平台、功能丰富的 GraphQL 客户端|
 |[Amazon.Kiro](https://kiro.dev/ "点击访问仓库或主页")|<a href="./bucket/a/Amazon/Amazon.Kiro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款智能代理 IDE，助您高效工作，具备规范制定、方向引导和钩子功能等特性。|
 |[amir1376.ABDownloadManager](https://abdownloadmanager.com/ "点击访问仓库或主页")|<a href="./bucket/a/amir1376/amir1376.ABDownloadManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款能加快你下载速度的下载管理器|
+|[AmN.yasb](https://yasb.dev/ "点击访问仓库或主页")|<a href="./bucket/a/AmN/AmN.yasb.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款用 Python 编写的具有高度可配置性的 Windows 状态栏。|
 |[amzxyz.rime_wanxiang](https://github.com/amzxyz/rime_wanxiang "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案|
 |[amzxyz.rime_wanxiang.model](https://github.com/amzxyz/RIME-LMDG "点击访问仓库或主页")|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.model.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Rime 小狼毫配置: 万象语法模型|
 |[AndrewCantino.McFly](https://github.com/cantino/mcfly "点击访问仓库或主页")|<a href="./bucket/a/AndrewCantino/AndrewCantino.McFly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在你的 shell 历史中快速穿梭|
