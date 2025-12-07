@@ -1202,6 +1202,7 @@ function A-Get-VersionFromGithubApi {
         if (-not $order) {
             $order = 1
             [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+            Write-Host "::notice::Switch to 'TOKEN_$order'"
         }
 
         $token = Invoke-Expression "`$Env:TOKEN_$order"
@@ -1209,7 +1210,6 @@ function A-Get-VersionFromGithubApi {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
-        Write-Host "::notice::Switch to 'TOKEN_$order'"
         $headers['Authorization'] = "token $token"
     }
 
@@ -1340,6 +1340,7 @@ function A-Get-InstallerInfoFromWinget {
         if (-not $order) {
             $order = 1
             [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+            Write-Host "::notice::Switch to 'TOKEN_$order'"
         }
 
         $token = Invoke-Expression "`$Env:TOKEN_$order"
@@ -1347,7 +1348,6 @@ function A-Get-InstallerInfoFromWinget {
             Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
-        Write-Host "::notice::Switch to 'TOKEN_$order'"
         $headers['Authorization'] = "token $token"
     }
 
