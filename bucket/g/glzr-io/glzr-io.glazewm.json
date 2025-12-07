@@ -1,0 +1,72 @@
+{
+    "version": "3.9.1",
+    "description": "GlazeWM 是一款受 i3wm 启发的适用于 Windows 系统的平铺窗口管理器。 | GlazeWM is a tiling window manager for Windows inspired by i3wm.",
+    "homepage": "https://github.com/glzr-io/glazewm",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/glzr-io/glazewm/blob/main/LICENSE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/glzr-io/glazewm/releases/download/v3.9.1/standalone-glazewm-v3.9.1-x64.msi",
+            "hash": "071ea95f5f0de018a7e9e05dcb86213e3b5657c699df21f8e573d85439957850"
+        },
+        "arm64": {
+            "url": "https://github.com/glzr-io/glazewm/releases/download/v3.9.1/standalone-glazewm-v3.9.1-arm64.msi",
+            "hash": "79be51d517ae48f97b11a394a4129fb6aa8af48d16b0a5326d9cb7f18408e7da"
+        }
+    },
+    "extract_dir": "PFiles64\\glzr.io\\GlazeWM",
+    "extract_to": "app",
+    "bin": "app\\cli\\GlazeWM.exe",
+    "shortcuts": [
+        [
+            "app\\GlazeWM.exe",
+            "GlazeWM"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:UserProfile\\.glzr\\glazewm\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/glzr-io/glazewm",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/glzr-io/glazewm/releases/download/v$version/standalone-glazewm-v$version-x64.msi"
+            },
+            "arm64": {
+                "url": "https://github.com/glzr-io/glazewm/releases/download/v$version/standalone-glazewm-v$version-arm64.msi"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
