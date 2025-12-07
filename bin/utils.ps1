@@ -653,7 +653,7 @@ function A-Install-Exe {
         A-Exit
     }
 
-    Start-Sleep -Seconds 1
+    Start-Sleep -Seconds 10
 
     if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
         error "'$Uninstaller' not found."
@@ -758,7 +758,7 @@ function A-Uninstall-Exe {
         A-Exit
     }
 
-    Start-Sleep -Seconds 1
+    Start-Sleep -Seconds 10
 }
 
 function A-Uninstall-ExeManually {
@@ -1238,7 +1238,7 @@ function A-Get-VersionFromGithubApi {
             Write-Host "::notice::Switch to 'TOKEN_$order'"
             $headers['Authorization'] = "token $token"
 
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 10
             Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
@@ -1380,7 +1380,7 @@ function A-Get-InstallerInfoFromWinget {
             Write-Host "::notice::Switch to 'TOKEN_$order'"
             $headers['Authorization'] = "token $token"
 
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 10
             Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
@@ -1433,7 +1433,7 @@ function A-Get-InstallerInfoFromWinget {
             Write-Host "::notice::Switch to 'TOKEN_$order'"
             $headers['Authorization'] = "token $token"
 
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 10
             Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
