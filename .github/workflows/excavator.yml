@@ -25,6 +25,12 @@ jobs:
       - name: Get latest changes
         run: git pull
 
+      - name: Install module to parse yaml
+        shell: pwsh
+        run: |
+          Install-Module powershell-yaml -Repository PSGallery -Force
+          Import-Module -Name powershell-yaml -Force
+
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
         # uses: abgox/ScoopInstaller-GithubActions@main
