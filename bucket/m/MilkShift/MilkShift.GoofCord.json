@@ -1,0 +1,72 @@
+{
+    "version": "1.11.3",
+    "description": "一款可高度配置且注重隐私的 Discord 客户端。 | A highly configurable and privacy minded discord client.",
+    "homepage": "https://github.com/Milkshiift/GoofCord",
+    "license": {
+        "identifier": "OSL-3.0",
+        "url": "https://github.com/Milkshiift/GoofCord/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Milkshiift/GoofCord/releases/download/v1.11.3/GoofCord-Setup-x64.exe",
+            "hash": "48046d5b0afcb086abb1c3f41331178fb250ca6cb9c17f8fc29296a1f9998447"
+        },
+        "arm64": {
+            "url": "https://github.com/Milkshiift/GoofCord/releases/download/v1.11.3/GoofCord-Setup-arm64.exe",
+            "hash": "7776dee0e232da5192619285bc0622490a6256e532c6f4d718351179582343ae"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\GoofCord.exe",
+            "GoofCord"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\goofcord\")",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall GoofCord.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData @(\"$env:LocalAppData\\goofcord-updater\")"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Milkshiift/GoofCord",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Milkshiift/GoofCord/releases/download/v$version/GoofCord-Setup-x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/Milkshiift/GoofCord/releases/download/v$version/GoofCord-Setup-arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
