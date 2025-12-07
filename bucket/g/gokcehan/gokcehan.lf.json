@@ -1,0 +1,58 @@
+{
+    "version": "r39",
+    "description": "由 Go 语言编写的终端文件管理器，深受 ranger 文件管理器的启发 | A terminal file manager written in Go with a heavy inspiration from ranger file manager",
+    "homepage": "https://github.com/gokcehan/lf",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/gokcehan/lf/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gokcehan/lf/releases/download/r39/lf-windows-amd64.zip",
+            "hash": "d78840963ab8f0c26c7a35156c879ea3a23a4b7de1a8faabe39b863e17e7b189"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\lf.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\lf\", \"$env:LocalAppData\\lf\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/gokcehan/lf",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gokcehan/lf/releases/download/$version/lf-windows-amd64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
