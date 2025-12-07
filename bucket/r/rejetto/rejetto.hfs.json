@@ -1,0 +1,75 @@
+{
+    "version": "0.57.27",
+    "description": "一个可在你的电脑上运行的网络文件服务器 | A web file server to run on your computer",
+    "homepage": "https://github.com/rejetto/hfs",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/rejetto/hfs/blob/main/LICENSE.txt"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/rejetto/hfs/releases/download/v0.57.27/hfs-windows-x64-0.57.27.zip",
+            "hash": "5b8ac15a9f732b2a6a3febbbd1f86d8ec768de3f505d5b7e89c79b5cde3ae0b1"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        [
+            "app\\hfs.exe",
+            "hfs",
+            "--cwd \"$dir\\app\\.hfs\""
+        ]
+    ],
+    "shortcuts": [
+        [
+            "app\\hfs.exe",
+            "HFS",
+            "--cwd \"$dir\\app\\.hfs\""
+        ]
+    ],
+    "persist": [
+        [
+            "app\\.hfs",
+            ".hfs"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/rejetto/hfs",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rejetto/hfs/releases/download/v$version/hfs-windows-x64-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
