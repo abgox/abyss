@@ -1,0 +1,75 @@
+{
+    "version": "0.60.7",
+    "description": "通过单点登录 (SSO) 、多因素认证 (MFA) 和精细化访问控制，将您的设备接入基于 WireGuard® 的安全 overlay 网络。 | Connect your devices into a secure WireGuard®-based overlay network with SSO, MFA and granular access controls.",
+    "homepage": "https://netbird.io/",
+    "license": {
+        "identifier": "BSD-3-Clause",
+        "url": "https://github.com/netbirdio/netbird/blob/main/LICENSE"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Netbird",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "notes-cn": [
+        "安装目录: $env:ProgramFiles\\Netbird",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/netbirdio/netbird/releases/download/v0.60.7/netbird_installer_0.60.7_windows_amd64.exe",
+            "hash": "6e60858025b32807f8d4a51eed9e2a5716a5439359a1c1059a19737e4236bd8b"
+        },
+        "arm64": {
+            "url": "https://github.com/netbirdio/netbird/releases/download/v0.60.7/netbird_installer_0.60.7_windows_arm64.exe",
+            "hash": "8897134a8a1c4cde20f963c1abc99b70a70d0c190976750b1b5fff9c242cfb89"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory @(\"$env:ProgramData\\Netbird\")",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Netbird\\netbird_uninstall.exe\" -ArgumentList @('/S')"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:ProgramFiles\\Netbird\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/netbirdio/netbird",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/netbirdio/netbird/releases/download/v$version/netbird_installer_$version_windows_amd64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/netbirdio/netbird/releases/download/v$version/netbird_installer_$version_windows_arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
