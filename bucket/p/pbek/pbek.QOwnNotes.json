@@ -1,0 +1,72 @@
+{
+    "version": "25.12.2",
+    "description": "一款支持 Markdown 格式且能与 Nextcloud / ownCloud 集成的纯文本文件记事本和待办事项管理器。 | A plain-text file notepad and todo-list manager with Markdown support and Nextcloud / ownCloud integration.",
+    "homepage": "https://www.qownnotes.org/",
+    "license": {
+        "identifier": "GPL-2.0-only",
+        "url": "https://github.com/pbek/QOwnNotes/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pbek/QOwnNotes/releases/download/v25.12.2/QOwnNotes.zip",
+            "hash": "9c4560a6c6c53fef9d0a0fc94ba8024ccc13b56d33a6750c4bd988520a014476"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\QOwnNotes.exe",
+            "QOwnNotes",
+            "--portable"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\Data",
+            "AppData\\Roaming\\PBE\\QOwnNotes"
+        ],
+        [
+            "app\\Data\\Notes",
+            "Notes"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/pbek/QOwnNotes",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubApi"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pbek/QOwnNotes/releases/download/v$version/QOwnNotes.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
