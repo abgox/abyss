@@ -3516,41 +3516,56 @@
                             }
                         },
                         "then": {
-                            "properties": {
-                                "checkver": {
-                                    "properties": {
-                                        "url": {
-                                            "not": true,
-                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，不需要定义它"
+                            "if": {
+                                "properties": {
+                                    "checkver": {
+                                        "required": [
+                                            "url"
+                                        ]
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "checkver": {
+                                        "properties": {
+                                            "url": {
+                                                "pattern": "^https://github\\.com/[^/]+/[^/]+$",
+                                                "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubApi，url 只能是 Github 地址\n例如: https://github.com/abgox/PSCompletions"
+                                            }
                                         }
                                     }
-                                },
-                                "autoupdate": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": [
-                                                                "array",
-                                                                "string"
-                                                            ],
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
-                                                            "allOf": [
-                                                                {
-                                                                    "pattern": "^https://github\\.com/[^/]+/[^/]+",
-                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须是一个 Github URL"
+                                }
+                            },
+                            "else": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": [
+                                                                    "array",
+                                                                    "string"
+                                                                ],
+                                                                "items": {
+                                                                    "type": "string"
                                                                 },
-                                                                {
-                                                                    "contains": {
-                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                "allOf": [
+                                                                    {
+                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+",
+                                                                        "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须是一个 Github URL，否则请定义 checkver.url"
                                                                     },
-                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它至少有一个 Github URL"
-                                                                }
-                                                            ]
+                                                                    {
+                                                                        "contains": {
+                                                                            "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                        },
+                                                                        "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它至少有一个 Github URL，否则请定义 checkver.url"
+                                                                    }
+                                                                ]
+                                                            }
                                                         }
                                                     }
                                                 }

@@ -3516,41 +3516,56 @@
                             }
                         },
                         "then": {
-                            "properties": {
-                                "checkver": {
-                                    "properties": {
-                                        "url": {
-                                            "not": true,
-                                            "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it is not needed."
+                            "if": {
+                                "properties": {
+                                    "checkver": {
+                                        "required": [
+                                            "url"
+                                        ]
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "checkver": {
+                                        "properties": {
+                                            "url": {
+                                                "pattern": "^https://github\\.com/[^/]+/[^/]+$",
+                                                "errorMessage": "Since 'A-Get-VersionFromGithubApi' is used, it must be a Github URL.\nFor example: https://github.com/abgox/PSCompletions"
+                                            }
                                         }
                                     }
-                                },
-                                "autoupdate": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": [
-                                                                "array",
-                                                                "string"
-                                                            ],
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
-                                                            "allOf": [
-                                                                {
-                                                                    "pattern": "^https://github\\.com/[^/]+/[^/]+",
-                                                                    "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it must be a Github URL."
+                                }
+                            },
+                            "else": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": [
+                                                                    "array",
+                                                                    "string"
+                                                                ],
+                                                                "items": {
+                                                                    "type": "string"
                                                                 },
-                                                                {
-                                                                    "contains": {
-                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                "allOf": [
+                                                                    {
+                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+",
+                                                                        "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it must be a Github URL. Otherwise, please define 'checkver.url'."
                                                                     },
-                                                                    "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it has at least one Github URL."
-                                                                }
-                                                            ]
+                                                                    {
+                                                                        "contains": {
+                                                                            "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                        },
+                                                                        "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it has at least one Github URL. Otherwise, please define 'checkver.url'."
+                                                                    }
+                                                                ]
+                                                            }
                                                         }
                                                     }
                                                 }
