@@ -1013,10 +1013,14 @@
                         "array",
                         "string"
                     ],
-                    "pattern": "^https://github\\.com/.+?/releases/download/",
+                    "examples": [
+                        "",
+                        []
+                    ],
+                    "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/",
                     "items": {
                         "type": "string",
-                        "pattern": "^https://github\\.com/.+?/releases/download/"
+                        "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/"
                     }
                 }
             }
@@ -1697,7 +1701,7 @@
                                         "errorMessage": "请修改英文描述"
                                     },
                                     {
-                                        "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                                        "pattern": "(?<![\\s\\|])\\s\\|\\s(?!\\s).*?[A-Za-z].*",
                                         "errorMessage": "不符合指定格式：中文描述 | English description\n注意: | 左右各只有一个空格"
                                     },
                                     {
@@ -1842,15 +1846,6 @@
                                 },
                                 "errorMessage": "checkver 必须是对象",
                                 "properties": {
-                                    "url": {
-                                        "not": {
-                                            "pattern": "/:owner/:repo"
-                                        },
-                                        "errorMessage": ":owner 和 :repo 是占位符",
-                                        "examples": [
-                                            "https://github.com/:owner/:repo"
-                                        ]
-                                    },
                                     "github": {
                                         "not": true,
                                         "errorMessage": "abyss 中不允许使用它"
@@ -2584,7 +2579,7 @@
                                                 },
                                                 "else": {
                                                     "not": true,
-                                                    "errorMessage": "由于使用了 A-Install-Exe 或 A-Expand-SetupExe，必须使用数组格式"
+                                                    "errorMessage": "由于使用了 A-Install-Exe 或 A-Expand-SetupExe，需要使用数组格式"
                                                 }
                                             }
                                         }
@@ -3436,87 +3431,130 @@
                                         "examples": [
                                             [
                                                 ". \"$pwd\\bin\\utils.ps1\"",
-                                                "A-Get-VersionFromGithubApi"
+                                                "A-Get-VersionFromGithubAPI"
                                             ]
                                         ],
                                         "minItems": 1,
-                                        "items": {
-                                            "anyOf": [
-                                                {},
-                                                {
-                                                    "const": ". \"$pwd\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                                },
-                                                {
-                                                    "const": "A-Get-VersionFromGithubApi",
-                                                    "markdownDescription": "从 GitHub 仓库获取应用的最新版本"
-                                                },
-                                                {
-                                                    "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                    "markdownDescription": "获取 Winget 中指定应用的安装信息"
-                                                },
-                                                {
-                                                    "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                    "markdownDescription": "获取 Winget 中指定应用的安装信息"
-                                                },
-                                                {
-                                                    "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                    "markdownDescription": "输出应用的版本号"
-                                                },
-                                                {
-                                                    "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "输出应用的 x64 安装程序 URL"
-                                                },
-                                                {
-                                                    "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                    "markdownDescription": "输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                },
-                                                {
-                                                    "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "输出应用的 x86 安装程序 URL"
-                                                },
-                                                {
-                                                    "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                    "markdownDescription": "输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                },
-                                                {
-                                                    "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "输出应用的 arm64 安装程序 URL"
-                                                },
-                                                {
-                                                    "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                    "markdownDescription": "输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                        "items": [
+                                            {
+                                                "const": ". \"$pwd\\bin\\utils.ps1\"",
+                                                "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                            }
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {},
+                                                        {
+                                                            "const": "A-Get-VersionFromGithubAPI",
+                                                            "markdownDescription": "从 GitHub 仓库获取应用的最新版本"
+                                                        },
+                                                        {
+                                                            "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                            "markdownDescription": "获取 Winget 中指定应用的安装信息"
+                                                        },
+                                                        {
+                                                            "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                            "markdownDescription": "获取 Winget 中指定应用的安装信息"
+                                                        },
+                                                        {
+                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                            "markdownDescription": "输出应用的版本号"
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "输出应用的 x64 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "输出应用的 x86 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                            "markdownDescription": "输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL"
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                        }
+                                                    ]
                                                 }
-                                            ]
-                                        }
+                                            }
+                                        ]
                                     }
                                 }
                             }
                         }
                     },
                     {
-                        "properties": {
-                            "checkver": {
-                                "if": {
+                        "if": {
+                            "required": [
+                                "checkver"
+                            ],
+                            "properties": {
+                                "checkver": {
                                     "required": [
                                         "script"
                                     ],
                                     "properties": {
                                         "script": {
                                             "contains": {
-                                                "pattern": "(?<!#.*)A-Get-VersionFromGithubApi"
+                                                "pattern": "(?<!#.*)A-Get-VersionFromGithubAPI"
                                             }
                                         }
                                     }
-                                },
-                                "then": {
-                                    "required": [
-                                        "url"
-                                    ],
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "checkver": {
                                     "properties": {
                                         "url": {
-                                            "pattern": "^https://github.com/[^/]+/[^/]+$",
-                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubApi，url 只能是 Github 地址\n例如: https://github.com/abgox/PSCompletions"
+                                            "not": true,
+                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，不需要定义它"
+                                        }
+                                    }
+                                },
+                                "autoupdate": {
+                                    "properties": {
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "type": [
+                                                                "array",
+                                                                "string"
+                                                            ],
+                                                            "items": {
+                                                                "type": "string"
+                                                            },
+                                                            "allOf": [
+                                                                {
+                                                                    "pattern": "^https://github\\.com/[^/]+/[^/]+",
+                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须是一个 Github URL"
+                                                                },
+                                                                {
+                                                                    "contains": {
+                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                    },
+                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它至少有一个 Github URL"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -3580,7 +3618,7 @@
                                                             "properties": {
                                                                 "url": {
                                                                     "const": "temp-autoupdate.json",
-                                                                    "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 temp-autoupdate.json"
+                                                                    "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 \"temp-autoupdate.json\""
                                                                 },
                                                                 "jsonpath": {
                                                                     "enum": [

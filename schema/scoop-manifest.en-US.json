@@ -1013,10 +1013,14 @@
                         "array",
                         "string"
                     ],
-                    "pattern": "^https://github\\.com/.+?/releases/download/",
+                    "examples": [
+                        "",
+                        []
+                    ],
+                    "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/",
                     "items": {
                         "type": "string",
-                        "pattern": "^https://github\\.com/.+?/releases/download/"
+                        "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/"
                     }
                 }
             }
@@ -1697,7 +1701,7 @@
                                         "errorMessage": "Please modify the English description"
                                     },
                                     {
-                                        "pattern": "(?<!\\s)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                                        "pattern": "(?<![\\s\\|])\\s\\|\\s(?!\\s).*?[A-Za-z].*",
                                         "errorMessage": "It does not conform to the specified format: Chinese description | English description\nNote: There should be only one space on each side of the | symbol"
                                     },
                                     {
@@ -1842,15 +1846,6 @@
                                 },
                                 "errorMessage": "It must be object",
                                 "properties": {
-                                    "url": {
-                                        "not": {
-                                            "pattern": "/:owner/:repo"
-                                        },
-                                        "errorMessage": "':owner' and ':repo' are placeholders",
-                                        "examples": [
-                                            "https://github.com/:owner/:repo"
-                                        ]
-                                    },
                                     "github": {
                                         "not": true,
                                         "errorMessage": "In abyss, it is not allowed."
@@ -3436,87 +3431,130 @@
                                         "examples": [
                                             [
                                                 ". \"$pwd\\bin\\utils.ps1\"",
-                                                "A-Get-VersionFromGithubApi"
+                                                "A-Get-VersionFromGithubAPI"
                                             ]
                                         ],
                                         "minItems": 1,
-                                        "items": {
-                                            "anyOf": [
-                                                {},
-                                                {
-                                                    "const": ". \"$pwd\\bin\\utils.ps1\"",
-                                                    "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
-                                                },
-                                                {
-                                                    "const": "A-Get-VersionFromGithubApi",
-                                                    "markdownDescription": "Get the latest version from the GitHub repository"
-                                                },
-                                                {
-                                                    "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                    "markdownDescription": "Get installer information of specified application in Winget."
-                                                },
-                                                {
-                                                    "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                    "markdownDescription": "Get installer information of specified application in Winget."
-                                                },
-                                                {
-                                                    "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                    "markdownDescription": "Output version number of specified application."
-                                                },
-                                                {
-                                                    "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "Output x64 installer URL of specified application."
-                                                },
-                                                {
-                                                    "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                    "markdownDescription": "Output x64 installer URL of specified application.\n- If no clear scope, use `machine`."
-                                                },
-                                                {
-                                                    "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "Output x86 installer URL of specified application."
-                                                },
-                                                {
-                                                    "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                    "markdownDescription": "Output x86 installer URL of specified application.\n- If no clear scope, use `machine`."
-                                                },
-                                                {
-                                                    "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                    "markdownDescription": "Output arm64 installer URL of specified application."
-                                                },
-                                                {
-                                                    "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                    "markdownDescription": "Output arm64 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                        "items": [
+                                            {
+                                                "const": ". \"$pwd\\bin\\utils.ps1\"",
+                                                "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                            }
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "items": {
+                                                    "anyOf": [
+                                                        {},
+                                                        {
+                                                            "const": "A-Get-VersionFromGithubAPI",
+                                                            "markdownDescription": "Get the latest version from the GitHub repository"
+                                                        },
+                                                        {
+                                                            "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                            "markdownDescription": "Get installer information of specified application in Winget."
+                                                        },
+                                                        {
+                                                            "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                            "markdownDescription": "Get installer information of specified application in Winget."
+                                                        },
+                                                        {
+                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                            "markdownDescription": "Output version number of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "Output x64 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "Output x64 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "Output x86 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                            "markdownDescription": "Output x86 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                            "markdownDescription": "Output arm64 installer URL of specified application."
+                                                        },
+                                                        {
+                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                            "markdownDescription": "Output arm64 installer URL of specified application.\n- If no clear scope, use `machine`."
+                                                        }
+                                                    ]
                                                 }
-                                            ]
-                                        }
+                                            }
+                                        ]
                                     }
                                 }
                             }
                         }
                     },
                     {
-                        "properties": {
-                            "checkver": {
-                                "if": {
+                        "if": {
+                            "required": [
+                                "checkver"
+                            ],
+                            "properties": {
+                                "checkver": {
                                     "required": [
                                         "script"
                                     ],
                                     "properties": {
                                         "script": {
                                             "contains": {
-                                                "pattern": "(?<!#.*)A-Get-VersionFromGithubApi"
+                                                "pattern": "(?<!#.*)A-Get-VersionFromGithubAPI"
                                             }
                                         }
                                     }
-                                },
-                                "then": {
-                                    "required": [
-                                        "url"
-                                    ],
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "checkver": {
                                     "properties": {
                                         "url": {
-                                            "pattern": "^https://github.com/[^/]+/[^/]+$",
-                                            "errorMessage": "Since 'A-Get-VersionFromGithubApi' is used, the URL can only be a Github address.\nFor example: https://github.com/abgox/PSCompletions"
+                                            "not": true,
+                                            "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it is not needed."
+                                        }
+                                    }
+                                },
+                                "autoupdate": {
+                                    "properties": {
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "^(64bit|arm64|32bit)$": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "type": [
+                                                                "array",
+                                                                "string"
+                                                            ],
+                                                            "items": {
+                                                                "type": "string"
+                                                            },
+                                                            "allOf": [
+                                                                {
+                                                                    "pattern": "^https://github\\.com/[^/]+/[^/]+",
+                                                                    "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it must be a Github URL."
+                                                                },
+                                                                {
+                                                                    "contains": {
+                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                    },
+                                                                    "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it has at least one Github URL."
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -3580,7 +3618,7 @@
                                                             "properties": {
                                                                 "url": {
                                                                     "const": "temp-autoupdate.json",
-                                                                    "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, 'hash.url' must be temp-autoupdate.json"
+                                                                    "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, it must be \"temp-autoupdate.json\""
                                                                 },
                                                                 "jsonpath": {
                                                                     "enum": [
