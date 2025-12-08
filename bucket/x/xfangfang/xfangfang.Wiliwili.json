@@ -1,0 +1,70 @@
+{
+    "version": "1.5.3",
+    "description": "一个专为手柄用户设计的第三方 B站 客户端 | A third-party Bilibili client designed for gamepad users",
+    "homepage": "https://xfangfang.github.io/wiliwili",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/xfangfang/wiliwili/blob/yoga/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xfangfang/wiliwili/releases/download/v1.5.3/wiliwili-Windows-x86_64.zip",
+            "hash": "44e0019231241814b0d3306a8d9ee5b1b983c05cbe9b76ba3eefd2e72b35d3b7"
+        },
+        "arm64": {
+            "url": "https://github.com/xfangfang/wiliwili/releases/download/v1.5.3/wiliwili-Windows-arm64.zip",
+            "hash": "311953aa7bb90ba5589f52049b640e8595aebbca868fa5fd662ebb26d1d75e1f"
+        }
+    },
+    "extract_dir": "wiliwili",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\wiliwili.exe",
+            "Wiliwili"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:LocalAppData\\xfangfang\\wiliwili\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xfangfang/wiliwili/releases/download/v$version/wiliwili-Windows-x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/xfangfang/wiliwili/releases/download/v$version/wiliwili-Windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
