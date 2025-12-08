@@ -34,19 +34,19 @@
   <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
 </p>
 
-> [!Tip]
+> [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个非常特别的 Scoop bucket
-> - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
-> - 其中的清单基于 [utils.ps1](./bin/utils.ps1) 编写，包含一些额外特性，其他 bucket 不应该合并它们，以避免冲突和错误
+> - [abyss](https://abyss.abgox.com) 是一个非常特殊的 Scoop bucket，它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
+> - 区别于标准的 Scoop bucket，它还包含了一些额外的 [特性](#特性)
+> - 它的清单基于 [utils.ps1](./bin/utils.ps1) 编写，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ## 特性
 
+- [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)
 - [完善的数据持久化](https://abyss.abgox.com/features/data-persistence)
 - [灵活的应用安装方案](https://abyss.abgox.com/features/install-solution)
-- [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)
-- [更多的扩展功能](https://abyss.abgox.com/features/extra-features)
-- 由 [abgox/scoop-i18n](https://scoop-i18n.abgox.com) 提供多语言支持
+- [由 Scoop 配置控制的其他功能](https://abyss.abgox.com/features/extra-features)
+- 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供的多语言支持
 - 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 的命名格式: `Publisher.PackageIdentifier`
 
 ## 演示
@@ -57,13 +57,13 @@
 
 > [!Tip]
 >
-> - 如果你无法访问 Github ，建议使用 [Scoop 镜像](https://gitee.com/scoop-installer-mirrors)
+> - 如果你无法访问 Github ，建议使用 [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors)
 > - 它可以让你正常安装并使用 Scoop，无需访问 Github
 
 - [Scoop](https://scoop.sh/)
-- [Scoop 文档](https://github.com/ScoopInstaller/Scoop/wiki)
-- [什么是 Scoop 中的 bucket?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
-- [什么是 Scoop 中的应用清单(App Manifests)?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
+- [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
+- [Scoop 中的 bucket - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
+- [Scoop 中的应用清单 (App Manifest) - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
 ## 如果你正在使用 Scoop
 

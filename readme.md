@@ -34,20 +34,20 @@
   <strong>Star ⭐️ or <a href="https://abgox.com/donate">Donate 💰</a> if you like it!</strong>
 </p>
 
-> [!Tip]
+> [!Important]
 >
-> - [abyss](https://abyss.abgox.com) is a very special Scoop bucket.
-> - It aims to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
-> - These manifests based on [utils.ps1](./bin/utils.ps1) contain some extra [features](#features), and other buckets should not merge them to avoid conflicts and errors.
+> - [abyss](https://abyss.abgox.com) is a very special Scoop bucket, aiming to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
+> - Unlike the standard Scoop bucket, it also includes some extra [features](#features).
+> - Its manifests based on [utils.ps1](./bin/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
 
 ## Features
 
+- [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)
 - [Enhanced Data Persistence](https://abyss.abgox.com/features/data-persistence)
 - [Flexible App Installation Solution](https://abyss.abgox.com/features/install-solution)
-- [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)
-- [Extra Features](https://abyss.abgox.com/features/extra-features)
-- Multilingual support powered by [abgox/scoop-i18n](https://scoop-i18n.abgox.com).
-- Referenced the naming format of [winget-pkgs](https://github.com/microsoft/winget-pkgs): `Publisher.PackageIdentifier`
+- [Extra Features via Scoop Configuration](https://abyss.abgox.com/features/extra-features)
+- Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
+- The naming format like [winget-pkgs](https://github.com/microsoft/winget-pkgs): `Publisher.PackageIdentifier`
 
 ## Demo
 
@@ -57,13 +57,13 @@
 
 > [!Tip]
 >
-> - If you cannot access Github, it is recommended to use the [Scoop mirror](https://gitee.com/scoop-installer-mirrors).
+> - If you cannot access Github, it is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors).
 > - It allows you to install and use Scoop normally without accessing Github.
 
 - [Scoop](https://scoop.sh/)
-- [Scoop Document](https://github.com/ScoopInstaller/Scoop/wiki)
-- [What is bucket in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
-- [What is App-Manifests in Scoop?](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
+- [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
+- [Scoop bucket - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
+- [Scoop App-Manifest - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
 ## If you are using Scoop
 
