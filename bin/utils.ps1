@@ -1188,36 +1188,38 @@ function A-Get-UninstallEntryByAppName {
     return $null
 }
 function A-Get-VersionFromGithubAPI {
-    if (-not $json) {
-        Write-Host "::error::`$json is invalid." -ForegroundColor Red
-        return
-    }
-
-    $url = if ($json.autoupdate.architecture.'64bit'.url) {
-        $json.autoupdate.architecture.'64bit'.url
-    }
-    elseif ($json.autoupdate.architecture.arm64.url) {
-        $json.autoupdate.architecture.arm64.url
-    }
-    elseif ($json.autoupdate.architecture.'32bit'.url) {
-        $json.autoupdate.architecture.'32bit'.url
-    }
-    else {
-        $json.autoupdate.url
-    }
-
-    if ($url -is [array]) {
-        $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
-    }
-
-    if (-not $url) {
-        Write-Host "::error::`$url is invalid." -ForegroundColor Red
-        return
-    }
-
     if ($url -notlike 'https://github.com/*/*') {
-        Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
-        return
+        if (-not $json) {
+            Write-Host "::error::`$json is invalid." -ForegroundColor Red
+            return
+        }
+
+        $url = if ($json.autoupdate.architecture.'64bit'.url) {
+            $json.autoupdate.architecture.'64bit'.url
+        }
+        elseif ($json.autoupdate.architecture.arm64.url) {
+            $json.autoupdate.architecture.arm64.url
+        }
+        elseif ($json.autoupdate.architecture.'32bit'.url) {
+            $json.autoupdate.architecture.'32bit'.url
+        }
+        else {
+            $json.autoupdate.url
+        }
+
+        if ($url -is [array]) {
+            $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
+        }
+
+        if (-not $url) {
+            Write-Host "::error::`$url is invalid." -ForegroundColor Red
+            return
+        }
+
+        if ($url -notlike 'https://github.com/*/*') {
+            Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
+            return
+        }
     }
 
     $headers = @{
