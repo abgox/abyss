@@ -1,0 +1,61 @@
+{
+    "version": "2025-12-08",
+    "description": "一个为编写 Rust 程序提供 IDE 功能的语言服务器 | A language server that provides IDE functionality for writing Rust programs.",
+    "homepage": "https://rust-analyzer.github.io/",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/rust-lang/rust-analyzer/releases/download/2025-12-08/rust-analyzer-x86_64-pc-windows-msvc.zip",
+            "hash": "5cd1dde4c1a80f987ad6fd524deb0256b69d0e8aa3ee5ed82458ce5f66079da9"
+        },
+        "arm64": {
+            "url": "https://github.com/rust-lang/rust-analyzer/releases/download/2025-12-08/rust-analyzer-aarch64-pc-windows-msvc.zip",
+            "hash": "c73863c0808506391ae16f8b6c600d1e96242657bbe21f0b1f4d0e4d06d2eedc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\rust-analyzer.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rust-lang/rust-analyzer/releases/download/$version/rust-analyzer-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/rust-lang/rust-analyzer/releases/download/$version/rust-analyzer-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
