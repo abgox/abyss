@@ -92,8 +92,8 @@ function A-Test-DeveloperMode {
     }
 }
 
-$isAdmin = A-Test-Admin
-$isDevMode = A-Test-DeveloperMode
+$abgox_abyss.isAdmin = A-Test-Admin
+$abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 <#
 应用的安装/卸载步骤 (xxx 表示其他自定义逻辑)
@@ -297,7 +297,7 @@ function A-New-LinkFile {
         [array]$LinkTargets = @()
     )
 
-    if (!$isAdmin -and !$isDevMode) {
+    if (!$abgox_abyss.isAdmin -and !$abgox_abyss.isDevMode) {
         error "$app requires admin permission or developer mode to create SymbolicLink."
         error "Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
         A-Exit
@@ -508,7 +508,7 @@ function A-Stop-Service {
         [switch]$RequireAdmin
     )
 
-    if (-not $isAdmin -and $RequireAdmin) {
+    if (-not $abgox_abyss.isAdmin -and $RequireAdmin) {
         A-Require-Admin
     }
 
@@ -1011,7 +1011,7 @@ function A-Require-Admin {
         要求以管理员权限运行
     #>
 
-    if (!$isAdmin) {
+    if (!$abgox_abyss.isAdmin) {
         error "It requires admin permission. Please try again with admin permission."
         error "Refer to: https://abyss.abgox.com/faq/require-admin"
         A-Exit
@@ -1242,7 +1242,7 @@ function A-Get-VersionFromGithubAPI {
         $headers['Authorization'] = "token $token"
     }
 
-    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.+)?', 'https://api.github.com/repos/$1/$2/releases/latest'
+    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
 
     try {
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
