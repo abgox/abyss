@@ -1,0 +1,69 @@
+{
+    "version": "1.8.2",
+    "description": "微软 Windows 应用运行时 1.8 | Microsoft Windows App Runtime 1.8",
+    "homepage": "https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://aka.ms/windowsappsdk/1.8/1.8.251003001/windowsappruntimeinstall-x64.exe",
+            "hash": "d0f58d52ceac2dd74fc10bd8411a1d3e81c0f1c0add5f043121cb382b7100833"
+        },
+        "arm64": {
+            "url": "https://aka.ms/windowsappsdk/1.8/1.8.251003001/windowsappruntimeinstall-arm64.exe",
+            "hash": "cb538c59ae93e6e1c6c38f25d93a096bdc82bb6d8c6c119bf008efeb8ebdcefc"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Install-Exe -ArgumentList @('--quiet')"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.WindowsAppRuntime.1.8' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
