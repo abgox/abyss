@@ -1,0 +1,57 @@
+{
+    "version": "1.24.0",
+    "description": "适用于 PowerShell 模块和脚本的静态代码检查器 | A static code checker for PowerShell modules and scripts",
+    "homepage": "https://github.com/PowerShell/PSScriptAnalyzer",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/psscriptanalyzer.1.24.0.nupkg",
+            "hash": "e86c97d44bb1bc8a1de35e753b85ea1d938f6f9f881639a181507e079bca4556"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/psscriptanalyzer.1.24.0.nupkg",
+            "hash": "e86c97d44bb1bc8a1de35e753b85ea1d938f6f9f881639a181507e079bca4556"
+        }
+    },
+    "psmodule": {
+        "name": "PSScriptAnalyzer"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "Remove-Item \"$dir\\_rels\", \"$dir\\package\", \"$dir\\*Content*.xml\" -Recurse -ErrorAction SilentlyContinue"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/psscriptanalyzer",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/psscriptanalyzer.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/psscriptanalyzer.$version.nupkg"
+            }
+        }
+    }
+}
