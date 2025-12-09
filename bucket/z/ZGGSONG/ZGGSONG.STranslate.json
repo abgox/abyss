@@ -1,15 +1,18 @@
 {
-    "version": "1.5.5.802",
+    "version": "2.0.0",
     "description": "一款即用即走的翻译、OCR工具 | A ready-to-go translation ocr tool.",
     "homepage": "https://stranslate.zggsong.com/",
     "license": {
         "identifier": "MIT",
         "url": "https://github.com/ZGGSONG/STranslate/blob/main/LICENSE"
     },
+    "suggest": {
+        "runtime": "abyss/Microsoft.DotNet.DesktopRuntime.10"
+    },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ZGGSONG/STranslate/releases/download/1.5.5.802/STranslate_1.5.5.802_win-x64_7z.7z",
-            "hash": "92e08c053b552a77ca2b765f77683a76dc5fe4ff3b299787d952a35df4c3734d"
+            "url": "https://github.com/STranslate/STranslate/releases/download/2.0.0/STranslate-win-Portable.zip",
+            "hash": "ea9cb228a1661b50c800a6604065ea05665e92abc4fa3187996521b6a631fc5b"
         }
     },
     "extract_to": "app",
@@ -20,16 +23,11 @@
             "STranslate"
         ]
     ],
-    "persist": [
-        [
-            "app\\portable_config",
-            "AppData\\Local\\STranslate"
-        ]
-    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\STranslate\")"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,7 +38,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -57,7 +56,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/ZGGSONG/STranslate/releases/download/$version/STranslate_$version_win-x64_7z.7z"
+                "url": "https://github.com/STranslate/STranslate/releases/download/$version/STranslate-win-Portable.zip"
             }
         },
         "hash": {
