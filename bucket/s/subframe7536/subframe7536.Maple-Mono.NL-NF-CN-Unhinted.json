@@ -1,0 +1,68 @@
+{
+    "version": "7.9",
+    "description": "(版本: NL-NF-CN-Unhinted，无连字) 一款带连字和控制台图标的圆角等宽字体，中英文宽度完美 2:1 | (version: NL-NF-CN-Unhinted, no ligatures) An open source monospace font with round corner and ligatures for IDE and command line.",
+    "homepage": "https://github.com/subframe7536/Maple-font",
+    "license": {
+        "identifier": "OFL-1.1"
+    },
+    "notes": [
+        "Font Name:",
+        "Maple Mono NL NF CN"
+    ],
+    "notes-cn": [
+        "字体名称:",
+        "Maple Mono NL NF CN"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/subframe7536/Maple-font/releases/download/v7.9/MapleMonoNL-NF-CN-unhinted.zip",
+            "hash": "6d30ac6942726a5b53117c82e6b378144ac02a62a8e6b28702b961db86390ac9"
+        },
+        "arm64": {
+            "url": "https://github.com/subframe7536/Maple-font/releases/download/v7.9/MapleMonoNL-NF-CN-unhinted.zip",
+            "hash": "6d30ac6942726a5b53117c82e6b378144ac02a62a8e6b28702b961db86390ac9"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Add-Font"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Remove-Font"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/subframe7536/Maple-font/releases/download/v$version/MapleMonoNL-NF-CN-unhinted.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/subframe7536/Maple-font/releases/download/v$version/MapleMonoNL-NF-CN-unhinted.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
