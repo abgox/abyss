@@ -1,0 +1,63 @@
+{
+    "version": "2.83.1",
+    "description": "GitHub 的官方命令行工具 | GitHub's official command line tool",
+    "homepage": "https://cli.github.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cli/cli/releases/download/v2.83.1/gh_2.83.1_windows_amd64.zip",
+            "hash": "1324871424cb8cb3793914565026a8da53b1a633fa05760597abef54b57ff12e"
+        },
+        "arm64": {
+            "url": "https://github.com/cli/cli/releases/download/v2.83.1/gh_2.83.1_windows_arm64.zip",
+            "hash": "874e07e89516fa064a8f9c55402bc5b6d8bfa7c625b05ce90e473b92075846e5"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\bin\\gh.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory @(\"$env:AppData\\GitHub CLI\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cli/cli/releases/download/v$version/gh_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/cli/cli/releases/download/v$version/gh_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
