@@ -1,0 +1,62 @@
+{
+    "version": "0.9.0",
+    "description": "Godot 版本管理器 (gdvm) 是一款旨在简化 Godot 引擎不同版本的安装、管理和切换的工具。 | Godot Version Manager (gdvm) is a tool designed to simplify the installation, management, and switching between different versions of the Godot Engine.",
+    "homepage": "https://gdvm.io/",
+    "license": {
+        "identifier": "ISC"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/adalinesimonian/gdvm/releases/download/v0.9.0/gdvm-x86_64-pc-windows-msvc.exe#/gdvm.exe",
+            "hash": "8a861ea6fc4786aa5cc69fab18a637f7ed8e5c481786c83822cf4beef7d9a226"
+        },
+        "arm64": {
+            "url": "https://github.com/adalinesimonian/gdvm/releases/download/v0.9.0/gdvm-aarch64-pc-windows-msvc.exe#/gdvm.exe",
+            "hash": "5b991ec2f55ffd85bca353899fa55375a3028c71b5a82eb91ec52ad81c344425"
+        }
+    },
+    "bin": "gdvm.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:UserProfile\\.gdvm\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/adalinesimonian/gdvm/releases/download/v$version/gdvm-x86_64-pc-windows-msvc.exe#/gdvm.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/adalinesimonian/gdvm/releases/download/v$version/gdvm-aarch64-pc-windows-msvc.exe#/gdvm.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
