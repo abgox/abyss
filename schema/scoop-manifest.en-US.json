@@ -458,7 +458,7 @@
         },
         "env_set": {
             "title": "Set environment variables",
-            "markdownDescription": "- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)",
+            "markdownDescription": "- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)\n- Available variables:\n  - `$dir`\n  - `$persist_dir`\n  - `$env:UserProfile`\n  - `$env:AppData`\n  - ...",
             "type": "object",
             "examples": [
                 {}
@@ -469,10 +469,10 @@
             "then": {
                 "patternProperties": {
                     "^.+$": {
-                        "$ref": "#/definitions/string_or_string_array",
+                        "$ref": "#/definitions/str",
                         "examples": [
-                            "",
-                            []
+                            "$dir\\xxx",
+                            "$persist_dir\\xxx"
                         ]
                     }
                 },
@@ -817,11 +817,11 @@
                             ]
                         },
                         "jsonpath": {
-                            "markdownDescription": "Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
+                            "markdownDescription": "Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.\n- Usage:\n    - `\"$.version\"`: Extract the value of `version`\n    - `\"$..[?(@.productVersion || @.version)]\"`: Extract the value of `productVersion` or `version`\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: Extract `updated_at` from the field in `assets` where `name` is `xxx`\n    - `\"$..['productVersion','version']\"`:\n      - Extract the values of these two fields and form an array.\n      - Like: `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                             "$ref": "#/definitions/str"
                         },
                         "jp": {
-                            "markdownDescription": "jp is an alias for jsonpath\n- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.",
+                            "markdownDescription": "jp is an alias for jsonpath\n- Use a JSON endpoint with a JSONPath expression to retrieve the version, you can use dot notation or bracket notation.\n- Usage:\n    - `\"$.version\"`: Extract the value of `version`\n    - `\"$..[?(@.productVersion || @.version)]\"`: Extract the value of `productVersion` or `version`\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: Extract `updated_at` from the field in `assets` where `name` is `xxx`\n    - `\"$..['productVersion','version']\"`:\n      - Extract the values of these two fields and form an array.\n      - Like: `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                             "$ref": "#/definitions/str"
                         },
                         "xpath": {
@@ -898,11 +898,11 @@
                     "$ref": "#/definitions/str"
                 },
                 "regex": {
-                    "markdownDescription": "Alias: find\nRegEx expression to extract the hash",
+                    "markdownDescription": "RegEx expression to extract the hash (Alias: find)",
                     "$ref": "#/definitions/str"
                 },
                 "find": {
-                    "markdownDescription": "Alias: regex\nRegEx expression to extract the hash",
+                    "markdownDescription": "RegEx expression to extract the hash (Alias: regex)",
                     "$ref": "#/definitions/str"
                 },
                 "mode": {
@@ -947,11 +947,11 @@
                     ]
                 },
                 "jp": {
-                    "markdownDescription": "Alias: jsonpath\nJSONPath expression to extract the hash",
+                    "markdownDescription": "JSONPath expression to extract the hash (Alias: jsonpath)\n- Usage:\n    - `\"$.version\"`: Extract the value of `version`\n    - `\"$..[?(@.productVersion || @.version)]\"`: Extract the value of `productVersion` or `version`\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: Extract `updated_at` from the field in `assets` where `name` is `xxx`\n    - `\"$..['productVersion','version']\"`:\n      - Extract the values of these two fields and form an array.\n      - Like: `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                     "$ref": "#/definitions/str"
                 },
                 "jsonpath": {
-                    "markdownDescription": "Alias: jp\nJSONPath expression to extract the hash",
+                    "markdownDescription": "JSONPath expression to extract the hash (Alias: jp)\n- Usage:\n    - `\"$.version\"`: Extract the value of `version`\n    - `\"$..[?(@.productVersion || @.version)]\"`: Extract the value of `productVersion` or `version`\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: Extract `updated_at` from the field in `assets` where `name` is `xxx`\n    - `\"$..['productVersion','version']\"`:\n      - Extract the values of these two fields and form an array.\n      - Like: `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                     "$ref": "#/definitions/str"
                 },
                 "xpath": {
@@ -1476,24 +1476,16 @@
                                 "architecture": {
                                     "patternProperties": {
                                         "^(64bit|arm64|32bit)$": {
-                                            "allOf": [
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "url"
-                                                        ]
-                                                    },
+                                            "properties": {
+                                                "url": {
+                                                    "not": true,
                                                     "errorMessage": "Property 'url' in 'architecture' conflicts with the top-level 'url'. You can only choose one way."
                                                 },
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "hash"
-                                                        ]
-                                                    },
+                                                "hash": {
+                                                    "not": true,
                                                     "errorMessage": "If the top-level 'url' is set, 'hash' in 'architecture' cannot be set."
                                                 }
-                                            ]
+                                            }
                                         }
                                     }
                                 }
@@ -1559,12 +1551,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "64bit"
-                                                    ]
-                                                },
-                                                "errorMessage": "The 'architecture' in 'autoupdate' does not set '64bit'."
+                                                "properties": {
+                                                    "64bit": {
+                                                        "not": true,
+                                                        "errorMessage": "The 'architecture' in 'autoupdate' does not set '64bit'."
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1595,12 +1587,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "32bit"
-                                                    ]
-                                                },
-                                                "errorMessage": "The 'architecture' in 'autoupdate' does not set '32bit'."
+                                                "properties": {
+                                                    "32bit": {
+                                                        "not": true,
+                                                        "errorMessage": "The 'architecture' in 'autoupdate' does not set '32bit'."
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1631,12 +1623,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "arm64"
-                                                    ]
-                                                },
-                                                "errorMessage": "The 'architecture' in 'autoupdate' does not set 'arm64'."
+                                                "properties": {
+                                                    "arm64": {
+                                                        "not": true,
+                                                        "errorMessage": "The 'architecture' in 'autoupdate' does not set 'arm64'."
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1830,15 +1822,47 @@
                                 ]
                             },
                             "persist": {
-                                "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$env:UserProfile\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")`\n- Lay the foundation for possible seamless migration in the future\n----\nScoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                                "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$env:UserProfile\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory \"$env:UserProfile\\.config\\xxx\"`\n- Lay the foundation for possible seamless migration in the future\n----\nScoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                            },
+                            "pre_install": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                }
                             },
                             "installer": {
                                 "not": true,
                                 "errorMessage": "In abyss, it is not allowed."
                             },
+                            "post_install": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                }
+                            },
+                            "pre_uninstall": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                }
+                            },
                             "uninstaller": {
                                 "not": true,
                                 "errorMessage": "In abyss, it is not allowed."
+                            },
+                            "post_uninstall": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                }
                             },
                             "checkver": {
                                 "not": {
@@ -1849,6 +1873,14 @@
                                     "github": {
                                         "not": true,
                                         "errorMessage": "In abyss, it is not allowed."
+                                    },
+                                    "script": {
+                                        "items": {
+                                            "not": {
+                                                "pattern": "[（）‘’“”，：？！—]+"
+                                            },
+                                            "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                        }
                                     },
                                     "re": {
                                         "not": true,
@@ -1987,7 +2019,7 @@
                                             "anyOf": [
                                                 {},
                                                 {
-                                                    "const": "A-Deny-IfAppConflict @()",
+                                                    "const": "A-Deny-IfAppConflict 'xxx', 'yyy'",
                                                     "markdownDescription": "If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict"
                                                 },
                                                 {
@@ -2044,15 +2076,15 @@
                                                 },
                                                 {
                                                     "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `'/S', \"/D=$dir\\app\"`\n- Example 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
-                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
+                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `'/S', \"/D=$dir\\app\"`\n- Example 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "pattern": "A-Install-Exe",
-                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `@('/S', \"/D=$dir\\app\")`\n- Example 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `'/S', \"/D=$dir\\app\"`\n- Example 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-Exe -UnInstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
@@ -2079,28 +2111,20 @@
                                                     "markdownDescription": "Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkFile @(\"$env:AppData\\xxx\")",
-                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
-                                                },
-                                                {
-                                                    "const": "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
-                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "const": "A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkFile",
-                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
-                                                    "const": "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
-                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
-                                                },
-                                                {
-                                                    "const": "A-New-LinkDirectory @(\"$env:UserProfile\\xxx\")",
-                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:UserProfile\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"",
+                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkDirectory",
-                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "const": "A-Add-Font",
@@ -2203,11 +2227,11 @@
                                                 {},
                                                 {
                                                     "const": "A-Stop-Process",
-                                                    "markdownDescription": "Try to stop processes in the installation directory to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- Usage: \n  - `A-Stop-Process \"$env:ProgramFiles\\xxx\", \"$env:AppData\\yyy\" 'aaa', 'bbb'`\n    1. Stop processes in `$dir`，`$env:ProgramFiles\\xxx`, `$env:AppData\\yyy`\n    2. Stop processes named `aaa` and `bbb`\n  - `A-Stop-Process @() 'aaa'`\n    1. Stop processes in `$dir`\n    2. Stop processes named `aaa`"
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Process",
-                                                    "markdownDescription": "Try to stop processes in the installation directory to ensure successful uninstallation."
+                                                    "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- Usage: \n  - `A-Stop-Process \"$env:ProgramFiles\\xxx\", \"$env:AppData\\yyy\" 'aaa', 'bbb'`\n    1. Stop processes in `$dir`，`$env:ProgramFiles\\xxx`, `$env:AppData\\yyy`\n    2. Stop processes named `aaa` and `bbb`\n  - `A-Stop-Process @() 'aaa'`\n    1. Stop processes in `$dir`\n    2. Stop processes named `aaa`"
                                                 },
                                                 {
                                                     "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
@@ -2242,16 +2266,12 @@
                                                     "markdownDescription": "Remove the plugins of PowerToys Run"
                                                 },
                                                 {
-                                                    "const": "A-Remove-TempData",
-                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
-                                                },
-                                                {
-                                                    "const": "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"",
+                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
                                                 },
                                                 {
                                                     "pattern": "A-Remove-TempData",
-                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
@@ -2275,15 +2295,15 @@
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/VerySilent', '/Force')",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 },
                                                 {
                                                     "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
@@ -2299,7 +2319,7 @@
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-Exe",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `@('/S')`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
                                                 }
                                             ]
                                         }
@@ -3143,7 +3163,6 @@
                         }
                     },
                     {
-                        "$comment": "If extract_to is specified as app, paths such as env_add_path and bin may need to start with app\\\\, $env:, or ${env:",
                         "if": {
                             "required": [
                                 "extract_to"
@@ -3157,116 +3176,6 @@
                         },
                         "then": {
                             "properties": {
-                                "env_add_path": {
-                                    "type": [
-                                        "string",
-                                        "array"
-                                    ],
-                                    "anyOf": [
-                                        {
-                                            "$ref": "#/definitions/str",
-                                            "if": {
-                                                "not": {
-                                                    "anyOf": [
-                                                        {
-                                                            "pattern": "^app\\\\"
-                                                        },
-                                                        {
-                                                            "pattern": "^\\$\\{?env:"
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
-                                            }
-                                        },
-                                        {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/str",
-                                                "if": {
-                                                    "not": {
-                                                        "anyOf": [
-                                                            {
-                                                                "pattern": "^app\\\\"
-                                                            },
-                                                            {
-                                                                "pattern": "^\\$\\{?env:"
-                                                            }
-                                                        ]
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                "env_set": {
-                                    "patternProperties": {
-                                        "^.+$": {
-                                            "$ref": "#/definitions/string_or_string_array",
-                                            "type": [
-                                                "string",
-                                                "array"
-                                            ],
-                                            "examples": [
-                                                "",
-                                                []
-                                            ],
-                                            "anyOf": [
-                                                {
-                                                    "$ref": "#/definitions/str",
-                                                    "if": {
-                                                        "not": {
-                                                            "anyOf": [
-                                                                {
-                                                                    "pattern": "\\\\app"
-                                                                },
-                                                                {
-                                                                    "pattern": "^\\$\\{?env:"
-                                                                }
-                                                            ]
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/definitions/str",
-                                                        "if": {
-                                                            "not": {
-                                                                "anyOf": [
-                                                                    {
-                                                                        "pattern": "\\\\app"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^\\$\\{?env:"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "minProperties": 1,
-                                    "additionalProperties": false,
-                                    "errorMessage": "Property names are not allowed to be empty strings."
-                                },
                                 "bin": {
                                     "type": [
                                         "string",
@@ -3382,41 +3291,6 @@
                                                 }
                                             }
                                         ]
-                                    }
-                                },
-                                "persist": {
-                                    "if": {
-                                        "type": "array"
-                                    },
-                                    "then": {
-                                        "items": {
-                                            "if": {
-                                                "type": "array"
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {
-                                                        "if": {
-                                                            "not": {
-                                                                "pattern": "^app\\\\"
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\"
-                                                        }
-                                                    }
-                                                ]
-                                            },
-                                            "else": {
-                                                "not": true,
-                                                "errorMessage": "Since extract_to is specified as \"app\", it need to use array"
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "not": true,
-                                        "errorMessage": "Since extract_to is specified as \"app\", it need to use array"
                                     }
                                 }
                             }
@@ -3644,7 +3518,7 @@
                                                                         "$.arm64_user.InstallerSha256",
                                                                         "$.x86_user.InstallerSha256"
                                                                     ],
-                                                                    "markdownDescription": "hash\n- If no clear scope, use `machine`."
+                                                                    "markdownDescription": "hash\n- If no clear scope, use `machine`.\n- Usage:\n    - `\"$.version\"`: Extract the value of `version`\n    - `\"$..[?(@.productVersion || @.version)]\"`: Extract the value of `productVersion` or `version`\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: Extract `updated_at` from the field in `assets` where `name` is `xxx`\n    - `\"$..['productVersion','version']\"`:\n      - Extract the values of these two fields and form an array.\n      - Like: `\"[\"1.2.3\",\"1.2.3-rc\"]\"`"
                                                                 }
                                                             }
                                                         }

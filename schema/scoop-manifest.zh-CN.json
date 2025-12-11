@@ -458,7 +458,7 @@
         },
         "env_set": {
             "title": "设置环境变量",
-            "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中",
+            "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$env:UserProfile`\n  - `$env:AppData`\n  - ...",
             "type": "object",
             "examples": [
                 {}
@@ -469,10 +469,10 @@
             "then": {
                 "patternProperties": {
                     "^.+$": {
-                        "$ref": "#/definitions/string_or_string_array",
+                        "$ref": "#/definitions/str",
                         "examples": [
-                            "",
-                            []
+                            "$dir\\xxx",
+                            "$persist_dir\\xxx"
                         ]
                     }
                 },
@@ -817,11 +817,11 @@
                             ]
                         },
                         "jsonpath": {
-                            "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。",
+                            "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                             "$ref": "#/definitions/str"
                         },
                         "jp": {
-                            "markdownDescription": "jp 是 jsonpath 的别名\n使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。",
+                            "markdownDescription": "jp 是 jsonpath 的别名\n使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                             "$ref": "#/definitions/str"
                         },
                         "xpath": {
@@ -898,11 +898,11 @@
                     "$ref": "#/definitions/str"
                 },
                 "regex": {
-                    "markdownDescription": "别名：find\nRegEx 表达式来提取 hash",
+                    "markdownDescription": "RegEx 表达式来提取 hash (别名：find)",
                     "$ref": "#/definitions/str"
                 },
                 "find": {
-                    "markdownDescription": "别名：regex\nRegEx 表达式来提取 hash",
+                    "markdownDescription": "RegEx 表达式来提取 hash (别名：regex)",
                     "$ref": "#/definitions/str"
                 },
                 "mode": {
@@ -947,11 +947,11 @@
                     ]
                 },
                 "jp": {
-                    "markdownDescription": "别名：jsonpath\nJSONPath 表达式提取 hash",
+                    "markdownDescription": "JSONPath 表达式提取 hash (别名：jsonpath)\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                     "$ref": "#/definitions/str"
                 },
                 "jsonpath": {
-                    "markdownDescription": "别名：jp\nJSONPath 表达式提取 hash",
+                    "markdownDescription": "JSONPath 表达式提取 hash (别名：jp)\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
                     "$ref": "#/definitions/str"
                 },
                 "xpath": {
@@ -1476,24 +1476,16 @@
                                 "architecture": {
                                     "patternProperties": {
                                         "^(64bit|arm64|32bit)$": {
-                                            "allOf": [
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "url"
-                                                        ]
-                                                    },
+                                            "properties": {
+                                                "url": {
+                                                    "not": true,
                                                     "errorMessage": "url 和顶层的 url 冲突，你只能选择其中一种方式"
                                                 },
-                                                {
-                                                    "not": {
-                                                        "required": [
-                                                            "hash"
-                                                        ]
-                                                    },
+                                                "hash": {
+                                                    "not": true,
                                                     "errorMessage": "如果有顶层的 url，禁止定义 architecture 中的 hash"
                                                 }
-                                            ]
+                                            }
                                         }
                                     }
                                 }
@@ -1559,12 +1551,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "64bit"
-                                                    ]
-                                                },
-                                                "errorMessage": "autoupdate 中的 architecture 没有定义 64bit"
+                                                "properties": {
+                                                    "64bit": {
+                                                        "not": true,
+                                                        "errorMessage": "autoupdate 中的 architecture 没有定义 64bit"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1595,12 +1587,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "32bit"
-                                                    ]
-                                                },
-                                                "errorMessage": "autoupdate 中的 architecture 没有定义 32bit"
+                                                "properties": {
+                                                    "32bit": {
+                                                        "not": true,
+                                                        "errorMessage": "autoupdate 中的 architecture 没有定义 32bit"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1631,12 +1623,12 @@
                                     "else": {
                                         "properties": {
                                             "architecture": {
-                                                "not": {
-                                                    "required": [
-                                                        "arm64"
-                                                    ]
-                                                },
-                                                "errorMessage": "autoupdate 中的 architecture 没有定义 arm64"
+                                                "properties": {
+                                                    "arm64": {
+                                                        "not": true,
+                                                        "errorMessage": "autoupdate 中的 architecture 没有定义 arm64"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1830,15 +1822,47 @@
                                 ]
                             },
                             "persist": {
-                                "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$env:UserProfile\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory @(\"$env:UserProfile\\.config\\xxx\")` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                                "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$env:UserProfile\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory \"$env:UserProfile\\.config\\xxx\"` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                            },
+                            "pre_install": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                }
                             },
                             "installer": {
                                 "not": true,
                                 "errorMessage": "abyss 中不允许使用它"
                             },
+                            "post_install": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                }
+                            },
+                            "pre_uninstall": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                }
+                            },
                             "uninstaller": {
                                 "not": true,
                                 "errorMessage": "abyss 中不允许使用它"
+                            },
+                            "post_uninstall": {
+                                "items": {
+                                    "not": {
+                                        "pattern": "[（）‘’“”，：？！—]+"
+                                    },
+                                    "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                }
                             },
                             "checkver": {
                                 "not": {
@@ -1849,6 +1873,14 @@
                                     "github": {
                                         "not": true,
                                         "errorMessage": "abyss 中不允许使用它"
+                                    },
+                                    "script": {
+                                        "items": {
+                                            "not": {
+                                                "pattern": "[（）‘’“”，：？！—]+"
+                                            },
+                                            "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                        }
                                     },
                                     "re": {
                                         "not": true,
@@ -1987,7 +2019,7 @@
                                             "anyOf": [
                                                 {},
                                                 {
-                                                    "const": "A-Deny-IfAppConflict @()",
+                                                    "const": "A-Deny-IfAppConflict 'xxx', 'yyy'",
                                                     "markdownDescription": "如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的应用包名\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict"
                                                 },
                                                 {
@@ -2044,15 +2076,15 @@
                                                 },
                                                 {
                                                     "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList @('/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\")",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
+                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
                                                 },
                                                 {
                                                     "pattern": "A-Install-Exe",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `@('/S', \"/D=$dir\\app\")`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList @('/VerySilent',\"/Dir=$dir\\app\")`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
@@ -2079,28 +2111,20 @@
                                                     "markdownDescription": "确保指定目录路径存在\n- 如果不传递参数，则确保 `$persist_dir` 路径存在\n- 例如: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkFile @(\"$env:AppData\\xxx\")",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile @(\"$env:AppData\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
-                                                },
-                                                {
-                                                    "const": "A-New-LinkFile @(\"$env:UserProfile\\xxx\")",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "const": "A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkFile",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile @(\"$env:UserProfile\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkDirectory @(\"$env:AppData\\xxx\")",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
-                                                },
-                                                {
-                                                    "const": "A-New-LinkDirectory @(\"$env:UserProfile\\xxx\")",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory @(\"$env:UserProfile\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"",
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkDirectory",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory @(\"$env:AppData\\xxx\")`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "const": "A-Add-Font",
@@ -2203,11 +2227,11 @@
                                                 {},
                                                 {
                                                     "const": "A-Stop-Process",
-                                                    "markdownDescription": "尝试暂停安装目录下的应用进程，以确保能正常卸载"
+                                                    "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 使用示例: \n  - `A-Stop-Process \"$env:ProgramFiles\\xxx\", \"$env:AppData\\yyy\" 'aaa', 'bbb'`\n    1. 暂停 `$dir`，`$env:ProgramFiles\\xxx`, `$env:AppData\\yyy` 三个目录下的进程\n    2. 暂停名为 `aaa` 和 `bbb` 的进程\n  - `A-Stop-Process @() 'aaa'`\n    1. 暂停 `$dir` 目录下的进程\n    2. 暂停名为 `aaa` 的进程"
                                                 },
                                                 {
                                                     "pattern": "A-Stop-Process",
-                                                    "markdownDescription": "尝试暂停安装目录下的应用进程，以确保能正常卸载"
+                                                    "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 使用示例: \n  - `A-Stop-Process \"$env:ProgramFiles\\xxx\", \"$env:AppData\\yyy\" 'aaa', 'bbb'`\n    1. 暂停 `$dir`，`$env:ProgramFiles\\xxx`, `$env:AppData\\yyy` 三个目录下的进程\n    2. 暂停名为 `aaa` 和 `bbb` 的进程\n  - `A-Stop-Process @() 'aaa'`\n    1. 暂停 `$dir` 目录下的进程\n    2. 暂停名为 `aaa` 的进程"
                                                 },
                                                 {
                                                     "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
@@ -2242,16 +2266,12 @@
                                                     "markdownDescription": "移除 PowerToys Run 插件"
                                                 },
                                                 {
-                                                    "const": "A-Remove-TempData",
-                                                    "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
-                                                },
-                                                {
-                                                    "const": "A-Remove-TempData @(\"$env:LocalAppData\\xxx\")",
-                                                    "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"",
+                                                    "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
                                                 },
                                                 {
                                                     "pattern": "A-Remove-TempData",
-                                                    "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `\"A-Remove-TempData @(\\\"$env:LocalAppData\\\\xxx\\\")\",`"
+                                                    "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
@@ -2275,15 +2295,15 @@
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-Exe",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList @('/VerySilent', '/Force')",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
                                                     "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
@@ -2299,7 +2319,7 @@
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-Exe",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `@('/S')`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList @('/VerySilent', '/Force')`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 }
                                             ]
                                         }
@@ -3143,7 +3163,6 @@
                         }
                     },
                     {
-                        "$comment": "如果指定了 extract_to 为 app，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
                         "if": {
                             "required": [
                                 "extract_to"
@@ -3157,116 +3176,6 @@
                         },
                         "then": {
                             "properties": {
-                                "env_add_path": {
-                                    "type": [
-                                        "string",
-                                        "array"
-                                    ],
-                                    "anyOf": [
-                                        {
-                                            "$ref": "#/definitions/str",
-                                            "if": {
-                                                "not": {
-                                                    "anyOf": [
-                                                        {
-                                                            "pattern": "^app\\\\"
-                                                        },
-                                                        {
-                                                            "pattern": "^\\$\\{?env:"
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                            }
-                                        },
-                                        {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/str",
-                                                "if": {
-                                                    "not": {
-                                                        "anyOf": [
-                                                            {
-                                                                "pattern": "^app\\\\"
-                                                            },
-                                                            {
-                                                                "pattern": "^\\$\\{?env:"
-                                                            }
-                                                        ]
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                "env_set": {
-                                    "patternProperties": {
-                                        "^.+$": {
-                                            "$ref": "#/definitions/string_or_string_array",
-                                            "type": [
-                                                "string",
-                                                "array"
-                                            ],
-                                            "examples": [
-                                                "",
-                                                []
-                                            ],
-                                            "anyOf": [
-                                                {
-                                                    "$ref": "#/definitions/str",
-                                                    "if": {
-                                                        "not": {
-                                                            "anyOf": [
-                                                                {
-                                                                    "pattern": "\\\\app"
-                                                                },
-                                                                {
-                                                                    "pattern": "^\\$\\{?env:"
-                                                                }
-                                                            ]
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录或环境变量($env:xxx 或 ${env:xxx})"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/definitions/str",
-                                                        "if": {
-                                                            "not": {
-                                                                "anyOf": [
-                                                                    {
-                                                                        "pattern": "\\\\app"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^\\$\\{?env:"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要包含 app 目录或环境变量($env:xxx 或 ${env:xxx})"
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "minProperties": 1,
-                                    "additionalProperties": false,
-                                    "errorMessage": "不允许属性名为空字符串"
-                                },
                                 "bin": {
                                     "type": [
                                         "string",
@@ -3382,41 +3291,6 @@
                                                 }
                                             }
                                         ]
-                                    }
-                                },
-                                "persist": {
-                                    "if": {
-                                        "type": "array"
-                                    },
-                                    "then": {
-                                        "items": {
-                                            "if": {
-                                                "type": "array"
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {
-                                                        "if": {
-                                                            "not": {
-                                                                "pattern": "^app\\\\"
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 开头"
-                                                        }
-                                                    }
-                                                ]
-                                            },
-                                            "else": {
-                                                "not": true,
-                                                "errorMessage": "由于指定了 extract_to 为 app，需要使用数组格式"
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "not": true,
-                                        "errorMessage": "由于指定了 extract_to 为 app，需要使用数组格式"
                                     }
                                 }
                             }
@@ -3644,7 +3518,7 @@
                                                                         "$.arm64_user.InstallerSha256",
                                                                         "$.x86_user.InstallerSha256"
                                                                     ],
-                                                                    "markdownDescription": "指定 hash\n- 如果没有明确的 scope，需要使用 machine"
+                                                                    "markdownDescription": "指定 hash\n- 如果没有明确的 scope，需要使用 machine\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`"
                                                                 }
                                                             }
                                                         }
