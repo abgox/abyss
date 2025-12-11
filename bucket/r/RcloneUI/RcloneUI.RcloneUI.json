@@ -29,8 +29,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:AppData\\com.rclone.ui\")",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Rclone UI\\uninstall.exe\" -ArgumentList @('/S')"
+        "A-New-LinkDirectory \"$env:AppData\\com.rclone.ui\"",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Rclone UI\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,7 +45,7 @@
         "A-Stop-Process \"$env:ProgramFiles\\Rclone UI\"",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\com.rclone.ui\")"
+        "A-Remove-TempData \"$env:LocalAppData\\com.rclone.ui\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

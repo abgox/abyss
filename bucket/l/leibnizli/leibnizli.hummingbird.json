@@ -27,7 +27,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Deny-Manifest",
-        "A-New-LinkFile @(\"$env:UserProfile\\hummingbird-config.json\")",
+        "A-New-LinkFile \"$env:UserProfile\\hummingbird-config.json\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall hummingbird.exe'"
     ],
     "post_install": [
@@ -42,7 +42,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:UserProfile\\hummingbird-log.txt\",\"$env:AppData\\hummingbird\",\"$env:LocalAppData\\hummingbird-updater\")"
+        "A-Remove-TempData \"$env:UserProfile\\hummingbird-log.txt\",\"$env:AppData\\hummingbird\",\"$env:LocalAppData\\hummingbird-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -22,7 +22,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Install-Exe -Uninstaller 'app\\uninstall.exe'",
-        "A-New-LinkDirectory @(\"$env:AppData\\com.holdem.app\")"
+        "A-New-LinkDirectory \"$env:AppData\\com.holdem.app\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\com.holdem.app\")"
+        "A-Remove-TempData \"$env:LocalAppData\\com.holdem.app\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -23,7 +23,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\Netron\")",
+        "A-New-LinkDirectory \"$env:AppData\\Netron\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall Netron.exe'"
     ],
     "post_install": [
@@ -38,7 +38,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\netron-updater\")"
+        "A-Remove-TempData \"$env:LocalAppData\\netron-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

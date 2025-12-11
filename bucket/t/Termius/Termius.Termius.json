@@ -21,7 +21,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\Termius\")",
+        "A-New-LinkDirectory \"$env:AppData\\Termius\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall Termius.exe'"
     ],
     "post_install": [
@@ -36,7 +36,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\termius-updater\")"
+        "A-Remove-TempData \"$env:LocalAppData\\termius-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -22,7 +22,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:UserProfile\\.config\\joplin-desktop\")",
+        "A-New-LinkDirectory \"$env:UserProfile\\.config\\joplin-desktop\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall Joplin.exe'"
     ],
     "post_install": [
@@ -37,7 +37,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:AppData\\joplin\",\"$env:LocalAppData\\@joplinapp-desktop-updater\")"
+        "A-Remove-TempData \"$env:AppData\\joplin\",\"$env:LocalAppData\\@joplinapp-desktop-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -17,8 +17,8 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkFile @(\"$env:AppData\\123pan\\config.json\")",
-        "A-Install-Exe -ArgumentList @('/S')",
+        "A-New-LinkFile \"$env:AppData\\123pan\\config.json\"",
+        "A-Install-Exe -ArgumentList '/S'",
         "A-Hold-App"
     ],
     "post_install": [
@@ -32,7 +32,7 @@
         "A-Start-Uninstall",
         "A-Uninstall-ExeManually \"$env:LocalAppData\\123pan\"",
         "A-Remove-Link",
-        "A-Remove-TempData @(\"$env:AppData\\123pan\")"
+        "A-Remove-TempData \"$env:AppData\\123pan\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

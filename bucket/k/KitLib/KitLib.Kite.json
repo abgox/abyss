@@ -15,8 +15,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\com.kitlib.kite\")",
-        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\kite\\uninstall.exe\" -ArgumentList @('/S')"
+        "A-New-LinkDirectory \"$env:AppData\\com.kitlib.kite\"",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\kite\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -30,7 +30,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\com.kitlib.kite\")"
+        "A-Remove-TempData \"$env:LocalAppData\\com.kitlib.kite\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -17,7 +17,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\com.levminer.authme\\EBWebView\\Default\\Local Storage\")",
+        "A-New-LinkDirectory \"$env:LocalAppData\\com.levminer.authme\\EBWebView\\Default\\Local Storage\"",
         "A-Install-Exe msi"
     ],
     "post_install": [
@@ -33,7 +33,7 @@
         "$ProductCode = A-Get-ProductCode '^Authme$'",
         "A-Uninstall-Exe $ProductCode",
         "A-Remove-Link",
-        "A-Remove-TempData @(\"$env:LocalAppData\\com.levminer.authme\")"
+        "A-Remove-TempData \"$env:LocalAppData\\com.levminer.authme\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

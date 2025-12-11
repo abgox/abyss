@@ -21,8 +21,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\xterminal\")",
-        "A-Install-Exe -Uninstaller 'app\\Uninstall XTerminal.exe' -ArgumentList @('/CurrentUser','/S',\"/D=$dir\\app\")"
+        "A-New-LinkDirectory \"$env:AppData\\xterminal\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall XTerminal.exe' -ArgumentList '/CurrentUser','/S',\"/D=$dir\\app\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\xterminal-updater\")"
+        "A-Remove-TempData \"$env:LocalAppData\\xterminal-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

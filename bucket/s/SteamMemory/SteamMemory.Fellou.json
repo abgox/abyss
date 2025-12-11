@@ -23,7 +23,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:AppData\\Fellou\")",
+        "A-New-LinkDirectory \"$env:AppData\\Fellou\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall Fellou.exe'"
     ],
     "post_install": [
@@ -39,7 +39,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\fellou-updater\")"
+        "A-Remove-TempData \"$env:LocalAppData\\fellou-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

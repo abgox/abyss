@@ -21,8 +21,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory @(\"$env:AppData\\apifox\")",
-        "A-Install-Exe -Uninstaller 'app\\Uninstall Apifox.exe' -ArgumentList @('/CurrentUser','/S',\"/D=$dir\\app\")"
+        "A-New-LinkDirectory \"$env:AppData\\apifox\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Apifox.exe' -ArgumentList '/CurrentUser','/S',\"/D=$dir\\app\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -33,10 +33,10 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process @(\"$env:AppData\\apifox\")",
+        "A-Stop-Process \"$env:AppData\\apifox\"",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\apifox-updater\")"
+        "A-Remove-TempData \"$env:LocalAppData\\apifox-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

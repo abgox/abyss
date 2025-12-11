@@ -23,7 +23,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:AppData\\Subtitle Edit\")",
+        "A-New-LinkDirectory \"$env:AppData\\Subtitle Edit\"",
         "A-Install-Exe inno"
     ],
     "post_install": [
@@ -38,7 +38,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -ArgumentList @('/VerySilent')"
+        "A-Uninstall-Exe -ArgumentList '/VerySilent'"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

@@ -24,7 +24,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:LocalAppData\\PixPin\")",
+        "A-New-LinkDirectory \"$env:LocalAppData\\PixPin\"",
         "A-Install-Exe inno"
     ],
     "post_install": [
@@ -39,7 +39,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-Exe -ArgumentList @('/VerySilent', '/Force')"
+        "A-Uninstall-Exe -ArgumentList '/VerySilent', '/Force'"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

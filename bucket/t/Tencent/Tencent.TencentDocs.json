@@ -22,7 +22,7 @@
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory @(\"$env:AppData\\TDAppDesktop\")",
+        "A-New-LinkDirectory \"$env:AppData\\TDAppDesktop\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall TencentDocs.exe'"
     ],
     "post_install": [
@@ -38,7 +38,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Exe",
-        "A-Remove-TempData @(\"$env:LocalAppData\\tdappdesktop\",\"$env:LocalAppData\\tdappdesktop-updater\")"
+        "A-Remove-TempData \"$env:LocalAppData\\tdappdesktop\",\"$env:LocalAppData\\tdappdesktop-updater\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
