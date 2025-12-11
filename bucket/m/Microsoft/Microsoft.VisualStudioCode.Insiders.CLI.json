@@ -1,0 +1,69 @@
+{
+    "version": "1.108.0-16ae90",
+    "description": "(Insiders 版本) vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器 | (Insiders Edition) vscode - A lightweight but powerful source code editor.",
+    "homepage": "https://code.visualstudio.com/",
+    "license": {
+        "identifier": "Microsoft Pre-Release Software License",
+        "url": "https://code.visualstudio.com/license/insiders"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://update.code.visualstudio.com/1.108.0-insider/cli-win32-x64/insider#/dl.7z",
+            "hash": "344d0991ac1bb2e4f1cf749f22749b1e858c72e4265598f9e6beb25740a588c0"
+        },
+        "arm64": {
+            "url": "https://update.code.visualstudio.com/1.108.0-insider/cli-win32-arm64/insider#/dl.7z",
+            "hash": "5c99ff16cc48171ea85235eb9a0a550f8d9cee0fbba77f4a5d43214feeaf8e2e"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\code-insiders.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$res = Invoke-RestMethod 'https://update.code.visualstudio.com/api/update/cli-win32-x64/insider/latest'",
+            "\"$($res.productVersion)-$($res.hash)\""
+        ],
+        "regex": "(?<version>.+)-insider-(?<hash>[0-9a-f]{6})[0-9a-f]*",
+        "replace": "${version}-${hash}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://update.code.visualstudio.com/$matchHead-insider/cli-win32-x64/insider#/dl.7z",
+                "hash": {
+                    "url": "https://update.code.visualstudio.com/api/update/cli-win32-x64/insider/latest",
+                    "jsonpath": "$.sha256hash"
+                }
+            },
+            "arm64": {
+                "url": "https://update.code.visualstudio.com/$matchHead-insider/cli-win32-arm64/insider#/dl.7z",
+                "hash": {
+                    "url": "https://update.code.visualstudio.com/api/update/cli-win32-arm64/insider/latest",
+                    "jsonpath": "$.sha256hash"
+                }
+            }
+        }
+    }
+}
