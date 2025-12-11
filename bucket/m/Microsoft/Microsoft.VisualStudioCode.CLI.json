@@ -1,19 +1,19 @@
 {
-    "version": "1.106.3",
+    "version": "1.107.0",
     "description": "vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器 | vscode - A lightweight but powerful source code editor.",
     "homepage": "https://code.visualstudio.com/",
     "license": {
         "identifier": "Microsoft Software License",
-        "url": "https://code.visualstudio.com/License/"
+        "url": "https://code.visualstudio.com/license/"
     },
     "architecture": {
         "64bit": {
-            "url": "https://vscode.download.prss.microsoft.com/dbazure/download/stable/bf9252a2fb45be6893dd8870c0bf37e2e1766d61/vscode_cli_win32_x64_cli.zip",
-            "hash": "a96332e8e4eb6d1e0521cf2243c148871de52a68346634615e7ba13916342c3e"
+            "url": "https://update.code.visualstudio.com/1.107.0/cli-win32-x64/stable#/dl.7z",
+            "hash": "da22b734ce240a13b8f065b85399b923c8d100b64685c3325330dcc6797dbfdd"
         },
         "arm64": {
-            "url": "https://vscode.download.prss.microsoft.com/dbazure/download/stable/bf9252a2fb45be6893dd8870c0bf37e2e1766d61/vscode_cli_win32_arm64_cli.zip",
-            "hash": "a15809cf288314b2ec25cb165b68fc48c9716d85f3ae9d9af1d5425b7e51cfc8"
+            "url": "https://update.code.visualstudio.com/1.107.0/cli-win32-arm64/stable#/dl.7z",
+            "hash": "0ba86ecf02f49c23b51dec0aa9498ab752f37ad3bb69639c84738665a524fe9f"
         }
     },
     "extract_to": "app",
@@ -40,30 +40,23 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". \"$pwd\\bin\\utils.ps1\"",
-            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Microsoft.VisualStudioCode.CLI' 'zip'",
-            "\"ver:$($InstallerInfo.PackageVersion);\"",
-            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
-        ],
-        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+        "url": "https://update.code.visualstudio.com/api/update/cli-win32-x64/stable/latest",
+        "jsonpath": "$.name"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64",
+                "url": "https://update.code.visualstudio.com/$version/cli-win32-x64/stable#/dl.7z",
                 "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.x64_machine.InstallerSha256"
+                    "url": "https://update.code.visualstudio.com/api/update/cli-win32-x64/stable/latest",
+                    "jsonpath": "$.sha256hash"
                 }
             },
             "arm64": {
-                "url": "$matchArm64",
+                "url": "https://update.code.visualstudio.com/$version/cli-win32-arm64/stable#/dl.7z",
                 "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                    "url": "https://update.code.visualstudio.com/api/update/cli-win32-arm64/stable/latest",
+                    "jsonpath": "$.sha256hash"
                 }
             }
         }
