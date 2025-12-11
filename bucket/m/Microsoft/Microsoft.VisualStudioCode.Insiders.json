@@ -1,0 +1,109 @@
+{
+    "version": "1.108.0-3dbc6c",
+    "description": "(Insiders 版本) vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器 | (Insiders Edition) vscode - A lightweight but powerful source code editor.",
+    "homepage": "https://code.visualstudio.com/",
+    "license": {
+        "identifier": "Microsoft Pre-Release Software License",
+        "url": "https://code.visualstudio.com/license/insiders"
+    },
+    "notes": [
+        "Add Visual Studio Code as a context menu option by running:",
+        "  reg import \"$dir\\install-context.reg\"",
+        "For file associations, run:",
+        "  reg import \"$dir\\install-associations.reg\"",
+        "For github integration, run:",
+        "  reg import \"$dir\\install-github-integration.reg\""
+    ],
+    "notes-cn": [
+        "通过运行以下命令将 Visual Studio Code 添加到右键菜单选项：",
+        "  reg import \"$dir\\install-context.reg\"",
+        "若要关联文件类型，请运行：",
+        "  reg import \"$dir\\install-associations.reg\"",
+        "若要集成 GitHub，请运行：",
+        "  reg import \"$dir\\install-github-integration.reg\""
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://update.code.visualstudio.com/1.108.0-insider/win32-x64-archive/insider#/dl.7z",
+            "hash": "3e86b2cd4364ae14223d47ed9599d8f96cde0d03544d71954254e7df20003b82"
+        },
+        "arm64": {
+            "url": "https://update.code.visualstudio.com/1.108.0-insider/win32-arm64-archive/insider#/dl.7z",
+            "hash": "2a43d402045b648b8db03b1acb85acbc49428d782df2c31012bc205e6b4ea41b"
+        }
+    },
+    "extract_to": "app",
+    "env_add_path": "app\\bin",
+    "shortcuts": [
+        [
+            "app\\Code - Insiders.exe",
+            "Visual Studio Code - Insiders"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\Code - Insiders\",\"$env:UserProfile\\.vscode-insiders\"",
+        " ",
+        "$dirpath = \"$dir\\app\".Replace('\\', '\\\\')",
+        "$exepath = \"$dir\\app\\Code - Insiders.exe\".Replace('\\', '\\\\')",
+        "Get-ChildItem \"$bucketsdir\\$bucket\\extra\\$app\" -Filter *.reg | ForEach-Object {",
+        "    $content = Get-Content $_.FullName",
+        "    $content = $content.Replace('$codedir', $dirpath).Replace('$code', $exepath).Replace('&Code', 'Code &Insiders')",
+        "    if ($global) {",
+        "      $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
+        "    }",
+        "    $content | Set-Content -Path \"$dir\\$($_.Name)\"",
+        "}"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "if ($cmd -eq 'uninstall') {",
+        "    Get-ChildItem $dir -Filter uninstall*.reg | ForEach-Object {",
+        "        reg import $_.FullName >nul 2>&1",
+        "    }",
+        "}"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$res = Invoke-RestMethod 'https://update.code.visualstudio.com/api/update/win32-x64-archive/insider/latest'",
+            "\"$($res.productVersion)-$($res.hash)\""
+        ],
+        "regex": "(?<version>.+)-insider-(?<hash>[0-9a-f]{6})[0-9a-f]*",
+        "replace": "${version}-${hash}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://update.code.visualstudio.com/$matchHead-insider/win32-x64-archive/insider#/dl.7z",
+                "hash": {
+                    "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/insider/latest",
+                    "jsonpath": "$.sha256hash"
+                }
+            },
+            "arm64": {
+                "url": "https://update.code.visualstudio.com/$matchHead-insider/win32-arm64-archive/insider#/dl.7z",
+                "hash": {
+                    "url": "https://update.code.visualstudio.com/api/update/win32-arm64-archive/insider/latest",
+                    "jsonpath": "$.sha256hash"
+                }
+            }
+        }
+    }
+}
