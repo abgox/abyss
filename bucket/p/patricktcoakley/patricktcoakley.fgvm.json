@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "description": "一个友好的 Godot 版本管理器。 | A friendly Godot version manager.",
+    "homepage": "https://fgvm.dev/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/patricktcoakley/fgvm/releases/download/v2.0.0/fgvm-win-x64.zip",
+            "hash": "f65e2086d5414d0616c5f9c8761157bbcd5531647ffb816a7542d1c266d7348a"
+        }
+    },
+    "env_add_path": "fgvm\\bin",
+    "env_set": {
+        "FGVM_HOME": "$persist_dir"
+    },
+    "extract_to": "app",
+    "bin": "app\\fgvm.exe",
+    "persist": "fgvm",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/patricktcoakley/fgvm/releases/download/v$version/fgvm-win-x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
