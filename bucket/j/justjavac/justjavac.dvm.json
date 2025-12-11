@@ -1,0 +1,70 @@
+{
+    "version": "1.9.3",
+    "description": "Deno 版本管理器 —— 轻松管理多个活跃的 deno 版本的方式。 | Deno Version Manager - Easy way to manage multiple active deno versions.",
+    "homepage": "https://dvm.deno.dev/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/justjavac/dvm/releases/download/v1.9.3/dvm-x86_64-pc-windows-msvc.zip",
+            "hash": "511690fab36fe6324605c3e884c864939d8a7dc4aeaccba27e376aa9ac18a35f"
+        }
+    },
+    "env_add_path": [
+        ".dvm\\bin",
+        ".deno\\bin"
+    ],
+    "env_set": {
+        "DVM_DIR": "$persist_dir\\.dvm",
+        "DENO_DIR": "$persist_dir\\.deno",
+        "DENO_INSTALL_ROOT": "$persist_dir\\.deno\\bin"
+    },
+    "extract_to": "app",
+    "bin": "app\\dvm.exe",
+    "persist": [
+        ".dvm",
+        ".deno"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-PersistFile \"$env:UserProfile\\.dvmrc\"",
+        "A-New-LinkFile @(\"$env:UserProfile\\.dvmrc\")"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/justjavac/dvm/releases/download/v$version/dvm-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
