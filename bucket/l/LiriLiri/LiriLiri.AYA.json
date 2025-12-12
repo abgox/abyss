@@ -1,0 +1,64 @@
+{
+    "version": "1.14.2",
+    "description": "一款可轻松控制安卓设备的桌面应用程序，它可以被视为 ADB 的图形用户界面封装程序。 | A desktop application for easily controlling android devices, which can be considered as a GUI wrapper for ADB.",
+    "homepage": "https://aya.liriliri.io/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/liriliri/aya/releases/download/v1.14.2/AYA-1.14.2-win-x64.exe",
+            "hash": "e2f580ba4645a3593e8f055a894ae4633e3af8008b3755ee202a8e139b0c7a15"
+        }
+    },
+    "bin": "app\\AYA.exe",
+    "shortcuts": [
+        [
+            "app\\AYA.exe",
+            "AYA"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\AYA\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall AYA.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\aya-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/liriliri/aya/releases/download/v$version/AYA-$version-win-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
