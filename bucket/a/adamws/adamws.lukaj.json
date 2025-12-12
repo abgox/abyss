@@ -1,0 +1,54 @@
+{
+    "version": "0.2.0",
+    "description": "SVG 图像的交互式差异工具 | Interactive diff tool for SVG images",
+    "homepage": "https://github.com/adamws/lukaj",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/adamws/lukaj/releases/download/v0.2.0/lukaj-0.2.0-x86_64-pc-windows-msvc.zip",
+            "hash": "5e1c35fb9976268802aa843955cffd8517bacbe0e398641f9a1b42ff5ed5280c"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\lukaj.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/adamws/lukaj/releases/download/v$version/lukaj-$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
