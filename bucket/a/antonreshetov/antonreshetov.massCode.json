@@ -1,0 +1,63 @@
+{
+    "version": "4.3.0",
+    "description": "一款面向开发者的免费开源代码片段管理器 | A free and open source code snippet manager for developers",
+    "homepage": "https://masscode.io/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/massCodeIO/massCode/releases/download/v4.3.0/massCode-4.3.0-x64.exe",
+            "hash": "efb07ebd5d944db5d9370df1b5124fe572ac4e085e4498880e18b992f7b8294d"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\massCode.exe",
+            "massCode"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\masscode\", \"$env:UserProfile\\massCode\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall massCode.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\masscode-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/massCodeIO/massCode/releases/download/v$version/massCode-$version-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
