@@ -1,0 +1,61 @@
+{
+    "version": "0.1.0",
+    "description": "一个现代化、快速且安全的 JavaScript 和 TypeScript 运行时环境 | A modern, fast, and secure JavaScript & TypeScript runtime",
+    "homepage": "https://tryandromeda.dev/",
+    "license": {
+        "identifier": "MPL-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tryandromeda/andromeda/releases/download/0.1.0/andromeda-windows-amd64.exe#/andromeda.exe",
+            "hash": "87d446eb9c81e26dd76411c66307a24e2ba141b3323f854721e439c05c5de443"
+        },
+        "arm64": {
+            "url": "https://github.com/tryandromeda/andromeda/releases/download/0.1.0/andromeda-windows-arm64.exe#/andromeda.exe",
+            "hash": "145d050a839f073b2a46f69976352c886586da57667dac3861e910791476f18b"
+        }
+    },
+    "env_add_path": ".",
+    "bin": "andromeda.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tryandromeda/andromeda/releases/download/$version/andromeda-windows-amd64.exe#/andromeda.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/tryandromeda/andromeda/releases/download/$version/andromeda-windows-arm64.exe#/andromeda.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
