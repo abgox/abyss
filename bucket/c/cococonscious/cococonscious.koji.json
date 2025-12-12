@@ -1,0 +1,63 @@
+{
+    "version": "3.3.1",
+    "description": "一个用于创建规范提交的交互式命令行界面。 | An interactive CLI for creating conventional commits.",
+    "homepage": "https://github.com/cococonscious/koji",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cococonscious/koji/releases/download/v3.3.1/koji-x86_64-pc-windows-msvc.zip",
+            "hash": "57e5167784f3f4837cb68b48d4bef9ec917b665faa24c39676d1abe4db834739"
+        },
+        "arm64": {
+            "url": "https://github.com/cococonscious/koji/releases/download/v3.3.1/koji-aarch64-pc-windows-msvc.zip",
+            "hash": "b7d439f9b98ee753305bae1b041075871a12af822b071ec6be5c99b16af658c2"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\koji.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\koji\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cococonscious/koji/releases/download/v$version/koji-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/cococonscious/koji/releases/download/v$version/koji-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
