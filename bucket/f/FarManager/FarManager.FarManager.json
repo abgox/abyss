@@ -16,13 +16,13 @@
             "hash": "547d373c5f9e36e1bc9cfe896337f4fe9724e6427fa2b23f9282310dc784a658"
         }
     },
-    "bin": "$env:ProgramFiles\\Far Manager\\Far.exe",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-PersistFile \"$env:ProgramFiles\\Far Manager\\Far.exe.ini\"",
+        "A-Add-Path \"$env:ProgramFiles\\Far Manager\"",
+        "A-New-File \"$env:ProgramFiles\\Far Manager\\Far.exe.ini\"",
         "A-New-LinkDirectory \"$env:AppData\\Far Manager\",\"$env:LocalAppData\\Far Manager\"",
         "A-New-LinkFile \"$env:ProgramFiles\\Far Manager\\Far.exe.ini\"",
         "A-Install-Exe msi"
