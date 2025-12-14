@@ -1782,16 +1782,32 @@
                                 ],
                                 "anyOf": [
                                     {
-                                        "$ref": "#/definitions/str",
-                                        "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
-                                        "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/str"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "\\$.+"
+                                                },
+                                                "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                            }
+                                        ]
                                     },
                                     {
                                         "type": "array",
                                         "items": {
-                                            "$ref": "#/definitions/str",
-                                            "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
-                                            "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/str"
+                                                },
+                                                {
+                                                    "not": {
+                                                        "pattern": "\\$.+"
+                                                    },
+                                                    "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                                }
+                                            ]
                                         }
                                     }
                                 ]
@@ -1812,6 +1828,57 @@
                                             "xxx"
                                         ]
                                     ]
+                                ],
+                                "anyOf": [
+                                    {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/str"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "\\$.+"
+                                                },
+                                                "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "oneOf": [
+                                                {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/definitions/str"
+                                                        },
+                                                        {
+                                                            "not": {
+                                                                "pattern": "\\$.+"
+                                                            },
+                                                            "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "allOf": [
+                                                            {
+                                                                "$ref": "#/definitions/str"
+                                                            },
+                                                            {
+                                                                "not": {
+                                                                    "pattern": "\\$.+"
+                                                                },
+                                                                "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
                                 ]
                             },
                             "shortcuts": {
@@ -2050,12 +2117,12 @@
                                                     "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
                                                 },
                                                 {
-                                                    "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
-                                                    "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "const": "A-New-File \"$persist_dir\\xxx\" -Content 'xxx'",
+                                                    "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
-                                                    "pattern": "A-New-PersistFile",
-                                                    "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "pattern": "A-New-File",
+                                                    "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
                                                     "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\xxx\" \"$persist_dir\\xxx\"",

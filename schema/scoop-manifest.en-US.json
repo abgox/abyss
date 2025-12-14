@@ -1782,16 +1782,32 @@
                                 ],
                                 "anyOf": [
                                     {
-                                        "$ref": "#/definitions/str",
-                                        "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
-                                        "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/str"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "\\$.+"
+                                                },
+                                                "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                            }
+                                        ]
                                     },
                                     {
                                         "type": "array",
                                         "items": {
-                                            "$ref": "#/definitions/str",
-                                            "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
-                                            "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/str"
+                                                },
+                                                {
+                                                    "not": {
+                                                        "pattern": "\\$.+"
+                                                    },
+                                                    "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                }
+                                            ]
                                         }
                                     }
                                 ]
@@ -1812,6 +1828,57 @@
                                             "xxx"
                                         ]
                                     ]
+                                ],
+                                "anyOf": [
+                                    {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/str"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "\\$.+"
+                                                },
+                                                "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "oneOf": [
+                                                {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/definitions/str"
+                                                        },
+                                                        {
+                                                            "not": {
+                                                                "pattern": "\\$.+"
+                                                            },
+                                                            "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "allOf": [
+                                                            {
+                                                                "$ref": "#/definitions/str"
+                                                            },
+                                                            {
+                                                                "not": {
+                                                                    "pattern": "\\$.+"
+                                                                },
+                                                                "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
                                 ]
                             },
                             "shortcuts": {
@@ -2050,12 +2117,12 @@
                                                     "markdownDescription": "Add environment variables\n- It will be automatically removed in `pre_uninstall`.\n- For example: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
                                                 },
                                                 {
-                                                    "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
-                                                    "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "const": "A-New-File \"$persist_dir\\xxx\" -Content 'xxx'",
+                                                    "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
-                                                    "pattern": "A-New-PersistFile",
-                                                    "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
+                                                    "pattern": "A-New-File",
+                                                    "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
                                                 {
                                                     "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\xxx\" \"$persist_dir\\xxx\"",
