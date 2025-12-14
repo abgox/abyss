@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (521)|Tag|Description|
+|App (522)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -138,6 +138,7 @@
 |[c0re100.qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition "点击访问仓库或主页")|<a href="./bucket/c/c0re100/c0re100.qBittorrent-Enhanced-Edition.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|非官方的 qBittorrent BitTorrent 客户端（增强版）|
 |[cangjie-lang.SDK](https://cangjie-lang.cn/ "点击访问仓库或主页")|<a href="./bucket/c/cangjie-lang/cangjie-lang.SDK.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|仓颉编程语言是一款面向全场景智能的新一代编程语言，主打原生智能化、天生全场景、高性能、强安全|
 |[Canva.Affinity](https://www.affinity.studio/ "点击访问仓库或主页")|<a href="./bucket/c/Canva/Canva.Affinity.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|屡获殊荣的集成平面设计、照片编辑和出版解决方案。|
+|[Casey.Just](https://just.systems/ "点击访问仓库或主页")|<a href="./bucket/c/Casey/Casey.Just.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一种方便的保存和运行特定项目命令的方式。|
 |[charmbracelet.crush](https://github.com/charmbracelet/crush "点击访问仓库或主页")|<a href="./bucket/c/charmbracelet/charmbracelet.crush.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于你喜爱的终端的魅力十足的 AI coding agent|
 |[charmbracelet.glow](https://github.com/charmbracelet/glow "点击访问仓库或主页")|<a href="./bucket/c/charmbracelet/charmbracelet.glow.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于终端的 markdown 阅读器|
 |[charmbracelet.gum](https://github.com/charmbracelet/gum "点击访问仓库或主页")|<a href="./bucket/c/charmbracelet/charmbracelet.gum.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款用于出色 shell 脚本的工具|
