@@ -193,7 +193,7 @@ function A-Copy-Item {
     }
 }
 
-function A-New-PersistFile {
+function A-New-File {
     <#
     .SYNOPSIS
         创建文件，可选择设置内容
@@ -209,15 +209,15 @@ function A-New-PersistFile {
         此参数仅在指定了 -Content 参数时有效
 
     .EXAMPLE
-        A-New-PersistFile "$persist_dir\data.json" -Content "{}"
+        A-New-File "$persist_dir\data.json" -Content "{}"
         创建文件并指定内容
 
     .EXAMPLE
-        A-New-PersistFile "$persist_dir\data.ini" -Content @('[Settings]', 'AutoUpdate=0')
+        A-New-File "$persist_dir\data.ini" -Content '[Settings]', 'AutoUpdate=0'
         创建文件并指定内容，传入数组会被写入多行
 
     .EXAMPLE
-        A-New-PersistFile "$persist_dir\data.ini"
+        A-New-File "$persist_dir\data.ini"
         创建空文件
     #>
     param (
@@ -273,7 +273,7 @@ function A-New-LinkFile {
         通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkFile @("$env:UserProfile\.config\starship.toml")
+        A-New-LinkFile "$env:UserProfile\xxx", "$env:AppData\xxx"
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -306,7 +306,7 @@ function A-New-LinkDirectory {
         通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkDirectory @("$env:AppData\Code","$env:UserProfile\.vscode")
+        A-New-LinkDirectory "$env:AppData\Code", "$env:UserProfile\.vscode"
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -379,7 +379,7 @@ function A-Remove-TempData {
         可以包含文件或目录路径。
 
     .EXAMPLE
-        A-Remove-TempData -Paths @("C:\Temp\Logs", "D:\Cache")
+        A-Remove-TempData -Paths "C:\Temp\Logs", "D:\Cache"
         删除指定的两个临时数据目录
     #>
     param (
@@ -1647,6 +1647,7 @@ function A-Uninstall-ExeByHand {
 #endregion
 
 #region 以下的函数不应该在外部调用
+
 function A-New-Link {
     <#
     .SYNOPSIS
@@ -1928,32 +1929,6 @@ $ScoopVersion = "0.5.3"
 
 #region 扩展 Scoop 部分功能
 
-function script:create_shims($manifest, $dir, $global, $arch) {
-    $shims = @(arch_specific 'bin' $manifest $arch)
-    $shims | Where-Object { $_ -ne $null } | ForEach-Object {
-        $target, $name, $arg = shim_def $_
-        Write-Output "Creating shim for '$name'."
-
-        #region 新增: 支持使用 $env:xxx 变量
-        # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
-        $target = Invoke-Expression "`"$target`""
-        #endregion
-
-        if (Test-Path "$dir\$target" -PathType leaf) {
-            $bin = "$dir\$target"
-        }
-        elseif (Test-Path $target -PathType leaf) {
-            $bin = $target
-        }
-        else {
-            $bin = (Get-Command $target).Source
-        }
-        if (!$bin) { abort "Can't shim '$target': File doesn't exist." }
-
-        shim $bin $global $name (substitute $arg @{ '$dir' = $dir; '$original_dir' = $original_dir; '$persist_dir' = $persist_dir })
-    }
-}
-
 function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global) {
     #region 新增: 支持 abyss 的特性
     function A-Test-ScriptPattern {
@@ -2121,4 +2096,5 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     }
     #endregion
 }
+
 #endregion
