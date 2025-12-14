@@ -37,33 +37,6 @@ if ($null -eq $abgox_abyss.uninstallActionLevel) {
     $abgox_abyss.uninstallActionLevel = "1"
 }
 
-if ($cmd) {
-    # 移除 reset 命令生成的错误的环境变量
-    # https://abyss.abgox.com/faq/error-path-in-env
-    if ($global) {
-        $abgox_abyss.dir = $globaldir
-        $abgox_abyss.level = [System.EnvironmentVariableTarget]::Machine
-    }
-    else {
-        $abgox_abyss.dir = $scoopdir
-        $abgox_abyss.level = [System.EnvironmentVariableTarget]::User
-    }
-    $abgox_abyss.allEnvVars = [System.Environment]::GetEnvironmentVariables($abgox_abyss.level)
-    $abgox_abyss.key = if ($abgox_abyss.allEnvVars.Contains('SCOOP_PATH')) { 'SCOOP_PATH' }else { 'PATH' }
-    $abgox_abyss.Path = $abgox_abyss.allEnvVars[$abgox_abyss.key]
-    $abgox_abyss.PathList = $abgox_abyss.Path -split ';'
-
-    $abgox_abyss.errorPath = $abgox_abyss.PathList | Where-Object { $_ -like "$($abgox_abyss.dir)\apps\*\current\`$env:*" }
-    $abgox_abyss.newPath = ($abgox_abyss.PathList | Where-Object { $_ -notin $abgox_abyss.errorPath }) -join ';'
-    if ($abgox_abyss.newPath -and $abgox_abyss.newPath -ne $abgox_abyss.Path) {
-        [System.Environment]::SetEnvironmentVariable($abgox_abyss.key, $abgox_abyss.newPath, $abgox_abyss.level)
-        warn "Refer to: https://abyss.abgox.com/faq/error-path-in-env"
-        foreach ($_ in $abgox_abyss.errorPath) {
-            warn "Removing $_ ($($abgox_abyss.key))"
-        }
-    }
-}
-
 function A-Test-Admin {
     <#
     .SYNOPSIS
@@ -125,10 +98,24 @@ function A-Start-Uninstall {
     if ($version -in @('pending', 'deprecated')) {
         A-Deny-Update
     }
+
+    A-Remove-Font
+    A-Remove-Path
+    A-Remove-PowerToysRunPlugin
 }
 
 function A-Complete-Uninstall {
 
+}
+
+function A-Add-Path {
+    param(
+        [string[]]$Path
+    )
+
+    Add-Path -Path $Path -Global:$global
+
+    @{ Path = $Path } | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-Path.jsonc" -Force -Encoding utf8
 }
 
 function A-Ensure-Directory {
@@ -875,59 +862,8 @@ function A-Add-Font {
         New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
         Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force
     }
-}
 
-function A-Remove-Font {
-    <#
-    .SYNOPSIS
-        卸载字体
-
-    .DESCRIPTION
-        卸载字体
-
-    .PARAMETER FontType
-        字体类型，支持 ttf, otf, ttc
-        如果未指定字体类型，则根据字体文件扩展名自动判断
-    #>
-    param(
-        [ValidateSet("ttf", "otf", "ttc")]
-        [string]$FontType
-    )
-
-    if (!$FontType) {
-        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
-        $FontType = $fontFile.Extension.TrimStart(".")
-    }
-
-    $filter = "*.$($FontType)"
-
-    $ExtMap = @{
-        ".ttf" = "TrueType"
-        ".otf" = "OpenType"
-        ".ttc" = "TrueType"
-    }
-
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
-    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
-        Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name | ForEach-Object {
-            try {
-                Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
-            }
-            catch {
-                error "Cannot uninstall '$app' font.`nIt is currently being used by another application.`nPlease close all applications that are using it (e.g. vscode) and try again."
-                A-Exit
-            }
-        }
-    }
-    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
-    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
-        Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
-        Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
-    }
-    if ($cmd -eq "uninstall") {
-        warn "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove."
-    }
+    @{ FontType = $FontType } | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-Font.jsonc" -Force -Encoding utf8
 }
 
 function A-Add-PowerToysRunPlugin {
@@ -937,7 +873,7 @@ function A-Add-PowerToysRunPlugin {
 
     $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
     $PluginPath = "$PluginsDir\$PluginName"
-    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
+    $OutFile = "$dir\scoop-install-A-Add-PowerToysRunPlugin.jsonc"
 
     try {
         if (Test-Path -LiteralPath $PluginPath) {
@@ -950,32 +886,6 @@ function A-Add-PowerToysRunPlugin {
         Copy-Item -LiteralPath $CopyingPath -Destination $PluginPath -Recurse -Force
 
         @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
-    }
-    catch {
-        error $_.Exception.Message
-        A-Show-IssueCreationPrompt
-        A-Exit
-    }
-}
-
-function A-Remove-PowerToysRunPlugin {
-    $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
-
-    $OutFile = "$dir\scoop-Install-A-Add-PowerToysRunPlugin.jsonc"
-
-    try {
-        if (Test-Path -LiteralPath $OutFile) {
-            $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
-            $PluginPath = "$PluginsDir\$PluginName"
-        }
-        else {
-            return
-        }
-
-        if (Test-Path -LiteralPath $PluginPath) {
-            Write-Host "Removing $PluginPath"
-            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
-        }
     }
     catch {
         error $_.Exception.Message
@@ -1681,6 +1591,32 @@ if ($cmd) {
             }
         }
     }
+
+    # 现在由 A-Add-Path 添加带有变量的环境变量，已避免此问题
+    # 移除 reset 命令生成的错误的环境变量
+    # https://abyss.abgox.com/faq/error-path-in-env
+    if ($global) {
+        $abgox_abyss.dir = $globaldir
+        $abgox_abyss.level = [System.EnvironmentVariableTarget]::Machine
+    }
+    else {
+        $abgox_abyss.dir = $scoopdir
+        $abgox_abyss.level = [System.EnvironmentVariableTarget]::User
+    }
+    $abgox_abyss.allEnvVars = [System.Environment]::GetEnvironmentVariables($abgox_abyss.level)
+    $abgox_abyss.key = if ($abgox_abyss.allEnvVars.Contains('SCOOP_PATH')) { 'SCOOP_PATH' }else { 'PATH' }
+    $abgox_abyss.Path = $abgox_abyss.allEnvVars[$abgox_abyss.key]
+    $abgox_abyss.PathList = $abgox_abyss.Path -split ';'
+
+    $abgox_abyss.errorPath = $abgox_abyss.PathList | Where-Object { $_ -like "$($abgox_abyss.dir)\apps\*\current\`$env:*" }
+    $abgox_abyss.newPath = ($abgox_abyss.PathList | Where-Object { $_ -notin $abgox_abyss.errorPath }) -join ';'
+    if ($abgox_abyss.newPath -and $abgox_abyss.newPath -ne $abgox_abyss.Path) {
+        [System.Environment]::SetEnvironmentVariable($abgox_abyss.key, $abgox_abyss.newPath, $abgox_abyss.level)
+        warn "Refer to: https://abyss.abgox.com/faq/error-path-in-env"
+        foreach ($_ in $abgox_abyss.errorPath) {
+            warn "Removing $_ ($($abgox_abyss.key))"
+        }
+    }
 }
 
 #endregion
@@ -1858,18 +1794,94 @@ function A-Remove-AppxPackage {
     #>
 
     $OutFile = "$dir\scoop-install-A-Add-AppxPackage.jsonc"
+    if (-not (Test-Path -LiteralPath $OutFile)) {
+        return
+    }
 
-    if (Test-Path -LiteralPath $OutFile) {
-        $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
-
-        $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
-
-        if ($package) {
-            if ($package.InstallLocation) {
-                Get-Process | Where-Object { $_.Path -and $_.Path -like "*$($package.InstallLocation)*" } | Stop-Process -Force -ErrorAction SilentlyContinue
-            }
-            $package | Remove-AppxPackage
+    $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
+    $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
+    if ($package) {
+        if ($package.InstallLocation) {
+            Get-Process | Where-Object { $_.Path -and $_.Path -like "*$($package.InstallLocation)*" } | Stop-Process -Force -ErrorAction SilentlyContinue
         }
+        $package | Remove-AppxPackage
+    }
+}
+
+function A-Remove-Path {
+    $OutFile = "$dir\scoop-install-A-Add-Path.jsonc"
+    if (-not (Test-Path -LiteralPath $OutFile)) {
+        return
+    }
+
+    $Path = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Path")
+    Remove-Path -Path $Path -Global:$global
+
+    Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+}
+
+function A-Remove-Font {
+    $OutFile = "$dir\scoop-install-A-Add-Font.jsonc"
+    if (-not (Test-Path -LiteralPath $OutFile)) {
+        return
+    }
+
+    $FontType = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "FontType"
+    $filter = "*.$($FontType)"
+
+    $ExtMap = @{
+        ".ttf" = "TrueType"
+        ".otf" = "OpenType"
+        ".ttc" = "TrueType"
+    }
+
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
+        Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name | ForEach-Object {
+            try {
+                Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
+            }
+            catch {
+                error "Cannot uninstall '$app' font.`nIt is currently being used by another application.`nPlease close all applications that are using it (e.g. vscode) and try again."
+                A-Exit
+            }
+        }
+    }
+    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
+    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
+        Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
+        Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
+    }
+    if ($cmd -eq "uninstall") {
+        warn "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove."
+    }
+
+    Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+}
+
+function A-Remove-PowerToysRunPlugin {
+    $OutFile = "$dir\scoop-install-A-Add-PowerToysRunPlugin.jsonc"
+    if (-not (Test-Path -LiteralPath $OutFile)) {
+        return
+    }
+
+    $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
+
+    try {
+        $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
+        $PluginPath = "$PluginsDir\$PluginName"
+
+        if (Test-Path -LiteralPath $PluginPath) {
+            Write-Host "Removing $PluginPath"
+            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
+            Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+        }
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        A-Exit
     }
 }
 
@@ -1915,78 +1927,6 @@ function A-Get-UserAgent {
 $ScoopVersion = "0.5.3"
 
 #region 扩展 Scoop 部分功能
-
-function script:Add-Path {
-    param(
-        [string[]]$Path,
-        [string]$TargetEnvVar = 'PATH',
-        [switch]$Global,
-        [switch]$Force,
-        [switch]$Quiet
-    )
-    #region 新增: 支持使用 $env:xxx 变量
-    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
-    $Path = $Path | ForEach-Object {
-        Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
-    }
-    #endregion
-
-    # future sessions
-    $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
-
-    if (!$inPath -or $Force) {
-        if (!$Quiet) {
-            #region 修改: 输出更友好
-            $Path | ForEach-Object {
-                Write-Host "Adding $(friendly_path $_) to $(if ($Global) {'system'} else {'user'}) environment variable $TargetEnvVar."
-            }
-            #endregion
-        }
-        Set-EnvVar -Name $TargetEnvVar -Value ((@($Path) + $strippedPath) -join ';') -Global:$Global
-    }
-    # current session
-    $inPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
-    if (!$inPath -or $Force) {
-        $env:PATH = (@($Path) + $strippedPath) -join ';'
-    }
-}
-
-function script:Remove-Path {
-    param(
-        [string[]]$Path,
-        [string]$TargetEnvVar = 'PATH',
-        [switch]$Global,
-        [switch]$Quiet,
-        [switch]$PassThru
-    )
-    #region 新增: 支持使用 $env:xxx 变量
-    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
-    $Path = $Path | ForEach-Object {
-        Invoke-Expression "`"$($_.Replace("$dir\`$env:", '$env:'))`""
-    }
-    #endregion
-
-    # future sessions
-    $inPath, $strippedPath = Split-PathLikeEnvVar $Path (Get-EnvVar -Name $TargetEnvVar -Global:$Global)
-    if ($inPath) {
-        if (!$Quiet) {
-            #region 修改: 输出更友好
-            $Path | ForEach-Object {
-                Write-Host "Removing $(friendly_path $_) from $(if ($Global) {'system'} else {'user'}) environment variable $TargetEnvVar."
-            }
-            #endregion
-        }
-        Set-EnvVar -Name $TargetEnvVar -Value $strippedPath -Global:$Global
-    }
-    # current session
-    $inSessionPath, $strippedPath = Split-PathLikeEnvVar $Path $env:PATH
-    if ($inSessionPath) {
-        $env:PATH = $strippedPath
-    }
-    if ($PassThru) {
-        return $inPath
-    }
-}
 
 function script:create_shims($manifest, $dir, $global, $arch) {
     $shims = @(arch_specific 'bin' $manifest $arch)
