@@ -1,0 +1,58 @@
+{
+    "version": "1.2.3",
+    "description": "一个更直观的 Rust 版 du 工具 | A more intuitive version of du in rust",
+    "homepage": "https://github.com/bootandy/dust",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/bootandy/dust/releases/download/v1.2.3/dust-v1.2.3-x86_64-pc-windows-msvc.zip",
+            "hash": "3b02f46312b65e06dc9525ab35f02c0def26099712503f139fcb07ac69963927",
+            "extract_dir": "dust-v1.2.3-x86_64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\dust.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:UserProfile\\.config\\dust\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/bootandy/dust/releases/download/v$version/dust-v$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "dust-v$version-x86_64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
