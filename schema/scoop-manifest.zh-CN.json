@@ -418,7 +418,7 @@
         },
         "env_add_path": {
             "title": "添加到环境变量 PATH 中的路径",
-            "markdownDescription": "- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中",
+            "markdownDescription": "- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果要指定 `$dir` 目录，请用 `.` 代替\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中",
             "type": [
                 "string",
                 "array"
@@ -429,32 +429,7 @@
             ],
             "minLength": 1,
             "minItems": 1,
-            "uniqueItems": true,
-            "oneOf": [
-                {
-                    "$ref": "#/definitions/str",
-                    "if": {
-                        "pattern": "\\$dir"
-                    },
-                    "then": {
-                        "not": true,
-                        "errorMessage": "不能使用 $dir，请用 . 代替"
-                    }
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/str",
-                        "if": {
-                            "pattern": "\\$dir"
-                        },
-                        "then": {
-                            "not": true,
-                            "errorMessage": "不能使用 $dir，请用 . 代替"
-                        }
-                    }
-                }
-            ]
+            "uniqueItems": true
         },
         "env_set": {
             "title": "设置环境变量",
@@ -1793,6 +1768,27 @@
                                     "app"
                                 ]
                             },
+                            "env_add_path": {
+                                "type": [
+                                    "string",
+                                    "array"
+                                ],
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/definitions/str",
+                                        "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
+                                        "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/definitions/str",
+                                            "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
+                                            "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                        }
+                                    }
+                                ]
+                            },
                             "innosetup": {
                                 "enum": [
                                     true
@@ -2039,6 +2035,14 @@
                                                     "markdownDescription": "拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用\n- 参考: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
+                                                    "const": "A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"",
+                                                    "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
+                                                },
+                                                {
+                                                    "pattern": "A-Add-Path",
+                                                    "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
+                                                },
+                                                {
                                                     "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
                                                     "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
@@ -2128,7 +2132,7 @@
                                                 },
                                                 {
                                                     "const": "A-Add-Font",
-                                                    "markdownDescription": "安装字体"
+                                                    "markdownDescription": "安装字体\n- 它在 `pre_uninstall` 阶段会自动移除"
                                                 },
                                                 {
                                                     "const": "A-Add-MsixPackage 'PackageFamilyName'",
@@ -2140,11 +2144,11 @@
                                                 },
                                                 {
                                                     "const": "A-Add-PowerToysRunPlugin 'xxx'",
-                                                    "markdownDescription": "添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "添加 PowerToys Run 插件\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-PowerToysRunPlugin",
-                                                    "markdownDescription": "添加 PowerToys Run 插件\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "添加 PowerToys Run 插件\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "const": "A-Hold-App",
@@ -2251,19 +2255,11 @@
                                                 },
                                                 {
                                                     "const": "A-Remove-Link",
-                                                    "markdownDescription": "移除 A-New-LinkFile 和 A-New-LinkDirectory 创建的 SymbolicLink 或 Junction"
-                                                },
-                                                {
-                                                    "const": "A-Remove-Font",
-                                                    "markdownDescription": "移除字体"
+                                                    "markdownDescription": "移除由 `A-New-LinkFile` 和 `A-New-LinkDirectory` 创建的 SymbolicLink 或 Junction"
                                                 },
                                                 {
                                                     "const": "A-Remove-MsixPackage",
                                                     "markdownDescription": "卸载 AppX/Msix 包"
-                                                },
-                                                {
-                                                    "const": "A-Remove-PowerToysRunPlugin",
-                                                    "markdownDescription": "移除 PowerToys Run 插件"
                                                 },
                                                 {
                                                     "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"",
@@ -2394,55 +2390,6 @@
                                     },
                                     "then": {
                                         "properties": {
-                                            "env_add_path": {
-                                                "type": [
-                                                    "string",
-                                                    "array"
-                                                ],
-                                                "anyOf": [
-                                                    {
-                                                        "$ref": "#/definitions/str",
-                                                        "if": {
-                                                            "not": {
-                                                                "anyOf": [
-                                                                    {
-                                                                        "pattern": "^app\\\\"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^\\$\\{?env:"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                        }
-                                                    },
-                                                    {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "$ref": "#/definitions/str",
-                                                            "if": {
-                                                                "not": {
-                                                                    "anyOf": [
-                                                                        {
-                                                                            "pattern": "^app\\\\"
-                                                                        },
-                                                                        {
-                                                                            "pattern": "^\\$\\{?env:"
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            },
-                                                            "then": {
-                                                                "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                            }
-                                                        }
-                                                    }
-                                                ]
-                                            },
                                             "bin": {
                                                 "type": [
                                                     "string",
@@ -2454,22 +2401,8 @@
                                                 "anyOf": [
                                                     {
                                                         "$ref": "#/definitions/str",
-                                                        "if": {
-                                                            "not": {
-                                                                "anyOf": [
-                                                                    {
-                                                                        "pattern": "^app\\\\"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^\\$\\{?env:"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                        }
+                                                        "pattern": "^app\\\\",
+                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                     },
                                                     {
                                                         "type": "array",
@@ -2481,44 +2414,15 @@
                                                             "anyOf": [
                                                                 {
                                                                     "$ref": "#/definitions/str",
-                                                                    "if": {
-                                                                        "not": {
-                                                                            "anyOf": [
-                                                                                {
-                                                                                    "pattern": "^app\\\\"
-                                                                                },
-                                                                                {
-                                                                                    "pattern": "^\\$\\{?env:"
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "then": {
-                                                                        "not": true,
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                                    }
+                                                                    "pattern": "^app\\\\",
+                                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                                 },
                                                                 {
                                                                     "type": "array",
                                                                     "items": [
                                                                         {
-                                                                            "if": {
-                                                                                "type": "string",
-                                                                                "not": {
-                                                                                    "anyOf": [
-                                                                                        {
-                                                                                            "pattern": "^app\\\\"
-                                                                                        },
-                                                                                        {
-                                                                                            "pattern": "^\\$\\{?env:"
-                                                                                        }
-                                                                                    ]
-                                                                                }
-                                                                            },
-                                                                            "then": {
-                                                                                "not": true,
-                                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                                            }
+                                                                            "pattern": "^app\\\\",
+                                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                                         }
                                                                     ]
                                                                 }
@@ -2560,46 +2464,6 @@
                                                             }
                                                         }
                                                     ]
-                                                }
-                                            },
-                                            "persist": {
-                                                "if": {
-                                                    "type": "array"
-                                                },
-                                                "then": {
-                                                    "items": {
-                                                        "if": {
-                                                            "type": "array"
-                                                        },
-                                                        "then": {
-                                                            "items": [
-                                                                {
-                                                                    "if": {
-                                                                        "type": "string",
-                                                                        "not": {
-                                                                            "anyOf": [
-                                                                                {
-                                                                                    "pattern": "^app\\\\"
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "then": {
-                                                                        "not": true,
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 开头"
-                                                                    }
-                                                                }
-                                                            ]
-                                                        },
-                                                        "else": {
-                                                            "not": true,
-                                                            "errorMessage": "由于使用了 A-Install-Exe 或 A-Expand-SetupExe，需要使用数组格式"
-                                                        }
-                                                    }
-                                                },
-                                                "else": {
-                                                    "not": true,
-                                                    "errorMessage": "由于使用了 A-Install-Exe 或 A-Expand-SetupExe，需要使用数组格式"
                                                 }
                                             }
                                         }
@@ -2690,58 +2554,6 @@
                                                     }
                                                 }
                                             }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-Font"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Remove-Font"
-                                                        },
-                                                        "errorMessage": "pre_install 中使用了 A-Add-Font，而 pre_uninstall 中缺少 A-Remove-Font"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "allOf": [
-                                                            {
-                                                                "contains": {
-                                                                    "pattern": "A-Remove-PowerToysRunPlugin"
-                                                                },
-                                                                "errorMessage": "pre_install 中使用了 A-Add-PowerToysRunPlugin，而 pre_uninstall 中缺少 A-Remove-PowerToysRunPlugin"
-                                                            },
-                                                            {
-                                                                "contains": {
-                                                                    "pattern": "^A-Remove-PowerToysRunPlugin$"
-                                                                },
-                                                                "errorMessage": "A-Remove-PowerToysRunPlugin 必须单独一行，不能包含额外内容"
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            }
                                         }
                                     ]
                                 },
@@ -2807,48 +2619,6 @@
                                                             "pattern": "(?<!#.*)A-Add-MsixPackage"
                                                         },
                                                         "errorMessage": "pre_uninstall 中使用了 A-Remove-MsixPackage，而 pre_install 中缺少 A-Add-MsixPackage"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Remove-Font"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-Font"
-                                                        },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-Font，而 pre_install 中缺少 A-Add-Font"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "contains": {
-                                                            "pattern": "^A-Remove-PowerToysRunPlugin$"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
-                                                        },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Remove-PowerToysRunPlugin，而 pre_install 中缺少 A-Add-PowerToysRunPlugin"
                                                     }
                                                 }
                                             }

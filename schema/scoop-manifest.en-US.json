@@ -418,7 +418,7 @@
         },
         "env_add_path": {
             "title": "Add the specified directory to the PATH environment variable",
-            "markdownDescription": "- Add the specified directory to the PATH environment variable (current user)\n- If the `--global` or `-g` parameter is used during installation, the directory will be added to the PATH environment variable (system level)",
+            "markdownDescription": "- Add the specified directory to the PATH environment variable (current user)\n- If you want to specify the `$dir` directory, please use `.` instead.\n- If the `--global` or `-g` parameter is used during installation, the directory will be added to the PATH environment variable (system level)",
             "type": [
                 "string",
                 "array"
@@ -429,32 +429,7 @@
             ],
             "minLength": 1,
             "minItems": 1,
-            "uniqueItems": true,
-            "oneOf": [
-                {
-                    "$ref": "#/definitions/str",
-                    "if": {
-                        "pattern": "\\$dir"
-                    },
-                    "then": {
-                        "not": true,
-                        "errorMessage": "Cannot use $dir, please use . instead"
-                    }
-                },
-                {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/str",
-                        "if": {
-                            "pattern": "\\$dir"
-                        },
-                        "then": {
-                            "not": true,
-                            "errorMessage": "Cannot use $dir, please use . instead"
-                        }
-                    }
-                }
-            ]
+            "uniqueItems": true
         },
         "env_set": {
             "title": "Set environment variables",
@@ -1793,6 +1768,27 @@
                                     "app"
                                 ]
                             },
+                            "env_add_path": {
+                                "type": [
+                                    "string",
+                                    "array"
+                                ],
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/definitions/str",
+                                        "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
+                                        "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/definitions/str",
+                                            "pattern": "^(?!(?:[^\\\\]|^)\\$).*$",
+                                            "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                        }
+                                    }
+                                ]
+                            },
                             "innosetup": {
                                 "enum": [
                                     true
@@ -2039,6 +2035,14 @@
                                                     "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been renamed, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been deprecated.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
+                                                    "const": "A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"",
+                                                    "markdownDescription": "Add environment variables\n- It will be automatically removed in `pre_uninstall`.\n- For example: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
+                                                },
+                                                {
+                                                    "pattern": "A-Add-Path",
+                                                    "markdownDescription": "Add environment variables\n- It will be automatically removed in `pre_uninstall`.\n- For example: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
+                                                },
+                                                {
                                                     "const": "A-New-PersistFile \"$persist_dir\\xxx\" -Content 'xxx'",
                                                     "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-PersistFile \"$persist_dir\\InputTip.ini\" -Content ''`"
                                                 },
@@ -2128,7 +2132,7 @@
                                                 },
                                                 {
                                                     "const": "A-Add-Font",
-                                                    "markdownDescription": "Install font"
+                                                    "markdownDescription": "Install font\n- It will be automatically removed in `pre_uninstall`."
                                                 },
                                                 {
                                                     "const": "A-Add-MsixPackage 'PackageFamilyName'",
@@ -2140,11 +2144,11 @@
                                                 },
                                                 {
                                                     "const": "A-Add-PowerToysRunPlugin 'xxx'",
-                                                    "markdownDescription": "Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "Add PowerToys Run plugin\n- It will be automatically removed in `pre_uninstall`.\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-PowerToysRunPlugin",
-                                                    "markdownDescription": "Add PowerToys Run plugin\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                    "markdownDescription": "Add PowerToys Run plugin\n- It will be automatically removed in `pre_uninstall`.\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
                                                 },
                                                 {
                                                     "const": "A-Hold-App",
@@ -2254,16 +2258,8 @@
                                                     "markdownDescription": "Remove SymbolicLink or Junction created by `A-New-LinkFile` and `A-New-LinkDirectory`."
                                                 },
                                                 {
-                                                    "const": "A-Remove-Font",
-                                                    "markdownDescription": "Remove fonts."
-                                                },
-                                                {
                                                     "const": "A-Remove-MsixPackage",
                                                     "markdownDescription": "Remove AppX/Msix packages."
-                                                },
-                                                {
-                                                    "const": "A-Remove-PowerToysRunPlugin",
-                                                    "markdownDescription": "Remove the plugins of PowerToys Run"
                                                 },
                                                 {
                                                     "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"",
@@ -2394,55 +2390,6 @@
                                     },
                                     "then": {
                                         "properties": {
-                                            "env_add_path": {
-                                                "type": [
-                                                    "string",
-                                                    "array"
-                                                ],
-                                                "anyOf": [
-                                                    {
-                                                        "$ref": "#/definitions/str",
-                                                        "if": {
-                                                            "not": {
-                                                                "anyOf": [
-                                                                    {
-                                                                        "pattern": "^app\\\\"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^\\$\\{?env:"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
-                                                        }
-                                                    },
-                                                    {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "$ref": "#/definitions/str",
-                                                            "if": {
-                                                                "not": {
-                                                                    "anyOf": [
-                                                                        {
-                                                                            "pattern": "^app\\\\"
-                                                                        },
-                                                                        {
-                                                                            "pattern": "^\\$\\{?env:"
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            },
-                                                            "then": {
-                                                                "not": true,
-                                                                "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
-                                                            }
-                                                        }
-                                                    }
-                                                ]
-                                            },
                                             "bin": {
                                                 "type": [
                                                     "string",
@@ -2454,22 +2401,8 @@
                                                 "anyOf": [
                                                     {
                                                         "$ref": "#/definitions/str",
-                                                        "if": {
-                                                            "not": {
-                                                                "anyOf": [
-                                                                    {
-                                                                        "pattern": "^app\\\\"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^\\$\\{?env:"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        "then": {
-                                                            "not": true,
-                                                            "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
-                                                        }
+                                                        "pattern": "^app\\\\",
+                                                        "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                     },
                                                     {
                                                         "type": "array",
@@ -2481,44 +2414,15 @@
                                                             "anyOf": [
                                                                 {
                                                                     "$ref": "#/definitions/str",
-                                                                    "if": {
-                                                                        "not": {
-                                                                            "anyOf": [
-                                                                                {
-                                                                                    "pattern": "^app\\\\"
-                                                                                },
-                                                                                {
-                                                                                    "pattern": "^\\$\\{?env:"
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "then": {
-                                                                        "not": true,
-                                                                        "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
-                                                                    }
+                                                                    "pattern": "^app\\\\",
+                                                                    "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                                 },
                                                                 {
                                                                     "type": "array",
                                                                     "items": [
                                                                         {
-                                                                            "if": {
-                                                                                "type": "string",
-                                                                                "not": {
-                                                                                    "anyOf": [
-                                                                                        {
-                                                                                            "pattern": "^app\\\\"
-                                                                                        },
-                                                                                        {
-                                                                                            "pattern": "^\\$\\{?env:"
-                                                                                        }
-                                                                                    ]
-                                                                                }
-                                                                            },
-                                                                            "then": {
-                                                                                "not": true,
-                                                                                "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
-                                                                            }
+                                                                            "pattern": "^app\\\\",
+                                                                            "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                                         }
                                                                     ]
                                                                 }
@@ -2560,46 +2464,6 @@
                                                             }
                                                         }
                                                     ]
-                                                }
-                                            },
-                                            "persist": {
-                                                "if": {
-                                                    "type": "array"
-                                                },
-                                                "then": {
-                                                    "items": {
-                                                        "if": {
-                                                            "type": "array"
-                                                        },
-                                                        "then": {
-                                                            "items": [
-                                                                {
-                                                                    "if": {
-                                                                        "type": "string",
-                                                                        "not": {
-                                                                            "anyOf": [
-                                                                                {
-                                                                                    "pattern": "^app\\\\"
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "then": {
-                                                                        "not": true,
-                                                                        "errorMessage": "Please check the path. Since A-Install-Exe or A-Expand-SetupExe is used, it may need to start with app\\\\"
-                                                                    }
-                                                                }
-                                                            ]
-                                                        },
-                                                        "else": {
-                                                            "not": true,
-                                                            "errorMessage": "Since A-Install-Exe or A-Expand-SetupExe is used，it need to use array"
-                                                        }
-                                                    }
-                                                },
-                                                "else": {
-                                                    "not": true,
-                                                    "errorMessage": "Since A-Install-Exe or A-Expand-SetupExe is used，it need to use array"
                                                 }
                                             }
                                         }
@@ -2690,58 +2554,6 @@
                                                     }
                                                 }
                                             }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-Font"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Remove-Font"
-                                                        },
-                                                        "errorMessage": "A-Add-Font is used in pre_install, while A-Remove-Font is missing in pre_uninstall"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "allOf": [
-                                                            {
-                                                                "contains": {
-                                                                    "pattern": "A-Remove-PowerToysRunPlugin"
-                                                                },
-                                                                "errorMessage": "A-Add-PowerToysRunPlugin is used in pre_install, while A-Remove-PowerToysRunPlugin is missing in pre_uninstall"
-                                                            },
-                                                            {
-                                                                "contains": {
-                                                                    "pattern": "^A-Remove-PowerToysRunPlugin$"
-                                                                },
-                                                                "errorMessage": "A-Remove-PowerToysRunPlugin must be on a separate line and must not contain any additional content"
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            }
                                         }
                                     ]
                                 },
@@ -2807,48 +2619,6 @@
                                                             "pattern": "(?<!#.*)A-Add-MsixPackage"
                                                         },
                                                         "errorMessage": "A-Remove-MsixPackage is used in pre_uninstall, while A-Add-MsixPackage is missing in pre_install"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Remove-Font"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-Font"
-                                                        },
-                                                        "errorMessage": "A-Remove-Font is used in pre_uninstall, while A-Add-Font is missing in pre_install"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "if": {
-                                                "properties": {
-                                                    "pre_uninstall": {
-                                                        "contains": {
-                                                            "pattern": "^A-Remove-PowerToysRunPlugin$"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "pre_install": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Add-PowerToysRunPlugin"
-                                                        },
-                                                        "errorMessage": "A-Remove-PowerToysRunPlugin is used in pre_uninstall, while A-Add-PowerToysRunPlugin is missing in pre_install"
                                                     }
                                                 }
                                             }
