@@ -13,12 +13,12 @@
         }
     },
     "extract_to": "app",
-    "env_add_path": "$env:AppData\\local\\bin",
     "bin": "app\\stack.exe",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Add-Path \"$env:AppData\\local\\bin\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

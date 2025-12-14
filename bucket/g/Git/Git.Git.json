@@ -24,12 +24,12 @@
             "hash": "ac77636c9240da04aa9306dd6cb99d0e6283a506d6f4ea01df5ab5630408f24e"
         }
     },
-    "env_add_path": "$env:ProgramFiles\\Git\\bin",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
         "A-Require-Admin",
+        "A-Add-Path \"$env:ProgramFiles\\Git\\bin\"",
         "A-New-PersistFile \"$persist_dir\\.gitconfig\"",
         "A-New-PersistFile \"$persist_dir\\.gitmessage\"",
         "A-New-LinkFile \"$env:UserProfile\\.gitconfig\",\"$env:UserProfile\\.gitmessage\"",

@@ -13,12 +13,12 @@
         }
     },
     "extract_to": "app",
-    "env_add_path": "$env:UserProfile\\.proto\\shims",
     "bin": "app\\proto.exe",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-Add-Path \"$env:UserProfile\\.proto\\shims\"",
         "A-New-LinkDirectory \"$env:UserProfile\\.proto\""
     ],
     "post_install": [

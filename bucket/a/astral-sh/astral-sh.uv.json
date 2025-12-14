@@ -16,7 +16,6 @@
         }
     },
     "extract_to": "app",
-    "env_add_path": "$env:UserProfile\\.local\\bin",
     "env_set": {
         "UV_PYTHON_INSTALL_DIR": "$persist_dir\\AppData\\Roaming\\uv\\python",
         "UV_TOOL_DIR": "$persist_dir\\AppData\\Roaming\\uv\\tools",
@@ -35,7 +34,8 @@
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Add-Path \"$env:UserProfile\\.local\\bin\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
