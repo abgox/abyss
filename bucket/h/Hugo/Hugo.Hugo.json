@@ -1,0 +1,62 @@
+{
+    "version": "0.152.2",
+    "description": "最受欢迎的开源静态网站生成器之一 | One of the most popular open-source static site generators",
+    "homepage": "https://gohugo.io/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gohugoio/hugo/releases/download/v0.152.2/hugo_0.152.2_windows-amd64.zip",
+            "hash": "f7af56db1437e8d2df1b2db95f9cf83106b243110f45ff3a4a570ef8086c7920"
+        },
+        "arm64": {
+            "url": "https://github.com/gohugoio/hugo/releases/download/v0.152.2/hugo_0.152.2_windows-arm64.zip",
+            "hash": "9a6a210e314f0e096b2e4e33163c707a3c21e9bd2e46c87e1adbd3b05d1288d9"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\hugo.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-TempData \"$env:LocalAppData\\hugo_cache\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gohugoio/hugo/releases/download/v$version/hugo_$version_windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/gohugoio/hugo/releases/download/v$version/hugo_$version_windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
