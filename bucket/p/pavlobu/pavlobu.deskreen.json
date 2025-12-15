@@ -1,0 +1,72 @@
+{
+    "version": "3.2.0",
+    "description": "屏幕共享和屏幕演示：将任何设备转换为计算机的辅助屏幕 | Screen sharing and present screen: Turn any device into a secondary screen for your computer",
+    "homepage": "https://deskreen.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\Programs\\deskreen-ce",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "notes-cn": [
+        "安装目录: $env:LocalAppData\\Programs\\deskreen-ce",
+        "参考: https://abyss.abgox.com/faq/external-installation-directories"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pavlobu/deskreen/releases/download/v3.2.0/deskreen-ce-3.2.0-x64.msi#/dl.msi_",
+            "hash": "c35f47666498770b2f7c52340bd53e4dddc30985d08503378e10ea5e1c37de7f"
+        },
+        "arm64": {
+            "url": "https://github.com/pavlobu/deskreen/releases/download/v3.2.0/deskreen-ce-3.2.0-arm64.msi#/dl.msi_",
+            "hash": "51bdedde91a7f6c0c3f64f1d59a7b8d7f6bde8eed94f59387c7b4a4a6cc36bda"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\deskreen-ce\"",
+        "A-Install-Exe msi"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process \"$env:LocalAppData\\Programs\\deskreen-ce\"",
+        "A-Remove-Link",
+        "$ProductCode = A-Get-ProductCode '^Deskreen CE'",
+        "A-Uninstall-Exe $ProductCode"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pavlobu/deskreen/releases/download/v$version/deskreen-ce-$version-x64.msi#/dl.msi_"
+            },
+            "arm64": {
+                "url": "https://github.com/pavlobu/deskreen/releases/download/v$version/deskreen-ce-$version-arm64.msi#/dl.msi_"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
