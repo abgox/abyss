@@ -1,0 +1,61 @@
+{
+    "version": "0.10.15",
+    "description": "一个以隐私为首要原则的开源知识管理与协作平台。 | A privacy-first, open-source platform for knowledge management and collaboration.",
+    "homepage": "https://logseq.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/logseq/logseq/releases/download/0.10.15/Logseq-win-x64-0.10.15.zip",
+            "hash": "05fd9eee843347fc4fbb3e9993a2ca219915b87fbf8df91f3d87aaa3a4f11f0d"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Logseq.exe",
+            "Logseq"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\Logseq\", \"$env:UserProfile\\.logseq\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/logseq/logseq/releases/download/$version/Logseq-win-x64-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
