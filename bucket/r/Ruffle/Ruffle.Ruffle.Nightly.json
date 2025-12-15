@@ -1,0 +1,62 @@
+{
+    "version": "2025-12-14",
+    "description": "一个用 Rust 编程语言编写的 Adobe Flash Player 模拟器 | An Adobe Flash Player emulator written in the Rust programming language",
+    "homepage": "https://ruffle.rs/",
+    "license": {
+        "identifier": "MIT|Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-2025-12-14/ruffle-nightly-2025_12_14-windows-x86_64.zip",
+            "hash": "90752a19b30b33b4b59c0a4d1cfbe7b42875c5d5a849d5a7011dd81a77791486"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\ruffle.exe",
+            "ruffle"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:LocalAppData\\ruffle\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/ruffle-rs/ruffle/releases?per_page=5",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "nightly-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-$version/ruffle-nightly-$underscoreVersion-windows-x86_64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
