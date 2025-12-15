@@ -1098,7 +1098,7 @@ function A-Get-UninstallEntryByAppName {
     return $null
 }
 function A-Get-VersionFromGithubAPI {
-    if ($url -notlike 'https://github.com/*/*') {
+    if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
         if (-not $json) {
             Write-Host "::error::`$json is invalid." -ForegroundColor Red
             return
@@ -1156,7 +1156,7 @@ function A-Get-VersionFromGithubAPI {
 
     try {
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-        return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
+        return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1181,7 +1181,7 @@ function A-Get-VersionFromGithubAPI {
             Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-            return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
+            return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
         }
     }
 }
