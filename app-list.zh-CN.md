@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (528)|Tag|Description|
+|App (529)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -476,6 +476,7 @@
 |[Softplicity.CoolUtilsMailViewer](https://www.coolutils.com/MailViewer "点击访问仓库或主页")|<a href="./bucket/s/Softplicity/Softplicity.CoolUtilsMailViewer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Coolutils' Mail Viewer 是一款免费程序，可让您查看 MSG、EML、EMLX、P7M、ICS、VCF 和 winmail.dat(TNEF) 文件|
 |[Sogou.SogouInput](https://shurufa.sogou.com/ "点击访问仓库或主页")|<a href="./bucket/s/Sogou/Sogou.SogouInput.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[DenyUpdate](https://abyss.abgox.com/faq/deny-update)|新一代基于搜索引擎技术的中文拼音输入法，特别适合中国互联网用户|
 |[sourcegit-scm.SourceGit](https://github.com/sourcegit-scm/sourcegit "点击访问仓库或主页")|<a href="./bucket/s/sourcegit-scm/sourcegit-scm.SourceGit.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|为 git 用户提供的开源图形用户界面客户端|
+|[sourcemeta.jsonschema](https://github.com/sourcemeta/jsonschema "点击访问仓库或主页")|<a href="./bucket/s/sourcemeta/sourcemeta.jsonschema.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用于处理 JSON Schema 的命令行界面 (CLI)|
 |[spacedrive.Spacedrive](https://www.spacedrive.com/ "点击访问仓库或主页")|<a href="./bucket/s/spacedrive/spacedrive.Spacedrive.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的跨平台文件浏览器，由一个用 Rust 编写的虚拟分布式文件系统提供支持|
 |[speauty.anto](https://github.com/speauty/anto "点击访问仓库或主页")|<a href="./bucket/s/speauty/speauty.anto.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Windows 上的字幕文件(srt)翻译工具|
 |[sqshq.Sampler](https://github.com/sqshq/sampler "点击访问仓库或主页")|<a href="./bucket/s/sqshq/sqshq.Sampler.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一种用于执行、可视化和警报 shell 命令的工具|
