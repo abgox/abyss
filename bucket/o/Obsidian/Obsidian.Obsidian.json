@@ -10,6 +10,10 @@
         "64bit": {
             "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.10.6/Obsidian-1.10.6.exe",
             "hash": "cf5ecd9e9d1b703186e41d938c1fefe4e06c075699de7d48e64d4ca1740d38ce"
+        },
+        "arm64": {
+            "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.10.6/Obsidian-1.10.6.exe",
+            "hash": "cf5ecd9e9d1b703186e41d938c1fefe4e06c075699de7d48e64d4ca1740d38ce"
         }
     },
     "bin": "app\\obsidian.exe",
@@ -23,7 +27,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\obsidian\"",
+        "A-New-LinkDirectory \"$env:UserProfile\\Documents\\Obsidian Vault\", \"$env:AppData\\obsidian\"",
         "A-Install-Exe -Uninstaller 'app\\Uninstall Obsidian.exe'"
     ],
     "post_install": [
@@ -55,6 +59,9 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
+                "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/Obsidian-$version.exe"
+            },
+            "arm64": {
                 "url": "https://github.com/obsidianmd/obsidian-releases/releases/download/v$version/Obsidian-$version.exe"
             }
         },
