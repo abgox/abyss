@@ -1,0 +1,56 @@
+{
+    "version": "13.0.0",
+    "description": "用于处理 JSON Schema 的命令行界面 (CLI) | The CLI for working with JSON Schema.",
+    "homepage": "https://github.com/sourcemeta/jsonschema",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sourcemeta/jsonschema/releases/download/v13.0.0/jsonschema-13.0.0-windows-x86_64.zip",
+            "hash": "efe3a7e3f6a575e0c3acd2b1c0e4d9cea50d1e79b0c2dfce3d3db1d2c7265713",
+            "extract_dir": "jsonschema-13.0.0-windows-x86_64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\bin\\jsonschema.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sourcemeta/jsonschema/releases/download/v$version/jsonschema-$version-windows-x86_64.zip",
+                "extract_dir": "jsonschema-$version-windows-x86_64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
