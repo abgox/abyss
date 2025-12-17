@@ -99,8 +99,8 @@ function A-Start-Uninstall {
         A-Deny-Update
     }
 
-    A-Remove-Font
     A-Remove-Path
+    A-Remove-Font
     A-Remove-PowerToysRunPlugin
 }
 
@@ -859,8 +859,14 @@ function A-Add-Font {
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
     Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
-        New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force | Out-Null
-        Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force
+        try {
+            New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force -ErrorAction Stop | Out-Null
+            Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
+            A-Exit
+        }
     }
 
     @{ FontType = $FontType } | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-Font.jsonc" -Force -Encoding utf8
