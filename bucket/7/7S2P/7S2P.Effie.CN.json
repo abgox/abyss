@@ -1,0 +1,69 @@
+{
+    "version": "6.9.1",
+    "description": "一款集清单制作、思维导图、笔记记录和专注于标记的写作工具，它能通过思维导图和大纲帮助你将想法可视化。 | A list making, mind mapping, note taking, focused markup-based writing tool that helps to visualize your ideas with mindmaps and outlines.",
+    "homepage": "https://www.effie.co/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.effie.co/effie/effie_setup_6.9.1.exe",
+            "hash": "871425b940a1e0a5ce51d309eaafa02f47a72fbd22f81830b5f048781bba01b0"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\effie.exe",
+            "Effie"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\Effie\"",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget '7S2P.Effie.CN' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX86",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
