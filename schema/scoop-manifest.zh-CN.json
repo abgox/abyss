@@ -1485,7 +1485,7 @@
                         }
                     },
                     {
-                        "$comment": "确保 architecture 和 autoupdate 中的 architecture 相对应",
+                        "$comment": "确保 architecture 和 autoupdate 中的属性相对应",
                         "if": {
                             "required": [
                                 "autoupdate"
@@ -1607,6 +1607,202 @@
                                             }
                                         }
                                     }
+                                },
+                                {
+                                    "allOf": [
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "required": [
+                                                            "extract_dir"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "required": [
+                                                    "extract_dir"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "required": [
+                                                            "env_add_path"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "required": [
+                                                    "env_add_path"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "required": [
+                                                            "bin"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "required": [
+                                                    "bin"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "required": [
+                                                            "shortcuts"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "required": [
+                                                    "shortcuts"
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "properties": {
+                                                            "architecture": {
+                                                                "patternProperties": {
+                                                                    "^(64bit|arm64|32bit)$": {
+                                                                        "required": [
+                                                                            "extract_dir"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "patternProperties": {
+                                                            "^(64bit|arm64|32bit)$": {
+                                                                "required": [
+                                                                    "extract_dir"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "properties": {
+                                                            "architecture": {
+                                                                "patternProperties": {
+                                                                    "^(64bit|arm64|32bit)$": {
+                                                                        "required": [
+                                                                            "env_add_path"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "patternProperties": {
+                                                            "^(64bit|arm64|32bit)$": {
+                                                                "required": [
+                                                                    "env_add_path"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "properties": {
+                                                            "architecture": {
+                                                                "patternProperties": {
+                                                                    "^(64bit|arm64|32bit)$": {
+                                                                        "required": [
+                                                                            "bin"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "patternProperties": {
+                                                            "^(64bit|arm64|32bit)$": {
+                                                                "required": [
+                                                                    "bin"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "autoupdate": {
+                                                        "properties": {
+                                                            "architecture": {
+                                                                "patternProperties": {
+                                                                    "^(64bit|arm64|32bit)$": {
+                                                                        "required": [
+                                                                            "shortcuts"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "architecture": {
+                                                        "patternProperties": {
+                                                            "^(64bit|arm64|32bit)$": {
+                                                                "required": [
+                                                                    "shortcuts"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -1945,12 +2141,79 @@
                                         "errorMessage": "abyss 中不允许使用它"
                                     },
                                     "script": {
+                                        "type": "array",
+                                        "examples": [
+                                            [
+                                                ". \"$pwd\\bin\\utils.ps1\"",
+                                                "A-Get-VersionFromGithubAPI"
+                                            ]
+                                        ],
+                                        "minItems": 1,
                                         "items": {
                                             "not": {
                                                 "pattern": "[（）‘’“”，：？！—]+"
                                             },
                                             "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
-                                        }
+                                        },
+                                        "allOf": [
+                                            {
+                                                "items": [
+                                                    {
+                                                        "const": ". \"$pwd\\bin\\utils.ps1\"",
+                                                        "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                                    }
+                                                ],
+                                                "allOf": [
+                                                    {
+                                                        "items": {
+                                                            "anyOf": [
+                                                                {},
+                                                                {
+                                                                    "const": "A-Get-VersionFromGithubAPI",
+                                                                    "markdownDescription": "从 GitHub 仓库获取应用的最新版本"
+                                                                },
+                                                                {
+                                                                    "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                                    "markdownDescription": "获取 Winget 中指定应用的安装信息"
+                                                                },
+                                                                {
+                                                                    "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
+                                                                    "markdownDescription": "获取 Winget 中指定应用的安装信息"
+                                                                },
+                                                                {
+                                                                    "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                                    "markdownDescription": "输出应用的版本号"
+                                                                },
+                                                                {
+                                                                    "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                                    "markdownDescription": "输出应用的 x64 安装程序 URL"
+                                                                },
+                                                                {
+                                                                    "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                                    "markdownDescription": "输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                                },
+                                                                {
+                                                                    "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                                    "markdownDescription": "输出应用的 x86 安装程序 URL"
+                                                                },
+                                                                {
+                                                                    "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                                    "markdownDescription": "输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                                },
+                                                                {
+                                                                    "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                                    "markdownDescription": "输出应用的 arm64 安装程序 URL"
+                                                                },
+                                                                {
+                                                                    "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                                    "markdownDescription": "输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     },
                                     "re": {
                                         "not": true,
@@ -1980,6 +2243,9 @@
                                 }
                             },
                             "autoupdate": {
+                                "required": [
+                                    "architecture"
+                                ],
                                 "propertyNames": {
                                     "pattern": "^(architecture|notes|notes-cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
                                     "errorMessage": "不允许的属性名"
@@ -2001,6 +2267,20 @@
                                                 "not": true,
                                                 "errorMessage": "abyss 中不允许使用它"
                                             }
+                                        },
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "pattern": "\\$.+",
+                                                        "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确",
+                                                        "examples": [
+                                                            "",
+                                                            []
+                                                        ]
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -2008,56 +2288,7 @@
                         }
                     },
                     {
-                        "$comment": "如果定义了 notes，则必须定义 notes-cn",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "required": [
-                                        "notes"
-                                    ]
-                                },
-                                "then": {
-                                    "if": {
-                                        "required": [
-                                            "notes-cn"
-                                        ]
-                                    },
-                                    "else": {
-                                        "properties": {
-                                            "notes": {
-                                                "not": true,
-                                                "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "notes-cn"
-                                    ]
-                                },
-                                "then": {
-                                    "if": {
-                                        "required": [
-                                            "notes"
-                                        ]
-                                    },
-                                    "else": {
-                                        "properties": {
-                                            "notes-cn": {
-                                                "not": true,
-                                                "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "脚本校验",
+                        "$comment": "必须使用 pre_install、post_install、pre_uninstall、post_uninstall",
                         "properties": {
                             "pre_install": {
                                 "examples": [
@@ -2230,6 +2461,131 @@
                                                 }
                                             ]
                                         }
+                                    },
+                                    {
+                                        "if": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Deny-Manifest"
+                                            }
+                                        },
+                                        "then": {
+                                            "items": [
+                                                {},
+                                                {},
+                                                {},
+                                                {
+                                                    "pattern": "A-Deny-Manifest",
+                                                    "errorMessage": "数组中存在 A-Deny-Manifest，因此这一项只能是它"
+                                                }
+                                            ],
+                                            "if": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-Deny-IfAppConflict"
+                                                }
+                                            },
+                                            "then": {
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "pattern": "A-Deny-IfAppConflict",
+                                                        "errorMessage": "数组中存在 A-Deny-IfAppConflict，因此这一项只能是它"
+                                                    }
+                                                ],
+                                                "if": {
+                                                    "contains": {
+                                                        "const": "A-Require-Admin"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "items": [
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {
+                                                            "const": "A-Require-Admin",
+                                                            "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "else": {
+                                                "if": {
+                                                    "contains": {
+                                                        "const": "A-Require-Admin"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "items": [
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {
+                                                            "const": "A-Require-Admin",
+                                                            "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "else": {
+                                            "if": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-Deny-IfAppConflict"
+                                                }
+                                            },
+                                            "then": {
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "pattern": "A-Deny-IfAppConflict",
+                                                        "errorMessage": "数组中存在 A-Deny-IfAppConflict，因此这一项只能是它或者 A-Deny-Manifest"
+                                                    }
+                                                ],
+                                                "if": {
+                                                    "contains": {
+                                                        "const": "A-Require-Admin"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "items": [
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {
+                                                            "const": "A-Require-Admin",
+                                                            "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "else": {
+                                                "if": {
+                                                    "contains": {
+                                                        "const": "A-Require-Admin"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "items": [
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {
+                                                            "const": "A-Require-Admin",
+                                                            "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它或者 A-Deny-Manifest 和 A-Deny-IfAppConflict"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
                                     }
                                 ]
                             },
@@ -2393,6 +2749,59 @@
                                                 }
                                             ]
                                         }
+                                    },
+                                    {
+                                        "if": {
+                                            "contains": {
+                                                "const": "A-Deny-Update"
+                                            }
+                                        },
+                                        "then": {
+                                            "items": [
+                                                {},
+                                                {},
+                                                {},
+                                                {
+                                                    "const": "A-Deny-Update",
+                                                    "errorMessage": "数组中存在 A-Deny-Update，因此这一项只能是它"
+                                                }
+                                            ],
+                                            "if": {
+                                                "contains": {
+                                                    "const": "A-Require-Admin"
+                                                }
+                                            },
+                                            "then": {
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "const": "A-Require-Admin",
+                                                        "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "else": {
+                                            "if": {
+                                                "contains": {
+                                                    "const": "A-Require-Admin"
+                                                }
+                                            },
+                                            "then": {
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "const": "A-Require-Admin",
+                                                        "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它或者 A-Deny-Update"
+                                                    }
+                                                ]
+                                            }
+                                        }
                                     }
                                 ]
                             },
@@ -2435,10 +2844,7 @@
                                     "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Uninstall"
                                 }
                             }
-                        }
-                    },
-                    {
-                        "$comment": "必须使用 pre_install、post_install、pre_uninstall、post_uninstall",
+                        },
                         "if": {
                             "required": [
                                 "pre_install",
@@ -2450,7 +2856,7 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\ 或 $env: 或 ${env: 开头",
+                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
@@ -2534,7 +2940,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
                                                             }
                                                         }
                                                     ]
@@ -2707,357 +3113,369 @@
                         }
                     },
                     {
-                        "$comment": "当 version 为特定内容时，必须在 checkver 中 定义对应的 replace",
                         "allOf": [
                             {
-                                "properties": {
-                                    "version": {
-                                        "$ref": "#/definitions/str"
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
+                                "$comment": "如果定义了 notes，则必须定义 notes-cn",
+                                "allOf": [
+                                    {
+                                        "if": {
                                             "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^pending$",
-                                                    "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^renamed$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^renamed$",
-                                                    "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "checkver": {
-                                            "required": [
-                                                "replace"
-                                            ],
-                                            "properties": {
-                                                "replace": {
-                                                    "pattern": "^deprecated$",
-                                                    "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "当 version 为特定内容时，url 必须为指定内容",
-                        "allOf": [
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending|renamed|deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "^(64bit|arm64|32bit)$": {
-                                                    "properties": {
-                                                        "url": {
-                                                            "type": [
-                                                                "string",
-                                                                "array"
-                                                            ],
-                                                            "items": {
-                                                                "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                            },
-                                                            "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
-                                                        },
-                                                        "hash": {
-                                                            "type": [
-                                                                "string",
-                                                                "array"
-                                                            ],
-                                                            "items": {
-                                                                "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                                            },
-                                                            "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                            "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
-                                                        }
+                                                "notes"
+                                            ]
+                                        },
+                                        "then": {
+                                            "if": {
+                                                "required": [
+                                                    "notes-cn"
+                                                ]
+                                            },
+                                            "else": {
+                                                "properties": {
+                                                    "notes": {
+                                                        "not": true,
+                                                        "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
                                                     }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "required": [
+                                                "notes-cn"
+                                            ]
+                                        },
+                                        "then": {
+                                            "if": {
+                                                "required": [
+                                                    "notes"
+                                                ]
+                                            },
+                                            "else": {
+                                                "properties": {
+                                                    "notes-cn": {
+                                                        "not": true,
+                                                        "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "$comment": "当 version 为特定内容时，必须在 checkver 中定义对应的 replace",
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "version": {
+                                                "$ref": "#/definitions/str"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "version": {
+                                                    "pattern": "^pending$"
                                                 }
                                             }
                                         },
-                                        "pre_install": {
-                                            "if": {
-                                                "minItems": 3,
-                                                "maxItems": 3
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "version 为 pending|renamed|deprecated 时，数组的第四项必须使用 A-Deny-Manifest"
-                                            },
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest"
+                                        "then": {
+                                            "properties": {
+                                                "checkver": {
+                                                    "required": [
+                                                        "replace"
+                                                    ],
+                                                    "properties": {
+                                                        "replace": {
+                                                            "pattern": "^pending$",
+                                                            "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
                                                         }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，此项必须使用 A-Deny-Manifest"
                                                     }
                                                 }
-                                            ]
+                                            }
                                         }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^pending|deprecated$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_install": {
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest$"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "version 为 pending|deprecated 时，此项只能是 A-Deny-Manifest"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "properties": {
-                                        "version": {
-                                            "pattern": "^renamed$"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_install": {
-                                            "items": [
-                                                {
-                                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }"
-                                                },
-                                                {
-                                                    "const": ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\""
-                                                },
-                                                {
-                                                    "const": "A-Start-Install"
-                                                },
-                                                {
-                                                    "if": {
-                                                        "not": {
-                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]"
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "version 为 renamed 时，此项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
-                        "if": {
-                            "not": {
-                                "required": [
-                                    "extract_to"
-                                ]
-                            }
-                        },
-                        "then": {
-                            "if": {
-                                "anyOf": [
-                                    {
-                                        "required": [
-                                            "innosetup"
-                                        ]
                                     },
                                     {
-                                        "required": [
-                                            "psmodule"
-                                        ]
+                                        "if": {
+                                            "properties": {
+                                                "version": {
+                                                    "pattern": "^renamed$"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "checkver": {
+                                                    "required": [
+                                                        "replace"
+                                                    ],
+                                                    "properties": {
+                                                        "replace": {
+                                                            "pattern": "^renamed$",
+                                                            "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     },
                                     {
-                                        "properties": {
-                                            "pre_install": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font)"
+                                        "if": {
+                                            "properties": {
+                                                "version": {
+                                                    "pattern": "^deprecated$"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "checkver": {
+                                                    "required": [
+                                                        "replace"
+                                                    ],
+                                                    "properties": {
+                                                        "replace": {
+                                                            "pattern": "^deprecated$",
+                                                            "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 ]
                             },
-                            "else": {
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|arm64|32bit)$": {
+                            {
+                                "$comment": "当 version 为特定内容时，url 必须为指定内容",
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "version": {
+                                                    "pattern": "^pending|renamed|deprecated$"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "architecture": {
+                                                    "patternProperties": {
+                                                        "^(64bit|arm64|32bit)$": {
+                                                            "properties": {
+                                                                "url": {
+                                                                    "type": [
+                                                                        "string",
+                                                                        "array"
+                                                                    ],
+                                                                    "items": {
+                                                                        "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    },
+                                                                    "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
+                                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                },
+                                                                "hash": {
+                                                                    "type": [
+                                                                        "string",
+                                                                        "array"
+                                                                    ],
+                                                                    "items": {
+                                                                        "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                                        "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                    },
+                                                                    "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
+                                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "version": {
+                                                    "pattern": "^pending|deprecated$"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "minItems": 4,
+                                                    "items": [
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {
+                                                            "pattern": "^A-Deny-Manifest$",
+                                                            "errorMessage": "version 为 pending|deprecated 时，这一项只能是 A-Deny-Manifest"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "version": {
+                                                    "pattern": "^renamed$"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "minItems": 4,
+                                                    "items": [
+                                                        {},
+                                                        {},
+                                                        {},
+                                                        {
+                                                            "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]",
+                                                            "errorMessage": "version 为 renamed 时，这一项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
+                                "if": {
+                                    "not": {
+                                        "required": [
+                                            "extract_to"
+                                        ]
+                                    }
+                                },
+                                "then": {
+                                    "if": {
+                                        "anyOf": [
+                                            {
+                                                "required": [
+                                                    "innosetup"
+                                                ]
+                                            },
+                                            {
+                                                "required": [
+                                                    "psmodule"
+                                                ]
+                                            },
+                                            {
                                                 "properties": {
-                                                    "url": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font)"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "array"
+                                                                ],
+                                                                "not": {
+                                                                    "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
+                                                                    "items": {
+                                                                        "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
+                                                                    }
+                                                                },
+                                                                "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "required": [
+                                        "extract_to"
+                                    ],
+                                    "properties": {
+                                        "extract_to": {
+                                            "type": "string",
+                                            "const": "app"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "bin": {
+                                            "type": [
+                                                "string",
+                                                "array"
+                                            ],
+                                            "examples": [
+                                                "app\\xxx.exe"
+                                            ],
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/definitions/str",
+                                                    "pattern": "^app\\\\",
+                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 开头"
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
                                                         "type": [
                                                             "string",
                                                             "array"
                                                         ],
-                                                        "not": {
-                                                            "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$",
-                                                            "items": {
-                                                                "pattern": "\\.(zip|7z|tar|gz|lzma|lzh|msi|nupkg)$"
+                                                        "anyOf": [
+                                                            {
+                                                                "$ref": "#/definitions/str",
+                                                                "pattern": "^app\\\\",
+                                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 开头"
+                                                            },
+                                                            {
+                                                                "type": "array",
+                                                                "items": [
+                                                                    {
+                                                                        "pattern": "^app\\\\",
+                                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 开头"
+                                                                    }
+                                                                ]
                                                             }
-                                                        },
-                                                        "errorMessage": "它还需要通过 extract_to 指定目录，通常为 app"
+                                                        ]
                                                     }
                                                 }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "required": [
-                                "extract_to"
-                            ],
-                            "properties": {
-                                "extract_to": {
-                                    "type": "string",
-                                    "const": "app"
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "bin": {
-                                    "type": [
-                                        "string",
-                                        "array"
-                                    ],
-                                    "examples": [
-                                        "app\\xxx.exe"
-                                    ],
-                                    "anyOf": [
-                                        {
-                                            "$ref": "#/definitions/str",
-                                            "if": {
-                                                "not": {
-                                                    "anyOf": [
-                                                        {
-                                                            "pattern": "^app\\\\"
-                                                        },
-                                                        {
-                                                            "pattern": "^\\$\\{?env:"
-                                                        }
-                                                    ]
-                                                }
-                                            },
-                                            "then": {
-                                                "not": true,
-                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                            }
+                                            ]
                                         },
-                                        {
+                                        "shortcuts": {
                                             "type": "array",
+                                            "examples": [
+                                                [
+                                                    [
+                                                        "app\\xxx.exe",
+                                                        "xxx"
+                                                    ]
+                                                ]
+                                            ],
                                             "items": {
-                                                "type": [
-                                                    "string",
-                                                    "array"
-                                                ],
-                                                "anyOf": [
+                                                "type": "array",
+                                                "items": [
                                                     {
-                                                        "$ref": "#/definitions/str",
                                                         "if": {
                                                             "not": {
                                                                 "anyOf": [
@@ -3072,146 +3490,16 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
                                                         }
-                                                    },
-                                                    {
-                                                        "type": "array",
-                                                        "items": [
-                                                            {
-                                                                "if": {
-                                                                    "not": {
-                                                                        "anyOf": [
-                                                                            {
-                                                                                "pattern": "^app\\\\"
-                                                                            },
-                                                                            {
-                                                                                "pattern": "^\\$\\{?env:"
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                },
-                                                                "then": {
-                                                                    "not": true,
-                                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                                }
-                                                            }
-                                                        ]
                                                     }
                                                 ]
                                             }
                                         }
-                                    ]
-                                },
-                                "shortcuts": {
-                                    "type": "array",
-                                    "examples": [
-                                        [
-                                            [
-                                                "app\\xxx.exe",
-                                                "xxx"
-                                            ]
-                                        ]
-                                    ],
-                                    "items": {
-                                        "type": "array",
-                                        "items": [
-                                            {
-                                                "if": {
-                                                    "not": {
-                                                        "anyOf": [
-                                                            {
-                                                                "pattern": "^app\\\\"
-                                                            },
-                                                            {
-                                                                "pattern": "^\\$\\{?env:"
-                                                            }
-                                                        ]
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\ 或 $env: 或 ${env: 开头"
-                                                }
-                                            }
-                                        ]
                                     }
                                 }
                             }
-                        }
-                    },
-                    {
-                        "properties": {
-                            "checkver": {
-                                "properties": {
-                                    "script": {
-                                        "type": "array",
-                                        "examples": [
-                                            [
-                                                ". \"$pwd\\bin\\utils.ps1\"",
-                                                "A-Get-VersionFromGithubAPI"
-                                            ]
-                                        ],
-                                        "minItems": 1,
-                                        "items": [
-                                            {
-                                                "const": ". \"$pwd\\bin\\utils.ps1\"",
-                                                "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                            }
-                                        ],
-                                        "allOf": [
-                                            {
-                                                "items": {
-                                                    "anyOf": [
-                                                        {},
-                                                        {
-                                                            "const": "A-Get-VersionFromGithubAPI",
-                                                            "markdownDescription": "从 GitHub 仓库获取应用的最新版本"
-                                                        },
-                                                        {
-                                                            "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                            "markdownDescription": "获取 Winget 中指定应用的安装信息"
-                                                        },
-                                                        {
-                                                            "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                            "markdownDescription": "获取 Winget 中指定应用的安装信息"
-                                                        },
-                                                        {
-                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                            "markdownDescription": "输出应用的版本号"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x86 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        }
+                        ]
                     },
                     {
                         "if": {
@@ -3366,33 +3654,6 @@
                                                                 }
                                                             }
                                                         }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "properties": {
-                            "autoupdate": {
-                                "required": [
-                                    "architecture"
-                                ],
-                                "properties": {
-                                    "architecture": {
-                                        "patternProperties": {
-                                            "^(64bit|arm64|32bit)$": {
-                                                "properties": {
-                                                    "url": {
-                                                        "pattern": "\\$.+",
-                                                        "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确",
-                                                        "examples": [
-                                                            "",
-                                                            []
-                                                        ]
                                                     }
                                                 }
                                             }
