@@ -272,7 +272,7 @@
         },
         "url_validation": {
             "pattern": "^https?://",
-            "errorMessage": "必须是一个有效的 http/https URL"
+            "errorMessage": "需要一个有效的 http/https URL"
         },
         "url": {
             "title": "软件下载地址",
@@ -1016,7 +1016,7 @@
                 "properties": {
                     "hash": {
                         "$ref": "#/definitions/str",
-                        "errorMessage": "url 和 hash 的类型必须匹配"
+                        "errorMessage": "url 和 hash 的类型不相同"
                     }
                 }
             },
@@ -1028,7 +1028,7 @@
                             "$ref": "#/definitions/hash"
                         },
                         "minItems": 1,
-                        "errorMessage": "url 和 hash 的类型必须匹配"
+                        "errorMessage": "url 和 hash 的类型不相同"
                     }
                 }
             }
@@ -3190,7 +3190,7 @@
                                                     "properties": {
                                                         "replace": {
                                                             "pattern": "^pending$",
-                                                            "errorMessage": "version 为 pending 时，checkver 中必须定义 replace 为 pending"
+                                                            "errorMessage": "version 为 pending 时，它只能是 pending"
                                                         }
                                                     }
                                                 }
@@ -3214,7 +3214,7 @@
                                                     "properties": {
                                                         "replace": {
                                                             "pattern": "^renamed$",
-                                                            "errorMessage": "version 为 renamed 时，checkver 中必须定义 replace 为 renamed"
+                                                            "errorMessage": "version 为 renamed 时，它只能是 renamed"
                                                         }
                                                     }
                                                 }
@@ -3238,7 +3238,7 @@
                                                     "properties": {
                                                         "replace": {
                                                             "pattern": "^deprecated$",
-                                                            "errorMessage": "version 为 deprecated 时，checkver 中必须定义 replace 为 deprecated"
+                                                            "errorMessage": "version 为 deprecated 时，它只能是 deprecated"
                                                         }
                                                     }
                                                 }
@@ -3522,6 +3522,16 @@
                             }
                         },
                         "then": {
+                            "properties": {
+                                "checkver": {
+                                    "properties": {
+                                        "regex": {
+                                            "pattern": "\\(\\.\\+\\)",
+                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须包含 (.+)"
+                                        }
+                                    }
+                                }
+                            },
                             "if": {
                                 "properties": {
                                     "checkver": {
@@ -3537,7 +3547,7 @@
                                         "properties": {
                                             "url": {
                                                 "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)",
-                                                "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubApi，url 只能是 Github 仓库或 REST API，例如:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
+                                                "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，url 只能是 Github 仓库或 REST API，例如:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
                                             }
                                         }
                                     }

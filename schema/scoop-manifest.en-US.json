@@ -272,7 +272,7 @@
         },
         "url_validation": {
             "pattern": "^https?://",
-            "errorMessage": "It must be a valid http/https URL"
+            "errorMessage": "Require a valid http/https URL"
         },
         "url": {
             "title": "Download URL",
@@ -1016,7 +1016,7 @@
                 "properties": {
                     "hash": {
                         "$ref": "#/definitions/str",
-                        "errorMessage": "The type of 'url' and 'hash' must match"
+                        "errorMessage": "The type of 'url' and 'hash' must be same"
                     }
                 }
             },
@@ -1028,7 +1028,7 @@
                             "$ref": "#/definitions/hash"
                         },
                         "minItems": 1,
-                        "errorMessage": "The type of 'url' and 'hash' must match"
+                        "errorMessage": "The type of 'url' and 'hash' must be same"
                     }
                 }
             }
@@ -3190,7 +3190,7 @@
                                                     "properties": {
                                                         "replace": {
                                                             "pattern": "^pending$",
-                                                            "errorMessage": "When the version is 'pending', it must be defined as 'pending' in checkver."
+                                                            "errorMessage": "When the version is 'pending', it must be 'pending'."
                                                         }
                                                     }
                                                 }
@@ -3214,7 +3214,7 @@
                                                     "properties": {
                                                         "replace": {
                                                             "pattern": "^renamed$",
-                                                            "errorMessage": "When the version is 'renamed', it must be defined as 'renamed' in checkver"
+                                                            "errorMessage": "When the version is 'renamed', it must be 'renamed'."
                                                         }
                                                     }
                                                 }
@@ -3238,7 +3238,7 @@
                                                     "properties": {
                                                         "replace": {
                                                             "pattern": "^deprecated$",
-                                                            "errorMessage": "When the version is 'deprecated', it must be defined as 'deprecated' in checkver."
+                                                            "errorMessage": "When the version is 'deprecated', it must be 'deprecated'."
                                                         }
                                                     }
                                                 }
@@ -3522,6 +3522,16 @@
                             }
                         },
                         "then": {
+                            "properties": {
+                                "checkver": {
+                                    "properties": {
+                                        "regex": {
+                                            "pattern": "\\(\\.\\+\\)",
+                                            "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it must contain (.+)"
+                                        }
+                                    }
+                                }
+                            },
                             "if": {
                                 "properties": {
                                     "checkver": {
@@ -3537,7 +3547,7 @@
                                         "properties": {
                                             "url": {
                                                 "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)",
-                                                "errorMessage": "Since 'A-Get-VersionFromGithubApi' is used, it must be a Github URL or REST API, like:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
+                                                "errorMessage": "Since 'A-Get-VersionFromGithubAPI' is used, it must be a Github URL or REST API, like:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
                                             }
                                         }
                                     }
