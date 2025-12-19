@@ -1,0 +1,64 @@
+{
+    "version": "1.1.14-20251210-b2654ea",
+    "description": "一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。 | A lightweight, cross-platform remote desktop software with support for Web Client access.",
+    "homepage": "https://www.crossdesk.cn/",
+    "license": {
+        "identifier": "LGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/kunkundi/crossdesk/releases/download/v1.1.14-20251210-b2654ea/crossdesk-win-x64-v1.1.14-20251210-b2654ea.exe",
+            "hash": "b2960b8653382cd33e4d36ab27599d5fdfb3fa93e411203b1104f8070a2b7ef7"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\CrossDesk.exe",
+            "CrossDesk"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\CrossDesk\", \"$env:LocalAppData\\CrossDesk\"",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/kunkundi/crossdesk/releases/download/v$version/crossdesk-win-x64-v$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
