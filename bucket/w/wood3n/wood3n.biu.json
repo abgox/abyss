@@ -1,0 +1,70 @@
+{
+    "version": "1.6.0-beta.11",
+    "description": "基于 Bilibili API 的跨平台桌面音乐播放器 | A cross-platform desktop music player based on Bilibili API",
+    "homepage": "https://github.com/wood3n/biu",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/wood3n/biu/releases/download/v1.6.0-beta.11/Biu-1.6.0-beta.11-win-setup-x64.exe",
+            "hash": "8e406e888c28304e54f5a8f68a0d35303077f7b37c434ee1fc394c7ae64acb40"
+        },
+        "arm64": {
+            "url": "https://github.com/wood3n/biu/releases/download/v1.6.0-beta.11/Biu-1.6.0-beta.11-win-setup-arm64.exe",
+            "hash": "ad759946974b8e0ba5f0ccbf49a5b565d689c83ca07f89efc36625adc6d69cf6"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Biu.exe",
+            "Biu"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\Biu\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall Biu.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\biu-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/wood3n/biu/releases/download/v$version/Biu-$version-win-setup-x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/wood3n/biu/releases/download/v$version/Biu-$version-win-setup-arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
