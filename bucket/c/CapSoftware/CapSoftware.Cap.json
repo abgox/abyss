@@ -1,0 +1,61 @@
+{
+    "version": "0.3.83",
+    "description": "美观且便于分享的屏幕录制内容。 | Beautiful, shareable screen recordings.",
+    "homepage": "https://cap.so/",
+    "license": {
+        "identifier": "AGPL-3.0-only|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cap.so/download/windows#/dl.exe",
+            "hash": "864c6a51c04f0bd8974734e635b7383c7ba32ce4df462308255e0dab6315e85c"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Cap.exe",
+            "Cap"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\so.cap.desktop\"",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\so.cap.desktop\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/CapSoftware/Cap",
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "cap-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cap.so/download/windows#/dl.exe"
+            }
+        }
+    }
+}
