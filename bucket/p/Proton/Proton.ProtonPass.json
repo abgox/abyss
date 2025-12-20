@@ -1,0 +1,70 @@
+{
+    "version": "1.33.3",
+    "description": "开源且加密的密码管理器 | Open-source and encrypted password manager",
+    "homepage": "https://proton.me/pass",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\ProtonPass",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes-cn": [
+        "安装目录: $env:LocalAppData\\ProtonPass",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://proton.me/download/pass/windows/ProtonPass_Setup_1.33.3.exe",
+            "hash": "2ffa48da81ceea405c9a7dbb5e368df420bc930de0e1384f3dd5bd013ccc6082"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\Proton Pass\"",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\ProtonPass\\Update.exe\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process \"$env:LocalAppData\\ProtonPass\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe -ArgumentList '--uninstall'",
+        "A-Remove-TempData \"$env:LocalAppData\\ProtonPass\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Proton.ProtonPass' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
