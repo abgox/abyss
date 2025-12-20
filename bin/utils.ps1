@@ -23,9 +23,8 @@ if ($bucket) {
 }
 
 # https://abyss.abgox.com/features/extra-features#abgox-abyss-app-uninstall-action
-if ($null -eq $scoopConfig.'abgox-abyss-app-uninstall-action') {
-    $abgox_abyss.uninstallActionLevel = "1"
-}
+$_ = $scoopConfig.'abgox-abyss-app-uninstall-action'
+$abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { "1" }
 
 function A-Test-Admin {
     <#
@@ -1996,18 +1995,9 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
 
     $abgox_abyss = @{}
 
-    try {
-        # 创建快捷方式的操作行为。
-        # 0: 不创建清单中定义的快捷方式
-        # 1: 创建清单中定义的快捷方式
-        # 2: 如果应用使用安装程序进行安装，不创建清单中定义的快捷方式
-        $abgox_abyss.shortcutsActionLevel = $scoopConfig.'abgox-abyss-app-shortcuts-action'
-    }
-    catch {}
-
-    if ($null -eq $abgox_abyss.shortcutsActionLevel) {
-        $abgox_abyss.shortcutsActionLevel = "1"
-    }
+    # https://abyss.abgox.com/features/extra-features#abgox-abyss-app-shortcuts-action
+    $_ = $scoopConfig.'abgox-abyss-app-shortcuts-action'
+    $abgox_abyss.shortcutsActionLevel = if ($_) { $_ }else { "1" }
 
     if ($abgox_abyss.shortcutsActionLevel -eq '0') {
         return
