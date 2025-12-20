@@ -7,33 +7,23 @@ Microsoft.PowerShell.Utility\Write-Host
 # 存储 abyss 相关的变量，避免污染作用域
 $abgox_abyss = @{}
 
-# Github: https://github.com/abgox/abyss#config
-# Gitee: https://gitee.com/abgox/abyss#config
-try {
-    $abgox_abyss.ScoopConfig = scoop config
+if ($scoopdir -and $scoopConfig.root_path -ne $scoopdir) {
+    scoop config 'root_path' $scoopdir
+}
 
-    if ($scoopdir -and $abgox_abyss.ScoopConfig.root_path -ne $scoopdir) {
-        scoop config 'root_path' $scoopdir
+# https://abyss.abgox.com/features/extra-features#abgox-abyss-bucket-name
+if ($bucket) {
+    if ($scoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
+        scoop config 'abgox-abyss-bucket-name' $bucket
     }
-
-    # 卸载时的操作行为。
-    $abgox_abyss.uninstallActionLevel = $abgox_abyss.ScoopConfig.'abgox-abyss-app-uninstall-action'
-
-    # 本地添加的 abyss 的实际名称
-    # https://github.com/abgox/abyss/issues/10
-    if ($bucket) {
-        if ($abgox_abyss.ScoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
-            scoop config 'abgox-abyss-bucket-name' $bucket
-        }
-        if ($bucket -ne 'abyss') {
-            error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
-            error "Refer to: https://abyss.abgox.com/faq/bucket-name"
-        }
+    if ($bucket -ne 'abyss') {
+        error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
+        error "Refer to: https://abyss.abgox.com/faq/bucket-name"
     }
 }
-catch {}
 
-if ($null -eq $abgox_abyss.uninstallActionLevel) {
+# https://abyss.abgox.com/features/extra-features#abgox-abyss-app-uninstall-action
+if ($null -eq $scoopConfig.'abgox-abyss-app-uninstall-action') {
     $abgox_abyss.uninstallActionLevel = "1"
 }
 
@@ -113,7 +103,17 @@ function A-Add-Path {
         [string[]]$Path
     )
 
-    Add-Path -Path $Path -Global:$global
+    if (get_config USE_ISOLATED_PATH) {
+        Add-Path -Path ('%' + $scoopPathEnvVar + '%') -Global:$global
+    }
+
+    $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
+    $Path = $Path | Where-Object { $_ -notin $oldPath }
+    if (-not $Path) {
+        return
+    }
+
+    Add-Path -Path $Path -TargetEnvVar $scoopPathEnvVar -Global:$global
 
     @{ Path = $Path } | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-Path.jsonc" -Force -Encoding utf8
 }
@@ -1821,9 +1821,13 @@ function A-Remove-Path {
         return
     }
 
-    $Path = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Path")
-    Remove-Path -Path $Path -Global:$global
+    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Path"
+    if (-not $Path) {
+        return
+    }
 
+    Remove-Path -Path $Path -Global:$global
+    Remove-Path -Path $Path -TargetEnvVar $scoopPathEnvVar -Global:$global
     Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
 }
 
@@ -1993,13 +1997,11 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     $abgox_abyss = @{}
 
     try {
-        $abgox_abyss.ScoopConfig = scoop config
-
         # 创建快捷方式的操作行为。
         # 0: 不创建清单中定义的快捷方式
         # 1: 创建清单中定义的快捷方式
         # 2: 如果应用使用安装程序进行安装，不创建清单中定义的快捷方式
-        $abgox_abyss.shortcutsActionLevel = $abgox_abyss.ScoopConfig.'abgox-abyss-app-shortcuts-action'
+        $abgox_abyss.shortcutsActionLevel = $scoopConfig.'abgox-abyss-app-shortcuts-action'
     }
     catch {}
 
