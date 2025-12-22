@@ -2,12 +2,17 @@
 
 Set-StrictMode -Off
 
-Microsoft.PowerShell.Utility\Write-Host
-
 # 存储 abyss 相关的变量，避免污染作用域
 $abgox_abyss = @{}
 
-if ($scoopdir -and $scoopConfig.root_path -ne $scoopdir) {
+if ($env:GITHUB_ACTIONS) {
+    $VerbosePreference = "SilentlyContinue"
+}
+else {
+    Microsoft.PowerShell.Utility\Write-Host
+}
+
+if ($scoopdir -and $scoopConfig.root_path -and $scoopdir -ne $scoopConfig.root_path) {
     scoop config 'root_path' $scoopdir
 }
 
@@ -1102,6 +1107,7 @@ function A-Get-UninstallEntryByAppName {
 
     return $null
 }
+
 function A-Get-VersionFromGithubAPI {
     if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
         if (-not $json) {
@@ -1142,16 +1148,8 @@ function A-Get-VersionFromGithubAPI {
     }
 
     if ($env:GITHUB_ACTIONS) {
-        $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
-        if (-not $order) {
-            $order = 1
-            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
-            Write-Host "::notice::Switch to 'TOKEN_$order'"
-        }
-
-        $token = Invoke-Expression "`$Env:TOKEN_$order"
+        $token = A-Get-GithubToken
         if (-not $token) {
-            Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
         $headers['Authorization'] = "token $token"
@@ -1171,19 +1169,14 @@ function A-Get-VersionFromGithubAPI {
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
-            $order++
-            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
 
-            $token = Invoke-Expression "`$Env:TOKEN_$order"
+            $token = A-Get-GithubToken -Next
             if (-not $token) {
-                Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return
             }
-            Write-Host "::notice::Switch to 'TOKEN_$order'"
             $headers['Authorization'] = "token $token"
 
             Start-Sleep -Seconds 10
-            Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
             return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
@@ -1280,16 +1273,8 @@ function A-Get-InstallerInfoFromWinget {
     }
 
     if ($env:GITHUB_ACTIONS) {
-        $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
-        if (-not $order) {
-            $order = 1
-            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
-            Write-Host "::notice::Switch to 'TOKEN_$order'"
-        }
-
-        $token = Invoke-Expression "`$Env:TOKEN_$order"
+        $token = A-Get-GithubToken
         if (-not $token) {
-            Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
             return
         }
         $headers['Authorization'] = "token $token"
@@ -1313,19 +1298,13 @@ function A-Get-InstallerInfoFromWinget {
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
-            $order++
-            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
-
-            $token = Invoke-Expression "`$Env:TOKEN_$order"
+            $token = A-Get-GithubToken -Next
             if (-not $token) {
-                Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return
             }
-            Write-Host "::notice::Switch to 'TOKEN_$order'"
             $headers['Authorization'] = "token $token"
 
             Start-Sleep -Seconds 10
-            Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
         }
@@ -1366,19 +1345,13 @@ function A-Get-InstallerInfoFromWinget {
         }
 
         if ($_.Exception.Message -like "*rate limit*") {
-            $order++
-            [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
-
-            $token = Invoke-Expression "`$Env:TOKEN_$order"
+            $token = A-Get-GithubToken -Next
             if (-not $token) {
-                Write-Host "::error::'TOKEN_$order' not set." -ForegroundColor Red
                 return
             }
-            Write-Host "::notice::Switch to 'TOKEN_$order'"
             $headers['Authorization'] = "token $token"
 
             Start-Sleep -Seconds 10
-            Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
 
             $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
         }
@@ -1927,6 +1900,31 @@ function A-Show-IssueCreationPrompt {
 
 function A-Get-UserAgent {
     return "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
+}
+
+function A-Get-GithubToken {
+    param(
+        [switch]$Next
+    )
+    if ($null -eq $env:TOKEN_POOL -or -not $env:TOKEN_POOL.Trim()) {
+        Write-Host "::error::'TOKEN_POOL' not set." -ForegroundColor Red
+        exit 1
+    }
+    $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
+    if (-not $order) {
+        $order = 1
+        [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+    }
+    if ($Next) {
+        $order++
+        [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+    }
+
+    $token = $env:TOKEN_POOL.Split(',')[$order - 1]
+
+    if ($token) {
+        return $token
+    }
 }
 
 #endregion
