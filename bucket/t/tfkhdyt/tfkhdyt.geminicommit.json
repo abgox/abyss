@@ -1,0 +1,56 @@
+{
+    "version": "0.6.1",
+    "description": "使用 Google Gemini AI 为您编写 git 提交消息的 CLI | CLI that writes git commit messages for you with Google Gemini AI",
+    "homepage": "https://github.com/tfkhdyt/geminicommit",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tfkhdyt/geminicommit/releases/download/v0.6.1/gmc-v0.6.1-windows-amd64.zip",
+            "hash": "9a146c2d3de6fc0e2308fb7c3dbf2b706316bba8d75779c25f4de2afd298e06c"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gmc.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\geminicommit\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tfkhdyt/geminicommit/releases/download/v$version/gmc-v$version-windows-amd64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
