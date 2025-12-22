@@ -2,8 +2,7 @@ name: Excavator
 on:
   workflow_dispatch:
   schedule:
-    # At minute 30 past every 4th hour.
-    - cron: "30 */4 * * *"
+    - cron: "25 */4 * * *"
 
 concurrency:
   group: excavator-workflow-${{ github.ref }}
@@ -13,23 +12,20 @@ jobs:
     name: Excavate
     runs-on: windows-latest
     env:
-      TOKEN_1: ${{ secrets.TOKEN_1 }}
-      TOKEN_2: ${{ secrets.TOKEN_2 }}
-      TOKEN_3: ${{ secrets.TOKEN_3 }}
-      TOKEN_4: ${{ secrets.TOKEN_4 }}
-      TOKEN_5: ${{ secrets.TOKEN_5 }}
+      # github_pat_x,github_pat_y
+      TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Install module
+        env:
+          PS_MODULE_LIST: ${{ secrets.PS_MODULE_LIST }}
+        shell: pwsh
+        run: $env:PS_MODULE_LIST -split ',' | ForEach-Object { Install-Module $_ -Repository PSGallery -Force }
+
       - name: Get latest changes
         run: git pull
-
-      - name: Install module to parse yaml
-        shell: pwsh
-        run: |
-          Install-Module powershell-yaml -Repository PSGallery -Force
-          Import-Module -Name powershell-yaml -Force
 
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
@@ -40,13 +36,24 @@ jobs:
           SKIP_UPDATED: 1
           THROW_ERROR: 0
 
-  # workflow-keepalive:
-  #   if: github.event_name == 'schedule'
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     actions: write
-  #   steps:
-  #     - uses: abgox/gh-workflow-keepalive@main
+      - name: Check rate limit
+        shell: pwsh
+        run: |
+          $headers = @{ "Accept" = "application/vnd.github.v3+json" }
+          Write-Output "::group::GitHub API Rate Limits"
+          $tokens = $env:TOKEN_POOL.Split(',')
+          foreach ($i in 1..$tokens.Count) {
+              $t = $tokens[$i - 1]
+              $headers["Authorization"] = "token $t"
+              try {
+                  $response = Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
+                  Write-Output $response.rate
+              }
+              catch {
+                  Write-Output "Token $i : Failed to check rate limit"
+              }
+          }
+          Write-Output "::endgroup::"
 
   check-scoop-version:
     runs-on: windows-latest
