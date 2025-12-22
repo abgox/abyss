@@ -1,0 +1,61 @@
+{
+    "version": "3.86.1",
+    "description": "高度可扩展的 Markdown 编辑器。 | A highly extensible Markdown editor.",
+    "homepage": "https://yank-note.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/purocean/yn/releases/download/v3.86.1/Yank-Note-win-x64-3.86.1.zip",
+            "hash": "3df4eed2fc17e4d9fe7f37a8dc7fe02aa441fc7c0b1713c2e49af674d00454e3"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Yank Note.exe",
+            "Yank Note"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\yank.note\", \"$env:UserProfile\\yank-note\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/purocean/yn/releases/download/v$version/Yank-Note-win-x64-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
