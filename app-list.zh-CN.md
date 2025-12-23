@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (652)|Tag|Description|
+|App (653)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -294,6 +294,7 @@
 |[EcoPaste.EcoPaste](https://github.com/EcoPasteHub/EcoPaste "点击访问仓库或主页")|<a href="./bucket/e/EcoPaste/EcoPaste.EcoPaste.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台的开源剪贴板管理工具|
 |[eduVPN.Client](https://www.eduvpn.org/ "点击访问仓库或主页")|<a href="./bucket/e/eduVPN/eduVPN.Client.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|使用加密连接访问您所在机构的网络或互联网。|
 |[electerm.electerm](https://github.com/electerm/electerm "点击访问仓库或主页")|<a href="./bucket/e/electerm/electerm.electerm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp客户端|
+|[eloston.ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium-windows "点击访问仓库或主页")|<a href="./bucket/e/eloston/eloston.ungoogled-chromium.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|不依赖谷歌网络服务的 Google Chromium 浏览器。|
 |[Empty-57.ZeroBit-Player](https://github.com/Empty-57/ZeroBit-Player "点击访问仓库或主页")|<a href="./bucket/e/Empty-57/Empty-57.ZeroBit-Player.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于 Flutter + Rust 的 Material 风格本地音乐播放器|
 |[Eugeny.Tabby](https://tabby.sh/ "点击访问仓库或主页")|<a href="./bucket/e/Eugeny/Eugeny.Tabby.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个现代终端|
 |[everauto.zTasker](https://www.everauto.net/ "点击访问仓库或主页")|<a href="./bucket/e/everauto/everauto.zTasker.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个自动化任务工具|
