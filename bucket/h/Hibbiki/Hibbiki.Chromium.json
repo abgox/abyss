@@ -1,0 +1,63 @@
+{
+    "version": "143.0.7499.170-r1536371",
+    "description": "适用于 Windows 64 位的稳定版 Chromium 构建版本 | Stable Chromium build for Windows 64-bit, nothing fancy.",
+    "homepage": "https://github.com/Hibbiki/chromium-win64",
+    "license": {
+        "identifier": "BSD-3-Clause"
+    },
+    "notes": [
+        "The installation directory: $env:LocalAppData\\Chromium",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes-cn": [
+        "安装目录: $env:LocalAppData\\Chromium",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Hibbiki/chromium-win64/releases/download/v143.0.7499.170-r1536371/mini_installer.exe",
+            "hash": "0ebc7b74723bb6c6984a64aebe217fe3a91b6b2331eb8097d6f63749780e3cb5"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:LocalAppData\\Chromium\\User Data\"",
+        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\Chromium\\Application\\chrome.exe\" -ArgumentList '--silent','--install'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Uninstall-ExeManually \"$env:LocalAppData\\Chromium\\Application\"",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Hibbiki/chromium-win64/releases/download/v$version/mini_installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
