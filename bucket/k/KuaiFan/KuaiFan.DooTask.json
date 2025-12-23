@@ -1,0 +1,70 @@
+{
+    "version": "1.5.5",
+    "description": "轻量级的开源项目管理工具 | Lightweight task management tool",
+    "homepage": "https://www.dootask.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/kuaifan/dootask/releases/download/v1.5.5/DooTask-v1.5.5-win-x64.exe",
+            "hash": "977ee35cefd5c2f7a50bdbeb344def9c69b7e21623d5cbadfd2d61d62b27000f"
+        },
+        "arm64": {
+            "url": "https://github.com/kuaifan/dootask/releases/download/v1.5.5/DooTask-v1.5.5-win-arm64.exe",
+            "hash": "67cb55de078c8aac1d1b2e604c520000237c55fc693746ee8cc3edc42c04eff8"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\DooTask.exe",
+            "DooTask"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\DooTask\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall DooTask.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\dootask-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/kuaifan/dootask/releases/download/v$version/DooTask-v$version-win-x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/kuaifan/dootask/releases/download/v$version/DooTask-v$version-win-arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
