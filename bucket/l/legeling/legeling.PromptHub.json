@@ -1,0 +1,70 @@
+{
+    "version": "0.3.2",
+    "description": "一款开源、纯本地 AI Prompt 管理工具，帮助你高效管理、版本控制和复用 Prompt | An open-source, local-first AI prompt management tool that helps you efficiently manage, version-control, and reuse your prompts",
+    "homepage": "https://github.com/legeling/PromptHub",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/legeling/PromptHub/releases/download/v0.3.2/PromptHub-Setup-0.3.2-x64.exe",
+            "hash": "45a33a1d818a3457f06b177f8e06ee3bb9ce55f26c0aed4fd128539d0ad94257"
+        },
+        "arm64": {
+            "url": "https://github.com/legeling/PromptHub/releases/download/v0.3.2/PromptHub-Setup-0.3.2-arm64.exe",
+            "hash": "136c9ff637391e5354b9c4ce996dba4af0c4148ecf894d48035fecc6b126e2e3"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\PromptHub.exe",
+            "PromptHub"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\prompthub\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall PromptHub.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\prompthub-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/legeling/PromptHub/releases/download/v$version/PromptHub-Setup-$version-x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/legeling/PromptHub/releases/download/v$version/PromptHub-Setup-$version-arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
