@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (653)|Tag|Description|
+|App (654)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -312,6 +312,7 @@
 |[Flameshot.Flameshot](https://flameshot.org/ "点击访问仓库或主页")|<a href="./bucket/f/Flameshot/Flameshot.Flameshot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|功能强大且使用简单的屏幕截图软件|
 |[Flow-Launcher.Flow-Launcher](https://www.flowlauncher.com/ "点击访问仓库或主页")|<a href="./bucket/f/Flow-Launcher/Flow-Launcher.Flow-Launcher.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|适用于 Windows 的快速文件搜索和应用程序启动器|
 |[Fly-io.flyctl](https://fly.io/ "点击访问仓库或主页")|<a href="./bucket/f/Fly-io/Fly-io.flyctl.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|为 fly.io 服务提供的命令行工具|
+|[flyhunterl.FlyMD](https://flymd.llingfei.com/ "点击访问仓库或主页")|<a href="./bucket/f/flyhunterl/flyhunterl.FlyMD.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款轻量级、高性能的 Markdown 编辑器和 PDF 阅读器工具。|
 |[flyingpie.windows-terminal-quake](https://github.com/flyingpie/windows-terminal-quake "点击访问仓库或主页")|<a href="./bucket/f/flyingpie/flyingpie.windows-terminal-quake.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|将任何应用程序转变为类似 Quake 风格的可切换应用程序|
 |[Fossil.Fossil](https://www.fossil-scm.org/ "点击访问仓库或主页")|<a href="./bucket/f/Fossil/Fossil.Fossil.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一个简单、高可靠性的分布式版本控制系统|
 |[Foundry376.Mailspring](https://github.com/Foundry376/Mailspring "点击访问仓库或主页")|<a href="./bucket/f/Foundry376/Foundry376.Mailspring.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个漂亮，快速，完全开源的邮件客户端|
