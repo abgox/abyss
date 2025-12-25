@@ -1,0 +1,70 @@
+{
+    "version": "3.0.0-beta.7",
+    "description": "一个简约的音乐播放器 | A simple music player",
+    "homepage": "http://splayer.imsyy.top/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/imsyy/SPlayer/releases/download/v3.0.0-beta.7/SPlayer-3.0.0-beta.7-x64-setup.exe",
+            "hash": "623ff3ee9fa08941d1b8591e9631ce78ade6b76a81a56b1885de00d62ae32d6f"
+        },
+        "arm64": {
+            "url": "https://github.com/imsyy/SPlayer/releases/download/v3.0.0-beta.7/SPlayer-3.0.0-beta.7-arm64-setup.exe",
+            "hash": "640b51f9894d8a4fce5f22703f6ed876b71211b25a5d176361b929db63a285b7"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\SPlayer.exe",
+            "SPlayer"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\SPlayer\"",
+        "A-Install-Exe -Uninstaller 'app\\Uninstall SPlayer.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\splayer-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/imsyy/SPlayer/releases/download/v$version/SPlayer-$version-x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/imsyy/SPlayer/releases/download/v$version/SPlayer-$version-arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
