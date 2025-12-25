@@ -1,0 +1,69 @@
+{
+    "version": "2.4.5",
+    "description": "一个由 Rust 和 Tokio 驱动的简单、安全、去中心化的异地组网方案 | A simple, secure, decentralized virtual private network solution powered by Rust and Tokio",
+    "homepage": "https://easytier.cn/",
+    "license": {
+        "identifier": "LGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/EasyTier/EasyTier/releases/download/v2.4.5/easytier-gui_2.4.5_x64-setup.exe",
+            "hash": "57727f955a01c9d2ac4566b9320cf383a3e446ebc5f882e7995aa5195a4ef1f0"
+        },
+        "arm64": {
+            "url": "https://github.com/EasyTier/EasyTier/releases/download/v2.4.5/easytier-gui_2.4.5_arm64-setup.exe",
+            "hash": "52bdd7b52ba11036636673e28b71e14637fd915b3a4189eea20f81d833ac77bf"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\easytier-gui.exe",
+            "easytier-gui"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:LocalAppData\\com.kkrainbow.easytier\"",
+        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/EasyTier/EasyTier/releases/download/v$version/easytier-gui_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/EasyTier/EasyTier/releases/download/v$version/easytier-gui_$version_arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
