@@ -1,0 +1,73 @@
+{
+    "version": "1.1.3",
+    "description": "一款轻量、可定制的开源桌面硬件监控软件 | A lightweight and customizable desktop hardware monitoring tool",
+    "homepage": "https://github.com/Diorser/LiteMonitor",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Diorser/LiteMonitor/releases/download/v1.1.3/LiteMonitor_v1.1.3-win-x64.zip",
+            "hash": "03b9c3b77b28f18e666947473187936018b45d31d2fbe70f22e35a700fe07e00",
+            "extract_dir": "LiteMonitor_v1.1.3-win-x64"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\LiteMonitor.exe",
+            "LiteMonitor"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\settings.json",
+            "settings.json"
+        ],
+        [
+            "app\\TrafficHistory.json",
+            "TrafficHistory.json"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-File \"$persist_dir\\settings.json\"",
+        "A-New-File \"$persist_dir\\TrafficHistory.json\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Diorser/LiteMonitor/releases/download/v$version/LiteMonitor_v$version-win-x64.zip",
+                "extract_dir": "LiteMonitor_v$version-win-x64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
