@@ -1,0 +1,61 @@
+{
+    "version": "1.9.3",
+    "description": "基于自定义规则的番剧采集 APP | A custom rule based anime collection APP",
+    "homepage": "https://kazumi.app/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Predidit/Kazumi/releases/download/1.9.3/Kazumi_windows_1.9.3.zip",
+            "hash": "dcc97aae31099d984b486cada8a2138e5682d3628d12c34436c0a5fd4ef2579e"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\kazumi.exe",
+            "kazumi"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\com.example\\kazumi\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Predidit/Kazumi/releases/download/$version/Kazumi_windows_$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
