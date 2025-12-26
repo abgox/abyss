@@ -1,0 +1,63 @@
+{
+    "version": "3.2.7",
+    "description": "一款适用于漏洞赏金、渗透测试和红队演练的安全工具。 | A Security Tool for Bug Bounty, Pentest and Red Teaming.",
+    "homepage": "https://github.com/zan8in/afrog",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zan8in/afrog/releases/download/v3.2.7/afrog_3.2.7_windows_amd64.zip",
+            "hash": "72f16b477b355d407cca24cb425dcbe91462c4bcbcaa301345abf30f0a5161a1"
+        },
+        "arm64": {
+            "url": "https://github.com/zan8in/afrog/releases/download/v3.2.7/afrog_3.2.7_windows_arm64.zip",
+            "hash": "d2fdf9188e557d97a07314463db52c5bfceca005092a5e2572841e2b88524c08"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\afrog.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:UserProfile\\.config\\afrog\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zan8in/afrog/releases/download/v$version/afrog_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/zan8in/afrog/releases/download/v$version/afrog_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
