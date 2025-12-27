@@ -1,0 +1,58 @@
+{
+    "version": "2.0.3",
+    "description": "使用 Win + 鼠标组合键，像在 KDE 系统中那样调整和移动 Windows 系统上的窗口 | Resize and move windows like in KDE on Windows with Win+Mouse",
+    "homepage": "https://github.com/alvesvaren/resizer2",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/alvesvaren/resizer2/releases/download/v2.0.3/resizer2-portable.exe#/resizer2.exe",
+            "hash": "42b704edf744c8ab257a0907f1353695af6b9934a9ce6c22931157750dc21383"
+        }
+    },
+    "shortcuts": [
+        [
+            "resizer2.exe",
+            "Resizer 2"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/alvesvaren/resizer2/releases/download/v$version/resizer2-portable.exe#/resizer2.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
