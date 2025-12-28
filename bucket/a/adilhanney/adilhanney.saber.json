@@ -1,0 +1,62 @@
+{
+    "version": "1.29.2",
+    "description": "一款专为手写设计的笔记应用。 | The notes app built for handwriting.",
+    "homepage": "https://saber.adil.hanney.org/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/saber-notes/saber/releases/download/v1.29.2/SaberInstaller_v1.29.2.exe",
+            "hash": "834b93fc3bd5703ef93b82249f8c9514e76e114f5d5e7d9ce26a3add8aa6f5ce"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\saber.exe",
+            "Saber"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\com.adilhanney\\Saber\", \"$env:UserProfile\\Documents\\Saber\"",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/saber-notes/saber/releases/download/v$version/SaberInstaller_v$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
