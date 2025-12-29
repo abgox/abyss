@@ -37,10 +37,11 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\7-Zip\"",
-        "$ProductCode = A-Get-ProductCode '^7-Zip'",
-        "A-Uninstall-Exe $ProductCode"
+        "if ($cmd -eq 'update') {",
+        "  A-Require-Admin",
+        "  return",
+        "}",
+        "A-Uninstall-ExeManually \"$env:ProgramFiles\\7-Zip\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
