@@ -1,0 +1,63 @@
+{
+    "version": "1.0.206",
+    "description": "专为终端打造的 AI 编程助手 | The AI coding agent built for the terminal.",
+    "homepage": "https://opencode.ai/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sst/opencode/releases/download/v1.0.206/opencode-windows-x64.zip",
+            "hash": "9583b0fef54d7f2c79f34b26cff8050aa315ccf26bcbe7834275964ce98169ff"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\opencode.exe",
+    "shortcuts": [
+        [
+            "app\\opencode.exe",
+            "OpenCode"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:UserProfile\\.config\\opencode\", \"$env:UserProfile\\.local\\share\\opencode\", \"$env:UserProfile\\.local\\state\\opencode\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:UserProfile\\.cache\\opencode\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sst/opencode/releases/download/v$version/opencode-windows-x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
