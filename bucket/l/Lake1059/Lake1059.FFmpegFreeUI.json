@@ -1,0 +1,81 @@
+{
+    "version": "3.5",
+    "description": "FFmpegFreeUI (3FUI) - A lightweight professional interactive shell for ffmpeg on Windows | FFmpegFreeUI (3FUI) - ffmpeg 在 Windows 上的轻度专业交互外壳",
+    "homepage": "https://3fui.top/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "suggest": {
+        "ffmpeg": [
+            "ffmpeg",
+            "abyss/Gyan.FFmpeg"
+        ]
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Lake1059/FFmpegFreeUI/releases/download/3.5/FFmpegFreeUI.SelfContained.x64.7z",
+            "hash": "71a57784919ba7b9977f883245a5eba94d6eeaa896cd1330162b43332fd5523d",
+            "extract_dir": "FFmpegFreeUI SelfContained x64"
+        },
+        "arm64": {
+            "url": "https://github.com/Lake1059/FFmpegFreeUI/releases/download/3.5/FFmpegFreeUI.SelfContained.arm64.7z",
+            "hash": "451c86b55c824ba59273cbe66b06ffca13a414d7546d5b91b229a879f59eee9a",
+            "extract_dir": "FFmpegFreeUI SelfContained arm64"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\FFmpegFreeUI.exe",
+            "FFmpegFreeUI"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\Settings.json",
+            "Settings.json"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-File \"$persist_dir\\Settings.json\" -Content '{}'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Lake1059/FFmpegFreeUI/releases/download/$version/FFmpegFreeUI.SelfContained.x64.7z"
+            },
+            "arm64": {
+                "url": "https://github.com/Lake1059/FFmpegFreeUI/releases/download/$version/FFmpegFreeUI.SelfContained.arm64.7z"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
