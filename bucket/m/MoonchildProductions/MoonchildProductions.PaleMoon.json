@@ -1,0 +1,72 @@
+{
+    "version": "33.9.1",
+    "description": "Pale Moon 基于 Firefox 构建，是一款以 Goanna 为引擎、注重效率和自定义功能的网页浏览器。 | Pale Moon is built on Firefox, and is Goanna-based web browser focusing on efficiency and customization.",
+    "homepage": "https://www.palemoon.org/",
+    "license": {
+        "identifier": "MPL-2.0"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Pale Moon",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes-cn": [
+        "安装目录: $env:ProgramFiles\\Pale Moon",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://rm-eu.palemoon.org/release/palemoon-33.9.1.win64.installer.exe",
+            "hash": "ddb26b85f604052fc267a4891b888d21926b32e3873243b1162c56afee71936f"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\Moonchild Productions\\Pale Moon\"",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Pale Moon\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:ProgramFiles\\Pale Moon\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\Moonchild Productions\\Pale Moon\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'MoonchildProductions.PaleMoon' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
