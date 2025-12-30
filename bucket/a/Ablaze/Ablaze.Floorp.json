@@ -1,0 +1,67 @@
+{
+    "version": "12.9.2",
+    "description": "Floorp 基于 Firefox 构建，是一款具备卓越隐私保护功能和高度灵活性的新型浏览器。 | Floorp is built on Firefox, and is a new browser with excellent privacy & flexibility.",
+    "homepage": "https://floorp.app/",
+    "license": {
+        "identifier": "MPL-2.0"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Ablaze Floorp",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes-cn": [
+        "安装目录: $env:ProgramFiles\\Ablaze Floorp",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Floorp-Projects/Floorp/releases/download/v12.9.2/floorp-windows-x86_64.installer.exe",
+            "hash": "9a52f86bbeb50b9cd576a7c2878a7c9bb6e24d3ee8978290279c91f9b0f26879"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\Floorp\"",
+        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Ablaze Floorp\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process \"$env:ProgramFiles\\Ablaze Floorp\"",
+        "A-Remove-Link",
+        "A-Uninstall-Exe",
+        "A-Remove-TempData \"$env:LocalAppData\\Floorp\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Floorp-Projects/Floorp/releases/download/v$version/floorp-windows-x86_64.installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
