@@ -23,11 +23,11 @@
         "MUSICFOX_ROOT": "$persist_dir\\AppData\\Roaming\\go-musicfox"
     },
     "bin": "app\\musicfox.exe",
-    "persist": "AppData\\Roaming\\go-musicfox",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\go-musicfox\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -38,7 +38,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

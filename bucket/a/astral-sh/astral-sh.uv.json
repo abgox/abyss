@@ -26,16 +26,12 @@
         "app\\uvx.exe",
         "app\\uvw.exe"
     ],
-    "persist": [
-        "AppData\\Roaming\\uv\\python",
-        "AppData\\Roaming\\uv\\tools",
-        "AppData\\Local\\uv\\cache"
-    ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-Add-Path \"$env:UserProfile\\.local\\bin\""
+        "A-Add-Path \"$env:UserProfile\\.local\\bin\"",
+        "A-New-LinkDirectory \"$env:AppData\\uv\", \"$env:LocalAppData\\uv\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -46,6 +42,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
+        "A-Remove-Link",
         "A-Stop-Process"
     ],
     "post_uninstall": [

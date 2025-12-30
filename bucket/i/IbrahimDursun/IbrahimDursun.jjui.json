@@ -21,11 +21,11 @@
         "JJUI_CONFIG_DIR": "$persist_dir\\AppData\\Roaming\\jjui"
     },
     "bin": "app\\jjui.exe",
-    "persist": "AppData\\Roaming\\jjui",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\jjui\"",
         "Get-ChildItem -Path $dir -Filter 'jjui*.exe' -Recurse | Select-Object -First 1 | Rename-Item -NewName 'jjui.exe'"
     ],
     "post_install": [
@@ -37,7 +37,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

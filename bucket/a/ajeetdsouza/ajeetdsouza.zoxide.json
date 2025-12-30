@@ -21,11 +21,11 @@
         "_ZO_DATA_DIR": "$persist_dir\\AppData\\Local\\zoxide"
     },
     "bin": "app\\zoxide.exe",
-    "persist": "AppData\\Local\\zoxide",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:LocalAppData\\zoxide\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,6 +36,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Uninstall",
+        "A-Remove-Link",
         "A-Stop-Process"
     ],
     "post_uninstall": [
