@@ -1,0 +1,64 @@
+{
+    "version": "1.28.0",
+    "description": "一个 Git 钩子管理器和项目代码检查工具。 | A git hook manager and project linting tool.",
+    "homepage": "https://hk.jdx.dev/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jdx/hk/releases/download/v1.28.0/hk-x86_64-pc-windows-msvc.zip",
+            "hash": "7c5c719e847637ff2477aa89b95c2c94db192894453aacc659d15056c351a3e2"
+        },
+        "arm64": {
+            "url": "https://github.com/jdx/hk/releases/download/v1.28.0/hk-aarch64-pc-windows-msvc.zip",
+            "hash": "c9c56f38ea51d02710b548eb8966034b4a985bb38df14a56d08e6e1b62f27172"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\hk.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-File \"$persist_dir\\.hkrc.pkl\" -Content ''",
+        "A-New-LinkFile \"$env:UserProfile\\.hkrc.pkl\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jdx/hk/releases/download/v$version/hk-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/jdx/hk/releases/download/v$version/hk-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
