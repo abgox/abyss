@@ -1,0 +1,66 @@
+{
+    "version": "2025.12.13",
+    "description": "多语言工具版本管理器、环境变量管理器和任务运行器 | Polyglot tool version manager, env vars manager and task runner",
+    "homepage": "https://mise.jdx.dev/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jdx/mise/releases/download/v2025.12.13/mise-v2025.12.13-windows-x64.zip",
+            "hash": "fab035370c08f0cdb74e045733373a675c1247dd2bf0bb0f8e739c31b7290932"
+        },
+        "arm64": {
+            "url": "https://github.com/jdx/mise/releases/download/v2025.12.13/mise-v2025.12.13-windows-arm64.zip",
+            "hash": "2c86922fbcc25e130b09b01db3c7e910b930340ede0c2d9f884ef0723e7c055a"
+        }
+    },
+    "extract_dir": "mise",
+    "extract_to": "app",
+    "bin": "app\\bin\\mise.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Add-Path \"$env:LocalAppData\\mise\\shims\"",
+        "A-New-LinkDirectory \"$env:UserProfile\\.config\\mise\", \"$env:LocalAppData\\mise\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:UserProfile\\.local\\state\\mise\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jdx/mise/releases/download/v$version/mise-v$version-windows-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/jdx/mise/releases/download/v$version/mise-v$version-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
