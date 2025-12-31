@@ -108,12 +108,24 @@
                     "markdownDescription": "- GNU Affero General Public License v3.0 only\n- https://spdx.org/licenses/AGPL-3.0-only.html"
                 },
                 {
+                    "const": "AGPL-3.0-or-later",
+                    "markdownDescription": "- GNU Affero General Public License v3.0 or later\n- https://spdx.org/licenses/AGPL-3.0-or-later.html"
+                },
+                {
                     "const": "LGPL-2.1-only",
                     "markdownDescription": "- GNU Library General Public License v2.1 only\n- https://spdx.org/licenses/LGPL-2.1-only.html"
                 },
                 {
+                    "const": "LGPL-2.1-or-later",
+                    "markdownDescription": "- GNU Library General Public License v2.1 or later\n- https://spdx.org/licenses/LGPL-2.1-or-later.html"
+                },
+                {
                     "const": "LGPL-3.0-only",
                     "markdownDescription": "- GNU Lesser General Public License v3.0 only\n- https://spdx.org/licenses/LGPL-3.0-only.html"
+                },
+                {
+                    "const": "LGPL-3.0-or-later",
+                    "markdownDescription": "- GNU Lesser General Public License v3.0 or later\n- https://spdx.org/licenses/LGPL-3.0-or-later.html"
                 },
                 {
                     "const": "MPL-2.0",
@@ -1864,7 +1876,7 @@
                                         "errorMessage": "Please modify the English description"
                                     },
                                     {
-                                        "pattern": "(?<![\\s\\|])\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                                        "pattern": "^([^\\|]*[\\u4e00-\\u9fa5][^\\|]*)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
                                         "errorMessage": "It does not conform to the specified format: Chinese description | English description\nNote: There should be only one space on each side of the | symbol"
                                     },
                                     {
@@ -2058,19 +2070,37 @@
                                                 },
                                                 {
                                                     "type": "array",
-                                                    "items": {
-                                                        "allOf": [
-                                                            {
-                                                                "$ref": "#/definitions/str"
-                                                            },
-                                                            {
-                                                                "not": {
-                                                                    "pattern": "\\$.+"
+                                                    "items": [
+                                                        {
+                                                            "allOf": [
+                                                                {
+                                                                    "$ref": "#/definitions/str"
                                                                 },
-                                                                "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
-                                                            }
-                                                        ]
-                                                    }
+                                                                {
+                                                                    "not": {
+                                                                        "pattern": "\\$.+"
+                                                                    },
+                                                                    "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "allOf": [
+                                                                {
+                                                                    "$ref": "#/definitions/str"
+                                                                },
+                                                                {
+                                                                    "not": {
+                                                                        "pattern": "\\$.+"
+                                                                    },
+                                                                    "errorMessage": "It cannot contain variables."
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "$ref": "#/definitions/str"
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -2093,7 +2123,7 @@
                             "pre_install": {
                                 "items": {
                                     "not": {
-                                        "pattern": "[（）‘’“”，：？！—]+"
+                                        "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                     },
                                     "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
                                 }
@@ -2105,7 +2135,7 @@
                             "post_install": {
                                 "items": {
                                     "not": {
-                                        "pattern": "[（）‘’“”，：？！—]+"
+                                        "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                     },
                                     "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
                                 }
@@ -2113,7 +2143,7 @@
                             "pre_uninstall": {
                                 "items": {
                                     "not": {
-                                        "pattern": "[（）‘’“”，：？！—]+"
+                                        "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                     },
                                     "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
                                 }
@@ -2125,7 +2155,7 @@
                             "post_uninstall": {
                                 "items": {
                                     "not": {
-                                        "pattern": "[（）‘’“”，：？！—]+"
+                                        "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                     },
                                     "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
                                 }
@@ -2151,7 +2181,7 @@
                                         "minItems": 1,
                                         "items": {
                                             "not": {
-                                                "pattern": "[（）‘’“”，：？！—]+"
+                                                "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                             },
                                             "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
                                         },
