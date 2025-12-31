@@ -1,0 +1,62 @@
+{
+    "version": "18.0.1",
+    "description": "用于 Qt 框架开发的集成开发环境 (IDE) | IDE for development with the Qt framework",
+    "homepage": "https://doc.qt.io/qtcreator/index.html",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/qt-creator/qt-creator/releases/download/v18.0.1/qtcreator-windows-x64-msvc-18.0.1.7z",
+            "hash": "6737208440dab7b620a7d66ef38c217a3672dad48b32101a95d81c5f858d6af5"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\bin\\qtcreator.exe",
+    "shortcuts": [
+        [
+            "app\\bin\\qtcreator.exe",
+            "Qt Creator"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\QtProject\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/qt-creator/qt-creator/releases/download/v$version/qtcreator-windows-x64-msvc-$version.7z"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
