@@ -1,0 +1,56 @@
+{
+    "version": "0.1.1",
+    "description": "一个适用于 PSReadLine 预测性智能感知功能的 PowerShell 命令行自动补全插件 | A PowerShell command line auto-completion plugin for the PSReadLine Predictive Intellisense feature",
+    "homepage": "https://github.com/PowerShell/CompletionPredictor",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/completionpredictor.0.1.1.nupkg",
+            "hash": "51dc843aead6b2d7af9622a42507f6634c81fdd1f51d36bc74519720400f40e0"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/completionpredictor.0.1.1.nupkg",
+            "hash": "51dc843aead6b2d7af9622a42507f6634c81fdd1f51d36bc74519720400f40e0"
+        }
+    },
+    "psmodule": {
+        "name": "CompletionPredictor"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/completionpredictor",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/completionpredictor.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/completionpredictor.$version.nupkg"
+            }
+        }
+    }
+}
