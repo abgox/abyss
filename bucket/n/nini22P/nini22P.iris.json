@@ -1,0 +1,64 @@
+{
+    "version": "1.5.2",
+    "description": "轻量级视频播放器 | A lightweight video player",
+    "homepage": "https://github.com/nini22P/iris",
+    "license": {
+        "identifier": "MPL-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nini22P/iris/releases/download/v1.5.2/IRIS-windows-installer.exe",
+            "hash": "e1b2e1b5dcfdfe09a5f6cdc8ea962079eedf64456a5864e0790bc018b6c98df6"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\iris.exe",
+            "IRIS"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\nini22P\\iris\"",
+        "A-Install-Exe inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Exe"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nini22P/iris/releases/download/v$version/IRIS-windows-installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
