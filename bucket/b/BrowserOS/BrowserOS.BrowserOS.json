@@ -1,0 +1,66 @@
+{
+    "version": "0.35.0",
+    "description": "一个原生运行人工智能代理的开源 Chromium 浏览器分支 | An open-source chromium browser fork that runs AI agents natively.",
+    "homepage": "https://browseros.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\BrowserOS\\BrowserOS",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes-cn": [
+        "安装目录: $env:ProgramFiles\\BrowserOS\\BrowserOS",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/browseros-ai/BrowserOS/releases/download/v0.35.0/BrowserOS_v0.35.0_x64_installer.exe",
+            "hash": "b383f32ae715d78b71609cd455c62bf214a4a419af65c01c8800e9d87b29d7dd"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:LocalAppData\\BrowserOS\\BrowserOS\\User Data\"",
+        "A-Install-Exe -ArgumentList '--do-not-launch-chrome','--system-level'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\BrowserOS\\BrowserOS\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
+        "A-Uninstall-Exe -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall','--system-level','--multi-install','--force-uninstall'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/browseros-ai/BrowserOS/releases/download/v$version/BrowserOS_v$version_x64_installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
