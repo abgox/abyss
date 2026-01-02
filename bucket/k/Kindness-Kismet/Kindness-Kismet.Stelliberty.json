@@ -1,0 +1,69 @@
+{
+    "version": "1.1.170",
+    "description": "基于 Flutter 和 Rust 构建的现代跨平台 Clash 客户端 | A modern cross-platform Clash client built with Flutter and Rust",
+    "homepage": "https://github.com/Kindness-Kismet/Stelliberty",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.170/Stelliberty-v1.1.170-windows-x64-setup.exe",
+            "hash": "8e46186a55597fb81c91f6ed00e0d6e9b8075cc1e1395637e2754f2d5ead9ed5"
+        },
+        "arm64": {
+            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.170/Stelliberty-v1.1.170-windows-arm64-setup.exe",
+            "hash": "0d70c4ce3b9a79853ad4d673d9bbc827f400319391d07d76a0cb11e5b698377a"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\stelliberty.exe",
+            "Stelliberty"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\stelliberty\"",
+        "A-Install-Exe inno -Uninstaller 'app\\uninstall\\unins000.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Uninstall-ExeManually 'app'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v$version/Stelliberty-v$version-windows-x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v$version/Stelliberty-v$version-windows-arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
