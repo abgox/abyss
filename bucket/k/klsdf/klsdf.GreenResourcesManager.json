@@ -1,0 +1,68 @@
+{
+    "version": "0.6.0",
+    "description": "一个管理电脑内资源，并提供游戏化的综合管理器 | A comprehensive, free local multimedia resource manager.",
+    "homepage": "https://github.com/klsdf/GreenResourcesManager",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/klsdf/GreenResourcesManager/releases/download/v0.6.0/GreenResourcesManager_0.6.0.zip",
+            "hash": "813afcae3c42803d997f4b634f3ece36f7ed4009c59893451855e0c8a4d87f66"
+        }
+    },
+    "extract_dir": "GreenResourcesManager_0.6.0",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\GreenResourcesManager.exe",
+            "GreenResourcesManager"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\SaveData",
+            "SaveData"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-TempData \"$env:AppData\\green-resources-manager\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". \"$pwd\\bin\\utils.ps1\"",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/klsdf/GreenResourcesManager/releases/download/v$version/GreenResourcesManager_$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "extract_dir": "GreenResourcesManager_$version"
+    }
+}
