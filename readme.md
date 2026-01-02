@@ -36,9 +36,9 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) is a very special Scoop bucket, aiming to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
+> - [abyss](https://abyss.abgox.com) is a special Scoop bucket, aiming to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
 > - Unlike the standard Scoop bucket, it also includes some extra [features](#features).
-> - Its manifests based on [utils.ps1](./bin/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
+> - Its manifests are based on [utils.ps1](./bin/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
 
 ## Features
 
@@ -47,7 +47,9 @@
 - [Flexible App Installation Solution](https://abyss.abgox.com/features/install-solution)
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/features/extra-features)
 - Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
-- The naming format like [winget-pkgs](https://github.com/microsoft/winget-pkgs): `Publisher.PackageIdentifier`
+- Standardized directory structure and manifest naming.
+  - Refer to: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
+  - Format: **Publisher.PackageIdentifier**
 
 ## Demo
 
@@ -77,7 +79,7 @@
     scoop bucket add abyss https://gitee.com/abgox/abyss
     ```
 
-2.  Use [PSCompletions](https://github.com/abgox/PSCompletions) to add `scoop` completion.
+2.  Add `scoop` completion via [PSCompletions](https://github.com/abgox/PSCompletions).
 
     ```shell
     scoop install abyss/abgox.PSCompletions

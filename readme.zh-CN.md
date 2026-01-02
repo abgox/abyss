@@ -36,18 +36,20 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个非常特殊的 Scoop bucket，它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
+> - [abyss](https://abyss.abgox.com) 是一个特殊的 Scoop bucket，它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
 > - 区别于标准的 Scoop bucket，它还包含了一些额外的 [特性](#特性)
-> - 它的清单基于 [utils.ps1](./bin/utils.ps1) 编写，其他 bucket 不应该合并它们，以避免冲突和错误
+> - 它的清单是基于 [utils.ps1](./bin/utils.ps1) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ## 特性
 
 - [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)
 - [完善的数据持久化](https://abyss.abgox.com/features/data-persistence)
 - [灵活的应用安装方案](https://abyss.abgox.com/features/install-solution)
-- [由 Scoop 配置控制的其他功能](https://abyss.abgox.com/features/extra-features)
-- 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供的多语言支持
-- 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 的命名格式: `Publisher.PackageIdentifier`
+- [Scoop 配置控制的其他功能](https://abyss.abgox.com/features/extra-features)
+- 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供多语言支持
+- 标准化的目录结构和应用清单命名
+  - 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
+  - 格式: **Publisher.PackageIdentifier**
 
 ## 演示
 
