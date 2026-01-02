@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (680)|Tag|Description|
+|App (681)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -431,6 +431,7 @@
 |[kelleyma49.PSFzf](https://github.com/kelleyma49/PSFzf "点击访问仓库或主页")|<a href="./bucket/k/kelleyma49/kelleyma49.PSFzf.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个围绕模糊查找工具 fzf 的 PowerShell 包装器|
 |[kingToolbox.WindTerm](https://github.com/kingToolbox/WindTerm "点击访问仓库或主页")|<a href="./bucket/k/kingToolbox/kingToolbox.WindTerm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|专业的跨平台 SSH/Sftp/Shell/Telnet/Tmux/Serial 终端|
 |[KitLib.Kite](https://kite.kitlib.cn/ "点击访问仓库或主页")|<a href="./bucket/k/KitLib/KitLib.Kite.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Kite 待办是一款按天规划的待办应用。轻量精简，无广告，注重隐私，数据离线存储在本地。|
+|[klsdf.GreenResourcesManager](https://github.com/klsdf/GreenResourcesManager "点击访问仓库或主页")|<a href="./bucket/k/klsdf/klsdf.GreenResourcesManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个管理电脑内资源，并提供游戏化的综合管理器|
 |[KuaiFan.DooTask](https://www.dootask.com/ "点击访问仓库或主页")|<a href="./bucket/k/KuaiFan/KuaiFan.DooTask.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|轻量级的开源项目管理工具|
 |[Kuingsmile.PicList](https://piclist.cn/ "点击访问仓库或主页")|<a href="./bucket/k/Kuingsmile/Kuingsmile.PicList.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于 PicGo 的图片上传与管理工具|
 |[kweatherman.Folcolor](https://github.com/kweatherman/Folcolor "点击访问仓库或主页")|<a href="./bucket/k/kweatherman/kweatherman.Folcolor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Windows 文件夹颜色工具|
