@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (684)|Tag|Description|
+|App (686)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -536,6 +536,8 @@
 |[Oracle.SQLDeveloper](https://www.oracle.com/database/sqldeveloper "点击访问仓库或主页")|<a href="./bucket/o/Oracle/Oracle.SQLDeveloper.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费的集成开发环境，它简化了在传统部署和云部署中对 Oracle 数据库的开发与管理|
 |[orf.gping](https://github.com/orf/gping "点击访问仓库或主页")|<a href="./bucket/o/orf/orf.gping.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|带有图表 的 Ping|
 |[Oven-sh.Bun](https://bun.sh/ "点击访问仓库或主页")|<a href="./bucket/o/Oven-sh/Oven-sh.Bun.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|速度极快的 JavaScript 运行时、打包工具、测试运行器和包管理器|
+|[oxc-project.oxfmt](https://oxc.rs/docs/guide/usage/formatter.html "点击访问仓库或主页")|<a href="./bucket/o/oxc-project/oxc-project.oxfmt.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个与 Prettier 兼容的代码格式化工具。|
+|[oxc-project.oxlint](https://oxc.rs/docs/guide/usage/linter.html "点击访问仓库或主页")|<a href="./bucket/o/oxc-project/oxc-project.oxlint.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款高性能 JavaScript 和 TypeScript 代码检查工具。|
 |[PasteBar.PasteBar](https://www.pastebar.app/ "点击访问仓库或主页")|<a href="./bucket/p/PasteBar/PasteBar.PasteBar.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|无限制的、免费的剪贴板管理器|
 |[patricktcoakley.fgvm](https://fgvm.dev/ "点击访问仓库或主页")|<a href="./bucket/p/patricktcoakley/patricktcoakley.fgvm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个友好的 Godot 版本管理器。|
 |[pavlobu.deskreen](https://deskreen.com/ "点击访问仓库或主页")|<a href="./bucket/p/pavlobu/pavlobu.deskreen.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|屏幕共享和屏幕演示：将任何设备转换为计算机的辅助屏幕|
