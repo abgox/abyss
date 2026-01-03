@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (683)|Tag|Description|
+|App (684)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -460,6 +460,7 @@
 |[Maicongs.SQLynx](https://www.maicongs.com/product/ "点击访问仓库或主页")|<a href="./bucket/m/Maicongs/Maicongs.SQLynx.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|本地基于 Web 的 SQL IDE，支持企业桌面和网络管理，它是一款跨平台数据库工具，适用于所有数据处理人员|
 |[manuelernestog.WeekToDo](https://weektodo.me/ "点击访问仓库或主页")|<a href="./bucket/m/manuelernestog/manuelernestog.WeekToDo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费和开源的极简每周计划和待办事项应用程序，专注于隐私|
 |[MarkText.MarkText](https://www.marktext.cc/ "点击访问仓库或主页")|<a href="./bucket/m/MarkText/MarkText.MarkText.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简单优雅的 MarkDown 编辑器|
+|[mdgrs-mei.WinUIShell](https://github.com/mdgrs-mei/WinUIShell "点击访问仓库或主页")|<a href="./bucket/m/mdgrs-mei/mdgrs-mei.WinUIShell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|使用 PowerShell 编写 WinUI 3 脚本。|
 |[Meta.Sapling](https://sapling-scm.com/ "点击访问仓库或主页")|<a href="./bucket/m/Meta/Meta.Sapling.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可扩展、用户友好的版本控制系统，兼容 Git|
 |[mg-chao.snow-shot](https://snowshot.top/ "点击访问仓库或主页")|<a href="./bucket/m/mg-chao/mg-chao.snow-shot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|功能强大的截图工具|
 |[Microsoft.CascadiaCode](https://github.com/microsoft/cascadia-code "点击访问仓库或主页")|<a href="./bucket/m/Microsoft/Microsoft.CascadiaCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Font](https://abyss.abgox.com/faq/font)|一种有趣的新编码字体，它与 Windows Terminal 捆绑在一起，现在也是 Visual Studio 中的默认字体|
