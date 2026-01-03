@@ -1,0 +1,56 @@
+{
+    "version": "0.9.0",
+    "description": "使用 PowerShell 编写 WinUI 3 脚本。 | Scripting WinUI 3 with PowerShell.",
+    "homepage": "https://github.com/mdgrs-mei/WinUIShell",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/winuishell.0.9.0.nupkg",
+            "hash": "83d54fa11ac2ded608769c0e719c1028f5c3aa6e8eef2a57dfd3913fa3f1de1b"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/winuishell.0.9.0.nupkg",
+            "hash": "83d54fa11ac2ded608769c0e719c1028f5c3aa6e8eef2a57dfd3913fa3f1de1b"
+        }
+    },
+    "psmodule": {
+        "name": "WinUIShell"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/winuishell",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/winuishell.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/winuishell.$version.nupkg"
+            }
+        }
+    }
+}
