@@ -1,0 +1,56 @@
+{
+    "version": "1.40.0",
+    "description": "一个 PowerShell 模块，无需任何 HTML、CSS 或 JavaScript 知识，就能生成精美的 HTML 报告、页面和电子邮件。 | A PowerShell Module to generate beautiful HTML reports, pages, emails without any knowledge of HTML, CSS or JavaScript.",
+    "homepage": "https://github.com/EvotecIT/PSWriteHTML",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/pswritehtml.1.40.0.nupkg",
+            "hash": "c768a8be5f3a1a8579b221d5837de535c4ae3cb64f9432c2658b6f9ca90c6245"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/pswritehtml.1.40.0.nupkg",
+            "hash": "c768a8be5f3a1a8579b221d5837de535c4ae3cb64f9432c2658b6f9ca90c6245"
+        }
+    },
+    "psmodule": {
+        "name": "PSWriteHTML"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/pswritehtml",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/pswritehtml.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/pswritehtml.$version.nupkg"
+            }
+        }
+    }
+}
