@@ -44,7 +44,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Code\",\"$env:UserProfile\\.vscode\"",
+        "A-New-LinkDirectory \"$env:AppData\\Code\", \"$env:UserProfile\\.vscode\"",
         " ",
         "$dirpath = \"$dir\\app\".Replace('\\', '\\\\')",
         "$exepath = \"$dir\\app\\Code.exe\".Replace('\\', '\\\\')",
@@ -81,21 +81,21 @@
     ],
     "checkver": {
         "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
-        "jsonpath": "$.name"
+        "jsonpath": "$.productVersion"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://update.code.visualstudio.com/$version/win32-x64-archive/stable#/dl.7z",
                 "hash": {
-                    "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
+                    "url": "https://update.code.visualstudio.com/api/versions/$version/win32-x64-archive/stable",
                     "jsonpath": "$.sha256hash"
                 }
             },
             "arm64": {
                 "url": "https://update.code.visualstudio.com/$version/win32-arm64-archive/stable#/dl.7z",
                 "hash": {
-                    "url": "https://update.code.visualstudio.com/api/update/win32-arm64-archive/stable/latest",
+                    "url": "https://update.code.visualstudio.com/api/versions/$version/win32-arm64-archive/stable",
                     "jsonpath": "$.sha256hash"
                 }
             }
