@@ -1,0 +1,56 @@
+{
+    "version": "4.9.1",
+    "description": "一个用 PowerShell 编写的构建自动化工具 | A build automation tool written in PowerShell",
+    "homepage": "https://psake.dev/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/psake.4.9.1.nupkg",
+            "hash": "0251d30c2daa7b60576d9b65349fe841946a46823d142b27a9c9c54919c3935d"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/psake.4.9.1.nupkg",
+            "hash": "0251d30c2daa7b60576d9b65349fe841946a46823d142b27a9c9c54919c3935d"
+        }
+    },
+    "psmodule": {
+        "name": "psake"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/psake",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/psake.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/psake.$version.nupkg"
+            }
+        }
+    }
+}
