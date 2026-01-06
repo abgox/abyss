@@ -1144,7 +1144,8 @@ function A-Get-VersionFromGithubAPI {
     }
 
     $headers = @{
-        'User-Agent' = A-Get-UserAgent
+        'User-Agent'           = A-Get-UserAgent
+        "X-GitHub-Api-Version" = "2022-11-28"
     }
 
     if ($env:GITHUB_ACTIONS) {
@@ -1152,7 +1153,7 @@ function A-Get-VersionFromGithubAPI {
         if (-not $token) {
             return
         }
-        $headers['Authorization'] = "token $token"
+        $headers['Authorization'] = "Bearer $token"
     }
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
@@ -1174,7 +1175,7 @@ function A-Get-VersionFromGithubAPI {
             if (-not $token) {
                 return
             }
-            $headers['Authorization'] = "token $token"
+            $headers['Authorization'] = "Bearer $token"
 
             Start-Sleep -Seconds 10
 
@@ -1269,7 +1270,8 @@ function A-Get-InstallerInfoFromWinget {
     )
 
     $headers = @{
-        'User-Agent' = A-Get-UserAgent
+        'User-Agent'           = A-Get-UserAgent
+        "X-GitHub-Api-Version" = "2022-11-28"
     }
 
     if ($env:GITHUB_ACTIONS) {
@@ -1277,7 +1279,7 @@ function A-Get-InstallerInfoFromWinget {
         if (-not $token) {
             return
         }
-        $headers['Authorization'] = "token $token"
+        $headers['Authorization'] = "Bearer $token"
     }
 
     $rootDir = $Package.ToLower()[0]
@@ -1302,7 +1304,7 @@ function A-Get-InstallerInfoFromWinget {
             if (-not $token) {
                 return
             }
-            $headers['Authorization'] = "token $token"
+            $headers['Authorization'] = "Bearer $token"
 
             Start-Sleep -Seconds 10
 
@@ -1349,7 +1351,7 @@ function A-Get-InstallerInfoFromWinget {
             if (-not $token) {
                 return
             }
-            $headers['Authorization'] = "token $token"
+            $headers['Authorization'] = "Bearer $token"
 
             Start-Sleep -Seconds 10
 
