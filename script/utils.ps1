@@ -2,7 +2,7 @@
 
 Set-StrictMode -Off
 
-# 存储 abyss 相关的变量，避免污染作用域
+# 存储 abyss 相关的变量
 $abgox_abyss = @{}
 
 if ($env:GITHUB_ACTIONS) {
@@ -62,23 +62,6 @@ function A-Test-DeveloperMode {
 $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
-<#
-应用的安装/卸载步骤 (xxx 表示其他自定义逻辑)
-
-pre_install
-   A-Start-Install
-   xxx
-post_install
-   xxx
-   A-Complete-Install
-pre_uninstall
-   A-Start-Uninstall
-   xxx
-post_uninstall
-   xxx
-   A-Complete-Uninstall
-
-#>
 function A-Start-Install {
 
 }
@@ -1497,134 +1480,6 @@ function A-Test-SymbolicLink {
         return $false
     }
 }
-
-#region 处理一些兼容性变更
-
-if ($cmd) {
-    switch ($app) {
-        # 从 2025-10 开始，在未来合适的时机移除 astral-sh.uv，Yarn.Yarn，JohannesMillan.superProductivity
-        'astral-sh.uv' {
-            if (Test-Path -LiteralPath $persist_dir) {
-                @(
-                    @{
-                        old = "data\python"
-                        new = "AppData\Roaming\uv\python"
-                    },
-                    @{
-                        old = "data\tools"
-                        new = "AppData\Roaming\uv\tools"
-                    },
-                    @{
-                        old = "data\cache"
-                        new = "AppData\Local\uv\cache"
-                    }
-                ) | ForEach-Object {
-                    $old_dir = Join-Path $persist_dir $_.old
-                    $new_dir = Join-Path $persist_dir $_.new
-
-                    if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
-                        A-Ensure-Directory (Split-Path $new_dir -Parent)
-                        Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
-                    }
-                }
-                if ((Get-ChildItem "$persist_dir\data" -ErrorAction SilentlyContinue).Count -eq 0) {
-                    Remove-Item "$persist_dir\data" -Force -Recurse -ErrorAction SilentlyContinue
-                }
-            }
-        }
-        'Yarn.Yarn' {
-            if (Test-Path -LiteralPath $persist_dir) {
-                @(
-                    @{
-                        old = "global"
-                        new = "AppData\Local\Yarn\Data\global"
-                    },
-                    @{
-                        old = "AppData\Local\Yarn\Data\global\bin"
-                        new = "AppData\Local\Yarn\bin"
-                    },
-                    @{
-                        old = "cache"
-                        new = "AppData\Local\Yarn\cache"
-                    },
-                    @{
-                        old = "mirror"
-                        new = "AppData\Local\Yarn\mirror"
-                    }
-                ) | ForEach-Object {
-                    $old_dir = Join-Path $persist_dir $_.old
-                    $new_dir = Join-Path $persist_dir $_.new
-
-                    if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
-                        A-Ensure-Directory (Split-Path $new_dir -Parent)
-                        Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
-                    }
-                }
-            }
-        }
-        'JohannesMillan.superProductivity' {
-            $old_dir = Join-Path $persist_dir 'SuperProductivity'
-            $new_dir = Join-Path $persist_dir 'AppData\Roaming\SuperProductivity'
-            if ((Test-Path -LiteralPath $old_dir) -and -not (Test-Path -LiteralPath $new_dir)) {
-                A-Ensure-Directory (Split-Path $new_dir -Parent)
-                Move-Item -Path $old_dir -Destination $new_dir -Force -ErrorAction SilentlyContinue
-            }
-        }
-    }
-
-    # 现在由 A-Add-Path 添加带有变量的环境变量，已避免此问题
-    # 移除 reset 命令生成的错误的环境变量
-    # https://abyss.abgox.com/faq/error-path-in-env
-    if ($global) {
-        $abgox_abyss.dir = $globaldir
-        $abgox_abyss.level = [System.EnvironmentVariableTarget]::Machine
-    }
-    else {
-        $abgox_abyss.dir = $scoopdir
-        $abgox_abyss.level = [System.EnvironmentVariableTarget]::User
-    }
-    $abgox_abyss.allEnvVars = [System.Environment]::GetEnvironmentVariables($abgox_abyss.level)
-    $abgox_abyss.key = if ($abgox_abyss.allEnvVars.Contains('SCOOP_PATH')) { 'SCOOP_PATH' }else { 'PATH' }
-    $abgox_abyss.Path = $abgox_abyss.allEnvVars[$abgox_abyss.key]
-    $abgox_abyss.PathList = $abgox_abyss.Path -split ';'
-
-    $abgox_abyss.errorPath = $abgox_abyss.PathList | Where-Object { $_ -like "$($abgox_abyss.dir)\apps\*\current\`$env:*" }
-    $abgox_abyss.newPath = ($abgox_abyss.PathList | Where-Object { $_ -notin $abgox_abyss.errorPath }) -join ';'
-    if ($abgox_abyss.newPath -and $abgox_abyss.newPath -ne $abgox_abyss.Path) {
-        [System.Environment]::SetEnvironmentVariable($abgox_abyss.key, $abgox_abyss.newPath, $abgox_abyss.level)
-        warn "Refer to: https://abyss.abgox.com/faq/error-path-in-env"
-        foreach ($_ in $abgox_abyss.errorPath) {
-            warn "Removing $_ ($($abgox_abyss.key))"
-        }
-    }
-}
-
-#endregion
-
-#region 废弃
-
-function A-Start-PreUninstall {
-    <#
-    .SYNOPSIS
-        由于 abyss 中的应用会在此函数运行后执行自定义卸载脚本，所以此函数可以当做安装阶段的开始
-    #>
-}
-
-function A-Start-PostUninstall {
-    <#
-    .SYNOPSIS
-        由于 abyss 中的应用会在 pre_uninstall 阶段完成自定义卸载脚本，所以此函数可以当做卸载阶段的结束
-    #>
-}
-
-function A-Uninstall-ExeByHand {
-    param(
-        [array]$Path
-    )
-    A-Uninstall-ExeManually $Path
-}
-
-#endregion
 
 #region 以下的函数不应该在外部调用
 
