@@ -20,7 +20,7 @@
     "extract_to": "app",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Ensure-Directory \"$dir\\app\\original\"",
         "A-Ensure-Directory \"$dir\\app\\shims\"",
@@ -37,13 +37,13 @@
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "@{ configFile = $configFile } | ConvertTo-Json -Depth 100 | Out-File \"$dir\\app\\data.json\" -Encoding utf8 -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "Get-ChildItem \"$dir\\app\\original\" | ForEach-Object {",
         "    Move-Item $_.FullName \"$scoopdir\\shims\" -Force",
@@ -51,7 +51,7 @@
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {

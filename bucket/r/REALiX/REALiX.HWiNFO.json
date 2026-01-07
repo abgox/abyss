@@ -46,7 +46,7 @@
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "foreach ($arch in '64','32','_ARM64') {",
         "    A-New-File \"$persist_dir\\HWiNFO$arch.INI\" -Content '[Settings]', 'AutoUpdate=0' -Encoding ascii",
@@ -57,12 +57,12 @@
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "foreach ($arch in '64','32','_ARM64') {",
@@ -76,12 +76,12 @@
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". \"$pwd\\bin\\utils.ps1\"",
+            ". $pwd\\script\\utils.ps1",
             "$InstallerInfo = A-Get-InstallerInfoFromWinget 'REALiX.HWiNFO' ''",
             "\"ver:$($InstallerInfo.PackageVersion);\"",
             "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",

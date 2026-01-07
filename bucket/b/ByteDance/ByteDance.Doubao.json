@@ -19,7 +19,7 @@
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:LocalAppData\\Doubao\"",
         "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
@@ -29,24 +29,24 @@
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Uninstall-ExeManually 'app'",
         "A-Remove-Link"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". \"$pwd\\bin\\utils.ps1\"",
+            ". $pwd\\script\\utils.ps1",
             "$InstallerInfo = A-Get-InstallerInfoFromWinget 'ByteDance.Doubao' 'exe'",
             "\"ver:$($InstallerInfo.PackageVersion);\"",
             "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",

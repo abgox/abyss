@@ -33,12 +33,12 @@
     ],
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "Push-Location \"$dir\\app\\.moon\\lib\\core\"",
         "moon.exe bundle --warn-list -a --all --quiet 2>$null",
         "moon.exe bundle --warn-list -a --target wasm-gc --quiet 2>$null",
@@ -47,18 +47,18 @@
     ],
     "pre_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". \"$pwd\\bin\\utils.ps1\"",
+            ". $pwd\\script\\utils.ps1",
             "$versionList = @()",
             "Invoke-RestMethod 'https://cli.moonbitlang.com/version.json' | Select-Object -ExpandProperty items | ForEach-Object {",
             "    if ($_.version -match '[\\d.]+') { $versionList += $Matches[0] }",

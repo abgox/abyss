@@ -14,19 +14,19 @@
     },
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Add-MsixPackage 'Seelen.SeelenUI_p6yyn03m1894e'",
         "A-New-LinkDirectory \"$env:AppData\\com.seelen.seelen-ui\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-MsixPackage",
@@ -35,12 +35,12 @@
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-        ". \"$bucketsdir\\$bucket\\bin\\utils.ps1\"",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". \"$pwd\\bin\\utils.ps1\"",
+            ". $pwd\\script\\utils.ps1",
             "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Seelen.SeelenUI' 'msix'",
             "\"ver:$($InstallerInfo.PackageVersion);\"",
             "\"x64:$($InstallerInfo.x64.InstallerUrl);\"",

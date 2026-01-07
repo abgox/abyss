@@ -27,15 +27,14 @@ jobs:
       - name: Generate list and update content
         shell: pwsh
         run: |
-          .\bin\generate-list.ps1
+          .\script\generate-list.ps1
 
       - name: Check for changes
         id: changes
         shell: pwsh
         run: |
-          git add .
-          $changes = git status --porcelain
-          if ($changes) {
+          git add -u
+          if (git status --porcelain) {
               "has_changes=true" >> $env:GITHUB_OUTPUT
           } else {
               "has_changes=false" >> $env:GITHUB_OUTPUT
@@ -47,9 +46,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add -u
           # scoop update 会忽略以 (chore) 开头的提交
-          git commit -m "(chore): automatically update some content"
+          git commit -m "(chore): automatically update some content [skip ci]"
           git push
 
   update-docs:
@@ -69,6 +68,6 @@ jobs:
           git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git abyss-docs
           cd abyss-docs
           .\scripts\update-app-list.ps1
-          git add .
-          git commit -m "chore: automatically update some content"
+          git add -u
+          git commit -m "chore: automatically update some content [skip ci]"
           git push --force

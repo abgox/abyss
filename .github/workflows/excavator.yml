@@ -39,12 +39,12 @@ jobs:
       - name: Check rate limit
         shell: pwsh
         run: |
-          $headers = @{ "Accept" = "application/vnd.github.v3+json" }
           Write-Output "::group::GitHub API Rate Limits"
+          $headers = @{ "Accept" = "application/vnd.github.v3+json" }
           $tokens = $env:TOKEN_POOL.Split(',')
           foreach ($i in 1..$tokens.Count) {
               $t = $tokens[$i - 1]
-              $headers["Authorization"] = "token $t"
+              $headers["Authorization"] = "Bearer $t"
               try {
                   $response = Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
                   Write-Output $response.rate
@@ -67,7 +67,7 @@ jobs:
         id: scoop-new-version
         shell: pwsh
         run: |
-          .\bin\check-scoop-version.ps1
+          .\script\check-scoop-version.ps1
 
       - name: Reopen Issue
         if: steps.scoop-new-version.outputs.ScoopNewVersion != ''
