@@ -18,7 +18,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkDirectory \"$env:LocalAppData\\com.levminer.authme\\EBWebView\\Default\\Local Storage\"",
-        "A-Install-App msi"
+        "A-Install-Msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -30,8 +30,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "$ProductCode = A-Get-ProductCode '^Authme$'",
-        "A-Uninstall-App $ProductCode",
+        "A-Uninstall-Msi",
         "A-Remove-Link",
         "A-Remove-TempData \"$env:LocalAppData\\com.levminer.authme\""
     ],

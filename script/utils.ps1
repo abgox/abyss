@@ -8,6 +8,7 @@ $abgox_abyss = @{
         LinkFile           = "$dir\abgox-abyss-A-New-LinkFile.json"
         LinkDirectory      = "$dir\abgox-abyss-A-New-LinkDirectory.json"
         InstallApp         = "$dir\abgox-abyss-A-Install-App.json"
+        InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
         MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
         EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
@@ -325,8 +326,12 @@ function A-Remove-Link {
         根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
-    if ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -or (Test-Path -LiteralPath $abgox_abyss.path.InstallApp)) {
-        # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
+    if (
+        (Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -or
+        (Test-Path -LiteralPath $abgox_abyss.path.InstallApp) -or
+        (Test-Path -LiteralPath $abgox_abyss.path.InstallMsi)
+    ) {
+        # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时可能会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
     elseif ($abgox_abyss.uninstallActionLevel -notlike "*2*") {
         # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
@@ -741,6 +746,167 @@ function A-Uninstall-App {
     Start-Sleep -Seconds 10
 }
 
+function A-Install-Msi {
+    param(
+        [array]$ArgumentList
+    )
+
+    $Installer = if ([Environment]::Is64BitOperatingSystem) {
+        'C:\Windows\SysWOW64\msiexec.exe'
+    }
+    else {
+        'C:\Windows\System32\msiexec.exe'
+    }
+
+    if (!(Test-Path -LiteralPath $Installer)) {
+        error "'$Installer' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $msiFile = Join-Path $dir ($fname | Select-Object -First 1)
+        $ArgumentList = @(
+            '/i',
+            "`"$msiFile`"",
+            # '/passive',
+            '/quiet',
+            '/norestart',
+            '/lvx*',
+            "$dir\msi-install.log"
+        )
+    }
+
+    $InstallerFileName = Split-Path $Installer -Leaf
+
+    Write-Host "Running the installer: $InstallerFileName"
+
+    try {
+        $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
+
+    try {
+        if ($msiFile) {
+            Remove-Item $msiFile -Force -ErrorAction Stop
+        }
+    }
+    catch {
+        error $_.Exception.Message
+    }
+
+    $log = Get-Content "$dir\msi-install.log" -ErrorAction SilentlyContinue
+
+    @{
+        Installer      = $Installer
+        Uninstaller    = $Installer
+        ProductCode    = $log | Select-String "ProductCode = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ProductName    = $log | Select-String "ProductName = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ProductVersion = $log | Select-String "ProductVersion = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        Manufacturer   = $log | Select-String "Manufacturer = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ArgumentList   = $ArgumentList
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
+}
+
+function A-Uninstall-Msi {
+    param(
+        [array]$ArgumentList
+    )
+
+    # msi 直接覆盖安装，无需卸载
+    if ($cmd -eq "update") { return }
+
+    $InstallerInfoPath = $abgox_abyss.path.InstallMsi
+
+    if (Test-Path -LiteralPath $InstallerInfoPath) {
+        try {
+            $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
+            return
+        }
+    }
+    else {
+        return
+    }
+
+    $Uninstaller = $InstallerInfo.Uninstaller
+
+    if ($Uninstaller) {
+        $UninstallerFileName = Split-Path $Uninstaller -Leaf
+    }
+    else {
+        return
+    }
+
+    if (!(Test-Path -LiteralPath $Uninstaller)) {
+        warn "'$Uninstaller' not found."
+        return
+    }
+
+    $ProductCode = $null
+    $registryPaths = @(
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+    :outerLoop foreach ($path in $registryPaths) {
+        $uninstallKeys = Get-ChildItem $path -ErrorAction SilentlyContinue
+        foreach ($key in $uninstallKeys) {
+            $item = Get-ItemProperty $key.PSPath
+
+            if ($item.ProductCode -eq $InstallerInfo.ProductCode) {
+                $ProductCode = $item.ProductCode
+                break outerLoop
+            }
+
+            if ($item.DisplayName -eq $InstallerInfo.ProductName) {
+                $ProductCode = $key.PSChildName  # 使用子项 GUID 作为 ProductCode
+                break outerLoop
+            }
+
+            if ($item.UninstallString -and $item.UninstallString -match [regex]::Escape($InstallerInfo.ProductCode)) {
+                $ProductCode = $InstallerInfo.ProductCode
+                break outerLoop
+            }
+        }
+    }
+
+    if (!$ProductCode) {
+        error "Cannot find product code of '$app'"
+        return
+    }
+
+    Write-Host "Running the uninstaller: $UninstallerFileName /X$ProductCode"
+
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $ArgumentList = @(
+            '/x',
+            "$ProductCode",
+            '/quiet',
+            '/norestart'
+        )
+    }
+
+    $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
+
+    try {
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
+}
+
 function A-Uninstall-Manually {
     param(
         [array]$Paths
@@ -1053,22 +1219,6 @@ function A-Move-Persist {
             break
         }
     }
-}
-
-function A-Get-ProductCode {
-    param (
-        [string]$AppNamePattern
-    )
-
-    $code = A-Get-UninstallEntryByAppName $AppNamePattern | Select-Object -ExpandProperty PSChildName
-
-    if ($code) {
-        return $code
-    }
-
-    error "Cannot find product code of '$app'"
-
-    return $null
 }
 
 function A-Get-UninstallEntryByAppName {

@@ -32,7 +32,7 @@
         "Expand-DarkArchive \"$dir\\$fname\" \"$dir\\.tmp\"",
         "Get-ChildItem $dir -Recurse -Filter '*.msi' | Select-Object -First 1 | ForEach-Object { Move-Item $_.FullName \"$dir\\dl.msi\" -Force }",
         "Remove-Item \"$dir\\.tmp\", \"$dir\\$fname\" -Force -Recurse -ErrorAction SilentlyContinue",
-        "A-Install-App msi -ArgumentList '/i', \"`\"$dir\\dl.msi`\"\", '/passive', '/norestart'",
+        "A-Install-Msi -ArgumentList '/i', \"`\"$dir\\dl.msi`\"\", '/passive', '/norestart'",
         "Start-Sleep -Seconds 5",
         "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
         "# 安装程序启动时不能进行链接, 会出现内存访问错误, 因此等待安装完成并终止相关进程后再创建链接",

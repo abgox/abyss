@@ -2402,7 +2402,7 @@
                                                     "markdownDescription": "Use `innosetup` installer."
                                                 },
                                                 {
-                                                    "const": "A-Install-App msi",
+                                                    "const": "A-Install-Msi",
                                                     "markdownDescription": "Use `msi` installer."
                                                 },
                                                 {
@@ -2742,6 +2742,14 @@
                                                     "markdownDescription": "Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
+                                                    "const": "A-Uninstall-Msi",
+                                                    "markdownDescription": "Uninstall the application (`msi`)"
+                                                },
+                                                {
+                                                    "pattern": "A-Uninstall-Msi",
+                                                    "markdownDescription": "Uninstall the application (`msi`)"
+                                                },
+                                                {
                                                     "const": "A-Uninstall-Manually 'app'",
                                                     "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
@@ -2760,18 +2768,6 @@
                                                 {
                                                     "const": "A-Uninstall-App -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
                                                     "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
-                                                },
-                                                {
-                                                    "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
-                                                    "markdownDescription": "Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
-                                                },
-                                                {
-                                                    "pattern": "\\$ProductCode = A-Get-ProductCode",
-                                                    "markdownDescription": "Get the product code\n- It requires a regular expression as a parameter to match the DisplayName\n- For example: `$ProductCode = A-Get-ProductCode '^xxx$'`"
-                                                },
-                                                {
-                                                    "const": "A-Uninstall-App $ProductCode",
-                                                    "markdownDescription": "Uninstall the application using the product code (`msi`)\n- It requires a product code as a parameter\n- For example: `A-Uninstall-App $ProductCode`"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-App",
@@ -3018,6 +3014,27 @@
                                                 "properties": {
                                                     "pre_install": {
                                                         "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Msi"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-Uninstall-Msi|A-Uninstall-Manually)"
+                                                        },
+                                                        "errorMessage": "A-Install-Msi is used in pre_install, while A-Uninstall-Msi or A-Uninstall-Manually is missing in pre_uninstall."
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
                                                             "pattern": "(?<!#.*)A-Install-App"
                                                         }
                                                     }
@@ -3087,6 +3104,27 @@
                                                             "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
                                                         },
                                                         "errorMessage": "A-Remove-Link is used in pre_uninstall, while A-New-LinkFile or A-New-LinkDirectory is missing in pre_install"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Uninstall-Msi"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Msi"
+                                                        },
+                                                        "errorMessage": "A-Uninstall-Msi is used in pre_uninstall, while A-Install-Msi is missing in pre_install"
                                                     }
                                                 }
                                             }

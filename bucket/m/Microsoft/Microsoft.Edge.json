@@ -37,7 +37,7 @@
         "A-Require-Admin",
         "A-Stop-Process \"${env:ProgramFiles(x86)}\\Microsoft\\Edge\"",
         "A-New-LinkDirectory \"$env:LocalAppData\\Microsoft\\Edge\\User Data\"",
-        "A-Install-App msi"
+        "A-Install-Msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -48,14 +48,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "if ($cmd -eq 'uninstall') {",
-        "    if($PSUICulture -like 'zh*') {",
-        "        Write-Host \"Microsoft Edge 是特殊的，在 Windows 系统中，它不允许被卸载，因此只会删除 Scoop 下的 $app 目录\" -ForegroundColor Yellow",
-        "    }",
-        "    else {",
-        "        Write-Host \"Microsoft Edge is special, it cannot be uninstalled in Windows system, so only the Scoop directory of $app will be deleted.\" -ForegroundColor Yellow",
-        "    }",
-        "}",
+        "A-Uninstall-Manually \"${env:ProgramFiles(x86)}\\Microsoft\\Edge\"",
         "A-Remove-Link"
     ],
     "post_uninstall": [

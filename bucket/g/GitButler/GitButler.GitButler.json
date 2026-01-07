@@ -18,7 +18,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkDirectory \"$env:AppData\\com.gitbutler.app\",\"$env:AppData\\gitbutler\"",
-        "A-Install-App msi"
+        "A-Install-Msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -32,8 +32,7 @@
         "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\GitButler\"",
         "A-Remove-Link",
-        "$ProductCode = A-Get-ProductCode '^GitButler$'",
-        "A-Uninstall-App $ProductCode",
+        "A-Uninstall-Msi",
         "A-Remove-TempData \"$env:LocalAppData\\com.gitbutler.app\""
     ],
     "post_uninstall": [

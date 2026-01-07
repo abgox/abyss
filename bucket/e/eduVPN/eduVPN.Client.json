@@ -29,7 +29,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-App msi"
+        "A-Install-Msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -41,10 +41,8 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\eduVPN\"",
-        "$ProductCode = A-Get-ProductCode '^eduVPN Client'",
-        "A-Uninstall-App $ProductCode",
-        "A-Remove-TempData \"$env:ProgramFiles\\eduVPN\",\"$env:LocalAppData\\eduVPN\""
+        "A-Uninstall-Msi",
+        "A-Remove-TempData \"$env:ProgramFiles\\eduVPN\", \"$env:LocalAppData\\eduVPN\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

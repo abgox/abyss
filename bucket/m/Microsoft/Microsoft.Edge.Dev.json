@@ -36,7 +36,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkDirectory \"$env:LocalAppData\\Microsoft\\Edge Dev\\User Data\"",
-        "A-Install-App msi"
+        "A-Install-Msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -48,8 +48,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "$ProductCode = A-Get-ProductCode '^Microsoft Edge Dev$'",
-        "A-Uninstall-App $ProductCode",
+        "A-Uninstall-Msi",
         "A-Remove-Link"
     ],
     "post_uninstall": [

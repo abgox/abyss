@@ -2402,7 +2402,7 @@
                                                     "markdownDescription": "使用 innosetup 安装程序"
                                                 },
                                                 {
-                                                    "const": "A-Install-App msi",
+                                                    "const": "A-Install-Msi",
                                                     "markdownDescription": "使用 msi 安装程序"
                                                 },
                                                 {
@@ -2742,6 +2742,14 @@
                                                     "markdownDescription": "禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用\n- 参考: https://abyss.abgox.com/faq/deny-update"
                                                 },
                                                 {
+                                                    "const": "A-Uninstall-Msi",
+                                                    "markdownDescription": "卸载应用 (`msi`)"
+                                                },
+                                                {
+                                                    "pattern": "A-Uninstall-Msi",
+                                                    "markdownDescription": "卸载应用 (`msi`)"
+                                                },
+                                                {
                                                     "const": "A-Uninstall-Manually 'app'",
                                                     "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
@@ -2760,18 +2768,6 @@
                                                 {
                                                     "const": "A-Uninstall-App -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
                                                     "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
-                                                },
-                                                {
-                                                    "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
-                                                    "markdownDescription": "获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
-                                                },
-                                                {
-                                                    "pattern": "\\$ProductCode = A-Get-ProductCode",
-                                                    "markdownDescription": "获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
-                                                },
-                                                {
-                                                    "const": "A-Uninstall-App $ProductCode",
-                                                    "markdownDescription": "使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-App $ProductCode`"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-App",
@@ -3018,6 +3014,27 @@
                                                 "properties": {
                                                     "pre_install": {
                                                         "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Msi"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-Uninstall-Msi|A-Uninstall-Manually)"
+                                                        },
+                                                        "errorMessage": "pre_install 中使用了 A-Install-Msi，而 pre_uninstall 中缺少 A-Uninstall-Msi 或 A-Uninstall-Manually"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
                                                             "pattern": "(?<!#.*)A-Install-App"
                                                         }
                                                     }
@@ -3087,6 +3104,27 @@
                                                             "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
                                                         },
                                                         "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而 pre_install 中缺少 A-New-LinkFile 或 A-New-LinkDirectory"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Uninstall-Msi"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Msi"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Msi，而 pre_install 中缺少 A-Install-Msi"
                                                     }
                                                 }
                                             }
