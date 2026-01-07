@@ -3,7 +3,17 @@
 Set-StrictMode -Off
 
 # 存储 abyss 相关的变量
-$abgox_abyss = @{}
+$abgox_abyss = @{
+    path = @{
+        LinkFile           = "$dir\abgox-abyss-A-New-LinkFile.json"
+        LinkDirectory      = "$dir\abgox-abyss-A-New-LinkDirectory.json"
+        InstallApp         = "$dir\abgox-abyss-A-Install-App.json"
+        MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
+        EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
+        Font               = "$dir\abgox-abyss-A-Add-Font.json"
+        PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
+    }
+}
 
 if ($env:GITHUB_ACTIONS) {
     $VerbosePreference = "SilentlyContinue"
@@ -87,7 +97,7 @@ function A-Complete-Uninstall {
 
 function A-Add-Path {
     param(
-        [string[]]$Path
+        [string[]]$Paths
     )
 
     if (get_config USE_ISOLATED_PATH) {
@@ -95,14 +105,14 @@ function A-Add-Path {
     }
 
     $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
-    $Path = $Path | Where-Object { $_ -notin $oldPath }
-    if (-not $Path) {
+    $Paths = $Paths | Where-Object { $_ -notin $oldPath }
+    if (-not $Paths) {
         return
     }
 
-    Add-Path -Path $Path -TargetEnvVar $scoopPathEnvVar -Global:$global
+    Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
 
-    @{ Path = $Path } | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-Path.jsonc" -Force -Encoding utf8
+    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
 }
 
 function A-Ensure-Directory {
@@ -214,10 +224,8 @@ function A-New-File {
         [string]$Encoding = "utf8"
     )
 
-    $itemExists = Test-Path -LiteralPath $Path
-    $item = if ($itemExists) { Get-Item -LiteralPath $Path } else { $null }
-
-    if ($itemExists) {
+    if (Test-Path -LiteralPath $Path) {
+        $item = Get-Item -LiteralPath $Path
         # 如果是一个目录，就删除它
         if ($item.PSIsContainer) {
             try {
@@ -277,7 +285,7 @@ function A-New-LinkFile {
         A-Exit
     }
 
-    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile "$dir\scoop-install-A-New-LinkFile.jsonc"
+    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile $abgox_abyss.path.LinkFile
 }
 
 function A-New-LinkDirectory {
@@ -304,7 +312,7 @@ function A-New-LinkDirectory {
         [array]$LinkTargets = @()
     )
 
-    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile "$dir\scoop-install-A-New-LinkDirectory.jsonc"
+    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile $abgox_abyss.path.LinkDirectory
 }
 
 function A-Remove-Link {
@@ -317,7 +325,7 @@ function A-Remove-Link {
         根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
-    if ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -or (Test-Path -LiteralPath "$dir\scoop-install-A-Install-Exe.jsonc")) {
+    if ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -or (Test-Path -LiteralPath $abgox_abyss.path.InstallApp)) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
     elseif ($abgox_abyss.uninstallActionLevel -notlike "*2*") {
@@ -327,12 +335,12 @@ function A-Remove-Link {
         }
     }
 
-    @("$dir\scoop-install-A-New-LinkFile.jsonc", "$dir\scoop-install-A-New-LinkDirectory.jsonc") | ForEach-Object {
+    @($abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory) | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
-            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty "LinkPaths"
+            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
 
             foreach ($p in $LinkPaths) {
-                if (A-Test-SymbolicLink $p) {
+                if (A-Test-Link $p) {
                     try {
                         Write-Host "Unlinking $p"
                         Remove-Item $p -Force -Recurse -ErrorAction Stop
@@ -421,9 +429,8 @@ function A-Stop-Process {
         [string[]]$ExtraProcessNames
     )
 
-
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if ($abgox_abyss.uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath "$dir\scoop-install-A-Add-AppxPackage.jsonc") -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    if ($abgox_abyss.uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
 
@@ -433,7 +440,6 @@ function A-Stop-Process {
     $processes = Get-Process
 
     foreach ($app_dir in $Paths) {
-        # $matched = $processes.where({ $_.Modules.FileName -like "$app_dir\*" })
         $matched = $processes.where({ $_.MainModule.FileName -like "$app_dir\*" })
         foreach ($p in $matched) {
             try {
@@ -606,7 +612,7 @@ function A-Install-Exe {
     $InstallerFileName = Split-Path $Installer -Leaf
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
 
-    $OutFile = "$dir\scoop-install-A-Install-Exe.jsonc"
+    $OutFile = $abgox_abyss.path.InstallApp
     @{
         InstallerType = $InstallerType
         Installer     = $Installer
@@ -655,7 +661,7 @@ function A-Uninstall-Exe {
         [array]$ArgumentList
     )
 
-    $InstallerInfoPath = "$dir\scoop-install-A-Install-Exe.jsonc"
+    $InstallerInfoPath = $abgox_abyss.path.InstallApp
 
     if (Test-Path -LiteralPath $InstallerInfoPath) {
         $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
@@ -737,10 +743,10 @@ function A-Uninstall-Exe {
 
 function A-Uninstall-ExeManually {
     param(
-        [array]$Path
+        [array]$Paths
     )
 
-    foreach ($p in $Path) {
+    foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
         if (Test-Path -LiteralPath $p) {
             if ((Get-ChildItem -LiteralPath $p -File -Recurse).Count -eq 0) {
@@ -763,11 +769,13 @@ function A-Add-MsixPackage {
         安装 AppX/Msix 包
     #>
     param(
+        # 包名，例如：Microsoft.PowerShellPreview_8wekyb3d8bbwe
         [string]$PackageFamilyName,
-        [string]$FileName
+        # 包文件路径，如果是相对路径，会拼接 $dir 作为父目录
+        [string]$FilePath
     )
-    if ($PSBoundParameters.ContainsKey('FileName')) {
-        $path = A-Get-AbsolutePath $FileName
+    if ($PSBoundParameters.ContainsKey('FilePath')) {
+        $path = A-Get-AbsolutePath $FilePath
     }
     else {
         # $fname 由 Scoop 提供，即下载的文件名
@@ -780,8 +788,6 @@ function A-Add-MsixPackage {
     }
 
     A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
-
-    # return $PackageFamilyName
 }
 
 function A-Remove-MsixPackage {
@@ -856,7 +862,7 @@ function A-Add-Font {
         }
     }
 
-    @{ FontType = $FontType } | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-Font.jsonc" -Force -Encoding utf8
+    @{ FontType = $FontType } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
 }
 
 function A-Add-PowerToysRunPlugin {
@@ -866,7 +872,6 @@ function A-Add-PowerToysRunPlugin {
 
     $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
     $PluginPath = "$PluginsDir\$PluginName"
-    $OutFile = "$dir\scoop-install-A-Add-PowerToysRunPlugin.jsonc"
 
     try {
         if (Test-Path -LiteralPath $PluginPath) {
@@ -878,7 +883,7 @@ function A-Add-PowerToysRunPlugin {
         Write-Host "Copying $CopyingPath => $PluginPath"
         Copy-Item -LiteralPath $CopyingPath -Destination $PluginPath -Recurse -Force
 
-        @{ "PluginName" = $PluginName } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
+        @{ PluginName = $PluginName } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.PowerToysRunPlugin -Force -Encoding utf8
     }
     catch {
         error $_.Exception.Message
@@ -1013,7 +1018,7 @@ function A-Deny-Manifest {
     A-Exit
 }
 
-function A-Move-PersistDirectory {
+function A-Move-Persist {
     <#
     .SYNOPSIS
         用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
@@ -1041,11 +1046,11 @@ function A-Move-PersistDirectory {
         if (A-Test-DirectoryNotEmpty $old) {
             try {
                 Rename-Item -Path $old -NewName $app -Force -ErrorAction Stop
-                break
             }
             catch {
                 error $_.Exception.Message
             }
+            break
         }
     }
 }
@@ -1055,7 +1060,7 @@ function A-Get-ProductCode {
         [string]$AppNamePattern
     )
 
-    $code = A-Get-UninstallEntryByAppName $AppNamePattern | Select-Object -ExpandProperty "PSChildName"
+    $code = A-Get-UninstallEntryByAppName $AppNamePattern | Select-Object -ExpandProperty PSChildName
 
     if ($code) {
         return $code
@@ -1458,6 +1463,8 @@ function A-Compare-Version {
     return 0
 }
 
+#region 以下的函数不应该在外部调用
+
 function A-Test-DirectoryNotEmpty {
     param(
         [string]$Path
@@ -1468,7 +1475,7 @@ function A-Test-DirectoryNotEmpty {
     return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
 }
 
-function A-Test-SymbolicLink {
+function A-Test-Link {
     param(
         [string]$Path
     )
@@ -1480,8 +1487,6 @@ function A-Test-SymbolicLink {
         return $false
     }
 }
-
-#region 以下的函数不应该在外部调用
 
 function A-New-Link {
     <#
@@ -1612,12 +1617,9 @@ function A-Add-AppxPackage {
         A-Exit
     }
 
-    $installData = @{
-        package = @{
-            PackageFamilyName = $PackageFamilyName
-        }
-    }
-    $installData | ConvertTo-Json | Out-File -FilePath "$dir\scoop-install-A-Add-AppxPackage.jsonc" -Force -Encoding utf8
+    @{
+        PackageFamilyName = $PackageFamilyName
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.MsixPackage -Force -Encoding utf8
 }
 
 function A-Remove-AppxPackage {
@@ -1629,12 +1631,12 @@ function A-Remove-AppxPackage {
         该函数使用 Remove-AppxPackage 命令移除应用程序包 (.appx 或 .msixbundle)
     #>
 
-    $OutFile = "$dir\scoop-install-A-Add-AppxPackage.jsonc"
+    $OutFile = $abgox_abyss.path.MsixPackage
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
     }
 
-    $PackageFamilyName = (Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "package").PackageFamilyName
+    $PackageFamilyName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty PackageFamilyName
     $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
     if ($package) {
         if ($package.InstallLocation) {
@@ -1645,12 +1647,12 @@ function A-Remove-AppxPackage {
 }
 
 function A-Remove-Path {
-    $OutFile = "$dir\scoop-install-A-Add-Path.jsonc"
+    $OutFile = $abgox_abyss.path.EnvVar
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
     }
 
-    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "Path"
+    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths
     if (-not $Path) {
         return
     }
@@ -1661,12 +1663,12 @@ function A-Remove-Path {
 }
 
 function A-Remove-Font {
-    $OutFile = "$dir\scoop-install-A-Add-Font.jsonc"
+    $OutFile = $abgox_abyss.path.Font
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
     }
 
-    $FontType = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "FontType"
+    $FontType = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty FontType
     $filter = "*.$($FontType)"
 
     $ExtMap = @{
@@ -1701,7 +1703,7 @@ function A-Remove-Font {
 }
 
 function A-Remove-PowerToysRunPlugin {
-    $OutFile = "$dir\scoop-install-A-Add-PowerToysRunPlugin.jsonc"
+    $OutFile = $abgox_abyss.path.PowerToysRunPlugin
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
     }
@@ -1709,7 +1711,7 @@ function A-Remove-PowerToysRunPlugin {
     $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
 
     try {
-        $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty "PluginName"
+        $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty PluginName
         $PluginPath = "$PluginsDir\$PluginName"
 
         if (Test-Path -LiteralPath $PluginPath) {
