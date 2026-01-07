@@ -541,74 +541,14 @@ function A-Remove-Service {
 
 function A-Install-App {
     param(
-        [ValidateSet("inno", "msi")]
-        [string]$InstallerType,
-        [string]$Installer,
-        [array]$ArgumentList,
-
         # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
-        [string]$Uninstaller
+        [string]$Uninstaller,
+        [array]$ArgumentList = @('/S', "/D=$dir\app"),
+        [string]$SleepSec = 3
     )
 
-    if ($PSBoundParameters.ContainsKey('Installer')) {
-        $Installer = A-Get-AbsolutePath $Installer
-    }
-    else {
-        # $fname 由 Scoop 提供，即下载的文件名
-        $Installer = Join-Path $dir ($fname | Select-Object -First 1)
-    }
-
-    if ($InstallerType -eq "inno") {
-        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @(
-                '/CurrentUser',
-                '/VerySilent',
-                '/SuppressMsgBoxes',
-                '/NoRestart',
-                '/SP-',
-                "/Log=$dir\$app-install.log",
-                "/Dir=`"$dir\app`""
-            )
-        }
-        if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
-            $Uninstaller = 'app\unins000.exe'
-        }
-    }
-    elseif ($InstallerType -eq "msi") {
-        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $msiFile = Join-Path $dir ($fname | Select-Object -First 1)
-
-            $ArgumentList = @(
-                '/i',
-                "`"$msiFile`"",
-                # '/passive',
-                '/quiet',
-                '/norestart'
-            )
-        }
-        if (!$PSBoundParameters.ContainsKey('Installer')) {
-            $Installer = if ([Environment]::Is64BitOperatingSystem) {
-                'C:\Windows\SysWOW64\msiexec.exe'
-            }
-            else {
-                'C:\Windows\System32\msiexec.exe'
-            }
-        }
-        if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
-            $Uninstaller = $Installer
-        }
-    }
-    else {
-        # 如果没有传递安装参数，则使用默认参数
-        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @('/S', "/D=$dir\app")
-        }
-    }
-
-    if (!$Installer) {
-        A-Show-IssueCreationPrompt
-        A-Exit
-    }
+    # $fname 由 Scoop 提供，即下载的文件名
+    $Installer = Join-Path $dir ($fname | Select-Object -First 1)
 
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
@@ -617,17 +557,16 @@ function A-Install-App {
     }
 
     $InstallerFileName = Split-Path $Installer -Leaf
-    $Uninstaller = A-Get-AbsolutePath $Uninstaller
-
-    $OutFile = $abgox_abyss.path.InstallApp
-    @{
-        InstallerType = $InstallerType
-        Installer     = $Installer
-        ArgumentList  = $ArgumentList
-        Uninstaller   = $Uninstaller
-    } | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
     Write-Host "Running the installer: $InstallerFileName"
+
+    $Uninstaller = A-Get-AbsolutePath $Uninstaller
+
+    @{
+        Installer    = $Installer
+        ArgumentList = $ArgumentList
+        Uninstaller  = $Uninstaller
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallApp -Force -Encoding utf8
 
     try {
         $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru -WindowStyle Hidden
@@ -640,7 +579,7 @@ function A-Install-App {
         A-Exit
     }
 
-    Start-Sleep -Seconds 10
+    Start-Sleep -Seconds $SleepSec
 
     if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
         error "'$Uninstaller' not found."
@@ -648,11 +587,9 @@ function A-Install-App {
         A-Exit
     }
 
-    $removeFile = if ($InstallerType -eq "msi") { $msiFile } else { $Installer }
-
     try {
-        if ($removeFile) {
-            Remove-Item $removeFile -Force -ErrorAction Stop
+        if ($Installer) {
+            Remove-Item $Installer -Force -ErrorAction Stop
         }
     }
     catch {
@@ -662,49 +599,24 @@ function A-Install-App {
 
 function A-Uninstall-App {
     param(
-        # 仅安装时的安装程序类型为 msi 时才需要
-        [string]$ProductCode,
         [string]$Uninstaller,
-        [array]$ArgumentList
+        [array]$ArgumentList = @('/S'),
+        [string]$SleepSec = 3
     )
 
     $InstallerInfoPath = $abgox_abyss.path.InstallApp
 
     if (Test-Path -LiteralPath $InstallerInfoPath) {
-        $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+        try {
+            $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
+            return
+        }
     }
     else {
         return
-    }
-
-    if ($InstallerInfo.InstallerType -eq "inno") {
-        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @('/VerySilent')
-        }
-    }
-    elseif ($InstallerInfo.InstallerType -eq "msi") {
-        # msi 直接覆盖安装，无需卸载
-        if ($cmd -eq "update") {
-            return
-        }
-
-        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            if (!$ProductCode) {
-                return
-            }
-            $ArgumentList = @(
-                '/x',
-                "`"$ProductCode`"",
-                '/quiet',
-                '/norestart'
-            )
-        }
-    }
-    else {
-        # 如果没有传递卸载参数，则使用默认参数
-        if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-            $ArgumentList = @('/S')
-        }
     }
 
     if (!$PSBoundParameters.ContainsKey('Uninstaller')) {
@@ -721,8 +633,12 @@ function A-Uninstall-App {
     }
 
     if (!(Test-Path -LiteralPath $Uninstaller)) {
-        warn "'$Uninstaller' not found."
-        return
+        $_Uninstaller = Get-ChildItem $dir $UninstallerFileName -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if (!(Test-Path -LiteralPath $_Uninstaller)) {
+            warn "'$Uninstaller' not found."
+            return
+        }
+        $Uninstaller = $_Uninstaller.FullName
     }
 
     Write-Host "Running the uninstaller: $UninstallerFileName"
@@ -745,7 +661,7 @@ function A-Uninstall-App {
         A-Exit
     }
 
-    Start-Sleep -Seconds 10
+    Start-Sleep -Seconds $SleepSec
 }
 
 function A-Install-Inno {
@@ -2101,7 +2017,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     if ($abgox_abyss.shortcutsActionLevel -eq '0') {
         return
     }
-    if ($abgox_abyss.shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-App.*')) {
+    if ($abgox_abyss.shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-.*')) {
         $abgox_abyss.locations = @(
             "$env:AppData\Microsoft\Windows\Start Menu\Programs",
             "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",

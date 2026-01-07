@@ -2395,7 +2395,7 @@
                                                 },
                                                 {
                                                     "const": "A-Expand-SetupExe",
-                                                    "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-App`\n- 除非 `A-Install-App` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
+                                                    "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-*`\n- 除非 `A-Install-*` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
                                                 },
                                                 {
                                                     "const": "A-Install-Inno",
@@ -2415,27 +2415,19 @@
                                                 },
                                                 {
                                                     "const": "A-Install-App -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-App -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "使用安装程序\n  - `Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 },
                                                 {
                                                     "const": "A-Install-App -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-App -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "使用安装程序\n  - `Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 },
                                                 {
                                                     "pattern": "A-Install-App",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-App -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "markdownDescription": "使用安装程序\n  - `Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
                                                     "markdownDescription": "要求以管理员权限运行\n- 参考: https://abyss.abgox.com/faq/require-admin"
-                                                },
-                                                {
-                                                    "const": "A-Test-Admin",
-                                                    "markdownDescription": "检查是否以管理员权限运行"
-                                                },
-                                                {
-                                                    "const": "A-Test-DeveloperMode",
-                                                    "markdownDescription": "检查是否启用了 [开发者模式](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging)"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory",
@@ -2454,11 +2446,27 @@
                                                     "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
+                                                    "const": "A-New-LinkFile \"$env:UserProfile\\xxx\"",
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                },
+                                                {
+                                                    "const": "A-New-LinkFile \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                },
+                                                {
                                                     "pattern": "A-New-LinkFile",
                                                     "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"",
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                },
+                                                {
+                                                    "const": "A-New-LinkDirectory \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                },
+                                                {
+                                                    "const": "A-New-LinkDirectory \"$env:UserProfile\\xxx\"",
                                                     "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
@@ -2722,7 +2730,7 @@
                                                     "markdownDescription": "卸载 AppX/Msix 包"
                                                 },
                                                 {
-                                                    "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"",
+                                                    "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
                                                     "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
                                                 },
                                                 {
@@ -2732,10 +2740,6 @@
                                                 {
                                                     "const": "A-Require-Admin",
                                                     "markdownDescription": "要求以管理员权限运行\n- 参考: https://abyss.abgox.com/faq/require-admin"
-                                                },
-                                                {
-                                                    "const": "A-Test-Admin",
-                                                    "markdownDescription": "检查是否以管理员权限运行"
                                                 },
                                                 {
                                                     "const": "A-Deny-Update",
@@ -2766,20 +2770,20 @@
                                                     "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-App -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe'",
+                                                    "markdownDescription": "使用卸载程序\n  - `Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-App",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "使用卸载程序\n  - `Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-App -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
+                                                    "markdownDescription": "使用卸载程序\n  - `Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-App",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "markdownDescription": "使用卸载程序\n  - `Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                                 }
                                             ]
                                         }

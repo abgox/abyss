@@ -2395,7 +2395,7 @@
                                                 },
                                                 {
                                                     "const": "A-Expand-SetupExe",
-                                                    "markdownDescription": "Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-App`.\n- Use `A-Expand-SetupExe` when `A-Install-App` needs admin privilege or it is more suitable for `A-Expand-SetupExe`."
+                                                    "markdownDescription": "Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-*`.\n- Use `A-Expand-SetupExe` when `A-Install-*` needs admin privilege or it is more suitable for `A-Expand-SetupExe`."
                                                 },
                                                 {
                                                     "const": "A-Install-Inno",
@@ -2415,27 +2415,19 @@
                                                 },
                                                 {
                                                     "const": "A-Install-App -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `'/S', \"/D=$dir\\app\"`\n- Example 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-App -UnInstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
                                                 },
                                                 {
                                                     "const": "A-Install-App -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
-                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `'/S', \"/D=$dir\\app\"`\n- Example 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-App -UnInstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
                                                 },
                                                 {
                                                     "pattern": "A-Install-App",
-                                                    "markdownDescription": "Use the installer\n- It has multiple parameters:\n    - Installer: The file name of the installer\n        - Default: `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: Command-line parameters of the installer\n        - Default: `'/S', \"/D=$dir\\app\"`\n- Example 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `/VerySilent` instead of the default `/S`\n- Example 2: \n    - `A-Install-App -UnInstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - Use `$dir\\uninstall.exe` as the UnInstaller"
+                                                    "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
                                                     "markdownDescription": "Require admin permission to run\n- Refer to: https://abyss.abgox.com/faq/require-admin"
-                                                },
-                                                {
-                                                    "const": "A-Test-Admin",
-                                                    "markdownDescription": "Check if running with admin permission"
-                                                },
-                                                {
-                                                    "const": "A-Test-DeveloperMode",
-                                                    "markdownDescription": "Check if [developer mode](https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging) is enabled"
                                                 },
                                                 {
                                                     "const": "A-Ensure-Directory",
@@ -2454,11 +2446,27 @@
                                                     "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
+                                                    "const": "A-New-LinkFile \"$env:UserProfile\\xxx\"",
+                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                },
+                                                {
+                                                    "const": "A-New-LinkFile \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                },
+                                                {
                                                     "pattern": "A-New-LinkFile",
                                                     "markdownDescription": "Use `SymbolicLink` to link data files\n- e.g. `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
                                                     "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"",
+                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                },
+                                                {
+                                                    "const": "A-New-LinkDirectory \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
+                                                },
+                                                {
+                                                    "const": "A-New-LinkDirectory \"$env:UserProfile\\xxx\"",
                                                     "markdownDescription": "Use `Junction` to link data directories\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n---\n- The target directory is automatically generated using the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure).\n- Therefore, specifying the target directory through the second parameter is not allowed under non-special circumstances."
                                                 },
                                                 {
@@ -2722,7 +2730,7 @@
                                                     "markdownDescription": "Remove AppX/Msix packages."
                                                 },
                                                 {
-                                                    "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"",
+                                                    "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
                                                     "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
                                                 },
                                                 {
@@ -2732,10 +2740,6 @@
                                                 {
                                                     "const": "A-Require-Admin",
                                                     "markdownDescription": "Require running with administrator permission.\n- Refer to: https://abyss.abgox.com/faq/require-admin"
-                                                },
-                                                {
-                                                    "const": "A-Test-Admin",
-                                                    "markdownDescription": "Check if running with administrator permission."
                                                 },
                                                 {
                                                     "const": "A-Deny-Update",
@@ -2766,20 +2770,20 @@
                                                     "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-App -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe'",
+                                                    "markdownDescription": "Use the Uninstaller\n  - `-Uninstaller`: The file path of the Uninstaller\n    - Default: The uninstaller specified by `A-Install-App`\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the uninstaller\n    - Default: `'/S'`\n  - `-SleepSec`: The seconds to wait after the uninstaller\n    - Default: `3`"
                                                 },
                                                 {
                                                     "const": "A-Uninstall-App",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Use the Uninstaller\n  - `-Uninstaller`: The file path of the Uninstaller\n    - Default: The uninstaller specified by `A-Install-App`\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the uninstaller\n    - Default: `'/S'`\n  - `-SleepSec`: The seconds to wait after the uninstaller\n    - Default: `3`"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-App -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
+                                                    "markdownDescription": "Use the Uninstaller\n  - `-Uninstaller`: The file path of the Uninstaller\n    - Default: The uninstaller specified by `A-Install-App`\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the uninstaller\n    - Default: `'/S'`\n  - `-SleepSec`: The seconds to wait after the uninstaller\n    - Default: `3`"
                                                 },
                                                 {
                                                     "pattern": "A-Uninstall-App",
-                                                    "markdownDescription": "Uninstall the application using the uninstaller\n- It has multiple parameters:\n    - Uninstaller: The file name (or absolute path) of the uninstall program\n    - ArgumentList: Command-line parameters for uninstalling a program\n        - Default: `'/S'`\n- Example: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - Use \"$dir\\uninstall.exe\" as the uninstaller and pass the default uninstallation parameters\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - Use \"D:\\demo\\uninstall.exe\" as the uninstaller and pass the specified uninstallation parameters"
+                                                    "markdownDescription": "Use the Uninstaller\n  - `-Uninstaller`: The file path of the Uninstaller\n    - Default: The uninstaller specified by `A-Install-App`\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the uninstaller\n    - Default: `'/S'`\n  - `-SleepSec`: The seconds to wait after the uninstaller\n    - Default: `3`"
                                                 }
                                             ]
                                         }
