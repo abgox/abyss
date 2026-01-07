@@ -8,6 +8,7 @@ $abgox_abyss = @{
         LinkFile           = "$dir\abgox-abyss-A-New-LinkFile.json"
         LinkDirectory      = "$dir\abgox-abyss-A-New-LinkDirectory.json"
         InstallApp         = "$dir\abgox-abyss-A-Install-App.json"
+        InstallInno        = "$dir\abgox-abyss-A-Install-Inno.json"
         InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
         MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
         EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
@@ -329,6 +330,7 @@ function A-Remove-Link {
     if (
         (Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -or
         (Test-Path -LiteralPath $abgox_abyss.path.InstallApp) -or
+        (Test-Path -LiteralPath $abgox_abyss.path.InstallInno) -or
         (Test-Path -LiteralPath $abgox_abyss.path.InstallMsi)
     ) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时可能会删除所有数据文件，因此必须先删除链接目录以保留数据
@@ -744,6 +746,96 @@ function A-Uninstall-App {
     }
 
     Start-Sleep -Seconds 10
+}
+
+function A-Install-Inno {
+    param(
+        [string]$Uninstaller = 'app\unins000.exe',
+        [array]$ArgumentList = @(
+            '/CurrentUser',
+            '/VerySilent',
+            '/SuppressMsgBoxes',
+            '/NoRestart',
+            '/SP-',
+            "/Log=$dir\inno-install.log",
+            "/Dir=`"$dir\app`""
+        )
+    )
+
+    # $fname 由 Scoop 提供，即下载的文件名
+    $Installer = Join-Path $dir ($fname | Select-Object -First 1)
+
+    if (!(Test-Path -LiteralPath $Installer)) {
+        error "'$Installer' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+
+    $Uninstaller = A-Get-AbsolutePath $Uninstaller
+    $InstallerFileName = Split-Path $Installer -Leaf
+
+    Write-Host "Running the installer: $InstallerFileName"
+
+    try {
+        $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
+
+    # $log = Get-Content "$dir\inno-install.log" -ErrorAction SilentlyContinue
+
+    @{
+        Installer    = $Installer
+        ArgumentList = $ArgumentList
+        Uninstaller  = $Uninstaller
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallInno -Force -Encoding utf8
+
+    if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
+        error "'$Uninstaller' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+
+    try {
+        if ($Installer) {
+            Remove-Item $Installer -Force -ErrorAction Stop
+        }
+    }
+    catch {
+        error $_.Exception.Message
+    }
+}
+
+function A-Uninstall-Inno {
+    param(
+        [array]$ArgumentList = @('/VerySilent', '/Force')
+    )
+
+    $Uninstaller = Get-ChildItem $dir unins000.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+    if (!$Uninstaller) {
+        warn "'unins000.exe' not found."
+        return
+    }
+
+    Write-Host "Running the uninstaller: $($Uninstaller.Name)"
+
+    $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
+
+    try {
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
 }
 
 function A-Install-Msi {

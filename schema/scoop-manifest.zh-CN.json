@@ -2398,7 +2398,7 @@
                                                     "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-App`\n- 除非 `A-Install-App` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
                                                 },
                                                 {
-                                                    "const": "A-Install-App inno",
+                                                    "const": "A-Install-Inno",
                                                     "markdownDescription": "使用 innosetup 安装程序"
                                                 },
                                                 {
@@ -2750,6 +2750,14 @@
                                                     "markdownDescription": "卸载应用 (`msi`)"
                                                 },
                                                 {
+                                                    "const": "A-Uninstall-Inno",
+                                                    "markdownDescription": "卸载应用 (`innosetup`)"
+                                                },
+                                                {
+                                                    "pattern": "A-Uninstall-Inno",
+                                                    "markdownDescription": "卸载应用 (`innosetup`)"
+                                                },
+                                                {
                                                     "const": "A-Uninstall-Manually 'app'",
                                                     "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
@@ -3014,6 +3022,27 @@
                                                 "properties": {
                                                     "pre_install": {
                                                         "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Inno"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-Uninstall-Inno|A-Uninstall-Manually)"
+                                                        },
+                                                        "errorMessage": "pre_install 中使用了 A-Install-Inno，而 pre_uninstall 中缺少 A-Uninstall-Inno 或 A-Uninstall-Manually"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
                                                             "pattern": "(?<!#.*)A-Install-Msi"
                                                         }
                                                     }
@@ -3104,6 +3133,27 @@
                                                             "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
                                                         },
                                                         "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而 pre_install 中缺少 A-New-LinkFile 或 A-New-LinkDirectory"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Uninstall-Inno"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Install-Inno"
+                                                        },
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Inno，而 pre_install 中缺少 A-Install-Inno"
                                                     }
                                                 }
                                             }
