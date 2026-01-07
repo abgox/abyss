@@ -38,7 +38,7 @@
         "$DataDir = \"RubyMine$versionShort\"",
         "A-New-LinkDirectory \"$env:AppData\\JetBrains\\$DataDir\"",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList '/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\""
+        "A-Install-App -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList '/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,7 +51,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "A-Stop-Process",
-        "A-Uninstall-Exe -ArgumentList '/S'",
+        "A-Uninstall-App -ArgumentList '/S'",
         "A-Remove-Link",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",

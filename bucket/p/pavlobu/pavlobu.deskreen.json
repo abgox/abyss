@@ -28,7 +28,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\deskreen-ce\"",
-        "A-Install-Exe msi"
+        "A-Install-App msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -42,7 +42,7 @@
         "A-Stop-Process \"$env:LocalAppData\\Programs\\deskreen-ce\"",
         "A-Remove-Link",
         "$ProductCode = A-Get-ProductCode '^Deskreen CE'",
-        "A-Uninstall-Exe $ProductCode"
+        "A-Uninstall-App $ProductCode"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

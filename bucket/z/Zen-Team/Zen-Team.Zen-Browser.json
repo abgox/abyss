@@ -32,7 +32,7 @@
         "A-New-LinkDirectory \"$env:AppData\\zen\"",
         "# 不能使用 /D=$dir 安装到 Scoop 目录下，只能使用标准安装目录 $env:ProgramFiles\\Zen Browser",
         "# 如果安装到 Scoop 目录下，每次重新安装/更新都会自动新建 Profile 用户配置，而不是使用旧的用户配置",
-        "A-Install-Exe -Uninstaller \"$env:ProgramFiles\\Zen Browser\\uninstall\\helper.exe\" -ArgumentList '/S'"
+        "A-Install-App -Uninstaller \"$env:ProgramFiles\\Zen Browser\\uninstall\\helper.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -46,7 +46,7 @@
         "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\Zen Browser\"",
         "A-Remove-Link",
-        "A-Uninstall-Exe",
+        "A-Uninstall-App",
         "A-Remove-TempData \"$env:ProgramFiles\\Zen Browser\",\"$env:LocalAppData\\zen\""
     ],
     "post_uninstall": [

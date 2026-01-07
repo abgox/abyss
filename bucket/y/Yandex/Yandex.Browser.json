@@ -25,7 +25,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:LocalAppData\\Yandex\\YandexBrowser\\User Data\"",
-        "A-Install-Exe -ArgumentList '--silent','--do-not-launch-browser'"
+        "A-Install-App -ArgumentList '--silent','--do-not-launch-browser'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -39,7 +39,7 @@
         "A-Require-Admin",
         "A-Stop-Process \"$env:LocalAppData\\Yandex\\YandexBrowser\"",
         "$Uninstaller = Get-ChildItem \"$env:LocalAppData\\Yandex\\YandexBrowser\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
-        "A-Uninstall-Exe -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall', '--force-uninstall'",
+        "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall', '--force-uninstall'",
         "A-Remove-Link",
         "A-Remove-TempData \"$env:LocalAppData\\Yandex\\YandexBrowser\""
     ],

@@ -25,7 +25,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkDirectory \"$env:AppData\\Tencent\\WeMeet\"",
-        "A-Install-Exe -ArgumentList '/SilentInstall=0','/StartProcess=0'"
+        "A-Install-App -ArgumentList '/SilentInstall=0','/StartProcess=0'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,7 +40,7 @@
         "A-Stop-Process \"$env:ProgramFiles\\Tencent\\WeMeet\"",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Tencent\\WeMeet\" WeMeetUninstall.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Remove-Link",
-        "A-Uninstall-Exe -Uninstaller $Uninstaller.FullName",
+        "A-Uninstall-App -Uninstaller $Uninstaller.FullName",
         "A-Remove-TempData \"$env:AppData\\WeMeetApp\""
     ],
     "post_uninstall": [

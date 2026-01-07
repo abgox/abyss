@@ -24,7 +24,7 @@
         "A-New-LinkDirectory \"$env:AppData\\LarkShell\"",
         "$InstallLocation = '\"' + \"$dir\\app\" + '\"'",
         "$LogLocation = '\"' + \"$env:TEMP\\scoop-$app-logs\" + '\"'",
-        "A-Install-Exe -ArgumentList '--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\"",
+        "A-Install-App -ArgumentList '--command=quiet_install', \"--target_dir=$InstallLocation\", \"--log_dir=$LogLocation\"",
         "A-Hold-App"
     ],
     "post_install": [
@@ -36,7 +36,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-ExeManually 'app'",
+        "A-Uninstall-Manually 'app'",
         "A-Remove-Link"
     ],
     "post_uninstall": [

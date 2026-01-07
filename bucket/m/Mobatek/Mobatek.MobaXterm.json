@@ -21,7 +21,7 @@
         "A-New-LinkDirectory \"$env:AppData\\MobaXterm\"",
         "$msi = Get-ChildItem $dir '*.msi' -Recurse | Select-Object -First 1",
         "$fname = Join-Path 'app' $msi.Name",
-        "A-Install-Exe msi"
+        "A-Install-App msi"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "$ProductCode = A-Get-ProductCode '^MobaXterm'",
-        "A-Uninstall-Exe $ProductCode"
+        "A-Uninstall-App $ProductCode"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

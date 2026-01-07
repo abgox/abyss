@@ -24,7 +24,7 @@
         "A-Deny-Manifest",
         "A-Require-Admin",
         "# 无法静默安装",
-        "A-Install-Exe -Uninstaller \"${env:ProgramFiles(x86)}\\Tencent\\QQLive\\QQLiveUninstaller.exe\" -ArgumentList '/RQ=0'"
+        "A-Install-App -Uninstaller \"${env:ProgramFiles(x86)}\\Tencent\\QQLive\\QQLiveUninstaller.exe\" -ArgumentList '/RQ=0'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Uninstall-Exe"
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

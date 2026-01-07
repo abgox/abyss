@@ -30,7 +30,7 @@
         "A-Start-Install",
         "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\Alexandria_Data\" \"$persist_dir\\Alexandria_Data\"",
         "A-Ensure-Directory \"$persist_dir\\Alexandria_Data\\books\"",
-        "A-Install-Exe -Uninstaller 'app\\uninstall.exe'"
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -42,7 +42,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Uninstall-Exe",
+        "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\com.btpf.alexandria\""
     ],
     "post_uninstall": [

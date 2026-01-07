@@ -25,7 +25,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\Mailspring\"",
-        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\Mailspring\\Update.exe\" -ArgumentList '--silent'"
+        "A-Install-App -Uninstaller \"$env:LocalAppData\\Mailspring\\Update.exe\" -ArgumentList '--silent'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-Exe -ArgumentList '--uninstall'",
+        "A-Uninstall-App -ArgumentList '--uninstall'",
         "A-Remove-Link",
         "A-Remove-TempData \"$env:LocalAppData\\Mailspring\""
     ],

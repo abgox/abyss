@@ -25,7 +25,7 @@
         "A-Start-Install",
         "A-Require-Admin",
         "A-New-LinkDirectory \"$env:LocalAppData\\BrowserOS\\BrowserOS\\User Data\"",
-        "A-Install-Exe -ArgumentList '--do-not-launch-chrome','--system-level'"
+        "A-Install-App -ArgumentList '--do-not-launch-chrome','--system-level'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -38,7 +38,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\BrowserOS\\BrowserOS\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
-        "A-Uninstall-Exe -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall','--system-level','--multi-install','--force-uninstall'",
+        "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall','--system-level','--multi-install','--force-uninstall'",
         "A-Remove-Link"
     ],
     "post_uninstall": [

@@ -17,7 +17,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\dyad\"",
-        "A-Install-Exe -Uninstaller \"$env:LocalAppData\\dyad\\Update.exe\" -ArgumentList '/S'"
+        "A-Install-App -Uninstaller \"$env:LocalAppData\\dyad\\Update.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -29,7 +29,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process \"$env:LocalAppData\\dyad\"",
-        "A-Uninstall-Exe -ArgumentList '--uninstall'",
+        "A-Uninstall-App -ArgumentList '--uninstall'",
         "A-Remove-Link",
         "A-Remove-TempData \"$env:LocalAppData\\dyad\""
     ],

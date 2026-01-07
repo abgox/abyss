@@ -20,7 +20,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Install-Exe -ArgumentList '/quiet', '/norestart'"
+        "A-Install-App -ArgumentList '/quiet', '/norestart'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +34,7 @@
         "A-Require-Admin",
         "A-Stop-Process",
         "$UninstallEntry = A-Get-UninstallEntryByAppName \"^Microsoft Windows Desktop Runtime - $version\"",
-        "A-Uninstall-Exe -Uninstaller $UninstallEntry.BundleCachePath -ArgumentList '/uninstall', '/quiet'"
+        "A-Uninstall-App -Uninstaller $UninstallEntry.BundleCachePath -ArgumentList '/uninstall', '/quiet'"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

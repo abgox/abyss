@@ -2395,35 +2395,35 @@
                                                 },
                                                 {
                                                     "const": "A-Expand-SetupExe",
-                                                    "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-Exe`\n- 除非 `A-Install-Exe` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
+                                                    "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-App`\n- 除非 `A-Install-App` 需要管理员权限或安装场景更适合 `A-Expand-SetupExe`"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe inno",
+                                                    "const": "A-Install-App inno",
                                                     "markdownDescription": "使用 innosetup 安装程序"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe msi",
+                                                    "const": "A-Install-App msi",
                                                     "markdownDescription": "使用 msi 安装程序"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe -Uninstaller 'app\\uninstall.exe'",
+                                                    "const": "A-Install-App -Uninstaller 'app\\uninstall.exe'",
                                                     "markdownDescription": "以 `uninstall.exe` 为卸载程序\n- 基于 [Tauri](https://tauri.app/) 构建的应用\n- ..."
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe -Uninstaller 'app\\Uninstall xxx.exe'",
+                                                    "const": "A-Install-App -Uninstaller 'app\\Uninstall xxx.exe'",
                                                     "markdownDescription": "以 `Uninstall xxx.exe` 为卸载程序"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe'",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "const": "A-Install-App -Uninstaller 'app\\xxx.exe'",
+                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-App -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
                                                 },
                                                 {
-                                                    "const": "A-Install-Exe -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "const": "A-Install-App -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
+                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-App -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
                                                 },
                                                 {
-                                                    "pattern": "A-Install-Exe",
-                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-Exe -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-Exe -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
+                                                    "pattern": "A-Install-App",
+                                                    "markdownDescription": "使用安装程序安装应用\n- 它有多个参数:\n    - Installer: 安装程序的文件名称\n        - 默认使用 `Join-Path $dir ($fname | Select-Object -First 1)`\n    - ArgumentList: 安装程序的命令行参数\n        - 默认 `'/S', \"/D=$dir\\app\"`\n- 示例 1: \n    - `A-Install-App -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 `/VerySilent` 而不是默认的 `/S`\n- 示例 2: \n    - `A-Install-App -Installer 'setup.exe' -ArgumentList '/VerySilent',\"/Dir=$dir\\app\"`\n    - 使用 \"$dir\\setup.exe\" 作为安装程序，并传递安装参数"
                                                 },
                                                 {
                                                     "const": "A-Require-Admin",
@@ -2742,24 +2742,24 @@
                                                     "markdownDescription": "禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用\n- 参考: https://abyss.abgox.com/faq/deny-update"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-ExeManually 'app'",
+                                                    "const": "A-Uninstall-Manually 'app'",
                                                     "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
                                                 {
-                                                    "pattern": "A-Uninstall-ExeManually",
+                                                    "pattern": "A-Uninstall-Manually",
                                                     "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe'",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "const": "A-Uninstall-App -Uninstaller 'uninstall.exe'",
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-Exe",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "const": "A-Uninstall-App",
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-Exe -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "const": "A-Uninstall-App -Uninstaller 'uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 },
                                                 {
                                                     "const": "$ProductCode = A-Get-ProductCode '^xxx$'",
@@ -2770,12 +2770,12 @@
                                                     "markdownDescription": "获取产品代码\n- 它需要传入一个正则表达式作为参数，去匹配 DisplayName\n- 例如: `$ProductCode = A-Get-ProductCode '^xxx$'`"
                                                 },
                                                 {
-                                                    "const": "A-Uninstall-Exe $ProductCode",
-                                                    "markdownDescription": "使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-Exe $ProductCode`"
+                                                    "const": "A-Uninstall-App $ProductCode",
+                                                    "markdownDescription": "使用产品代码卸载应用(`msi`)\n- 它需要传入产品代码作为参数\n- 例如: `A-Uninstall-App $ProductCode`"
                                                 },
                                                 {
-                                                    "pattern": "A-Uninstall-Exe",
-                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-Exe -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-Exe -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
+                                                    "pattern": "A-Uninstall-App",
+                                                    "markdownDescription": "使用卸载程序卸载应用\n- 它有多个参数:\n    - Uninstaller: 卸载程序的文件名称(或绝对路径)\n    - ArgumentList: 卸载程序的命令行参数\n        - 默认 `'/S'`\n- 示例: \n    - `A-Uninstall-App -Uninstaller 'uninstall.exe'`\n    - 使用 \"$dir\\uninstall.exe\" 作为卸载程序，并传递默认卸载参数\n    - `A-Uninstall-App -Uninstaller 'D:\\demo\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'`\n    - 使用 \"D:\\demo\\uninstall.exe\" 作为卸载程序，并传递指定的卸载参数"
                                                 }
                                             ]
                                         }
@@ -2886,14 +2886,14 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "如果在 pre_install 中使用了 A-Install-Exe 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
+                                    "$comment": "如果在 pre_install 中使用了 A-Install-App 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
                                                 "type": "array",
                                                 "contains": {
                                                     "type": "string",
-                                                    "pattern": "(?<!#.*)(A-Install-Exe|A-Expand-SetupExe)"
+                                                    "pattern": "(?<!#.*)(A-Install-App|A-Expand-SetupExe)"
                                                 }
                                             }
                                         }
@@ -2912,7 +2912,7 @@
                                                     {
                                                         "$ref": "#/definitions/str",
                                                         "pattern": "^app\\\\",
-                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                     },
                                                     {
                                                         "type": "array",
@@ -2925,14 +2925,14 @@
                                                                 {
                                                                     "$ref": "#/definitions/str",
                                                                     "pattern": "^app\\\\",
-                                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                                 },
                                                                 {
                                                                     "type": "array",
                                                                     "items": [
                                                                         {
                                                                             "pattern": "^app\\\\",
-                                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                                         }
                                                                     ]
                                                                 }
@@ -2970,7 +2970,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-Exe 或 A-Expand-SetupExe，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
                                                             }
                                                         }
                                                     ]
@@ -2980,7 +2980,7 @@
                                     }
                                 },
                                 {
-                                    "$comment": "根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
+                                    "$comment": "根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-App/A-Uninstall-App",
                                     "allOf": [
                                         {
                                             "if": {
@@ -3018,7 +3018,7 @@
                                                 "properties": {
                                                     "pre_install": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)A-Install-Exe"
+                                                            "pattern": "(?<!#.*)A-Install-App"
                                                         }
                                                     }
                                                 }
@@ -3027,9 +3027,9 @@
                                                 "properties": {
                                                     "pre_uninstall": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)(A-Uninstall-Exe|Remove-AppPackage)"
+                                                            "pattern": "(?<!#.*)(A-Uninstall-App|A-Uninstall-Manually|Remove-AppPackage)"
                                                         },
-                                                        "errorMessage": "pre_install 中使用了 A-Install-Exe，而 pre_uninstall 中缺少 A-Uninstall-Exe 或 A-Uninstall-ExeManually 或 Remove-AppPackage"
+                                                        "errorMessage": "pre_install 中使用了 A-Install-App，而 pre_uninstall 中缺少 A-Uninstall-App 或 A-Uninstall-Manually 或 Remove-AppPackage"
                                                     }
                                                 }
                                             }
@@ -3068,7 +3068,7 @@
                                     ]
                                 },
                                 {
-                                    "$comment": "根据 pre_uninstall 使用的函数，检查 pre_install 中的对应函数是否存在，如 A-Install-Exe/A-Uninstall-Exe",
+                                    "$comment": "根据 pre_uninstall 使用的函数，检查 pre_install 中的对应函数是否存在，如 A-Install-App/A-Uninstall-App",
                                     "allOf": [
                                         {
                                             "if": {
@@ -3096,7 +3096,7 @@
                                                 "properties": {
                                                     "pre_uninstall": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)A-Uninstall-Exe"
+                                                            "pattern": "(?<!#.*)A-Uninstall-App"
                                                         }
                                                     }
                                                 }
@@ -3105,9 +3105,9 @@
                                                 "properties": {
                                                     "pre_install": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)A-Install-Exe"
+                                                            "pattern": "(?<!#.*)A-Install-App"
                                                         },
-                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Exe 或 A-Uninstall-ExeManually，而 pre_install 中缺少 A-Install-Exe"
+                                                        "errorMessage": "pre_uninstall 中使用了 A-Uninstall-App，而 pre_install 中缺少 A-Install-App"
                                                     }
                                                 }
                                             }

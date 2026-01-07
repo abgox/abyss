@@ -532,14 +532,14 @@ function A-Remove-Service {
     }
 }
 
-function A-Install-Exe {
+function A-Install-App {
     param(
         [ValidateSet("inno", "msi")]
         [string]$InstallerType,
         [string]$Installer,
         [array]$ArgumentList,
 
-        # 当指定它后，A-Uninstall-Exe 会默认使用它作为卸载程序路径
+        # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
         [string]$Uninstaller
     )
 
@@ -653,7 +653,7 @@ function A-Install-Exe {
     }
 }
 
-function A-Uninstall-Exe {
+function A-Uninstall-App {
     param(
         # 仅安装时的安装程序类型为 msi 时才需要
         [string]$ProductCode,
@@ -741,7 +741,7 @@ function A-Uninstall-Exe {
     Start-Sleep -Seconds 10
 }
 
-function A-Uninstall-ExeManually {
+function A-Uninstall-Manually {
     param(
         [array]$Paths
     )
@@ -1859,7 +1859,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     if ($abgox_abyss.shortcutsActionLevel -eq '0') {
         return
     }
-    if ($abgox_abyss.shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-Exe.*')) {
+    if ($abgox_abyss.shortcutsActionLevel -eq '2' -and (A-Test-ScriptPattern $manifest '(?<!#.*)A-Install-App.*')) {
         $abgox_abyss.locations = @(
             "$env:AppData\Microsoft\Windows\Start Menu\Programs",
             "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",
