@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (689)|Tag|Description|
+|App (690)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -560,6 +560,7 @@
 |[Predidit.oneAnime](https://github.com/Predidit/oneAnime "点击访问仓库或主页")|<a href="./bucket/p/Predidit/Predidit.oneAnime.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款看番软件，带弹幕的 anime1 第三方客户端|
 |[Proton.ProtonPass](https://proton.me/pass "点击访问仓库或主页")|<a href="./bucket/p/Proton/Proton.ProtonPass.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开源且加密的密码管理器|
 |[psake.psake](https://psake.dev/ "点击访问仓库或主页")|<a href="./bucket/p/psake/psake.psake.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个用 PowerShell 编写的构建自动化工具|
+|[Psyche.Kelivo](https://kelivo.psycheas.top/ "点击访问仓库或主页")|<a href="./bucket/p/Psyche/Psyche.Kelivo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个 Flutter LLM 聊天客户端。|
 |[purocean.YankNote](https://yank-note.com/ "点击访问仓库或主页")|<a href="./bucket/p/purocean/purocean.YankNote.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|高度可扩展的 Markdown 编辑器。|
 |[Pylogmon.pot](https://pot-app.com/ "点击访问仓库或主页")|<a href="./bucket/p/Pylogmon/Pylogmon.pot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台的划词翻译和 OCR 软件|
 |[qBittorrent.qBittorrent](https://www.qbittorrent.org/ "点击访问仓库或主页")|<a href="./bucket/q/qBittorrent/qBittorrent.qBittorrent.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|免费（自由）可靠的 P2P Bittorent 客户端|
