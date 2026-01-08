@@ -39,7 +39,7 @@
         "    Write-Host \"Copying $app syntax model to Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
         "}",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
         "Copy-Item \"$dir\\wanxiang-lts-zh-hans.gram\" $RimeDataDir -Force"
     ],
     "post_install": [
@@ -63,7 +63,7 @@
         "    $p | Stop-Process -Force -ErrorAction SilentlyContinue",
         "}",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
         "Remove-Item \"$RimeDataDir\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue",
         "if ($p.Path) {",
         "    Start-Process $p.Path -ErrorAction SilentlyContinue",

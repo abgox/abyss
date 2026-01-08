@@ -445,7 +445,7 @@
         },
         "env_set": {
             "title": "设置环境变量",
-            "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$env:UserProfile`\n  - `$env:AppData`\n  - ...",
+            "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ...",
             "type": "object",
             "examples": [
                 {}
@@ -2118,7 +2118,7 @@
                                 ]
                             },
                             "persist": {
-                                "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$env:UserProfile\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory \"$env:UserProfile\\.config\\xxx\"` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                                "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$home\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory \"$home\\.config\\xxx\"` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
                             },
                             "pre_install": {
                                 "items": {
@@ -2370,12 +2370,12 @@
                                                     "markdownDescription": "拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单已重命名，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单已被弃用\n- 参考: https://abyss.abgox.com/faq/deny-manifest"
                                                 },
                                                 {
-                                                    "const": "A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"",
-                                                    "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
+                                                    "const": "A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"",
+                                                    "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
                                                 },
                                                 {
                                                     "pattern": "A-Add-Path",
-                                                    "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$env:UserProfile\\xxx\", \"$env:ProgramFiles\\xxx\"`"
+                                                    "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
                                                 },
                                                 {
                                                     "const": "A-New-File \"$persist_dir\\xxx\" -Content 'xxx'",
@@ -2442,36 +2442,36 @@
                                                     "markdownDescription": "确保指定目录路径存在\n- 如果不传递参数，则确保 `$persist_dir` 路径存在\n- 例如: `A-Ensure-Directory 'xxx'`"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "const": "A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"",
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkFile \"$env:UserProfile\\xxx\"",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "const": "A-New-LinkFile \"$home\\xxx\"",
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "const": "A-New-LinkFile \"$env:AppData\\xxx\"",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkFile",
-                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$env:UserProfile\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "使用 SymbolicLink 链接数据文件\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"",
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "const": "A-New-LinkDirectory \"$env:AppData\\xxx\"",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
-                                                    "const": "A-New-LinkDirectory \"$env:UserProfile\\xxx\"",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "const": "A-New-LinkDirectory \"$home\\xxx\"",
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "pattern": "A-New-LinkDirectory",
-                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$env:UserProfile\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
+                                                    "markdownDescription": "使用 Junction 链接数据目录\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果是相对路径，会拼接 `$dir` 作为父目录\n---\n- 使用 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 自动生成目标目录，因此，非特殊情况不允许通过第二个参数指定目标目录"
                                                 },
                                                 {
                                                     "const": "A-Add-Font",

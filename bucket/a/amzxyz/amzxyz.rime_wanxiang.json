@@ -40,7 +40,7 @@
         "    Write-Host \"Copying $app configuration file to Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
         "}",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
         "Copy-Item \"$dir\\rime_wanxiang\\*\" $RimeDataDir -Recurse -Force"
     ],
     "post_install": [
@@ -59,7 +59,7 @@
         "    Write-Host \"Removing $app configuration file from Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
         "}",
         "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($env:UserProfile,$RimeDir)",
+        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
         "(Get-ChildItem \"$dir\\rime_wanxiang\" -Recurse).FullName.Replace(\"$dir\\rime_wanxiang\", $RimeDataDir) | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [

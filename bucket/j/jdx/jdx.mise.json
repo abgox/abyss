@@ -23,7 +23,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Add-Path \"$env:LocalAppData\\mise\\shims\"",
-        "A-New-LinkDirectory \"$env:UserProfile\\.config\\mise\", \"$env:LocalAppData\\mise\""
+        "A-New-LinkDirectory \"$home\\.config\\mise\", \"$env:LocalAppData\\mise\""
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,7 @@
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Remove-TempData \"$env:UserProfile\\.local\\state\\mise\""
+        "A-Remove-TempData \"$home\\.local\\state\\mise\""
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

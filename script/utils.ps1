@@ -270,7 +270,7 @@ function A-New-LinkFile {
         通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkFile "$env:UserProfile\xxx", "$env:AppData\xxx"
+        A-New-LinkFile "$home\xxx", "$env:AppData\xxx"
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -303,7 +303,7 @@ function A-New-LinkDirectory {
         通常忽略它，让它根据 LinkPaths 自动生成
 
     .EXAMPLE
-        A-New-LinkDirectory "$env:AppData\Code", "$env:UserProfile\.vscode"
+        A-New-LinkDirectory "$env:AppData\Code", "$home\.vscode"
 
     .LINK
         https://github.com/abgox/abyss#link
@@ -1663,7 +1663,7 @@ function A-New-Link {
         通常忽略它，让它根据 LinkPaths 自动生成
         生成规则:
             如果 LinkPaths 包含 $dir\app，则替换为 $persist_dir
-            如果 LinkPaths 包含 $env:UserProfile，则替换为 $persist_dir
+            如果 LinkPaths 包含 $home，则替换为 $persist_dir
             否则，去掉盘符
 
     .PARAMETER ItemType
@@ -1701,8 +1701,8 @@ function A-New-Link {
                 $linkTarget = $LinkPath.replace("$dir\app\", "$persist_dir\").replace("$dir\", "$persist_dir\")
             }
             else {
-                $linkTarget = $LinkPath.replace($env:UserProfile, $persist_dir)
-                # 如果不在 $env:UserProfile 目录下，则去掉盘符
+                $linkTarget = $LinkPath.replace($home, $persist_dir)
+                # 如果不在 $home 目录下，则去掉盘符
                 if ($linkTarget -notlike "$persist_dir\*") {
                     $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
                 }
@@ -2030,7 +2030,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
             "$env:AppData\Microsoft\Windows\Start Menu\Programs",
             "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",
             "$env:ProgramData\Microsoft\Windows\Start Menu\Programs",
-            "$env:UserProfile\Desktop",
+            "$home\Desktop",
             "$env:Public\Desktop"
         )
 
