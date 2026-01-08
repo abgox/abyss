@@ -1692,17 +1692,18 @@ function A-New-Link {
     for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
         $linkPath = $LinkPaths[$i]
         if ($LinkTargets[$i]) {
-            $linkTarget = $LinkTargets[$i]
+            $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $persist_dir
         }
         else {
-            if ($LinkPath -like "$dir\app\*") {
-                # abyss 中的应用清单会额外添加一个 app 目录，因此需要替换 $dir\app
-                $linkTarget = $LinkPath.replace("$dir\app", $persist_dir)
+            $LinkPath = A-Get-AbsolutePath $LinkPath
+            if ($LinkPath -like "$dir\*") {
+                # abyss 中的应用清单会额外添加一个 app 目录，因此 "$dir\app" 和 "$dir" 应该等效
+                $linkTarget = $LinkPath.replace("$dir\app\", "$persist_dir\").replace("$dir\", "$persist_dir\")
             }
             else {
                 $linkTarget = $LinkPath.replace($env:UserProfile, $persist_dir)
                 # 如果不在 $env:UserProfile 目录下，则去掉盘符
-                if ($linkTarget -notlike "$persist_dir*") {
+                if ($linkTarget -notlike "$persist_dir\*") {
                     $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
                 }
             }
@@ -1895,18 +1896,25 @@ function A-Exit {
 
 function A-Get-AbsolutePath {
     param(
-        [string]$path
+        [string]$Path,
+        [string]$Parent = $dir
     )
 
-    if (!$path) {
+    if (-not $Path) {
         return ""
     }
 
-    if ([System.IO.Path]::IsPathRooted($path)) {
-        return $path
+    if ([System.IO.Path]::IsPathRooted($Path)) {
+        return $Path
     }
 
-    return Join-Path $dir $path
+    $newPath = Join-Path $Parent $Path
+
+    if ([System.IO.Path]::IsPathRooted($newPath)) {
+        return $newPath
+    }
+
+    return Join-Path $dir $newPath
 }
 
 function A-Show-IssueCreationPrompt {
