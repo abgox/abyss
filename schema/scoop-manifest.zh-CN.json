@@ -2628,7 +2628,7 @@
                                 ]
                             },
                             "post_install": {
-                                "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
+                                "markdownDescription": "- 对于 [abyss](https://abyss.abgox.com)，一般情况它应该是规定的固定数组\n- 如果必须在 post_install 中添加安装逻辑，必须确保最后一项为 `A-Complete-Install`\n---\n- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist，需要在这之前(pre_install 中) \n- 可以使用的函数:\n    - appdir: 参考另一个独家应用程序。\n例如，要检查是否安装了另一个应用程序，可以使用 \"if (Test-Path \"$(appdir otherapp)\\current\\otherapp.exe\") { ... }\"\n- 可以使用的变量：\n    - $app: 应用程序名称(应用清单名称)\n    - $architecture: 所安装应用程序的 CPU 架构，如 64bit/32bit/arm64\n    - $cmd: 当前正在运行的子命令，如 uninstall/update/install\n    - $fname: 下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $cfg: Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}\n    - $global: 如果安装时使用了 `-g` 或 `--global`，则为 `$true`\n    - $manifest: 反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}\n    - $version: 正在安装的版本，如 1.2.3\n    - $dir: 应用程序安装目录(current 目录)\n    - $persist_dir: 数据持久化目录\n    - $bucketsdir: Scoop buckets 目录，如 D:\\scoop\\buckets\n    - $bucket: 当前安装应用所属于的 bucket 名称\n    - $cachedir: Scoop cache 目录\n    - $configFile: Scoop 配置的路径\n    - $globaldir: 全局安装目录\n    - $modulesdir: Scoop modules 目录\n    - $original_dir: 应用程序安装目录(实际版本号目录)\n    - $scoopdir: Scoop 所在目录",
                                 "type": "array",
                                 "minItems": 3,
                                 "examples": [
@@ -2894,14 +2894,14 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "如果在 pre_install 中使用了 A-Install-App 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
+                                    "$comment": "如果在 pre_install 中使用了 A-Install-* 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
                                                 "type": "array",
                                                 "contains": {
                                                     "type": "string",
-                                                    "pattern": "(?<!#.*)(A-Install-App|A-Expand-SetupExe)"
+                                                    "pattern": "(?<!#.*)(A-Install-\\w+|A-Expand-SetupExe)"
                                                 }
                                             }
                                         }
@@ -2920,7 +2920,7 @@
                                                     {
                                                         "$ref": "#/definitions/str",
                                                         "pattern": "^app\\\\",
-                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                     },
                                                     {
                                                         "type": "array",
@@ -2933,14 +2933,14 @@
                                                                 {
                                                                     "$ref": "#/definitions/str",
                                                                     "pattern": "^app\\\\",
-                                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                                 },
                                                                 {
                                                                     "type": "array",
                                                                     "items": [
                                                                         {
                                                                             "pattern": "^app\\\\",
-                                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
                                                                         }
                                                                     ]
                                                                 }
@@ -2978,7 +2978,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-App 或 A-Expand-SetupExe，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
                                                             }
                                                         }
                                                     ]
@@ -2990,6 +2990,27 @@
                                 {
                                     "$comment": "根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-App/A-Uninstall-App",
                                     "allOf": [
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Require-Admin"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Require-Admin"
+                                                        },
+                                                        "errorMessage": "pre_install 中使用了 A-Require-Admin，而 pre_uninstall 中缺少 A-Require-Admin"
+                                                    }
+                                                }
+                                            }
+                                        },
                                         {
                                             "if": {
                                                 "properties": {

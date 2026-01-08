@@ -2894,14 +2894,14 @@
                         "then": {
                             "allOf": [
                                 {
-                                    "$comment": "If A-Install-App or A-Expand-SetupExe is used in pre_install, then env_add_path and bin may need to start with app\\\\ or $env: or ${env:",
+                                    "$comment": "If A-Install-* or A-Expand-SetupExe is used in pre_install, then env_add_path and bin may need to start with app\\\\ or $env: or ${env:",
                                     "if": {
                                         "properties": {
                                             "pre_install": {
                                                 "type": "array",
                                                 "contains": {
                                                     "type": "string",
-                                                    "pattern": "(?<!#.*)(A-Install-App|A-Expand-SetupExe)"
+                                                    "pattern": "(?<!#.*)(A-Install-\\w+|A-Expand-SetupExe)"
                                                 }
                                             }
                                         }
@@ -2920,7 +2920,7 @@
                                                     {
                                                         "$ref": "#/definitions/str",
                                                         "pattern": "^app\\\\",
-                                                        "errorMessage": "Please check the path. Since A-Install-App or A-Expand-SetupExe is used, it may need to start with app\\\\"
+                                                        "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                     },
                                                     {
                                                         "type": "array",
@@ -2933,14 +2933,14 @@
                                                                 {
                                                                     "$ref": "#/definitions/str",
                                                                     "pattern": "^app\\\\",
-                                                                    "errorMessage": "Please check the path. Since A-Install-App or A-Expand-SetupExe is used, it may need to start with app\\\\"
+                                                                    "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                                 },
                                                                 {
                                                                     "type": "array",
                                                                     "items": [
                                                                         {
                                                                             "pattern": "^app\\\\",
-                                                                            "errorMessage": "Please check the path. Since A-Install-App or A-Expand-SetupExe is used, it may need to start with app\\\\"
+                                                                            "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\"
                                                                         }
                                                                     ]
                                                                 }
@@ -2978,7 +2978,7 @@
                                                             },
                                                             "then": {
                                                                 "not": true,
-                                                                "errorMessage": "Please check the path. Since A-Install-App or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
+                                                                "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
                                                             }
                                                         }
                                                     ]
@@ -2990,6 +2990,27 @@
                                 {
                                     "$comment": "Check whether the corresponding functions in pre_uninstall exist according to the functions used in pre_install, such as A-Install-App/A-Uninstall-App",
                                     "allOf": [
+                                        {
+                                            "if": {
+                                                "properties": {
+                                                    "pre_install": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Require-Admin"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "pre_uninstall": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Require-Admin"
+                                                        },
+                                                        "errorMessage": "A-Require-Admin is used in pre_install, while A-Require-Admin is missing in pre_uninstall"
+                                                    }
+                                                }
+                                            }
+                                        },
                                         {
                                             "if": {
                                                 "properties": {
