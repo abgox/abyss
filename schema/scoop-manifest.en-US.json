@@ -3002,10 +3002,17 @@
                                         "then": {
                                             "properties": {
                                                 "pre_uninstall": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Require-Admin"
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Uninstall-Manually"
+                                                        }
                                                     },
-                                                    "errorMessage": "A-Require-Admin is used in pre_install, while A-Require-Admin is missing in pre_uninstall"
+                                                    "else": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Require-Admin"
+                                                        },
+                                                        "errorMessage": "A-Require-Admin is used in pre_install, while A-Require-Admin or A-Uninstall-Manually is missing in pre_uninstall"
+                                                    }
                                                 }
                                             }
                                         }

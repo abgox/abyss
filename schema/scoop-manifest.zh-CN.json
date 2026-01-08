@@ -3002,10 +3002,17 @@
                                         "then": {
                                             "properties": {
                                                 "pre_uninstall": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Require-Admin"
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Uninstall-Manually"
+                                                        }
                                                     },
-                                                    "errorMessage": "pre_install 中使用了 A-Require-Admin，而 pre_uninstall 中缺少 A-Require-Admin"
+                                                    "else": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Require-Admin"
+                                                        },
+                                                        "errorMessage": "pre_install 中使用了 A-Require-Admin，而 pre_uninstall 中缺少 A-Require-Admin 或 A-Uninstall-Manually"
+                                                    }
                                                 }
                                             }
                                         }
