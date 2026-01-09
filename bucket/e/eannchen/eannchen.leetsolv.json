@@ -1,0 +1,62 @@
+{
+    "version": "1.2.0",
+    "description": "一款用于 DSA 的间隔重复 CLI，采用定制的 SM-2 算法进行刻意练习。 | A spaced repetition CLI for DSA, powered by a custom SM-2 algorithm for deliberate practice.",
+    "homepage": "https://github.com/eannchen/leetsolv",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/eannchen/leetsolv/releases/download/v1.2.0/leetsolv-windows-amd64.exe#/leetsolv.exe",
+            "hash": "c99167a421f4b18daf08800d57df2c07f8e6830b132528020cec2f904c8a7f63"
+        },
+        "arm64": {
+            "url": "https://github.com/eannchen/leetsolv/releases/download/v1.2.0/leetsolv-windows-arm64.exe#/leetsolv.exe",
+            "hash": "e9e96606b6e42f7119be297f3cd969379e391dfbab5ce502206b921eb520e51a"
+        }
+    },
+    "bin": "leetsolv.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$home\\.leetsolv\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/eannchen/leetsolv/releases/download/v$version/leetsolv-windows-amd64.exe#/leetsolv.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/eannchen/leetsolv/releases/download/v$version/leetsolv-windows-arm64.exe#/leetsolv.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
