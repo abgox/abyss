@@ -667,15 +667,7 @@ function A-Uninstall-App {
 function A-Install-Inno {
     param(
         [string]$Uninstaller = 'app\unins000.exe',
-        [array]$ArgumentList = @(
-            '/CurrentUser',
-            '/VerySilent',
-            '/SuppressMsgBoxes',
-            '/NoRestart',
-            '/SP-',
-            "/Log=$dir\inno-install.log",
-            "/Dir=`"$dir\app`""
-        )
+        [array]$ArgumentList
     )
 
     # $fname 由 Scoop 提供，即下载的文件名
@@ -685,6 +677,20 @@ function A-Install-Inno {
         error "'$Installer' not found."
         A-Show-IssueCreationPrompt
         A-Exit
+    }
+
+    $logPath = "$env:TEMP\scoop_$($app)_$($version)_install_inno.log"
+
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $ArgumentList = @(
+            '/CurrentUser',
+            '/VerySilent',
+            '/SuppressMsgBoxes',
+            '/NoRestart',
+            '/SP-',
+            "/Log=$logPath",
+            "/Dir=`"$dir\app`""
+        )
     }
 
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
@@ -703,7 +709,7 @@ function A-Install-Inno {
         A-Exit
     }
 
-    # $log = Get-Content "$dir\inno-install.log" -ErrorAction SilentlyContinue
+    # $log = Get-Content $logPath -ErrorAction SilentlyContinue
 
     @{
         Installer    = $Installer
@@ -772,6 +778,8 @@ function A-Install-Msi {
         A-Exit
     }
 
+    $logPath = "$env:TEMP\scoop_$($app)_$($version)_install_msi.log"
+
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $msiFile = Join-Path $dir ($fname | Select-Object -First 1)
         $ArgumentList = @(
@@ -781,7 +789,7 @@ function A-Install-Msi {
             '/quiet',
             '/norestart',
             '/lvx*',
-            "$dir\msi-install.log"
+            $logPath
         )
     }
 
@@ -809,7 +817,7 @@ function A-Install-Msi {
         error $_.Exception.Message
     }
 
-    $log = Get-Content "$dir\msi-install.log" -ErrorAction SilentlyContinue
+    $log = Get-Content $logPath -ErrorAction SilentlyContinue
 
     @{
         Installer      = $Installer
