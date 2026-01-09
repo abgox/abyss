@@ -1,0 +1,71 @@
+{
+    "version": "10.12.1000.2512",
+    "description": "星愿浏览器，一款方便，可靠，简洁的浏览器 | Twinkstar Browser is a convenient, reliable and simple browser",
+    "homepage": "https://www.twinkstar.com/",
+    "license": {
+        "identifier": "Freeware"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Twinkstar Browser",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes-cn": [
+        "安装目录: $env:ProgramFiles\\Twinkstar Browser",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://d1.twinkstar.com/win/Twinkstar_v10.12.1000.2512_Release.exe",
+            "hash": "dfa3483a2e11fee7a1bd8230fac4214c3c9cbcab9e9466de8e01f4d7cc15635f"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:LocalAppData\\Twinkstar\\User Data\"",
+        "A-Install-App -Uninstaller \"$env:ProgramFiles\\Twinkstar Browser\\Uninstall.exe\" -ArgumentList '-silent'",
+        "A-Hold-App"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Uninstall-Manually \"$env:ProgramFiles\\Twinkstar Browser\"",
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:LocalAppData\\Twinkstar\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Twinkstar.TwinkstarBrowser' 'exe'",
+            "\"ver:$($InstallerInfo.PackageVersion);\"",
+            "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+            "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+            "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\""
+        ],
+        "regex": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
