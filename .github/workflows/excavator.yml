@@ -5,7 +5,7 @@ on:
     - cron: "25 */2 * * *"
 
 concurrency:
-  group: excavator-workflow-${{ github.ref }}
+  group: manifest-check-lock
 
 jobs:
   excavate:
@@ -56,6 +56,7 @@ jobs:
           Write-Output "::endgroup::"
 
   check-scoop-version:
+    name: Check Scoop Version
     runs-on: windows-latest
     outputs:
       ScoopNewVersion: ${{ steps.scoop-new-version.outputs.ScoopNewVersion }}
