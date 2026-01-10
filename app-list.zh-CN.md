@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (693)|Tag|Description|
+|App (694)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -457,6 +457,7 @@
 |[loganchef.Ciphora](https://github.com/loganchef/Ciphora "点击访问仓库或主页")|<a href="./bucket/l/loganchef/loganchef.Ciphora.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源、安全、跨平台的密码管理器|
 |[Logseq.Logseq](https://logseq.com/ "点击访问仓库或主页")|<a href="./bucket/l/Logseq/Logseq.Logseq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个以隐私为首要原则的开源知识管理与协作平台。|
 |[lordaimer.iris](https://github.com/lordaimer/iris "点击访问仓库或主页")|<a href="./bucket/l/lordaimer/lordaimer.iris.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个用 Rust 编写的快速、简洁、配置驱动的文件管理引擎。|
+|[lrclib.lrcget](https://github.com/tranxuanthang/lrcget "点击访问仓库或主页")|<a href="./bucket/l/lrclib/lrclib.lrcget.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于为你的离线音乐库批量下载 LRC 同步歌词的工具。|
 |[lsd-rs.lsd](https://github.com/lsd-rs/lsd "点击访问仓库或主页")|<a href="./bucket/l/lsd-rs/lsd-rs.lsd.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|下一代 ls 命令|
 |[LutzRoeder.Netron](https://netron.app/ "点击访问仓库或主页")|<a href="./bucket/l/LutzRoeder/LutzRoeder.Netron.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|神经网络、深度学习和机器学习模型的可视化工具|
 |[lyswhut.lx-music-desktop](https://github.com/lyswhut/lx-music-desktop "点击访问仓库或主页")|<a href="./bucket/l/lyswhut/lyswhut.lx-music-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个基于 electron 的音乐软件|
