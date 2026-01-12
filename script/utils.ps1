@@ -1423,6 +1423,9 @@ function A-Get-InstallerInfoFromWinget {
         [string]$MaxExclusiveVersion
     )
 
+    $tempFile = "$PSScriptRoot\..\temp-autoupdate.json"
+    Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+
     $headers = @{
         'User-Agent'           = A-Get-UserAgent
         "X-GitHub-Api-Version" = "2022-11-28"
@@ -1565,9 +1568,51 @@ function A-Get-InstallerInfoFromWinget {
     $installerInfo.PackageVersion = $installerInfo.PackageVersion -replace '^(v|V)', ''
 
     # 写入到 temp-autoupdate.json，用于后续读取
-    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath "$PSScriptRoot\..\temp-autoupdate.json" -Force -Encoding utf8
+    $installerInfo | ConvertTo-Json -Depth 100 | Out-File -FilePath $tempFile -Force -Encoding utf8
 
-    $installerInfo
+    $out = @("ver:$($InstallerInfo.PackageVersion);")
+    $out_neutral_machine = @(
+        "x64:$($InstallerInfo.neutral_machine.InstallerUrl);",
+        "x86:$($InstallerInfo.neutral_machine.InstallerUrl);",
+        "arm64:$($InstallerInfo.neutral_machine.InstallerUrl);"
+    )
+    $out_neutral_user = @(
+        "x64:$($InstallerInfo.neutral_user.InstallerUrl);",
+        "x86:$($InstallerInfo.neutral_user.InstallerUrl);",
+        "arm64:$($InstallerInfo.neutral_user.InstallerUrl);"
+    )
+    $out_machine = @(
+        "x64:$($InstallerInfo.x64_machine.InstallerUrl);",
+        "x86:$($InstallerInfo.x86_machine.InstallerUrl);",
+        "arm64:$($InstallerInfo.arm64_machine.InstallerUrl);"
+    )
+    $out_user = @(
+        "x64:$($InstallerInfo.x64_user.InstallerUrl);",
+        "x86:$($InstallerInfo.x86_user.InstallerUrl);",
+        "arm64:$($InstallerInfo.arm64_user.InstallerUrl);"
+    )
+
+    $_ = $json.autoupdate.architecture.'64bit'.hash.jsonpath
+    $jsonpath = if ($_) { $_ }else { $json.autoupdate.architecture.'arm64'.hash.jsonpath }
+
+    if ($jsonpath) {
+        if ($jsonpath -like '$.*_machine.InstallerSha256') {
+            $out += $out_neutral_machine
+            $out += $out_machine
+        }
+        elseif ($jsonpath -like '$.*_user.InstallerSha256') {
+            $out += $out_neutral_user
+            $out += $out_user
+        }
+    }
+    else {
+        $out += $out_neutral_machine
+        $out += $out_neutral_user
+        $out += $out_machine
+        $out += $out_user
+    }
+
+    return $installerInfo, $out
 }
 
 function A-Compare-Version {
