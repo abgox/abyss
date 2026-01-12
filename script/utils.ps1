@@ -2108,7 +2108,6 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Notes'
         Microsoft.PowerShell.Utility\Write-Output '-----'
-
         Write-Output (substitute $note @{
                 '$dir'                     = $dir
                 '$original_dir'            = $original_dir
@@ -2121,6 +2120,26 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
                 '$env:AppData'             = $env:AppData
                 '$env:LocalAppData'        = $env:LocalAppData
             })
+        Microsoft.PowerShell.Utility\Write-Output '-----'
+    }
+    #endregion
+
+    #region 新增 commands 字段
+    if ($manifest.commands) {
+        Microsoft.PowerShell.Utility\Write-Host
+        Write-Output 'Commands'
+        Microsoft.PowerShell.Utility\Write-Output '-----'
+        Microsoft.PowerShell.Utility\Write-Output $manifest.commands
+        Microsoft.PowerShell.Utility\Write-Output '-----'
+    }
+    #endregion
+
+    #region 新增 fonts 字段
+    if ($manifest.fonts) {
+        Microsoft.PowerShell.Utility\Write-Host
+        Write-Output 'Fonts'
+        Microsoft.PowerShell.Utility\Write-Output '-----'
+        Microsoft.PowerShell.Utility\Write-Output $manifest.fonts
         Microsoft.PowerShell.Utility\Write-Output '-----'
     }
     #endregion
