@@ -19,14 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install Scoop
-        shell: pwsh
-        run: |
-          Invoke-RestMethod -Uri https://raw.githubusercontent.com/ScoopInstaller/Install/master/install.ps1 | Invoke-Expression
-
       - name: Sort JSON Files
         shell: pwsh
         run: |
+          git clone --depth 1 https://github.com/ScoopInstaller/Scoop scoop
+          $env:SCOOP_HOME = ".\scoop"
           .\script\sort-json.ps1
 
       - name: Commit changes if any
