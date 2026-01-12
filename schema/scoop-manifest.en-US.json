@@ -1826,7 +1826,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|depends|suggest|notes|notes-cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|depends|suggest|notes|notes_cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -1933,9 +1933,9 @@
                                 }
                             }
                         },
-                        "notes-cn": {
+                        "notes_cn": {
                             "title": "Notes (Chinese)",
-                            "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes-cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
+                            "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
                             "$ref": "#/definitions/string_or_string_array"
                         },
                         "url": {
@@ -2291,7 +2291,7 @@
                                 "architecture"
                             ],
                             "propertyNames": {
-                                "pattern": "^(architecture|notes|notes-cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
+                                "pattern": "^(architecture|notes|notes_cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
                                 "errorMessage": "It is not allowed."
                             },
                             "markdownDescription": "- It will automatically update the manifest via [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml)\n - Scoop can install specific versions using `scoop install AppName@1.2.3`\n - The prerequisite is that `url` in the `autoupdate` of the manifest can only contain the following [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
@@ -2300,9 +2300,9 @@
                                     "not": true,
                                     "errorMessage": "In abyss, it is not allowed. Please use 'architecture'."
                                 },
-                                "notes-cn": {
+                                "notes_cn": {
                                     "title": "Notes (Chinese)",
-                                    "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes-cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
+                                    "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
                                     "$ref": "#/definitions/string_or_string_array"
                                 },
                                 "architecture": {
@@ -3279,7 +3279,7 @@
                 {
                     "allOf": [
                         {
-                            "$comment": "If 'notes' is set, then 'notes-cn' must be set.",
+                            "$comment": "If 'notes' is set, then 'notes_cn' must be set.",
                             "allOf": [
                                 {
                                     "if": {
@@ -3290,14 +3290,14 @@
                                     "then": {
                                         "if": {
                                             "required": [
-                                                "notes-cn"
+                                                "notes_cn"
                                             ]
                                         },
                                         "else": {
                                             "properties": {
                                                 "notes": {
                                                     "not": true,
-                                                    "errorMessage": "In abyss, if 'notes' is set, then 'notes-cn' must be set."
+                                                    "errorMessage": "In abyss, if 'notes' is set, then 'notes_cn' must be set."
                                                 }
                                             }
                                         }
@@ -3306,7 +3306,7 @@
                                 {
                                     "if": {
                                         "required": [
-                                            "notes-cn"
+                                            "notes_cn"
                                         ]
                                     },
                                     "then": {
@@ -3317,9 +3317,9 @@
                                         },
                                         "else": {
                                             "properties": {
-                                                "notes-cn": {
+                                                "notes_cn": {
                                                     "not": true,
-                                                    "errorMessage": "In abyss, if 'notes-cn' is set, then 'notes' must be set."
+                                                    "errorMessage": "In abyss, if 'notes_cn' is set, then 'notes' must be set."
                                                 }
                                             }
                                         }

@@ -10,7 +10,7 @@ $order = [ordered]@{
         url        = ''
     }
     notes          = ''
-    'notes-cn'     = ''
+    notes_cn       = ''
     depends        = ''
     suggest        = ''
     # url            = ''

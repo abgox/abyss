@@ -1826,7 +1826,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|depends|suggest|notes|notes-cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|depends|suggest|notes|notes_cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -1933,9 +1933,9 @@
                                 }
                             }
                         },
-                        "notes-cn": {
+                        "notes_cn": {
                             "title": "提示信息 (中文)",
-                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes-cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
+                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
                             "$ref": "#/definitions/string_or_string_array"
                         },
                         "url": {
@@ -2291,7 +2291,7 @@
                                 "architecture"
                             ],
                             "propertyNames": {
-                                "pattern": "^(architecture|notes|notes-cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
+                                "pattern": "^(architecture|notes|notes_cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
                                 "errorMessage": "不允许的属性名"
                             },
                             "markdownDescription": "- 它将通过 [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
@@ -2300,9 +2300,9 @@
                                     "not": true,
                                     "errorMessage": "abyss 中不允许使用它，请使用 architecture"
                                 },
-                                "notes-cn": {
+                                "notes_cn": {
                                     "title": "提示信息 (中文)",
-                                    "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes-cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
+                                    "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
                                     "$ref": "#/definitions/string_or_string_array"
                                 },
                                 "architecture": {
@@ -3279,7 +3279,7 @@
                 {
                     "allOf": [
                         {
-                            "$comment": "如果定义了 notes，则必须定义 notes-cn",
+                            "$comment": "如果定义了 notes，则必须定义 notes_cn",
                             "allOf": [
                                 {
                                     "if": {
@@ -3290,14 +3290,14 @@
                                     "then": {
                                         "if": {
                                             "required": [
-                                                "notes-cn"
+                                                "notes_cn"
                                             ]
                                         },
                                         "else": {
                                             "properties": {
                                                 "notes": {
                                                     "not": true,
-                                                    "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes-cn"
+                                                    "errorMessage": "在 abyss 中，如果定义了 notes，则必须定义 notes_cn"
                                                 }
                                             }
                                         }
@@ -3306,7 +3306,7 @@
                                 {
                                     "if": {
                                         "required": [
-                                            "notes-cn"
+                                            "notes_cn"
                                         ]
                                     },
                                     "then": {
@@ -3317,9 +3317,9 @@
                                         },
                                         "else": {
                                             "properties": {
-                                                "notes-cn": {
+                                                "notes_cn": {
                                                     "not": true,
-                                                    "errorMessage": "在 abyss 中，如果定义了 notes-cn，则必须定义 notes"
+                                                    "errorMessage": "在 abyss 中，如果定义了 notes_cn，则必须定义 notes"
                                                 }
                                             }
                                         }

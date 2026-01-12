@@ -2101,7 +2101,7 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     $note = $manifest.notes
 
     if ($PSUICulture -like 'zh*') {
-        $note = $manifest.'notes-cn'
+        $note = $manifest.notes_cn
     }
 
     if ($note) {
