@@ -1,0 +1,39 @@
+name: Sort JSON Files
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: manifest-check-lock
+
+permissions:
+  contents: write
+
+jobs:
+  push-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Sort JSON Files
+        shell: pwsh
+        run: |
+          .\script\sort-json.ps1
+
+      - name: Commit changes if any
+        id: changes
+        shell: pwsh
+        run: |
+          git add -u
+          if (git status --porcelain) {
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            # scoop update 会忽略以 (chore) 开头的提交
+            git commit -m "(chore): automatically sort json files [skip ci]"
+            git push
+          }
