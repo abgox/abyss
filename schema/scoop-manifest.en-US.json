@@ -859,7 +859,7 @@
         },
         "autoupdate_url": {
             "title": "Software download URL",
-            "markdownDescription": "- It is usually dynamic and includes version variables such as: `$version`\n- For example: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`",
+            "markdownDescription": "- It is usually dynamic and includes version variables such as: `$version`\n- For example: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`\n- If there are multiple URLs, an array can be used.\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- If you need to change the file name of the download URL, you can add `#/dl.7z` at the end of the URL. For example:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop will download program.exe, but save it as dl.7z, and then automatically extract it using 7-Zip.",
             "type": [
                 "string",
                 "array"
@@ -1848,7 +1848,11 @@
                                     "const": "deprecated",
                                     "markdownDescription": "- [abyss](https://abyss.abgox.com) special field to control manifest status: `deprecated`\n- Refer to: [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)"
                                 }
-                            ]
+                            ],
+                            "not": {
+                                "const": "0.0.0"
+                            },
+                            "errorMessage": "After the manifest is written, please run '.\\bin\\checkver.ps1 <app> -u' to update the manifest"
                         },
                         "description": {
                             "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
@@ -1910,6 +1914,12 @@
                                             "markdownDescription": "- Use `Freemium`，This is a special field defined by [abyss](https://abyss.abgox.com): free to use, must pay to unlock advanced features"
                                         }
                                     ]
+                                },
+                                "url": {
+                                    "not": {
+                                        "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                    },
+                                    "errorMessage": "It is a Github address, should remove it"
                                 }
                             }
                         },
@@ -1970,6 +1980,18 @@
                                                     ],
                                                     "not": true,
                                                     "errorMessage": "In abyss, it is not allowed to use 'extract_to' in 'architecture'.\nIf needed, it should be defined at the top level."
+                                                },
+                                                "checkver": {
+                                                    "not": true,
+                                                    "errorMessage": "In abyss, it is not allowed.\nIf needed, it should be defined at the top level."
+                                                },
+                                                "installer": {
+                                                    "not": true,
+                                                    "errorMessage": "In abyss, it is not allowed."
+                                                },
+                                                "uninstaller": {
+                                                    "not": true,
+                                                    "errorMessage": "In abyss, it is not allowed."
                                                 }
                                             }
                                         }
@@ -2209,6 +2231,76 @@
                                             ],
                                             "allOf": [
                                                 {
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "items": [
+                                                            {},
+                                                            {
+                                                                "pattern": "\\$InstallerInfo, \\$out = A-Get-InstallerInfoFromWinget",
+                                                                "markdownDescription": "Get installer information of specified application in Winget.",
+                                                                "errorMessage": "Format error, for example: \"$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'\""
+                                                            },
+                                                            {
+                                                                "const": "$out",
+                                                                "markdownDescription": "Default output of installer information.\n- It provides version number, URL, etc. that can be matched.\n- You can also customize to override them.\n- For example, you can append the following content after it:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                            }
+                                                        ],
+                                                        "allOf": [
+                                                            {
+                                                                "items": {
+                                                                    "anyOf": [
+                                                                        {},
+                                                                        {
+                                                                            "pattern": "\\$InstallerInfo, \\$out = A-Get-InstallerInfoFromWinget",
+                                                                            "markdownDescription": "Get installer information of specified application in Winget."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                                            "markdownDescription": "Output version number of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output x64 installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output x64 installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output x86 installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output x86 installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output arm64 installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output arm64 installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"neutral:$($InstallerInfo.neutral_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output neutral installer URL of specified application."
+                                                                        },
+                                                                        {
+                                                                            "const": "\"neutral:$($InstallerInfo.neutral_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "Output neutral installer URL of specified application."
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
                                                     "items": {
                                                         "anyOf": [
                                                             {},
@@ -2217,40 +2309,8 @@
                                                                 "markdownDescription": "Get the latest version from the GitHub repository\n- It will filter out the `v` or `V` prefix.\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
                                                             },
                                                             {
-                                                                "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                                "const": "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "Get installer information of specified application in Winget."
-                                                            },
-                                                            {
-                                                                "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                                "markdownDescription": "Get installer information of specified application in Winget."
-                                                            },
-                                                            {
-                                                                "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                                "markdownDescription": "Output version number of specified application."
-                                                            },
-                                                            {
-                                                                "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                                "markdownDescription": "Output x64 installer URL of specified application."
-                                                            },
-                                                            {
-                                                                "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                                "markdownDescription": "Output x64 installer URL of specified application.\n- If no clear scope, use `machine`."
-                                                            },
-                                                            {
-                                                                "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                                "markdownDescription": "Output x86 installer URL of specified application."
-                                                            },
-                                                            {
-                                                                "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                                "markdownDescription": "Output x86 installer URL of specified application.\n- If no clear scope, use `machine`."
-                                                            },
-                                                            {
-                                                                "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                                "markdownDescription": "Output arm64 installer URL of specified application."
-                                                            },
-                                                            {
-                                                                "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                                "markdownDescription": "Output arm64 installer URL of specified application.\n- If no clear scope, use `machine`."
                                                             }
                                                         ]
                                                     }
@@ -3662,6 +3722,33 @@
                                     }
                                 }
                             }
+                        },
+                        {
+                            "$comment": "If the URL is powershellgallery.com, then psmodule needs to be specified.",
+                            "if": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "properties": {
+                                                    "64bit": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "pattern": "\\.powershellgallery\\.com/packages/"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "psmodule"
+                                ]
+                            }
                         }
                     ]
                 },
@@ -3782,8 +3869,17 @@
                             "checkver": {
                                 "properties": {
                                     "regex": {
-                                        "const": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
-                                        "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, it must be \"ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?\""
+                                        "const": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
+                                        "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, it must be \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?\""
+                                    },
+                                    "script": {
+                                        "items": [
+                                            {},
+                                            {},
+                                            {
+                                                "const": "$out"
+                                            }
+                                        ]
                                     }
                                 }
                             },
@@ -3792,39 +3888,52 @@
                                     "architecture": {
                                         "patternProperties": {
                                             "^(64bit|arm64|32bit)$": {
-                                                "required": [
-                                                    "hash"
-                                                ],
-                                                "properties": {
-                                                    "url": {
-                                                        "examples": [
-                                                            "$matchX64",
-                                                            "$matchX64#/dl.7z",
-                                                            "$matchX64#/dl.exe",
-                                                            "$matchArm64",
-                                                            "$matchArm64#/dl.7z",
-                                                            "$matchArm64#/dl.exe",
-                                                            "$matchX86",
-                                                            "$matchX86#/dl.7z",
-                                                            "$matchX86#/dl.exe"
-                                                        ]
-                                                    },
-                                                    "hash": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "const": "temp-autoupdate.json",
-                                                                "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, it must be \"temp-autoupdate.json\""
-                                                            },
-                                                            "jsonpath": {
-                                                                "enum": [
-                                                                    "$.x64_machine.InstallerSha256",
-                                                                    "$.arm64_machine.InstallerSha256",
-                                                                    "$.x86_machine.InstallerSha256",
-                                                                    "$.x64_user.InstallerSha256",
-                                                                    "$.arm64_user.InstallerSha256",
-                                                                    "$.x86_user.InstallerSha256"
-                                                                ],
-                                                                "markdownDescription": "hash\n- If no clear scope, use `machine`.\n- Usage:\n    - `\"$.version\"`: Extract the value of `version`\n    - `\"$..[?(@.productVersion || @.version)]\"`: Extract the value of `productVersion` or `version`\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: Extract `updated_at` from the field in `assets` where `name` is `xxx`\n    - `\"$..['productVersion','version']\"`:\n      - Extract the values of these two fields and form an array.\n      - Like: `\"[\"1.2.3\",\"1.2.3-rc\"]\"`"
+                                                "if": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "pattern": "^https://"
+                                                        }
+                                                    }
+                                                },
+                                                "else": {
+                                                    "required": [
+                                                        "hash"
+                                                    ],
+                                                    "properties": {
+                                                        "url": {
+                                                            "markdownDescription": "- For the installation package URL provided by `A-Get-InstallerInfoFromWinget`\n- It usually uses variables like `$matchX64`\n- Some examples can be viewed through field completion",
+                                                            "examples": [
+                                                                "$matchX64",
+                                                                "$matchX64#/dl.7z",
+                                                                "$matchX64#/dl.exe",
+                                                                "$matchArm64",
+                                                                "$matchArm64#/dl.7z",
+                                                                "$matchArm64#/dl.exe",
+                                                                "$matchX86",
+                                                                "$matchX86#/dl.7z",
+                                                                "$matchX86#/dl.exe"
+                                                            ]
+                                                        },
+                                                        "hash": {
+                                                            "properties": {
+                                                                "url": {
+                                                                    "const": "temp-autoupdate.json",
+                                                                    "markdownDescription": "The temporary file where the installer information is stored\n- `A-Get-InstallerInfoFromWinget` will write the information to `temp-autoupdate.json` in the project root directory\n- Therefore, it must be `temp-autoupdate.json`",
+                                                                    "errorMessage": "Since 'A-Get-InstallerInfoFromWinget' is used, it must be \"temp-autoupdate.json\""
+                                                                },
+                                                                "jsonpath": {
+                                                                    "enum": [
+                                                                        "$.x64_machine.InstallerSha256",
+                                                                        "$.arm64_machine.InstallerSha256",
+                                                                        "$.x86_machine.InstallerSha256",
+                                                                        "$.x64_user.InstallerSha256",
+                                                                        "$.arm64_user.InstallerSha256",
+                                                                        "$.x86_user.InstallerSha256",
+                                                                        "$.neutral_machine.InstallerSha256",
+                                                                        "$.neutral_user.InstallerSha256"
+                                                                    ],
+                                                                    "markdownDescription": "hash\n- Select the correct field based on `temp-autoupdate.json`"
+                                                                }
                                                             }
                                                         }
                                                     }

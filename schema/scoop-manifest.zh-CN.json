@@ -859,7 +859,7 @@
         },
         "autoupdate_url": {
             "title": "软件的下载地址",
-            "markdownDescription": "- 它通常是动态的，会包含一些版本变量，如: `$version` 等\n- 例如: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`",
+            "markdownDescription": "- 它通常是动态的，会包含一些版本变量，如: `$version` 等\n- 例如: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`\n- 如果有多个 URL，可以使用数组\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/dl.7z`，例如:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取",
             "type": [
                 "string",
                 "array"
@@ -1848,7 +1848,11 @@
                                     "const": "deprecated",
                                     "markdownDescription": "- [abyss](https://abyss.abgox.com) 特殊字段，用于指定清单状态: `deprecated`\n- 参考: [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)"
                                 }
-                            ]
+                            ],
+                            "not": {
+                                "const": "0.0.0"
+                            },
+                            "errorMessage": "清单编写完成后，请运行 .\\bin\\checkver.ps1 <app> -u 进行清单更新"
                         },
                         "description": {
                             "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
@@ -1910,6 +1914,12 @@
                                             "markdownDescription": "- 使用 `Freemium`，这是由 [abyss](https://abyss.abgox.com) 定义的特殊字段: 基础功能免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
                                         }
                                     ]
+                                },
+                                "url": {
+                                    "not": {
+                                        "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                    },
+                                    "errorMessage": "它是一个 Github 地址，应该移除它"
                                 }
                             }
                         },
@@ -1970,6 +1980,18 @@
                                                     ],
                                                     "not": true,
                                                     "errorMessage": "abyss 中不允许在 architecture 中使用 extract_to，如果需要，应该在顶层定义"
+                                                },
+                                                "checkver": {
+                                                    "not": true,
+                                                    "errorMessage": "abyss 中不允许使用它。如果需要，应该在顶层定义"
+                                                },
+                                                "installer": {
+                                                    "not": true,
+                                                    "errorMessage": "abyss 中不允许使用它"
+                                                },
+                                                "uninstaller": {
+                                                    "not": true,
+                                                    "errorMessage": "abyss 中不允许使用它"
                                                 }
                                             }
                                         }
@@ -2209,6 +2231,76 @@
                                             ],
                                             "allOf": [
                                                 {
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "items": [
+                                                            {},
+                                                            {
+                                                                "pattern": "\\$InstallerInfo, \\$out = A-Get-InstallerInfoFromWinget",
+                                                                "markdownDescription": "获取 Winget 中指定应用的安装信息",
+                                                                "errorMessage": "格式错误，例如: \"$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'\""
+                                                            },
+                                                            {
+                                                                "const": "$out",
+                                                                "markdownDescription": "默认输出安装信息\n- 你也可以自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                            }
+                                                        ],
+                                                        "allOf": [
+                                                            {
+                                                                "items": {
+                                                                    "anyOf": [
+                                                                        {},
+                                                                        {
+                                                                            "pattern": "\\$InstallerInfo, \\$out = A-Get-InstallerInfoFromWinget",
+                                                                            "markdownDescription": "获取 Winget 中指定应用的安装信息"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                                            "markdownDescription": "输出应用的版本号"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 x64 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 x64 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 x86 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 x86 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x64:$($InstallerInfo.neutral_machine.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 neutral 安装程序 URL"
+                                                                        },
+                                                                        {
+                                                                            "const": "\"x64:$($InstallerInfo.neutral_user.InstallerUrl);\"",
+                                                                            "markdownDescription": "输出应用的 neutral 安装程序 URL"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
                                                     "items": {
                                                         "anyOf": [
                                                             {},
@@ -2217,40 +2309,8 @@
                                                                 "markdownDescription": "从 GitHub 仓库获取应用的最新版本\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
                                                             },
                                                             {
-                                                                "const": "$InstallerInfo = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                                "const": "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息"
-                                                            },
-                                                            {
-                                                                "pattern": "\\$InstallerInfo = A-Get-InstallerInfoFromWinget",
-                                                                "markdownDescription": "获取 Winget 中指定应用的安装信息"
-                                                            },
-                                                            {
-                                                                "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
-                                                                "markdownDescription": "输出应用的版本号"
-                                                            },
-                                                            {
-                                                                "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
-                                                                "markdownDescription": "输出应用的 x64 安装程序 URL"
-                                                            },
-                                                            {
-                                                                "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
-                                                                "markdownDescription": "输出应用的 x64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                            },
-                                                            {
-                                                                "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
-                                                                "markdownDescription": "输出应用的 x86 安装程序 URL"
-                                                            },
-                                                            {
-                                                                "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
-                                                                "markdownDescription": "输出应用的 x86 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
-                                                            },
-                                                            {
-                                                                "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
-                                                                "markdownDescription": "输出应用的 arm64 安装程序 URL"
-                                                            },
-                                                            {
-                                                                "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
-                                                                "markdownDescription": "输出应用的 arm64 安装程序 URL\n- 如果没有明确的 scope，需要使用 machine"
                                                             }
                                                         ]
                                                     }
@@ -3662,6 +3722,33 @@
                                     }
                                 }
                             }
+                        },
+                        {
+                            "$comment": "如果 url 属于 powershellgallery, 则需要指定 psmodule",
+                            "if": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "properties": {
+                                                    "64bit": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "pattern": "\\.powershellgallery\\.com/packages/"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "psmodule"
+                                ]
+                            }
                         }
                     ]
                 },
@@ -3782,8 +3869,17 @@
                             "checkver": {
                                 "properties": {
                                     "regex": {
-                                        "const": "ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?",
-                                        "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，regex 只能是 \"ver:(?<version>[^;]+)(?:; x64:(?<x64>[^;]*))?(?:; x86:(?<x86>[^;]*))?(?:; arm64:(?<arm64>[^;]*))?\""
+                                        "const": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
+                                        "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，regex 只能是 \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?\""
+                                    },
+                                    "script": {
+                                        "items": [
+                                            {},
+                                            {},
+                                            {
+                                                "const": "$out"
+                                            }
+                                        ]
                                     }
                                 }
                             },
@@ -3792,39 +3888,52 @@
                                     "architecture": {
                                         "patternProperties": {
                                             "^(64bit|arm64|32bit)$": {
-                                                "required": [
-                                                    "hash"
-                                                ],
-                                                "properties": {
-                                                    "url": {
-                                                        "examples": [
-                                                            "$matchX64",
-                                                            "$matchX64#/dl.7z",
-                                                            "$matchX64#/dl.exe",
-                                                            "$matchArm64",
-                                                            "$matchArm64#/dl.7z",
-                                                            "$matchArm64#/dl.exe",
-                                                            "$matchX86",
-                                                            "$matchX86#/dl.7z",
-                                                            "$matchX86#/dl.exe"
-                                                        ]
-                                                    },
-                                                    "hash": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "const": "temp-autoupdate.json",
-                                                                "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 \"temp-autoupdate.json\""
-                                                            },
-                                                            "jsonpath": {
-                                                                "enum": [
-                                                                    "$.x64_machine.InstallerSha256",
-                                                                    "$.arm64_machine.InstallerSha256",
-                                                                    "$.x86_machine.InstallerSha256",
-                                                                    "$.x64_user.InstallerSha256",
-                                                                    "$.arm64_user.InstallerSha256",
-                                                                    "$.x86_user.InstallerSha256"
-                                                                ],
-                                                                "markdownDescription": "指定 hash\n- 如果没有明确的 scope，需要使用 machine\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`"
+                                                "if": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "pattern": "^https://"
+                                                        }
+                                                    }
+                                                },
+                                                "else": {
+                                                    "required": [
+                                                        "hash"
+                                                    ],
+                                                    "properties": {
+                                                        "url": {
+                                                            "markdownDescription": "- 对于由 `A-Get-InstallerInfoFromWinget` 提供的安装包 URL\n- 它通常使用类似 `$matchX64` 的变量\n- 可通过字段补全查看一些示例",
+                                                            "examples": [
+                                                                "$matchX64",
+                                                                "$matchX64#/dl.7z",
+                                                                "$matchX64#/dl.exe",
+                                                                "$matchArm64",
+                                                                "$matchArm64#/dl.7z",
+                                                                "$matchArm64#/dl.exe",
+                                                                "$matchX86",
+                                                                "$matchX86#/dl.7z",
+                                                                "$matchX86#/dl.exe"
+                                                            ]
+                                                        },
+                                                        "hash": {
+                                                            "properties": {
+                                                                "url": {
+                                                                    "const": "temp-autoupdate.json",
+                                                                    "markdownDescription": "安装信息所在的临时文件\n- `A-Get-InstallerInfoFromWinget` 会将信息临时写入项目根目录下的 `temp-autoupdate.json`\n- 因此，它只能是 `temp-autoupdate.json`",
+                                                                    "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 \"temp-autoupdate.json\""
+                                                                },
+                                                                "jsonpath": {
+                                                                    "enum": [
+                                                                        "$.x64_machine.InstallerSha256",
+                                                                        "$.arm64_machine.InstallerSha256",
+                                                                        "$.x86_machine.InstallerSha256",
+                                                                        "$.x64_user.InstallerSha256",
+                                                                        "$.arm64_user.InstallerSha256",
+                                                                        "$.x86_user.InstallerSha256",
+                                                                        "$.neutral_machine.InstallerSha256",
+                                                                        "$.neutral_user.InstallerSha256"
+                                                                    ],
+                                                                    "markdownDescription": "指定 hash\n- 根据 `temp-autoupdate.json` 选择正确的字段"
+                                                                }
                                                             }
                                                         }
                                                     }
