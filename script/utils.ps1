@@ -1309,6 +1309,12 @@ function A-Get-VersionFromGithubAPI {
         }
         $headers['Authorization'] = "Bearer $token"
     }
+    else {
+        $token = $scoopConfig.gh_token
+        if ($token) {
+            $headers['Authorization'] = "Bearer $token"
+        }
+    }
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
 
@@ -1437,6 +1443,12 @@ function A-Get-InstallerInfoFromWinget {
             return
         }
         $headers['Authorization'] = "Bearer $token"
+    }
+    else {
+        $token = $scoopConfig.gh_token
+        if ($token) {
+            $headers['Authorization'] = "Bearer $token"
+        }
     }
 
     $rootDir = $Package.ToLower()[0]
