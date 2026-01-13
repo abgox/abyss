@@ -859,7 +859,7 @@
         },
         "autoupdate_url": {
             "title": "软件的下载地址",
-            "markdownDescription": "- 它通常是动态的，会包含一些版本变量，如: `$version` 等\n- 例如: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`\n- 如果有多个 URL，可以使用数组\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/dl.7z`，例如:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取",
+            "markdownDescription": "- 它通常是动态的，会包含一些 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)，参考 `autoupdate` 字段的悬停提示\n- 例如: `https://github.com/owner/repo/releases/download/v$version/xxx.exe`\n- 如果有多个 URL，可以使用数组\n```json\n  \"url\": [\n      \"http://example.com/file1.zip\",\n      \"http://example.com/file2.zip\"\n  ]\n  ```\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/dl.7z`，例如:\n```json\n  \"url\": \"http://example.org/program.exe#/dl.7z\"\n  ```\n- Scoop 将下载 program.exe ，但将其保存为 dl.7z ，然后将使用 7-Zip 自动提取",
             "type": [
                 "string",
                 "array"
@@ -1189,7 +1189,7 @@
         },
         "autoupdate": {
             "title": "自动更新",
-            "markdownDescription": "- 它将通过 [Github Actions](https://github.com/ScoopInstaller/GithubActions) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
+            "markdownDescription": "- 它将通过 [Github Actions](https://github.com/ScoopInstaller/GithubActions) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`",
             "type": "object",
             "minProperties": 1,
             "examples": [
@@ -1826,7 +1826,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|depends|suggest|notes|notes_cn|url|hash|architecture|extract_dir|extract_to|env_add_path|env_set|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|installer|post_install|pre_uninstall|uninstaller|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -2354,7 +2354,7 @@
                                 "pattern": "^(architecture|notes|notes_cn|url|hash|bin|extract_dir|extract_to|env_add_path|env_set|installer|license|persist|post_install|psmodule|shortcuts)$",
                                 "errorMessage": "不允许的属性名"
                             },
-                            "markdownDescription": "- 它将通过 [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n    - `$version`\n    - `$majorVersion`,`$minorVersion`,`$patchVersion`,`$buildVersion`,`$preReleaseVersion`\n    - `$dotVersion`,`$dashVersion`,`$underscoreVersion`,`$cleanVersion`\n    - `$matchHead`,`$matchTail`",
+                            "markdownDescription": "- 它将通过 [Github Actions](https://github.com/abgox/abyss/blob/main/.github/workflows/excavator.yml) 去自动更新清单\n- Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n- 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`",
                             "properties": {
                                 "url": {
                                     "not": true,
