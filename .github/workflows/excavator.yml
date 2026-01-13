@@ -37,17 +37,20 @@ jobs:
         shell: pwsh
         run: |
           Write-Output "::group::GitHub API Rate Limits"
-          $headers = @{ "Accept" = "application/vnd.github.v3+json" }
-          $tokens = $env:TOKEN_POOL.Split(',')
-          foreach ($i in 1..$tokens.Count) {
-              $t = $tokens[$i - 1]
+          $headers = @{
+              "Accept" = "application/vnd.github.v3+json"
+              "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          $tokens = $env:TOKEN_POOL.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          for ($i = 0; $i -lt $tokens.Count; $i++) {
+              $t = $tokens[$i]
               $headers["Authorization"] = "Bearer $t"
               try {
                   $response = Invoke-RestMethod -Uri "https://api.github.com/rate_limit" -Headers $headers
                   Write-Output $response.rate
               }
               catch {
-                  Write-Output "Token $i : Failed to check rate limit"
+                  Write-Output "Token $($i + 1) : Failed to check rate limit"
               }
           }
           Write-Output "::endgroup::"
