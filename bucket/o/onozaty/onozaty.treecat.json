@@ -1,0 +1,61 @@
+{
+    "version": "1.1.1",
+    "description": "一个命令行工具，可将一个目录中的多个文件合并为单个输出。 | A command-line tool that combines multiple files from a directory into a single output.",
+    "homepage": "https://github.com/onozaty/treecat",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/onozaty/treecat/releases/download/v1.1.1/treecat_v1.1.1_Windows_x86_64.zip",
+            "hash": "6e64fdaeba9d2c99157532313de81b530155dcdf50e649e2590703b066fec561"
+        },
+        "arm64": {
+            "url": "https://github.com/onozaty/treecat/releases/download/v1.1.1/treecat_v1.1.1_Windows_arm64.zip",
+            "hash": "c3ef683d62e3b18e72a45a3e39b38271d0f3c31d95b1e0869db3b6b8b32b900f"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\treecat.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/onozaty/treecat/releases/download/v$version/treecat_v$version_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/onozaty/treecat/releases/download/v$version/treecat_v$version_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
