@@ -1,0 +1,61 @@
+{
+    "version": "1.15.1",
+    "description": "一个命令行工具，用于处理 CSV。 | A command-line tool that processes CSV.",
+    "homepage": "https://github.com/onozaty/csvt",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/onozaty/csvt/releases/download/v1.15.1/csvt_v1.15.1_Windows_x86_64.zip",
+            "hash": "94ac0fa8b456098b7b619dded11e5122757603fd1df3a43d35d29df2f89dd2d7"
+        },
+        "arm64": {
+            "url": "https://github.com/onozaty/csvt/releases/download/v1.15.1/csvt_v1.15.1_Windows_arm64.zip",
+            "hash": "8b326fbb414f520cc7048dfb1906e8d195c656ae0154800786890ac57b4bb4d4"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\csvt.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/onozaty/csvt/releases/download/v$version/csvt_v$version_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/onozaty/csvt/releases/download/v$version/csvt_v$version_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
