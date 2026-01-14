@@ -1,0 +1,61 @@
+{
+    "version": "1.2.2",
+    "description": "一个命令行工具，可将 XML 文件转换为 CSV 文件。 | A command-line tool that converts XML to CSV.",
+    "homepage": "https://github.com/onozaty/xml2csv",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/onozaty/xml2csv/releases/download/v1.2.2/xml2csv_v1.2.2_Windows_x86_64.zip",
+            "hash": "6ab6aeb35a7caeb2d277fe359a256bf6fc52745e9165ae7bcc04c2c0bf1acb5d"
+        },
+        "arm64": {
+            "url": "https://github.com/onozaty/xml2csv/releases/download/v1.2.2/xml2csv_v1.2.2_Windows_arm64.zip",
+            "hash": "d3ed7a131910a859a9dab41564b002c1c9bc750a99bf3ba69764172703243eaf"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\xml2csv.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/onozaty/xml2csv/releases/download/v$version/xml2csv_v$version_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/onozaty/xml2csv/releases/download/v$version/xml2csv_v$version_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
