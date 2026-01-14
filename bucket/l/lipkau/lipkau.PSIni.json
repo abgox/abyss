@@ -1,0 +1,56 @@
+{
+    "version": "4.0.1",
+    "description": "一个 PowerShell 模块，用于解析和写入 ini 文件 | A PowerShell module for parsing and writing ini file.",
+    "homepage": "https://github.com/lipkau/PSIni",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/psini.4.0.1.nupkg",
+            "hash": "4d5eb316b7200b0e035cac74d29977b7904a9f7604e8838e1c90a10df84454c1"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/psini.4.0.1.nupkg",
+            "hash": "4d5eb316b7200b0e035cac74d29977b7904a9f7604e8838e1c90a10df84454c1"
+        }
+    },
+    "psmodule": {
+        "name": "PSIni"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/psini",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/psini.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/psini.$version.nupkg"
+            }
+        }
+    }
+}
