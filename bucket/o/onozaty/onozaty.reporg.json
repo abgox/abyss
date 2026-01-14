@@ -1,0 +1,62 @@
+{
+    "version": "1.1.0",
+    "description": "一个命令行工具，用于搜索 Git 仓库并将结果输出为 TSV 格式。 | A command-line tool that searches Git repositories using ripgrep and outputs results in TSV format.",
+    "homepage": "https://github.com/onozaty/reporg",
+    "license": {
+        "identifier": "MIT"
+    },
+    "depends": "abyss/BurntSushi.ripgrep.MSVC",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/onozaty/reporg/releases/download/v1.1.0/reporg_v1.1.0_Windows_x86_64.zip",
+            "hash": "b3b0991fc05d1545fa521f5bab875b43097015987c29d5c601cfaad083b26612"
+        },
+        "arm64": {
+            "url": "https://github.com/onozaty/reporg/releases/download/v1.1.0/reporg_v1.1.0_Windows_arm64.zip",
+            "hash": "2e09ff6dde8b50179ffdd5efaf08ec70bbc33b4213d44bf96def83b094f4cc58"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\reporg.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/onozaty/reporg/releases/download/v$version/reporg_v$version_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/onozaty/reporg/releases/download/v$version/reporg_v$version_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
