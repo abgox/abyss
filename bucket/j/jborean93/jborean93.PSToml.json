@@ -1,0 +1,56 @@
+{
+    "version": "0.4.0",
+    "description": "一个 PowerShell 模块，用于解析和写入 TOML 文件 | A PowerShell module for parsing and writing TOML file.",
+    "homepage": "https://github.com/jborean93/PSToml",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/pstoml.0.4.0.nupkg",
+            "hash": "4063afc80b99c480cfab4553c31356e3968a0a03712428de406a291e9ed4ca7a"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/pstoml.0.4.0.nupkg",
+            "hash": "4063afc80b99c480cfab4553c31356e3968a0a03712428de406a291e9ed4ca7a"
+        }
+    },
+    "psmodule": {
+        "name": "PSToml"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/pstoml",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/pstoml.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/pstoml.$version.nupkg"
+            }
+        }
+    }
+}
