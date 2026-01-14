@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (700)|Tag|Description|
+|App (703)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -536,7 +536,10 @@
 |[oldj.switchhosts](https://switchhosts.vercel.app/ "点击访问仓库或主页")|<a href="./bucket/o/oldj/oldj.switchhosts.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个管理、切换多个 hosts 方案的工具，快速切换 hosts|
 |[OliverSchwendener.ueli](https://ueli.app/ "点击访问仓库或主页")|<a href="./bucket/o/OliverSchwendener/OliverSchwendener.ueli.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|跨平台的按键启动器|
 |[OnOff.Onlook](https://onlook.com/ "点击访问仓库或主页")|<a href="./bucket/o/OnOff/OnOff.Onlook.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款开源的带有视觉氛围的代码编辑器，借助人工智能以可视化方式构建、设计样式并编辑你的应用程序|
+|[onozaty.csvt](https://github.com/onozaty/csvt "点击访问仓库或主页")|<a href="./bucket/o/onozaty/onozaty.csvt.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个命令行工具，用于处理 CSV。|
+|[onozaty.reporg](https://github.com/onozaty/reporg "点击访问仓库或主页")|<a href="./bucket/o/onozaty/onozaty.reporg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个命令行工具，用于搜索 Git 仓库并将结果输出为 TSV 格式。|
 |[onozaty.treecat](https://github.com/onozaty/treecat "点击访问仓库或主页")|<a href="./bucket/o/onozaty/onozaty.treecat.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个命令行工具，可将一个目录中的多个文件合并为单个输出。|
+|[onozaty.xml2csv](https://github.com/onozaty/xml2csv "点击访问仓库或主页")|<a href="./bucket/o/onozaty/onozaty.xml2csv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个命令行工具，可将 XML 文件转换为 CSV 文件。|
 |[open-ani.animeko](https://animeko.org/ "点击访问仓库或主页")|<a href="./bucket/o/open-ani/open-ani.animeko.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|集找番、追番、看番的一站式弹幕追番平台|
 |[OpenAI.Codex](https://github.com/openai/codex "点击访问仓库或主页")|<a href="./bucket/o/OpenAI/OpenAI.Codex.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款在终端中运行的开源本地编码代理|
 |[OpenJS.NodeJS](https://nodejs.org/ "点击访问仓库或主页")|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个免费、开源、跨平台的 JavaScript 运行时环境|
