@@ -2246,7 +2246,7 @@
                                                             },
                                                             {
                                                                 "const": "$out",
-                                                                "markdownDescription": "Default output of installer information.\n- It provides version number, URL, etc. that can be matched.\n- You can also customize to override them.\n- For example, you can append the following content after it:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                                "markdownDescription": "Default installer information.\n- It provides version number, URL, etc. that can be matched.\n- You can also customize to override them.\n- For example, you can append the following content after it:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
                                                             }
                                                         ],
                                                         "allOf": [
@@ -3888,6 +3888,24 @@
                                     "architecture": {
                                         "patternProperties": {
                                             "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "examples": [
+                                                            "$matchX64",
+                                                            "$matchX64#/dl.7z",
+                                                            "$matchX64#/dl.exe",
+                                                            "$matchX64#/dl.msi_",
+                                                            "$matchArm64",
+                                                            "$matchArm64#/dl.7z",
+                                                            "$matchArm64#/dl.exe",
+                                                            "$matchArm64#/dl.msi_",
+                                                            "$matchX86",
+                                                            "$matchX86#/dl.7z",
+                                                            "$matchX86#/dl.exe",
+                                                            "$matchX86#/dl.msi_"
+                                                        ]
+                                                    }
+                                                },
                                                 "if": {
                                                     "properties": {
                                                         "url": {
@@ -3901,18 +3919,7 @@
                                                     ],
                                                     "properties": {
                                                         "url": {
-                                                            "markdownDescription": "- For the installation package URL provided by `A-Get-InstallerInfoFromWinget`\n- It usually uses variables like `$matchX64`\n- Some examples can be viewed through field completion",
-                                                            "examples": [
-                                                                "$matchX64",
-                                                                "$matchX64#/dl.7z",
-                                                                "$matchX64#/dl.exe",
-                                                                "$matchArm64",
-                                                                "$matchArm64#/dl.7z",
-                                                                "$matchArm64#/dl.exe",
-                                                                "$matchX86",
-                                                                "$matchX86#/dl.7z",
-                                                                "$matchX86#/dl.exe"
-                                                            ]
+                                                            "markdownDescription": "- For the installation package URL provided by `A-Get-InstallerInfoFromWinget`\n- It usually uses variables like `$matchX64`\n- Some examples can be viewed through field completion"
                                                         },
                                                         "hash": {
                                                             "properties": {

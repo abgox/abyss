@@ -2246,7 +2246,7 @@
                                                             },
                                                             {
                                                                 "const": "$out",
-                                                                "markdownDescription": "默认输出安装信息\n- 你也可以自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                                "markdownDescription": "默认的安装信息\n- 你也可以自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
                                                             }
                                                         ],
                                                         "allOf": [
@@ -3888,6 +3888,24 @@
                                     "architecture": {
                                         "patternProperties": {
                                             "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "url": {
+                                                        "examples": [
+                                                            "$matchX64",
+                                                            "$matchX64#/dl.7z",
+                                                            "$matchX64#/dl.exe",
+                                                            "$matchX64#/dl.msi_",
+                                                            "$matchArm64",
+                                                            "$matchArm64#/dl.7z",
+                                                            "$matchArm64#/dl.exe",
+                                                            "$matchArm64#/dl.msi_",
+                                                            "$matchX86",
+                                                            "$matchX86#/dl.7z",
+                                                            "$matchX86#/dl.exe",
+                                                            "$matchX86#/dl.msi_"
+                                                        ]
+                                                    }
+                                                },
                                                 "if": {
                                                     "properties": {
                                                         "url": {
@@ -3901,18 +3919,7 @@
                                                     ],
                                                     "properties": {
                                                         "url": {
-                                                            "markdownDescription": "- 对于由 `A-Get-InstallerInfoFromWinget` 提供的安装包 URL\n- 它通常使用类似 `$matchX64` 的变量\n- 可通过字段补全查看一些示例",
-                                                            "examples": [
-                                                                "$matchX64",
-                                                                "$matchX64#/dl.7z",
-                                                                "$matchX64#/dl.exe",
-                                                                "$matchArm64",
-                                                                "$matchArm64#/dl.7z",
-                                                                "$matchArm64#/dl.exe",
-                                                                "$matchX86",
-                                                                "$matchX86#/dl.7z",
-                                                                "$matchX86#/dl.exe"
-                                                            ]
+                                                            "markdownDescription": "- 对于由 `A-Get-InstallerInfoFromWinget` 提供的安装包 URL\n- 它通常使用类似 `$matchX64` 的变量\n- 可通过字段补全查看一些示例"
                                                         },
                                                         "hash": {
                                                             "properties": {
