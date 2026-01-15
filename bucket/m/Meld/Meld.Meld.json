@@ -1,0 +1,65 @@
+{
+    "version": "3.22.2",
+    "description": "可视化差异与合并工具 | Visual diff and merge tool",
+    "homepage": "https://meldmerge.org/",
+    "license": {
+        "identifier": "GPL-2.0-or-later"
+    },
+    "notes": [
+        "The installation directory: $env:ProgramFiles\\Meld",
+        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "notes_cn": [
+        "安装目录: $env:ProgramFiles\\Meld",
+        "参考: https://abyss.abgox.com/faq/external-installation-directory"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://download.gnome.org/binaries/win32/meld/3.22/Meld-3.22.2-mingw.msi#/dl.msi_",
+            "hash": "e1525657ff0e0d9762619b4930fa758756d5e766967764bd12c2f3914f16ece8"
+        }
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Msi"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Uninstall-Msi"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Meld.Meld' 'msi'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.msi_",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
