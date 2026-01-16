@@ -32,30 +32,6 @@
             "minLength": 1,
             "minItems": 1
         },
-        "license_field": {
-            "anyOf": [
-                {
-                    "const": "Unknown",
-                    "markdownDescription": "- 使用 `Unknown`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示无法确定许可证(unable to determine the license)"
-                },
-                {
-                    "const": "Freeware",
-                    "markdownDescription": "- 使用 `Freeware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费软件(free to use forever)"
-                },
-                {
-                    "const": "Proprietary",
-                    "markdownDescription": "- 使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)"
-                },
-                {
-                    "const": "Public Domain",
-                    "markdownDescription": "- 使用 `Public Domain`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个属于公有领域的软件(Public Domain)"
-                },
-                {
-                    "const": "Shareware",
-                    "markdownDescription": "- 使用 `Shareware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)"
-                }
-            ]
-        },
         "license_identifier": {
             "$comment": "在此处添加已知的许可证，以便验证器可以提供更好的错误信息",
             "anyOf": [
@@ -210,6 +186,30 @@
                 {
                     "const": "OSL-3.0",
                     "markdownDescription": "- Open Software License 3.0\n- https://spdx.org/licenses/OSL-3.0.html"
+                }
+            ]
+        },
+        "license_field": {
+            "anyOf": [
+                {
+                    "const": "Unknown",
+                    "markdownDescription": "- 使用 `Unknown`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示无法确定许可证(unable to determine the license)"
+                },
+                {
+                    "const": "Freeware",
+                    "markdownDescription": "- 使用 `Freeware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费软件(free to use forever)"
+                },
+                {
+                    "const": "Proprietary",
+                    "markdownDescription": "- 使用 `Proprietary`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个付费软件(must pay to use)"
+                },
+                {
+                    "const": "Public Domain",
+                    "markdownDescription": "- 使用 `Public Domain`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个属于公有领域的软件(Public Domain)"
+                },
+                {
+                    "const": "Shareware",
+                    "markdownDescription": "- 使用 `Shareware`，这是 [Scoop 官方定义的字段](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties)，表示这是一个免费试用软件，试用结束后必须付费才能继续使用(free to try, must pay eventually)"
                 }
             ]
         },
@@ -1943,10 +1943,18 @@
                                 }
                             }
                         },
+                        "notes": {
+                            "examples": [
+                                []
+                            ]
+                        },
                         "notes_cn": {
                             "title": "提示信息 (中文)",
-                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
-                            "$ref": "#/definitions/string_or_string_array"
+                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段",
+                            "$ref": "#/definitions/string_or_string_array",
+                            "examples": [
+                                []
+                            ]
                         },
                         "url": {
                             "not": true,
@@ -2048,14 +2056,14 @@
                             ]
                         },
                         "fonts": {
-                            "markdownDescription": "字体名称",
+                            "markdownDescription": "字体名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它用于列出这个清单安装的字体的名称",
                             "$ref": "#/definitions/string_or_string_array",
                             "examples": [
                                 []
                             ]
                         },
                         "commands": {
-                            "markdownDescription": "命令名称",
+                            "markdownDescription": "命令名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `bin` 字段无法准确定义时，就应该使用它",
                             "$ref": "#/definitions/string_or_string_array",
                             "examples": [
                                 []
@@ -2362,7 +2370,7 @@
                                 },
                                 "notes_cn": {
                                     "title": "提示信息 (中文)",
-                                    "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的自定义字段",
+                                    "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段",
                                     "$ref": "#/definitions/string_or_string_array"
                                 },
                                 "architecture": {

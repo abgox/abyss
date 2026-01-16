@@ -32,30 +32,6 @@
             "minLength": 1,
             "minItems": 1
         },
-        "license_field": {
-            "anyOf": [
-                {
-                    "const": "Unknown",
-                    "markdownDescription": "- Use `Unknown`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the license cannot be determined."
-                },
-                {
-                    "const": "Freeware",
-                    "markdownDescription": "- Use `Freeware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to use forever."
-                },
-                {
-                    "const": "Proprietary",
-                    "markdownDescription": "- Use `Proprietary`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is a paid software(must pay to use)"
-                },
-                {
-                    "const": "Public Domain",
-                    "markdownDescription": "- Use `Public Domain`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software belongs to the public domain."
-                },
-                {
-                    "const": "Shareware",
-                    "markdownDescription": "- Use `Shareware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to try, but must pay eventually."
-                }
-            ]
-        },
         "license_identifier": {
             "$comment": "Add known licenses here to provide better error messages for the validator",
             "anyOf": [
@@ -210,6 +186,30 @@
                 {
                     "const": "OSL-3.0",
                     "markdownDescription": "- Open Software License 3.0\n- https://spdx.org/licenses/OSL-3.0.html"
+                }
+            ]
+        },
+        "license_field": {
+            "anyOf": [
+                {
+                    "const": "Unknown",
+                    "markdownDescription": "- Use `Unknown`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the license cannot be determined."
+                },
+                {
+                    "const": "Freeware",
+                    "markdownDescription": "- Use `Freeware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to use forever."
+                },
+                {
+                    "const": "Proprietary",
+                    "markdownDescription": "- Use `Proprietary`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is a paid software(must pay to use)"
+                },
+                {
+                    "const": "Public Domain",
+                    "markdownDescription": "- Use `Public Domain`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software belongs to the public domain."
+                },
+                {
+                    "const": "Shareware",
+                    "markdownDescription": "- Use `Shareware`, which is the [official field defined by Scoop](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests#required-properties), to indicate that the software is free to try, but must pay eventually."
                 }
             ]
         },
@@ -1943,10 +1943,18 @@
                                 }
                             }
                         },
+                        "notes": {
+                            "examples": [
+                                []
+                            ]
+                        },
                         "notes_cn": {
                             "title": "Notes (Chinese)",
                             "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
-                            "$ref": "#/definitions/string_or_string_array"
+                            "$ref": "#/definitions/string_or_string_array",
+                            "examples": [
+                                []
+                            ]
                         },
                         "url": {
                             "not": true,
@@ -2048,14 +2056,14 @@
                             ]
                         },
                         "fonts": {
-                            "markdownDescription": "Font Name",
+                            "markdownDescription": "Font Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- It is used to list the names of fonts installed by this manifest",
                             "$ref": "#/definitions/string_or_string_array",
                             "examples": [
                                 []
                             ]
                         },
                         "commands": {
-                            "markdownDescription": "Command Name",
+                            "markdownDescription": "Command Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- When `bin` field cannot define the command accurately, it should be used",
                             "$ref": "#/definitions/string_or_string_array",
                             "examples": [
                                 []
