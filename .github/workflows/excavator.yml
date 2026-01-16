@@ -24,6 +24,9 @@ jobs:
         shell: pwsh
         run: $env:PS_MODULE_LIST -split ',' | ForEach-Object { Install-Module $_ -Repository PSGallery -Force }
 
+      - name: Get latest changes
+        run: git pull
+
       - name: Excavate
         uses: ScoopInstaller/GithubActions@main
         # uses: abgox/ScoopInstaller-GithubActions@main
