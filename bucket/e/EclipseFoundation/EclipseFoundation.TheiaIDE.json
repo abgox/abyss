@@ -1,0 +1,65 @@
+{
+    "version": "1.67.100",
+    "description": "Eclipse Theia 是一款基于 Theia 平台构建的适用于云端和桌面端的现代化、原生支持人工智能的集成开发环境。 | Eclipse Theia is a modern, AI-native IDE for cloud and desktop built on the Theia Platform.",
+    "homepage": "https://theia-ide.org/",
+    "license": {
+        "identifier": "EPL-2.0|GPL-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.eclipse.org/theia/ide/1.67.100/windows/TheiaIDESetup-1.67.100.exe",
+            "hash": "4cda100b992dbe617da9463944002a7a3634cb132778ee816a1ee617b1f18109"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\TheiaIDE.exe",
+            "TheiaIDE"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\Theia IDE\", \"$home\\.theia-ide\"",
+        "A-Install-App -Uninstaller 'app\\Uninstall TheiaIDE.exe'"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\theia-ide-electron-app-updater\""
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'EclipseFoundation.TheiaIDE' 'exe'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
