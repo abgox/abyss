@@ -45,10 +45,8 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "$Uninstaller = \"$env:ProgramFiles\\Rime\\weasel-$version\\uninstall.exe\"",
-        "if (Test-Path $Uninstaller) { A-Uninstall-App -Uninstaller $Uninstaller }",
         "A-New-LinkDirectory \"$env:AppData\\Rime\"",
-        "A-Install-App -Uninstaller $Uninstaller"
+        "A-Install-App -Uninstaller \"$env:ProgramFiles\\Rime\\weasel-$version\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
