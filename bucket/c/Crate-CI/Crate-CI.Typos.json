@@ -1,0 +1,54 @@
+{
+    "version": "1.42.0",
+    "description": "源代码拼写检查器 | Source code spell checker",
+    "homepage": "https://github.com/crate-ci/typos",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/crate-ci/typos/releases/download/v1.42.0/typos-v1.42.0-x86_64-pc-windows-msvc.zip",
+            "hash": "5b6f2d5124c185f4ec2337cceb3b41f6783a030cbbad925752a3091c8bba44a7"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\typos.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/crate-ci/typos/releases/download/v$version/typos-v$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
