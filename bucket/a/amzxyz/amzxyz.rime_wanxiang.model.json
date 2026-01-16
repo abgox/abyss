@@ -31,15 +31,8 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "if($PSUICulture -like 'zh*') {",
-        "    Write-Host \"正在将 $app 语法模型复制到 Rime.Weasel 用户文件夹中...\" -ForegroundColor Yellow",
-        "}",
-        "else {",
-        "    Write-Host \"Copying $app syntax model to Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
-        "}",
-        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
-        "Copy-Item \"$dir\\wanxiang-lts-zh-hans.gram\" $RimeDataDir -Force"
+        "Write-Host \"Copying $dir\\wanxiang-lts-zh-hans.gram => $env:AppData\\Rime\" -ForegroundColor Yellow",
+        "Copy-Item \"$dir\\wanxiang-lts-zh-hans.gram\" $env:AppData\\Rime -Force"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,22 +44,8 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "if($PSUICulture -like 'zh*') {",
-        "    Write-Host \"正在从 Rime.Weasel 用户文件夹中移除 $app 语法模型...\" -ForegroundColor Yellow",
-        "}",
-        "else {",
-        "    Write-Host \"Removing $app syntax model from Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
-        "}",
-        "$p = Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1",
-        "if ($p) {",
-        "    $p | Stop-Process -Force -ErrorAction SilentlyContinue",
-        "}",
-        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
-        "Remove-Item \"$RimeDataDir\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue",
-        "if ($p.Path) {",
-        "    Start-Process $p.Path -ErrorAction SilentlyContinue",
-        "}"
+        "Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1 | Stop-Process -Force -ErrorAction SilentlyContinue",
+        "Remove-Item \"$env:AppData\\Rime\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",

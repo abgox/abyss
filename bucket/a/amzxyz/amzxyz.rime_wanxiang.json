@@ -1,6 +1,6 @@
 {
     "version": "14.2.3",
-    "description": "Rime 小狼毫配置: 万象拼音输入方案 | Rime Weasel Configuration: Wanxiang-Pinyin.",
+    "description": "Rime 小狼毫配置: 万象拼音输入方案 (标准版) | Rime Weasel Configuration: Wanxiang-Pinyin (Base)",
     "homepage": "https://github.com/amzxyz/rime_wanxiang",
     "license": {
         "identifier": "CC-BY-4.0"
@@ -27,20 +27,14 @@
             "hash": "168d5950a376a9ef57a24f47a3a67dafdeabadbd666ba3ca41862efa8c8344eb"
         }
     },
-    "extract_to": "rime_wanxiang",
+    "extract_to": "app",
     "pre_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "if($PSUICulture -like 'zh*') {",
-        "    Write-Host \"正在将 $app 配置文件复制到 Rime.Weasel 用户文件夹中...\" -ForegroundColor Yellow",
-        "}",
-        "else {",
-        "    Write-Host \"Copying $app configuration file to Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
-        "}",
-        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
-        "Copy-Item \"$dir\\rime_wanxiang\\*\" $RimeDataDir -Recurse -Force"
+        "A-Deny-IfAppConflict 'amzxyz.rime_wanxiang', 'amzxyz.rime_wanxiang.shouyou', 'amzxyz.rime_wanxiang.zrm', 'amzxyz.rime_wanxiang.tiger', 'amzxyz.rime_wanxiang.moqi', 'amzxyz.rime_wanxiang.flypy', 'amzxyz.rime_wanxiang.wubi', 'amzxyz.rime_wanxiang.hanxin'",
+        "Write-Host \"Copying $dir\\app\\* => $env:AppData\\Rime\" -ForegroundColor Yellow",
+        "Copy-Item $dir\\app\\* $env:AppData\\Rime -Recurse -Force"
     ],
     "post_install": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,15 +45,7 @@
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "if($PSUICulture -like 'zh*') {",
-        "    Write-Host \"正在从 Rime.Weasel 用户文件夹中移除 $app 配置文件...\" -ForegroundColor Yellow",
-        "}",
-        "else {",
-        "    Write-Host \"Removing $app configuration file from Rime.Weasel user configuration directory...\" -ForegroundColor Yellow",
-        "}",
-        "$RimeDir = Join-Path (Split-Path $persist_dir -Parent) 'Rime.Weasel'",
-        "$RimeDataDir = \"$env:AppData\\Rime\".Replace($home,$RimeDir)",
-        "(Get-ChildItem \"$dir\\rime_wanxiang\" -Recurse).FullName.Replace(\"$dir\\rime_wanxiang\", $RimeDataDir) | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
+        "(Get-ChildItem \"$dir\\app\" -Recurse -File).FullName.Replace(\"$dir\\app\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
         "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
