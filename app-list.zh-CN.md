@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (717)|Tag|Description|
+|App (718)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -357,6 +357,7 @@
 |[GitHub.Copilot](https://github.com/github/copilot-cli "点击访问仓库或主页")|<a href="./bucket/g/GitHub/GitHub.Copilot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|GitHub Copilot CLI 将 Copilot 编码代理的强大功能直接带到你的终端。|
 |[GitHub.GitHubDesktop](https://desktop.github.com/ "点击访问仓库或主页")|<a href="./bucket/g/GitHub/GitHub.GitHubDesktop.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a>|Github Desktop 是 GitHub 官方的客户端|
 |[Gitify.Gitify](https://gitify.io/ "点击访问仓库或主页")|<a href="./bucket/g/Gitify/Gitify.Gitify.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|菜单栏上的 GitHub 通知。|
+|[GLab.GLab](https://gitlab.com/gitlab-org/cli "点击访问仓库或主页")|<a href="./bucket/g/GLab/GLab.GLab.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款开源的 GitLab 命令行工具，将 GitLab 的酷炫功能带到你的命令行中|
 |[glzr-io.glazewm](https://github.com/glzr-io/glazewm "点击访问仓库或主页")|<a href="./bucket/g/glzr-io/glzr-io.glazewm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|GlazeWM 是一款受 i3wm 启发的适用于 Windows 系统的平铺窗口管理器。|
 |[GNU.datamash](https://www.gnu.org/software/datamash/ "点击访问仓库或主页")|<a href="./bucket/g/GNU/GNU.datamash.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|GNU datamash 是一个命令行程序，它对输入的文本数据文件执行基本的数值、文本和统计操作|
 |[GNU.Nano](https://www.nano-editor.org/ "点击访问仓库或主页")|<a href="./bucket/g/GNU/GNU.Nano.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款用于终端的小型且简单的文本编辑器|
