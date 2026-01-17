@@ -1,5 +1,11 @@
 ﻿#Requires -Version 7.0
 
+if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
+    $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
+}
+
+. $env:SCOOP_HOME\lib\json.ps1
+
 $order = [ordered]@{
     '##'           = ''
     version        = ''
@@ -103,15 +109,13 @@ function Sort-JsonByOrder {
 }
 
 Get-ChildItem "$root\bucket" -Recurse -File -Filter *.json | ForEach-Object {
-    $old = Get-Content $_.FullName -Raw
-    $json = $old | ConvertFrom-Json -AsHashtable
-
+    $content = Get-Content $_.FullName -Raw
+    $json = $content | ConvertFrom-Json -AsHashtable
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
-    $new = $sortedJson | ConvertTo-Json -Depth 10
 
+    $old = $json | ConvertToPrettyJson
+    $new = $sortedJson | ConvertToPrettyJson
     if ($new -ne $old) {
-        $new | Set-Content $_.FullName -Encoding UTF8
+        Set-Content -LiteralPath $_.FullName -Value $new -Encoding utf8
     }
 }
-
-. "$root\bin\formatjson.ps1"
