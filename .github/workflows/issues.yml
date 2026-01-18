@@ -8,8 +8,8 @@ concurrency:
   group: manifest-check-lock
 
 jobs:
-  issueHandler:
-    name: IssueHandler
+  issue-handler:
+    name: Issue Handler
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -18,9 +18,23 @@ jobs:
       - name: Get latest changes
         run: git pull
 
-      - name: IssueHandler
+      - name: Issue Handler
         uses: ScoopInstaller/GithubActions@main
         # uses: abgox/ScoopInstaller-GithubActions@main
         if: github.event.action == 'opened' || (github.event.action == 'labeled' && contains(github.event.issue.labels.*.name, 'verify'))
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sync-repos:
+    name: Sync Repos
+    needs: issue-handler
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/abgox
+          dst: gitee/abgox
+          dst_key: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+          dst_token: ""
+          force_update: true
+          static_list: ${{ github.event.repository.name }}
