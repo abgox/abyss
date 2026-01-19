@@ -735,7 +735,12 @@ function A-Install-Inno {
 
 function A-Uninstall-Inno {
     param(
-        [array]$ArgumentList = @('/VerySilent', '/Force')
+        [array]$ArgumentList = @(
+            '/VerySilent',
+            '/SuppressMsgBoxes',
+            '/NoRestart',
+            '/Force'
+        )
     )
 
     $Uninstaller = Get-ChildItem $dir unins000.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1
