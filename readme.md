@@ -36,7 +36,7 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) is a special Scoop bucket, aiming to be a Scoop solution similar to Winget with [data persistence](https://abyss.abgox.com/features/data-persistence).
+> - [abyss](https://abyss.abgox.com) is a cleverly designed Scoop bucket, aims to provide a Winget-like solution with [data persistence](https://abyss.abgox.com/features/data-persistence).
 > - Unlike the standard Scoop bucket, it also includes some extra [features](#features).
 > - Its manifests are based on [utils.ps1](./script/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
 
@@ -48,14 +48,18 @@
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/features/extra-features)
 - Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
 - Standardized directory structure and manifest naming.
-  - Refer to: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
+  - Inspired by: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
   - Format: **Publisher.PackageIdentifier**
 
 ## Demo
 
+> [!Tip]
+>
+> If it cannot be displayed here, [you can check it on the official website](https://abyss.abgox.com).
+
 ![Demo](https://abyss.abgox.com/demo.gif)
 
-## If you are not using Scoop
+## If you have never used Scoop
 
 > [!Tip]
 >
@@ -67,7 +71,7 @@
 - [Scoop bucket - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
 - [Scoop App-Manifest - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
-## If you are using Scoop
+## If you are currently using Scoop
 
 1.  Add the [abyss](https://abyss.abgox.com) bucket ([Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss)).
 
@@ -79,7 +83,7 @@
     scoop bucket add abyss https://gitee.com/abgox/abyss
     ```
 
-2.  Add `scoop` completion via [PSCompletions](https://github.com/abgox/PSCompletions).
+2.  Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com).
 
     ```shell
     scoop install abyss/abgox.PSCompletions
@@ -93,7 +97,7 @@
     psc add scoop
     ```
 
-3.  Install [scoop-i18n](https://scoop-i18n.abgox.com) to enable multilingual support.
+3.  Install [scoop-i18n](https://scoop-i18n.abgox.com) to provide multilingual support.
 
     ```shell
     scoop install abyss/abgox.scoop-i18n
@@ -101,7 +105,7 @@
 
 ## If you cannot access Github resources
 
-You can use [scoop-tools](https://scoop-tools.abgox.com), and it allows you to temporarily use the replaced proxy url to download the installation package.
+[scoop-tools](https://scoop-tools.abgox.com) is a good solution that allows you to temporarily use the replaced proxy URL to download app packages.
 
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools

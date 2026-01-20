@@ -36,7 +36,7 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个特殊的 Scoop bucket，它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
+> - [abyss](https://abyss.abgox.com) 是一个设计巧妙的 Scoop bucket，它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
 > - 区别于标准的 Scoop bucket，它还包含了一些额外的 [特性](#特性)
 > - 它的清单是基于 [utils.ps1](./script/utils.ps1) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
@@ -53,9 +53,13 @@
 
 ## 演示
 
+> [!Tip]
+>
+> 如果这里无法显示，[可以在官网中查看](https://abyss.abgox.com)
+
 ![Demo](https://abyss.abgox.com/demo.zh-CN.gif)
 
-## 如果你没有使用 Scoop
+## 如果没有用过 Scoop
 
 > [!Tip]
 >
@@ -67,7 +71,7 @@
 - [Scoop 中的 bucket - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
 - [Scoop 中的应用清单 (App Manifest) - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
-## 如果你正在使用 Scoop
+## 如果正在使用 Scoop
 
 1. 添加 [abyss](https://abyss.abgox.com) bucket ([Github](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss))
 
@@ -79,7 +83,7 @@
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
-2. 使用 [PSCompletions](https://gitee.com/abgox/PSCompletions) 添加 `scoop` 命令补全
+2. 使用 [PSCompletions](https://pscompletions.abgox.com) 添加 `scoop` 命令补全
 
    ```shell
    scoop install abyss/abgox.PSCompletions
@@ -99,9 +103,9 @@
    scoop install abyss/abgox.scoop-i18n
    ```
 
-## 如果你无法访问 Github 资源
+## 如果无法访问 Github 资源
 
-可以使用 [scoop-tools](https://scoop-tools.abgox.com)，它允许你临时使用替换之后的代理 url 来下载安装包，以解决下载问题
+[scoop-tools](https://scoop-tools.abgox.com) 是一个很好的解决方案，它允许你临时使用替换之后的代理 url 来下载安装包
 
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
