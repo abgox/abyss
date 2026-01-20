@@ -2027,7 +2027,7 @@
                                             "not": {
                                                 "pattern": "\\$.+"
                                             },
-                                            "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                            "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
                                         }
                                     ]
                                 },
@@ -2042,7 +2042,7 @@
                                                 "not": {
                                                     "pattern": "\\$.+"
                                                 },
-                                                "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
                                             }
                                         ]
                                     }
@@ -2091,7 +2091,7 @@
                                             "not": {
                                                 "pattern": "\\$.+"
                                             },
-                                            "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                            "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
                                         }
                                     ]
                                 },
@@ -2108,7 +2108,7 @@
                                                         "not": {
                                                             "pattern": "\\$.+"
                                                         },
-                                                        "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                        "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
                                                     }
                                                 ]
                                             },
@@ -2124,7 +2124,7 @@
                                                                 "not": {
                                                                     "pattern": "\\$.+"
                                                                 },
-                                                                "errorMessage": "It cannot add paths with variables.\nPlease use A-Add-Path in pre_install."
+                                                                "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
                                                             }
                                                         ]
                                                     },
@@ -2720,34 +2720,48 @@
                                     "A-Complete-Install"
                                 ]
                             ],
-                            "$comment": "The implementation of 'if' here can cleverly restrict the last element of the array.",
-                            "if": {
-                                "oneOf": [
-                                    {
-                                        "items": [
+                            "items": [
+                                {
+                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                    "markdownDescription": "Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
+                                },
+                                {
+                                    "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
+                                    "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                }
+                            ],
+                            "allOf": [
+                                {
+                                    "contains": {
+                                        "const": "A-Complete-Install"
+                                    },
+                                    "errorMessage": "It must contain 'A-Complete-Install', and must be the last item in the array."
+                                },
+                                {
+                                    "$comment": "The implementation of 'if' here can cleverly restrict the last element of the array.",
+                                    "if": {
+                                        "oneOf": [
                                             {
-                                                "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                "markdownDescription": "Get `$bucket` variable.\n- If `$bucket` is not set, then use `abgox-abyss-bucket-name` config."
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "const": "A-Complete-Install",
+                                                        "markdownDescription": "The end of install.\n- Any custom installation logic should be placed before it.\n- Installation process: `pre_install` -> `installer` -> `post_install`"
+                                                    }
+                                                ]
                                             },
                                             {
-                                                "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
-                                                "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
-                                            },
-                                            {
-                                                "const": "A-Complete-Install",
-                                                "markdownDescription": "The end of install.\n- Any custom installation logic should be placed before it.\n- Installation process: `pre_install` -> `installer` -> `post_install`"
+                                                "minItems": 4
                                             }
                                         ]
                                     },
-                                    {
-                                        "minItems": 4
+                                    "else": {
+                                        "not": true,
+                                        "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be A-Complete-Uninstall"
                                     }
-                                ]
-                            },
-                            "else": {
-                                "not": true,
-                                "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be A-Complete-Uninstall"
-                            }
+                                }
+                            ]
                         },
                         "pre_uninstall": {
                             "examples": [
@@ -3002,7 +3016,7 @@
                                                 {
                                                     "$ref": "#/definitions/str",
                                                     "pattern": "^app\\\\",
-                                                    "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\"
+                                                    "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\"
                                                 },
                                                 {
                                                     "type": "array",
@@ -3015,14 +3029,14 @@
                                                             {
                                                                 "$ref": "#/definitions/str",
                                                                 "pattern": "^app\\\\",
-                                                                "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\"
+                                                                "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\"
                                                             },
                                                             {
                                                                 "type": "array",
                                                                 "items": [
                                                                     {
                                                                         "pattern": "^app\\\\",
-                                                                        "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\"
+                                                                        "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\"
                                                                     }
                                                                 ]
                                                             }
@@ -3060,7 +3074,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "Please check the path. Since A-Install-* or A-Expand-SetupExe is used, it may need to start with app\\\\ or $env: or ${env:"
+                                                            "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\ or $env: or ${env:"
                                                         }
                                                     }
                                                 ]
@@ -3094,7 +3108,7 @@
                                                         "contains": {
                                                             "pattern": "(?<!#.*)A-Require-Admin"
                                                         },
-                                                        "errorMessage": "A-Require-Admin is used in pre_install, while A-Require-Admin or A-Uninstall-Manually is missing in pre_uninstall"
+                                                        "errorMessage": "'A-Require-Admin' is used in 'pre_install', while 'A-Require-Admin' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
                                                     }
                                                 }
                                             }
@@ -3118,13 +3132,13 @@
                                                             "contains": {
                                                                 "pattern": "A-Remove-Link"
                                                             },
-                                                            "errorMessage": "A-New-LinkFile or A-New-LinkDirectory is used in pre_install, while A-Remove-Link is missing in pre_uninstall"
+                                                            "errorMessage": "'A-New-LinkFile' or 'A-New-LinkDirectory' is used in 'pre_install', while 'A-Remove-Link' is missing in 'pre_uninstall'"
                                                         },
                                                         {
                                                             "contains": {
                                                                 "pattern": "^A-Remove-Link$"
                                                             },
-                                                            "errorMessage": "A-Remove-Link must be on a separate line and must not contain any additional content"
+                                                            "errorMessage": "'A-Remove-Link' must be on a separate line and must not contain any additional content"
                                                         }
                                                     ]
                                                 }
@@ -3147,7 +3161,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)(A-Uninstall-Inno|A-Uninstall-Manually)"
                                                     },
-                                                    "errorMessage": "A-Install-Inno is used in pre_install, while A-Uninstall-Inno or A-Uninstall-Manually is missing in pre_uninstall."
+                                                    "errorMessage": "'A-Install-Inno' is used in 'pre_install', while 'A-Uninstall-Inno' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
                                                 }
                                             }
                                         }
@@ -3168,7 +3182,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)(A-Uninstall-Msi|A-Uninstall-Manually)"
                                                     },
-                                                    "errorMessage": "A-Install-Msi is used in pre_install, while A-Uninstall-Msi or A-Uninstall-Manually is missing in pre_uninstall."
+                                                    "errorMessage": "'A-Install-Msi' is used in 'pre_install', while 'A-Uninstall-Msi' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
                                                 }
                                             }
                                         }
@@ -3189,7 +3203,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)(A-Uninstall-App|A-Uninstall-Manually|Remove-AppPackage)"
                                                     },
-                                                    "errorMessage": "A-Install-App is used in pre_install, while A-Uninstall-App, A-Uninstall-Manually, or Remove-AppPackage is missing in pre_uninstall."
+                                                    "errorMessage": "'A-Install-App' is used in 'pre_install', while 'A-Uninstall-App', 'A-Uninstall-Manually', or 'Remove-AppPackage' is missing in 'pre_uninstall'"
                                                 }
                                             }
                                         }
@@ -3212,13 +3226,13 @@
                                                             "contains": {
                                                                 "pattern": "A-Remove-MsixPackage"
                                                             },
-                                                            "errorMessage": "A-Add-MsixPackage is used in pre_install, while A-Remove-MsixPackage is missing in pre_uninstall"
+                                                            "errorMessage": "'A-Add-MsixPackage' is used in 'pre_install', while 'A-Remove-MsixPackage' is missing in 'pre_uninstall'"
                                                         },
                                                         {
                                                             "contains": {
                                                                 "pattern": "^A-Remove-MsixPackage$"
                                                             },
-                                                            "errorMessage": "A-Remove-MsixPackage must be on a separate line and must not contain any additional content"
+                                                            "errorMessage": "'A-Remove-MsixPackage' must be on a separate line and must not contain any additional content"
                                                         }
                                                     ]
                                                 }
@@ -3246,7 +3260,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
                                                     },
-                                                    "errorMessage": "A-Remove-Link is used in pre_uninstall, while A-New-LinkFile or A-New-LinkDirectory is missing in pre_install"
+                                                    "errorMessage": "'A-Remove-Link' is used in 'pre_uninstall', while 'A-New-LinkFile' or 'A-New-LinkDirectory' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -3267,7 +3281,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)A-Install-Inno"
                                                     },
-                                                    "errorMessage": "A-Uninstall-Inno is used in pre_uninstall, while A-Install-Inno is missing in pre_install"
+                                                    "errorMessage": "'A-Uninstall-Inno' is used in 'pre_uninstall', while 'A-Install-Inno' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -3288,7 +3302,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)A-Install-Msi"
                                                     },
-                                                    "errorMessage": "A-Uninstall-Msi is used in pre_uninstall, while A-Install-Msi is missing in pre_install"
+                                                    "errorMessage": "'A-Uninstall-Msi' is used in 'pre_uninstall', while 'A-Install-Msi' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -3309,7 +3323,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)A-Install-App"
                                                     },
-                                                    "errorMessage": "A-Uninstall-App is used in pre_uninstall, while A-Install-App is missing in pre_install"
+                                                    "errorMessage": "'A-Uninstall-App' is used in 'pre_uninstall', while 'A-Install-App' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -3330,7 +3344,7 @@
                                                     "contains": {
                                                         "pattern": "(?<!#.*)A-Add-MsixPackage"
                                                     },
-                                                    "errorMessage": "A-Remove-MsixPackage is used in pre_uninstall, while A-Add-MsixPackage is missing in pre_install"
+                                                    "errorMessage": "'A-Remove-MsixPackage' is used in 'pre_uninstall', while 'A-Add-MsixPackage' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -3341,7 +3355,7 @@
                     },
                     "else": {
                         "not": true,
-                        "errorMessage": "In abyss, pre_install, post_install, pre_uninstall, and post_uninstall must be used."
+                        "errorMessage": "In abyss, 'pre_install', 'post_install', 'pre_uninstall', and 'post_uninstall' must be used."
                     }
                 },
                 {
@@ -3578,6 +3592,26 @@
                                     }
                                 }
                             ]
+                        },
+                        {
+                            "$comment": "Verify A-Deny-Manifest and version",
+                            "if": {
+                                "properties": {
+                                    "pre_install": {
+                                        "contains": {
+                                            "pattern": "(?<!#.*)A-Deny-Manifest"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "version": {
+                                        "pattern": "^pending|renamed|deprecated$",
+                                        "errorMessage": "Since 'A-Deny-Manifest' is used in 'pre_install', it must be 'pending', 'renamed', or 'deprecated'"
+                                    }
+                                }
+                            }
                         },
                         {
                             "$comment": "Since the manifest is installed through decompression and extraction, it is necessary to use extract_to to specify the directory.",

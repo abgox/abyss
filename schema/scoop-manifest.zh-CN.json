@@ -1911,7 +1911,7 @@
                                         },
                                         {
                                             "const": "Freemium",
-                                            "markdownDescription": "- 使用 `Freemium`，这是由 [abyss](https://abyss.abgox.com) 定义的特殊字段: 基础功能免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
+                                            "markdownDescription": "- 使用 `Freemium`，这是由 [abyss](https://abyss.abgox.com) 定义的特殊字段\n- 它表示基础功能免费，高级功能需付费解锁(free to use, must pay to unlock advanced features)"
                                         }
                                     ]
                                 },
@@ -2720,34 +2720,48 @@
                                     "A-Complete-Install"
                                 ]
                             ],
-                            "$comment": "这里的 if 实现可以很巧妙的限制数组的最后一位",
-                            "if": {
-                                "oneOf": [
-                                    {
-                                        "items": [
+                            "items": [
+                                {
+                                    "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+                                    "markdownDescription": "获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
+                                },
+                                {
+                                    "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
+                                    "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                }
+                            ],
+                            "allOf": [
+                                {
+                                    "contains": {
+                                        "const": "A-Complete-Install"
+                                    },
+                                    "errorMessage": "数组中必须包含 A-Complete-Install，且它必须是数组的最后一项"
+                                },
+                                {
+                                    "$comment": "这里的 if 实现可以很巧妙的限制数组的最后一位",
+                                    "if": {
+                                        "oneOf": [
                                             {
-                                                "const": "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
-                                                "markdownDescription": "获取 `$bucket` 变量\n- 如果没有指定 `$bucket`，则使用 `abgox-abyss-bucket-name` 配置项"
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "const": "A-Complete-Install",
+                                                        "markdownDescription": "安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                                    }
+                                                ]
                                             },
                                             {
-                                                "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
-                                                "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                            },
-                                            {
-                                                "const": "A-Complete-Install",
-                                                "markdownDescription": "安装过程的结束，任何自定义安装逻辑都应该放在它之前\n- 安装过程: `pre_install` -> `installer` -> `post_install`"
+                                                "minItems": 4
                                             }
                                         ]
                                     },
-                                    {
-                                        "minItems": 4
+                                    "else": {
+                                        "not": true,
+                                        "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Install"
                                     }
-                                ]
-                            },
-                            "else": {
-                                "not": true,
-                                "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Install"
-                            }
+                                }
+                            ]
                         },
                         "pre_uninstall": {
                             "examples": [
@@ -3578,6 +3592,26 @@
                                     }
                                 }
                             ]
+                        },
+                        {
+                            "$comment": "验证 A-Deny-Manifest 和 version 的值",
+                            "if": {
+                                "properties": {
+                                    "pre_install": {
+                                        "contains": {
+                                            "pattern": "(?<!#.*)A-Deny-Manifest"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "version": {
+                                        "pattern": "^pending|renamed|deprecated$",
+                                        "errorMessage": "pre_install 中使用了 A-Deny-Manifest，version 的值只能是 pending、renamed 或 deprecated"
+                                    }
+                                }
+                            }
                         },
                         {
                             "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
