@@ -2193,12 +2193,16 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
         Microsoft.PowerShell.Utility\Write-Output '-----'
     }
     elseif ($manifest.psmodule) {
+        Remove-Item "$dir\_rels", "$dir\package", "$dir\*Content*.xml" -Recurse -ErrorAction SilentlyContinue
+
         $psd1 = Import-PowerShellDataFile -LiteralPath "$scoopdir\modules\$($manifest.psmodule.name)\$($manifest.psmodule.name).psd1" -ErrorAction SilentlyContinue
         $funcs = @($psd1.FunctionsToExport) | Where-Object { $_ -and $_ -ne '*' }
         $aliases = @($psd1.AliasesToExport) | Where-Object { $_ -and $_ -ne '*' }
+
         if (-not $funcs.Count -and -not $aliases.Count) {
             return
         }
+
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Commands'
         Microsoft.PowerShell.Utility\Write-Output '-----'
