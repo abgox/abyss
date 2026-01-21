@@ -36,11 +36,14 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个设计巧妙的 Scoop bucket，它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
-> - 区别于标准的 Scoop bucket，它还包含了一些额外的 [特性](#特性)
+> - [abyss](https://abyss.abgox.com) 是一个设计巧妙的 Scoop bucket，旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
 > - 它的清单是基于 [utils.ps1](./script/utils.ps1) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ## 特性
+
+> [!Tip]
+>
+> 区别于标准的 Scoop bucket，[abyss](https://abyss.abgox.com) 包含了一些额外的特性
 
 - [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)
 - [完善的数据持久化](https://abyss.abgox.com/features/data-persistence)
@@ -55,7 +58,7 @@
 
 > [!Tip]
 >
-> 如果这里无法显示，[可以在官网中查看](https://abyss.abgox.com)
+> 如果这里无法显示，[可以在官网上查看](https://abyss.abgox.com)
 
 ![Demo](https://abyss.abgox.com/demo.zh-CN.gif)
 
@@ -114,7 +117,7 @@
 
 > [!Tip]
 >
-> 在 [官网](https://abyss.abgox.com) 中查看: https://abyss.abgox.com/app-list
+> 在 [官网](https://abyss.abgox.com) 上查看: https://abyss.abgox.com/app-list
 
 - [简体中文](./app-list.zh-CN.md)
 - [English](./app-list.md)
