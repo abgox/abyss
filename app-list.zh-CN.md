@@ -32,7 +32,7 @@
 ---
 
 <!-- prettier-ignore-start -->
-|App (718)|Tag|Description|
+|App (719)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "点击访问仓库或主页")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
 |[123.123pan](https://www.123pan.com/ "点击访问仓库或主页")|<a href="./bucket/1/123/123.123pan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|123 云盘，一款云存储服务产品|
@@ -575,6 +575,7 @@
 |[PicGo.PicGo](https://molunerfinn.com/PicGo/ "点击访问仓库或主页")|<a href="./bucket/p/PicGo/PicGo.PicGo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|由 vue-cli-electron-builder 构建的简洁美观的图片上传工具|
 |[pingbird.Puro](https://puro.dev/ "点击访问仓库或主页")|<a href="./bucket/p/pingbird/pingbird.Puro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款强大的 Flutter 版本安装与升级工具|
 |[PixPin.PixPin](https://pixpin.cn/ "点击访问仓库或主页")|<a href="./bucket/p/PixPin/PixPin.PixPin.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个功能强大使用简单的截图/贴图/录屏工具|
+|[PixPin.PixPin.Beta](https://pixpin.cn/ "点击访问仓库或主页")|<a href="./bucket/p/PixPin/PixPin.PixPin.Beta.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个功能强大使用简单的截图/贴图/录屏工具|
 |[Planshit.Tai](https://github.com/Planshit/Tai "点击访问仓库或主页")|<a href="./bucket/p/Planshit/Planshit.Tai.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|在 Windows 上统计软件使用时长和网站浏览时长|
 |[pnpm.pnpm](https://pnpm.io/ "点击访问仓库或主页")|<a href="./bucket/p/pnpm/pnpm.pnpm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款快速且节省磁盘空间的 Node 包管理器|
 |[PowerShell.CompletionPredictor](https://github.com/PowerShell/CompletionPredictor "点击访问仓库或主页")|<a href="./bucket/p/PowerShell/PowerShell.CompletionPredictor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个适用于 PSReadLine 预测性智能感知功能的 PowerShell 命令行自动补全插件|
