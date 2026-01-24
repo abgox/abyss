@@ -9,29 +9,18 @@
 > - Here are some badges for [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control).
 > - Click on the badge to view the manifest json file.
 
-- <img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active" />
+<!-- prettier-ignore-start -->
 
-  - It is available and can be installed or updated normally.
+|Badge|Description|
+|:-:|-|
+|<img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/>|It is available and can be installed or updated normally.|
+|<img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/>|It has been deprecated, and cannot be installed.<br/>If the installation is completed before `deprecated`, it cannot be updated via Scoop.|
+|<img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/>|It is pending, and cannot be installed.<br/>If the installation is completed before `pending`, it cannot be updated via Scoop.|
+|<img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/>|It has been renamed and will fail to install or update.<br/>The new name will be displayed in the error message, and you should use the new name for installation.<br/>If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.|
 
-- <img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated" />
-
-  - It has been deprecated, and cannot be installed.
-  - If the installation is completed before `deprecated`, it cannot be updated via Scoop.
-
-- <img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending" />
-
-  - It is pending, and cannot be installed.
-  - If the installation is completed before `pending`, it cannot be updated via Scoop.
-
-- <img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed" />
-
-  - It has been renamed and will fail to install or update.
-  - The new name will be displayed in the error message, and you should use the new name for installation
-  - If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.
 
 ---
 
-<!-- prettier-ignore-start -->
 |App (719)|Tag|Description|
 |-|:-:|-|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop "Click to access the repository or homepage")|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions.|

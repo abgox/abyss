@@ -62,11 +62,11 @@ function Test-ScriptPattern {
 function Get-StaticContent($path) {
     $content = Get-Content -Path $path -Encoding UTF8
 
-    $match = $content | Select-String -Pattern "<!-- prettier-ignore-start -->"
+    $match = $content | Select-String -Pattern "\|App \(\d+\)\|Tag\|Description\|"
 
     if ($match) {
         $matchLineNumber = ([array]$match.LineNumber)[0]
-        $result = $content | Select-Object -First $matchLineNumber
+        $result = $content | Select-Object -First ($matchLineNumber - 1)
         $result
     }
 }
