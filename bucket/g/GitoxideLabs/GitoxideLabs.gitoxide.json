@@ -1,0 +1,68 @@
+{
+    "version": "0.50.0",
+    "description": "一个符合语言习惯、简洁、快速且安全的纯 Rust 实现的 Git | An idiomatic, lean, fast & safe pure Rust implementation of Git",
+    "homepage": "https://github.com/GitoxideLabs/gitoxide",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/GitoxideLabs/gitoxide/releases/download/v0.50.0/gitoxide-max-v0.50.0-x86_64-pc-windows-msvc.zip",
+            "hash": "761c2995947b73e5695eb97e0a18be55fe5efcf8c518283f0de1db639e06f98e",
+            "extract_dir": "gitoxide-max-v0.50.0-x86_64-pc-windows-msvc"
+        },
+        "arm64": {
+            "url": "https://github.com/GitoxideLabs/gitoxide/releases/download/v0.50.0/gitoxide-max-v0.50.0-aarch64-pc-windows-msvc.zip",
+            "hash": "97d915c971338d65defcd87aee0c2b729de9fc512b5901e95019f19525a01877",
+            "extract_dir": "gitoxide-max-v0.50.0-aarch64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\gix.exe",
+        "app\\ein.exe"
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/GitoxideLabs/gitoxide/releases/download/v$version/gitoxide-max-v$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "gitoxide-max-v$version-x86_64-pc-windows-msvc"
+            },
+            "arm64": {
+                "url": "https://github.com/GitoxideLabs/gitoxide/releases/download/v$version/gitoxide-max-v$version-aarch64-pc-windows-msvc.zip",
+                "extract_dir": "gitoxide-max-v$version-aarch64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
