@@ -1,0 +1,69 @@
+{
+    "version": "7.1.4143",
+    "description": "一个更智能、更直观且更易读的 Shell | A smarter, more intuitive, and readable shell.",
+    "homepage": "https://murex.rocks/",
+    "license": {
+        "identifier": "GPL-2.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://nojs.murex.rocks/bin/latest/murex-windows-amd64.exe.zip",
+            "hash": "ca425911017e2e5640cb440aa685aebf7fe2004770d52cb5e64fc80e7c4be0c9",
+            "bin": [
+                [
+                    "app\\bin\\murex-7.1-windows-amd64.exe",
+                    "murex"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\.murex_preload\" \"$persist_dir\\.murex_preload\"",
+        "A-New-File \"$persist_dir\\.murex_profile\" -Content ''",
+        "A-New-File \"$persist_dir\\.murex_history\" -Content ''",
+        "A-New-LinkDirectory \"$home\\.murex_modules\"",
+        "A-New-LinkFile \"$home\\.murex_preload\", \"$home\\.murex_profile\", \"$home\\.murex_history\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/lmorg/murex",
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://nojs.murex.rocks/bin/latest/murex-windows-amd64.exe.zip",
+                "bin": [
+                    [
+                        "app\\bin\\murex-$majorVersion.$minorVersion-windows-amd64.exe",
+                        "murex"
+                    ]
+                ]
+            }
+        }
+    }
+}
