@@ -1,0 +1,66 @@
+{
+    "version": "1.1.93",
+    "description": "非官方的 Telegram 桌面版 | Unofficial Telegram Desktop",
+    "homepage": "https://github.com/TDesktop-x64/tdesktop",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/TDesktop-x64/tdesktop/releases/download/v1.1.93/64Gram-setup-x64.1.1.93.exe",
+            "hash": "3481b0169eaeb12504603815c94a0f6424e7502d377b5235aa895622186dffc8"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Telegram.exe",
+            "64Gram"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\tdata",
+            "tdata"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/TDesktop-x64/tdesktop/releases/download/v$version/64Gram-setup-x64.$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
