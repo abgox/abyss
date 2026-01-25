@@ -1,0 +1,65 @@
+{
+    "version": "2.3.1",
+    "description": "一款可从系统托盘切换明暗模式的 Windows 应用程序 | A windows app to toggle light and dark mode from the system tray",
+    "homepage": "https://github.com/5mdt/WinGoDarkTray",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/5mdt/WinGoDarkTray/releases/download/v2.3.1/WinGoDarkTray-x64.exe#/WinGoDarkTray.exe",
+            "hash": "4b008d10e9cae1aa86a57453398e6ec3f8a3d1c1004ac3a4c434f7754dc16097"
+        },
+        "arm64": {
+            "url": "https://github.com/5mdt/WinGoDarkTray/releases/download/v2.3.1/WinGoDarkTray-arm64.exe#/WinGoDarkTray.exe",
+            "hash": "e4d7bc9f4d7cc2c1b1479a74681ed662d237af61c6efec3dfe1abe025ae85e92"
+        }
+    },
+    "shortcuts": [
+        [
+            "WinGoDarkTray.exe",
+            "WinGoDarkTray"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/5mdt/WinGoDarkTray/releases/download/v$version/WinGoDarkTray-x64.exe#/WinGoDarkTray.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/5mdt/WinGoDarkTray/releases/download/v$version/WinGoDarkTray-arm64.exe#/WinGoDarkTray.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
