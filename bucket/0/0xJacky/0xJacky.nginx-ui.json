@@ -1,0 +1,56 @@
+{
+    "version": "2.3.2",
+    "description": "另一个适用于 Nginx 的 Web 用户界面 | Yet another Web UI for Nginx",
+    "homepage": "https://nginxui.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/0xJacky/nginx-ui/releases/download/v2.3.2/nginx-ui-windows-64.zip",
+            "hash": "adeb498eff75dbd93e97aa03c11ef42360f752459b62c2638a76254ca82fb0dc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\nginx-ui.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:LocalAppData\\nginx-ui\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/0xJacky/nginx-ui/releases/download/v$version/nginx-ui-windows-64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
