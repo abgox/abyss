@@ -1,0 +1,64 @@
+{
+    "version": "8.038",
+    "description": "一款由 3Dflow 提供，可根据照片自动重建三维模型的摄影测量软件解决方案 | A photogrammetry software solution by 3Dflow to automatically reconstruct 3D models from photos",
+    "homepage": "https://www.3dflow.net/3df-zephyr-free/",
+    "license": {
+        "identifier": "Freeware"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://3df-eu.fra1.digitaloceanspaces.com/8.038/3DF%20Zephyr%20Free%20v8.038%20(x64).exe",
+            "hash": "1feb9e00eea123914f0705349185225d612e7d7204bf112b31d3b0c4d71f9838"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\3DF Zephyr Free.exe",
+            "3DF Zephyr Free"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget '3Dflow.3DFZephyr.Free' 'exe'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
