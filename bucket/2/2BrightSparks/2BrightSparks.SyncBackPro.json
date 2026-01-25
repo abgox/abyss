@@ -1,0 +1,66 @@
+{
+    "version": "11.3.134.0",
+    "description": "一款提供给专业人士用于备份、同步和恢复数据文件的工具。 | The professional's tool to backup, synchronize, and restore data files.",
+    "homepage": "https://www.2brightsparks.com/download-syncbackpro.html",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.2brightsparks.com/assets/software/SyncBack/SyncBackPro64_Setup.11.3.134.0.exe",
+            "hash": "0a087a4995dc85599a83c779c83db3d5b2e01a3bb37078a1e3ad81dd2e5626be"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\SyncBackPro.exe",
+            "SyncBackPro"
+        ]
+    ],
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\2BrightSparks\\SyncBackPro\", \"$env:LocalAppData\\2BrightSparks\\SyncBackPro\"",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget '2BrightSparks.SyncBackPro' 'exe'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
