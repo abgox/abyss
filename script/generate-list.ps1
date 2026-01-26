@@ -85,12 +85,7 @@ foreach ($path in $PathList) {
         $app = $mp.BaseName
 
         # homepage
-        if ($isCN) {
-            $info += "[$app]($($json.homepage) `"点击访问仓库或主页`")"
-        }
-        else {
-            $info += "[$app]($($json.homepage) `"Click to access the repository or homepage`")"
-        }
+        $info += "[$app]($($json.homepage))"
 
         # Tag
         $tag = @()
