@@ -1,0 +1,63 @@
+{
+    "version": "0.9.10",
+    "description": "一个命令行界面，用于管理 Atlassian Confluence Cloud。 | Command-line interface for Atlassian Confluence Cloud.",
+    "homepage": "https://github.com/open-cli-collective/confluence-cli",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/open-cli-collective/confluence-cli/releases/download/v0.9.10/cfl_0.9.10_windows_amd64.zip",
+            "hash": "34e71e3d798249d94c32be41f9c58b50af1398f7c27f7c141b1e4c41045ac30f"
+        },
+        "arm64": {
+            "url": "https://github.com/open-cli-collective/confluence-cli/releases/download/v0.9.10/cfl_0.9.10_windows_arm64.zip",
+            "hash": "b9bdd42c4ed5d727151369d3094067d84290a2c220cac5e6b5d27e780cf44981"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\cfl.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$home\\.config\\cfl\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/open-cli-collective/confluence-cli/releases/download/v$version/cfl_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/open-cli-collective/confluence-cli/releases/download/v$version/cfl_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
