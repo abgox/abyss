@@ -1,0 +1,56 @@
+{
+    "version": "3.1.0",
+    "description": "一个 PowerShell 模块，提供用于创建、管理和提取 zip 及 tar 归档文件，以及压缩和解压缩字符串的工具。 | A PowerShell module that provides utilities for creating, managing, and extracting zip and tar archives, as well as compressing and decompressing strings.",
+    "homepage": "https://github.com/santisq/PSCompression",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/pscompression.3.1.0.nupkg",
+            "hash": "31349409f3a7eee4ae417db55068475d6700a36831a83cdb2839084155389ca2"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/pscompression.3.1.0.nupkg",
+            "hash": "31349409f3a7eee4ae417db55068475d6700a36831a83cdb2839084155389ca2"
+        }
+    },
+    "psmodule": {
+        "name": "PSCompression"
+    },
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/pscompression",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/pscompression.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/pscompression.$version.nupkg"
+            }
+        }
+    }
+}
