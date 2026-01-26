@@ -998,18 +998,23 @@ function A-Add-Font {
         [string]$FontType
     )
 
-    if (!$FontType) {
-        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -Include *.ttf, *.otf, *.ttc -File | Select-Object -First 1
-        $FontType = $fontFile.Extension.TrimStart(".")
-    }
-
-    $filter = "*.$($FontType)"
-
     $ExtMap = @{
         ".ttf" = "TrueType"
         ".otf" = "OpenType"
         ".ttc" = "TrueType"
     }
+
+    if (!$FontType) {
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -File
+        foreach ($file in $fontFile) {
+            if ($file.Extension -in $ExtMap.Keys) {
+                $FontType = $file.Extension.TrimStart('.')
+                break
+            }
+        }
+    }
+
+    $filter = "*.$FontType"
 
     $currentBuildNumber = [int] (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuildNumber
     $windows10Version1809BuildNumber = 17763
@@ -1037,11 +1042,13 @@ function A-Add-Font {
     }
     $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    $fonts = [System.Drawing.Text.PrivateFontCollection]::new()
     Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
         try {
             New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force -ErrorAction Stop | Out-Null
             Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force -ErrorAction Stop
+            $fonts.AddFontFile($_.FullName)
         }
         catch {
             error $_.Exception.Message
@@ -1049,7 +1056,10 @@ function A-Add-Font {
         }
     }
 
-    @{ FontType = $FontType } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
+    @{
+        FontType = $FontType
+        FontName = $fonts.Families | Select-Object -ExpandProperty Name
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
 }
 
 function A-Add-PowerToysRunPlugin {
@@ -1898,7 +1908,7 @@ function A-Remove-Font {
     }
 
     $FontType = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty FontType
-    $filter = "*.$($FontType)"
+    $filter = "*.$FontType"
 
     $ExtMap = @{
         ".ttf" = "TrueType"
@@ -2210,12 +2220,13 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     }
     #endregion
 
-    #region 新增 fonts 字段
-    if ($manifest.fonts) {
+    #region 新增: 输出字体名称
+    $fonts = Get-Content "$dir\abgox-abyss-A-Add-Font.json" -Raw -ErrorAction Ignore | ConvertFrom-Json | Select-Object -ExpandProperty FontName
+    if ($fonts) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Fonts'
         Microsoft.PowerShell.Utility\Write-Output '-----'
-        Microsoft.PowerShell.Utility\Write-Output $manifest.fonts
+        Microsoft.PowerShell.Utility\Write-Output $fonts
         Microsoft.PowerShell.Utility\Write-Output '-----'
     }
     #endregion

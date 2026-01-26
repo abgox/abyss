@@ -55,7 +55,6 @@ $order = [ordered]@{
     env_add_path   = ''
     innosetup      = ''
     psmodule       = ''
-    fonts          = ''
     commands       = ''
     bin            = ''
     shortcuts      = ''
