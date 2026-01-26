@@ -1,0 +1,63 @@
+{
+    "version": "1.0.24",
+    "description": "一个只读的命令行界面，用于管理谷歌服务。 | A read-only command-line interface for Google services.",
+    "homepage": "https://github.com/open-cli-collective/google-readonly",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/open-cli-collective/google-readonly/releases/download/v1.0.24/gro_v1.0.24_windows_amd64.zip",
+            "hash": "8c4aa019cc2785c63b99405fec8610e91b5a8633a309dfa5748cf11ffc8448a1"
+        },
+        "arm64": {
+            "url": "https://github.com/open-cli-collective/google-readonly/releases/download/v1.0.24/gro_v1.0.24_windows_arm64.zip",
+            "hash": "559a375ba44fb4a809f7fc428fdc639df01440990ae8cd85f4105eb7121c1eb2"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gro.exe",
+    "pre_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$home\\.config\\google-readonly\""
+    ],
+    "post_install": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/open-cli-collective/google-readonly/releases/download/v$version/gro_v$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/open-cli-collective/google-readonly/releases/download/v$version/gro_v$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
