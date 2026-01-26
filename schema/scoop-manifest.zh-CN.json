@@ -1826,7 +1826,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -2053,13 +2053,6 @@
                             "markdownDescription": "- 如果安装程序基于 `InnoSetup`，则设置为 `true`\n- 在 abyss 中，应该优先使用 `A-Install-Inno` 而不是此字段",
                             "enum": [
                                 true
-                            ]
-                        },
-                        "fonts": {
-                            "markdownDescription": "字体名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它用于列出这个清单安装的字体的名称",
-                            "$ref": "#/definitions/string_or_string_array",
-                            "examples": [
-                                []
                             ]
                         },
                         "commands": {
@@ -3768,6 +3761,9 @@
                         {
                             "$comment": "如果 url 属于 powershellgallery, 则需要指定 psmodule",
                             "if": {
+                                "required": [
+                                    "autoupdate"
+                                ],
                                 "properties": {
                                     "autoupdate": {
                                         "properties": {

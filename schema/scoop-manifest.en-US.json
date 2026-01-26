@@ -1826,7 +1826,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|fonts|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -2053,13 +2053,6 @@
                             "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`\n- In abyss, it is recommended to use `A-Install-Inno` instead of this field",
                             "enum": [
                                 true
-                            ]
-                        },
-                        "fonts": {
-                            "markdownDescription": "Font Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- It is used to list the names of fonts installed by this manifest",
-                            "$ref": "#/definitions/string_or_string_array",
-                            "examples": [
-                                []
                             ]
                         },
                         "commands": {
@@ -3768,6 +3761,9 @@
                         {
                             "$comment": "If the URL is powershellgallery.com, then psmodule needs to be specified.",
                             "if": {
+                                "required": [
+                                    "autoupdate"
+                                ],
                                 "properties": {
                                     "autoupdate": {
                                         "properties": {
