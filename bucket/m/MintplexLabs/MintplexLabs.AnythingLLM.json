@@ -1,6 +1,6 @@
 {
     "version": "1.10.0",
-    "description": "集桌面与 Docker 功能于一体的 AI 应用程序，内置 RAG、AI 代理等多种功能。 | The all-in-one Desktop & Docker AI application with built-in RAG, AI agents, and more.",
+    "description": "集桌面与 Docker 功能于一体的 AI 应用程序，内置 RAG、AI 代理等多种功能 | The all-in-one Desktop & Docker AI application with built-in RAG, AI agents, and more",
     "homepage": "https://anythingllm.com/",
     "license": {
         "identifier": "MIT"
@@ -22,19 +22,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\anythingllm-desktop\"",
         "A-Install-App -Uninstaller 'app\\Uninstall AnythingLLM.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -43,7 +43,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\anythingllm-desktop-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
