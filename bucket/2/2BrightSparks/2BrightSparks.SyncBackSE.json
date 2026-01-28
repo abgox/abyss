@@ -1,6 +1,6 @@
 {
     "version": "11.3.134.0",
-    "description": "面向家庭用户备份个人数据的理想 Windows 解决方案。 | The ideal Windows solution for home users to backup their personal data.",
+    "description": "面向家庭用户备份个人数据的理想 Windows 解决方案 | The ideal Windows solution for home users to backup their personal data",
     "homepage": "https://www.2brightsparks.com/download-syncbackse.html",
     "license": {
         "identifier": "Proprietary"
@@ -18,7 +18,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -26,12 +26,12 @@
         "A-Install-Inno"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -40,7 +40,7 @@
         "A-Uninstall-Inno"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
