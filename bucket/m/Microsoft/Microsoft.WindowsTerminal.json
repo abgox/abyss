@@ -67,27 +67,21 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Microsoft.WindowsTerminal' 'msixbundle'",
-            "$out"
+            "A-Get-VersionFromGithubAPI"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "regex": "(.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.x64_user.InstallerSha256"
-                }
+                "url": "https://github.com/microsoft/terminal/releases/download/v$version/Microsoft.WindowsTerminal_$version_8wekyb3d8bbwe.msixbundle"
             },
             "arm64": {
-                "url": "$matchArm64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.arm64_user.InstallerSha256"
-                }
+                "url": "https://github.com/microsoft/terminal/releases/download/v$version/Microsoft.WindowsTerminal_$version_8wekyb3d8bbwe.msixbundle"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }
