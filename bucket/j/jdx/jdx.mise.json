@@ -19,19 +19,19 @@
     "extract_to": "app",
     "bin": "app\\bin\\mise.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Add-Path \"$env:LocalAppData\\mise\\shims\"",
         "A-New-LinkDirectory \"$home\\.config\\mise\", \"$env:LocalAppData\\mise\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -39,7 +39,7 @@
         "A-Remove-TempData \"$home\\.local\\state\\mise\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

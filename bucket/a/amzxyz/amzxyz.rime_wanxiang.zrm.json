@@ -23,7 +23,7 @@
     },
     "extract_to": "app",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Deny-IfAppConflict 'amzxyz.rime_wanxiang', 'amzxyz.rime_wanxiang.shouyou', 'amzxyz.rime_wanxiang.zrm', 'amzxyz.rime_wanxiang.tiger', 'amzxyz.rime_wanxiang.moqi', 'amzxyz.rime_wanxiang.flypy', 'amzxyz.rime_wanxiang.wubi', 'amzxyz.rime_wanxiang.hanxin'",
@@ -32,18 +32,18 @@
         "Copy-Item $dir\\app\\* $env:AppData\\Rime -Recurse -Force"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "(Get-ChildItem \"$dir\\app\" -Recurse -File).FullName.Replace(\"$dir\\app\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
