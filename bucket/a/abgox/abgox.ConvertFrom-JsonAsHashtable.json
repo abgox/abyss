@@ -1,6 +1,6 @@
 {
     "version": "1.0.2",
-    "description": "适用于 Windows PowerShell 5.0+ 的 JSON 到哈希表的转换，类似于 PowerShell 7.0+ 的 'ConvertFrom-Json -AsHashtable' | JSON to Hashtable Conversion for Windows PowerShell 5.0+, similar to 'ConvertFrom-Json -AsHashtable' in PowerShell 7+.",
+    "description": "适用于 Windows PowerShell 5.0+ 的 JSON 到哈希表的转换，类似于 PowerShell 7.0+ 的 'ConvertFrom-Json -AsHashtable' | JSON to Hashtable Conversion for Windows PowerShell 5.0+, similar to 'ConvertFrom-Json -AsHashtable' in PowerShell 7.0+",
     "homepage": "https://www.powershellgallery.com/packages/ConvertFrom-JsonAsHashtable",
     "license": {
         "identifier": "MIT"
@@ -19,22 +19,23 @@
         "name": "ConvertFrom-JsonAsHashtable"
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Uninstall"
+        "A-Start-Uninstall",
+        "A-Stop-Process"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

@@ -1,0 +1,59 @@
+{
+    "version": "3.4.0",
+    "description": "Nerd Font，源自 ryanoasis/nerd-fonts | Nerd Font from ryanoasis/nerd-fonts",
+    "homepage": "https://www.nerdfonts.com/",
+    "license": {
+        "identifier": "MIT|OFL-1.1"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/DroidSansMono.zip",
+            "hash": "030229341907c833862f00682f0f4bce65d0dc8d281fc9a40d80b7ee9d306e88"
+        },
+        "arm64": {
+            "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/DroidSansMono.zip",
+            "hash": "030229341907c833862f00682f0f4bce65d0dc8d281fc9a40d80b7ee9d306e88"
+        }
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Add-Font"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/DroidSansMono.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/DroidSansMono.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

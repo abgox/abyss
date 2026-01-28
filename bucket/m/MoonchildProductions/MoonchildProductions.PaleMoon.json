@@ -1,6 +1,6 @@
 {
     "version": "34.0.0",
-    "description": "Pale Moon 基于 Firefox 构建，是一款以 Goanna 为引擎、注重效率和自定义功能的网页浏览器。 | Pale Moon is built on Firefox, and is Goanna-based web browser focusing on efficiency and customization.",
+    "description": "Pale Moon 基于 Firefox 构建，是一款以 Goanna 为引擎、注重效率和自定义功能的网页浏览器 | Pale Moon is built on Firefox, and is Goanna-based web browser focusing on efficiency and customization",
     "homepage": "https://www.palemoon.org/",
     "license": {
         "identifier": "MPL-2.0"
@@ -20,7 +20,7 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -28,12 +28,12 @@
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Pale Moon\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -43,7 +43,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\Moonchild Productions\\Pale Moon\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

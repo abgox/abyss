@@ -1,6 +1,6 @@
 {
     "version": "3.10.15",
-    "description": "腾讯文档，腾讯的一款可多人同时编辑的在线文档协作工具 | A collaborative online document tool that allows multiple people to edit at the same time by Tencent.",
+    "description": "腾讯文档，腾讯的一款可多人同时编辑的在线文档协作工具 | A collaborative online document tool that allows multiple people to edit at the same time by Tencent",
     "homepage": "https://docs.qq.com/",
     "license": {
         "identifier": "Unknown"
@@ -18,7 +18,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -26,12 +26,12 @@
         "A-Install-App -Uninstaller 'app\\Uninstall TencentDocs.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -41,7 +41,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\tdappdesktop\",\"$env:LocalAppData\\tdappdesktop-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

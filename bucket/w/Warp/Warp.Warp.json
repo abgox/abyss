@@ -1,6 +1,6 @@
 {
-    "version": "0.2026.01.21.08.14.stable_01",
-    "description": "一款内置 AI 和开发团队知识的智能终端 | The intelligent terminal with AI and your dev team's knowledge built-in.",
+    "version": "0.2026.01.21.08.14.stable_04",
+    "description": "一款内置 AI 和开发团队知识的智能终端 | The intelligent terminal with AI and your dev team's knowledge built-in",
     "homepage": "https://www.warp.dev/",
     "license": {
         "identifier": "Unknown",
@@ -8,12 +8,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://app.warp.dev/download/windows?version=v0.2026.01.21.08.14.stable_01&arch=x86_64#/dl.exe",
-            "hash": "b0e32ff3c9c2ba9deb27f5abea4b795cd09b093f5799389270a3b76ad8b3c525"
+            "url": "https://app.warp.dev/download/windows?version=v0.2026.01.21.08.14.stable_04&arch=x86_64#/dl.exe",
+            "hash": "7f03333a1896773017467e0616736fc11c4bd97f2cd9b8dffea8eb46001126f8"
         },
         "arm64": {
-            "url": "https://app.warp.dev/download/windows?version=v0.2026.01.21.08.14.stable_01&arch=arm64#/dl.exe",
-            "hash": "9d0558c1dd75e095eadc8b09a26f16d37211964e251c85312ef02ae3a2d87b7d"
+            "url": "https://app.warp.dev/download/windows?version=v0.2026.01.21.08.14.stable_04&arch=arm64#/dl.exe",
+            "hash": "253479620b58fc477026e8937fb5b86d6ad2f4a16d8539b15e3677599be59424"
         }
     },
     "env_add_path": "app\\bin",
@@ -25,19 +25,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:LocalAppData\\warp\\Warp\"",
         "A-Install-Inno"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -45,7 +45,7 @@
         "A-Uninstall-Inno"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

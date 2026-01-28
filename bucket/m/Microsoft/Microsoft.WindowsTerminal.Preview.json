@@ -1,6 +1,6 @@
 {
     "version": "1.24.10212.0",
-    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验 | The new Windows Terminal, a tabbed command line experience for Windows.",
+    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验 | The new Windows Terminal, a tabbed command line experience for Windows",
     "homepage": "https://github.com/microsoft/terminal",
     "license": {
         "identifier": "MIT"
@@ -16,7 +16,7 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
@@ -34,12 +34,12 @@
         "A-New-LinkDirectory \"$env:LocalAppData\\Packages\\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\\LocalState\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
@@ -58,7 +58,7 @@
         "A-Remove-MsixPackage"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

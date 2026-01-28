@@ -1,42 +1,42 @@
 {
-    "version": "0.0.394",
-    "description": "GitHub Copilot CLI 将 Copilot 编码代理的强大功能直接带到你的终端。 | GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal.",
+    "version": "0.0.396",
+    "description": "GitHub Copilot CLI 将 Copilot 编码代理的强大功能直接带到你的终端 | GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal",
     "homepage": "https://github.com/github/copilot-cli",
     "license": {
         "identifier": "Proprietary"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/github/copilot-cli/releases/download/v0.0.394/copilot-win32-x64.zip",
-            "hash": "da7f771e3d85dd21ec34b11f98c9c8de378e0d1307ebff5c97855489a889e67f"
+            "url": "https://github.com/github/copilot-cli/releases/download/v0.0.396/copilot-win32-x64.zip",
+            "hash": "7ea5534f6c37bcabd149be8975d057fe06b697155637b46d5a4ab76ddd78884e"
         },
         "arm64": {
-            "url": "https://github.com/github/copilot-cli/releases/download/v0.0.394/copilot-win32-arm64.zip",
-            "hash": "5a0a8c50e3d15e96f79caa0f7a5ab02a662d3db37cb08b1090e2a3d635364ae6"
+            "url": "https://github.com/github/copilot-cli/releases/download/v0.0.396/copilot-win32-arm64.zip",
+            "hash": "88f8d1be93cee39ebbd77480993513ca48dbe9623f38194dc1ca5993265d8e96"
         }
     },
     "extract_to": "app",
     "bin": "app\\copilot.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$home\\.copilot\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

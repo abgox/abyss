@@ -1,6 +1,6 @@
 {
     "version": "26005.204.4249.1621",
-    "description": "使用更快、更简单、更智能和更灵活的 Teams，更有效地进行协作 | Collaborate more effectively with a faster, simpler, smarter, and more flexible Teams.",
+    "description": "使用更快、更简单、更智能和更灵活的 Teams，更有效地进行协作 | Collaborate more effectively with a faster, simpler, smarter, and more flexible Teams",
     "homepage": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/Microsoft/Teams",
     "license": {
         "identifier": "Freemium",
@@ -17,19 +17,19 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Add-MsixPackage 'MSTeams_8wekyb3d8bbwe'",
         "A-New-LinkDirectory \"$env:LocalAppData\\Packages\\MSTeams_8wekyb3d8bbwe\\LocalCache\\Microsoft\\MSTeams\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -37,7 +37,7 @@
         "A-Remove-MsixPackage"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

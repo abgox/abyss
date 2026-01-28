@@ -1,6 +1,6 @@
 {
     "version": "5.1.4",
-    "description": "免费（自由）可靠的 P2P Bittorent 客户端 | Free and reliable P2P Bittorent client.",
+    "description": "免费（自由）可靠的 P2P Bittorent 客户端 | Free and reliable P2P Bittorent client",
     "homepage": "https://www.qbittorrent.org/",
     "license": {
         "identifier": "GPL-2.0-only|GPL-3.0-only"
@@ -18,7 +18,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Deny-IfAppConflict 'qBittorrent.qBittorrent','c0re100.qBittorrent-Enhanced-Edition'",
@@ -27,12 +27,12 @@
         "A-Install-App -Uninstaller 'app\\uninst.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -42,7 +42,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\qBittorrent\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

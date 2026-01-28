@@ -1,14 +1,14 @@
 {
-    "version": "1.1.36",
-    "description": "开源的编码助手。 | The open source coding agent.",
+    "version": "1.1.39",
+    "description": "开源的编码助手 | The open source coding agent",
     "homepage": "https://opencode.ai/",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/anomalyco/opencode/releases/download/v1.1.36/opencode-desktop-windows-x64.exe",
-            "hash": "3fea18ab2f4ed847d4b2d77b8ceb940f439364bb1ffa6c22c7ca7fbb030c852e"
+            "url": "https://github.com/anomalyco/opencode/releases/download/v1.1.39/opencode-desktop-windows-x64.exe",
+            "hash": "518501ec0f72658190aa6282642bafe7187d5b2bfbd62b90abbf2e86a586e735"
         }
     },
     "shortcuts": [
@@ -18,19 +18,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\ai.opencode.desktop\"",
         "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -39,7 +39,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\ai.opencode.desktop\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

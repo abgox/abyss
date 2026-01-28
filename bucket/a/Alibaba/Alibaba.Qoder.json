@@ -1,6 +1,6 @@
 {
-    "version": "0.3.1",
-    "description": "用于现实软件的自主智能编程平台 | Agentic Coding Platform for Real Software.",
+    "version": "0.3.3",
+    "description": "用于现实软件的自主智能编程平台 | Agentic Coding Platform for Real Software",
     "homepage": "https://qoder.com/",
     "license": {
         "identifier": "Unknown",
@@ -9,7 +9,7 @@
     "architecture": {
         "64bit": {
             "url": "https://download.qoder.com/release/latest/QoderUserSetup-x64.exe",
-            "hash": "f654688a46a60648c9a962dd1417407c08ea089aebea5a73b5653ae872052a18"
+            "hash": "3fe3e28c401f6ecae5ca84174e4495936392e76384e9a123fad19dfe16259a5a"
         }
     },
     "env_add_path": "app\\bin",
@@ -21,19 +21,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\Qoder\",\"$home\\.qoder\"",
         "A-Install-Inno"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -41,7 +41,7 @@
         "A-Uninstall-Inno"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

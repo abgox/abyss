@@ -1,6 +1,6 @@
 {
     "version": "0.25.7",
-    "description": "一款注重隐私、本地优先、开源且即用型的 Notion 与 Miro 替代方案 | A privacy-focused, local-first, open-source, and ready-to-use alternative for Notion & Miro.",
+    "description": "一款注重隐私、本地优先、开源且即用型的 Notion 与 Miro 替代方案 | A privacy-focused, local-first, open-source, and ready-to-use alternative for Notion & Miro",
     "homepage": "https://affine.pro/",
     "license": {
         "identifier": "Unknown"
@@ -22,19 +22,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\AFFiNE\"",
         "A-Install-App -Uninstaller 'app\\Uninstall AFFiNE.exe' -ArgumentList '/CurrentUser','/S',\"/D=$dir\\app\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -43,7 +43,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\affine-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

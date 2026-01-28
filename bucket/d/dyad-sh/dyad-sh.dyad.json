@@ -1,30 +1,30 @@
 {
-    "version": "0.33.0",
-    "description": "一个本地的开源人工智能应用构建工具。它速度快、注重隐私，且完全在你的掌控之中 —— 就像 Lovable、v0 或 Bolt 一样，但能直接在你的设备上运行 | A local, open-source AI app builder. It's fast, private, and fully under your control — like Lovable, v0, or Bolt, but running right on your machine.",
+    "version": "0.34.0",
+    "description": "一个本地的开源人工智能应用构建工具。它速度快、注重隐私，且完全在你的掌控之中 —— 就像 Lovable、v0 或 Bolt 一样，但能直接在你的设备上运行 | A local, open-source AI app builder. It's fast, private, and fully under your control — like Lovable, v0, or Bolt, but running right on your machine",
     "homepage": "https://dyad.sh/",
     "license": {
         "identifier": "Apache-2.0"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/dyad-sh/dyad/releases/download/v0.33.0/dyad-0.33.0.Setup.exe",
-            "hash": "d9ad69af85bcd899f777057ad0b8bcd59be43df34d29f1ccd590d5d33786c71d"
+            "url": "https://github.com/dyad-sh/dyad/releases/download/v0.34.0/dyad-0.34.0.Setup.exe",
+            "hash": "4f3efe7cc2740aeb8ade7eefaa61112f79830c2bb87f45e4595eccb5ab49468a"
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\dyad\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\dyad\\Update.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process \"$env:LocalAppData\\dyad\"",
@@ -33,7 +33,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\dyad\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

@@ -1,6 +1,6 @@
 {
     "version": "7.0.0",
-    "description": "适用于桌面端的简单跨平台双因素 (2FA) 认证器应用程序 | Simple cross-platform two-factor (2FA) authenticator app for desktop.",
+    "description": "适用于桌面端的简单跨平台双因素 (2FA) 认证器应用程序 | Simple cross-platform two-factor (2FA) authenticator app for desktop",
     "homepage": "https://authme.levminer.com/",
     "license": {
         "identifier": "GPL-3.0-only"
@@ -12,7 +12,7 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -20,12 +20,12 @@
         "A-Install-Msi"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -34,7 +34,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\com.levminer.authme\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

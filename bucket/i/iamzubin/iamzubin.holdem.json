@@ -1,6 +1,6 @@
 {
     "version": "0.2.4",
-    "description": "一款开源应用程序，它提供了一个临时的拖放存放区域，以便在桌面上更轻松地进行文件管理和多任务处理 | An open-source app that provides a temporary drag-and-drop holding area for easier file management and multitasking on desktop.",
+    "description": "一款开源应用程序，它提供了一个临时的拖放存放区域，以便在桌面上更轻松地进行文件管理和多任务处理 | An open-source app that provides a temporary drag-and-drop holding area for easier file management and multitasking on desktop",
     "homepage": "https://github.com/iamzubin/holdem",
     "license": {
         "identifier": "Unknown"
@@ -18,19 +18,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Install-App -Uninstaller 'app\\uninstall.exe'",
         "A-New-LinkDirectory \"$env:AppData\\com.holdem.app\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -39,7 +39,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\com.holdem.app\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

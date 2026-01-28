@@ -1,6 +1,6 @@
 {
     "version": "11.0.4",
-    "description": "在一处记住所有内容，并通过笔记、任务和日程处理一切 | Remember everything and tackle any project with your notes, tasks, and schedule all in one place.",
+    "description": "在一处记住所有内容，并通过笔记、任务和日程处理一切 | Remember everything and tackle any project with your notes, tasks, and schedule all in one place",
     "homepage": "https://evernote.com/",
     "license": {
         "identifier": "Unknown",
@@ -21,19 +21,19 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\Evernote\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\Programs\\Evernote\\Uninstall Evernote.exe\" -ArgumentList '/CurrentUser','/S'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process \"$env:LocalAppData\\Programs\\Evernote\"",
@@ -42,7 +42,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\evernote-client-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

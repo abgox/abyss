@@ -1,6 +1,6 @@
 {
     "version": "8.40",
-    "description": "适用于 Windows 和 DOS 的全面硬件分析、监测与报告 | Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS.",
+    "description": "适用于 Windows 和 DOS 的全面硬件分析、监测与报告 | Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS",
     "homepage": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/r/REALiX/HWiNFO",
     "license": {
         "identifier": "Freeware"
@@ -45,7 +45,7 @@
         "HWiNFO_ARM64.INI"
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "foreach ($arch in '64','32','_ARM64') {",
@@ -56,12 +56,12 @@
         "}"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -75,7 +75,7 @@
         "}"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

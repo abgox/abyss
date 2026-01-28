@@ -1,18 +1,18 @@
 {
-    "version": "2.4.3",
-    "description": "由 vue-cli-electron-builder 构建的简洁美观的图片上传工具 | A simple & beautiful tool for pictures uploading built by vue-cli-electron-builder.",
+    "version": "2.5.0",
+    "description": "由 vue-cli-electron-builder 构建的简洁美观的图片上传工具 | A simple & beautiful tool for pictures uploading built by vue-cli-electron-builder",
     "homepage": "https://molunerfinn.com/PicGo/",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Molunerfinn/PicGo/releases/download/v2.4.3/PicGo-2.4.3-x64.exe",
-            "hash": "b544da21019bd597e71d107cfab38c4b84e9e49882c3d7f2643d4bb3de423663"
+            "url": "https://github.com/Molunerfinn/PicGo/releases/download/v2.5.0/PicGo-2.5.0-x64.exe",
+            "hash": "919290ffc516ef7c0d2c6a575c80280a6dbb2a4d597c4a78b7ee79bddc315c08"
         },
         "arm64": {
-            "url": "https://github.com/Molunerfinn/PicGo/releases/download/v2.4.3/PicGo-2.4.3-arm64.exe",
-            "hash": "ada42e8554c604a1693f7934845b7c06a0941bd7dfd14e8f5aa1610337c30963"
+            "url": "https://github.com/Molunerfinn/PicGo/releases/download/v2.5.0/PicGo-2.5.0-arm64.exe",
+            "hash": "3a3678ffd499e442efc96e6cabbf1cb1f67aa129e33870e43fe2ff601e949c33"
         }
     },
     "shortcuts": [
@@ -22,19 +22,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\picgo\"",
         "A-Install-App -Uninstaller 'app\\Uninstall PicGo.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -43,7 +43,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\picgo-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

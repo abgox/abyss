@@ -1,7 +1,7 @@
 {
     "##": "当更改语言之后，更新版本无法加载旧的配置文件",
     "version": "pending",
-    "description": "一款易于设置和定制的免费电子邮件应用程序 | A free email application that's easy to set up and customize.",
+    "description": "一款易于设置和定制的免费电子邮件应用程序 | A free email application that's easy to set up and customize",
     "homepage": "https://www.thunderbird.net/",
     "license": {
         "identifier": "Freeware",
@@ -25,7 +25,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Deny-Manifest",
@@ -33,12 +33,12 @@
         "A-Install-App -Uninstaller 'app\\uninstall\\helper.exe' -ArgumentList '/S','/PreventRebootRequired=true',\"/InstallDirectoryPath='$dir\\app'\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -46,7 +46,7 @@
         "A-Uninstall-App"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

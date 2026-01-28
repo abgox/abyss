@@ -1,6 +1,6 @@
 {
     "version": "1.38.1",
-    "description": "快速、简单的 Node.js 版本管理器，采用 Rust 内建 | Fast and simple Node.js version manager, built in Rust.",
+    "description": "快速、简单的 Node.js 版本管理器，采用 Rust 内建 | Fast and simple Node.js version manager, built in Rust",
     "homepage": "https://github.com/Schniz/fnm",
     "license": {
         "identifier": "GPL-3.0-only"
@@ -27,18 +27,18 @@
     },
     "bin": "app\\fnm.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\fnm\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -46,7 +46,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\fnm_multishells\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

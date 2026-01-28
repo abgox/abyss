@@ -1,6 +1,6 @@
 {
     "version": "5.83.0",
-    "description": "Yandex Music 是一项寻找和收听音乐和播客的服务，可为每位用户提供个性化推荐 | Yandex Music is a service for finding and listening to music and podcasts that provides personalized recommendations for each user.",
+    "description": "Yandex Music 是一项寻找和收听音乐和播客的服务，可为每位用户提供个性化推荐 | Yandex Music is a service for finding and listening to music and podcasts that provides personalized recommendations for each user",
     "homepage": "https://music.yandex.com/",
     "license": {
         "identifier": "Proprietary",
@@ -19,19 +19,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\YandexMusic\"",
         "A-Install-App -Uninstaller 'app\\Uninstall Яндекс Музыка.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -40,7 +40,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\yandexmusic-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

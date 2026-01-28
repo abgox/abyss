@@ -1,6 +1,6 @@
 {
-    "version": "1.23.13503.0",
-    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验 | The new Windows Terminal, a tabbed command line experience for Windows.",
+    "version": "1.23.20211.0",
+    "description": "新的 Windows 终端，为 Windows 提供标签命令行体验 | The new Windows Terminal, a tabbed command line experience for Windows",
     "homepage": "https://github.com/microsoft/terminal",
     "license": {
         "identifier": "MIT"
@@ -9,16 +9,16 @@
     "notes_cn": "运行 wt 去启动它",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.13503.0/Microsoft.WindowsTerminal_1.23.13503.0_8wekyb3d8bbwe.msixbundle",
-            "hash": "11c4f64907ac16fda90c9bcae9b8e7584866f4cab0a64c163c5236365be34e72"
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.20211.0/Microsoft.WindowsTerminal_1.23.20211.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "a5b4b6bd5375227945396529d0023167942b5ed0b9e9516004b30e3648c21e52"
         },
         "arm64": {
-            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.13503.0/Microsoft.WindowsTerminal_1.23.13503.0_8wekyb3d8bbwe.msixbundle",
-            "hash": "11c4f64907ac16fda90c9bcae9b8e7584866f4cab0a64c163c5236365be34e72"
+            "url": "https://github.com/microsoft/terminal/releases/download/v1.23.20211.0/Microsoft.WindowsTerminal_1.23.20211.0_8wekyb3d8bbwe.msixbundle",
+            "hash": "a5b4b6bd5375227945396529d0023167942b5ed0b9e9516004b30e3648c21e52"
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
@@ -36,12 +36,12 @@
         "A-New-LinkDirectory \"$env:LocalAppData\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
@@ -60,34 +60,28 @@
         "A-Remove-MsixPackage"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Microsoft.WindowsTerminal' 'msixbundle'",
-            "$out"
+            "A-Get-VersionFromGithubAPI"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "regex": "(.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.x64_user.InstallerSha256"
-                }
+                "url": "https://github.com/microsoft/terminal/releases/download/v$version/Microsoft.WindowsTerminal_$version_8wekyb3d8bbwe.msixbundle"
             },
             "arm64": {
-                "url": "$matchArm64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.arm64_user.InstallerSha256"
-                }
+                "url": "https://github.com/microsoft/terminal/releases/download/v$version/Microsoft.WindowsTerminal_$version_8wekyb3d8bbwe.msixbundle"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

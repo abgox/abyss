@@ -1,18 +1,18 @@
 {
-    "version": "1.17.4",
-    "description": "哔哩哔哩 Bilibili 的 Windows 桌面客户端程序 | A windows client for Bilibili.",
+    "version": "1.17.5",
+    "description": "哔哩哔哩 Bilibili 的 Windows 桌面客户端程序 | A windows client for Bilibili",
     "homepage": "https://app.bilibili.com/",
     "license": {
         "identifier": "Freemium"
     },
     "architecture": {
         "64bit": {
-            "url": "https://dl.hdslb.com/mobile/pack/bili_win/21817980/public/bilibili-setup-v1.17.4.exe",
-            "hash": "b5b10db484e7281619fc48a8461e9ed060fe9a320bf8325aea10d509f0d69de3"
+            "url": "https://dl.hdslb.com/mobile/pack/bili_win/22851993/public/bilibili-setup-v1.17.5.exe",
+            "hash": "3a8fa9e67c47c783b99fc9d322a171b16af9dfbbd40d3b0603fe668806e3a96c"
         },
         "arm64": {
-            "url": "https://dl.hdslb.com/mobile/pack/bili_win/21817980/public/bilibili-setup-v1.17.4.exe",
-            "hash": "b5b10db484e7281619fc48a8461e9ed060fe9a320bf8325aea10d509f0d69de3"
+            "url": "https://dl.hdslb.com/mobile/pack/bili_win/22851993/public/bilibili-setup-v1.17.5.exe",
+            "hash": "3a8fa9e67c47c783b99fc9d322a171b16af9dfbbd40d3b0603fe668806e3a96c"
         }
     },
     "shortcuts": [
@@ -22,7 +22,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -30,12 +30,12 @@
         "A-Install-App -Uninstaller 'app\\bilibili\\卸载哔哩哔哩.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -45,7 +45,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\bilibili-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

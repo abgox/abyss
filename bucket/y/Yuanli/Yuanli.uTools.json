@@ -1,6 +1,6 @@
 {
     "version": "7.5.1",
-    "description": "新一代效率工具平台，自由组合插件应用，打造专属你的趁手工具集 | A modern, simple, and extensible desktop software that allows you to create a handy toolset by freely choosing from a rich set of plugins.",
+    "description": "新一代效率工具平台，自由组合插件应用，打造专属你的趁手工具集 | A modern, simple, and extensible desktop software that allows you to create a handy toolset by freely choosing from a rich set of plugins",
     "homepage": "https://u.tools/",
     "license": {
         "identifier": "Unknown",
@@ -19,19 +19,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\uTools\"",
         "A-Install-App -Uninstaller 'app\\Uninstall uTools.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -40,7 +40,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\utools-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

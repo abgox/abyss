@@ -1,6 +1,6 @@
 {
     "version": "pending",
-    "description": "GNU Octave 是一种高级语言，主要用于数值计算 | GNU Octave is a high-level language, primarily intended for numerical computations.",
+    "description": "GNU Octave 是一种高级语言，主要用于数值计算 | GNU Octave is a high-level language, primarily intended for numerical computations",
     "homepage": "https://octave.org/",
     "license": {
         "identifier": "GPL-3.0-only",
@@ -13,7 +13,7 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Deny-Manifest",
@@ -21,18 +21,18 @@
         "A-Install-App -ArgumentList '/AllUsers','/S'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Uninstall-Manually \"$env:ProgramFiles\\GNU Octave\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

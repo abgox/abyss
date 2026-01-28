@@ -1,38 +1,38 @@
 {
-    "version": "0.1.88",
-    "description": "一个基于终端的文本编辑器。 | A terminal-based text editor.",
+    "version": "0.1.93",
+    "description": "一个基于终端的文本编辑器 | A terminal-based text editor",
     "homepage": "https://sinelaw.github.io/fresh/",
     "license": {
         "identifier": "GPL-2.0-only"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/sinelaw/fresh/releases/download/v0.1.88/fresh-editor-x86_64-pc-windows-msvc.zip",
-            "hash": "e39bfefa522ab4623e1e1cd683888826850051333a57f58d6713d5ce44550f3f"
+            "url": "https://github.com/sinelaw/fresh/releases/download/v0.1.93/fresh-editor-x86_64-pc-windows-msvc.zip",
+            "hash": "b5b49020c2417221c849d0ad3360ad7cfb7bed2588b2026546a36530a87ddfe9"
         }
     },
     "extract_to": "app",
     "bin": "app\\fresh.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\fresh\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

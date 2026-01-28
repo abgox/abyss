@@ -1,14 +1,14 @@
 {
-    "version": "2026.1.0",
-    "description": "一款快速、注重隐私的API客户端，支持REST、GraphQL、SSE、WebSocket和gRPC | A fast, privacy-first API client for REST, GraphQL, SSE, WebSocket, and gRPC.",
+    "version": "2026.1.2",
+    "description": "一款快速、注重隐私的API客户端，支持REST、GraphQL、SSE、WebSocket和gRPC | A fast, privacy-first API client for REST, GraphQL, SSE, WebSocket, and gRPC",
     "homepage": "https://yaak.app/",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/mountain-loop/yaak/releases/download/v2026.1.0/Yaak_2026.1.0_x64-setup.exe",
-            "hash": "d4d15f2d2edfc8bf44e3009bfaf38d0022ddcda591f670660a7609a2ab452235"
+            "url": "https://github.com/mountain-loop/yaak/releases/download/v2026.1.2/Yaak_2026.1.2_x64-setup.exe",
+            "hash": "5f493b2646d559a02ffcef58f117d33c19ed2ba2d62766707358c107abeeb8c1"
         }
     },
     "shortcuts": [
@@ -18,19 +18,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\app.yaak.desktop\"",
         "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -39,7 +39,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\app.yaak.desktop\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

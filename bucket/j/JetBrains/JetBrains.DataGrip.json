@@ -1,6 +1,6 @@
 {
-    "version": "2025.3.3",
-    "description": "JetBrains 的 IDE 产品，用于处理数据库 | A IDE by JetBrains for database processing.",
+    "version": "2025.3.4",
+    "description": "JetBrains 的 IDE 产品，用于处理数据库 | A IDE by JetBrains for database processing",
     "homepage": "https://www.jetbrains.com/datagrip/",
     "license": {
         "identifier": "Unknown",
@@ -8,12 +8,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/datagrip/datagrip-2025.3.3.exe",
-            "hash": "bc30dadee53d4e5d8256b6a1ef4d4fe057f3956afb934acd6be9a8ac9f54dcae"
+            "url": "https://download.jetbrains.com/datagrip/datagrip-2025.3.4.exe",
+            "hash": "f6c5074a9337a34479d84565cd5395ff5b067f66c924a1fd65f1350c19f14d4d"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/datagrip/datagrip-2025.3.3-aarch64.exe",
-            "hash": "4a5ed9ad18300a7a4915d9e9a66e7e5726117a6891bc2f274bc1f70bf6eda245"
+            "url": "https://download.jetbrains.com/datagrip/datagrip-2025.3.4-aarch64.exe",
+            "hash": "09a366daffe8f8d47deda8f1c2b561abe8939d00ef5e878e74e986f4dd5a409c"
         }
     },
     "bin": [
@@ -25,11 +25,11 @@
     "shortcuts": [
         [
             "app\\bin\\datagrip64.exe",
-            "DataGrip 2025.3.3"
+            "DataGrip 2025.3.4"
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -41,12 +41,12 @@
         "A-Install-App -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList '/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -59,7 +59,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\JetBrains\\$DataDir\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

@@ -1,6 +1,6 @@
 {
     "version": "2026.01.12.114354",
-    "description": "Scoop 的国际化解决方案(语言包)，提升不同语言的用户使用 Scoop 时的体验 | An internationalization tool (language pack) for Scoop helps users of different languages use Scoop more easily.",
+    "description": "Scoop 的国际化解决方案(语言包)，提升不同语言的用户使用 Scoop 时的体验 | An internationalization tool (language pack) for Scoop helps users of different languages use Scoop more easily",
     "homepage": "https://scoop-i18n.abgox.com/",
     "license": {
         "identifier": "MIT"
@@ -18,7 +18,7 @@
     "extract_dir": "scoop-i18n-a545e795f57b433dbf9adba0b7ae4cbc83fdaff4",
     "extract_to": "app",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Ensure-Directory \"$dir\\app\\original\"",
@@ -35,13 +35,13 @@
         "}"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "@{ configFile = $configFile } | ConvertTo-Json | Out-File \"$dir\\app\\data.json\" -Encoding utf8 -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "Get-ChildItem \"$dir\\app\\original\" | ForEach-Object {",
@@ -49,7 +49,7 @@
         "}"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

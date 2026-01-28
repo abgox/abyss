@@ -1,6 +1,6 @@
 {
     "version": "144.0.7559.96-1.1",
-    "description": "不依赖谷歌网络服务的 Google Chromium 浏览器。 | Google Chromium without dependency on Google web services.",
+    "description": "不依赖谷歌网络服务的 Google Chromium 浏览器 | Google Chromium without dependency on Google web services",
     "homepage": "https://github.com/ungoogled-software/ungoogled-chromium-windows",
     "license": {
         "identifier": "BSD-3-Clause"
@@ -24,7 +24,7 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Deny-IfAppConflict 'Hibbiki.Chromium', 'eloston.ungoogled-chromium'",
@@ -32,19 +32,19 @@
         "A-Install-App -Uninstaller \"$env:LocalAppData\\Chromium\\Application\\chrome.exe\" -ArgumentList '--silent','--install'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Uninstall-Manually \"$env:LocalAppData\\Chromium\\Application\"",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

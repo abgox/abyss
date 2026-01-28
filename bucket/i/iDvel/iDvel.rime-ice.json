@@ -1,6 +1,6 @@
 {
-    "version": "2026.01.26.103530",
-    "description": "Rime 小狼毫配置: 雾凇拼音输入方案 | Rime Weasel Configuration: ice-Pinyin.",
+    "version": "2026.01.28.103644",
+    "description": "Rime 小狼毫配置: 雾凇拼音输入方案 | Rime Weasel Configuration: ice-Pinyin",
     "homepage": "https://github.com/iDvel/rime-ice",
     "license": {
         "identifier": "GPL-3.0-only"
@@ -11,16 +11,16 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/iDvel/rime-ice/releases/download/nightly/full.zip",
-            "hash": "19551bdbb9cb127a77e8c097a5a7834a44807d0edc73bd85afe561344e8e4cf3"
+            "hash": "c99bc0825c9afcbd84b98679b08678375b56e62abd935fa44ab935803401d8f2"
         },
         "arm64": {
             "url": "https://github.com/iDvel/rime-ice/releases/download/nightly/full.zip",
-            "hash": "19551bdbb9cb127a77e8c097a5a7834a44807d0edc73bd85afe561344e8e4cf3"
+            "hash": "c99bc0825c9afcbd84b98679b08678375b56e62abd935fa44ab935803401d8f2"
         }
     },
     "extract_to": "app",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Ensure-Directory \"$env:AppData\\Rime\"",
@@ -28,18 +28,18 @@
         "Copy-Item $dir\\app\\* $env:AppData\\Rime -Recurse -Force"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "(Get-ChildItem \"$dir\\app\" -Recurse -File).FullName.Replace(\"$dir\\app\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

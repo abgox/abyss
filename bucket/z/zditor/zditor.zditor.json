@@ -1,14 +1,14 @@
 {
-    "version": "0.9.5",
-    "description": "一款类似 Typora 的文档编辑器，拥有更快的性能、智能 AI 辅助和 Git 集成。 | A Typora-like document editor with faster performance, smart AI assistance, and Git integration.",
+    "version": "0.9.6",
+    "description": "一款类似 Typora 的文档编辑器，拥有更快的性能、智能 AI 辅助和 Git 集成 | A Typora-like document editor with faster performance, smart AI assistance, and Git integration",
     "homepage": "https://www.zditor.com/",
     "license": {
         "identifier": "Unknown"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/zditor/zditor-docs/releases/download/zditor-v0.9.5/zditor_0.9.5_x64-setup.exe",
-            "hash": "76c34144ba800acb8a4edf370c67da2bd71597c66cf2f4858e32dade7f7ca8a4"
+            "url": "https://github.com/zditor/zditor-docs/releases/download/zditor-v0.9.6/zditor_0.9.6_x64-setup.exe",
+            "hash": "c7bb21631f23de82bca29e7bcb587aa13c4f902a6792cd985e34c7540c931896"
         }
     },
     "shortcuts": [
@@ -18,19 +18,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\com.zditor.app\"",
         "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -39,7 +39,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\com.zditor.app\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

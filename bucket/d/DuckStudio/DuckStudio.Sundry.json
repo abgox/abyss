@@ -1,43 +1,43 @@
 {
-    "version": "1.6.1",
-    "description": "一个 WinGet 相关的工具，帮您更方便地移除清单、修改清单、分析验证错误等 | A tool related to WinGet that assists you in more conveniently removing manifests, modifying manifests, and analyzing validation errors, and more.",
+    "version": "1.6.2",
+    "description": "一个 WinGet 相关的工具，帮您更方便地移除清单、修改清单、分析验证错误等 | A tool related to WinGet that assists you in more conveniently removing manifests, modifying manifests, and analyzing validation errors, and more",
     "homepage": "https://github.com/DuckDuckStudio/Sundry",
     "license": {
         "identifier": "AGPL-3.0-only"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/1.6.1/Sundry.zip",
-            "hash": "03845261ea574c3a2a6e3a5a3addd7d2128b541bff2b6d1f34fc697a710f307a"
+            "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/1.6.2/Sundry.zip",
+            "hash": "444641eff853a35017a9e3c1980110fe0c93b1b7844cf446f8955947174e786d"
         },
         "arm64": {
-            "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/1.6.1/Sundry.zip",
-            "hash": "03845261ea574c3a2a6e3a5a3addd7d2128b541bff2b6d1f34fc697a710f307a"
+            "url": "https://github.com/DuckDuckStudio/Sundry/releases/download/1.6.2/Sundry.zip",
+            "hash": "444641eff853a35017a9e3c1980110fe0c93b1b7844cf446f8955947174e786d"
         }
     },
     "extract_dir": "Release\\pack",
     "extract_to": "app",
     "bin": "app\\sundry.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$home\\.config\\DuckStudio\\Sundry\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

@@ -1,6 +1,6 @@
 {
     "version": "0.4.3",
-    "description": "一个开源的跨平台文件浏览器，由一个用 Rust 编写的虚拟分布式文件系统提供支持 | An open source cross-platform file explorer, powered by a virtual distributed filesystem written in Rust.",
+    "description": "一个开源的跨平台文件浏览器，由一个用 Rust 编写的虚拟分布式文件系统提供支持 | An open source cross-platform file explorer, powered by a virtual distributed filesystem written in Rust",
     "homepage": "https://www.spacedrive.com/",
     "license": {
         "identifier": "AGPL-3.0-only"
@@ -19,18 +19,18 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\spacedrive\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -38,7 +38,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\com.spacedrive.desktop\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

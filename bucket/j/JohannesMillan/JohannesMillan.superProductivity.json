@@ -1,18 +1,18 @@
 {
-    "version": "17.0.2",
-    "description": "一个高级待办事项列表应用，具备时间限制和时间跟踪功能，支持从日历、Jira、GitHub 等平台导入任务 | An advanced todo list app with timeboxing & time tracking capabilities that supports importing tasks from your calendar, Jira, GitHub and others.",
+    "version": "17.0.6",
+    "description": "一个高级待办事项列表应用，具备时间限制和时间跟踪功能，支持从日历、Jira、GitHub 等平台导入任务 | An advanced todo list app with timeboxing & time tracking capabilities that supports importing tasks from your calendar, Jira, GitHub and others",
     "homepage": "https://super-productivity.com/",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/johannesjo/super-productivity/releases/download/v17.0.2/superProductivity-x64.exe#/dl.7z",
-            "hash": "3f3ff9a9e0ef54592ab35748d869f529f7bc80b04eccad7eae5d8e080c0579ac"
+            "url": "https://github.com/johannesjo/super-productivity/releases/download/v17.0.6/superProductivity-x64.exe#/dl.7z",
+            "hash": "fa85c2b8a54b6761861f27910a7fe0ebca558c5eb77d31b10f3cc68e08ef419e"
         },
         "arm64": {
-            "url": "https://github.com/johannesjo/super-productivity/releases/download/v17.0.2/superProductivity-arm64.exe#/dl.7z",
-            "hash": "4aa676b55ff3139a7610b92054d39de93a0dbe5eb9b6e3e700414573fa7d28ee"
+            "url": "https://github.com/johannesjo/super-productivity/releases/download/v17.0.6/superProductivity-arm64.exe#/dl.7z",
+            "hash": "76481fde8179f2947d6b00853bb267e1890b0e7d7990dff17acb67148fa67b5b"
         }
     },
     "shortcuts": [
@@ -22,26 +22,26 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Expand-SetupExe",
         "A-New-LinkDirectory \"$env:AppData\\superProductivity\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

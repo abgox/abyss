@@ -1,5 +1,5 @@
 {
-    "version": "2026-01-26",
+    "version": "2026-01-28",
     "description": "一个用 Rust 编程语言编写的 Adobe Flash Player 模拟器 | An Adobe Flash Player emulator written in the Rust programming language",
     "homepage": "https://ruffle.rs/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-2026-01-26/ruffle-nightly-2026_01_26-windows-x86_64.zip",
-            "hash": "fe549cc2db33fbe4b65633f71aae0b176b8cc053bbc2ff4728fd3d32adaa252f"
+            "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-2026-01-28/ruffle-nightly-2026_01_28-windows-x86_64.zip",
+            "hash": "a8dc8c5b0039d60da2e29c245a245bbe66694282a1c8a85f4af351e22dfd840b"
         }
     },
     "extract_to": "app",
@@ -19,25 +19,25 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:LocalAppData\\ruffle\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

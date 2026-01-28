@@ -1,6 +1,6 @@
 {
     "version": "1.1.0",
-    "description": "一种用于执行、可视化和警报 shell 命令的工具 | A tool for shell commands execution, visualization and alerting.",
+    "description": "一种用于执行、可视化和警报 shell 命令的工具 | A tool for shell commands execution, visualization and alerting",
     "homepage": "https://github.com/sqshq/sampler",
     "license": {
         "identifier": "GPL-3.0-only"
@@ -20,24 +20,24 @@
     ],
     "persist": "config.yml",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\config.yml\" \"$persist_dir\\config.yml\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

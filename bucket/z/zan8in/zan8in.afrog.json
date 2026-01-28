@@ -1,42 +1,42 @@
 {
-    "version": "3.3.2",
-    "description": "一款适用于漏洞赏金、渗透测试和红队演练的安全工具。 | A Security Tool for Bug Bounty, Pentest and Red Teaming.",
+    "version": "3.3.3",
+    "description": "一款适用于漏洞赏金、渗透测试和红队演练的安全工具 | A Security Tool for Bug Bounty, Pentest and Red Teaming",
     "homepage": "https://github.com/zan8in/afrog",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/zan8in/afrog/releases/download/v3.3.2/afrog_3.3.2_windows_amd64.zip",
-            "hash": "b18e641160d049c3f68ba5955275b3fd9288f2e165501e4f8c121102a715bb20"
+            "url": "https://github.com/zan8in/afrog/releases/download/v3.3.3/afrog_3.3.3_windows_amd64.zip",
+            "hash": "0ccd5eb19ea1ef36a8d90cbdce51db9c49c59a22115e163778dd6475d8664297"
         },
         "arm64": {
-            "url": "https://github.com/zan8in/afrog/releases/download/v3.3.2/afrog_3.3.2_windows_arm64.zip",
-            "hash": "d7796cdb2bccf88a32564181995660a94e18deb0bd59b783bb0d045ba97170d7"
+            "url": "https://github.com/zan8in/afrog/releases/download/v3.3.3/afrog_3.3.3_windows_arm64.zip",
+            "hash": "93d2d1273a834cbe94cf993b43ad15a9a8e9806b348ec718537e4b7fd979c0d7"
         }
     },
     "extract_to": "app",
     "bin": "app\\afrog.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$home\\.config\\afrog\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

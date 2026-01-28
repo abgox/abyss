@@ -1,5 +1,5 @@
 {
-    "version": "14.4.3",
+    "version": "14.5.0",
     "description": "Rime 小狼毫配置: 万象拼音输入方案 (五笔前2) | Rime Weasel Configuration: Wanxiang-Pinyin (wubi)",
     "homepage": "https://github.com/amzxyz/rime_wanxiang",
     "license": {
@@ -13,17 +13,17 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v14.4.3/rime-wanxiang-wubi-fuzhu.zip",
-            "hash": "bc3b3b504ed7f817b877f2303bfccb3ec1e5cc38c239ffb494707538183cbdce"
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v14.5.0/rime-wanxiang-wubi-fuzhu.zip",
+            "hash": "df9dfc4051c241d8484e05469d644f483b2fe54e03548a146f273bf491610daa"
         },
         "arm64": {
-            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v14.4.3/rime-wanxiang-wubi-fuzhu.zip",
-            "hash": "bc3b3b504ed7f817b877f2303bfccb3ec1e5cc38c239ffb494707538183cbdce"
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v14.5.0/rime-wanxiang-wubi-fuzhu.zip",
+            "hash": "df9dfc4051c241d8484e05469d644f483b2fe54e03548a146f273bf491610daa"
         }
     },
     "extract_to": "app",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Deny-IfAppConflict 'amzxyz.rime_wanxiang', 'amzxyz.rime_wanxiang.shouyou', 'amzxyz.rime_wanxiang.zrm', 'amzxyz.rime_wanxiang.tiger', 'amzxyz.rime_wanxiang.moqi', 'amzxyz.rime_wanxiang.flypy', 'amzxyz.rime_wanxiang.wubi', 'amzxyz.rime_wanxiang.hanxin'",
@@ -32,18 +32,18 @@
         "Copy-Item $dir\\app\\* $env:AppData\\Rime -Recurse -Force"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "(Get-ChildItem \"$dir\\app\" -Recurse -File).FullName.Replace(\"$dir\\app\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

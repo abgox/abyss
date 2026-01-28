@@ -1,6 +1,6 @@
 {
     "version": "7.5.4",
-    "description": "pwsh - 一个跨平台的 PowerShell Core | pwsh - A cross-platform PowerShell Core.",
+    "description": "pwsh - 一个跨平台的 PowerShell Core | pwsh - A cross-platform PowerShell Core",
     "homepage": "https://github.com/PowerShell/PowerShell",
     "license": {
         "identifier": "MIT"
@@ -21,7 +21,7 @@
     },
     "commands": "pwsh",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "if ($PSVersionTable.PSEdition -eq 'Core' -and !$PSVersionTable.PSVersion.PreReleaseLabel) {",
@@ -37,12 +37,12 @@
         "A-New-LinkDirectory \"$home\\Documents\\PowerShell\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "if ($PSVersionTable.PSEdition -eq 'Core' -and !$PSVersionTable.PSVersion.PreReleaseLabel) {",
@@ -58,7 +58,7 @@
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

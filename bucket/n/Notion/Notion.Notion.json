@@ -1,18 +1,18 @@
 {
-    "version": "7.1.0",
-    "description": "一个崭新的工具，将你的多个工作应用融为一体，并成为你和团队的一站式工作空间 | A new tool that blends your everyday work apps into one. It's the all-in-one workspace for you and your team.",
+    "version": "7.2.1",
+    "description": "一个崭新的工具，将你的多个工作应用融为一体，并成为你和团队的一站式工作空间 | A new tool that blends your everyday work apps into one. It's the all-in-one workspace for you and your team",
     "homepage": "https://www.notion.so/",
     "license": {
         "identifier": "Unknown"
     },
     "architecture": {
         "64bit": {
-            "url": "https://desktop-release.notion-static.com/Notion%20Setup%207.1.0.exe",
-            "hash": "a3ea2c7b5018faf4b89440ca2f0cc89e05d6fb9863944619cef4d84dd798e9e3"
+            "url": "https://desktop-release.notion-static.com/Notion%20Setup%207.2.1.exe",
+            "hash": "0516c4257557a392c95fb5140a22e06d4fb3083d83a246dd975078cff466bd51"
         },
         "arm64": {
-            "url": "https://desktop-release.notion-static.com/Notion%20Setup%207.1.0%20arm64.exe",
-            "hash": "fcec4337d64c7bc2aee5a04073ed650ce640737d8e942553181241faff2a3060"
+            "url": "https://desktop-release.notion-static.com/Notion%20Setup%207.2.1%20arm64.exe",
+            "hash": "6a34202f52625b2ed7eca169f45edd7c32ab1a5ac729e8be08253fdd53ee5b26"
         }
     },
     "shortcuts": [
@@ -22,19 +22,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\Notion\"",
         "A-Install-App -Uninstaller 'app\\Uninstall Notion.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -43,7 +43,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\notion-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

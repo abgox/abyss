@@ -1,14 +1,14 @@
 {
-    "version": "3.3.1",
-    "description": "免费开源的媒体服务器，为动漫爱好者提供丰富功能 | Free and open-source media server packed with features for anime and manga enthusiasts.",
+    "version": "3.4.1",
+    "description": "免费开源的媒体服务器，为动漫爱好者提供丰富功能 | Free and open-source media server packed with features for anime and manga enthusiasts",
     "homepage": "https://seanime.rahim.app/",
     "license": {
         "identifier": "GPL-3.0-only"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/5rahim/seanime/releases/download/v3.3.1/seanime-denshi-3.3.1_Windows_x64.exe",
-            "hash": "4f847b1925192f7b1029c6fe5452e2fa1f5f8da98d49489bb30e4166b4d1b932"
+            "url": "https://github.com/5rahim/seanime/releases/download/v3.4.1/seanime-denshi-3.4.1_Windows_x64.exe",
+            "hash": "575f596f006affc9311d6ddd342fe52245744e949712a9f0ec1100f816153f48"
         }
     },
     "extract_to": "app",
@@ -19,7 +19,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -27,12 +27,12 @@
         "A-Install-App -Uninstaller 'app\\Uninstall Seanime Denshi.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -42,7 +42,7 @@
         "A-Remove-TempData \"$env:AppData\\seanime-denshi\",\"$env:LocalAppData\\app.seanime.desktop\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

@@ -1,6 +1,6 @@
 {
     "version": "4.2.495",
-    "description": "一个应用，在 iMessage、WhatsApp 和其它 13 个聊天网络上聊天 | A single app to chat on iMessage, WhatsApp, and 13 other chat networks.",
+    "description": "一个应用，在 iMessage、WhatsApp 和其它 13 个聊天网络上聊天 | A single app to chat on iMessage, WhatsApp, and 13 other chat networks",
     "homepage": "https://www.beeper.com/",
     "license": {
         "identifier": "Unknown",
@@ -19,19 +19,19 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\BeeperTexts\"",
         "A-Install-App -Uninstaller 'app\\Uninstall Beeper.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -40,7 +40,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\beepertexts-updater\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

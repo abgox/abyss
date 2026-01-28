@@ -1,6 +1,6 @@
 {
     "version": "0.15.1",
-    "description": "一个用于管理 PowerToys Run 插件的命令行工具。它可用于安装、卸载、更新、列出和导入插件。 | A cli tool to manage PowerToys Run plugins. It can be used to install, uninstall, update, list, and import plugins.",
+    "description": "一个用于管理 PowerToys Run 插件的命令行工具。它可用于安装、卸载、更新、列出和导入插件 | A cli tool to manage PowerToys Run plugins. It can be used to install, uninstall, update, list, and import plugins",
     "homepage": "https://github.com/8LWXpg/ptr",
     "license": {
         "identifier": "MIT"
@@ -18,26 +18,26 @@
     "extract_to": "app",
     "bin": "app\\ptr.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-File \"$env:LocalAppData\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\version.toml\"",
         "A-New-LinkFile \"$env:LocalAppData\\Microsoft\\PowerToys\\PowerToys Run\\Plugins\\version.toml\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

@@ -1,6 +1,6 @@
 {
-    "version": "2025.3.1.1",
-    "description": "JetBrains 的 IDE 产品，用于 Web 开发 (JavaScript，TypeScript) | A IDE by JetBrains for web development (JavaScript, TypeScript).",
+    "version": "2025.3.2",
+    "description": "JetBrains 的 IDE 产品，用于 Web 开发 (JavaScript，TypeScript) | A IDE by JetBrains for web development (JavaScript, TypeScript)",
     "homepage": "https://www.jetbrains.com/webstorm/",
     "license": {
         "identifier": "Unknown",
@@ -8,12 +8,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.3.1.1.exe",
-            "hash": "00f7b06eb66ac628042b663e48d950d7616411702facba0a46502574351d6fbb"
+            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.3.2.exe",
+            "hash": "a4a839ac96394cf956c968c44efaa5107847f26e50937e6cf153a6321d646240"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.3.1.1-aarch64.exe",
-            "hash": "099c48ef634a92714ceb5f63685cc6280b6efb55553446e5f28add284b2f1c40"
+            "url": "https://download.jetbrains.com/webstorm/WebStorm-2025.3.2-aarch64.exe",
+            "hash": "8d579539e52cb4a2b85beb95fe569cdc22b5f302f7ae856eca904495cc50d86f"
         }
     },
     "bin": [
@@ -25,11 +25,11 @@
     "shortcuts": [
         [
             "app\\bin\\webstorm64.exe",
-            "WebStorm 2025.3.1.1"
+            "WebStorm 2025.3.2"
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -41,12 +41,12 @@
         "A-Install-App -Uninstaller 'app\\bin\\Uninstall.exe' -ArgumentList '/S', \"/LOG=$LogLocation\", \"/D=$dir\\app\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
@@ -59,7 +59,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\JetBrains\\$DataDir\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

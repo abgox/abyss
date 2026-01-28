@@ -1,6 +1,6 @@
 {
     "version": "1.4.5",
-    "description": "一个安全的远程桌面访问工具，用 Rust 语言编写 | An open-source remote desktop software, written in Rust.",
+    "description": "一个安全的远程桌面访问工具，用 Rust 语言编写 | An open-source remote desktop software, written in Rust",
     "homepage": "https://github.com/rustdesk/rustdesk",
     "license": {
         "identifier": "AGPL-3.0-only"
@@ -24,18 +24,18 @@
         }
     },
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-LinkDirectory \"$env:AppData\\RustDesk\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process \"$env:LocalAppData\\rustdesk\"",
@@ -43,7 +43,7 @@
         "A-Remove-TempData \"$env:LocalAppData\\rustdesk\""
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

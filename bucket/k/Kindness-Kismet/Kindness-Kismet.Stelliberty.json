@@ -1,5 +1,5 @@
 {
-    "version": "1.2.150",
+    "version": "1.2.171",
     "description": "基于 Flutter 和 Rust 构建的现代跨平台 Clash 客户端 | A modern cross-platform Clash client built with Flutter and Rust",
     "homepage": "https://github.com/Kindness-Kismet/Stelliberty",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.150/Stelliberty-v1.2.150-windows-x64-setup.exe",
-            "hash": "24f55be8c936b666e3d21aa44b6ace2008fe46e019d5665f3d68976a8293c4e5"
+            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.171/Stelliberty-v1.2.171-windows-x64-setup.exe",
+            "hash": "8954745fb8bd1173639b144996d9cbb4a5cce054333440562e5b32f41c9c7f0f"
         },
         "arm64": {
-            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.150/Stelliberty-v1.2.150-windows-arm64-setup.exe",
-            "hash": "bd64ef7bfb6674c03879f5f1ff8f2d59b27cd12dfea066aef2aab64c0f0d5295"
+            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.171/Stelliberty-v1.2.171-windows-arm64-setup.exe",
+            "hash": "1a84f1f9f296d848c22107c26224dcf28ef8d6821c9788edcd4766e67b4b2205"
         }
     },
     "shortcuts": [
@@ -22,7 +22,7 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
@@ -30,19 +30,19 @@
         "A-Install-Inno -Uninstaller 'app\\uninstall\\unins000.exe'"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Uninstall-Manually 'app'",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

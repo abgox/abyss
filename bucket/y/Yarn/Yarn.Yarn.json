@@ -1,6 +1,6 @@
 {
     "version": "1.22.22",
-    "description": "快速、可靠且安全的 Node.js 依赖管理器 | Fast, reliable, and secure dependency Node.js dependency manager.",
+    "description": "快速、可靠且安全的 Node.js 依赖管理器 | Fast, reliable, and secure dependency Node.js dependency manager",
     "homepage": "https://github.com/yarnpkg/yarn",
     "license": {
         "identifier": "BSD-2-Clause"
@@ -36,14 +36,14 @@
         ]
     ],
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-File \"$home\\.yarnrc\"",
         "A-New-LinkFile \"$home\\.yarnrc\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "yarn config set prefix \"$dir\\bin\"",
         "yarn config set global-folder \"$dir\\global\"",
@@ -52,14 +52,14 @@
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

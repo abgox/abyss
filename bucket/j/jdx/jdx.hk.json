@@ -1,43 +1,43 @@
 {
-    "version": "1.32.0",
-    "description": "一个 Git 钩子管理器和项目代码检查工具。 | A git hook manager and project linting tool.",
+    "version": "1.34.0",
+    "description": "一个 Git 钩子管理器和项目代码检查工具 | A git hook manager and project linting tool",
     "homepage": "https://hk.jdx.dev/",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/jdx/hk/releases/download/v1.32.0/hk-x86_64-pc-windows-msvc.zip",
-            "hash": "580b37a53c42bcae68a0f970ffeb08825503684bf270656510c2fde44f86cad8"
+            "url": "https://github.com/jdx/hk/releases/download/v1.34.0/hk-x86_64-pc-windows-msvc.zip",
+            "hash": "8d8690a58dc3fc1d0aa04688f4bbb9e93c11ec7070de44c02f619b185dc0a0fd"
         },
         "arm64": {
-            "url": "https://github.com/jdx/hk/releases/download/v1.32.0/hk-aarch64-pc-windows-msvc.zip",
-            "hash": "703bad291f5cd1af896e1312dd8388c2eb2a043b8fdc7791ec58c4ac3856d61f"
+            "url": "https://github.com/jdx/hk/releases/download/v1.34.0/hk-aarch64-pc-windows-msvc.zip",
+            "hash": "a5e9b7a197ff4993edad4b94673cf3a694e16ed50d08c3b36de7ad4a23a7b40e"
         }
     },
     "extract_to": "app",
     "bin": "app\\hk.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-New-File \"$persist_dir\\.hkrc.pkl\" -Content ''",
         "A-New-LinkFile \"$home\\.hkrc.pkl\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],

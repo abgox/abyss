@@ -1,41 +1,41 @@
 {
-    "version": "1.41.0",
-    "description": "一个与 Prettier 兼容的代码格式化工具。 | A Prettier-compatible code formatter.",
+    "version": "1.42.0",
+    "description": "一个与 Prettier 兼容的代码格式化工具 | A Prettier-compatible code formatter",
     "homepage": "https://oxc.rs/docs/guide/usage/formatter.html",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/oxc-project/oxc/releases/download/apps_v1.41.0/oxfmt-win32-x64.zip",
-            "hash": "e2a760596dd8bc8c85171702094819d93ab614f7b843d844ab04bfcd6cde3db4"
+            "url": "https://github.com/oxc-project/oxc/releases/download/apps_v1.42.0/oxfmt-win32-x64.zip",
+            "hash": "eba721c532b71ad9acc664e84b82af4cbb34787502ea3c01bea7b9c53d98bbea"
         },
         "arm64": {
-            "url": "https://github.com/oxc-project/oxc/releases/download/apps_v1.41.0/oxfmt-win32-arm64.zip",
-            "hash": "3086ce6e7583f62595d3b45c8c9b696229b96a979b36f5b0ddabea8dc1e1c04d"
+            "url": "https://github.com/oxc-project/oxc/releases/download/apps_v1.42.0/oxfmt-win32-arm64.zip",
+            "hash": "3d5636879d7c50d350d2f1a1d52985343b448089de37e123d8686343016f1e10"
         }
     },
     "extract_to": "app",
     "bin": "app\\oxfmt.exe",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "Get-ChildItem -Path $dir -Filter oxfmt*.exe -Recurse | Select-Object -First 1 | Rename-Item -NewName oxfmt.exe"
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
