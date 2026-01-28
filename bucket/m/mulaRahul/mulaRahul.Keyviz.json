@@ -1,28 +1,29 @@
 {
-    "version": "1.0.6",
+    "version": "2.1.0",
     "description": "一个免费的开源工具来可视化你的击键和鼠标实时动作 | A free and open-source tool to visualize your keystrokes and mouse actions in real-time",
-    "homepage": "https://mularahul.github.io/keyviz",
+    "homepage": "https://keyviz.org/",
     "license": {
         "identifier": "GPL-3.0-only"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/mulaRahul/keyviz/releases/download/v1.0.6/keyviz-v1.0.6-portable.zip",
-            "hash": "5dcebe08768ecd7e86d453f6be36346b2cc744183598195fee4c7b4931a8b4b3"
+            "url": "https://github.com/mulaRahul/keyviz/releases/download/v2.1.0/keyviz_2.1.0_windows.msi",
+            "hash": "2d3f6c922102834a6fc5fff473b9f6fed8ec3bb34a34cb2e5b2df8d4654acc80"
         }
     },
+    "extract_dir": "PFiles\\keyviz",
     "extract_to": "app",
     "shortcuts": [
         [
-            "app\\keyviz-v1.0.6-portable.exe",
-            "Keyviz"
+            "app\\keyviz.exe",
+            "keyviz"
         ]
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\com.example\\keyviz\""
+        "A-New-LinkDirectory \"$env:AppData\\org.keyviz\""
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +35,8 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:LocalAppData\\org.keyviz\""
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,17 +53,11 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz-v$version-portable.zip"
+                "url": "https://github.com/mulaRahul/keyviz/releases/download/v$version/keyviz_$version_windows.msi"
             }
         },
         "hash": {
             "mode": "github"
-        },
-        "shortcuts": [
-            [
-                "app\\keyviz-v$version-portable.exe",
-                "Keyviz"
-            ]
-        ]
+        }
     }
 }
