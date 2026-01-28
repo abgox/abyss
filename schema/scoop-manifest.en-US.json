@@ -19,7 +19,21 @@
         },
         "str": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "allOf": [
+                {
+                    "not": {
+                        "pattern": "^\\s[^\\s]"
+                    },
+                    "errorMessage": "Please remove the leading space"
+                },
+                {
+                    "not": {
+                        "pattern": "[^\\s]\\s$"
+                    },
+                    "errorMessage": "Please remove the trailing space"
+                }
+            ]
         },
         "string_or_string_array": {
             "type": [
@@ -30,7 +44,26 @@
                 "$ref": "#/definitions/str"
             },
             "minLength": 1,
-            "minItems": 1
+            "minItems": 1,
+            "if": {
+                "type": "string"
+            },
+            "then": {
+                "allOf": [
+                    {
+                        "not": {
+                            "pattern": "^\\s[^\\s]"
+                        },
+                        "errorMessage": "Please remove the leading space"
+                    },
+                    {
+                        "not": {
+                            "pattern": "[^\\s]\\s$"
+                        },
+                        "errorMessage": "Please remove the trailing space"
+                    }
+                ]
+            }
         },
         "license_identifier": {
             "$comment": "Add known licenses here to provide better error messages for the validator",
@@ -1074,8 +1107,7 @@
         "description": {
             "title": "App Description",
             "markdownDescription": "- A brief description of the software.",
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/definitions/str"
         },
         "homepage": {
             "title": "Homepage",
@@ -1855,7 +1887,7 @@
                             "errorMessage": "After the manifest is written, please run '.\\bin\\checkver.ps1 <app> -u' to update the manifest"
                         },
                         "description": {
-                            "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
+                            "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
                             "examples": [
                                 "描述 | Description"
                             ],
@@ -1887,6 +1919,18 @@
                                         "pattern": "\\|.*\\|"
                                     },
                                     "errorMessage": "It can only have one | symbol, which is used to separate Chinese and English descriptions"
+                                },
+                                {
+                                    "not": {
+                                        "pattern": "[。！？!?] \\||[^.]\\. \\|"
+                                    },
+                                    "errorMessage": "Chinese description is disallowed to add symbols at the end, such as: .!?。！？\nBut it is allowed to use ... ellipsis"
+                                },
+                                {
+                                    "not": {
+                                        "pattern": "[。！？!?]$|[^.]\\.$"
+                                    },
+                                    "errorMessage": "English description is disallowed to add symbols at the end, such as: .!?。！？\nBut it is allowed to use ... ellipsis"
                                 }
                             ]
                         },
@@ -2371,20 +2415,6 @@
                                         "32bit": {
                                             "not": true,
                                             "errorMessage": "In abyss, it is not allowed."
-                                        }
-                                    },
-                                    "patternProperties": {
-                                        "^(64bit|arm64|32bit)$": {
-                                            "properties": {
-                                                "url": {
-                                                    "pattern": "\\$.+",
-                                                    "errorMessage": "It does not use dynamic version variables like $version. Please check carefully.",
-                                                    "examples": [
-                                                        "",
-                                                        []
-                                                    ]
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -3852,13 +3882,7 @@
                                                 "^(64bit|arm64|32bit)$": {
                                                     "properties": {
                                                         "url": {
-                                                            "type": [
-                                                                "array",
-                                                                "string"
-                                                            ],
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
+                                                            "$ref": "#/definitions/string_or_string_array",
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
@@ -3983,6 +4007,30 @@
                                                             }
                                                         }
                                                     }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "autoupdate": {
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "properties": {
+                                                "url": {
+                                                    "pattern": "\\$.+",
+                                                    "errorMessage": "It does not use dynamic version variables like $version. Please check carefully.",
+                                                    "examples": [
+                                                        "",
+                                                        []
+                                                    ]
                                                 }
                                             }
                                         }

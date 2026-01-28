@@ -19,7 +19,21 @@
         },
         "str": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "allOf": [
+                {
+                    "not": {
+                        "pattern": "^\\s[^\\s]"
+                    },
+                    "errorMessage": "请删除开头的空格"
+                },
+                {
+                    "not": {
+                        "pattern": "[^\\s]\\s$"
+                    },
+                    "errorMessage": "请删除末尾的空格"
+                }
+            ]
         },
         "string_or_string_array": {
             "type": [
@@ -30,7 +44,26 @@
                 "$ref": "#/definitions/str"
             },
             "minLength": 1,
-            "minItems": 1
+            "minItems": 1,
+            "if": {
+                "type": "string"
+            },
+            "then": {
+                "allOf": [
+                    {
+                        "not": {
+                            "pattern": "^\\s[^\\s]"
+                        },
+                        "errorMessage": "请删除开头的空格"
+                    },
+                    {
+                        "not": {
+                            "pattern": "[^\\s]\\s$"
+                        },
+                        "errorMessage": "请删除末尾的空格"
+                    }
+                ]
+            }
         },
         "license_identifier": {
             "$comment": "在此处添加已知的许可证，以便验证器可以提供更好的错误信息",
@@ -1074,8 +1107,7 @@
         "description": {
             "title": "软件描述",
             "markdownDescription": "- 软件的简短描述",
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/definitions/str"
         },
         "homepage": {
             "title": "软件主页",
@@ -1855,7 +1887,7 @@
                             "errorMessage": "清单编写完成后，请运行 .\\bin\\checkver.ps1 <app> -u 进行清单更新"
                         },
                         "description": {
-                            "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx.\"\n```",
+                            "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
                             "examples": [
                                 "描述 | Description"
                             ],
@@ -1887,6 +1919,18 @@
                                         "pattern": "\\|.*\\|"
                                     },
                                     "errorMessage": "只能有一个 | 符号，它用于分隔中文和英文描述"
+                                },
+                                {
+                                    "not": {
+                                        "pattern": "[。！？!?] \\||[^.]\\. \\|"
+                                    },
+                                    "errorMessage": "中文描述禁止添加末尾的符号，如: .!?。！？\n但是，允许使用 ... 省略号"
+                                },
+                                {
+                                    "not": {
+                                        "pattern": "[。！？!?]$|[^.]\\.$"
+                                    },
+                                    "errorMessage": "英文描述禁止添加末尾的符号，如: .!?。！？但是，允许使用 ... 省略号"
                                 }
                             ]
                         },
@@ -2371,20 +2415,6 @@
                                         "32bit": {
                                             "not": true,
                                             "errorMessage": "abyss 中不允许使用它"
-                                        }
-                                    },
-                                    "patternProperties": {
-                                        "^(64bit|arm64|32bit)$": {
-                                            "properties": {
-                                                "url": {
-                                                    "pattern": "\\$.+",
-                                                    "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确",
-                                                    "examples": [
-                                                        "",
-                                                        []
-                                                    ]
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -3852,13 +3882,7 @@
                                                 "^(64bit|arm64|32bit)$": {
                                                     "properties": {
                                                         "url": {
-                                                            "type": [
-                                                                "array",
-                                                                "string"
-                                                            ],
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
+                                                            "$ref": "#/definitions/string_or_string_array",
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
@@ -3983,6 +4007,30 @@
                                                             }
                                                         }
                                                     }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "autoupdate": {
+                            "properties": {
+                                "architecture": {
+                                    "patternProperties": {
+                                        "^(64bit|arm64|32bit)$": {
+                                            "properties": {
+                                                "url": {
+                                                    "pattern": "\\$.+",
+                                                    "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确",
+                                                    "examples": [
+                                                        "",
+                                                        []
+                                                    ]
                                                 }
                                             }
                                         }
