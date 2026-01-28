@@ -4,6 +4,11 @@ if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
     $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
 }
 
+if (-not $env:SCOOP_HOME) {
+    Write-Host "::error::`$env:SCOOP_HOME is not set." -ForegroundColor Red
+    exit 1
+}
+
 . $env:SCOOP_HOME\lib\json.ps1
 
 $order = [ordered]@{
@@ -87,9 +92,7 @@ function Sort-JsonByOrder {
             $value = $JsonObject[$key]
             $subOrder = $Order[$key]
 
-            if ($value -is [System.Collections.IDictionary] -and
-                $subOrder -is [System.Collections.IDictionary]) {
-
+            if ($value -is [System.Collections.IDictionary] -and $subOrder -is [System.Collections.IDictionary]) {
                 $result[$key] = Sort-JsonByOrder $value $subOrder
             }
             else {
@@ -107,14 +110,21 @@ function Sort-JsonByOrder {
     return $result
 }
 
-Get-ChildItem "$root\bucket" -Recurse -File -Filter *.json | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
-    $json = $content | ConvertFrom-Json -AsHashtable
+$manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter *.json
+
+foreach ($m in $manifests) {
+    $content = Get-Content $m.FullName -Raw
+    try {
+        $json = $content | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+    }
+    catch {
+        Write-Host "::error::Failed to convert $($m.FullName) to JSON: $_" -ForegroundColor Red
+        continue
+    }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
 
     $old = $json | ConvertToPrettyJson
     $new = $sortedJson | ConvertToPrettyJson
-    if ($new -ne $old) {
-        Set-Content -LiteralPath $_.FullName -Value $new -Encoding utf8
-    }
+    if ($new -eq $old) { continue }
+    Set-Content -LiteralPath $m.FullName -Value $new -Encoding utf8
 }
