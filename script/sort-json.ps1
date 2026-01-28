@@ -9,6 +9,11 @@ if (-not $env:SCOOP_HOME) {
     exit 1
 }
 
+if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
+    Write-Host "::error::`$env:SCOOP_HOME\lib\json.ps1 is not found." -ForegroundColor Red
+    exit 1
+}
+
 . $env:SCOOP_HOME\lib\json.ps1
 
 $order = [ordered]@{
@@ -122,9 +127,10 @@ foreach ($m in $manifests) {
         continue
     }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
-
     $old = $json | ConvertToPrettyJson
     $new = $sortedJson | ConvertToPrettyJson
-    if ($new -eq $old) { continue }
+    if ($new -eq $old) {
+        continue
+    }
     Set-Content -LiteralPath $m.FullName -Value $new -Encoding utf8
 }
