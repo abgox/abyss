@@ -1,6 +1,6 @@
 {
     "version": "7.1.4143",
-    "description": "一个更智能、更直观且更易读的 Shell | A smarter, more intuitive, and readable shell.",
+    "description": "一个更智能、更直观且更易读的 Shell | A smarter, more intuitive, and readable shell",
     "homepage": "https://murex.rocks/",
     "license": {
         "identifier": "GPL-2.0-only"
@@ -19,7 +19,7 @@
     },
     "extract_to": "app",
     "pre_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\.murex_preload\" \"$persist_dir\\.murex_preload\"",
@@ -29,19 +29,19 @@
         "A-New-LinkFile \"$home\\.murex_preload\", \"$home\\.murex_profile\", \"$home\\.murex_history\""
     ],
     "post_install": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
     ],
