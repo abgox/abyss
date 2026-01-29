@@ -21,7 +21,7 @@
 
 ---
 
-|App (796)|Tag|Description|
+|App (797)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -372,6 +372,7 @@
 |[Gyan.FFmpeg](https://www.gyan.dev/ffmpeg/builds/)|<a href="./bucket/g/Gyan/Gyan.FFmpeg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A complete, cross-platform solution to record, convert and stream audio and video|
 |[HaiYing.AionUi](https://github.com/iOfficeAI/AionUi)|<a href="./bucket/h/HaiYing/HaiYing.AionUi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Free, local, open-source GUI app for Gemini CLI, Claude Code, Codex, Qwen Code, and more|
 |[HandBrake.HandBrake](https://handbrake.fr/)|<a href="./bucket/h/HandBrake/HandBrake.HandBrake.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A open-source tool, built by volunteers, for converting video from nearly any format to a selection of modern, widely supported codecs|
+|[hanshuaikang.NBping](https://github.com/hanshuaikang/nping)|<a href="./bucket/h/hanshuaikang/hanshuaikang.NBping.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A Ping Tool in Rust with Real-Time Data and Visualizations|
 |[HelioFM.HelioSequencer](https://helio.fm/)|<a href="./bucket/h/HelioFM/HelioFM.HelioSequencer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open-source music sequencer software for desktop and mobile platforms|
 |[Helix.Helix](https://helix-editor.com/)|<a href="./bucket/h/Helix/Helix.Helix.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A post-modern modal text editor|
 |[HexHub.HexHub](https://www.hexhub.cn/)|<a href="./bucket/h/HexHub/HexHub.HexHub.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A one-stop development and operation tool tailored for programmers and operations personnel|

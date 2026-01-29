@@ -21,7 +21,7 @@
 
 ---
 
-|App (796)|Tag|Description|
+|App (797)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -372,6 +372,7 @@
 |[Gyan.FFmpeg](https://www.gyan.dev/ffmpeg/builds/)|<a href="./bucket/g/Gyan/Gyan.FFmpeg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用于录制、转换和传输音频和视频的完整跨平台解决方案|
 |[HaiYing.AionUi](https://github.com/iOfficeAI/AionUi)|<a href="./bucket/h/HaiYing/HaiYing.AionUi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费、本地化、开源的图形用户界面应用，适用于 Gemini CLI、Claude Code、Codex、Qwen Code 等|
 |[HandBrake.HandBrake](https://handbrake.fr/)|<a href="./bucket/h/HandBrake/HandBrake.HandBrake.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款由志愿者开发的开源工具，可将几乎任何格式的视频转换为多种现代且广泛支持的编码格式|
+|[hanshuaikang.NBping](https://github.com/hanshuaikang/nping)|<a href="./bucket/h/hanshuaikang/hanshuaikang.NBping.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个用 Rust 编写的具有实时数据和可视化功能的 Ping 工具|
 |[HelioFM.HelioSequencer](https://helio.fm/)|<a href="./bucket/h/HelioFM/HelioFM.HelioSequencer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于桌面和移动平台的开源音乐音序器软件|
 |[Helix.Helix](https://helix-editor.com/)|<a href="./bucket/h/Helix/Helix.Helix.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|后现代文本编辑器|
 |[HexHub.HexHub](https://www.hexhub.cn/)|<a href="./bucket/h/HexHub/HexHub.HexHub.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|为程序员和运维人员量身打造的一站式开发运维利器|
