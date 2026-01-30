@@ -21,7 +21,7 @@
 
 ---
 
-|App (797)|Tag|Description|
+|App (798)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -678,6 +678,7 @@
 |[Rustlang.Rustup](https://rust-lang.github.io/rustup/)|<a href="./bucket/r/Rustlang/Rustlang.Rustup.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|The Rust toolchain installer|
 |[SamsidParty.TopNotify](https://www.samsidparty.com/software/topnotify)|<a href="./bucket/s/SamsidParty/SamsidParty.TopNotify.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Msix](https://abyss.abgox.com/faq/msix)|The Ultimate Notification Customization Tool For Windows|
 |[santhosh-tekuri.boon](https://github.com/santhosh-tekuri/boon)|<a href="./bucket/s/santhosh-tekuri/santhosh-tekuri.boon.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|JSONSchema (draft 2020-12, draft 2019-09, draft-7, draft-6, draft-4) Validation in Rust|
+|[santisq.PSCompression](https://github.com/santisq/PSCompression)|<a href="./bucket/s/santisq/santisq.PSCompression.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A PowerShell module that provides utilities for creating, managing, and extracting zip and tar archives, as well as compressing and decompressing strings|
 |[SatoshiLabs.trezor-suite](https://github.com/trezor/trezor-suite)|<a href="./bucket/s/SatoshiLabs/SatoshiLabs.trezor-suite.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Desktop application for managing Trezor hardware wallet|
 |[SchneeHertz.exhentai-manga-manager](https://github.com/SchneeHertz/exhentai-manga-manager)|<a href="./bucket/s/SchneeHertz/SchneeHertz.exhentai-manga-manager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|ExHentai local manga tag-manager and reader|
 |[Schniz.fnm](https://github.com/Schniz/fnm)|<a href="./bucket/s/Schniz/Schniz.fnm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Fast and simple Node.js version manager, built in Rust|

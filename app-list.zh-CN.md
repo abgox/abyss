@@ -21,7 +21,7 @@
 
 ---
 
-|App (797)|Tag|Description|
+|App (798)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -678,6 +678,7 @@
 |[Rustlang.Rustup](https://rust-lang.github.io/rustup/)|<a href="./bucket/r/Rustlang/Rustlang.Rustup.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rust 工具链安装程序|
 |[SamsidParty.TopNotify](https://www.samsidparty.com/software/topnotify)|<a href="./bucket/s/SamsidParty/SamsidParty.TopNotify.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Msix](https://abyss.abgox.com/faq/msix)|适用于 Windows 的终极通知自定义工具|
 |[santhosh-tekuri.boon](https://github.com/santhosh-tekuri/boon)|<a href="./bucket/s/santhosh-tekuri/santhosh-tekuri.boon.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rust 实现的 JSONSchema 校验 (draft 2020-12, draft 2019-09, draft-7, draft-6, draft-4)|
+|[santisq.PSCompression](https://github.com/santisq/PSCompression)|<a href="./bucket/s/santisq/santisq.PSCompression.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，提供用于创建、管理和提取 zip 及 tar 归档文件，以及压缩和解压缩字符串的工具|
 |[SatoshiLabs.trezor-suite](https://github.com/trezor/trezor-suite)|<a href="./bucket/s/SatoshiLabs/SatoshiLabs.trezor-suite.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于管理 Trezor 硬件钱包的桌面应用程序|
 |[SchneeHertz.exhentai-manga-manager](https://github.com/SchneeHertz/exhentai-manga-manager)|<a href="./bucket/s/SchneeHertz/SchneeHertz.exhentai-manga-manager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|ExHentai 本地漫画标签管理阅读应用|
 |[Schniz.fnm](https://github.com/Schniz/fnm)|<a href="./bucket/s/Schniz/Schniz.fnm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|快速、简单的 Node.js 版本管理器，采用 Rust 内建|
