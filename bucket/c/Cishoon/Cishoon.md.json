@@ -1,0 +1,69 @@
+{
+  "version": "1.4.0",
+  "description": "一键复制上一条命令到剪贴板 | Message Dump - A CLI tool to dump the last command output to the clipboard.",
+  "homepage": "https://github.com/Cishoon/md",
+  "license": {
+    "identifier": "MIT"
+  },
+  "notes": [
+    "This tool requires PowerShell 7+.",
+    "Add the following line to your $PROFILE to enable it:",
+    ". \"$(scoop prefix Cishoon.md)\\md.ps1\"",
+    "",
+    "If you want to use 'mdd' instead of 'md' (to avoid conflict with mkdir):",
+    "$env:MD_CMD_NAME = 'mdd'; . \"$(scoop prefix Cishoon.md)\\md.ps1\""
+  ],
+  "notes_cn": [
+    "此工具需要 PowerShell 7+。",
+    "请将以下内容添加到您的 $PROFILE 中以启用它：",
+    ". \"$(scoop prefix Cishoon.md)\\md.ps1\"",
+    "",
+    "如果您想使用 'mdd' 命令代替 'md' (避免与 mkdir 冲突)：",
+    "$env:MD_CMD_NAME = 'mdd'; . \"$(scoop prefix Cishoon.md)\\md.ps1\""
+  ],
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/Cishoon/md/archive/refs/tags/v1.4.0.zip",
+      "extract_dir": "md-1.4.0",
+      "hash": "c56539311a37e800548adc16687d8664fce202d74a2b1ec06c685db62f64e1d7"
+    }
+  },
+  "persist": ".md",
+  "commands": [
+    "md"
+  ],
+  "pre_install": [
+    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+    ". $bucketsdir\\$bucket\\script\\utils.ps1",
+    "A-Start-Install",
+    "A-Ensure-Directory \"$persist_dir\\.md\"",
+    "A-New-LinkDirectory \"$env:USERPROFILE\\.md\""
+  ],
+  "post_install": [
+    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+    ". $bucketsdir\\$bucket\\script\\utils.ps1",
+    "A-Complete-Install"
+  ],
+  "pre_uninstall": [
+    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+    ". $bucketsdir\\$bucket\\script\\utils.ps1",
+    "A-Start-Uninstall"
+  ],
+  "post_uninstall": [
+    "$bucket = if ($bucket) { $bucket } else { (scoop config).'abgox-abyss-bucket-name' }",
+    ". $bucketsdir\\$bucket\\script\\utils.ps1",
+    "A-Complete-Uninstall"
+  ],
+  "checkver": {
+    "url": "https://github.com/Cishoon/md/tags",
+    "regex": "tags/v([\\d.]+)\\.zip"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/Cishoon/md/archive/refs/tags/v$version.zip",
+        "extract_dir": "md-$version"
+      }
+    }
+  }
+}
