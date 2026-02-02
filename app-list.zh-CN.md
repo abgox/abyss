@@ -21,7 +21,7 @@
 
 ---
 
-|App (798)|Tag|Description|
+|App (799)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -759,6 +759,7 @@
 |[Tohrusky.Final2x](https://github.com/EutropicAI/Final2x)|<a href="./bucket/t/Tohrusky/Tohrusky.Final2x.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款跨平台图像超分辨率工具|
 |[tombi-toml.tombi](http://tombi-toml.github.io/tombi/)|<a href="./bucket/t/tombi-toml/tombi-toml.tombi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于 TOML 的工具包，提供了格式化工具、代码检查工具和语言服务器，帮助您维护整洁且一致的 TOML 文件|
 |[TominLab.WonderPen](https://www.tominlab.com/wonderpen)|<a href="./bucket/t/TominLab/TominLab.WonderPen.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款专业的写作软件，致力于为作者提供专注且流畅的写作体验|
+|[TooYi.IShell](https://ishell.cc/)|<a href="./bucket/t/TooYi/TooYi.IShell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|轻量、高性能的 SSH 工具|
 |[TranslucentTB.TranslucentTB](https://github.com/TranslucentTB/TranslucentTB)|<a href="./bucket/t/TranslucentTB/TranslucentTB.TranslucentTB.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|一个轻量级的实用程序，使 Windows 任务栏半透明/透明|
 |[TriliumNext.Notes](https://github.com/TriliumNext/Trilium)|<a href="./bucket/t/TriliumNext/TriliumNext.Notes.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费开源、跨平台的分层式笔记应用程序，专注于构建大型个人知识库|
 |[tsl0922.ttyd](https://tsl0922.github.io/ttyd)|<a href="./bucket/t/tsl0922/tsl0922.ttyd.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个用于在整个网络上共享你的终端的命令行应用程序|

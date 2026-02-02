@@ -21,7 +21,7 @@
 
 ---
 
-|App (798)|Tag|Description|
+|App (799)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -759,6 +759,7 @@
 |[Tohrusky.Final2x](https://github.com/EutropicAI/Final2x)|<a href="./bucket/t/Tohrusky/Tohrusky.Final2x.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cross-platform image super-resolution tool|
 |[tombi-toml.tombi](http://tombi-toml.github.io/tombi/)|<a href="./bucket/t/tombi-toml/tombi-toml.tombi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A toolkit for TOML that provides a Formatter, Linter, and Language Server to help you maintain clean and consistent TOML files|
 |[TominLab.WonderPen](https://www.tominlab.com/wonderpen)|<a href="./bucket/t/TominLab/TominLab.WonderPen.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A professional writing software dedicated to providing writers with a focused and smooth writing experience|
+|[TooYi.IShell](https://ishell.cc/)|<a href="./bucket/t/TooYi/TooYi.IShell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A lightweight yet high-performance SSH tool|
 |[TranslucentTB.TranslucentTB](https://github.com/TranslucentTB/TranslucentTB)|<a href="./bucket/t/TranslucentTB/TranslucentTB.TranslucentTB.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|A lightweight utility that makes the Windows taskbar translucent/transparent|
 |[TriliumNext.Notes](https://github.com/TriliumNext/Trilium)|<a href="./bucket/t/TriliumNext/TriliumNext.Notes.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open-source, cross-platform hierarchical note taking application with focus on building large personal knowledge bases|
 |[tsl0922.ttyd](https://tsl0922.github.io/ttyd)|<a href="./bucket/t/tsl0922/tsl0922.ttyd.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A cli appication for sharing your terminal all over the web|
