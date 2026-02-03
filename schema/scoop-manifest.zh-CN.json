@@ -2285,13 +2285,13 @@
                                                         "items": [
                                                             {},
                                                             {
-                                                                "pattern": "\\$InstallerInfo, \\$out = A-Get-InstallerInfoFromWinget",
+                                                                "pattern": "\\$res, \\$out = A-Get-InstallerInfoFromWinget",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息",
-                                                                "errorMessage": "格式错误，例如: \"$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'\""
+                                                                "errorMessage": "格式错误，例如: \"$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'\""
                                                             },
                                                             {
                                                                 "const": "$out",
-                                                                "markdownDescription": "默认的安装信息\n- 你也可以自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($InstallerInfo.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                                "markdownDescription": "默认的安装信息\n- 你也可以自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
                                                             }
                                                         ],
                                                         "allOf": [
@@ -2300,43 +2300,43 @@
                                                                     "anyOf": [
                                                                         {},
                                                                         {
-                                                                            "pattern": "\\$InstallerInfo, \\$out = A-Get-InstallerInfoFromWinget",
+                                                                            "pattern": "\\$res, \\$out = A-Get-InstallerInfoFromWinget",
                                                                             "markdownDescription": "获取 Winget 中指定应用的安装信息"
                                                                         },
                                                                         {
-                                                                            "const": "\"ver:$($InstallerInfo.PackageVersion);\"",
+                                                                            "const": "\"ver:$($res.PackageVersion);\"",
                                                                             "markdownDescription": "输出应用的版本号"
                                                                         },
                                                                         {
-                                                                            "const": "\"x64:$($InstallerInfo.x64_machine.InstallerUrl);\"",
+                                                                            "const": "\"x64:$($res.x64_machine.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 x64 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"x64:$($InstallerInfo.x64_user.InstallerUrl);\"",
+                                                                            "const": "\"x64:$($res.x64_user.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 x64 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"x86:$($InstallerInfo.x86_machine.InstallerUrl);\"",
+                                                                            "const": "\"x86:$($res.x86_machine.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 x86 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"x86:$($InstallerInfo.x86_user.InstallerUrl);\"",
+                                                                            "const": "\"x86:$($res.x86_user.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 x86 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"arm64:$($InstallerInfo.arm64_machine.InstallerUrl);\"",
+                                                                            "const": "\"arm64:$($res.arm64_machine.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 arm64 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"arm64:$($InstallerInfo.arm64_user.InstallerUrl);\"",
+                                                                            "const": "\"arm64:$($res.arm64_user.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 arm64 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"x64:$($InstallerInfo.neutral_machine.InstallerUrl);\"",
+                                                                            "const": "\"x64:$($res.neutral_machine.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 neutral 安装程序 URL"
                                                                         },
                                                                         {
-                                                                            "const": "\"x64:$($InstallerInfo.neutral_user.InstallerUrl);\"",
+                                                                            "const": "\"x64:$($res.neutral_user.InstallerUrl);\"",
                                                                             "markdownDescription": "输出应用的 neutral 安装程序 URL"
                                                                         }
                                                                     ]
@@ -2354,7 +2354,7 @@
                                                                 "markdownDescription": "从 GitHub 仓库获取应用的最新版本\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
                                                             },
                                                             {
-                                                                "const": "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
+                                                                "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息"
                                                             }
                                                         ]
