@@ -1,0 +1,55 @@
+{
+    "version": "1.11.2",
+    "description": "一个简单的命令行工具，用于向指定服务器进行 DNS 查询 | Simple command line utility to make DNS lookups to the specified server",
+    "homepage": "https://github.com/ameshkov/dnslookup",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ameshkov/dnslookup/releases/download/v1.11.2/dnslookup-windows-amd64-v1.11.2.zip",
+            "hash": "5a594664b40e45d3e917309bf284d7b877cb78bb03fe4bdd35a337d57bc0fe37",
+            "extract_dir": "windows-amd64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\dnslookup.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ameshkov/dnslookup/releases/download/v$version/dnslookup-windows-amd64-v$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
