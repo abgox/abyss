@@ -1742,7 +1742,6 @@ function A-New-Link {
         链接指向的目标路径数组
         通常忽略它，让它根据 LinkPaths 自动生成
         生成规则:
-            如果 LinkPaths 包含 $dir\app，则替换为 $persist_dir
             如果 LinkPaths 包含 $home，则替换为 $persist_dir
             否则，去掉盘符
 
@@ -1764,6 +1763,11 @@ function A-New-Link {
         [string]$OutFile
     )
 
+    if ($LinkPaths.Where({ $_ -like "$dir\*" -or -not [System.IO.Path]::IsPathRooted($_) })) {
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+
     $installData = @{
         LinkPaths   = @()
         LinkTargets = @()
@@ -1775,17 +1779,10 @@ function A-New-Link {
             $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $persist_dir
         }
         else {
-            $LinkPath = A-Get-AbsolutePath $LinkPath
-            if ($LinkPath -like "$dir\*") {
-                # abyss 中的应用清单会额外添加一个 app 目录，因此 "$dir\app" 和 "$dir" 应该等效
-                $linkTarget = $LinkPath.replace("$dir\app\", "$persist_dir\").replace("$dir\", "$persist_dir\")
-            }
-            else {
-                $linkTarget = $LinkPath.replace($home, $persist_dir)
-                # 如果不在 $home 目录下，则去掉盘符
-                if ($linkTarget -notlike "$persist_dir\*") {
-                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
-                }
+            $linkTarget = $LinkPath.replace($home, $persist_dir)
+            # 如果不在 $home 目录下，则去掉盘符
+            if ($linkTarget -notlike "$persist_dir\*") {
+                $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
             }
         }
         $installData.LinkPaths += $linkPath
