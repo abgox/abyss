@@ -1,5 +1,9 @@
 ﻿#Requires -Version 7.0
 
+param(
+    [string]$App = '*'
+)
+
 if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
     $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
 }
@@ -58,6 +62,19 @@ $order = [ordered]@{
             # post_install = ''
             # uninstaller  = ''
         }
+        # '32bit' = [ordered]@{
+        #     url          = ''
+        #     hash         = ''
+        #     extract_dir  = ''
+        #     extract_to   = ''
+        #     env_add_path = ''
+        #     bin          = ''
+        #     shortcuts    = ''
+        #     # pre_install  = ''
+        #     # installer    = ''
+        #     # post_install = ''
+        #     # uninstaller  = ''
+        # }
     }
     extract_dir    = ''
     extract_to     = ''
@@ -76,7 +93,60 @@ $order = [ordered]@{
     # uninstaller    = ''
     post_uninstall = ''
     checkver       = ''
-    autoupdate     = ''
+    autoupdate     = [ordered]@{
+        architecture = [ordered]@{
+            '64bit' = [ordered]@{
+                url          = ''
+                hash         = ''
+                extract_dir  = ''
+                extract_to   = ''
+                env_add_path = ''
+                bin          = ''
+                shortcuts    = ''
+                # pre_install  = ''
+                # installer    = ''
+                # post_install = ''
+                # uninstaller  = ''
+            }
+            'arm64' = [ordered]@{
+                url          = ''
+                hash         = ''
+                extract_dir  = ''
+                extract_to   = ''
+                env_add_path = ''
+                bin          = ''
+                shortcuts    = ''
+                # pre_install  = ''
+                # installer    = ''
+                # post_install = ''
+                # uninstaller  = ''
+            }
+            # '32bit' = [ordered]@{
+            #     url          = ''
+            #     hash         = ''
+            #     extract_dir  = ''
+            #     extract_to   = ''
+            #     env_add_path = ''
+            #     bin          = ''
+            #     shortcuts    = ''
+            #     # pre_install  = ''
+            #     # installer    = ''
+            #     # post_install = ''
+            #     # uninstaller  = ''
+            # }
+        }
+        hash         = ''
+        extract_dir  = ''
+        extract_to   = ''
+        env_set      = ''
+        env_add_path = ''
+        innosetup    = ''
+        psmodule     = ''
+        commands     = ''
+        bin          = ''
+        shortcuts    = ''
+        persist      = ''
+    }
 }
 
 $root = Split-Path $PSScriptRoot -Parent
@@ -115,7 +185,7 @@ function Sort-JsonByOrder {
     return $result
 }
 
-$manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter *.json
+$manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
 
 foreach ($m in $manifests) {
     $content = Get-Content $m.FullName -Raw
