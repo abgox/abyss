@@ -1763,7 +1763,7 @@ function A-New-Link {
         [string]$OutFile
     )
 
-    if ($LinkPaths.Where({ $_ -like "$dir\*" -or -not [System.IO.Path]::IsPathRooted($_) })) {
+    if ($LinkPaths.Where({ -not [System.IO.Path]::IsPathRooted($_) })) {
         A-Show-IssueCreationPrompt
         A-Exit
     }
@@ -1779,10 +1779,16 @@ function A-New-Link {
             $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $persist_dir
         }
         else {
-            $linkTarget = $LinkPath.replace($home, $persist_dir)
-            # 如果不在 $home 目录下，则去掉盘符
-            if ($linkTarget -notlike "$persist_dir\*") {
-                $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
+            if ($LinkPath -like "$dir\*") {
+                # 只有无法使用 persist 字段的特殊情况才能使用它，例如: liule.Snipaste
+                $linkTarget = $LinkPath.replace("$dir\app\", "$persist_dir\").replace("$dir\", "$persist_dir\")
+            }
+            else {
+                $linkTarget = $LinkPath.replace($home, $persist_dir)
+                # 如果不在 $home 目录下，则去掉盘符
+                if ($linkTarget -notlike "$persist_dir\*") {
+                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
+                }
             }
         }
         $installData.LinkPaths += $linkPath
