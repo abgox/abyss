@@ -1,4 +1,5 @@
-﻿#Requires -Version 5.1
+﻿# Deprecated: It has been replaced by script/utils.ps1 and will be removed in the future.
+#Requires -Version 5.1
 
 Set-StrictMode -Off
 
