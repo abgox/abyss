@@ -75,7 +75,25 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
-
+    if ($manifest.persist -is [array]) {
+        foreach ($item in $manifest.persist) {
+            if ($item -is [string]) {
+                continue
+            }
+            # $source = $item[0]
+            $target = $item[1]
+            if ($target -notlike "AppData\Roaming\*" -and $target -notlike "AppData\Local\*") {
+                continue
+            }
+            if (Test-Path "$persist_dir\$target") {
+                continue
+            }
+            if (-not (Test-Path "$home\$target") -or (A-Test-Link "$home\$target")) {
+                continue
+            }
+            Copy-Item -Path "$home\$target" -Destination "$persist_dir\$target" -Recurse -Force
+        }
+    }
 }
 
 function A-Complete-Install {
