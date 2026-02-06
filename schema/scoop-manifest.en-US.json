@@ -35,35 +35,17 @@
                 }
             ]
         },
-        "string_or_string_array": {
+        "str_or_arr": {
             "type": [
                 "string",
                 "array"
             ],
             "items": {
-                "$ref": "#/definitions/str"
+                "type": "string",
+                "minLength": 1
             },
             "minLength": 1,
-            "minItems": 1,
-            "if": {
-                "type": "string"
-            },
-            "then": {
-                "allOf": [
-                    {
-                        "not": {
-                            "pattern": "^\\s[^\\s]"
-                        },
-                        "errorMessage": "Please remove the leading space"
-                    },
-                    {
-                        "not": {
-                            "pattern": "[^\\s]\\s$"
-                        },
-                        "errorMessage": "Please remove the trailing space"
-                    }
-                ]
-            }
+            "minItems": 1
         },
         "license_identifier": {
             "$comment": "Add known licenses here to provide better error messages for the validator",
@@ -313,7 +295,7 @@
         "notes": {
             "title": "Notes",
             "markdownDescription": "- The notes after installing the software.",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "url_validation": {
             "pattern": "^https?://",
@@ -454,12 +436,12 @@
         "extract_dir": {
             "title": "Extract specified directory only",
             "markdownDescription": "- If the value of the url property points to a compressed package, Scoop will extract all content by default.\n  - Compressed package types: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- If the `extract_dir` property is defined, Scoop will only extract the specified directory defined in `extract_dir`.",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "extract_to": {
             "title": "Extract content to specified directory",
             "markdownDescription": "- If the value of the url property points to a compressed package, Scoop will extract all content to the directory defined by `extract_to`\n  - Compressed package types: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- If url is an array with multiple compressed packages, `extract_to` should also be an array with the same order as url",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "env_add_path": {
             "title": "Add the specified directory to the PATH environment variable",
@@ -711,7 +693,7 @@
         "pre_install": {
             "title": "Pre-install script",
             "markdownDescription": "- Commands to be executed before installing the application\n- Execution order: `pre_install` -> `installer` -> `post_install`\n\n|Variables|Description|\n|:-:|-|\n|`$app`|Application name (manifest name)|\n|`$architecture`|CPU architecture of the installed application, e.g. 64bit/32bit/arm64|\n|`$cmd`|Current running subcommand, e.g. uninstall/update/install|\n|`$fname`|Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)|\n|`$scoopConfig`|Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|If value is $true, then it's a global installation|\n|`$manifest`|Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}|\n|`$version`|Version being installed, e.g. 1.2.3|\n|`$dir`|Application installation directory (actual version number directory)|\n|`$persist_dir`|Data persistence directory|\n|`$bucketsdir`|Scoop buckets directory, e.g. D:\\scoop\\buckets|\n|`$bucket`|Name of the bucket to which the currently installed application belongs|\n|`$cachedir`|Scoop cache directory|\n|`$configFile`|Path to Scoop configuration|\n|`$globaldir`|Global installation directory|\n|`$original_dir`|Application installation directory (actual version number directory)|\n|`$scoopdir`|Scoop installation directory",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "installer": {
             "title": "Installer configuration",
@@ -729,7 +711,7 @@
                 },
                 "script": {
                     "markdownDescription": "Execute as an installer instead of a file\n- Available variables in the script:\n    - $fname: downloaded file(s) (may be an array; treat as array unless you are sure url is not an array)\n    - $manifest: validated manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
-                    "$ref": "#/definitions/string_or_string_array"
+                    "$ref": "#/definitions/str_or_arr"
                 },
                 "args": {
                     "type": "array",
@@ -748,12 +730,12 @@
         "post_install": {
             "title": "Post-install script",
             "markdownDescription": "- Commands executed after the application is installed\n- Execution order: `pre_install` -> `installer` -> `post_install`\n- Note: At this point, Scoop has already completed persist, so if you need to create files for persist, do it before this (in `pre_install`)\n\n|Variables|Description|\n|:-:|-|\n|`$app`|Application name (manifest name)|\n|`$architecture`|CPU architecture of the installed application, e.g. 64bit/32bit/arm64|\n|`$cmd`|Current running subcommand, e.g. uninstall/update/install|\n|`$fname`|Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)|\n|`$scoopConfig`|Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|If value is $true, then it's a global installation|\n|`$manifest`|Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}|\n|`$version`|Version being installed, e.g. 1.2.3|\n|`$dir`|Application installation directory (current directory)|\n|`$persist_dir`|Data persistence directory|\n|`$bucketsdir`|Scoop buckets directory, e.g. D:\\scoop\\buckets|\n|`$bucket`|Name of the bucket to which the currently installed application belongs|\n|`$cachedir`|Scoop cache directory|\n|`$configFile`|Path to Scoop configuration|\n|`$globaldir`|Global installation directory|\n|`$original_dir`|Application installation directory (actual version number directory)|\n|`$scoopdir`|Scoop installation directory",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "pre_uninstall": {
             "title": "Pre-uninstall script",
             "markdownDescription": "- Execute commands before uninstalling the application\n- Execution order: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n\n|Variables|Description|\n|:-:|-|\n|`$app`|Application name (manifest name)|\n|`$architecture`|CPU architecture of the installed application, e.g. 64bit/32bit/arm64|\n|`$cmd`|Current running subcommand, e.g. uninstall/update/install|\n|`$fname`|Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)|\n|`$scoopConfig`|Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|If value is $true, then it's a global installation|\n|`$manifest`|Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}|\n|`$version`|Version being installed, e.g. 1.2.3|\n|`$dir`|Application installation directory (actual version number directory)|\n|`$persist_dir`|Data persistence directory|\n|`$bucketsdir`|Scoop buckets directory, e.g. D:\\scoop\\buckets|\n|`$bucket`|Name of the bucket to which the currently installed application belongs|\n|`$cachedir`|Scoop cache directory|\n|`$configFile`|Path to Scoop configuration|\n|`$globaldir`|Global installation directory|\n|`$original_dir`|Application installation directory (actual version number directory)|\n|`$scoopdir`|Scoop installation directory",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "uninstaller": {
             "title": "Uninstaller configuration",
@@ -771,7 +753,7 @@
                 },
                 "script": {
                     "markdownDescription": "Execute as an uninstaller rather than a file\n- Variables available in the script: \n    - $fname: downloaded file (there may be multiple files, which need to be handled as an array unless you are sure the url is not an array)\n    - $manifest: verified manifest reference\n    - $architecture: 64bit/32bit/arm64\n    - $dir: installation directory",
-                    "$ref": "#/definitions/string_or_string_array"
+                    "$ref": "#/definitions/str_or_arr"
                 },
                 "args": {
                     "type": "array",
@@ -786,7 +768,7 @@
         "post_uninstall": {
             "title": "Post-uninstall script",
             "markdownDescription": "- Used to execute commands after uninstalling the application\n- Execution order: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n\n|Variables|Description|\n|:-:|-|\n|`$app`|Application name (manifest name)|\n|`$architecture`|CPU architecture of the installed application, e.g. 64bit/32bit/arm64|\n|`$cmd`|Current running subcommand, e.g. uninstall/update/install|\n|`$fname`|Downloaded file name (may be multiple files, treat as array unless you are sure url is not an array)|\n|`$scoopConfig`|Scoop configuration (PowerShell object), e.g. {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|If value is $true, then it's a global installation|\n|`$manifest`|Deserialized manifest (PowerShell object), e.g. @{version=1.2.3; description=xxx;...}|\n|`$version`|Version being installed, e.g. 1.2.3|\n|`$dir`|Application installation directory (current directory)|\n|`$persist_dir`|Data persistence directory|\n|`$bucketsdir`|Scoop buckets directory, e.g. D:\\scoop\\buckets|\n|`$bucket`|Name of the bucket to which the currently installed application belongs|\n|`$cachedir`|Scoop cache directory|\n|`$configFile`|Path to Scoop configuration|\n|`$globaldir`|Global installation directory|\n|`$original_dir`|Application installation directory (actual version number directory)|\n|`$scoopdir`|Scoop installation directory",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "checkver": {
             "title": "Version check configuration",
@@ -869,7 +851,7 @@
                         },
                         "script": {
                             "markdownDescription": "PowerShell script to track multiple links",
-                            "$ref": "#/definitions/string_or_string_array"
+                            "$ref": "#/definitions/str_or_arr"
                         },
                         "sourceforge": {
                             "markdownDescription": "SourceForge project version check configuration",
@@ -1083,7 +1065,7 @@
         "##": {
             "title": "Comment",
             "markdownDescription": "- Comment for readers or maintainers of this manifest.",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "version": {
             "title": "Version",
@@ -1137,7 +1119,7 @@
         "depends": {
             "title": "Dependencies",
             "markdownDescription": "- Dependencies of the app\n- Missing dependencies will be automatically installed before the app is installed\n- If a dependency is optional, please use the `suggest` property",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "suggest": {
             "title": "Suggested Dependencies",
@@ -1150,7 +1132,7 @@
                 "patternProperties": {
                     "^.+$": {
                         "markdownDescription": "- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions\n- If it is an array, it means that if any of the dependencies in the array are installed, the feature will be considered as **implemented**",
-                        "$ref": "#/definitions/string_or_string_array"
+                        "$ref": "#/definitions/str_or_arr"
                     }
                 },
                 "minProperties": 1,
@@ -2001,7 +1983,7 @@
                         "notes_cn": {
                             "title": "Notes (Chinese)",
                             "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
-                            "$ref": "#/definitions/string_or_string_array",
+                            "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
                             ]
@@ -2107,7 +2089,7 @@
                         },
                         "commands": {
                             "markdownDescription": "Command Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- When `bin` field cannot define the command accurately, it should be used",
-                            "$ref": "#/definitions/string_or_string_array",
+                            "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
                             ]
@@ -2414,7 +2396,7 @@
                                 "notes_cn": {
                                     "title": "Notes (Chinese)",
                                     "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
-                                    "$ref": "#/definitions/string_or_string_array"
+                                    "$ref": "#/definitions/str_or_arr"
                                 },
                                 "architecture": {
                                     "properties": {
@@ -3267,6 +3249,29 @@
                                                 }
                                             }
                                         }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Add-Font"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "items": {
+                                                        "not": {
+                                                            "pattern": "(?<!#.*)A-Stop-Process"
+                                                        },
+                                                        "errorMessage": "The font manifest does not require 'A-Stop-Process'"
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 ]
                             },
@@ -3386,6 +3391,73 @@
                         "not": true,
                         "errorMessage": "In abyss, 'pre_install', 'post_install', 'pre_uninstall', and 'post_uninstall' must be used."
                     }
+                },
+                {
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "pre_install": {
+                                        "contains": {
+                                            "const": "A-Install-Msi"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "pattern": "#/dl.msi_$",
+                                                                "errorMessage": "'A-Install-Msi' is used in 'pre_install', so 'url' should end with #/dl.msi_"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "required": [
+                                    "extract_to"
+                                ]
+                            },
+                            "then": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "if": {
+                                                                    "pattern": "\\.exe$"
+                                                                },
+                                                                "then": {
+                                                                    "not": true,
+                                                                    "errorMessage": "'extract_to' is used, but 'url' is an exe file\nIt should be a compress file, or end with #/dl.7z"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 },
                 {
                     "allOf": [
@@ -3790,6 +3862,89 @@
                                                 }
                                             ]
                                         }
+                                    },
+                                    "architecture": {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "bin": {
+                                                        "type": [
+                                                            "string",
+                                                            "array"
+                                                        ],
+                                                        "examples": [
+                                                            "app\\xxx.exe"
+                                                        ],
+                                                        "anyOf": [
+                                                            {
+                                                                "$ref": "#/definitions/str",
+                                                                "pattern": "^app\\\\",
+                                                                "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\"
+                                                            },
+                                                            {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": [
+                                                                        "string",
+                                                                        "array"
+                                                                    ],
+                                                                    "anyOf": [
+                                                                        {
+                                                                            "$ref": "#/definitions/str",
+                                                                            "pattern": "^app\\\\",
+                                                                            "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\"
+                                                                        },
+                                                                        {
+                                                                            "type": "array",
+                                                                            "items": [
+                                                                                {
+                                                                                    "pattern": "^app\\\\",
+                                                                                    "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    "shortcuts": {
+                                                        "type": "array",
+                                                        "examples": [
+                                                            [
+                                                                [
+                                                                    "app\\xxx.exe",
+                                                                    "xxx"
+                                                                ]
+                                                            ]
+                                                        ],
+                                                        "items": {
+                                                            "type": "array",
+                                                            "items": [
+                                                                {
+                                                                    "if": {
+                                                                        "not": {
+                                                                            "anyOf": [
+                                                                                {
+                                                                                    "pattern": "^app\\\\"
+                                                                                },
+                                                                                {
+                                                                                    "pattern": "^\\$\\{?env:"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "then": {
+                                                                        "not": true,
+                                                                        "errorMessage": "Please check the path. Since extract_to is specified as \"app\", it may need to start with app\\\\ or $env: or ${env:"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -3888,7 +4043,7 @@
                                                 "^(64bit|arm64|32bit)$": {
                                                     "properties": {
                                                         "url": {
-                                                            "$ref": "#/definitions/string_or_string_array",
+                                                            "$ref": "#/definitions/str_or_arr",
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",

@@ -35,35 +35,17 @@
                 }
             ]
         },
-        "string_or_string_array": {
+        "str_or_arr": {
             "type": [
                 "string",
                 "array"
             ],
             "items": {
-                "$ref": "#/definitions/str"
+                "type": "string",
+                "minLength": 1
             },
             "minLength": 1,
-            "minItems": 1,
-            "if": {
-                "type": "string"
-            },
-            "then": {
-                "allOf": [
-                    {
-                        "not": {
-                            "pattern": "^\\s[^\\s]"
-                        },
-                        "errorMessage": "请删除开头的空格"
-                    },
-                    {
-                        "not": {
-                            "pattern": "[^\\s]\\s$"
-                        },
-                        "errorMessage": "请删除末尾的空格"
-                    }
-                ]
-            }
+            "minItems": 1
         },
         "license_identifier": {
             "$comment": "在此处添加已知的许可证，以便验证器可以提供更好的错误信息",
@@ -313,7 +295,7 @@
         "notes": {
             "title": "提示信息",
             "markdownDescription": "- 安装软件之后的提示信息",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "url_validation": {
             "pattern": "^https?://",
@@ -454,12 +436,12 @@
         "extract_dir": {
             "title": "仅提取指定目录",
             "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 默认会提取所有内容\n    - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果存在 `extract_dir` 属性，Scoop 将只提取 `extract_dir` 定义的指定目录",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "extract_to": {
             "title": "提取内容到指定目录",
             "markdownDescription": "- 如果 url 属性的值指向一个压缩包，Scoop 会将所有内容提取到 `extract_to` 定义的指定目录中\n  - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果 url 是一个数组，有多个压缩包，则 `extract_to` 也应该是一个数组，并且与 url 数组的顺序一致",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "env_add_path": {
             "title": "添加到环境变量 PATH 中的路径",
@@ -711,7 +693,7 @@
         "pre_install": {
             "title": "预安装脚本",
             "markdownDescription": "- 用于在安装应用程序之前执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n\n|可用的变量|说明|\n|:-:|-|\n|`$app`|应用程序名称(应用清单名称)|\n|`$architecture`|CPU 架构, 如: `64bit` `32bit` `arm64`|\n|`$cmd`|当前正在运行的子命令, 如: `uninstall` `update` `install`|\n|`$fname`|下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)|\n|`$scoopConfig`|Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|如果安装时使用了 `-g` 或 `--global`，则为 `$true`|\n|`$manifest`|反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}|\n|`$version`|正在安装的版本，如 1.2.3|\n|`$dir`|应用程序安装目录(实际版本号目录)|\n|`$persist_dir`|数据持久化目录|\n|`$bucketsdir`|Scoop buckets 目录，如 D:\\scoop\\buckets|\n|`$bucket`|当前安装应用所属于的 bucket 名称|\n|`$cachedir`|Scoop cache 目录|\n|`$configFile`|Scoop 配置的路径|\n|`$globaldir`|全局安装目录|\n|`$original_dir`|应用程序安装目录(实际版本号目录)|\n|`$scoopdir`|Scoop 所在目录|",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "installer": {
             "title": "安装程序配置",
@@ -729,7 +711,7 @@
                 },
                 "script": {
                     "markdownDescription": "作为安装程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 下载的文件(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
-                    "$ref": "#/definitions/string_or_string_array"
+                    "$ref": "#/definitions/str_or_arr"
                 },
                 "args": {
                     "type": "array",
@@ -748,12 +730,12 @@
         "post_install": {
             "title": "后安装脚本",
             "markdownDescription": "- 用于在安装应用程序之后执行命令\n- 执行顺序: `pre_install` -> `installer` -> `post_install`\n- 需要注意，此时 Scoop 已经完成 persist，因此如果需要创建文件用于 persist, 需要在 `pre_install` 中提前定义\n\n|可用的变量|说明|\n|:-:|-|\n|`$app`|应用程序名称(应用清单名称)|\n|`$architecture`|CPU 架构, 如: `64bit` `32bit` `arm64`|\n|`$cmd`|当前正在运行的子命令, 如: `uninstall` `update` `install`|\n|`$fname`|下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)|\n|`$scoopConfig`|Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|如果安装时使用了 `-g` 或 `--global`，则为 `$true`|\n|`$manifest`|反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}|\n|`$version`|正在安装的版本，如 1.2.3|\n|`$dir`|应用程序安装目录(current 目录)|\n|`$persist_dir`|数据持久化目录|\n|`$bucketsdir`|Scoop buckets 目录，如 D:\\scoop\\buckets|\n|`$bucket`|当前安装应用所属于的 bucket 名称|\n|`$cachedir`|Scoop cache 目录|\n|`$configFile`|Scoop 配置的路径|\n|`$globaldir`|全局安装目录|\n|`$original_dir`|应用程序安装目录(实际版本号目录)|\n|`$scoopdir`|Scoop 所在目录|",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "pre_uninstall": {
             "title": "预卸载脚本",
             "markdownDescription": "- 用于在卸载应用程序之前执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n\n|可用的变量|说明|\n|:-:|-|\n|`$app`|应用程序名称(应用清单名称)|\n|`$architecture`|CPU 架构, 如: `64bit` `32bit` `arm64`|\n|`$cmd`|当前正在运行的子命令, 如: `uninstall` `update` `install`|\n|`$fname`|下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)|\n|`$scoopConfig`|Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|如果安装时使用了 `-g` 或 `--global`，则为 `$true`|\n|`$manifest`|反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}|\n|`$version`|正在安装的版本，如 1.2.3|\n|`$dir`|应用程序安装目录(实际版本号目录)|\n|`$persist_dir`|数据持久化目录|\n|`$bucketsdir`|Scoop buckets 目录，如 D:\\scoop\\buckets|\n|`$bucket`|当前安装应用所属于的 bucket 名称|\n|`$cachedir`|Scoop cache 目录|\n|`$configFile`|Scoop 配置的路径|\n|`$globaldir`|全局安装目录|\n|`$original_dir`|应用程序安装目录(实际版本号目录)|\n|`$scoopdir`|Scoop 所在目录|",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "uninstaller": {
             "title": "卸载程序配置",
@@ -771,7 +753,7 @@
                 },
                 "script": {
                     "markdownDescription": "作为卸载程序而不是 file 执行\n- 脚本中可用的变量: \n    - $fname: 下载的文件(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)\n    - $manifest: 已验证的清单引用\n    - $architecture: 64bit/32bit/arm64\n    - $dir: 安装目录",
-                    "$ref": "#/definitions/string_or_string_array"
+                    "$ref": "#/definitions/str_or_arr"
                 },
                 "args": {
                     "type": "array",
@@ -786,7 +768,7 @@
         "post_uninstall": {
             "title": "后卸载脚本",
             "markdownDescription": "- 用于在卸载应用程序之后执行命令\n- 执行顺序: `pre_uninstall` -> `uninstaller` -> `post_uninstall`\n\n|可用的变量|说明|\n|:-:|-|\n|`$app`|应用程序名称(应用清单名称)|\n|`$architecture`|CPU 架构, 如: `64bit` `32bit` `arm64`|\n|`$cmd`|当前正在运行的子命令, 如: `uninstall` `update` `install`|\n|`$fname`|下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)|\n|`$scoopConfig`|Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}|\n|`$global`|如果安装时使用了 `-g` 或 `--global`，则为 `$true`|\n|`$manifest`|反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}|\n|`$version`|正在安装的版本，如 1.2.3|\n|`$dir`|应用程序安装目录(current 目录)|\n|`$persist_dir`|数据持久化目录|\n|`$bucketsdir`|Scoop buckets 目录，如 D:\\scoop\\buckets|\n|`$bucket`|当前安装应用所属于的 bucket 名称|\n|`$cachedir`|Scoop cache 目录|\n|`$configFile`|Scoop 配置的路径|\n|`$globaldir`|全局安装目录|\n|`$original_dir`|应用程序安装目录(实际版本号目录)|\n|`$scoopdir`|Scoop 所在目录|",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "checkver": {
             "title": "版本检查配置",
@@ -869,7 +851,7 @@
                         },
                         "script": {
                             "markdownDescription": "可包含 PowerShell 命令的字符串或字符串数组，用于跟踪多个链接",
-                            "$ref": "#/definitions/string_or_string_array"
+                            "$ref": "#/definitions/str_or_arr"
                         },
                         "sourceforge": {
                             "markdownDescription": "SourceForge 项目的版本检查配置",
@@ -1083,7 +1065,7 @@
         "##": {
             "title": "注释",
             "markdownDescription": "- 给此清单的读者或维护者的注释。",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "version": {
             "title": "软件版本",
@@ -1137,7 +1119,7 @@
         "depends": {
             "title": "依赖项",
             "markdownDescription": "- 应用程序的必要依赖项\n- 未安装的依赖项将在应用程序安装前自动安装\n- 如果依赖项是可选的，请使用 `suggest` 属性",
-            "$ref": "#/definitions/string_or_string_array"
+            "$ref": "#/definitions/str_or_arr"
         },
         "suggest": {
             "title": "建议的依赖项",
@@ -1150,7 +1132,7 @@
                 "patternProperties": {
                     "^.+$": {
                         "markdownDescription": "- 当指定的建议已经安装，则不会显示该建议。\n- 如果是一个数组，它表示只要数组中任意一个建议被安装，则不会显示该建议",
-                        "$ref": "#/definitions/string_or_string_array"
+                        "$ref": "#/definitions/str_or_arr"
                     }
                 },
                 "minProperties": 1,
@@ -2001,7 +1983,7 @@
                         "notes_cn": {
                             "title": "提示信息 (中文)",
                             "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段",
-                            "$ref": "#/definitions/string_or_string_array",
+                            "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
                             ]
@@ -2107,7 +2089,7 @@
                         },
                         "commands": {
                             "markdownDescription": "命令名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `bin` 字段无法准确定义时，就应该使用它",
-                            "$ref": "#/definitions/string_or_string_array",
+                            "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
                             ]
@@ -2414,7 +2396,7 @@
                                 "notes_cn": {
                                     "title": "提示信息 (中文)",
                                     "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段",
-                                    "$ref": "#/definitions/string_or_string_array"
+                                    "$ref": "#/definitions/str_or_arr"
                                 },
                                 "architecture": {
                                     "properties": {
@@ -3267,6 +3249,29 @@
                                                 }
                                             }
                                         }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Add-Font"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "items": {
+                                                        "not": {
+                                                            "pattern": "(?<!#.*)A-Stop-Process"
+                                                        },
+                                                        "errorMessage": "字体清单不需要 A-Stop-Process"
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 ]
                             },
@@ -3386,6 +3391,73 @@
                         "not": true,
                         "errorMessage": "abyss 中必须使用 pre_install、post_install、pre_uninstall、post_uninstall"
                     }
+                },
+                {
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "pre_install": {
+                                        "contains": {
+                                            "const": "A-Install-Msi"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "pattern": "#/dl.msi_$",
+                                                                "errorMessage": "pre_install 中使用了 A-Install-Msi，因此 url 应该以 #/dl.msi_ 结尾"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "if": {
+                                "required": [
+                                    "extract_to"
+                                ]
+                            },
+                            "then": {
+                                "properties": {
+                                    "autoupdate": {
+                                        "properties": {
+                                            "architecture": {
+                                                "patternProperties": {
+                                                    "^(64bit|arm64|32bit)$": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "if": {
+                                                                    "pattern": "\\.exe$"
+                                                                },
+                                                                "then": {
+                                                                    "not": true,
+                                                                    "errorMessage": "使用了 extract_to 字段，但 url 是一个 exe 文件\n它应该是一个可解压的文件，或者以 #/dl.7z 结尾"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 },
                 {
                     "allOf": [
@@ -3790,6 +3862,89 @@
                                                 }
                                             ]
                                         }
+                                    },
+                                    "architecture": {
+                                        "patternProperties": {
+                                            "^(64bit|arm64|32bit)$": {
+                                                "properties": {
+                                                    "bin": {
+                                                        "type": [
+                                                            "string",
+                                                            "array"
+                                                        ],
+                                                        "examples": [
+                                                            "app\\xxx.exe"
+                                                        ],
+                                                        "anyOf": [
+                                                            {
+                                                                "$ref": "#/definitions/str",
+                                                                "pattern": "^app\\\\",
+                                                                "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 开头"
+                                                            },
+                                                            {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": [
+                                                                        "string",
+                                                                        "array"
+                                                                    ],
+                                                                    "anyOf": [
+                                                                        {
+                                                                            "$ref": "#/definitions/str",
+                                                                            "pattern": "^app\\\\",
+                                                                            "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 开头"
+                                                                        },
+                                                                        {
+                                                                            "type": "array",
+                                                                            "items": [
+                                                                                {
+                                                                                    "pattern": "^app\\\\",
+                                                                                    "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 开头"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    "shortcuts": {
+                                                        "type": "array",
+                                                        "examples": [
+                                                            [
+                                                                [
+                                                                    "app\\xxx.exe",
+                                                                    "xxx"
+                                                                ]
+                                                            ]
+                                                        ],
+                                                        "items": {
+                                                            "type": "array",
+                                                            "items": [
+                                                                {
+                                                                    "if": {
+                                                                        "not": {
+                                                                            "anyOf": [
+                                                                                {
+                                                                                    "pattern": "^app\\\\"
+                                                                                },
+                                                                                {
+                                                                                    "pattern": "^\\$\\{?env:"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "then": {
+                                                                        "not": true,
+                                                                        "errorMessage": "请检查路径是否正确，由于指定了 extract_to 为 app，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -3888,7 +4043,7 @@
                                                 "^(64bit|arm64|32bit)$": {
                                                     "properties": {
                                                         "url": {
-                                                            "$ref": "#/definitions/string_or_string_array",
+                                                            "$ref": "#/definitions/str_or_arr",
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
