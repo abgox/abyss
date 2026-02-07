@@ -49,8 +49,8 @@ function A-Test-Admin {
         检查当前用户是否具有管理员权限
     #>
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
-    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -and ($identity.Groups -contains "S-1-5-32-544")
+    $admin = [Security.Principal.WindowsBuiltInRole]::Administrator
+    [Security.Principal.WindowsPrincipal]::new($identity).IsInRole($admin)
 }
 
 function A-Test-DeveloperMode {
@@ -664,6 +664,9 @@ function A-Uninstall-App {
 
     if (!(Test-Path -LiteralPath $Uninstaller)) {
         $_Uninstaller = Get-ChildItem $dir $UninstallerFileName -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($null -eq $_Uninstaller) {
+            return
+        }
         if (!(Test-Path -LiteralPath $_Uninstaller)) {
             warn "'$Uninstaller' not found."
             return
