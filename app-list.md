@@ -21,7 +21,7 @@
 
 ---
 
-|App (799)|Tag|Description|
+|App (800)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -240,6 +240,7 @@
 |[Canva.Affinity](https://www.affinity.studio/)|<a href="./bucket/c/Canva/Canva.Affinity.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|Award-winning integrated graphic design, photo-editing and publishing solution|
 |[CapSoftware.Cap](https://cap.so/)|<a href="./bucket/c/CapSoftware/CapSoftware.Cap.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Beautiful, shareable screen recordings|
 |[Casey.Just](https://just.systems/)|<a href="./bucket/c/Casey/Casey.Just.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A handy way to save and run project-specific commands|
+|[Ch3nyang.MrRSS](https://mrrss.ch3nyang.top/)|<a href="./bucket/c/Ch3nyang/Ch3nyang.MrRSS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A modern, cross-platform, and free AI RSS reader|
 |[charmbracelet.crush](https://github.com/charmbracelet/crush)|<a href="./bucket/c/charmbracelet/charmbracelet.crush.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The glamourous AI coding agent for your favourite terminal|
 |[charmbracelet.glow](https://github.com/charmbracelet/glow)|<a href="./bucket/c/charmbracelet/charmbracelet.glow.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal based markdown reader|
 |[charmbracelet.gum](https://github.com/charmbracelet/gum)|<a href="./bucket/c/charmbracelet/charmbracelet.gum.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A tool for glamorous shell scripts|
