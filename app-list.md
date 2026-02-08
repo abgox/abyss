@@ -21,7 +21,7 @@
 
 ---
 
-|App (800)|Tag|Description|
+|App (801)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -461,6 +461,7 @@
 |[LGUG2Z.komorebi](https://lgug2z.github.io/komorebi)|<a href="./bucket/l/LGUG2Z/LGUG2Z.komorebi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|A tiling window manager for Windows|
 |[LiErHeXun.Quicker](https://getquicker.net/)|<a href="./bucket/l/LiErHeXun/LiErHeXun.Quicker.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A toolbox to improve efficiency on Windows|
 |[lin-ycv.PowerToysRun-Everything](https://github.com/lin-ycv/EverythingPowerToys)|<a href="./bucket/l/lin-ycv/lin-ycv.PowerToysRun-Everything.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Everything search plugin for PowerToys Run|
+|[Linebender.resvg](https://github.com/linebender/resvg)|<a href="./bucket/l/Linebender/Linebender.resvg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|An SVG rendering library|
 |[lipkau.PSIni](https://github.com/lipkau/PSIni)|<a href="./bucket/l/lipkau/lipkau.PSIni.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A PowerShell module for parsing and writing ini file|
 |[LiriLiri.AYA](https://aya.liriliri.io/)|<a href="./bucket/l/LiriLiri/LiriLiri.AYA.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A desktop application for easily controlling android devices, which can be considered as a GUI wrapper for ADB|
 |[liule.Snipaste](https://www.snipaste.com/)|<a href="./bucket/l/liule/liule.Snipaste.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|A simple but powerful snipping tool designed to boost productivity|

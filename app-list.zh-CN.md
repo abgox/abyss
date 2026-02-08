@@ -21,7 +21,7 @@
 
 ---
 
-|App (800)|Tag|Description|
+|App (801)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -461,6 +461,7 @@
 |[LGUG2Z.komorebi](https://lgug2z.github.io/komorebi)|<a href="./bucket/l/LGUG2Z/LGUG2Z.komorebi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款适用于 Windows 系统的平铺式窗口管理器|
 |[LiErHeXun.Quicker](https://getquicker.net/)|<a href="./bucket/l/LiErHeXun/LiErHeXun.Quicker.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|指尖工具箱, Windows 效率工具|
 |[lin-ycv.PowerToysRun-Everything](https://github.com/lin-ycv/EverythingPowerToys)|<a href="./bucket/l/lin-ycv/lin-ycv.PowerToysRun-Everything.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|PowerToys Run 中的 Everything 插件|
+|[Linebender.resvg](https://github.com/linebender/resvg)|<a href="./bucket/l/Linebender/Linebender.resvg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 SVG 渲染库|
 |[lipkau.PSIni](https://github.com/lipkau/PSIni)|<a href="./bucket/l/lipkau/lipkau.PSIni.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，用于解析和写入 ini 文件|
 |[LiriLiri.AYA](https://aya.liriliri.io/)|<a href="./bucket/l/LiriLiri/LiriLiri.AYA.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款可轻松控制安卓设备的桌面应用程序，它可以被视为 ADB 的图形用户界面封装程序|
 |[liule.Snipaste](https://www.snipaste.com/)|<a href="./bucket/l/liule/liule.Snipaste.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款简单却功能强大的截图工具，旨在提高工作效率|
