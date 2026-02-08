@@ -1,7 +1,8 @@
 ﻿#Requires -Version 7.0
 
 param(
-    [string]$App = '*'
+    [string]$App = '*',
+    [switch]$Recent = $env:GITHUB_ACTIONS
 )
 
 if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
@@ -82,8 +83,8 @@ $order = [ordered]@{
     env_add_path   = ''
     innosetup      = ''
     psmodule       = ''
-    commands       = ''
     bin            = ''
+    commands       = ''
     shortcuts      = ''
     persist        = ''
     pre_install    = ''
@@ -142,8 +143,8 @@ $order = [ordered]@{
         env_add_path = ''
         innosetup    = ''
         psmodule     = ''
-        commands     = ''
         bin          = ''
+        commands     = ''
         shortcuts    = ''
         persist      = ''
     }
@@ -185,7 +186,23 @@ function Sort-JsonByOrder {
     return $result
 }
 
-$manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
+if ($Recent) {
+    Write-Host "::group::Recent Manifests" -ForegroundColor Cyan
+
+    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format: -- "bucket/" |
+    Where-Object { $_ -match '\.json$' } |
+    Sort-Object -Unique |
+    ForEach-Object {
+        Write-Host $_
+        $fullPath = Join-Path $root $_
+        [System.IO.FileInfo]$fullPath
+    }
+
+    Write-Host "::endgroup::" -ForegroundColor Cyan
+}
+else {
+    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
+}
 
 foreach ($m in $manifests) {
     $content = Get-Content $m.FullName -Raw
