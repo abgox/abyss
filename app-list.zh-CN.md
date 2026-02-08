@@ -21,7 +21,7 @@
 
 ---
 
-|App (801)|Tag|Description|
+|App (802)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -466,6 +466,7 @@
 |[LiriLiri.AYA](https://aya.liriliri.io/)|<a href="./bucket/l/LiriLiri/LiriLiri.AYA.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款可轻松控制安卓设备的桌面应用程序，它可以被视为 ADB 的图形用户界面封装程序|
 |[liule.Snipaste](https://www.snipaste.com/)|<a href="./bucket/l/liule/liule.Snipaste.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款简单却功能强大的截图工具，旨在提高工作效率|
 |[LiveKit.LiveKitCLI](https://livekit.io/)|<a href="./bucket/l/LiveKit/LiveKit.LiveKitCLI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|LiveKit 的命令行界面|
+|[lmorg.Murex](https://murex.rocks/)|<a href="./bucket/l/lmorg/lmorg.Murex.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一个更智能、更直观且更易读的 Shell|
 |[LocalSend.LocalSend](https://localsend.org/)|<a href="./bucket/l/LocalSend/LocalSend.LocalSend.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款免费的开源应用程序，它允许你在无需互联网连接的情况下，通过本地网络安全地与附近设备共享文件和消息|
 |[loganchef.Ciphora](https://github.com/loganchef/Ciphora)|<a href="./bucket/l/loganchef/loganchef.Ciphora.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源、安全、跨平台的密码管理器|
 |[Logseq.Logseq](https://logseq.com/)|<a href="./bucket/l/Logseq/Logseq.Logseq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个以隐私为首要原则的开源知识管理与协作平台|
