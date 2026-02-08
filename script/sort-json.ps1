@@ -2,7 +2,7 @@
 
 param(
     [string]$App = '*',
-    [switch]$Recent = $env:GITHUB_ACTIONS
+    [switch]$Recent
 )
 
 if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
