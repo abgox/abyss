@@ -41,7 +41,7 @@ if ($bucket) {
 
 # https://abyss.abgox.com/features/extra-features#abgox-abyss-app-uninstall-action
 $_ = $scoopConfig.'abgox-abyss-app-uninstall-action'
-$abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { "1" }
+$abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { "123" }
 
 function A-Test-Admin {
     <#
