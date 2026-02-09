@@ -21,7 +21,7 @@
 
 ---
 
-|App (802)|Tag|Description|
+|App (803)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -479,6 +479,7 @@
 |[Maicongs.SQLynx](https://www.maicongs.com/product/)|<a href="./bucket/m/Maicongs/Maicongs.SQLynx.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Native Web-Based SQL IDE, support desktop and web management for enterprise. It's a cross-platform database tool for everyone working with data|
 |[manuelernestog.WeekToDo](https://weektodo.me/)|<a href="./bucket/m/manuelernestog/manuelernestog.WeekToDo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open source minimalist weekly planner and To Do list App focused on privacy|
 |[MarkText.MarkText](https://www.marktext.cc/)|<a href="./bucket/m/MarkText/MarkText.MarkText.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A simple and elegant markdown editor|
+|[max-sixty.worktrunk](https://worktrunk.dev/)|<a href="./bucket/m/max-sixty/max-sixty.worktrunk.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|CLI for Git worktree management, designed for parallel AI agent workflows|
 |[mdgrs-mei.WinUIShell](https://github.com/mdgrs-mei/WinUIShell)|<a href="./bucket/m/mdgrs-mei/mdgrs-mei.WinUIShell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|Scripting WinUI 3 with PowerShell|
 |[Meld.Meld](https://meldmerge.org/)|<a href="./bucket/m/Meld/Meld.Meld.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Visual diff and merge tool|
 |[Meta.Sapling](https://sapling-scm.com/)|<a href="./bucket/m/Meta/Meta.Sapling.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Scalable, User-Friendly Source Control System, Compatible with Git|

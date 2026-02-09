@@ -21,7 +21,7 @@
 
 ---
 
-|App (802)|Tag|Description|
+|App (803)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -479,6 +479,7 @@
 |[Maicongs.SQLynx](https://www.maicongs.com/product/)|<a href="./bucket/m/Maicongs/Maicongs.SQLynx.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|本地基于 Web 的 SQL IDE，支持企业桌面和网络管理，它是一款跨平台数据库工具，适用于所有数据处理人员|
 |[manuelernestog.WeekToDo](https://weektodo.me/)|<a href="./bucket/m/manuelernestog/manuelernestog.WeekToDo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费和开源的极简每周计划和待办事项应用程序，专注于隐私|
 |[MarkText.MarkText](https://www.marktext.cc/)|<a href="./bucket/m/MarkText/MarkText.MarkText.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简单优雅的 MarkDown 编辑器|
+|[max-sixty.worktrunk](https://worktrunk.dev/)|<a href="./bucket/m/max-sixty/max-sixty.worktrunk.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于 Git 工作树管理的命令行界面，专为并行人工智能代理工作流设计|
 |[mdgrs-mei.WinUIShell](https://github.com/mdgrs-mei/WinUIShell)|<a href="./bucket/m/mdgrs-mei/mdgrs-mei.WinUIShell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|使用 PowerShell 编写 WinUI 3 脚本|
 |[Meld.Meld](https://meldmerge.org/)|<a href="./bucket/m/Meld/Meld.Meld.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|可视化差异与合并工具|
 |[Meta.Sapling](https://sapling-scm.com/)|<a href="./bucket/m/Meta/Meta.Sapling.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可扩展、用户友好的版本控制系统，兼容 Git|
