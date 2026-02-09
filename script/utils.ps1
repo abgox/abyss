@@ -504,13 +504,14 @@ function A-Stop-Process {
         }
     }
 
-    Start-Sleep -Seconds 1
+    Start-Sleep -Milliseconds 500
 
     # 再次检查是否存在未终止的相关进程
     # 这里参考了 Scoop 的官方检查逻辑，以确保一致性
     # https://github.com/ScoopInstaller/Scoop/blob/ebd8c036fa0d2e1dc93bca44c10eeee36c0d233e/lib/install.ps1#L534
+    $processes = Get-Process
     foreach ($app_dir in $Paths) {
-        $running_processes = Get-Process | Where-Object { $_.Path -like "$app_dir\*" } | Out-String
+        $running_processes = $processes.Where({ $_.Path -like "$app_dir\*" }) | Out-String
         if ($running_processes) {
             error "The following instances of `"$app`" are still running. Close them and try again."
             Write-Host $running_processes
