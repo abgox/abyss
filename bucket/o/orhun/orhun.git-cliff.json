@@ -1,0 +1,65 @@
+{
+    "version": "2.12.0",
+    "description": "一款高度可定制的变更日志生成器，遵循约定式提交规范 | A highly customizable Changelog Generator that follows Conventional Commit specifications",
+    "homepage": "https://git-cliff.org/",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/orhun/git-cliff/releases/download/v2.12.0/git-cliff-2.12.0-x86_64-pc-windows-msvc.zip",
+            "hash": "f2b8c692d9488c3313d7786e2099976151c10fd8f76580b12d045bb9683a8379"
+        },
+        "arm64": {
+            "url": "https://github.com/orhun/git-cliff/releases/download/v2.12.0/git-cliff-2.12.0-aarch64-pc-windows-msvc.zip",
+            "hash": "faa97e8a741a853eea0e826207211c59727a7f90218c26c56bb6c8c4038ac058"
+        }
+    },
+    "extract_dir": "git-cliff-2.12.0",
+    "extract_to": "app",
+    "bin": "app\\git-cliff.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\git-cliff\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/orhun/git-cliff/releases/download/v$version/git-cliff-$version-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/orhun/git-cliff/releases/download/v$version/git-cliff-$version-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "extract_dir": "git-cliff-$version"
+    }
+}
