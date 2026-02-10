@@ -21,7 +21,7 @@
 
 ---
 
-|App (803)|Tag|Description|
+|App (805)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -101,6 +101,7 @@
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="./bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的 Notion 替代品，数据和定制由你掌控|
 |[appmakes.Typora](https://typora.io/)|<a href="./bucket/a/appmakes/appmakes.Typora.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个 Markdown 编辑器和阅读器，所见即所得|
 |[astral-sh.ruff](https://docs.astral.sh/ruff/)|<a href="./bucket/a/astral-sh/astral-sh.ruff.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款由 Rust 编写的极快速的 Python 代码检查工具和代码格式化工具|
+|[astral-sh.ty](https://docs.astral.sh/ty/)|<a href="./bucket/a/astral-sh/astral-sh.ty.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款速度极快的 Python 类型检查器和语言服务器，用 Rust 编写|
 |[astral-sh.uv](https://docs.astral.sh/uv/)|<a href="./bucket/a/astral-sh/astral-sh.uv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个极其快速的 Python 包和项目管理器，用 Rust 编写|
 |[asxez.MusicBox](https://github.com/asxez/MusicBox)|<a href="./bucket/a/asxez/asxez.MusicBox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款高颜值的本地音乐播放器|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="./bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - 一款免费的开源宏创建和自动化软件工具，允许用户自动执行重复性任务|
@@ -625,6 +626,7 @@
 |[OptiPNG.OptiPNG](https://optipng.sourceforge.net/)|<a href="./bucket/o/OptiPNG/OptiPNG.OptiPNG.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款 PNG 优化工具，它能重新压缩图像文件以减小其大小，且不会丢失任何信息|
 |[Oracle.SQLDeveloper](https://www.oracle.com/database/sqldeveloper)|<a href="./bucket/o/Oracle/Oracle.SQLDeveloper.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费的集成开发环境，它简化了在传统部署和云部署中对 Oracle 数据库的开发与管理|
 |[orf.gping](https://github.com/orf/gping)|<a href="./bucket/o/orf/orf.gping.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|带有图表 的 Ping|
+|[orhun.git-cliff](https://git-cliff.org/)|<a href="./bucket/o/orhun/orhun.git-cliff.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款高度可定制的变更日志生成器，遵循约定式提交规范|
 |[Oven-sh.Bun](https://bun.sh/)|<a href="./bucket/o/Oven-sh/Oven-sh.Bun.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|速度极快的 JavaScript 运行时、打包工具、测试运行器和包管理器|
 |[oxc-project.oxfmt](https://oxc.rs/docs/guide/usage/formatter.html)|<a href="./bucket/o/oxc-project/oxc-project.oxfmt.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个与 Prettier 兼容的代码格式化工具|
 |[oxc-project.oxlint](https://oxc.rs/docs/guide/usage/linter.html)|<a href="./bucket/o/oxc-project/oxc-project.oxlint.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款高性能 JavaScript 和 TypeScript 代码检查工具|
