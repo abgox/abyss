@@ -21,7 +21,7 @@
 
 ---
 
-|App (805)|Tag|Description|
+|App (806)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -67,6 +67,7 @@
 |[ajeetdsouza.zoxide](https://github.com/ajeetdsouza/zoxide)|<a href="./bucket/a/ajeetdsouza/ajeetdsouza.zoxide.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个更智能的 cd 命令，灵感源自 z 和 autojump|
 |[AlekseyHoffman.Sigma-File-Manager](https://sigma-file-manager.vercel.app/)|<a href="./bucket/a/AlekseyHoffman/AlekseyHoffman.Sigma-File-Manager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费、开源、快速发展的现代文件管理器 (explorer) 应用程序|
 |[AlexanderPro.SmartContextMenu](https://github.com/AlexanderPro/SmartContextMenu)|<a href="./bucket/a/AlexanderPro/AlexanderPro.SmartContextMenu.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|系统中所有窗口的智能上下文菜单|
+|[alexpasmantier.television](https://alexpasmantier.github.io/television/)|<a href="./bucket/a/alexpasmantier/alexpasmantier.television.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于终端的速度极快、可移植且易于修改的模糊查找工具|
 |[Alibaba.aDrive](https://www.alipan.com/)|<a href="./bucket/a/Alibaba/Alibaba.aDrive.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|阿里云盘，一款速度快、不打扰、够安全、易于分享的网盘|
 |[Alibaba.DingTalk](https://www.dingtalk.com/)|<a href="./bucket/a/Alibaba/Alibaba.DingTalk.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|钉钉，阿里巴巴的智能移动办公平台|
 |[Alibaba.Qoder](https://qoder.com/)|<a href="./bucket/a/Alibaba/Alibaba.Qoder.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于现实软件的自主智能编程平台|

@@ -21,7 +21,7 @@
 
 ---
 
-|App (805)|Tag|Description|
+|App (806)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -67,6 +67,7 @@
 |[ajeetdsouza.zoxide](https://github.com/ajeetdsouza/zoxide)|<a href="./bucket/a/ajeetdsouza/ajeetdsouza.zoxide.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A smarter cd command, inspired by z and autojump|
 |[AlekseyHoffman.Sigma-File-Manager](https://sigma-file-manager.vercel.app/)|<a href="./bucket/a/AlekseyHoffman/AlekseyHoffman.Sigma-File-Manager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free, open-source, quickly evolving, modern file manager (explorer) app|
 |[AlexanderPro.SmartContextMenu](https://github.com/AlexanderPro/SmartContextMenu)|<a href="./bucket/a/AlexanderPro/AlexanderPro.SmartContextMenu.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Smart context menu for all windows in the system|
+|[alexpasmantier.television](https://alexpasmantier.github.io/television/)|<a href="./bucket/a/alexpasmantier/alexpasmantier.television.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A very fast, portable and hackable fuzzy finder for the terminal|
 |[Alibaba.aDrive](https://www.alipan.com/)|<a href="./bucket/a/Alibaba/Alibaba.aDrive.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cloud drive that is fast, non-intrusive, secure, and easy to share|
 |[Alibaba.DingTalk](https://www.dingtalk.com/)|<a href="./bucket/a/Alibaba/Alibaba.DingTalk.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A smart mobile office platform by Alibaba|
 |[Alibaba.Qoder](https://qoder.com/)|<a href="./bucket/a/Alibaba/Alibaba.Qoder.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Agentic Coding Platform for Real Software|
