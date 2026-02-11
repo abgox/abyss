@@ -189,7 +189,20 @@ function Sort-JsonByOrder {
 if ($Recent) {
     Write-Host "::group::Recent Manifests" -ForegroundColor Cyan
 
-    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format: -- "bucket/" |
+    $guid = [Guid]::NewGuid()
+    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- "bucket/" |
+    ForEach-Object {
+        if ($_ -eq '') { return }
+        if ($_ -eq $guid) {
+            if ($current) {
+                $current
+            }
+            $current = @()
+        }
+        else {
+            $current += $_
+        }
+    } |
     Where-Object { $_ -match '\.json$' } |
     Sort-Object -Unique |
     ForEach-Object {
