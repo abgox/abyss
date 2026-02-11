@@ -1893,14 +1893,20 @@
                                     "errorMessage": "请修改英文描述"
                                 },
                                 {
-                                    "pattern": "^([^\\|]*[\\u4e00-\\u9fa5][^\\|]*)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
-                                    "errorMessage": "不符合指定格式：中文描述 | English description\n注意: | 左右各只有一个空格"
+                                    "pattern": "^([^\\|]*[\\u4e00-\\u9fff][^\\|]*)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                                    "errorMessage": "不符合指定格式：中文描述 | English description"
                                 },
                                 {
                                     "not": {
                                         "pattern": "\\|.*\\|"
                                     },
                                     "errorMessage": "只能有一个 | 符号，它用于分隔中文和英文描述"
+                                },
+                                {
+                                    "not": {
+                                        "pattern": "\\s{2,}\\||\\|\\s{2,}"
+                                    },
+                                    "errorMessage": "| 左右各只有一个空格"
                                 },
                                 {
                                     "not": {

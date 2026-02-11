@@ -1893,14 +1893,20 @@
                                     "errorMessage": "Please modify the English description"
                                 },
                                 {
-                                    "pattern": "^([^\\|]*[\\u4e00-\\u9fa5][^\\|]*)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
-                                    "errorMessage": "It does not conform to the specified format: Chinese description | English description\nNote: There should be only one space on each side of the | symbol"
+                                    "pattern": "^([^\\|]*[\\u4e00-\\u9fff][^\\|]*)\\s\\|\\s(?!\\s).*?[A-Za-z].*",
+                                    "errorMessage": "It does not conform to the specified format: Chinese description | English description"
                                 },
                                 {
                                     "not": {
                                         "pattern": "\\|.*\\|"
                                     },
                                     "errorMessage": "It can only have one | symbol, which is used to separate Chinese and English descriptions"
+                                },
+                                {
+                                    "not": {
+                                        "pattern": "\\s{2,}\\||\\|\\s{2,}"
+                                    },
+                                    "errorMessage": "There should be only one space on each side of the | symbol"
                                 },
                                 {
                                     "not": {
