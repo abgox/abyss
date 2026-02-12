@@ -18,7 +18,7 @@ $abgox_abyss = @{
 }
 
 if ($env:GITHUB_ACTIONS) {
-    $VerbosePreference = "SilentlyContinue"
+    $VerbosePreference = 'SilentlyContinue'
 }
 else {
     Microsoft.PowerShell.Utility\Write-Host
@@ -35,13 +35,13 @@ if ($bucket) {
     }
     if ($bucket -ne 'abyss') {
         error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
-        error "Refer to: https://abyss.abgox.com/faq/bucket-name"
+        error 'Refer to: https://abyss.abgox.com/faq/bucket-name'
     }
 }
 
 # https://abyss.abgox.com/features/extra-features#abgox-abyss-app-uninstall-action
 $_ = $scoopConfig.'abgox-abyss-app-uninstall-action'
-$abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { "123" }
+$abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { '123' }
 
 function A-Test-Admin {
     <#
@@ -61,9 +61,9 @@ function A-Test-DeveloperMode {
     .LINK
         https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging
     #>
-    $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
+    $path = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock'
     try {
-        $value = Get-ItemProperty -LiteralPath $path -Name "AllowDevelopmentWithoutDevLicense" -ErrorAction Stop
+        $value = Get-ItemProperty -LiteralPath $path -Name 'AllowDevelopmentWithoutDevLicense' -ErrorAction Stop
         return $value.AllowDevelopmentWithoutDevLicense -eq 1
     }
     catch {
@@ -82,7 +82,7 @@ function A-Start-Install {
             }
             # $source = $item[0]
             $target = $item[1]
-            if ($target -notlike "AppData\Roaming\*" -and $target -notlike "AppData\Local\*") {
+            if ($target -notlike 'AppData\Roaming\*' -and $target -notlike 'AppData\Local\*') {
                 continue
             }
             if (Test-Path "$persist_dir\$target") {
@@ -240,8 +240,8 @@ function A-New-File {
     param (
         [string]$Path,
         [array]$Content,
-        [ValidateSet("utf8", "utf8Bom", "utf8NoBom", "unicode", "ansi", "ascii", "bigendianunicode", "bigendianutf32", "oem", "utf7", "utf32")]
-        [string]$Encoding = "utf8"
+        [ValidateSet('utf8', 'utf8Bom', 'utf8NoBom', 'unicode', 'ansi', 'ascii', 'bigendianunicode', 'bigendianutf32', 'oem', 'utf7', 'utf32')]
+        [string]$Encoding = 'utf8'
     )
 
     if (Test-Path -LiteralPath $Path) {
@@ -291,8 +291,7 @@ function A-New-LinkFile {
         A-New-LinkFile "$home\xxx", "$env:AppData\xxx"
 
     .LINK
-        https://github.com/abgox/abyss#link
-        https://gitee.com/abgox/abyss#link
+        https://abyss.abgox.com/features/data-persistence/link
     #>
     param (
         [array]$LinkPaths,
@@ -301,7 +300,7 @@ function A-New-LinkFile {
 
     if (!$abgox_abyss.isAdmin -and !$abgox_abyss.isDevMode) {
         error "$app requires admin permission or developer mode to create SymbolicLink."
-        error "Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode"
+        error 'Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode'
         A-Exit
     }
 
@@ -324,8 +323,7 @@ function A-New-LinkDirectory {
         A-New-LinkDirectory "$env:AppData\Code", "$home\.vscode"
 
     .LINK
-        https://github.com/abgox/abyss#link
-        https://gitee.com/abgox/abyss#link
+        https://abyss.abgox.com/features/data-persistence/link
     #>
     param (
         [array]$LinkPaths,
@@ -353,7 +351,7 @@ function A-Remove-Link {
     ) {
         # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时可能会删除所有数据文件，因此必须先删除链接目录以保留数据
     }
-    elseif ($abgox_abyss.uninstallActionLevel -notlike "*2*") {
+    elseif ($abgox_abyss.uninstallActionLevel -notlike '*2*') {
         # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
         if (-not $purge) {
             return
@@ -406,7 +404,7 @@ function A-Remove-TempData {
         [array]$Paths
     )
 
-    if ($cmd -eq "update" -or $abgox_abyss.uninstallActionLevel -notlike "*3*") {
+    if ($cmd -eq 'update' -or $abgox_abyss.uninstallActionLevel -notlike '*3*') {
         # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
         if (-not $purge) {
             return
@@ -455,7 +453,7 @@ function A-Stop-Process {
     )
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if ($abgox_abyss.uninstallActionLevel -notlike "*1*" -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    if ($abgox_abyss.uninstallActionLevel -notlike '*1*' -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
 
@@ -680,7 +678,7 @@ function A-Uninstall-App {
     $paramList = @{
         FilePath     = $Uninstaller
         ArgumentList = $ArgumentList
-        WindowStyle  = "Hidden"
+        WindowStyle  = 'Hidden'
         PassThru     = $true
     }
     $process = Start-Process @paramList
@@ -861,10 +859,10 @@ function A-Install-Msi {
     @{
         Installer      = $Installer
         Uninstaller    = $Installer
-        ProductCode    = $log | Select-String "ProductCode = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-        ProductName    = $log | Select-String "ProductName = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-        ProductVersion = $log | Select-String "ProductVersion = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-        Manufacturer   = $log | Select-String "Manufacturer = (.+)" -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ProductCode    = $log | Select-String 'ProductCode = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ProductName    = $log | Select-String 'ProductName = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ProductVersion = $log | Select-String 'ProductVersion = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        Manufacturer   = $log | Select-String 'Manufacturer = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
         ArgumentList   = $ArgumentList
     } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
 }
@@ -875,7 +873,7 @@ function A-Uninstall-Msi {
     )
 
     # msi 直接覆盖安装，无需卸载
-    if ($cmd -eq "update") { return }
+    if ($cmd -eq 'update') { return }
 
     $InstallerInfoPath = $abgox_abyss.path.InstallMsi
 
@@ -908,8 +906,8 @@ function A-Uninstall-Msi {
 
     $ProductCode = $null
     $registryPaths = @(
-        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+        'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
+        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
     )
     :outerLoop foreach ($path in $registryPaths) {
         $uninstallKeys = Get-ChildItem $path -ErrorAction SilentlyContinue
@@ -977,8 +975,8 @@ function A-Uninstall-Manually {
                 }
                 catch {}
             }
-            error "It requires you to uninstall it manually."
-            error "Refer to: https://abyss.abgox.com/faq/uninstall-manually"
+            error 'It requires you to uninstall it manually.'
+            error 'Refer to: https://abyss.abgox.com/faq/uninstall-manually'
             A-Exit
         }
     }
@@ -1028,14 +1026,14 @@ function A-Add-Font {
         如果未指定字体类型，则根据字体文件扩展名自动判断
     #>
     param(
-        [ValidateSet("ttf", "otf", "ttc")]
+        [ValidateSet('ttf', 'otf', 'ttc')]
         [string]$FontType
     )
 
     $ExtMap = @{
-        ".ttf" = "TrueType"
-        ".otf" = "OpenType"
-        ".ttc" = "TrueType"
+        '.ttf' = 'TrueType'
+        '.otf' = 'OpenType'
+        '.ttc' = 'TrueType'
     }
 
     if (!$FontType) {
@@ -1050,14 +1048,14 @@ function A-Add-Font {
 
     $filter = "*.$FontType"
 
-    $currentBuildNumber = [int] (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuildNumber
+    $currentBuildNumber = [int] (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuildNumber
     $windows10Version1809BuildNumber = 17763
     $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
     if (!$isPerUserFontInstallationSupported -and !$global) {
         Microsoft.PowerShell.Utility\Write-Host
         error "For Windows version before Windows 10 Version 1809 (OS Build 17763), Font can only be installed for all users.`nPlease use following commands to install '$app' Font for all users."
         Microsoft.PowerShell.Utility\Write-Host
-        Microsoft.PowerShell.Utility\Write-Host "        scoop install sudo"
+        Microsoft.PowerShell.Utility\Write-Host '        scoop install sudo'
         Microsoft.PowerShell.Utility\Write-Host "        sudo scoop install -g $app"
         Microsoft.PowerShell.Utility\Write-Host
         A-Exit
@@ -1068,13 +1066,13 @@ function A-Add-Font {
         # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
         New-Item $fontInstallDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
         $accessControlList = Get-Acl $fontInstallDir
-        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new("S-1-15-2-1"), "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
-        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new("S-1-15-2-2"), "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow")
+        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-1'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
+        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-2'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
         $accessControlList.SetAccessRule($allApplicationPackagesAccessRule)
         $accessControlList.SetAccessRule($allRestrictedApplicationPackagesAccessRule)
         Set-Acl -AclObject $accessControlList $fontInstallDir
     }
-    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
+    $registryRoot = if ($global) { 'HKLM' } else { 'HKCU' }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
     $fonts = [System.Drawing.Text.PrivateFontCollection]::new()
     Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
@@ -1130,7 +1128,7 @@ function A-Expand-SetupExe {
         'arm64' = 'arm64'
     }
 
-    $all7z = Get-ChildItem "$dir\`$PLUGINSDIR" -Filter "app*.7z"
+    $all7z = Get-ChildItem "$dir\`$PLUGINSDIR" -Filter 'app*.7z'
     $matched = $all7z | Where-Object { $_.Name -match "app.+$($archMap[$architecture])\.7z" }
 
     if ($matched.Length) {
@@ -1151,8 +1149,8 @@ function A-Require-Admin {
     #>
 
     if (!$abgox_abyss.isAdmin) {
-        error "It requires admin permission. Please try again with admin permission."
-        error "Refer to: https://abyss.abgox.com/faq/require-admin"
+        error 'It requires admin permission. Please try again with admin permission.'
+        error 'Refer to: https://abyss.abgox.com/faq/require-admin'
         A-Exit
     }
 }
@@ -1168,7 +1166,7 @@ function A-Deny-IfAppConflict {
     $Apps | Where-Object { $_ -ne $app } | ForEach-Object {
         if (Test-Path (appdir $_)) {
             error "'$app' conflicts with '$_'."
-            error "Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict"
+            error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
             A-Exit
         }
     }
@@ -1179,9 +1177,9 @@ function A-Deny-Update {
     .SYNOPSIS
         禁止通过 scoop 更新
     #>
-    if ($cmd -eq "update") {
+    if ($cmd -eq 'update') {
         error "'$app' does not allow update by Scoop."
-        error "Refer to: https://abyss.abgox.com/faq/deny-update"
+        error 'Refer to: https://abyss.abgox.com/faq/deny-update'
         A-Exit
     }
 }
@@ -1203,7 +1201,7 @@ function A-Hold-App {
         $Timeout = 300
         $can = $false
 
-        While ($true) {
+        while ($true) {
             if ((New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds -ge $Timeout) {
                 break
             }
@@ -1238,13 +1236,13 @@ function A-Deny-Manifest {
         renamed {
             $msg = "'$app' is renamed to '$NewManifestName'."
         }
-        Default {
+        default {
             $msg = "'$app' is deprecated."
         }
     }
 
     error $msg
-    error "Refer to: https://abyss.abgox.com/faq/deny-manifest"
+    error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
 
     A-Exit
 }
@@ -1293,8 +1291,8 @@ function A-Get-UninstallEntryByAppName {
 
     # 搜索注册表位置
     $registryPaths = @(
-        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+        'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
+        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
     )
 
     foreach ($path in $registryPaths) {
@@ -1348,7 +1346,7 @@ function A-Get-VersionFromGithubAPI {
 
     $headers = @{
         'User-Agent'           = A-Get-UserAgent
-        "X-GitHub-Api-Version" = "2022-11-28"
+        'X-GitHub-Api-Version' = '2022-11-28'
     }
 
     if ($env:GITHUB_ACTIONS) {
@@ -1378,7 +1376,7 @@ function A-Get-VersionFromGithubAPI {
             return
         }
 
-        if ($_.Exception.Message -like "*rate limit*") {
+        if ($_.Exception.Message -like '*rate limit*') {
 
             $token = A-Get-GithubToken -Next
             if (-not $token) {
@@ -1417,8 +1415,8 @@ function A-Get-VersionFromPage {
     }
 
     try {
-        if ((pip freeze) -notmatch "selenium") {
-            Write-Host "Installing selenium..." -ForegroundColor Green
+        if ((pip freeze) -notmatch 'selenium') {
+            Write-Host 'Installing selenium...' -ForegroundColor Green
             $null = pip install selenium
         }
     }
@@ -1483,7 +1481,7 @@ function A-Get-InstallerInfoFromWinget {
 
     $headers = @{
         'User-Agent'           = A-Get-UserAgent
-        "X-GitHub-Api-Version" = "2022-11-28"
+        'X-GitHub-Api-Version' = '2022-11-28'
     }
 
     if ($env:GITHUB_ACTIONS) {
@@ -1517,7 +1515,7 @@ function A-Get-InstallerInfoFromWinget {
             return
         }
 
-        if ($_.Exception.Message -like "*rate limit*") {
+        if ($_.Exception.Message -like '*rate limit*') {
             $token = A-Get-GithubToken -Next
             if (-not $token) {
                 return
@@ -1533,7 +1531,7 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    $latestVersion = ""
+    $latestVersion = ''
 
     foreach ($v in $versions) {
         if ($MaxExclusiveVersion) {
@@ -1550,7 +1548,7 @@ function A-Get-InstallerInfoFromWinget {
     }
 
 
-    $headers.Add("Accept", "application/vnd.github.v3.raw")
+    $headers.Add('Accept', 'application/vnd.github.v3.raw')
 
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
@@ -1564,7 +1562,7 @@ function A-Get-InstallerInfoFromWinget {
             return
         }
 
-        if ($_.Exception.Message -like "*rate limit*") {
+        if ($_.Exception.Message -like '*rate limit*') {
             $token = A-Get-GithubToken -Next
             if (-not $token) {
                 return
@@ -1775,9 +1773,7 @@ function A-New-Link {
     .PARAMETER linkTargets
         链接指向的目标路径数组
         通常忽略它，让它根据 LinkPaths 自动生成
-        生成规则:
-            如果 LinkPaths 包含 $home，则替换为 $persist_dir
-            否则，去掉盘符
+        生成规则: https://abyss.abgox.com/features/data-persistence/link-rule
 
     .PARAMETER ItemType
         链接类型，可选值为 SymbolicLink/Junction
@@ -1786,13 +1782,12 @@ function A-New-Link {
         相关链接路径信息会写入到该文件中
 
     .LINK
-        https://github.com/abgox/abyss#link
-        https://gitee.com/abgox/abyss#link
+        https://abyss.abgox.com/features/data-persistence/link
     #>
     param (
         [array]$LinkPaths, # 源路径数组（将被替换为链接）
         [array]$LinkTargets, # 目标路径数组（链接指向的位置）
-        [ValidateSet("SymbolicLink", "Junction")]
+        [ValidateSet('SymbolicLink', 'Junction')]
         [string]$ItemType,
         [string]$OutFile
     )
@@ -1948,9 +1943,9 @@ function A-Remove-Font {
     $filter = "*.$FontType"
 
     $ExtMap = @{
-        ".ttf" = "TrueType"
-        ".otf" = "OpenType"
-        ".ttc" = "TrueType"
+        '.ttf' = 'TrueType'
+        '.otf' = 'OpenType'
+        '.ttc' = 'TrueType'
     }
 
     $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
@@ -1965,13 +1960,13 @@ function A-Remove-Font {
             }
         }
     }
-    $registryRoot = if ($global) { "HKLM" } else { "HKCU" }
+    $registryRoot = if ($global) { 'HKLM' } else { 'HKCU' }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
     Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
         Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
         Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
-    if ($cmd -eq "uninstall") {
+    if ($cmd -eq 'uninstall') {
         warn "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove."
     }
 
@@ -2018,7 +2013,7 @@ function A-Get-AbsolutePath {
     )
 
     if (-not $Path) {
-        return ""
+        return ''
     }
 
     if ([System.IO.Path]::IsPathRooted($Path)) {
@@ -2036,7 +2031,7 @@ function A-Get-AbsolutePath {
 
 function A-Show-IssueCreationPrompt {
     # Write-Host "Please contact the bucket maintainer!" -ForegroundColor Red -NoNewline
-    Write-Host "Something went wrong here." -ForegroundColor Red -NoNewline
+    Write-Host 'Something went wrong here.' -ForegroundColor Red -NoNewline
     Write-Host "`nPlease try again or create a new issue by using the following link and paste your console output:`nhttps://github.com/abgox/abyss/issues/new?template=bug-report.yml" -ForegroundColor Red
 }
 
@@ -2052,14 +2047,14 @@ function A-Get-GithubToken {
         Write-Host "::error::'TOKEN_POOL' not set." -ForegroundColor Red
         exit 1
     }
-    $order = [int]([System.Environment]::GetEnvironmentVariable("TOKEN_ORDER", "User"))
+    $order = [int]([System.Environment]::GetEnvironmentVariable('TOKEN_ORDER', 'User'))
     if (-not $order) {
         $order = 1
-        [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+        [Environment]::SetEnvironmentVariable('TOKEN_ORDER', $order, 'User')
     }
     if ($Next) {
         $order++
-        [Environment]::SetEnvironmentVariable("TOKEN_ORDER", $order, "User")
+        [Environment]::SetEnvironmentVariable('TOKEN_ORDER', $order, 'User')
     }
     $tokens = $env:TOKEN_POOL.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
     if ($tokens) {
@@ -2072,7 +2067,7 @@ function A-Get-GithubToken {
 
 
 # 以下的扩展功能是基于这个 Scoop 版本的，如果 Scoop 最新版本大于它，需要重新检查并跟进
-$abgox_abyss.ScoopVersion = "0.5.3"
+$abgox_abyss.ScoopVersion = '0.5.3'
 
 #region 扩展 Scoop 部分功能
 
@@ -2135,7 +2130,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
 
     # https://abyss.abgox.com/features/extra-features#abgox-abyss-app-shortcuts-action
     $_ = $scoopConfig.'abgox-abyss-app-shortcuts-action'
-    $abgox_abyss.shortcutsActionLevel = if ($_) { $_ }else { "1" }
+    $abgox_abyss.shortcutsActionLevel = if ($_) { $_ }else { '1' }
 
     if ($abgox_abyss.shortcutsActionLevel -eq '0') {
         return
