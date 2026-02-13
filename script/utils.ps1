@@ -1320,6 +1320,10 @@ function A-Get-UninstallEntryByAppName {
 }
 
 function A-Get-VersionFromGithubAPI {
+    param (
+        [switch]$PreRelease
+    )
+
     if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
         if (-not $json) {
             Write-Host "::error::`$json is invalid." -ForegroundColor Red
@@ -1375,8 +1379,15 @@ function A-Get-VersionFromGithubAPI {
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
 
+    if ($PreRelease) {
+        $url = $url -replace '/latest$', ''
+    }
+
     try {
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+        if ($PreRelease) {
+            $releaseInfo = $releaseInfo | Where-Object { $_.prerelease }
+        }
         return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
     }
     catch {
@@ -1397,9 +1408,16 @@ function A-Get-VersionFromGithubAPI {
             Start-Sleep -Seconds 10
 
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+            if ($PreRelease) {
+                $releaseInfo = $releaseInfo | Where-Object { $_.prerelease }
+            }
             return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
         }
     }
+}
+
+function A-Get-PreVersionFromGithubAPI {
+    A-Get-VersionFromGithubAPI -PreRelease
 }
 
 function A-Get-VersionFromPage {
