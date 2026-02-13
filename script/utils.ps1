@@ -298,10 +298,16 @@ function A-New-LinkFile {
         [array]$LinkTargets = @()
     )
 
-    if (!$abgox_abyss.isAdmin -and !$abgox_abyss.isDevMode) {
-        error "$app requires admin permission or developer mode to create SymbolicLink."
-        error 'Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode'
-        A-Exit
+    if (!$abgox_abyss.isAdmin) {
+        if ($PSEdition -eq 'Desktop') {
+            # Windows PowerShell 5.1 需要管理员权限才能创建 SymbolicLink
+            A-Require-Admin
+        }
+        if (!$abgox_abyss.isDevMode) {
+            error "$app requires admin permission or developer mode to create SymbolicLink."
+            error 'Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode'
+            A-Exit
+        }
     }
 
     A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile $abgox_abyss.path.LinkFile
@@ -1822,8 +1828,27 @@ function A-New-Link {
         }
         $installData.LinkPaths += $linkPath
         $installData.LinkTargets += $linkTarget
-        if ((Test-Path -LiteralPath $linkPath) -and !(Get-Item -LiteralPath $linkPath -ErrorAction SilentlyContinue).LinkType) {
-            if (!(Test-Path -LiteralPath $linkTarget)) {
+
+        A-Ensure-Directory $linkTarget
+        A-Ensure-Directory (Split-Path $linkPath -Parent)
+
+        $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
+        if (Test-Path -LiteralPath $linkTarget -PathType $type) {
+            if (Test-Path -LiteralPath $linkPath) {
+                try {
+                    Write-Host "Removing $linkPath"
+                    Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
+                }
+                catch {
+                    error $_.Exception.Message
+                    A-Show-IssueCreationPrompt
+                    A-Exit
+                }
+            }
+        }
+        else {
+            Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
+            if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-Link $linkPath)) {
                 A-Ensure-Directory (Split-Path $linkTarget -Parent)
                 Write-Host "Copying $linkPath => $linkTarget"
                 try {
@@ -1836,18 +1861,13 @@ function A-New-Link {
                     A-Exit
                 }
             }
-            try {
-                Write-Host "Removing $linkPath"
-                Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
-            }
-            catch {
-                error $_.Exception.Message
-                A-Show-IssueCreationPrompt
-                A-Exit
+            else {
+                Remove-Item $linkPath -Recurse -Force -ErrorAction SilentlyContinue
+                if ($type -eq 'Leaf') {
+                    New-Item -ItemType File -Path $linkTarget -Force | Out-Null
+                }
             }
         }
-        A-Ensure-Directory $linkTarget
-        A-Ensure-Directory (Split-Path $linkPath -Parent)
 
         New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
 
