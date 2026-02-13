@@ -49,14 +49,17 @@
         " ",
         "$_dir_path = \"$dir\\app\".Replace('\\', '\\\\')",
         "$_exe_path = \"$dir\\app\\Code.exe\".Replace('\\', '\\\\')",
-        "$_resources_id = Get-Content \"$dir\\app\\bin\\code\" | Select-String -Pattern 'VERSIONFOLDER=\"(.+)\"' | Select-Object -First 1 | ForEach-Object { $_.Matches.Groups[1].Value }",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extra\\$app\" -Filter *.reg | ForEach-Object {",
         "    $content = Get-Content $_.FullName",
-        "    $content = $content.Replace('$code_dir', $_dir_path).Replace('$code', $_exe_path).Replace('$resources_id', $_resources_id)",
+        "    $content = $content.Replace('$code_dir', $_dir_path).Replace('$code', $_exe_path)",
         "    if ($global) {",
         "      $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
         "    }",
         "    $content | Set-Content -Path \"$dir\\$($_.Name)\"",
+        "}",
+        "$_build_dir = Get-ChildItem \"$dir\\app\" -Directory | Where-Object { $_.Name -match '^[a-f0-9]{10,}$' } | Select-Object -First 1 -ExpandProperty FullName",
+        "if ($_build_dir -and (Test-Path \"$_build_dir\\resources\")) {",
+        "    New-Item -ItemType Junction -Path \"$dir\\app\\resources\" -Target \"$_build_dir\\resources\" | Out-Null",
         "}"
     ],
     "post_install": [
@@ -71,7 +74,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "if ($cmd -eq 'uninstall') {",
-        "    Get-ChildItem $dir -Filter uninstall*.reg | ForEach-Object {",
+        "    Get-ChildItem $dir -File -Filter uninstall-*.reg | ForEach-Object {",
         "        reg import $_.FullName >nul 2>&1",
         "    }",
         "}"
