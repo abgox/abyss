@@ -2,6 +2,10 @@
 
 Set-StrictMode -Off
 
+if ($PSEdition -eq 'Desktop') {
+    Add-Type -AssemblyName Microsoft.VisualBasic
+}
+
 # 存储 abyss 相关的变量
 $abgox_abyss = @{
     path = @{
@@ -192,7 +196,7 @@ function A-Copy-Item {
             $needCopy = $false
         }
         else {
-            Remove-Item $Destination -Recurse -Force
+            A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
             $needCopy = $true
         }
     }
@@ -249,7 +253,7 @@ function A-New-File {
         # 如果是一个目录，就删除它
         if ($item.PSIsContainer) {
             try {
-                Remove-Item $Path -Recurse -Force
+                A-Remove-ToRecycleBin $Path -ErrorAction Stop
             }
             catch {
                 error $_.Exception.Message
@@ -1111,7 +1115,7 @@ function A-Add-PowerToysRunPlugin {
     try {
         if (Test-Path -LiteralPath $PluginPath) {
             Write-Host "Removing $PluginPath"
-            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
+            A-Remove-ToRecycleBin $PluginPath -ErrorAction Stop
         }
         $CopyingPath = if (Test-Path -LiteralPath "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
         A-Ensure-Directory (Split-Path $PluginPath -Parent)
@@ -1741,6 +1745,20 @@ function A-Compare-Version {
 
 #region 以下的函数不应该在外部调用
 
+function A-Remove-ToRecycleBin {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+    if (Test-Path $Path -PathType Container) {
+        [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($Path, 'OnlyErrorDialogs', 'SendToRecycleBin')
+    }
+    else {
+        [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($Path, 'OnlyErrorDialogs', 'SendToRecycleBin')
+    }
+}
+
+
 function A-Test-DirectoryNotEmpty {
     param(
         [string]$Path
@@ -1837,7 +1855,7 @@ function A-New-Link {
             if (Test-Path -LiteralPath $linkPath) {
                 try {
                     Write-Host "Removing $linkPath"
-                    Remove-Item $linkPath -Recurse -Force -ErrorAction Stop
+                    A-Remove-ToRecycleBin $linkPath -ErrorAction Stop
                 }
                 catch {
                     error $_.Exception.Message
@@ -1862,7 +1880,7 @@ function A-New-Link {
                 }
             }
             else {
-                Remove-Item $linkPath -Recurse -Force -ErrorAction SilentlyContinue
+                A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
                 if ($type -eq 'Leaf') {
                     New-Item -ItemType File -Path $linkTarget -Force | Out-Null
                 }
