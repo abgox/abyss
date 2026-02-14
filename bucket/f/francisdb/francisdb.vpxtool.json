@@ -1,0 +1,63 @@
+{
+    "version": "0.24.15",
+    "description": "Visual Pinball 的基于终端的前端和实用程序 | Terminal based frontend and utilities for Visual Pinball",
+    "homepage": "https://github.com/francisdb/vpxtool",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/francisdb/vpxtool/releases/download/v0.24.15/vpxtool-Windows-x86_64-v0.24.15.zip",
+            "hash": "a1de90c02b175d84afb7f6843f61c9d29ca078df76c6dcd9d491ec44105fcbc7"
+        },
+        "arm64": {
+            "url": "https://github.com/francisdb/vpxtool/releases/download/v0.24.15/vpxtool-Windows-aarch64-v0.24.15.zip",
+            "hash": "4faf73f7ed33cfabd09dd349481dd04e8e2cb764b928c1b04a6bbc55f7fea562"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\vpxtool.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkFile \"$env:AppData\\vpxtool.cfg\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/francisdb/vpxtool/releases/download/v$version/vpxtool-Windows-x86_64-v$version.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/francisdb/vpxtool/releases/download/v$version/vpxtool-Windows-aarch64-v$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
