@@ -21,7 +21,7 @@
 
 ---
 
-|App (808)|Tag|Description|
+|App (809)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -813,6 +813,7 @@
 |[Yandex.Music](https://music.yandex.com/)|<a href="./bucket/y/Yandex/Yandex.Music.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yandex Music is a service for finding and listening to music and podcasts that provides personalized recommendations for each user|
 |[yang991178.fluent-reader](https://hyliu.me/fluent-reader/)|<a href="./bucket/y/yang991178/yang991178.fluent-reader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A modern desktop RSS reader|
 |[Yarn.Yarn](https://github.com/yarnpkg/yarn)|<a href="./bucket/y/Yarn/Yarn.Yarn.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|Fast, reliable, and secure dependency Node.js dependency manager|
+|[YS-L.csvlens](https://github.com/YS-L/csvlens)|<a href="./bucket/y/YS-L/YS-L.csvlens.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A command line CSV file viewer|
 |[Yuanli.uTools](https://u.tools/)|<a href="./bucket/y/Yuanli/Yuanli.uTools.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A modern, simple, and extensible desktop software that allows you to create a handy toolset by freely choosing from a rich set of plugins|
 |[Z-Library.Z-Library](https://go-to-library.sk/)|<a href="./bucket/z/Z-Library/Z-Library.Z-Library.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Z-Library - the world's largest e-book library|
 |[zan8in.afrog](https://github.com/zan8in/afrog)|<a href="./bucket/z/zan8in/zan8in.afrog.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Security Tool for Bug Bounty, Pentest and Red Teaming|

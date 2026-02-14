@@ -21,7 +21,7 @@
 
 ---
 
-|App (808)|Tag|Description|
+|App (809)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -813,6 +813,7 @@
 |[Yandex.Music](https://music.yandex.com/)|<a href="./bucket/y/Yandex/Yandex.Music.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yandex Music 是一项寻找和收听音乐和播客的服务，可为每位用户提供个性化推荐|
 |[yang991178.fluent-reader](https://hyliu.me/fluent-reader/)|<a href="./bucket/y/yang991178/yang991178.fluent-reader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个现代的 RSS 阅读器|
 |[Yarn.Yarn](https://github.com/yarnpkg/yarn)|<a href="./bucket/y/Yarn/Yarn.Yarn.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|快速、可靠且安全的 Node.js 依赖管理器|
+|[YS-L.csvlens](https://github.com/YS-L/csvlens)|<a href="./bucket/y/YS-L/YS-L.csvlens.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个命令行 CSV 文件查看器|
 |[Yuanli.uTools](https://u.tools/)|<a href="./bucket/y/Yuanli/Yuanli.uTools.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|新一代效率工具平台，自由组合插件应用，打造专属你的趁手工具集|
 |[Z-Library.Z-Library](https://go-to-library.sk/)|<a href="./bucket/z/Z-Library/Z-Library.Z-Library.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Z-Library —— 世界上最大的电子书图书馆|
 |[zan8in.afrog](https://github.com/zan8in/afrog)|<a href="./bucket/z/zan8in/zan8in.afrog.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于漏洞赏金、渗透测试和红队演练的安全工具|
