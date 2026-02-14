@@ -1,0 +1,65 @@
+{
+    "version": "5.4.1",
+    "description": "基于 AutoHotkey 语言的免费自动化工具和脚本生成器 | Free Automation Tool and Script Generator based on AutoHotkey language",
+    "homepage": "https://github.com/Pulover/PuloversMacroCreator",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Pulover/PuloversMacroCreator/releases/download/v5.4.1/PuloversMacroCreator-Portable.zip",
+            "hash": "aebdf335913eae4270b585339727b44593a98d17d73a3aae80e4d46d27c01310",
+            "extract_dir": "MacroCreatorPortable\\x64\\MacroCreator"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\MacroCreator.exe",
+            "Macro Creator"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\MacroCreator\"",
+        "Remove-Item \"$dir\\app\\MacroCreator.ini\" -Force",
+        "Remove-Item \"$env:AppData\\MacroCreator\\Lang\" -Recurse -Force -ErrorAction Ignore",
+        "Move-Item \"$dir\\app\\Lang\" \"$env:AppData\\MacroCreator\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Pulover/PuloversMacroCreator/releases/download/v$version/PuloversMacroCreator-Portable.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
