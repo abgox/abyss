@@ -1,0 +1,55 @@
+{
+    "version": "4.0.10",
+    "description": "彻底卸载顽固软件、Windows 应用程序和浏览器扩展程序 | Completely Uninstall Stubborn Software, Windows Apps & Browser Extension",
+    "homepage": "https://www.hibitsoft.ir/Uninstaller.html",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.hibitsoft.ir/HiBitUninstaller/HiBitUninstaller-Portable-4.0.10.zip",
+            "hash": "986b1e07de8037cda70e4d2cf01010e2660042f79f233bbac91846de94741646"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\HiBitUninstaller-Portable.exe",
+            "HiBit Uninstaller"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\HiBit Uninstaller\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.hibitsoft.ir/HiBitUninstaller/Changelog.txt",
+        "regex": "HiBit Uninstaller\\s([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.hibitsoft.ir/HiBitUninstaller/HiBitUninstaller-Portable-$version.zip"
+            }
+        }
+    }
+}
