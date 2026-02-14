@@ -1,0 +1,56 @@
+{
+    "version": "1.1.0",
+    "description": "一个 PowerShell 模块，用于创建和显示 Windows 上的 Toast 通知 | PowerShell module for creating and displaying Toast Notifications on Windows",
+    "homepage": "https://github.com/Windos/BurntToast",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/burnttoast.1.1.0.nupkg",
+            "hash": "2d29036fd1e1879e6641f8c14275f5ddc296e77595af3c1833310e803a0344df"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/burnttoast.1.1.0.nupkg",
+            "hash": "2d29036fd1e1879e6641f8c14275f5ddc296e77595af3c1833310e803a0344df"
+        }
+    },
+    "psmodule": {
+        "name": "BurntToast"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/burnttoast",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/burnttoast.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/burnttoast.$version.nupkg"
+            }
+        }
+    }
+}
