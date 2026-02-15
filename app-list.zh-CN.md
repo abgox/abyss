@@ -21,7 +21,7 @@
 
 ---
 
-|App (809)|Tag|Description|
+|App (810)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -382,6 +382,7 @@
 |[Helix.Helix](https://helix-editor.com/)|<a href="./bucket/h/Helix/Helix.Helix.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|后现代文本编辑器|
 |[HexHub.HexHub](https://www.hexhub.cn/)|<a href="./bucket/h/HexHub/HexHub.HexHub.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|为程序员和运维人员量身打造的一站式开发运维利器|
 |[Hibbiki.Chromium](https://github.com/Hibbiki/chromium-win64)|<a href="./bucket/h/Hibbiki/Hibbiki.Chromium.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|适用于 Windows 64 位的稳定版 Chromium 构建版本|
+|[HiBitSoftware.HiBitUninstaller](https://www.hibitsoft.ir/Uninstaller.html)|<a href="./bucket/h/HiBitSoftware/HiBitSoftware.HiBitUninstaller.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|彻底卸载顽固软件、Windows 应用程序和浏览器扩展程序|
 |[hrpzcf.HashCalculator](https://github.com/hrpzcf/HashCalculator)|<a href="./bucket/h/hrpzcf/hrpzcf.HashCalculator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个文件哈希值计算工具，批量计算/批量校验/查找重复文件/改变哈希值等|
 |[Huawei.HarmonyOS-Sans](https://developer.huawei.com/consumer/cn/design/resource/)|<a href="./bucket/h/Huawei/Huawei.HarmonyOS-Sans.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[NoUpdate](https://abyss.abgox.com/faq/no-update)<br/>[Font](https://abyss.abgox.com/faq/font)|一款无衬线体字体，是华为为鸿蒙系统设计的官方字体|
 |[Hugo.Hugo](https://gohugo.io/)|<a href="./bucket/h/Hugo/Hugo.Hugo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|最受欢迎的开源静态网站生成器之一|

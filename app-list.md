@@ -21,7 +21,7 @@
 
 ---
 
-|App (809)|Tag|Description|
+|App (810)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -382,6 +382,7 @@
 |[Helix.Helix](https://helix-editor.com/)|<a href="./bucket/h/Helix/Helix.Helix.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A post-modern modal text editor|
 |[HexHub.HexHub](https://www.hexhub.cn/)|<a href="./bucket/h/HexHub/HexHub.HexHub.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A one-stop development and operation tool tailored for programmers and operations personnel|
 |[Hibbiki.Chromium](https://github.com/Hibbiki/chromium-win64)|<a href="./bucket/h/Hibbiki/Hibbiki.Chromium.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|Stable Chromium build for Windows 64-bit, nothing fancy|
+|[HiBitSoftware.HiBitUninstaller](https://www.hibitsoft.ir/Uninstaller.html)|<a href="./bucket/h/HiBitSoftware/HiBitSoftware.HiBitUninstaller.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Completely Uninstall Stubborn Software, Windows Apps & Browser Extension|
 |[hrpzcf.HashCalculator](https://github.com/hrpzcf/HashCalculator)|<a href="./bucket/h/hrpzcf/hrpzcf.HashCalculator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A file hash calculator, which can calculate/verify/find duplicate files/change hash values in batch|
 |[Huawei.HarmonyOS-Sans](https://developer.huawei.com/consumer/cn/design/resource/)|<a href="./bucket/h/Huawei/Huawei.HarmonyOS-Sans.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[NoUpdate](https://abyss.abgox.com/faq/no-update)<br/>[Font](https://abyss.abgox.com/faq/font)|A sans-serif font designed by Huawei as the official typeface for the HarmonyOS system|
 |[Hugo.Hugo](https://gohugo.io/)|<a href="./bucket/h/Hugo/Hugo.Hugo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|One of the most popular open-source static site generators|
