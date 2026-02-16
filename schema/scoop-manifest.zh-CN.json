@@ -1840,7 +1840,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -2093,11 +2093,28 @@
                                 true
                             ]
                         },
-                        "commands": {
-                            "markdownDescription": "命令名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `bin` 字段无法准确定义时，就应该使用它",
-                            "$ref": "#/definitions/str_or_arr",
+                        "font": {
+                            "markdownDescription": "- 作为字体清单安装\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段",
                             "examples": [
-                                []
+                                true
+                            ],
+                            "anyOf": [
+                                {
+                                    "const": true,
+                                    "markdownDescription": "从字体包中自动提取合适的字体文件"
+                                },
+                                {
+                                    "const": "ttf",
+                                    "markdownDescription": "从字体包中提取 `ttf` 字体文件"
+                                },
+                                {
+                                    "const": "otf",
+                                    "markdownDescription": "从字体包中提取 `otf` 字体文件"
+                                },
+                                {
+                                    "const": "ttc",
+                                    "markdownDescription": "从字体包中提取 `ttc` 字体文件"
+                                }
                             ]
                         },
                         "bin": {
@@ -2180,6 +2197,13 @@
                                         ]
                                     }
                                 }
+                            ]
+                        },
+                        "commands": {
+                            "markdownDescription": "命令名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `bin` 字段无法准确定义时，就应该使用它",
+                            "$ref": "#/definitions/str_or_arr",
+                            "examples": [
+                                []
                             ]
                         },
                         "shortcuts": {
@@ -2575,10 +2599,6 @@
                                             {
                                                 "pattern": "A-New-LinkDirectory",
                                                 "markdownDescription": "使用 Junction 链接数据目录，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
-                                            },
-                                            {
-                                                "const": "A-Add-Font",
-                                                "markdownDescription": "安装字体\n- 它在 `pre_uninstall` 阶段会自动移除"
                                             },
                                             {
                                                 "const": "A-Add-MsixPackage 'PackageFamilyName'",
@@ -3262,13 +3282,9 @@
                                     },
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Add-Font"
-                                                    }
-                                                }
-                                            }
+                                            "required": [
+                                                "font"
+                                            ]
                                         },
                                         "then": {
                                             "properties": {
@@ -3747,10 +3763,15 @@
                                             ]
                                         },
                                         {
+                                            "required": [
+                                                "font"
+                                            ]
+                                        },
+                                        {
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font)"
+                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin)"
                                                     }
                                                 }
                                             }

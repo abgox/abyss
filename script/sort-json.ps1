@@ -83,6 +83,7 @@ $order = [ordered]@{
     env_add_path   = ''
     innosetup      = ''
     psmodule       = ''
+    font           = ''
     bin            = ''
     commands       = ''
     shortcuts      = ''

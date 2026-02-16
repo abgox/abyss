@@ -101,7 +101,14 @@ function A-Start-Install {
 }
 
 function A-Complete-Install {
-
+    if ($manifest.font) {
+        switch ($manifest.font) {
+            ttf { A-Add-Font ttf }
+            otf { A-Add-Font otf }
+            ttc { A-Add-Font ttc }
+            default { A-Add-Font }
+        }
+    }
 }
 
 function A-Start-Uninstall {
@@ -110,8 +117,10 @@ function A-Start-Uninstall {
         A-Deny-Update
     }
 
+    if ($manifest.font) {
+        A-Remove-Font
+    }
     A-Remove-Path
-    A-Remove-Font
     A-Remove-PowerToysRunPlugin
 }
 
@@ -1023,87 +1032,6 @@ function A-Remove-MsixPackage {
     A-Remove-AppxPackage
 }
 
-function A-Add-Font {
-    <#
-    .SYNOPSIS
-        安装字体
-
-    .DESCRIPTION
-        安装字体
-
-    .PARAMETER FontType
-        字体类型，支持 ttf, otf, ttc
-        如果未指定字体类型，则根据字体文件扩展名自动判断
-    #>
-    param(
-        [ValidateSet('ttf', 'otf', 'ttc')]
-        [string]$FontType
-    )
-
-    $ExtMap = @{
-        '.ttf' = 'TrueType'
-        '.otf' = 'OpenType'
-        '.ttc' = 'TrueType'
-    }
-
-    if (!$FontType) {
-        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -File
-        foreach ($file in $fontFile) {
-            if ($file.Extension -in $ExtMap.Keys) {
-                $FontType = $file.Extension.TrimStart('.')
-                break
-            }
-        }
-    }
-
-    $filter = "*.$FontType"
-
-    $currentBuildNumber = [int] (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuildNumber
-    $windows10Version1809BuildNumber = 17763
-    $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
-    if (!$isPerUserFontInstallationSupported -and !$global) {
-        Microsoft.PowerShell.Utility\Write-Host
-        error "For Windows version before Windows 10 Version 1809 (OS Build 17763), Font can only be installed for all users.`nPlease use following commands to install '$app' Font for all users."
-        Microsoft.PowerShell.Utility\Write-Host
-        Microsoft.PowerShell.Utility\Write-Host '        scoop install sudo'
-        Microsoft.PowerShell.Utility\Write-Host "        sudo scoop install -g $app"
-        Microsoft.PowerShell.Utility\Write-Host
-        A-Exit
-    }
-    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
-    if (!$global) {
-        # Ensure user font install directory exists and has correct permission settings
-        # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
-        New-Item $fontInstallDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-        $accessControlList = Get-Acl $fontInstallDir
-        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-1'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
-        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-2'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
-        $accessControlList.SetAccessRule($allApplicationPackagesAccessRule)
-        $accessControlList.SetAccessRule($allRestrictedApplicationPackagesAccessRule)
-        Set-Acl -AclObject $accessControlList $fontInstallDir
-    }
-    $registryRoot = if ($global) { 'HKLM' } else { 'HKCU' }
-    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    $fonts = [System.Drawing.Text.PrivateFontCollection]::new()
-    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
-        $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
-        try {
-            New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force -ErrorAction Stop | Out-Null
-            Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force -ErrorAction Stop
-            $fonts.AddFontFile($_.FullName)
-        }
-        catch {
-            error $_.Exception.Message
-            A-Exit
-        }
-    }
-
-    @{
-        FontType = $FontType
-        FontName = $fonts.Families | Select-Object -ExpandProperty Name
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
-}
-
 function A-Add-PowerToysRunPlugin {
     param(
         [string]$PluginName
@@ -1973,20 +1901,92 @@ function A-Remove-AppxPackage {
     }
 }
 
-function A-Remove-Path {
-    $OutFile = $abgox_abyss.path.EnvVar
-    if (-not (Test-Path -LiteralPath $OutFile)) {
-        return
+function A-Add-Font {
+    <#
+    .SYNOPSIS
+        安装字体
+
+    .DESCRIPTION
+        安装字体
+
+    .PARAMETER FontType
+        字体类型，支持 ttf, otf, ttc
+        如果未指定字体类型，则根据字体文件扩展名自动判断
+    #>
+    param(
+        [ValidateSet('ttf', 'otf', 'ttc')]
+        [string]$FontType
+    )
+
+    $ExtMap = @{
+        '.ttf' = 'TrueType'
+        '.otf' = 'OpenType'
+        '.ttc' = 'TrueType'
     }
 
-    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths
-    if (-not $Path) {
-        return
+    if (!$FontType) {
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -File
+        foreach ($file in $fontFile) {
+            if ($file.Extension -in $ExtMap.Keys) {
+                $FontType = $file.Extension.TrimStart('.')
+                break
+            }
+        }
     }
 
-    Remove-Path -Path $Path -Global:$global
-    Remove-Path -Path $Path -TargetEnvVar $scoopPathEnvVar -Global:$global
-    Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+    $filter = "*.$FontType"
+
+    $currentBuildNumber = [int] (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuildNumber
+    $windows10Version1809BuildNumber = 17763
+    $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
+    if (!$isPerUserFontInstallationSupported -and !$global) {
+        Microsoft.PowerShell.Utility\Write-Host
+        error "For Windows version before Windows 10 Version 1809 (OS Build 17763), Font can only be installed for all users.`nPlease use following commands to install '$app' Font for all users."
+        Microsoft.PowerShell.Utility\Write-Host
+        Microsoft.PowerShell.Utility\Write-Host '        scoop install sudo'
+        Microsoft.PowerShell.Utility\Write-Host "        sudo scoop install -g $app"
+        Microsoft.PowerShell.Utility\Write-Host
+        A-Exit
+    }
+    $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
+    if (!$global) {
+        # Ensure user font install directory exists and has correct permission settings
+        # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
+        New-Item $fontInstallDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+        $accessControlList = Get-Acl $fontInstallDir
+        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-1'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
+        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-2'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
+        $accessControlList.SetAccessRule($allApplicationPackagesAccessRule)
+        $accessControlList.SetAccessRule($allRestrictedApplicationPackagesAccessRule)
+        Set-Acl -AclObject $accessControlList $fontInstallDir
+    }
+    $registryRoot = if ($global) { 'HKLM' } else { 'HKCU' }
+    $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+    $fonts = [System.Drawing.Text.PrivateFontCollection]::new()
+
+    $allFonts = Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse
+    if (!$allFonts) {
+        error "No font file found in '$dir' with extension '$filter'"
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+    $allFonts | ForEach-Object {
+        $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
+        try {
+            New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force -ErrorAction Stop | Out-Null
+            Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force -ErrorAction Stop
+            $fonts.AddFontFile($_.FullName)
+        }
+        catch {
+            error $_.Exception.Message
+            A-Exit
+        }
+    }
+
+    @{
+        FontType = $FontType
+        FontName = $fonts.Families | Select-Object -ExpandProperty Name
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
 }
 
 function A-Remove-Font {
@@ -2026,6 +2026,22 @@ function A-Remove-Font {
         warn "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove."
     }
 
+    Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+}
+
+function A-Remove-Path {
+    $OutFile = $abgox_abyss.path.EnvVar
+    if (-not (Test-Path -LiteralPath $OutFile)) {
+        return
+    }
+
+    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths
+    if (-not $Path) {
+        return
+    }
+
+    Remove-Path -Path $Path -Global:$global
+    Remove-Path -Path $Path -TargetEnvVar $scoopPathEnvVar -Global:$global
     Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
 }
 

@@ -1840,7 +1840,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|commands|bin|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -2093,11 +2093,28 @@
                                 true
                             ]
                         },
-                        "commands": {
-                            "markdownDescription": "Command Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- When `bin` field cannot define the command accurately, it should be used",
-                            "$ref": "#/definitions/str_or_arr",
+                        "font": {
+                            "markdownDescription": "- Install as a font manifest\n- It is a special field of [abyss](https://abyss.abgox.com)",
                             "examples": [
-                                []
+                                true
+                            ],
+                            "anyOf": [
+                                {
+                                    "const": true,
+                                    "markdownDescription": "Auto extract the appropriate font files from the font package"
+                                },
+                                {
+                                    "const": "ttf",
+                                    "markdownDescription": "Extract `ttf` font files from the font package"
+                                },
+                                {
+                                    "const": "otf",
+                                    "markdownDescription": "Extract `otf` font files from the font package"
+                                },
+                                {
+                                    "const": "ttc",
+                                    "markdownDescription": "Extract `ttc` font files from the font package"
+                                }
                             ]
                         },
                         "bin": {
@@ -2180,6 +2197,13 @@
                                         ]
                                     }
                                 }
+                            ]
+                        },
+                        "commands": {
+                            "markdownDescription": "Command Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- When `bin` field cannot define the command accurately, it should be used",
+                            "$ref": "#/definitions/str_or_arr",
+                            "examples": [
+                                []
                             ]
                         },
                         "shortcuts": {
@@ -2575,10 +2599,6 @@
                                             {
                                                 "pattern": "A-New-LinkDirectory",
                                                 "markdownDescription": "Use `Junction` to link data directories, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the app stores data in the app directory, use the `persist` field"
-                                            },
-                                            {
-                                                "const": "A-Add-Font",
-                                                "markdownDescription": "Install font\n- It will be automatically removed in `pre_uninstall`."
                                             },
                                             {
                                                 "const": "A-Add-MsixPackage 'PackageFamilyName'",
@@ -3262,13 +3282,9 @@
                                     },
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Add-Font"
-                                                    }
-                                                }
-                                            }
+                                            "required": [
+                                                "font"
+                                            ]
                                         },
                                         "then": {
                                             "properties": {
@@ -3747,10 +3763,15 @@
                                             ]
                                         },
                                         {
+                                            "required": [
+                                                "font"
+                                            ]
+                                        },
+                                        {
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin|A-Add-Font)"
+                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin)"
                                                     }
                                                 }
                                             }

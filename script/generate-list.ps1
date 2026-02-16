@@ -153,7 +153,7 @@ foreach ($path in $PathList) {
         }
 
         ## Font
-        if (Test-ScriptPattern $json '(?<!#.*)A-Add-Font') {
+        if ($json.font) {
             $tag += '[Font](https://abyss.abgox.com/faq/font)'
         }
 
