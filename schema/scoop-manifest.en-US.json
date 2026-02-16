@@ -2064,7 +2064,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -2103,6 +2103,10 @@
                                 "const": "0.0.0"
                             },
                             "errorMessage": "After the manifest is written, please run '.\\bin\\checkver.ps1 <app> -u' to update the manifest"
+                        },
+                        "new": {
+                            "$ref": "#/definitions/str",
+                            "markdownDescription": "New manifest\n- It will tell users that the current manifest has been renamed, and prompt the new manifest name\n- The new manifest name is defined in this field"
                         },
                         "description": {
                             "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -2370,7 +2374,7 @@
                             ]
                         },
                         "conflicts": {
-                            "markdownDescription": "Specified conflict apps\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "markdownDescription": "Specified conflict apps\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
                             "minItems": 1,
                             "uniqueItems": true,
@@ -2751,18 +2755,6 @@
                                     "items": {
                                         "anyOf": [
                                             {},
-                                            {
-                                                "const": "A-Deny-Manifest",
-                                                "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been `renamed`, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been `deprecated` or `pending`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
-                                            {
-                                                "const": "A-Deny-Manifest 'newName'",
-                                                "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been `renamed`, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been `deprecated` or `pending`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
-                                            {
-                                                "pattern": "A-Deny-Manifest",
-                                                "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been `renamed`, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been `deprecated` or `pending`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
                                             {
                                                 "const": "A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"",
                                                 "markdownDescription": "Add environment variables\n- It will be automatically removed in `pre_uninstall`.\n- For example: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
@@ -3832,73 +3824,17 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|deprecated$"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "minItems": 4,
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "pattern": "^A-Deny-Manifest$",
-                                                        "errorMessage": "When the version is pending|deprecated, it must use 'A-Deny-Manifest'"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "version": {
                                                 "pattern": "^renamed$"
                                             }
                                         }
                                     },
                                     "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "minItems": 4,
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]",
-                                                        "errorMessage": "When the version is renamed, it must be \"A-Deny-Manifest 'xxx'\"\nHere 'xxx' is the new manifest name"
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        "required": [
+                                            "new"
+                                        ]
                                     }
                                 }
                             ]
-                        },
-                        {
-                            "$comment": "Verify A-Deny-Manifest and version",
-                            "if": {
-                                "properties": {
-                                    "pre_install": {
-                                        "contains": {
-                                            "pattern": "(?<!#.*)A-Deny-Manifest"
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "version": {
-                                        "pattern": "^pending|renamed|deprecated$",
-                                        "errorMessage": "Since 'A-Deny-Manifest' is used in 'pre_install', it must be 'pending', 'renamed', or 'deprecated'"
-                                    }
-                                }
-                            }
                         },
                         {
                             "$comment": "Since the manifest is installed through decompression and extraction, it is necessary to use extract_to to specify the directory.",

@@ -101,8 +101,6 @@ foreach ($path in $PathList) {
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a>'
             }
             renamed {
-                (Get-Content $mp.FullName -Raw -Encoding UTF8) -match '(?<!#.*)A-Deny-Manifest\s*(''|")(.+?)(''|")"' | Out-Null
-                $newName = $Matches[2]
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/></a>'
             }
             default {

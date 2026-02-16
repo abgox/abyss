@@ -24,6 +24,7 @@ if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
 $order = [ordered]@{
     '##'           = ''
     version        = ''
+    new            = ''
     description    = ''
     homepage       = ''
     license        = [ordered]@{

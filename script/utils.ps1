@@ -79,6 +79,9 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
+    if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
+        A-Deny-Manifest $manifest.new
+    }
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
     }
@@ -1142,35 +1145,6 @@ function A-Hold-App {
     } -ArgumentList $AppName
 }
 
-function A-Deny-Manifest {
-    <#
-    .SYNOPSIS
-        拒绝清单文件，提示用户使用新的清单文件
-    #>
-    param(
-        [string]$NewManifestName
-    )
-    switch ($manifest.version) {
-        deprecated {
-            $msg = "'$app' is deprecated."
-        }
-        pending {
-            $msg = "'$app' is pending."
-        }
-        renamed {
-            $msg = "'$app' is renamed to '$NewManifestName'."
-        }
-        default {
-            $msg = "'$app' is deprecated."
-        }
-    }
-
-    error $msg
-    error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
-
-    A-Exit
-}
-
 function A-Move-Persist {
     <#
     .SYNOPSIS
@@ -1676,6 +1650,35 @@ function A-Compare-Version {
 }
 
 #region 以下的函数不应该在外部调用
+
+function A-Deny-Manifest {
+    <#
+    .SYNOPSIS
+        拒绝清单文件，提示用户使用新的清单文件
+    #>
+    param(
+        [string]$NewManifestName
+    )
+
+    $msg = $null
+    switch ($manifest.version) {
+        deprecated {
+            $msg = "'$app' is deprecated."
+        }
+        pending {
+            $msg = "'$app' is pending."
+        }
+        renamed {
+            $msg = "'$app' is renamed to '$NewManifestName'."
+        }
+    }
+    if ($msg) {
+        error $msg
+        error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
+
+        A-Exit
+    }
+}
 
 function A-Deny-IfAppConflict {
     <#

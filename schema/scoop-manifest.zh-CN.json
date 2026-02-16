@@ -2064,7 +2064,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -2103,6 +2103,10 @@
                                 "const": "0.0.0"
                             },
                             "errorMessage": "清单编写完成后，请运行 .\\bin\\checkver.ps1 <app> -u 进行清单更新"
+                        },
+                        "new": {
+                            "$ref": "#/definitions/str",
+                            "markdownDescription": "新的清单\n- 它会告诉用户当前清单已被重命名，并提示新的清单名称\n- 新的清单名称来自本字段的定义"
                         },
                         "description": {
                             "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -2370,7 +2374,7 @@
                             ]
                         },
                         "conflicts": {
-                            "markdownDescription": "指定冲突的应用\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的应用包名\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "markdownDescription": "指定冲突的应用\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
                             "minItems": 1,
                             "uniqueItems": true,
@@ -2751,18 +2755,6 @@
                                     "items": {
                                         "anyOf": [
                                             {},
-                                            {
-                                                "const": "A-Deny-Manifest",
-                                                "markdownDescription": "拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单 `renamed`，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单 `deprecated` 或者 `pending`\n- 参考: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
-                                            {
-                                                "const": "A-Deny-Manifest 'newName'",
-                                                "markdownDescription": "拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单 `renamed`，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单 `deprecated` 或者 `pending`\n- 参考: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
-                                            {
-                                                "pattern": "A-Deny-Manifest",
-                                                "markdownDescription": "拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单 `renamed`，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单 `deprecated` 或者 `pending`\n- 参考: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
                                             {
                                                 "const": "A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"",
                                                 "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
@@ -3832,73 +3824,17 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|deprecated$"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "minItems": 4,
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "pattern": "^A-Deny-Manifest$",
-                                                        "errorMessage": "version 为 pending|deprecated 时，这一项只能是 A-Deny-Manifest"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "version": {
                                                 "pattern": "^renamed$"
                                             }
                                         }
                                     },
                                     "then": {
-                                        "properties": {
-                                            "pre_install": {
-                                                "minItems": 4,
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "pattern": "^A-Deny-Manifest\\s+['\"](.*?)['\"]",
-                                                        "errorMessage": "version 为 renamed 时，这一项必须是 A-Deny-Manifest 'xxx'\n这里的 'xxx' 为新的清单名称"
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        "required": [
+                                            "new"
+                                        ]
                                     }
                                 }
                             ]
-                        },
-                        {
-                            "$comment": "验证 A-Deny-Manifest 和 version 的值",
-                            "if": {
-                                "properties": {
-                                    "pre_install": {
-                                        "contains": {
-                                            "pattern": "(?<!#.*)A-Deny-Manifest"
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "version": {
-                                        "pattern": "^pending|renamed|deprecated$",
-                                        "errorMessage": "pre_install 中使用了 A-Deny-Manifest，version 的值只能是 pending、renamed 或 deprecated"
-                                    }
-                                }
-                            }
                         },
                         {
                             "$comment": "由于当前清单通过解压提取进行安装，需要使用 extract_to 指定目录",
