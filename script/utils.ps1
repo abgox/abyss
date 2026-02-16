@@ -79,6 +79,9 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
+    if ($manifest.conflicts) {
+        A-Deny-IfAppConflict $manifest.conflicts
+    }
     if ($manifest.persist -is [array]) {
         foreach ($item in $manifest.persist) {
             if ($item -is [string]) {
@@ -1093,23 +1096,6 @@ function A-Require-Admin {
     }
 }
 
-function A-Deny-IfAppConflict {
-    <#
-    .SYNOPSIS
-        如果应用冲突，则拒绝安装
-    #>
-    param (
-        [string[]]$Apps
-    )
-    $Apps | Where-Object { $_ -ne $app } | ForEach-Object {
-        if (Test-Path (appdir $_)) {
-            error "'$app' conflicts with '$_'."
-            error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
-            A-Exit
-        }
-    }
-}
-
 function A-Deny-Update {
     <#
     .SYNOPSIS
@@ -1690,6 +1676,23 @@ function A-Compare-Version {
 }
 
 #region 以下的函数不应该在外部调用
+
+function A-Deny-IfAppConflict {
+    <#
+    .SYNOPSIS
+        如果应用冲突，则拒绝安装
+    #>
+    param (
+        [string[]]$Apps
+    )
+    $Apps | Where-Object { $_ -ne $app } | ForEach-Object {
+        if (Test-Path (appdir $_)) {
+            error "'$app' conflicts with '$_'."
+            error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
+            A-Exit
+        }
+    }
+}
 
 function A-Remove-ToRecycleBin {
     param(

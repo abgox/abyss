@@ -2064,7 +2064,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -2368,6 +2368,17 @@
                                     ]
                                 }
                             ]
+                        },
+                        "conflicts": {
+                            "markdownDescription": "Specified conflict apps\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "errorMessage": "Please use the correct manifest name, like: abgox.PSCompletions"
+                            }
                         },
                         "bin": {
                             "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
@@ -2741,14 +2752,6 @@
                                         "anyOf": [
                                             {},
                                             {
-                                                "const": "A-Deny-IfAppConflict 'xxx', 'yyy'",
-                                                "markdownDescription": "If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict"
-                                            },
-                                            {
-                                                "pattern": "A-Deny-IfAppConflict",
-                                                "markdownDescription": "If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the package names of the apps.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict"
-                                            },
-                                            {
                                                 "const": "A-Deny-Manifest",
                                                 "markdownDescription": "Deny install or update this app.\n- If new manifest name is given, then it means this manifest has been `renamed`, and you need to install with new name.\n- If no new manifest name is given, then it means this manifest has been `deprecated` or `pending`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
                                             },
@@ -2890,7 +2893,7 @@
                                 {
                                     "if": {
                                         "contains": {
-                                            "pattern": "(?<!#.*)A-Deny-Manifest"
+                                            "const": "A-Require-Admin"
                                         }
                                     },
                                     "then": {
@@ -2899,117 +2902,10 @@
                                             {},
                                             {},
                                             {
-                                                "pattern": "A-Deny-Manifest",
-                                                "errorMessage": "There is 'A-Deny-Manifest' in the array, so here can only be it."
+                                                "const": "A-Require-Admin",
+                                                "errorMessage": "'A-Require-Admin' must be placed here as the fourth item in the array"
                                             }
-                                        ],
-                                        "if": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Deny-IfAppConflict"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "pattern": "A-Deny-IfAppConflict",
-                                                    "errorMessage": "There is 'A-Deny-IfAppConflict' in the array, so here can only be it."
-                                                }
-                                            ],
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it."
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        "else": {
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it."
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Deny-IfAppConflict"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "pattern": "A-Deny-IfAppConflict",
-                                                    "errorMessage": "There is 'A-Deny-IfAppConflict' in the array, so here can only be it or 'A-Deny-Manifest'."
-                                                }
-                                            ],
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it."
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        "else": {
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it, 'A-Deny-Manifest' or 'A-Deny-IfAppConflict'."
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        ]
                                     }
                                 }
                             ]

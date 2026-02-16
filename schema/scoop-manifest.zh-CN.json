@@ -2064,7 +2064,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -2368,6 +2368,17 @@
                                     ]
                                 }
                             ]
+                        },
+                        "conflicts": {
+                            "markdownDescription": "指定冲突的应用\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的应用包名\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "errorMessage": "请使用正确的清单名称，例如: abgox.PSCompletions"
+                            }
                         },
                         "bin": {
                             "markdownDescription": "- 一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用\n- 可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件\n- 二维数组应该包含最多三个字符串：程序名,别名,参数(可选)\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
@@ -2741,14 +2752,6 @@
                                         "anyOf": [
                                             {},
                                             {
-                                                "const": "A-Deny-IfAppConflict 'xxx', 'yyy'",
-                                                "markdownDescription": "如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的应用包名\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict"
-                                            },
-                                            {
-                                                "pattern": "A-Deny-IfAppConflict",
-                                                "markdownDescription": "如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的应用包名\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict"
-                                            },
-                                            {
                                                 "const": "A-Deny-Manifest",
                                                 "markdownDescription": "拒绝安装或更新此应用\n- 如果传入了新的清单名称，则表示此清单 `renamed`，需使用新名称安装\n- 如果没有传入新的清单名称，则表示此清单 `deprecated` 或者 `pending`\n- 参考: https://abyss.abgox.com/faq/deny-manifest"
                                             },
@@ -2890,7 +2893,7 @@
                                 {
                                     "if": {
                                         "contains": {
-                                            "pattern": "(?<!#.*)A-Deny-Manifest"
+                                            "const": "A-Require-Admin"
                                         }
                                     },
                                     "then": {
@@ -2899,117 +2902,10 @@
                                             {},
                                             {},
                                             {
-                                                "pattern": "A-Deny-Manifest",
-                                                "errorMessage": "数组中存在 A-Deny-Manifest，因此这一项只能是它"
+                                                "const": "A-Require-Admin",
+                                                "errorMessage": "A-Require-Admin 必须放在这里，作为数组的第四项"
                                             }
-                                        ],
-                                        "if": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Deny-IfAppConflict"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "pattern": "A-Deny-IfAppConflict",
-                                                    "errorMessage": "数组中存在 A-Deny-IfAppConflict，因此这一项只能是它"
-                                                }
-                                            ],
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        "else": {
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Deny-IfAppConflict"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "pattern": "A-Deny-IfAppConflict",
-                                                    "errorMessage": "数组中存在 A-Deny-IfAppConflict，因此这一项只能是它或者 A-Deny-Manifest"
-                                                }
-                                            ],
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        "else": {
-                                            "if": {
-                                                "contains": {
-                                                    "const": "A-Require-Admin"
-                                                }
-                                            },
-                                            "then": {
-                                                "items": [
-                                                    {},
-                                                    {},
-                                                    {},
-                                                    {
-                                                        "const": "A-Require-Admin",
-                                                        "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它或者 A-Deny-Manifest 和 A-Deny-IfAppConflict"
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        ]
                                     }
                                 }
                             ]

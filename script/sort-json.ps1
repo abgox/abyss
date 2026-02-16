@@ -77,6 +77,7 @@ $order = [ordered]@{
         #     # uninstaller  = ''
         # }
     }
+    conflicts      = ''
     extract_dir    = ''
     extract_to     = ''
     env_set        = ''
