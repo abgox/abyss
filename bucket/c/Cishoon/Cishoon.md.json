@@ -6,22 +6,12 @@
         "identifier": "MIT"
     },
     "notes": [
-        "This tool requires PowerShell 7.0+.",
-        "Add the following line to your $PROFILE to enable it:",
-        "  . '$dir\\app\\md.ps1'",
-        " ",
-        "If you want to use 'mdd' instead of 'md' (to avoid conflict with 'mkdir'):",
-        "  $env:MD_CMD_NAME = 'mdd'",
-        "  . '$dir\\app\\md.ps1'"
+        "Use the module: 'Import-Module MessageDump'",
+        "Add it to your $Profile to make it permanent."
     ],
     "notes_cn": [
-        "此工具需要 PowerShell 7.0+。",
-        "请将以下内容添加到您的 $PROFILE 中以启用它：",
-        "  . '$dir\\app\\md.ps1'",
-        " ",
-        "如果您想使用 'mdd' 命令代替 'md' (避免与 'mkdir' 冲突)：",
-        "  $env:MD_CMD_NAME = 'mdd'",
-        "  . '$dir\\app\\md.ps1'"
+        "使用此模块: Import-Module MessageDump",
+        "可以将它写入 $Profile 中，就不需要每次都导入了"
     ],
     "architecture": {
         "64bit": {
@@ -29,13 +19,19 @@
             "hash": "c56539311a37e800548adc16687d8664fce202d74a2b1ec06c685db62f64e1d7"
         }
     },
-    "extract_dir": "md-1.4.0",
-    "extract_to": "app",
-    "commands": "md",
+    "env_set": {
+        "MD_CMD_NAME": "mdd"
+    },
+    "extract_dir": "md-1.4.0\\psmodule",
+    "psmodule": {
+        "name": "MessageDump"
+    },
+    "commands": "mdd",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
+        "Move-Item \"$dir\\MessageDump\\*\" $dir -Force",
         "A-New-LinkDirectory \"$home\\.md\""
     ],
     "post_install": [
@@ -68,6 +64,6 @@
                 "url": "https://github.com/Cishoon/md/archive/refs/tags/v$version.zip"
             }
         },
-        "extract_dir": "md-$version"
+        "extract_dir": "md-$version\\psmodule"
     }
 }
