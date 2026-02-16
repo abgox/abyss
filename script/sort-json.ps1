@@ -187,10 +187,10 @@ function Sort-JsonByOrder {
 }
 
 if ($Recent) {
-    Write-Host "::group::Recent Manifests" -ForegroundColor Cyan
+    Write-Host '::group::Recent Manifests' -ForegroundColor Cyan
 
     $guid = [Guid]::NewGuid()
-    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- "bucket/" |
+    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
     ForEach-Object {
         if ($_ -eq '') { return }
         if ($_ -eq $guid) {
@@ -211,7 +211,7 @@ if ($Recent) {
         [System.IO.FileInfo]$fullPath
     }
 
-    Write-Host "::endgroup::" -ForegroundColor Cyan
+    Write-Host '::endgroup::' -ForegroundColor Cyan
 }
 else {
     $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"

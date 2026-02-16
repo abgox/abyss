@@ -1,7 +1,7 @@
 #Requires -PSEdition Core
 
 param(
-    [array]$PathList = @("app-list.md", "app-list.zh-CN.md")
+    [array]$PathList = @('app-list.md', 'app-list.zh-CN.md')
 )
 
 $manifests = Get-ChildItem "$PSScriptRoot\..\bucket" -Recurse -Filter *.json | Sort-Object { $_.BaseName }
@@ -62,7 +62,7 @@ function Test-ScriptPattern {
 function Get-StaticContent($path) {
     $content = Get-Content -Path $path -Encoding UTF8
 
-    $match = $content | Select-String -Pattern "\|App \(\d+\)\|Tag\|Description\|"
+    $match = $content | Select-String -Pattern '\|App \(\d+\)\|Tag\|Description\|'
 
     if ($match) {
         $matchLineNumber = ([array]$match.LineNumber)[0]
@@ -73,9 +73,9 @@ function Get-StaticContent($path) {
 
 
 foreach ($path in $PathList) {
-    $content = @("|App ($($manifests.Length))|Tag|Description|", "|-|:-:|-|")
+    $content = @("|App ($($manifests.Length))|Tag|Description|", '|-|:-:|-|')
 
-    $isCN = $path -like "*cn*.md"
+    $isCN = $path -like '*cn*.md'
 
     foreach ($mp in $manifests) {
 
@@ -105,7 +105,7 @@ foreach ($path in $PathList) {
                 $newName = $Matches[2]
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/></a>'
             }
-            Default {
+            default {
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>'
                 # $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" style="display:inline" alt="version" /></a>'
             }
@@ -180,7 +180,7 @@ foreach ($path in $PathList) {
         }
 
 
-        if ($path -like "*cn*.md") {
+        if ($path -like '*cn*.md') {
             $info += $description[0]
         }
         else {
@@ -192,7 +192,7 @@ foreach ($path in $PathList) {
             }
         }
 
-        $content += "|" + ($info -join "|") + "|"
+        $content += '|' + ($info -join '|') + '|'
     }
 
     (Get-StaticContent $path) + $content + "`n<!-- prettier-ignore-end -->" | Out-File $path -Encoding UTF8 -Force
