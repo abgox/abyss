@@ -1107,6 +1107,7 @@ function A-Deny-Update {
     if ($cmd -eq 'update') {
         error "'$app' does not allow update by Scoop."
         error 'Refer to: https://abyss.abgox.com/faq/deny-update'
+        A-Show-Notes
         A-Exit
     }
 }
@@ -1651,6 +1652,33 @@ function A-Compare-Version {
 
 #region 以下的函数不应该在外部调用
 
+function A-Show-Notes {
+    $note = $manifest.notes
+
+    if ($PSUICulture -like 'zh*') {
+        $note = $manifest.notes_cn
+    }
+
+    if ($note) {
+        Microsoft.PowerShell.Utility\Write-Host
+        Write-Output 'Notes'
+        Microsoft.PowerShell.Utility\Write-Output '-----'
+        Write-Output (substitute $note @{
+                '$dir'                     = $dir
+                '$original_dir'            = $original_dir
+                '$persist_dir'             = $persist_dir
+                '$app'                     = $app
+                '$version'                 = $manifest.version
+                '$env:ProgramFiles'        = $env:ProgramFiles
+                '${env:ProgramFiles(x86)}' = ${env:ProgramFiles(x86)}
+                '$env:ProgramData'         = $env:ProgramData
+                '$env:AppData'             = $env:AppData
+                '$env:LocalAppData'        = $env:LocalAppData
+            })
+        Microsoft.PowerShell.Utility\Write-Output '-----'
+    }
+}
+
 function A-Deny-Manifest {
     <#
     .SYNOPSIS
@@ -1675,7 +1703,7 @@ function A-Deny-Manifest {
     if ($msg) {
         error $msg
         error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
-
+        A-Show-Notes
         A-Exit
     }
 }
