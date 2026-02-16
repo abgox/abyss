@@ -3703,72 +3703,109 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending$"
+                                                "pattern": "^pending|renamed|deprecated$"
+                                            },
+                                            "checkver": {
+                                                "required": [
+                                                    "script"
+                                                ],
+                                                "properties": {
+                                                    "script": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)(A-Get-VersionFromGithubAPI|A-Get-PreVersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     },
                                     "then": {
                                         "properties": {
                                             "checkver": {
-                                                "required": [
-                                                    "replace"
-                                                ],
                                                 "properties": {
                                                     "replace": {
-                                                        "pattern": "^pending$",
-                                                        "errorMessage": "When the version is 'pending', it must be 'pending'."
+                                                        "not": true,
+                                                        "errorMessage": "It's no need to define it; the methods in the 'script' will handle it automatically."
                                                     }
                                                 }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "version": {
-                                                "pattern": "^renamed$"
                                             }
                                         }
                                     },
-                                    "then": {
-                                        "properties": {
-                                            "checkver": {
-                                                "required": [
-                                                    "replace"
-                                                ],
-                                                "properties": {
-                                                    "replace": {
-                                                        "pattern": "^renamed$",
-                                                        "errorMessage": "When the version is 'renamed', it must be 'renamed'."
+                                    "else": {
+                                        "allOf": [
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^pending$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^pending$",
+                                                                    "errorMessage": "When the version is 'pending', it must be 'pending'."
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^renamed$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^renamed$",
+                                                                    "errorMessage": "When the version is 'renamed', it must be 'renamed'."
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^deprecated$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^deprecated$",
+                                                                    "errorMessage": "When the version is 'deprecated', it must be 'deprecated'."
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "version": {
-                                                "pattern": "^deprecated$"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "checkver": {
-                                                "required": [
-                                                    "replace"
-                                                ],
-                                                "properties": {
-                                                    "replace": {
-                                                        "pattern": "^deprecated$",
-                                                        "errorMessage": "When the version is 'deprecated', it must be 'deprecated'."
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        ]
                                     }
                                 }
                             ]

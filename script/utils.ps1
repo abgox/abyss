@@ -1212,6 +1212,9 @@ function A-Get-VersionFromGithubAPI {
     param (
         [switch]$PreRelease
     )
+    if ($json.version -in 'pending', 'renamed', 'deprecated') {
+        return $json.version
+    }
 
     if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
         if (-not $json) {
@@ -1323,6 +1326,10 @@ function A-Get-VersionFromPage {
         [string]$Url
     )
 
+    if ($json.version -in 'pending', 'renamed', 'deprecated') {
+        return $json.version
+    }
+
     if (!$PSBoundParameters.ContainsKey('Regex')) {
         return $null
     }
@@ -1392,6 +1399,11 @@ function A-Get-InstallerInfoFromWinget {
         [string]$InstallerType,
         [string]$MaxExclusiveVersion
     )
+
+    if ($json.version -in 'pending', 'renamed', 'deprecated') {
+        $out = @("ver:$($json.version);")
+        return $installerInfo, $out
+    }
 
     $tempFile = "$PSScriptRoot\..\temp-autoupdate.json"
     Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
