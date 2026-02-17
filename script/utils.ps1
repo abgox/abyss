@@ -1839,7 +1839,6 @@ function A-New-Link {
         $installData.LinkPaths += $linkPath
         $installData.LinkTargets += $linkTarget
 
-        A-Ensure-Directory $linkTarget
         A-Ensure-Directory (Split-Path $linkPath -Parent)
 
         $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
@@ -1879,8 +1878,14 @@ function A-New-Link {
             }
         }
 
+        if ($type -eq 'Leaf') {
+            A-Ensure-Directory (Split-Path $linkTarget -Parent)
+        }
+        else {
+            A-Ensure-Directory $linkTarget
+        }
+        A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
         New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
-
         Write-Host "Persisting (Link) $linkPath => $linkTarget"
     }
     $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
