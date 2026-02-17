@@ -45,7 +45,17 @@
                 "minLength": 1
             },
             "minLength": 1,
-            "minItems": 1
+            "minItems": 1,
+            "if": {
+                "type": "array",
+                "minItems": 1
+            },
+            "then": {
+                "not": {
+                    "maxItems": 1
+                },
+                "errorMessage": "When the array has only one item, it should be a string"
+            }
         },
         "license_identifier": {
             "$comment": "Add known licenses here to provide better error messages for the validator",
@@ -2375,7 +2385,7 @@
                             ]
                         },
                         "conflicts": {
-                            "markdownDescription": "Specified conflict apps\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "markdownDescription": "Specified conflict apps\n- It is a special field of [abyss](https://abyss.abgox.com)\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
                             "minItems": 1,
                             "uniqueItems": true,
