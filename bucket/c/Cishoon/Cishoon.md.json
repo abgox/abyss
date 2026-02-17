@@ -1,0 +1,69 @@
+{
+    "version": "1.4.0",
+    "description": "Message Dump - 一个命令行工具，可以一键复制上一条命令到剪贴板 | Message Dump - A CLI tool to dump the last command output to the clipboard",
+    "homepage": "https://github.com/Cishoon/md",
+    "license": {
+        "identifier": "MIT"
+    },
+    "notes": [
+        "Use the module: 'Import-Module MessageDump'",
+        "Add it to your $Profile to make it permanent."
+    ],
+    "notes_cn": [
+        "使用此模块: Import-Module MessageDump",
+        "可以将它写入 $Profile 中，就不需要每次都导入了"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Cishoon/md/archive/refs/tags/v1.4.0.zip",
+            "hash": "c56539311a37e800548adc16687d8664fce202d74a2b1ec06c685db62f64e1d7"
+        }
+    },
+    "env_set": {
+        "MD_CMD_NAME": "mdd"
+    },
+    "extract_dir": "md-1.4.0\\psmodule",
+    "psmodule": {
+        "name": "MessageDump"
+    },
+    "commands": "mdd",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "Move-Item \"$dir\\MessageDump\\*\" $dir -Force",
+        "A-New-LinkDirectory \"$home\\.md\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Cishoon/md/archive/refs/tags/v$version.zip"
+            }
+        },
+        "extract_dir": "md-$version\\psmodule"
+    }
+}
