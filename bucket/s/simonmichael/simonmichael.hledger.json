@@ -1,0 +1,61 @@
+{
+    "version": "1.51.2",
+    "description": "一款功能强大、速度快、直观的纯文本会计工具，具有 CLI、TUI 和 Web 界面 | Robust, fast, intuitive plain text accounting tool with CLI, TUI and web interfaces",
+    "homepage": "https://hledger.org/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/simonmichael/hledger/releases/download/1.51.2/hledger-windows-x64.zip",
+            "hash": "10b7da22a2893065159fcb28325cced05c63d745e20b48e26ecfa9e9b8f711f0"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\hledger-ui.exe",
+        "app\\hledger-web.exe",
+        "app\\hledger.exe"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-File \"$home\\.hledger.journal\" -Content \"; journal created $(Get-Date -Format 'yyyy-MM-dd')\"",
+        "A-New-LinkFile \"$home\\.hledger.journal\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/simonmichael/hledger/releases/download/$version/hledger-windows-x64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
