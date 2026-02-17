@@ -1,0 +1,58 @@
+{
+    "version": "2026.1.1.1651",
+    "description": "一个高性能 PowerShell 模块，可在终端中显示漂亮的 ANSI 颜色脚本，并具有智能缓存功能，加载速度可提高 6-19 倍 | A high-performance PowerShell module for displaying beautiful ANSI colorscripts in your terminal with intelligent caching for 6-19x faster load times",
+    "homepage": "https://github.com/Nick2bad4u/PS-Color-Scripts-Enhanced",
+    "license": {
+        "identifier": "Unlicense"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/colorscripts-enhanced.2026.1.1.1651.nupkg",
+            "hash": "0dc75bfee055cebca0f4526b10d9a5d5ce6c303c22f39bc28090db98a2134956"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/colorscripts-enhanced.2026.1.1.1651.nupkg",
+            "hash": "0dc75bfee055cebca0f4526b10d9a5d5ce6c303c22f39bc28090db98a2134956"
+        }
+    },
+    "psmodule": {
+        "name": "ColorScripts-Enhanced"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\ColorScripts-Enhanced\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/colorscripts-enhanced",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/colorscripts-enhanced.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/colorscripts-enhanced.$version.nupkg"
+            }
+        }
+    }
+}
