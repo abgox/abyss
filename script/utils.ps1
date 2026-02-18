@@ -1742,7 +1742,10 @@ function A-Remove-ToRecycleBin {
         [Parameter(Mandatory)]
         [string]$Path
     )
-    if (Test-Path $Path -PathType Container) {
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return
+    }
+    if ((Get-Item $Path).PSIsContainer) {
         [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($Path, 'OnlyErrorDialogs', 'SendToRecycleBin')
     }
     else {
