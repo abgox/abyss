@@ -21,7 +21,7 @@
 
 ---
 
-|App (813)|Tag|Description|
+|App (814)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -249,6 +249,7 @@
 |[charmbracelet.glow](https://github.com/charmbracelet/glow)|<a href="./bucket/c/charmbracelet/charmbracelet.glow.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal based markdown reader|
 |[charmbracelet.gum](https://github.com/charmbracelet/gum)|<a href="./bucket/c/charmbracelet/charmbracelet.gum.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A tool for glamorous shell scripts|
 |[charmbracelet.mods](https://github.com/charmbracelet/mods)|<a href="./bucket/c/charmbracelet/charmbracelet.mods.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|AI on the command line|
+|[charmbracelet.sequin](https://github.com/charmbracelet/sequin)|<a href="./bucket/c/charmbracelet/charmbracelet.sequin.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Human-readable ANSI sequences|
 |[charmbracelet.soft-serve](https://github.com/charmbracelet/soft-serve)|<a href="./bucket/c/charmbracelet/charmbracelet.soft-serve.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A tasty, self-hostable Git server for the command line|
 |[charmbracelet.vhs](https://github.com/charmbracelet/vhs)|<a href="./bucket/c/charmbracelet/charmbracelet.vhs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Write terminal GIFs as code for integration testing and demoing your CLI tools|
 |[charmbracelet.wishlist](https://github.com/charmbracelet/wishlist)|<a href="./bucket/c/charmbracelet/charmbracelet.wishlist.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Your single gateway to manage and connect all SSH endpoints|
