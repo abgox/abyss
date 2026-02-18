@@ -1,0 +1,58 @@
+{
+    "version": "0.2.2",
+    "description": "生成代码和终端输出的图像 | Generate images of code and terminal output",
+    "homepage": "https://github.com/charmbracelet/freeze",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/charmbracelet/freeze/releases/download/v0.2.2/freeze_0.2.2_Windows_x86_64.zip",
+            "hash": "971fc4b83ca797835505929620012db39a9c5aa849dccca369e852575fb1d344",
+            "extract_dir": "freeze_0.2.2_Windows_x86_64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\freeze.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:LocalAppData\\freeze\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/charmbracelet/freeze/releases/download/v$version/freeze_$version_Windows_x86_64.zip",
+                "extract_dir": "freeze_$version_Windows_x86_64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
