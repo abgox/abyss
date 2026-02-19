@@ -1,0 +1,66 @@
+{
+    "version": "2.3.0",
+    "description": "一款隐私优先、跨平台的文本扩展器，采用 Rust 语言编写 | A Privacy-first, Cross-platform Text Expander written in Rust",
+    "homepage": "https://espanso.org/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/espanso/espanso/releases/download/v2.3.0/Espanso-Win-Installer-x86_64.exe",
+            "hash": "d146ca640d35f175cbef04d04f137b9759cdab08cb1035b277c8bac0f70f13be"
+        }
+    },
+    "bin": [
+        "app\\espanso.cmd",
+        "app\\espansod.exe"
+    ],
+    "shortcuts": [
+        [
+            "app\\espansod.exe",
+            "Espanso"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$env:AppData\\espanso\", \"$env:LocalAppData\\espanso\"",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/espanso/espanso/releases/download/v$version/Espanso-Win-Installer-x86_64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
