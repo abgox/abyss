@@ -21,7 +21,7 @@
 
 ---
 
-|App (814)|Tag|Description|
+|App (815)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -246,6 +246,7 @@
 |[Casey.Just](https://just.systems/)|<a href="./bucket/c/Casey/Casey.Just.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一种方便的保存和运行特定项目命令的方式|
 |[Ch3nyang.MrRSS](https://mrrss.ch3nyang.top/)|<a href="./bucket/c/Ch3nyang/Ch3nyang.MrRSS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个现代化、跨平台且免费的 AI RSS 阅读器|
 |[charmbracelet.crush](https://github.com/charmbracelet/crush)|<a href="./bucket/c/charmbracelet/charmbracelet.crush.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于你喜爱的终端的魅力十足的 AI coding agent|
+|[charmbracelet.freeze](https://github.com/charmbracelet/freeze)|<a href="./bucket/c/charmbracelet/charmbracelet.freeze.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|生成代码和终端输出的图像|
 |[charmbracelet.glow](https://github.com/charmbracelet/glow)|<a href="./bucket/c/charmbracelet/charmbracelet.glow.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于终端的 markdown 阅读器|
 |[charmbracelet.gum](https://github.com/charmbracelet/gum)|<a href="./bucket/c/charmbracelet/charmbracelet.gum.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款用于出色 shell 脚本的工具|
 |[charmbracelet.mods](https://github.com/charmbracelet/mods)|<a href="./bucket/c/charmbracelet/charmbracelet.mods.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|命令行中的 AI|
