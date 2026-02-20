@@ -21,7 +21,7 @@
 
 ---
 
-|App (816)|Tag|Description|
+|App (817)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -318,6 +318,7 @@
 |[electerm.electerm](https://github.com/electerm/electerm)|<a href="./bucket/e/electerm/electerm.electerm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开源终端/ssh/telnet/serialport/RDP/VNC/sftp/ftp 客户端|
 |[eloston.ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium-windows)|<a href="./bucket/e/eloston/eloston.ungoogled-chromium.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|不依赖谷歌网络服务的 Google Chromium 浏览器|
 |[Empty-57.ZeroBit-Player](https://github.com/Empty-57/ZeroBit-Player)|<a href="./bucket/e/Empty-57/Empty-57.ZeroBit-Player.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于 Flutter + Rust 的 Material 风格本地音乐播放器|
+|[Espanso.Espanso](https://espanso.org/)|<a href="./bucket/e/Espanso/Espanso.Espanso.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款隐私优先、跨平台的文本扩展器，采用 Rust 语言编写|
 |[Eugeny.Tabby](https://tabby.sh/)|<a href="./bucket/e/Eugeny/Eugeny.Tabby.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个现代终端|
 |[everauto.zTasker](https://www.everauto.net/)|<a href="./bucket/e/everauto/everauto.zTasker.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个自动化任务工具|
 |[Evernote.Evernote](https://evernote.com/)|<a href="./bucket/e/Evernote/Evernote.Evernote.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在一处记住所有内容，并通过笔记、任务和日程处理一切|

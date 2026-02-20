@@ -21,7 +21,7 @@
 
 ---
 
-|App (816)|Tag|Description|
+|App (817)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -318,6 +318,7 @@
 |[electerm.electerm](https://github.com/electerm/electerm)|<a href="./bucket/e/electerm/electerm.electerm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Open-sourced terminal/ssh/telnet/serialport/RDP/VNC/sftp/ftp client|
 |[eloston.ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium-windows)|<a href="./bucket/e/eloston/eloston.ungoogled-chromium.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|Google Chromium without dependency on Google web services|
 |[Empty-57.ZeroBit-Player](https://github.com/Empty-57/ZeroBit-Player)|<a href="./bucket/e/Empty-57/Empty-57.ZeroBit-Player.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Material-style local music player based on Flutter + Rust|
+|[Espanso.Espanso](https://espanso.org/)|<a href="./bucket/e/Espanso/Espanso.Espanso.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Privacy-first, Cross-platform Text Expander written in Rust|
 |[Eugeny.Tabby](https://tabby.sh/)|<a href="./bucket/e/Eugeny/Eugeny.Tabby.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A terminal for a more modern age|
 |[everauto.zTasker](https://www.everauto.net/)|<a href="./bucket/e/everauto/everauto.zTasker.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A task automation tool|
 |[Evernote.Evernote](https://evernote.com/)|<a href="./bucket/e/Evernote/Evernote.Evernote.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Remember everything and tackle any project with your notes, tasks, and schedule all in one place|
