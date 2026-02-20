@@ -21,7 +21,7 @@
 
 ---
 
-|App (815)|Tag|Description|
+|App (816)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -678,6 +678,7 @@
 |[rejetto.hfs](https://github.com/rejetto/hfs)|<a href="./bucket/r/rejetto/rejetto.hfs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A web file server to run on your computer|
 |[Rime.Weasel](https://rime.im/)|<a href="./bucket/r/Rime/Rime.Weasel.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A modular, extensible, and customizable input method engine|
 |[Rizonesoft.Notepad3](https://github.com/rizonesoft/Notepad3)|<a href="./bucket/r/Rizonesoft/Rizonesoft.Notepad3.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A fast and light-weight Scintilla-based text editor|
+|[rocksdanister.LivelyWallpaper](https://rocksdanister.com/lively)|<a href="./bucket/r/rocksdanister/rocksdanister.LivelyWallpaper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Free and open-source software that allows users to set animated desktop wallpapers and screensavers|
 |[RSSNext.Folo](https://follow.is/)|<a href="./bucket/r/RSSNext/RSSNext.Folo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Follow everything in one place|
 |[rsteube.Carapace](https://carapace.sh/)|<a href="./bucket/r/rsteube/rsteube.Carapace.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|multi-shell, multi-command, argument completer|
 |[rubickCenter.Rubick](https://rubickcenter.github.io/docs)|<a href="./bucket/r/rubickCenter/rubickCenter.Rubick.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Electron based open source toolbox, free integration of rich plugins|

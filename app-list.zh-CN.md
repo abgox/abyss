@@ -21,7 +21,7 @@
 
 ---
 
-|App (815)|Tag|Description|
+|App (816)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -678,6 +678,7 @@
 |[rejetto.hfs](https://github.com/rejetto/hfs)|<a href="./bucket/r/rejetto/rejetto.hfs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个可在你的电脑上运行的网络文件服务器|
 |[Rime.Weasel](https://rime.im/)|<a href="./bucket/r/Rime/Rime.Weasel.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|小狼毫输入法 - 一个模块化、可扩展且可定制的输入法引擎|
 |[Rizonesoft.Notepad3](https://github.com/rizonesoft/Notepad3)|<a href="./bucket/r/Rizonesoft/Rizonesoft.Notepad3.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个快速、轻量级的基于 Scintilla 的文本编辑器|
+|[rocksdanister.LivelyWallpaper](https://rocksdanister.com/lively)|<a href="./bucket/r/rocksdanister/rocksdanister.LivelyWallpaper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款免费开源的软件，它能让用户设置动态桌面壁纸和屏幕保护程序|
 |[RSSNext.Folo](https://follow.is/)|<a href="./bucket/r/RSSNext/RSSNext.Folo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在一个地方关注所有事情|
 |[rsteube.Carapace](https://carapace.sh/)|<a href="./bucket/r/rsteube/rsteube.Carapace.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|多 shell、多命令、参数补全器|
 |[rubickCenter.Rubick](https://rubickcenter.github.io/docs)|<a href="./bucket/r/rubickCenter/rubickCenter.Rubick.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于 electron 的开源工具箱，自由集成丰富插件|
