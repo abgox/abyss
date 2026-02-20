@@ -42,7 +42,14 @@
             ],
             "items": {
                 "type": "string",
-                "minLength": 1
+                "allOf": [
+                    {
+                        "not": {
+                            "maxLength": 0
+                        },
+                        "errorMessage": "String is shorter than the minimum length of 1.\nIf you just want to avoid warnings, you can add a space."
+                    }
+                ]
             },
             "minLength": 1,
             "minItems": 1,
@@ -54,7 +61,7 @@
                 "not": {
                     "maxItems": 1
                 },
-                "errorMessage": "When the array has only one item, it should be a string"
+                "errorMessage": "When the array has only one item, it should be a string."
             }
         },
         "license_identifier": {
@@ -2811,10 +2818,6 @@
                                                 "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
                                             },
                                             {
-                                                "const": "A-Install-App -Uninstaller 'app\\xxx.exe'",
-                                                "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
-                                            },
-                                            {
                                                 "const": "A-Install-App -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
                                                 "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
                                             },
@@ -2843,27 +2846,11 @@
                                                 "markdownDescription": "Use `SymbolicLink` to link data files, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
                                             },
                                             {
-                                                "const": "A-New-LinkFile \"$home\\xxx\"",
-                                                "markdownDescription": "Use `SymbolicLink` to link data files, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
-                                            },
-                                            {
-                                                "const": "A-New-LinkFile \"$env:AppData\\xxx\"",
-                                                "markdownDescription": "Use `SymbolicLink` to link data files, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
-                                            },
-                                            {
                                                 "pattern": "A-New-LinkFile",
                                                 "markdownDescription": "Use `SymbolicLink` to link data files, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
                                             },
                                             {
                                                 "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"",
-                                                "markdownDescription": "Use `Junction` to link data directories, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
-                                            },
-                                            {
-                                                "const": "A-New-LinkDirectory \"$env:AppData\\xxx\"",
-                                                "markdownDescription": "Use `Junction` to link data directories, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
-                                            },
-                                            {
-                                                "const": "A-New-LinkDirectory \"$home\\xxx\"",
                                                 "markdownDescription": "Use `Junction` to link data directories, it will use the [Unified Specification](https://abyss.abgox.com/features/data-persistence#link-directory-structure) to generate the target directory.\n- It only allows standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the app stores data in the app directory, use the `persist` field."
                                             },
                                             {
@@ -3068,10 +3055,6 @@
                                             {
                                                 "pattern": "A-Uninstall-Manually",
                                                 "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
-                                            },
-                                            {
-                                                "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe'",
-                                                "markdownDescription": "Use the Uninstaller\n  - `-Uninstaller`: The file path of the Uninstaller\n    - Default: The uninstaller specified by `A-Install-App`\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the uninstaller\n    - Default: `'/S'`\n  - `-SleepSec`: The seconds to wait after the uninstaller\n    - Default: `3`"
                                             },
                                             {
                                                 "const": "A-Uninstall-App",

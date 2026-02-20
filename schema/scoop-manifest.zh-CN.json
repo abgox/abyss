@@ -42,7 +42,14 @@
             ],
             "items": {
                 "type": "string",
-                "minLength": 1
+                "allOf": [
+                    {
+                        "not": {
+                            "maxLength": 0
+                        },
+                        "errorMessage": "字符串短于最小长度 1\n如果只是想避免警告，可以添加一个空格"
+                    }
+                ]
             },
             "minLength": 1,
             "minItems": 1,
@@ -2168,7 +2175,7 @@
                                     "not": {
                                         "pattern": "[。！？!?]$|[^.]\\.$"
                                     },
-                                    "errorMessage": "英文描述禁止添加末尾的符号，如: .!?。！？但是，允许使用 ... 省略号"
+                                    "errorMessage": "英文描述禁止添加末尾的符号，如: .!?。！？\n但是，允许使用 ... 省略号"
                                 },
                                 {
                                     "not": {
@@ -2811,10 +2818,6 @@
                                                 "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
                                             },
                                             {
-                                                "const": "A-Install-App -Uninstaller 'app\\xxx.exe'",
-                                                "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
-                                            },
-                                            {
                                                 "const": "A-Install-App -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
                                                 "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
                                             },
@@ -2843,27 +2846,11 @@
                                                 "markdownDescription": "使用 SymbolicLink 链接数据文件，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果文件不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
                                             },
                                             {
-                                                "const": "A-New-LinkFile \"$home\\xxx\"",
-                                                "markdownDescription": "使用 SymbolicLink 链接数据文件，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果文件不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
-                                            },
-                                            {
-                                                "const": "A-New-LinkFile \"$env:AppData\\xxx\"",
-                                                "markdownDescription": "使用 SymbolicLink 链接数据文件，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果文件不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
-                                            },
-                                            {
                                                 "pattern": "A-New-LinkFile",
                                                 "markdownDescription": "使用 SymbolicLink 链接数据文件，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- 如果文件不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
                                             },
                                             {
                                                 "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"",
-                                                "markdownDescription": "使用 Junction 链接数据目录，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果目录不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
-                                            },
-                                            {
-                                                "const": "A-New-LinkDirectory \"$env:AppData\\xxx\"",
-                                                "markdownDescription": "使用 Junction 链接数据目录，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果目录不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
-                                            },
-                                            {
-                                                "const": "A-New-LinkDirectory \"$home\\xxx\"",
                                                 "markdownDescription": "使用 Junction 链接数据目录，它会根据 [统一规范](https://abyss.abgox.com/features/data-persistence#link-directory-structure) 在 `$persist_dir` 中生成对应的目录结构\n- 它只允许标准目录，例如 `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果目录不存在，它会自动创建\n- 如果应用在应用目录下存放数据，则使用 `persist` 字段"
                                             },
                                             {
@@ -3068,10 +3055,6 @@
                                             {
                                                 "pattern": "A-Uninstall-Manually",
                                                 "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
-                                            },
-                                            {
-                                                "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe'",
-                                                "markdownDescription": "使用卸载程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `-SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                             },
                                             {
                                                 "const": "A-Uninstall-App",
