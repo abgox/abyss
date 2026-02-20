@@ -1,0 +1,64 @@
+{
+    "version": "2.2.1.0",
+    "description": "一款免费开源的软件，它能让用户设置动态桌面壁纸和屏幕保护程序 | Free and open-source software that allows users to set animated desktop wallpapers and screensavers",
+    "homepage": "https://rocksdanister.com/lively",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/rocksdanister/lively/releases/download/v2.2.1.0/lively_setup_x86_full_v2210.exe",
+            "hash": "98f4e96bb8e2c416384eeaf48016eadaea9dce8263b8d212052775ebcf2d7e34"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Lively.exe",
+            "Lively Wallpaper"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:LocalAppData\\Lively Wallpaper\"",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rocksdanister/lively/releases/download/v$version/lively_setup_x86_full_v$cleanVersion.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
