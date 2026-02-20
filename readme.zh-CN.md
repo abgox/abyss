@@ -36,7 +36,8 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个设计巧妙的 Scoop bucket，旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
+> - [abyss](https://abyss.abgox.com) 是一个精心设计且有独特见解的 Scoop bucket
+> - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
 > - 它的清单是基于 [utils.ps1](./script/utils.ps1) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ## 特性
@@ -45,7 +46,7 @@
 >
 > 区别于标准的 Scoop bucket，[abyss](https://abyss.abgox.com) 包含了一些额外的特性
 
-- [清单状态控制](https://abyss.abgox.com/features/manifest-state-control)
+- [清单状态控制](https://abyss.abgox.com/features/manifest-status-control)
 - [完善的数据持久化](https://abyss.abgox.com/features/data-persistence)
 - [灵活的应用安装方案](https://abyss.abgox.com/features/install-solution)
 - [Scoop 配置控制的其他功能](https://abyss.abgox.com/features/extra-features)

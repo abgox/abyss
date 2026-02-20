@@ -6,7 +6,7 @@
 
 > [!Tip]
 >
-> - Here are some badges for [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control).
+> - Here are some badges for [Manifest Status Control](https://abyss.abgox.com/features/manifest-status-control).
 > - Click on the badge to view the manifest json file.
 
 <!-- prettier-ignore-start -->
@@ -14,8 +14,8 @@
 |Badge|Description|
 |:-:|-|
 |<img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/>|It is available and can be installed or updated normally.|
-|<img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/>|It has been deprecated, and cannot be installed.<br/>If the installation is completed before `deprecated`, it cannot be updated via Scoop.|
 |<img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/>|It is pending, and cannot be installed.<br/>If the installation is completed before `pending`, it cannot be updated via Scoop.|
+|<img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/>|It has been deprecated, and cannot be installed.<br/>If the installation is completed before `deprecated`, it cannot be updated via Scoop.|
 |<img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/>|It has been renamed and will fail to install or update.<br/>The new name will be displayed in the error message, and you should use the new name for installation.<br/>If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.|
 
 
