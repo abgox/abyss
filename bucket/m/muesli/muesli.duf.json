@@ -1,0 +1,61 @@
+{
+    "version": "0.9.1",
+    "description": "磁盘使用/空闲工具 - 一个更出色的 df 替代方案 | Disk Usage/Free Utility - a better 'df' alternative",
+    "homepage": "https://github.com/muesli/duf",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/muesli/duf/releases/download/v0.9.1/duf_0.9.1_windows_x86_64.zip",
+            "hash": "503934be81f847d9ddb1b739834217480633435ad16515dd199e372c0b2e1afc"
+        },
+        "arm64": {
+            "url": "https://github.com/muesli/duf/releases/download/v0.9.1/duf_0.9.1_windows_arm64.zip",
+            "hash": "6aa91380c7bd5ba935bab38bb826680255a0d9569614de7b0d149cea471ccf4b"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\duf.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/muesli/duf/releases/download/v$version/duf_$version_windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/muesli/duf/releases/download/v$version/duf_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
