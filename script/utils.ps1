@@ -2353,27 +2353,20 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     #endregion
 
     #region 新增 commands 字段
-    if ($manifest.commands) {
-        Microsoft.PowerShell.Utility\Write-Host
-        Write-Output 'Commands'
-        Microsoft.PowerShell.Utility\Write-Output '-----'
-        Microsoft.PowerShell.Utility\Write-Output $manifest.commands
-        Microsoft.PowerShell.Utility\Write-Output '-----'
-    }
-    elseif ($manifest.psmodule) {
+    $cmds = @($manifest.commands)
+
+    if ($manifest.psmodule) {
         Remove-Item "$dir\_rels", "$dir\package", "$dir\*Content*.xml" -Recurse -ErrorAction SilentlyContinue
-
         $psd1 = Import-PowerShellDataFile -LiteralPath "$scoopdir\modules\$($manifest.psmodule.name)\$($manifest.psmodule.name).psd1" -ErrorAction SilentlyContinue
-        $cmds = @($psd1.CmdletsToExport, $psd1.FunctionsToExport, $psd1.AliasesToExport) | Where-Object { $_ -and $_ -ne '*' }
-
-        if (-not $cmds.Count) {
-            return
-        }
-
+        $cmds += @($psd1.CmdletsToExport, $psd1.FunctionsToExport, $psd1.AliasesToExport) | Where-Object { $_ -ne '*' }
+    }
+    $out = [System.Collections.Generic.HashSet[string]]::new()
+    $cmds | ForEach-Object { $_ -and $out.Add($_) } | Out-Null
+    if ($out.Count) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Commands'
         Microsoft.PowerShell.Utility\Write-Output '-----'
-        Microsoft.PowerShell.Utility\Write-Output $cmds
+        Microsoft.PowerShell.Utility\Write-Output $out
         Microsoft.PowerShell.Utility\Write-Output '-----'
     }
     #endregion
