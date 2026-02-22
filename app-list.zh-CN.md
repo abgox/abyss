@@ -21,7 +21,7 @@
 
 ---
 
-|App (817)|Tag|Description|
+|App (818)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -530,6 +530,7 @@
 |[Mozilla.Firefox](https://www.mozilla.org/firefox)|<a href="./bucket/m/Mozilla/Mozilla.Firefox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发|
 |[Mozilla.Firefox.MSIX](https://www.mozilla.org/firefox)|<a href="./bucket/m/Mozilla/Mozilla.Firefox.MSIX.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发|
 |[Mozilla.Thunderbird](https://www.thunderbird.net/)|<a href="./bucket/m/Mozilla/Mozilla.Thunderbird.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款易于设置和定制的免费电子邮件应用程序|
+|[muesli.duf](https://github.com/muesli/duf)|<a href="./bucket/m/muesli/muesli.duf.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|磁盘使用/空闲工具 - 一个更出色的 df 替代方案|
 |[mulaRahul.Keyviz](https://keyviz.org/)|<a href="./bucket/m/mulaRahul/mulaRahul.Keyviz.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费的开源工具来可视化你的击键和鼠标实时动作|
 |[MystenLabs.suiup](https://github.com/MystenLabs/suiup)|<a href="./bucket/m/MystenLabs/MystenLabs.suiup.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Sui 生态系统中命令行界面工具的安装程序和管理器|
 |[N0I0C0K.PowerToysRun-Translator](https://github.com/N0I0C0K/PowerTranslator)|<a href="./bucket/n/N0I0C0K/N0I0C0K.PowerToysRun-Translator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 PowerToys Run 的翻译插件|

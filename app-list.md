@@ -21,7 +21,7 @@
 
 ---
 
-|App (817)|Tag|Description|
+|App (818)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -530,6 +530,7 @@
 |[Mozilla.Firefox](https://www.mozilla.org/firefox)|<a href="./bucket/m/Mozilla/Mozilla.Firefox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries|
 |[Mozilla.Firefox.MSIX](https://www.mozilla.org/firefox)|<a href="./bucket/m/Mozilla/Mozilla.Firefox.MSIX.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries|
 |[Mozilla.Thunderbird](https://www.thunderbird.net/)|<a href="./bucket/m/Mozilla/Mozilla.Thunderbird.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free email application that's easy to set up and customize|
+|[muesli.duf](https://github.com/muesli/duf)|<a href="./bucket/m/muesli/muesli.duf.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Disk Usage/Free Utility - a better 'df' alternative|
 |[mulaRahul.Keyviz](https://keyviz.org/)|<a href="./bucket/m/mulaRahul/mulaRahul.Keyviz.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open-source tool to visualize your keystrokes and mouse actions in real-time|
 |[MystenLabs.suiup](https://github.com/MystenLabs/suiup)|<a href="./bucket/m/MystenLabs/MystenLabs.suiup.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The installer and manager for CLI tools in the Sui ecosystem|
 |[N0I0C0K.PowerToysRun-Translator](https://github.com/N0I0C0K/PowerTranslator)|<a href="./bucket/n/N0I0C0K/N0I0C0K.PowerToysRun-Translator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A translate plugin for PowerToys Run|
