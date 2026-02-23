@@ -1,0 +1,68 @@
+{
+    "version": "3.2.0",
+    "description": "一款轻量级、开源的通用代理客户端（Proxifier 替代方案），可为 Windows 和 macOS 上的应用程序提供透明代理路由 | A lightweight, open-source universal proxy client (Proxifier alternative) that provides transparent proxy routing for applications on Windows and macOS",
+    "homepage": "https://interceptsuite.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/InterceptSuite/ProxyBridge/releases/download/v3.2.0/ProxyBridge-Setup-3.2.0.exe",
+            "hash": "d2147b1431b4af2788e28bd07df41862f0fa1bd0d4919c180ede172d9cabe17f"
+        }
+    },
+    "bin": [
+        "app\\ProxyBridge.exe",
+        "app\\ProxyBridge_CLI.exe"
+    ],
+    "shortcuts": [
+        [
+            "app\\ProxyBridge.exe",
+            "ProxyBridge"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-New-LinkDirectory \"$env:AppData\\ProxyBridge\"",
+        "A-Install-App -Uninstaller 'app\\uninst.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/InterceptSuite/ProxyBridge/releases/download/v$version/ProxyBridge-Setup-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
