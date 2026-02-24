@@ -3214,11 +3214,12 @@
                             "not": {
                                 "const": "0.0.0"
                             },
-                            "errorMessage": "After the manifest is written, please run '.\\bin\\checkver.ps1 <app> -u' to update the manifest"
+                            "errorMessage": "After the manifest is written, please run '.\\bin\\checkver.ps1 <app> -ForceUpdate' to update the manifest"
                         },
                         "new": {
                             "$ref": "#/definitions/str",
-                            "markdownDescription": "New manifest\n- It will tell users that the current manifest has been renamed, and prompt the new manifest name\n- The new manifest name is defined in this field"
+                            "title": "New manifest name",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com).\n- In [abyss](https://abyss.abgox.com), the manifest with the version number `renamed` cannot be installed.\n- If you try to install it, it will be rejected and a new manifest name will be prompted.\n- The new manifest name is defined by the `new` field."
                         },
                         "description": {
                             "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -3342,7 +3343,7 @@
                         },
                         "notes_cn": {
                             "title": "Notes (Chinese)",
-                            "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display `notes_cn` instead of `notes`.\n- It is a special field of [abyss](https://abyss.abgox.com).\n- When `version` is [abyss](https://abyss.abgox.com) defined special values, it will also be displayed as a prompt.\n  - `pending`\n  - `renamed`\n  - `deprecated`\n- You can use some variables, which will be automatically replaced when displayed.\n  - `$dir`\n  - `$original_dir`\n  - `$persist_dir`\n  - `$app`\n  - `$version`\n  - `$env:ProgramFiles`\n  - `${env:ProgramFiles(x86)}`\n  - `$env:ProgramData`\n  - `$env:AppData`\n  - `$env:LocalAppData`",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com).\n- Chinese notes after installing the software.\n- If the current environment is Chinese, then display `notes_cn` instead of `notes`.\n- When `version` is [abyss](https://abyss.abgox.com) defined special values, it will also be displayed as a prompt.\n  - `pending`\n  - `renamed`\n  - `deprecated`\n- You can use some variables, which will be automatically replaced when displayed.\n  - `$dir`\n  - `$original_dir`\n  - `$persist_dir`\n  - `$app`\n  - `$version`\n  - `$env:ProgramFiles`\n  - `${env:ProgramFiles(x86)}`\n  - `$env:ProgramData`\n  - `$env:AppData`\n  - `$env:LocalAppData`",
                             "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
@@ -3448,7 +3449,8 @@
                             ]
                         },
                         "font": {
-                            "markdownDescription": "- Install as a font manifest\n- It is a special field of [abyss](https://abyss.abgox.com)\n- Usually, it is set to `true`, unless there is a specific need to specify the font type",
+                            "title": "Install as a font manifest",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- Usually, it is set to `true`, unless there is a specific need to specify the font type",
                             "examples": [
                                 true
                             ],
@@ -3602,10 +3604,17 @@
                         },
                         "pre_install": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "installer": {
@@ -3614,18 +3623,32 @@
                         },
                         "post_install": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "pre_uninstall": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "uninstaller": {
@@ -3634,10 +3657,17 @@
                         },
                         "post_uninstall": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "checkver": {
@@ -3660,10 +3690,17 @@
                                     ],
                                     "minItems": 1,
                                     "items": {
-                                        "not": {
-                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                        },
-                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                        "allOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                                },
+                                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                            }
+                                        ]
                                     },
                                     "allOf": [
                                         {
@@ -4065,7 +4102,7 @@
                                     },
                                     "else": {
                                         "not": true,
-                                        "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be A-Complete-Uninstall"
+                                        "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be 'A-Complete-Install'"
                                     }
                                 }
                             ]
@@ -4253,33 +4290,48 @@
                                     "A-Complete-Uninstall"
                                 ]
                             ],
-                            "if": {
-                                "oneOf": [
-                                    {
-                                        "items": [
+                            "items": [
+                                {
+                                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                                    "markdownDescription": "Set `$bucket` variable.\n- If `$bucket` is null, then use `abgox-abyss-bucket-name` config."
+                                },
+                                {
+                                    "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
+                                    "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
+                                }
+                            ],
+                            "allOf": [
+                                {
+                                    "contains": {
+                                        "const": "A-Complete-Uninstall"
+                                    },
+                                    "errorMessage": "It must contain 'A-Complete-Uninstall', and must be the last item in the array."
+                                },
+                                {
+                                    "$comment": "The implementation of 'if' here can cleverly restrict the last element of the array.",
+                                    "if": {
+                                        "oneOf": [
                                             {
-                                                "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                                                "markdownDescription": "Set `$bucket` variable.\n- If `$bucket` is null, then use `abgox-abyss-bucket-name` config."
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "const": "A-Complete-Uninstall",
+                                                        "markdownDescription": "The end of the uninstall. Any custom uninstall logic should be placed before it.\n- Uninstall process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                    }
+                                                ]
                                             },
                                             {
-                                                "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
-                                                "markdownDescription": "Import `utils.ps1` script.\n- Features in [abyss](https://abyss.abgox.com) are implemented based on it."
-                                            },
-                                            {
-                                                "const": "A-Complete-Uninstall",
-                                                "markdownDescription": "The end of the uninstall. Any custom uninstall logic should be placed before it.\n- Uninstall process: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                "minItems": 4
                                             }
                                         ]
                                     },
-                                    {
-                                        "minItems": 4
+                                    "else": {
+                                        "not": true,
+                                        "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be 'A-Complete-Uninstall'"
                                     }
-                                ]
-                            },
-                            "else": {
-                                "not": true,
-                                "errorMessage": "Either it is the fixed array content or it is at least 4 elements long, and the last item must be A-Complete-Uninstall"
-                            }
+                                }
+                            ]
                         }
                     },
                     "if": {
@@ -4717,7 +4769,12 @@
                             "if": {
                                 "required": [
                                     "extract_to"
-                                ]
+                                ],
+                                "not": {
+                                    "required": [
+                                        "innosetup"
+                                    ]
+                                }
                             },
                             "then": {
                                 "properties": {
@@ -4729,7 +4786,10 @@
                                                         "properties": {
                                                             "url": {
                                                                 "if": {
-                                                                    "pattern": "\\.exe$"
+                                                                    "pattern": "\\.exe$",
+                                                                    "items": {
+                                                                        "pattern": "\\.exe$"
+                                                                    }
                                                                 },
                                                                 "then": {
                                                                     "not": true,
@@ -4978,7 +5038,20 @@
                                     "then": {
                                         "required": [
                                             "new"
-                                        ]
+                                        ],
+                                        "if": {
+                                            "required": [
+                                                "new"
+                                            ]
+                                        },
+                                        "else": {
+                                            "properties": {
+                                                "version": {
+                                                    "not": true,
+                                                    "errorMessage": "When the version is renamed, a new field is needed to specify the new manifest name"
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             ]

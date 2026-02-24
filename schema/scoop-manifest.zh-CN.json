@@ -3214,11 +3214,12 @@
                             "not": {
                                 "const": "0.0.0"
                             },
-                            "errorMessage": "清单编写完成后，请运行 .\\bin\\checkver.ps1 <app> -u 进行清单更新"
+                            "errorMessage": "清单编写完成后，请运行 .\\bin\\checkver.ps1 <app> -ForceUpdate 进行清单更新"
                         },
                         "new": {
                             "$ref": "#/definitions/str",
-                            "markdownDescription": "新的清单\n- 它会告诉用户当前清单已被重命名，并提示新的清单名称\n- 新的清单名称来自本字段的定义"
+                            "title": "新的清单名称",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 在 [abyss](https://abyss.abgox.com) 中，无法安装版本号为 `renamed` 的清单\n- 如果尝试安装，它会被拒绝，并提示新的清单名称\n- 新的清单名称由 `new` 字段来定义"
                         },
                         "description": {
                             "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -3342,7 +3343,7 @@
                         },
                         "notes_cn": {
                             "title": "提示信息 (中文)",
-                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 `notes_cn` 而不是 `notes`\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `version` 为 [abyss](https://abyss.abgox.com) 定义的以下特殊值时，它也会作为相关的说明提示\n  - `pending`\n  - `renamed`\n  - `deprecated`\n- 可以使用一些变量，它会在显示时自动替换\n  - `$dir`\n  - `$original_dir`\n  - `$persist_dir`\n  - `$app`\n  - `$version`\n  - `$env:ProgramFiles`\n  - `${env:ProgramFiles(x86)}`\n  - `$env:ProgramData`\n  - `$env:AppData`\n  - `$env:LocalAppData`",
+                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 `notes_cn` 而不是 `notes`\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `version` 为 [abyss](https://abyss.abgox.com) 定义的以下特殊值时，它也会作为相关的说明提示\n  - `pending`\n  - `renamed`\n  - `deprecated`",
                             "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
@@ -3448,7 +3449,8 @@
                             ]
                         },
                         "font": {
-                            "markdownDescription": "- 作为字体清单安装\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 通常设置为 `true`，除非有明确指定字体类型的必要",
+                            "title": "作为字体清单安装",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 通常设置为 `true`，除非有明确指定字体类型的必要",
                             "examples": [
                                 true
                             ],
@@ -3602,10 +3604,17 @@
                         },
                         "pre_install": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "installer": {
@@ -3614,18 +3623,32 @@
                         },
                         "post_install": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "pre_uninstall": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "uninstaller": {
@@ -3634,10 +3657,17 @@
                         },
                         "post_uninstall": {
                             "items": {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                "allOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                    }
+                                ]
                             }
                         },
                         "checkver": {
@@ -3660,10 +3690,17 @@
                                     ],
                                     "minItems": 1,
                                     "items": {
-                                        "not": {
-                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                        },
-                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                        "allOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                                },
+                                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                            }
+                                        ]
                                     },
                                     "allOf": [
                                         {
@@ -4253,33 +4290,48 @@
                                     "A-Complete-Uninstall"
                                 ]
                             ],
-                            "if": {
-                                "oneOf": [
-                                    {
-                                        "items": [
+                            "items": [
+                                {
+                                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                                    "markdownDescription": "设置 `$bucket` 变量\n- 如果 `$bucket` 为空，则使用 `abgox-abyss-bucket-name` 配置项"
+                                },
+                                {
+                                    "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
+                                    "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
+                                }
+                            ],
+                            "allOf": [
+                                {
+                                    "contains": {
+                                        "const": "A-Complete-Uninstall"
+                                    },
+                                    "errorMessage": "数组中必须包含 A-Complete-Uninstall，且它必须是数组的最后一项"
+                                },
+                                {
+                                    "$comment": "这里的 if 实现可以很巧妙的限制数组的最后一位",
+                                    "if": {
+                                        "oneOf": [
                                             {
-                                                "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                                                "markdownDescription": "设置 `$bucket` 变量\n- 如果 `$bucket` 为空，则使用 `abgox-abyss-bucket-name` 配置项"
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "const": "A-Complete-Uninstall",
+                                                        "markdownDescription": "卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                    }
+                                                ]
                                             },
                                             {
-                                                "const": ". $bucketsdir\\$bucket\\script\\utils.ps1",
-                                                "markdownDescription": "引入 `utils.ps1` 脚本\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
-                                            },
-                                            {
-                                                "const": "A-Complete-Uninstall",
-                                                "markdownDescription": "卸载过程的结束，任何自定义卸载逻辑都应该放在它之前\n- 卸载过程: `pre_uninstall` -> `uninstaller` -> `post_uninstall`"
+                                                "minItems": 4
                                             }
                                         ]
                                     },
-                                    {
-                                        "minItems": 4
+                                    "else": {
+                                        "not": true,
+                                        "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Uninstall"
                                     }
-                                ]
-                            },
-                            "else": {
-                                "not": true,
-                                "errorMessage": "要么是规定好的数组内容，要么是至少有 4 个元素的数组，且最后一项为 A-Complete-Uninstall"
-                            }
+                                }
+                            ]
                         }
                     },
                     "if": {
@@ -4717,7 +4769,12 @@
                             "if": {
                                 "required": [
                                     "extract_to"
-                                ]
+                                ],
+                                "not": {
+                                    "required": [
+                                        "innosetup"
+                                    ]
+                                }
                             },
                             "then": {
                                 "properties": {
@@ -4729,7 +4786,10 @@
                                                         "properties": {
                                                             "url": {
                                                                 "if": {
-                                                                    "pattern": "\\.exe$"
+                                                                    "pattern": "\\.exe$",
+                                                                    "items": {
+                                                                        "pattern": "\\.exe$"
+                                                                    }
                                                                 },
                                                                 "then": {
                                                                     "not": true,
@@ -4978,7 +5038,20 @@
                                     "then": {
                                         "required": [
                                             "new"
-                                        ]
+                                        ],
+                                        "if": {
+                                            "required": [
+                                                "new"
+                                            ]
+                                        },
+                                        "else": {
+                                            "properties": {
+                                                "version": {
+                                                    "not": true,
+                                                    "errorMessage": "version 为 renamed 时，需要 new 字段去指定新的清单名称"
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             ]
