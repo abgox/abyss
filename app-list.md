@@ -21,7 +21,7 @@
 
 ---
 
-|App (818)|Tag|Description|
+|App (819)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -621,6 +621,7 @@
 |[Nushell.Nushell](https://www.nushell.sh/)|<a href="./bucket/n/Nushell/Nushell.Nushell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A new type of shell written in Rust|
 |[Obsidian.Obsidian](https://obsidian.md/)|<a href="./bucket/o/Obsidian/Obsidian.Obsidian.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Powerful knowledge base that works on top of a local folder of plain text Markdown files|
 |[OBSProject.OBSStudio](https://obsproject.com/)|<a href="./bucket/o/OBSProject/OBSProject.OBSStudio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Free and open source software for video recording and live streaming|
+|[OctasoftLtd.WSLUI](https://wsl-ui.octasoft.co.uk/)|<a href="./bucket/o/OctasoftLtd/OctasoftLtd.WSLUI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|WSL-UI - A lightweight desktop application to manage Windows Subsystem for Linux (WSL) distributions|
 |[okibcn.nano](https://github.com/okibcn/nano-for-windows)|<a href="./bucket/o/okibcn/okibcn.nano.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A small and simple text editor for use on the terminal|
 |[oldj.switchhosts](https://switchhosts.vercel.app/)|<a href="./bucket/o/oldj/oldj.switchhosts.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An App for hosts management & switching. Switch hosts quickly|
 |[OliverSchwendener.ueli](https://ueli.app/)|<a href="./bucket/o/OliverSchwendener/OliverSchwendener.ueli.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Cross-Platform Keystroke Launcher|

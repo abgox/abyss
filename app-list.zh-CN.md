@@ -21,7 +21,7 @@
 
 ---
 
-|App (818)|Tag|Description|
+|App (819)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -621,6 +621,7 @@
 |[Nushell.Nushell](https://www.nushell.sh/)|<a href="./bucket/n/Nushell/Nushell.Nushell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一种用 Rust 编写的新型 shell|
 |[Obsidian.Obsidian](https://obsidian.md/)|<a href="./bucket/o/Obsidian/Obsidian.Obsidian.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|强大的知识库，基于 Markdown 文件|
 |[OBSProject.OBSStudio](https://obsproject.com/)|<a href="./bucket/o/OBSProject/OBSProject.OBSStudio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于视频录制和直播的免费开源软件|
+|[OctasoftLtd.WSLUI](https://wsl-ui.octasoft.co.uk/)|<a href="./bucket/o/OctasoftLtd/OctasoftLtd.WSLUI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|WSL-UI - 一款轻量级桌面应用程序，用于管理 Windows 子系统 Linux（WSL）发行版|
 |[okibcn.nano](https://github.com/okibcn/nano-for-windows)|<a href="./bucket/o/okibcn/okibcn.nano.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款用于终端的小型且简单的文本编辑器|
 |[oldj.switchhosts](https://switchhosts.vercel.app/)|<a href="./bucket/o/oldj/oldj.switchhosts.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个管理、切换多个 hosts 方案的工具，快速切换 hosts|
 |[OliverSchwendener.ueli](https://ueli.app/)|<a href="./bucket/o/OliverSchwendener/OliverSchwendener.ueli.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|跨平台的按键启动器|
