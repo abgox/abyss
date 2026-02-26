@@ -21,7 +21,7 @@
 
 ---
 
-|App (819)|Tag|Description|
+|App (820)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -520,6 +520,7 @@
 |[MikeFarah.yq](https://mikefarah.gitbook.io/yq/)|<a href="./bucket/m/MikeFarah/MikeFarah.yq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款便携式的命令行 YAML、JSON、XML、CSV、TOML 和 properties 处理器|
 |[MilkShift.GoofCord](https://github.com/Milkshiift/GoofCord)|<a href="./bucket/m/MilkShift/MilkShift.GoofCord.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款可高度配置且注重隐私的 Discord 客户端|
 |[MindMapTeam.SimpleMindMap](https://github.com/wanglin2/mind-map)|<a href="./bucket/m/MindMapTeam/MindMapTeam.SimpleMindMap.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个还算强大的 Web 思维导图|
+|[Miro.Miro-PDF](https://github.com/vincent-uden/miro)|<a href="./bucket/m/Miro/Miro.Miro-PDF.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个原生的 Windows 和 Linux（Wayland/X11）PDF 浏览器，带有可配置的快捷键绑定|
 |[Mobatek.MobaXterm](https://mobaxterm.mobatek.net/)|<a href="./bucket/m/Mobatek/Mobatek.MobaXterm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|适用于 Windows 的增强型终端，配备 X11 服务器、多标签 SSH 客户端、网络工具等诸多功能|
 |[moonbitlang.moonbit](https://www.moonbitlang.com/)|<a href="./bucket/m/moonbitlang/moonbitlang.moonbit.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|MoonBit 是一种类似 Rust 的语言（支持垃圾回收），也是一个为 WebAssembly 体验优化的工具链|
 |[MoonchildProductions.PaleMoon](https://www.palemoon.org/)|<a href="./bucket/m/MoonchildProductions/MoonchildProductions.PaleMoon.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Pale Moon 基于 Firefox 构建，是一款以 Goanna 为引擎、注重效率和自定义功能的网页浏览器|
