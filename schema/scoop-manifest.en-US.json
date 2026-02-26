@@ -3976,19 +3976,19 @@
                                             },
                                             {
                                                 "const": "A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"",
-                                                "markdownDescription": "Use `SymbolicLink` to link data files\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
+                                                "markdownDescription": "Use `SymbolicLink` to link data files\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, except for a few special cases.\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
                                             },
                                             {
                                                 "pattern": "A-New-LinkFile",
-                                                "markdownDescription": "Use `SymbolicLink` to link data files\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
+                                                "markdownDescription": "Use `SymbolicLink` to link data files\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, except for a few special cases.\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- e.g. `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- If the file does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
                                             },
                                             {
                                                 "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"",
-                                                "markdownDescription": "Use `Junction` to link data directories\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
+                                                "markdownDescription": "Use `Junction` to link data directories\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, except for a few special cases.\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
                                             },
                                             {
                                                 "pattern": "A-New-LinkDirectory",
-                                                "markdownDescription": "Use `Junction` to link data directories\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, such as `$home`, `$env:AppData`, `$env:LocalAppData`, `$env:xxx`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
+                                                "markdownDescription": "Use `Junction` to link data directories\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, except for a few special cases.\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
                                             },
                                             {
                                                 "const": "A-Add-MsixPackage 'PackageFamilyName'",
@@ -4017,8 +4017,8 @@
                                                     "pattern": "(?<!#.*)A-New-LinkFile"
                                                 },
                                                 "then": {
-                                                    "pattern": "^A-New-LinkFile\\s+\"(\\$env:[^\"]+|\\$home[^\"]*)\"(\\s*,\\s*\"(\\$env:[^\"]+|\\$home[^\"]*)\")*$",
-                                                    "errorMessage": "It should use standard directory, such as $home, $env:AppData, $env:LocalAppData, $env:xxx"
+                                                    "pattern": "^A-New-LinkDirectory\\s+\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\"(\\s*,\\s*\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\")*$",
+                                                    "errorMessage": "It should use standard directory, such as $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
                                                 }
                                             },
                                             {
@@ -4026,8 +4026,8 @@
                                                     "pattern": "(?<!#.*)A-New-LinkDirectory"
                                                 },
                                                 "then": {
-                                                    "pattern": "^A-New-LinkDirectory\\s+\"(\\$env:[^\"]+|\\$home[^\"]*)\"(\\s*,\\s*\"(\\$env:[^\"]+|\\$home[^\"]*)\")*$",
-                                                    "errorMessage": "It should use standard directory, such as $home, $env:AppData, $env:LocalAppData, $env:xxx"
+                                                    "pattern": "^A-New-LinkDirectory\\s+\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\"(\\s*,\\s*\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\")*$",
+                                                    "errorMessage": "It should use standard directory, such as $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
                                                 }
                                             }
                                         ]
