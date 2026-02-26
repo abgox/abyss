@@ -1,0 +1,61 @@
+{
+    "version": "0.7.3",
+    "description": "一个原生的 Windows 和 Linux（Wayland/X11）PDF 浏览器，带有可配置的快捷键绑定 | A native pdf viewer for Windows and Linux (Wayland/X11) with configurable keybindings",
+    "homepage": "https://github.com/vincent-uden/miro",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/vincent-uden/miro/releases/download/v0.7.3/miro-pdf.exe",
+            "hash": "f14abd9e11f86cb8de1c7130c9cb26b45c181d4869c6bbee37ce825a1eb3d839"
+        }
+    },
+    "bin": "miro-pdf.exe",
+    "shortcuts": [
+        [
+            "miro-pdf.exe",
+            "Miro PDF"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$home\\.config\\miro-pdf\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/vincent-uden/miro/releases/download/v$version/miro-pdf.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
