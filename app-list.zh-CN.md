@@ -21,7 +21,7 @@
 
 ---
 
-|App (820)|Tag|Description|
+|App (821)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -661,6 +661,7 @@
 |[PowerShell.PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer)|<a href="./bucket/p/PowerShell/PowerShell.PSScriptAnalyzer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|适用于 PowerShell 模块和脚本的静态代码检查器|
 |[Predidit.Kazumi](https://kazumi.app/)|<a href="./bucket/p/Predidit/Predidit.Kazumi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于自定义规则的番剧采集 APP|
 |[Predidit.oneAnime](https://github.com/Predidit/oneAnime)|<a href="./bucket/p/Predidit/Predidit.oneAnime.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款看番软件，带弹幕的 anime1 第三方客户端|
+|[Primesieve.Primesieve](https://github.com/kimwalisch/primesieve)|<a href="./bucket/p/Primesieve/Primesieve.Primesieve.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个使用埃拉托斯特尼筛法生成质数的命令行程序|
 |[Proton.ProtonPass](https://proton.me/pass)|<a href="./bucket/p/Proton/Proton.ProtonPass.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开源且加密的密码管理器|
 |[psake.psake](https://psake.dev/)|<a href="./bucket/p/psake/psake.psake.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个用 PowerShell 编写的构建自动化工具|
 |[Psyche.Kelivo](https://kelivo.psycheas.top/)|<a href="./bucket/p/Psyche/Psyche.Kelivo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个 Flutter LLM 聊天客户端|

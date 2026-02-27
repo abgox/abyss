@@ -21,7 +21,7 @@
 
 ---
 
-|App (820)|Tag|Description|
+|App (821)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -661,6 +661,7 @@
 |[PowerShell.PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer)|<a href="./bucket/p/PowerShell/PowerShell.PSScriptAnalyzer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A static code checker for PowerShell modules and scripts|
 |[Predidit.Kazumi](https://kazumi.app/)|<a href="./bucket/p/Predidit/Predidit.Kazumi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A custom rule based anime collection APP|
 |[Predidit.oneAnime](https://github.com/Predidit/oneAnime)|<a href="./bucket/p/Predidit/Predidit.oneAnime.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A third-party client for anime1 with subtitle features|
+|[Primesieve.Primesieve](https://github.com/kimwalisch/primesieve)|<a href="./bucket/p/Primesieve/Primesieve.Primesieve.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A command-line program that generates primes using the sieve of Eratosthenes algorithm|
 |[Proton.ProtonPass](https://proton.me/pass)|<a href="./bucket/p/Proton/Proton.ProtonPass.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Open-source and encrypted password manager|
 |[psake.psake](https://psake.dev/)|<a href="./bucket/p/psake/psake.psake.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A build automation tool written in PowerShell|
 |[Psyche.Kelivo](https://kelivo.psycheas.top/)|<a href="./bucket/p/Psyche/Psyche.Kelivo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A Flutter LLM Chat Client|
