@@ -368,20 +368,19 @@ function A-Remove-Link {
         根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
-    if (
-        (Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -or
-        (Test-Path -LiteralPath $abgox_abyss.path.InstallApp) -or
-        (Test-Path -LiteralPath $abgox_abyss.path.InstallInno) -or
-        (Test-Path -LiteralPath $abgox_abyss.path.InstallMsi)
-    ) {
-        # 通过 Msix 打包的程序或安装程序安装的应用，在卸载时可能会删除所有数据文件，因此必须先删除链接目录以保留数据
-    }
-    elseif ($abgox_abyss.uninstallActionLevel -notlike '*2*') {
-        # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
-        if (-not $purge) {
-            return
-        }
-    }
+    # $byMsix = Test-Path -LiteralPath $abgox_abyss.path.MsixPackage
+    # $byApp = (Test-Path -LiteralPath $abgox_abyss.path.InstallApp) -or (Test-Path -LiteralPath $abgox_abyss.path.InstallInno)
+    # $byMsi = Test-Path -LiteralPath $abgox_abyss.path.InstallMsi
+
+    # if (-not ($byMsix -or $byApp -or $byMsi)) {
+    #     # 它们在卸载时可能会删除所有数据文件，因此必须先删除链接目录以保留数据
+    #     return
+    # }
+
+    # if (-not ($abgox_abyss.uninstallActionLevel.Contains('2') -or $purge)) {
+    #     # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 2，则需要执行删除操作
+    #     return
+    # }
 
     @($abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory) | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
@@ -429,11 +428,12 @@ function A-Remove-TempData {
         [array]$Paths
     )
 
-    if ($cmd -eq 'update' -or $abgox_abyss.uninstallActionLevel -notlike '*3*') {
-        # 如果使用了 -p 或 --purge 参数，则需要执行删除操作
-        if (-not $purge) {
-            return
-        }
+    if ($cmd -eq 'update') {
+        return
+    }
+    if (-not ($abgox_abyss.uninstallActionLevel.Contains('3') -or $purge)) {
+        # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 3，则需要执行删除操作
+        return
     }
     foreach ($p in $Paths) {
         if (Test-Path -LiteralPath $p) {
@@ -478,7 +478,7 @@ function A-Stop-Process {
     )
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if ($abgox_abyss.uninstallActionLevel -notlike '*1*' -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    if (-not $abgox_abyss.uninstallActionLevel.Contains('1') -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
         return
     }
 
