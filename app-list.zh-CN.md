@@ -21,7 +21,7 @@
 
 ---
 
-|App (821)|Tag|Description|
+|App (822)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -407,6 +407,7 @@
 |[Insco.PicGuard](https://www.picguard.app/)|<a href="./bucket/i/Insco/Insco.PicGuard.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|给图片添加水印, 防止被恶意使用|
 |[Insco.PicGuard.Pro](https://www.picguard.app/)|<a href="./bucket/i/Insco/Insco.PicGuard.Pro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|给图片添加水印, 防止被恶意使用|
 |[Insomnia.Insomnia](https://insomnia.rest/)|<a href="./bucket/i/Insomnia/Insomnia.Insomnia.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的跨平台 API 客户端，适用于 GraphQL、REST、WebSockets、SSE 和 gRPC，具有 Cloud、Local 和 Git 存储|
+|[InterceptSuite.ProxyBridge](https://interceptsuite.com/)|<a href="./bucket/i/InterceptSuite/InterceptSuite.ProxyBridge.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款轻量级、开源的通用代理客户端（Proxifier 替代方案），可为 Windows 和 macOS 上的应用程序提供透明代理路由|
 |[iscute.chfs](http://iscute.cn/chfs)|<a href="./bucket/i/iscute/iscute.chfs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|CuteHttpFileServer，一个免费的 http 服务器文件共享工具，通过局域网实现文件传输|
 |[itchyny.bed](https://github.com/itchyny/bed)|<a href="./bucket/i/itchyny/itchyny.bed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用 Go 语言编写的二进制编辑器|
 |[itchyny.gojq](https://github.com/itchyny/gojq)|<a href="./bucket/i/itchyny/itchyny.gojq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|jq 的 Go 语言实现|

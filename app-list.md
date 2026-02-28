@@ -21,7 +21,7 @@
 
 ---
 
-|App (821)|Tag|Description|
+|App (822)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -407,6 +407,7 @@
 |[Insco.PicGuard](https://www.picguard.app/)|<a href="./bucket/i/Insco/Insco.PicGuard.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Your pictures, your signature|
 |[Insco.PicGuard.Pro](https://www.picguard.app/)|<a href="./bucket/i/Insco/Insco.PicGuard.Pro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Your pictures, your signature|
 |[Insomnia.Insomnia](https://insomnia.rest/)|<a href="./bucket/i/Insomnia/Insomnia.Insomnia.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The open-source, cross-platform API client for GraphQL, REST, WebSockets, SSE and gRPC. With Cloud, Local and Git storage|
+|[InterceptSuite.ProxyBridge](https://interceptsuite.com/)|<a href="./bucket/i/InterceptSuite/InterceptSuite.ProxyBridge.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A lightweight, open-source universal proxy client (Proxifier alternative) that provides transparent proxy routing for applications on Windows and macOS|
 |[iscute.chfs](http://iscute.cn/chfs)|<a href="./bucket/i/iscute/iscute.chfs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|CuteHttpFileServer, A free file sharing http server tool|
 |[itchyny.bed](https://github.com/itchyny/bed)|<a href="./bucket/i/itchyny/itchyny.bed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Binary editor written in Go|
 |[itchyny.gojq](https://github.com/itchyny/gojq)|<a href="./bucket/i/itchyny/itchyny.gojq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Go implementation of jq|
