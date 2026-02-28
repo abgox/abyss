@@ -1,0 +1,55 @@
+{
+    "version": "1.12.1",
+    "description": "用于实时监控和探索 Kubernetes 资源的 TUI 工具 | TUI tool for real-time monitoring and exploration of Kubernetes resources",
+    "homepage": "https://github.com/sarub0b0/kubetui",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sarub0b0/kubetui/releases/download/v1.12.1/kubetui-x86_64-pc-windows-msvc.exe#/kubetui.exe",
+            "hash": "11a53a52a011cdd871f48251e34f0e689a96f0db803bc081106c68e8a4e10f95"
+        }
+    },
+    "bin": "kubetui.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-New-LinkDirectory \"$home\\.config\\kubetui\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sarub0b0/kubetui/releases/download/v$version/kubetui-x86_64-pc-windows-msvc.exe#/kubetui.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
