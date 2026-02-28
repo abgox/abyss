@@ -1,0 +1,56 @@
+{
+    "version": "0.1.1",
+    "description": "PowerShell 的自动补全功能 | Autocomplete for PowerShell",
+    "homepage": "https://github.com/AnderssonPeter/PowerType",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/powertype.0.1.1.nupkg",
+            "hash": "bd0e9d7d3d3d8413db5b6532774fad77f0c3dcc9cef8229597367ecac0442dc2"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/powertype.0.1.1.nupkg",
+            "hash": "bd0e9d7d3d3d8413db5b6532774fad77f0c3dcc9cef8229597367ecac0442dc2"
+        }
+    },
+    "psmodule": {
+        "name": "PowerType"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.powershellgallery.com/packages/powertype",
+        "regex": "<h2>([\\d.]+)</h2>"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/powertype.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/powertype.$version.nupkg"
+            }
+        }
+    }
+}
