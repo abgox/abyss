@@ -1,0 +1,61 @@
+{
+    "version": "10.3.1",
+    "description": "一种能够让任意两台计算机简单且安全地传输文件和文件夹的工具 | A tool that allows any two computers to simply and securely transfer files and folders",
+    "homepage": "https://schollz.com/software/croc6",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/schollz/croc/releases/download/v10.3.1/croc_v10.3.1_Windows-64bit.zip",
+            "hash": "005d563026de72ce703d10833354dd5fe952301a69d73d67f8004a19c42bfcb4"
+        },
+        "arm64": {
+            "url": "https://github.com/schollz/croc/releases/download/v10.3.1/croc_v10.3.1_Windows-ARM64.zip",
+            "hash": "cc1d065a0c84947c4950718e4d4898d4b8102cf798d6f669d007c6ca06038833"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\croc.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/schollz/croc/releases/download/v$version/croc_v$version_Windows-64bit.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/schollz/croc/releases/download/v$version/croc_v$version_Windows-ARM64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
