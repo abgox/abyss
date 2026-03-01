@@ -21,7 +21,7 @@
 
 ---
 
-|App (822)|Tag|Description|
+|App (823)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -412,6 +412,7 @@
 |[itchyny.bed](https://github.com/itchyny/bed)|<a href="./bucket/i/itchyny/itchyny.bed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Binary editor written in Go|
 |[itchyny.gojq](https://github.com/itchyny/gojq)|<a href="./bucket/i/itchyny/itchyny.gojq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Go implementation of jq|
 |[JackieLiu.NotepadsApp](https://www.notepadsapp.com/)|<a href="./bucket/j/JackieLiu/JackieLiu.NotepadsApp.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|A modern, lightweight text editor with a minimalist design|
+|[jamiepine.voicebox](https://voicebox.sh/)|<a href="./bucket/j/jamiepine/jamiepine.voicebox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The open-source voice synthesis studio powered by Qwen3-TTS|
 |[Jan.Jan](https://jan.ai/)|<a href="./bucket/j/Jan/Jan.Jan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open source alternative to ChatGPT that runs 100% offline on your computer|
 |[JanDeDobbeleer.OhMyPosh](https://ohmyposh.dev/)|<a href="./bucket/j/JanDeDobbeleer/JanDeDobbeleer.OhMyPosh.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A prompt theme engine for any shell|
 |[JavadMotallebi.NeatDownloadManager](https://www.neatdownloadmanager.com/)|<a href="./bucket/j/JavadMotallebi/JavadMotallebi.NeatDownloadManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Neat Download Manager is a free download manager and accelerator|

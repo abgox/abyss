@@ -21,7 +21,7 @@
 
 ---
 
-|App (822)|Tag|Description|
+|App (823)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -412,6 +412,7 @@
 |[itchyny.bed](https://github.com/itchyny/bed)|<a href="./bucket/i/itchyny/itchyny.bed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用 Go 语言编写的二进制编辑器|
 |[itchyny.gojq](https://github.com/itchyny/gojq)|<a href="./bucket/i/itchyny/itchyny.gojq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|jq 的 Go 语言实现|
 |[JackieLiu.NotepadsApp](https://www.notepadsapp.com/)|<a href="./bucket/j/JackieLiu/JackieLiu.NotepadsApp.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|一款设计简约的现代轻量级文本编辑器|
+|[jamiepine.voicebox](https://voicebox.sh/)|<a href="./bucket/j/jamiepine/jamiepine.voicebox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于 Qwen3-TTS 的开源语音合成平台|
 |[Jan.Jan](https://jan.ai/)|<a href="./bucket/j/Jan/Jan.Jan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|ChatGPT 的开源替代品，可在计算机上百分百脱机运行|
 |[JanDeDobbeleer.OhMyPosh](https://ohmyposh.dev/)|<a href="./bucket/j/JanDeDobbeleer/JanDeDobbeleer.OhMyPosh.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|适用于任何 shell 的提示主题引擎|
 |[JavadMotallebi.NeatDownloadManager](https://www.neatdownloadmanager.com/)|<a href="./bucket/j/JavadMotallebi/JavadMotallebi.NeatDownloadManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Neat Download Manager 是一款免费的下载管理器和加速器|
