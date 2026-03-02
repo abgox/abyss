@@ -21,7 +21,7 @@
 
 ---
 
-|App (823)|Tag|Description|
+|App (825)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -460,6 +460,7 @@
 |[kingToolbox.WindTerm](https://github.com/kingToolbox/WindTerm)|<a href="./bucket/k/kingToolbox/kingToolbox.WindTerm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|专业的跨平台 SSH/Sftp/Shell/Telnet/Tmux/Serial 终端|
 |[KitLib.Kite](https://kite.kitlib.cn/)|<a href="./bucket/k/KitLib/KitLib.Kite.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Kite 待办是一款按天规划的待办应用。轻量精简，无广告，注重隐私，数据离线存储在本地|
 |[klsdf.GreenResourcesManager](https://github.com/klsdf/GreenResourcesManager)|<a href="./bucket/k/klsdf/klsdf.GreenResourcesManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个管理电脑内资源，并提供游戏化的综合管理器|
+|[kosay.kubetui](https://github.com/sarub0b0/kubetui)|<a href="./bucket/k/kosay/kosay.kubetui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于实时监控和探索 Kubernetes 资源的 TUI 工具|
 |[KuaiFan.DooTask](https://www.dootask.com/)|<a href="./bucket/k/KuaiFan/KuaiFan.DooTask.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|轻量级的开源项目管理工具|
 |[Kuingsmile.PicList](https://piclist.cn/)|<a href="./bucket/k/Kuingsmile/Kuingsmile.PicList.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于 PicGo 的图片上传与管理工具|
 |[kweatherman.Folcolor](https://github.com/kweatherman/Folcolor)|<a href="./bucket/k/kweatherman/kweatherman.Folcolor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Windows 文件夹颜色工具|
@@ -713,6 +714,7 @@
 |[sigoden.Argc](https://github.com/sigoden/argc)|<a href="./bucket/s/sigoden/sigoden.Argc.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 Bash CLI 框架，也是 Bash Command Runner|
 |[sigoden.Argc-completions](https://github.com/sigoden/argc-completions)|<a href="./bucket/s/sigoden/sigoden.Argc-completions.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|适用于 1000 多个命令的 bash、zsh、fish、powershell、nushell 自动补全功能|
 |[sigoden.Dufs](https://github.com/sigoden/dufs)|<a href="./bucket/s/sigoden/sigoden.Dufs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个支持静态服务、上传、搜索、访问控制、webdav 等的文件服务器...|
+|[simonmichael.hledger](https://hledger.org/)|<a href="./bucket/s/simonmichael/simonmichael.hledger.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一款功能强大、速度快、直观的纯文本会计工具，具有 CLI、TUI 和 Web 界面|
 |[sinelaw.fresh](https://sinelaw.github.io/fresh/)|<a href="./bucket/s/sinelaw/sinelaw.fresh.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个基于终端的文本编辑器|
 |[SkyArc.LANDrop](https://landrop.app/)|<a href="./bucket/s/SkyArc/SkyArc.LANDrop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|将任何文件拖放到局域网内的任何设备上|
 |[SlackTechnologies.Slack](https://www.slack.com/)|<a href="./bucket/s/SlackTechnologies/SlackTechnologies.Slack.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|一个团队沟通和协作工具|
