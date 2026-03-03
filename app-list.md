@@ -21,7 +21,7 @@
 
 ---
 
-|App (825)|Tag|Description|
+|App (826)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -497,6 +497,7 @@
 |[Meld.Meld](https://meldmerge.org/)|<a href="./bucket/m/Meld/Meld.Meld.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Visual diff and merge tool|
 |[Meta.Sapling](https://sapling-scm.com/)|<a href="./bucket/m/Meta/Meta.Sapling.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Scalable, User-Friendly Source Control System, Compatible with Git|
 |[mg-chao.snow-shot](https://snowshot.top/)|<a href="./bucket/m/mg-chao/mg-chao.snow-shot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Powerful screenshot tool|
+|[michidk.vscli](https://github.com/michidk/vscli)|<a href="./bucket/m/michidk/michidk.vscli.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A CLI/TUI that simplifies launching VSCode projects, with a focus on dev containers|
 |[Microsoft.CascadiaCode](https://github.com/microsoft/cascadia-code)|<a href="./bucket/m/Microsoft/Microsoft.CascadiaCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Font](https://abyss.abgox.com/faq/font)|A fun new coding font that comes bundled with Windows Terminal, and is now the default font in Visual Studio as well|
 |[Microsoft.DotNet.DesktopRuntime.10](https://dotnet.microsoft.com/)|<a href="./bucket/m/Microsoft/Microsoft.DotNet.DesktopRuntime.10.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|.NET is a free, cross-platform, open-source developer platform for building many different types of applications|
 |[Microsoft.DotNet.DesktopRuntime.8](https://dotnet.microsoft.com/)|<a href="./bucket/m/Microsoft/Microsoft.DotNet.DesktopRuntime.8.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|.NET is a free, cross-platform, open-source developer platform for building many different types of applications|

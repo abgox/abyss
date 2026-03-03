@@ -21,7 +21,7 @@
 
 ---
 
-|App (825)|Tag|Description|
+|App (826)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -497,6 +497,7 @@
 |[Meld.Meld](https://meldmerge.org/)|<a href="./bucket/m/Meld/Meld.Meld.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|可视化差异与合并工具|
 |[Meta.Sapling](https://sapling-scm.com/)|<a href="./bucket/m/Meta/Meta.Sapling.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可扩展、用户友好的版本控制系统，兼容 Git|
 |[mg-chao.snow-shot](https://snowshot.top/)|<a href="./bucket/m/mg-chao/mg-chao.snow-shot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|功能强大的截图工具|
+|[michidk.vscli](https://github.com/michidk/vscli)|<a href="./bucket/m/michidk/michidk.vscli.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简化 VSCode 项目启动的 CLI/TUI，重点关注开发容器|
 |[Microsoft.CascadiaCode](https://github.com/microsoft/cascadia-code)|<a href="./bucket/m/Microsoft/Microsoft.CascadiaCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Font](https://abyss.abgox.com/faq/font)|一种有趣的新编码字体，它与 Windows Terminal 捆绑在一起，现在也是 Visual Studio 中的默认字体|
 |[Microsoft.DotNet.DesktopRuntime.10](https://dotnet.microsoft.com/)|<a href="./bucket/m/Microsoft/Microsoft.DotNet.DesktopRuntime.10.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|.NET 是一个免费、跨平台、开源的开发者平台，用于构建多种不同类型的应用程序|
 |[Microsoft.DotNet.DesktopRuntime.8](https://dotnet.microsoft.com/)|<a href="./bucket/m/Microsoft/Microsoft.DotNet.DesktopRuntime.8.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|.NET 是一个免费、跨平台、开源的开发者平台，用于构建多种不同类型的应用程序|
