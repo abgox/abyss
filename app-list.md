@@ -21,7 +21,7 @@
 
 ---
 
-|App (826)|Tag|Description|
+|App (827)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -524,6 +524,7 @@
 |[MikeFarah.yq](https://mikefarah.gitbook.io/yq/)|<a href="./bucket/m/MikeFarah/MikeFarah.yq.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A portable command-line YAML, JSON, XML, CSV, TOML and properties processor|
 |[MilkShift.GoofCord](https://github.com/Milkshiift/GoofCord)|<a href="./bucket/m/MilkShift/MilkShift.GoofCord.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A highly configurable and privacy minded discord client|
 |[MindMapTeam.SimpleMindMap](https://github.com/wanglin2/mind-map)|<a href="./bucket/m/MindMapTeam/MindMapTeam.SimpleMindMap.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A relatively powerful web mind map|
+|[MintplexLabs.AnythingLLM](https://anythingllm.com/)|<a href="./bucket/m/MintplexLabs/MintplexLabs.AnythingLLM.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The all-in-one Desktop & Docker AI application with built-in RAG, AI agents, and more|
 |[Miro.Miro-PDF](https://github.com/vincent-uden/miro)|<a href="./bucket/m/Miro/Miro.Miro-PDF.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A native pdf viewer for Windows and Linux (Wayland/X11) with configurable keybindings|
 |[Mobatek.MobaXterm](https://mobaxterm.mobatek.net/)|<a href="./bucket/m/Mobatek/Mobatek.MobaXterm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Enhanced terminal for Windows with X11 server, tabbed SSH client, network tools and much more|
 |[moonbitlang.moonbit](https://www.moonbitlang.com/)|<a href="./bucket/m/moonbitlang/moonbitlang.moonbit.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|MoonBit is a Rust-like language (with GC support) and toolchain optimized for WebAssembly experience|
