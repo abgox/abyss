@@ -1,5 +1,5 @@
 {
-    "version": "8.42",
+    "version": "8.42-5931",
     "description": "适用于 Windows 和 DOS 的全面硬件分析、监测与报告 | Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS",
     "homepage": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/r/REALiX/HWiNFO",
     "license": {
@@ -7,53 +7,54 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://www.sac.sk/download/utildiag/hwi_842x.exe",
-            "hash": "e530af8b5141f24bebe55868369e4e283bfff6f480e272150e01799019fb4f21",
+            "url": "https://www.sac.sk/download/utildiag/hwi_842.zip",
+            "hash": "78a71c71e215fdb8ae6ff196eddca9a78cb0520ab9ef5d7e16aca7ae6104c911",
             "bin": [
                 [
-                    "HWiNFO64.exe",
+                    "app\\HWiNFO64.exe",
                     "HWiNFO"
                 ]
             ],
             "shortcuts": [
                 [
-                    "HWiNFO64.exe",
+                    "app\\HWiNFO64.exe",
                     "HWiNFO"
                 ]
             ]
         },
         "arm64": {
-            "url": "https://www.sac.sk/download/utildiag/hwi_842x.exe",
-            "hash": "e530af8b5141f24bebe55868369e4e283bfff6f480e272150e01799019fb4f21",
+            "url": "https://www.sac.sk/download/utildiag/hwi_842.zip",
+            "hash": "78a71c71e215fdb8ae6ff196eddca9a78cb0520ab9ef5d7e16aca7ae6104c911",
             "bin": [
                 [
-                    "HWiNFO_ARM64.exe",
+                    "app\\HWiNFO_ARM64.exe",
                     "HWiNFO"
                 ]
             ],
             "shortcuts": [
                 [
-                    "HWiNFO_ARM64.exe",
+                    "app\\HWiNFO_ARM64.exe",
                     "HWiNFO"
                 ]
             ]
         }
     },
+    "extract_to": "app",
     "persist": [
-        "HWiNFO64.INI",
-        "HWiNFO32.INI",
-        "HWiNFO_ARM64.INI"
+        [
+            "app\\HWiNFO64.INI",
+            "HWiNFO64.INI"
+        ],
+        [
+            "app\\HWiNFO_ARM64.INI",
+            "HWiNFO_ARM64.INI"
+        ]
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "foreach ($arch in '64','32','_ARM64') {",
-        "    A-New-File \"$persist_dir\\HWiNFO$arch.INI\" -Content '[Settings]', 'AutoUpdate=0' -Encoding ascii",
-        "    if (Test-PATH \"$persist_dir\\HWiNFO$arch_KEY.txt\" -PathType Leaf) {",
-        "        Copy-Item \"$persist_dir\\HWiNFO$arch_KEY.txt\" \"$dir\"",
-        "    }",
-        "}"
+        "Get-ChildItem -Path $persist_dir -Include '*64_KEY.txt' -Recurse -File | Copy-Item -Destination $dir -Force"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -65,14 +66,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "foreach ($arch in '64','32','_ARM64') {",
-        "    if (Test-PATH \"$dir\\HWiNFO$arch_KEY.txt\" -PathType Leaf) {",
-        "        if (Test-PATH \"$persist_dir\\HWiNFO$arch_KEY.txt\" -PathType Container) {",
-        "            Remove-Item \"$persist_dir\\HWiNFO$arch_KEY.txt\" -Recurse",
-        "        }",
-        "        Copy-Item \"$dir\\HWiNFO$arch_KEY.txt\" \"$persist_dir\"",
-        "    }",
-        "}"
+        "Get-ChildItem -Path \"$dir\\app\" -Filter '*64_KEY.txt' -File | Copy-Item -Destination $persist_dir -Force"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -80,28 +74,16 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\script\\utils.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget 'REALiX.HWiNFO' ''",
-            "$out"
-        ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "url": "https://www.hwinfo.com/ver.txt",
+        "regex": "([\\d.-]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.x64_machine.InstallerSha256"
-                }
+                "url": "https://www.sac.sk/download/utildiag/hwi_$majorVersion$minorVersion.zip"
             },
             "arm64": {
-                "url": "$matchArm64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.arm64_machine.InstallerSha256"
-                }
+                "url": "https://www.sac.sk/download/utildiag/hwi_$majorVersion$minorVersion.zip"
             }
         }
     }
