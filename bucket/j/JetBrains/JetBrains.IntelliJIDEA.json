@@ -1,29 +1,19 @@
 {
-    "version": "deprecated",
+    "version": "2025.3.3",
     "description": "JetBrains 的 IDE 产品，用于 Java 和 Kotlin 开发 | A IDE by JetBrains for Java and Kotlin development",
     "homepage": "https://www.jetbrains.com/idea/",
     "license": {
         "identifier": "Unknown",
         "url": "https://www.jetbrains.com/store/license.html"
     },
-    "notes": [
-        "IntelliJ IDEA has now switched to a unified version.",
-        "For more information, see: https://blog.jetbrains.com/idea/2025/12/intellij-idea-unified-release/",
-        "Please use 'JetBrains.IntelliJIDEA'"
-    ],
-    "notes_cn": [
-        "IntelliJ IDEA 已经切换到统一版本。",
-        "更多信息，请参阅：https://blog.jetbrains.com/idea/2025/12/intellij-idea-unified-release/",
-        "请使用 JetBrains.IntelliJIDEA"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
-            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+            "url": "https://download.jetbrains.com/idea/idea-2025.3.3.exe",
+            "hash": "5831b2f4450aa5ed4c363cd4bbd4d9fc31ae10e46503b3c553dbe8ebdf726888"
         },
         "arm64": {
-            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
-            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+            "url": "https://download.jetbrains.com/idea/idea-2025.3.3-aarch64.exe",
+            "hash": "fcbc8451964fd4fff74582d0e9092c76c3aeadd1b744c3a93964c4eba09877f3"
         }
     },
     "bin": [
@@ -35,7 +25,7 @@
     "shortcuts": [
         [
             "app\\bin\\idea64.exe",
-            "IntelliJ IDEA 2025.2.5"
+            "IntelliJ IDEA 2025.3.3"
         ]
     ],
     "pre_install": [
@@ -76,7 +66,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget 'JetBrains.IntelliJIDEA.Ultimate' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'JetBrains.IntelliJIDEA' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
@@ -84,14 +74,14 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://download.jetbrains.com/idea/ideaIU-$version.exe",
+                "url": "https://download.jetbrains.com/idea/idea-$version.exe",
                 "hash": {
                     "url": "temp-autoupdate.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
-                "url": "https://download.jetbrains.com/idea/ideaIU-$version-aarch64.exe",
+                "url": "https://download.jetbrains.com/idea/idea-$version-aarch64.exe",
                 "hash": {
                     "url": "temp-autoupdate.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
