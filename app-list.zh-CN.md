@@ -21,7 +21,7 @@
 
 ---
 
-|App (828)|Tag|Description|
+|App (830)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -687,6 +687,7 @@
 |[REALiX.HWiNFO](https://github.com/microsoft/winget-pkgs/tree/master/manifests/r/REALiX/HWiNFO)|<a href="./bucket/r/REALiX/REALiX.HWiNFO.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|适用于 Windows 和 DOS 的全面硬件分析、监测与报告|
 |[RealWorldGraphics.RWCursorEditor](https://www.rw-designer.com/cursor-maker)|<a href="./bucket/r/RealWorldGraphics/RealWorldGraphics.RWCursorEditor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个鼠标光标样式编辑器|
 |[rejetto.hfs](https://github.com/rejetto/hfs)|<a href="./bucket/r/rejetto/rejetto.hfs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个可在你的电脑上运行的网络文件服务器|
+|[Reqable.Reqable](https://reqable.com/)|<a href="./bucket/r/Reqable/Reqable.Reqable.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|高性能 API 开发工具|
 |[Rime.Weasel](https://rime.im/)|<a href="./bucket/r/Rime/Rime.Weasel.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|小狼毫输入法 - 一个模块化、可扩展且可定制的输入法引擎|
 |[Rizonesoft.Notepad3](https://github.com/rizonesoft/Notepad3)|<a href="./bucket/r/Rizonesoft/Rizonesoft.Notepad3.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个快速、轻量级的基于 Scintilla 的文本编辑器|
 |[rocksdanister.LivelyWallpaper](https://rocksdanister.com/lively)|<a href="./bucket/r/rocksdanister/rocksdanister.LivelyWallpaper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款免费开源的软件，它能让用户设置动态桌面壁纸和屏幕保护程序|
@@ -849,6 +850,7 @@
 |[zladovan.gorched](https://github.com/zladovan/gorched)|<a href="./bucket/z/zladovan/zladovan.gorched.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款基于终端的游戏，灵感源自 "The Mother of all games" Scorched Earth|
 |[Zoid.Meru](https://meru.so/)|<a href="./bucket/z/Zoid/Zoid.Meru.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源桌面应用程序，它将您的 Gmail 使用体验从浏览器带到桌面|
 |[zTools.zTools](https://github.com/ZToolsCenter/ZTools)|<a href="./bucket/z/zTools/zTools.zTools.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个高性能、可扩展的应用启动器和插件平台|
+|[zu1k.nali](https://github.com/zu1k/nali)|<a href="./bucket/z/zu1k/zu1k.nali.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个查询 IP 地理信息和 CDN 服务提供商的离线终端工具|
 |[zufuliu.notepad4](https://github.com/zufuliu/notepad4)|<a href="./bucket/z/zufuliu/zufuliu.notepad4.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个轻量级的基于 Scintilla 的文本编辑器|
 |[zyedidia.micro](https://micro-editor.github.io/)|<a href="./bucket/z/zyedidia/zyedidia.micro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款现代化且直观的基于终端的文本编辑器|
 
