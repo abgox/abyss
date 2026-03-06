@@ -89,6 +89,7 @@ $order = [ordered]@{
     bin            = ''
     commands       = ''
     shortcuts      = ''
+    link           = ''
     persist        = ''
     pre_install    = ''
     # installer      = ''

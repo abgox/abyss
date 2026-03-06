@@ -1789,6 +1789,8 @@
             "additionalProperties": false
         },
         "bin": {
+            "title": "Program (executable or script) string or string array",
+            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- If the program file is a GUI application and it doesn't accept any commandline arguments, no need to add it in `bin`\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
             "type": [
                 "string",
                 "array"
@@ -1850,8 +1852,19 @@
             "minLength": 1,
             "minItems": 1,
             "uniqueItems": true,
-            "title": "Program (executable or script) string or string array",
-            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```"
+            "if": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "then": {
+                "not": {
+                    "minItems": 1,
+                    "maxItems": 1
+                },
+                "errorMessage": "When the array has only one item, it should be a string."
+            }
         },
         "shortcuts": {
             "type": "array",
@@ -3176,7 +3189,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3501,7 +3514,7 @@
                             }
                         },
                         "bin": {
-                            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- A two-dimensional array can be used to create an alias shim that uses a different name from the real executable and optionally passes arguments to it\n- The inner array must contain at most three strings: program name, alias, arguments (optional)\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
+                            "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- If the program file is a GUI application and it doesn't accept any commandline arguments, no need to add it in `bin`\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
                             "examples": [
                                 "app\\xxx.exe",
                                 [],
@@ -3599,6 +3612,79 @@
                                 ]
                             ]
                         },
+                        "link": {
+                            "markdownDescription": "Use `Junction` or `SymbolicLink` to [link](https://abyss.abgox.com/features/data-persistence/link) app data\n- It is a special field of [abyss](https://abyss.abgox.com)\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory under `$persist_dir`\n- It will be executed automatically during `A-Start-Install` in `pre_install`, and can also be executed manually using `A-New-Link`\n- By default, it creates directory links\n- If you need to link files, please refer to the instructions below and create the corresponding files in the `extra` directory\n### For manifest maintainers\n- You only need to create a directory with the same name as the application under the `extra` directory, and then place the required files or directories inside it\n- Assume the current manifest is: `abgox.test`\n- Assume the following link is defined\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- You can create an `abgox.test` directory under the `extra` directory. It uses a structure mapping similar to the [Link rule](https://abyss.abgox.com/features/data-persistence/link-rule)\n  - Add directory: `AppData\\Roaming\\test` (only required if the directory is not empty)\n  - Create file: `.config\\test\\data.json`\n- If the file or directory does not exist but exists in the `extra` directory, it will be copied first\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- Some common directory structure mappings (essentially removing `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
+                            "type": [
+                                "string",
+                                "array"
+                            ],
+                            "examples": [
+                                []
+                            ],
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "type": "string"
+                                    },
+                                    "then": {
+                                        "minLength": 1,
+                                        "allOf": [
+                                            {
+                                                "pattern": "^\\$",
+                                                "errorMessage": "It only allows paths that start with a variable.\nFor ordinary relative paths, please use the persist field."
+                                            },
+                                            {
+                                                "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                                "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\nLike: $env:AppData\\\\Code"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "type": "array"
+                                    },
+                                    "then": {
+                                        "items": {
+                                            "type": "string",
+                                            "examples": [
+                                                "$home\\xxx",
+                                                "$home\\.config\\xxx",
+                                                "$env:AppData\\xxx",
+                                                "$env:LocalAppData\\xxx",
+                                                "$env:ProgramData\\xxx"
+                                            ],
+                                            "minLength": 1,
+                                            "allOf": [
+                                                {
+                                                    "pattern": "^\\$",
+                                                    "errorMessage": "It only allows paths that start with a variable.\nFor ordinary relative paths, please use the persist field."
+                                                },
+                                                {
+                                                    "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                                    "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\nLike: $env:AppData\\\\Code"
+                                                }
+                                            ]
+                                        },
+                                        "if": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "then": {
+                                            "not": {
+                                                "minItems": 1,
+                                                "maxItems": 1
+                                            },
+                                            "errorMessage": "When the array has only one item, it should be a string."
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         "persist": {
                             "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$home\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory \"$home\\.config\\xxx\"`\n- Lay the foundation for possible seamless migration in the future\n----\nScoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
                         },
@@ -3612,7 +3698,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—\nThey are only allowed to appear in the comments of the script"
                                     }
                                 ]
                             }
@@ -3631,7 +3717,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—\nThey are only allowed to appear in the comments of the script"
                                     }
                                 ]
                             }
@@ -3646,7 +3732,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—\nThey are only allowed to appear in the comments of the script"
                                     }
                                 ]
                             }
@@ -3665,7 +3751,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                        "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—\nThey are only allowed to appear in the comments of the script"
                                     }
                                 ]
                             }
@@ -3698,7 +3784,7 @@
                                                 "not": {
                                                     "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                                 },
-                                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—"
+                                                "errorMessage": "It has invalid Chinese characters\n（）‘’“”，：？！—\nThey are only allowed to appear in the comments of the script"
                                             }
                                         ]
                                     },
@@ -3991,6 +4077,14 @@
                                                 "markdownDescription": "Use `Junction` to link data directories\n- It will use the [Link Rule](https://abyss.abgox.com/features/data-persistence/link-rule) to generate the target directory.\n- It should use standard directory, except for a few special cases.\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- e.g. `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- If the directory does not exist, it will be created automatically.\n- If the data is stored in the app installation directory, it should use the `persist` field."
                                             },
                                             {
+                                                "const": "A-New-Link",
+                                                "markdownDescription": "Execute [link](https://abyss.abgox.com/features/data-persistence/link) manually\n- Under normal circumstances, there is no need to define it manually\n- It will trigger the link at the defined position instead of automatically triggering it in `A-Start-Install`"
+                                            },
+                                            {
+                                                "pattern": "A-New-Link",
+                                                "markdownDescription": "Execute [link](https://abyss.abgox.com/features/data-persistence/link) manually\n- Under normal circumstances, there is no need to define it manually\n- It will trigger the link at the defined position instead of automatically triggering it in `A-Start-Install`"
+                                            },
+                                            {
                                                 "const": "A-Add-MsixPackage 'PackageFamilyName'",
                                                 "markdownDescription": "Install AppX/Msix package\n- e.g. `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
                                             },
@@ -4013,11 +4107,23 @@
                                         ],
                                         "allOf": [
                                             {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-New-LinkFile"
+                                                },
+                                                "errorMessage": "Please use the `link` field instead of 'A-New-LinkFile'"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-New-LinkDirectory"
+                                                },
+                                                "errorMessage": "Please use the `link` field instead of 'A-New-LinkDirectory'"
+                                            },
+                                            {
                                                 "if": {
                                                     "pattern": "(?<!#.*)A-New-LinkFile"
                                                 },
                                                 "then": {
-                                                    "pattern": "^A-New-LinkDirectory\\s+\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\"(\\s*,\\s*\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\")*$",
+                                                    "pattern": "^A-New-LinkFile\\s+\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\"(\\s*,\\s*\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\")*$",
                                                     "errorMessage": "It should use standard directory, such as $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
                                                 }
                                             },
@@ -4163,7 +4269,7 @@
                                             },
                                             {
                                                 "const": "A-Remove-Link",
-                                                "markdownDescription": "Remove SymbolicLink or Junction created by `A-New-LinkFile` and `A-New-LinkDirectory`."
+                                                "markdownDescription": "Remove the data link defined by the `link` field."
                                             },
                                             {
                                                 "const": "A-Remove-MsixPackage",
@@ -4471,13 +4577,9 @@
                                     },
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
-                                                    }
-                                                }
-                                            }
+                                            "required": [
+                                                "link"
+                                            ]
                                         },
                                         "then": {
                                             "properties": {
@@ -4487,7 +4589,7 @@
                                                             "contains": {
                                                                 "pattern": "A-Remove-Link"
                                                             },
-                                                            "errorMessage": "'A-New-LinkFile' or 'A-New-LinkDirectory' is used in 'pre_install', while 'A-Remove-Link' is missing in 'pre_uninstall'"
+                                                            "errorMessage": "'A-Remove-Link' is missing in 'pre_uninstall'"
                                                         },
                                                         {
                                                             "contains": {
@@ -4629,13 +4731,27 @@
                                             }
                                         },
                                         "then": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
+                                            "if": {
+                                                "anyOf": [
+                                                    {
+                                                        "required": [
+                                                            "link"
+                                                        ]
                                                     },
-                                                    "errorMessage": "'A-Remove-Link' is used in 'pre_uninstall', while 'A-New-LinkFile' or 'A-New-LinkDirectory' is missing in 'pre_install'"
-                                                }
+                                                    {
+                                                        "properties": {
+                                                            "pre_install": {
+                                                                "contains": {
+                                                                    "pattern": "(?<!#.*)A-New-LinkDirectory|A-New-LinkFile"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "else": {
+                                                "not": true,
+                                                "errorMessage": "'A-Remove-Link' is used in 'pre_uninstall', while the manifest is missing the 'link' field"
                                             }
                                         }
                                     },
@@ -4734,6 +4850,54 @@
                 },
                 {
                     "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "pre_install": {
+                                        "contains": {
+                                            "pattern": "(?<!#.*)A-New-Link$"
+                                        }
+                                    }
+                                }
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "link"
+                                    ]
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "allOf": [
+                                                {
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Copy-Item"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "'A-Copy-Item' is used in 'pre_install'.\nYou may need to use 'A-New-Link'"
+                                                    }
+                                                },
+                                                {
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-New-File"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "'A-New-File' is used in 'pre_install'.\nYou may need to use 'A-New-Link'"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         {
                             "if": {
                                 "properties": {

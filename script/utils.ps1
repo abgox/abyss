@@ -104,6 +104,12 @@ function A-Start-Install {
             Copy-Item -Path "$home\$target" -Destination "$persist_dir\$target" -Recurse -Force
         }
     }
+    if ($manifest.link -and -not ($manifest.pre_install -match '^\s*A-New-Link$')) {
+        if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
+            A-Require-Admin
+        }
+        A-New-Link $manifest.link
+    }
 }
 
 function A-Complete-Install {
@@ -294,6 +300,26 @@ function A-New-File {
     }
 }
 
+function A-New-Link {
+    $filePaths = @()
+    $dirPaths = @()
+    foreach ($item in $manifest.link) {
+        if ($item -is [array] -and $item[1] -eq 'file') {
+            $filePaths += $item[0]
+            continue
+        }
+        $dirPaths += $item
+    }
+    $filePaths = $filePaths | Where-Object { $_ } | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
+    $dirPaths = $dirPaths | Where-Object { $_ } | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
+    if ($filePaths) {
+        A-New-LinkFile -LinkPaths $filePaths
+    }
+    if ($dirPaths) {
+        A-New-LinkDirectory -LinkPaths $dirPaths
+    }
+}
+
 function A-New-LinkFile {
     <#
     .SYNOPSIS
@@ -329,7 +355,7 @@ function A-New-LinkFile {
         }
     }
 
-    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile $abgox_abyss.path.LinkFile
+    A-New-LinkBase -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType SymbolicLink -OutFile $abgox_abyss.path.LinkFile
 }
 
 function A-New-LinkDirectory {
@@ -355,7 +381,7 @@ function A-New-LinkDirectory {
         [array]$LinkTargets = @()
     )
 
-    A-New-Link -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile $abgox_abyss.path.LinkDirectory
+    A-New-LinkBase -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile $abgox_abyss.path.LinkDirectory
 }
 
 function A-Remove-Link {
@@ -1777,7 +1803,7 @@ function A-Test-Link {
     }
 }
 
-function A-New-Link {
+function A-New-LinkBase {
     <#
     .SYNOPSIS
         创建链接: SymbolicLink 或 Junction

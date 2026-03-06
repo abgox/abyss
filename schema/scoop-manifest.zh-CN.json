@@ -1789,6 +1789,8 @@
             "additionalProperties": false
         },
         "bin": {
+            "title": "程序（可执行文件或脚本）字符串或字符串数组",
+            "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
             "type": [
                 "string",
                 "array"
@@ -1850,8 +1852,19 @@
             "minLength": 1,
             "minItems": 1,
             "uniqueItems": true,
-            "title": "一个程序(可执行文件或脚本)的字符串或字符串数组",
-            "markdownDescription": "- 一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用\n- 可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件\n- 二维数组应该包含最多三个字符串：程序名,别名,参数(可选)\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```"
+            "if": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "then": {
+                "not": {
+                    "minItems": 1,
+                    "maxItems": 1
+                },
+                "errorMessage": "当数组只有一项时，应该使用字符串"
+            }
         },
         "shortcuts": {
             "type": "array",
@@ -3176,7 +3189,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3501,7 +3514,7 @@
                             }
                         },
                         "bin": {
-                            "markdownDescription": "- 一个程序(可执行文件或脚本)的字符串或字符串数组，可在用户路径上使用\n- 可以通过一个二维数组来创建一个别名 shim，它使用与真实的可执行文件不同的名称，并(可选地)将参数传递给可执行文件\n- 二维数组应该包含最多三个字符串：程序名,别名,参数(可选)\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
+                            "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
                             "examples": [
                                 "app\\xxx.exe",
                                 [],
@@ -3599,6 +3612,79 @@
                                 ]
                             ]
                         },
+                        "link": {
+                            "markdownDescription": "使用 `Junction` 或 `SymbolicLink` 去 [link](https://abyss.abgox.com/features/data-persistence/link) 应用数据\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认会进行目录链接，如果需要进行文件链接，请参考下方内容，在 `extra` 目录中创建对应的文件\n### 对于清单编写者\n- 你只需要在 `extra` 目录下创建一个和应用名称相同的目录，然后放入需要的文件或目录即可\n- 假设当前的清单是: `abgox.test`\n- 假设定义了以下的 link\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- 你可以在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 添加目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则先进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
+                            "type": [
+                                "string",
+                                "array"
+                            ],
+                            "examples": [
+                                []
+                            ],
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "type": "string"
+                                    },
+                                    "then": {
+                                        "minLength": 1,
+                                        "allOf": [
+                                            {
+                                                "pattern": "^\\$",
+                                                "errorMessage": "它只允许以变量开头的路径，普通的相对路径，请使用 persist 字段"
+                                            },
+                                            {
+                                                "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                                "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\n参考: $env:AppData\\\\Code"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "type": "array"
+                                    },
+                                    "then": {
+                                        "items": {
+                                            "type": "string",
+                                            "examples": [
+                                                "$home\\xxx",
+                                                "$home\\.config\\xxx",
+                                                "$env:AppData\\xxx",
+                                                "$env:LocalAppData\\xxx",
+                                                "$env:ProgramData\\xxx"
+                                            ],
+                                            "minLength": 1,
+                                            "allOf": [
+                                                {
+                                                    "pattern": "^\\$",
+                                                    "errorMessage": "它只允许以变量开头的路径，普通的相对路径，请使用 persist 字段"
+                                                },
+                                                {
+                                                    "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                                    "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\n参考: $env:AppData\\\\Code"
+                                                }
+                                            ]
+                                        },
+                                        "if": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "then": {
+                                            "not": {
+                                                "minItems": 1,
+                                                "maxItems": 1
+                                            },
+                                            "errorMessage": "当数组只有一项时，应该使用字符串"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         "persist": {
                             "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$home\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory \"$home\\.config\\xxx\"` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
                         },
@@ -3612,7 +3698,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在脚本的注释中出现"
                                     }
                                 ]
                             }
@@ -3631,7 +3717,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在脚本的注释中出现"
                                     }
                                 ]
                             }
@@ -3646,7 +3732,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在脚本的注释中出现"
                                     }
                                 ]
                             }
@@ -3665,7 +3751,7 @@
                                         "not": {
                                             "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                         },
-                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在脚本的注释中出现"
                                     }
                                 ]
                             }
@@ -3698,7 +3784,7 @@
                                                 "not": {
                                                     "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                                 },
-                                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—"
+                                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在脚本的注释中出现"
                                             }
                                         ]
                                     },
@@ -3991,6 +4077,14 @@
                                                 "markdownDescription": "使用 Junction 链接数据目录\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它应该使用标准数据目录，少数特殊情况除外\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- 例如: `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- 如果目录不存在，它会自动创建\n- 如果数据存放在应用安装目录下，则应该使用 `persist` 字段"
                                             },
                                             {
+                                                "const": "A-New-Link",
+                                                "markdownDescription": "手动执行 [link](https://abyss.abgox.com/features/data-persistence/link)\n- 通常情况下，不需要手动定义它\n- 它将在定义的位置触发 link 而不是在 `A-Start-Install` 中自动触发"
+                                            },
+                                            {
+                                                "pattern": "A-New-Link",
+                                                "markdownDescription": "手动执行 [link](https://abyss.abgox.com/features/data-persistence/link)\n- 通常情况下，不需要手动定义它\n- 它将在定义的位置触发 link 而不是在 `A-Start-Install` 中自动触发"
+                                            },
+                                            {
                                                 "const": "A-Add-MsixPackage 'PackageFamilyName'",
                                                 "markdownDescription": "安装 AppX/Msix 包\n- 示例: `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
                                             },
@@ -4013,11 +4107,23 @@
                                         ],
                                         "allOf": [
                                             {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-New-LinkFile"
+                                                },
+                                                "errorMessage": "请使用 link 字段进行定义，而非 A-New-LinkFile"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-New-LinkDirectory"
+                                                },
+                                                "errorMessage": "请使用 link 字段进行定义，而非 A-New-LinkDirectory"
+                                            },
+                                            {
                                                 "if": {
                                                     "pattern": "(?<!#.*)A-New-LinkFile"
                                                 },
                                                 "then": {
-                                                    "pattern": "^A-New-LinkDirectory\\s+\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\"(\\s*,\\s*\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\")*$",
+                                                    "pattern": "^A-New-LinkFile\\s+\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\"(\\s*,\\s*\"((\\$home\\\\|\\$env:(AppData|LocalAppData|ProgramData)\\\\)[^\"]*)\")*$",
                                                     "errorMessage": "它应该使用标准数据目录，例如 $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
                                                 }
                                             },
@@ -4163,7 +4269,7 @@
                                             },
                                             {
                                                 "const": "A-Remove-Link",
-                                                "markdownDescription": "移除由 `A-New-LinkFile` 和 `A-New-LinkDirectory` 创建的 SymbolicLink 或 Junction"
+                                                "markdownDescription": "移除 `link` 字段定义的数据链接"
                                             },
                                             {
                                                 "const": "A-Remove-MsixPackage",
@@ -4471,13 +4577,9 @@
                                     },
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
-                                                    }
-                                                }
-                                            }
+                                            "required": [
+                                                "link"
+                                            ]
                                         },
                                         "then": {
                                             "properties": {
@@ -4487,7 +4589,7 @@
                                                             "contains": {
                                                                 "pattern": "A-Remove-Link"
                                                             },
-                                                            "errorMessage": "pre_install 中使用了 A-New-LinkFile 或 A-New-LinkDirectory，而 pre_uninstall 中缺少 A-Remove-Link"
+                                                            "errorMessage": "pre_uninstall 中缺少 A-Remove-Link"
                                                         },
                                                         {
                                                             "contains": {
@@ -4629,13 +4731,27 @@
                                             }
                                         },
                                         "then": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)"
+                                            "if": {
+                                                "anyOf": [
+                                                    {
+                                                        "required": [
+                                                            "link"
+                                                        ]
                                                     },
-                                                    "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而 pre_install 中缺少 A-New-LinkFile 或 A-New-LinkDirectory"
-                                                }
+                                                    {
+                                                        "properties": {
+                                                            "pre_install": {
+                                                                "contains": {
+                                                                    "pattern": "(?<!#.*)A-New-LinkDirectory|A-New-LinkFile"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "else": {
+                                                "not": true,
+                                                "errorMessage": "pre_uninstall 中使用了 A-Remove-Link， 而清单中缺少 link 字段"
                                             }
                                         }
                                     },
@@ -4734,6 +4850,54 @@
                 },
                 {
                     "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "pre_install": {
+                                        "contains": {
+                                            "pattern": "(?<!#.*)A-New-Link$"
+                                        }
+                                    }
+                                }
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "link"
+                                    ]
+                                },
+                                "then": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "allOf": [
+                                                {
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-Copy-Item"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "pre_install 中使用了 A-Copy-Item，你可能需要使用 A-New-Link"
+                                                    }
+                                                },
+                                                {
+                                                    "if": {
+                                                        "contains": {
+                                                            "pattern": "(?<!#.*)A-New-File"
+                                                        }
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "pre_install 中使用了 A-New-File，你可能需要使用 A-New-Link"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         {
                             "if": {
                                 "properties": {
