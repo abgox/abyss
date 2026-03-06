@@ -277,7 +277,6 @@ function A-New-Link {
         if (-not $item) {
             continue
         }
-        $isDir = $true
         $expandPath = $ExecutionContext.InvokeCommand.ExpandString($item)
         if (Test-Path $expandPath) {
             if (Test-Path $expandPath -PathType Leaf) {
