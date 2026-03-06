@@ -3757,7 +3757,10 @@
                             ]
                         },
                         "persist": {
-                            "markdownDescription": "- 在 [abyss](https://abyss.abgox.com) 中，它的定义需要非常慎重，需要参考可能的默认数据目录\n- 举个例子，如果默认数据目录是 `$home\\.config\\xxx`\n- 当想要通过官方的 [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data) 定义时，就应该使用 `.config\\xxx` (如果可以)\n- 尤其是一些靠环境变量来定义配置数据目录的应用清单\n- 因为它最终的目录结构和 `A-New-LinkDirectory \"$home\\.config\\xxx\"` 一致\n- 为后续可能的无缝迁移提供基础\n---\n- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- Scoop 默认会进行目录链接，如果需要进行文件链接，请参考下方内容，在 `extra` 目录中创建对应的文件\n### 对于清单编写者\n- 你只需要在 `extra` 目录下创建一个和应用名称相同的目录，然后放入需要的文件或目录即可\n- 假设当前的清单是: `abgox.test`\n- 假设定义了以下的 persist\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- Scoop 会默认进行目录链接 (除非 `data.json` 提前作为文件存在，否则也会视为目录)\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 你可以在 `extra` 目录下创建 `abgox.test` 目录\n  - 添加目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则先进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### abyss 对 persist 的高要求\n- 在 [abyss](https://abyss.abgox.com) 中，使用 [persist](https://abyss.abgox.com/features/data-persistence/persist) 有较高的要求，要做到能够随时和 [link](https://abyss.abgox.com/features/data-persistence/link) 无缝切换\n- 举个例子，如果默认数据目录是 `$home\\.config\\xxx`，根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\.config\\xxx`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n- 因此，它只能使用下方的写法，`<source>` 合理即可，但目标目录必须是 `.config\\xxx`，不允许改变\n```json\n  \"persist\": [\n    [\"<source>\", \".config\\\\xxx\"]\n  ]\n  ```",
+                            "examples": [
+                                []
+                            ]
                         },
                         "pre_install": {
                             "items": {
@@ -4072,14 +4075,6 @@
                                                 "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                             },
                                             {
-                                                "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\xxx\" \"$persist_dir\\xxx\"",
-                                                "markdownDescription": "复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
-                                            },
-                                            {
-                                                "pattern": "A-Copy-Item",
-                                                "markdownDescription": "复制文件或目录\n- 例如: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
-                                            },
-                                            {
                                                 "const": "A-Expand-SetupExe",
                                                 "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-*`\n- 除非安装场景更适合 `A-Expand-SetupExe`"
                                             },
@@ -4171,15 +4166,27 @@
                                         "allOf": [
                                             {
                                                 "not": {
+                                                    "pattern": "(?<!#.*)A-New-File"
+                                                },
+                                                "errorMessage": "请使用 extra 目录去提供文件"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-Copy-Item"
+                                                },
+                                                "errorMessage": "请使用 extra 目录去提供文件"
+                                            },
+                                            {
+                                                "not": {
                                                     "pattern": "(?<!#.*)A-New-LinkFile"
                                                 },
-                                                "errorMessage": "请使用 link 字段进行定义，而非 A-New-LinkFile"
+                                                "errorMessage": "请使用 link 字段进行定义"
                                             },
                                             {
                                                 "not": {
                                                     "pattern": "(?<!#.*)A-New-LinkDirectory"
                                                 },
-                                                "errorMessage": "请使用 link 字段进行定义，而非 A-New-LinkDirectory"
+                                                "errorMessage": "请使用 link 字段进行定义"
                                             },
                                             {
                                                 "if": {

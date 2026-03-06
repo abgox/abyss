@@ -3757,7 +3757,10 @@
                             ]
                         },
                         "persist": {
-                            "markdownDescription": "- In [abyss](https://abyss.abgox.com), its definition needs to be very cautious and should refer to the possible default data directory.\n- For example, if the default data directory is `$home\\.config\\xxx`\n- When you want to define via the official [persist](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data), you should use `.config\\xxx` (if possible)\n- Especially some manifests that rely on environment variables to define the configuration data directory\n- Because its final directory structure is consistent with `A-New-LinkDirectory \"$home\\.config\\xxx\"`\n- Lay the foundation for possible seamless migration in the future\n----\nScoop will persist the specified directories and files.\n- Note: Scoop creates directory junctions by default; if you need file-level linking, create the file first in your install script.\n- Example 1: Directory junction: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- Example 2: Same as Ex.1 but multiple items\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- Example 3: Same as Ex.2 but with custom target names\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```"
+                            "markdownDescription": "- Scoop will persist the specified directories and files\n- By default, it creates directory links\n- If you need to link files, please refer to the instructions below and create the corresponding files in the `extra` directory\n### For manifest maintainers\n- You only need to create a directory with the same name as the application under the `extra` directory, and then place the required files or directories inside it\n- Assume the current manifest is: `abgox.test`\n- Assume the following persist is defined\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- Scoop will create directory links by default (unless `data.json` already exists as a file)\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- You can create an `abgox.test` directory under the `extra` directory\n  - Add directory: `config` (only required if the directory is not empty)\n  - Create file: `data.json`\n- If the file or directory does not exist but exists in the `extra` directory, it will be copied first\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### Higher requirements for `persist` in abyss\n- In [abyss](https://abyss.abgox.com), using [persist](https://abyss.abgox.com/features/data-persistence/persist) has stricter requirements to ensure it can seamlessly switch with [link](https://abyss.abgox.com/features/data-persistence/link) at any time\n- For example, if the default data directory is `$home\\.config\\xxx`, according to the [Link rule](https://abyss.abgox.com/features/data-persistence/link-rule), the target directory should be `$persist_dir\\.config\\xxx`\n- Even if the application provides environment variables to freely define the data storage location, abyss does not allow it to affect the stability of the directory structure under `$persist_dir`\n- Therefore, only the following form is allowed: `<source>` can be any reasonable path, but the target directory must be `.config\\xxx` and cannot be changed\n```json\n  \"persist\": [\n    [\"<source>\", \".config\\\\xxx\"]\n  ]\n  ```",
+                            "examples": [
+                                []
+                            ]
                         },
                         "pre_install": {
                             "items": {
@@ -4072,14 +4075,6 @@
                                                 "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                             },
                                             {
-                                                "const": "A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\xxx\" \"$persist_dir\\xxx\"",
-                                                "markdownDescription": "Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
-                                            },
-                                            {
-                                                "pattern": "A-Copy-Item",
-                                                "markdownDescription": "Copy file or directory.\n- For example: `A-Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\InputTip.ini\" \"$persist_dir\\InputTip.ini\"`"
-                                            },
-                                            {
                                                 "const": "A-Expand-SetupExe",
                                                 "markdownDescription": "Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-*`.\n- Unless it is more suitable for `A-Expand-SetupExe`."
                                             },
@@ -4171,15 +4166,27 @@
                                         "allOf": [
                                             {
                                                 "not": {
+                                                    "pattern": "(?<!#.*)A-New-File"
+                                                },
+                                                "errorMessage": "Please use the extra directory to provide files"
+                                            },
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-Copy-Item"
+                                                },
+                                                "errorMessage": "Please use the extra directory to provide files"
+                                            },
+                                            {
+                                                "not": {
                                                     "pattern": "(?<!#.*)A-New-LinkFile"
                                                 },
-                                                "errorMessage": "Please use the `link` field instead of 'A-New-LinkFile'"
+                                                "errorMessage": "Please use the link field"
                                             },
                                             {
                                                 "not": {
                                                     "pattern": "(?<!#.*)A-New-LinkDirectory"
                                                 },
-                                                "errorMessage": "Please use the `link` field instead of 'A-New-LinkDirectory'"
+                                                "errorMessage": "Please use the link field"
                                             },
                                             {
                                                 "if": {

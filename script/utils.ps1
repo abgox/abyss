@@ -85,23 +85,32 @@ function A-Start-Install {
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
     }
-    if ($manifest.persist -is [array]) {
+    if ($manifest.persist) {
         foreach ($item in $manifest.persist) {
             if ($item -is [string]) {
+                $path = "$dir\$item"
+                if (Test-Path $path) {
+                    A-Copy-Item $path "$persist_dir\$item"
+                }
+                $path = "$bucketsdir\$bucket\extra\$app\$item"
+                if (Test-Path $path) {
+                    A-Copy-Item $path "$persist_dir\$item"
+                }
                 continue
             }
-            # $source = $item[0]
+            $source = $item[0]
             $target = $item[1]
-            if ($target -notlike 'AppData\Roaming\*' -and $target -notlike 'AppData\Local\*') {
-                continue
+            $path = "$dir\$source"
+            if (Test-Path $path) {
+                A-Copy-Item $path "$persist_dir\$target"
             }
-            if (Test-Path "$persist_dir\$target") {
-                continue
+            $path = "$bucketsdir\$bucket\extra\$app\$target"
+            if (Test-Path $path) {
+                A-Copy-Item $path "$persist_dir\$target"
             }
-            if (-not (Test-Path "$home\$target") -or (A-Test-Link "$home\$target")) {
-                continue
+            if ((Test-Path "$home\$target") -and -not (A-Test-Link "$home\$target")) {
+                A-Copy-Item "$home\$target" "$persist_dir\$target"
             }
-            Copy-Item -Path "$home\$target" -Destination "$persist_dir\$target" -Recurse -Force
         }
     }
     if ($manifest.env_set) {
@@ -113,11 +122,38 @@ function A-Start-Install {
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
-    if ($manifest.link -and -not ($manifest.pre_install -match '^\s*A-New-Link$')) {
-        if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
-            A-Require-Admin
+    if ($manifest.link) {
+        foreach ($item in $manifest.link) {
+            $path = if ($item -is [array]) { $item[0] } else { $item }
+            $expandPath = $ExecutionContext.InvokeCommand.ExpandString($path)
+            if (Test-Path $expandPath) {
+                if ($expandPath -like "$dir\*") {
+                    $to = $expandPath.Replace("$dir\app\", "$persist_dir\").Replace("$dir\", "$persist_dir\")
+                }
+                else {
+                    $to = $expandPath.Replace("$home", $persist_dir)
+                }
+                A-Copy-Item $expandPath $to
+            }
+            else {
+                if ($expandPath -like "$dir\*") {
+                    $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
+                }
+                else {
+                    $leaf = $expandPath.Replace("$home\", '')
+                }
+                $extraPath = "$bucketsdir\$bucket\extra\$app\$leaf"
+                if (Test-Path $extraPath) {
+                    A-Copy-Item $extraPath "$persist_dir\$leaf"
+                }
+            }
         }
-        A-New-Link $manifest.link
+        if (-not ($manifest.pre_install -match '^\s*A-New-Link$')) {
+            if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
+                A-Require-Admin
+            }
+            A-New-Link $manifest.link
+        }
     }
 }
 
@@ -159,65 +195,6 @@ function A-Ensure-Directory {
     )
     if (-not (Test-Path -LiteralPath $Path)) {
         New-Item -ItemType Directory -Path $Path -Force | Out-Null
-    }
-}
-
-function A-Copy-Item {
-    <#
-    .SYNOPSIS
-        复制文件或目录
-
-    .DESCRIPTION
-        通常用来将 bucket\extra 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
-        因为部分配置文件，如果直接使用 New-Item 或 Set-Content，会出现编码错误
-
-    .EXAMPLE
-        A-Copy-Item "$bucketsdir\$bucket\extra\$app\InputTip.ini" "$persist_dir\InputTip.ini"
-
-    .NOTES
-        文件或目录名必须对应，以下是错误写法
-        A-Copy-Item "$bucketsdir\$bucket\extra\$app\InputTip.ini" $persist_dir
-    #>
-    param (
-        [string]$Path,
-        [string]$Destination
-    )
-
-    if (-not (Test-Path -LiteralPath $Path)) {
-        error "Source path does not exist: $Path"
-        A-Show-IssueCreationPrompt
-        A-Exit
-    }
-
-    $sourceItem = Get-Item -LiteralPath $Path
-    $targetDir = Split-Path $Destination -Parent
-
-    A-Ensure-Directory $targetDir
-
-    $needCopy = $true
-
-    if (Test-Path -LiteralPath $Destination) {
-        $targetItem = Get-Item -LiteralPath $Destination
-
-        if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
-            $needCopy = $false
-        }
-        else {
-            A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
-            $needCopy = $true
-        }
-    }
-
-    if ($needCopy) {
-        try {
-            Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
-            Write-Host "Copying $Path => $Destination"
-        }
-        catch {
-            error $_.Exception.Message
-            A-Show-IssueCreationPrompt
-            A-Exit
-        }
     }
 }
 
@@ -1747,6 +1724,65 @@ function A-Deny-IfAppConflict {
         if (Test-Path (appdir $_)) {
             error "'$app' conflicts with '$_'."
             error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
+            A-Exit
+        }
+    }
+}
+
+function A-Copy-Item {
+    <#
+    .SYNOPSIS
+        复制文件或目录
+
+    .DESCRIPTION
+        通常用来将 bucket\extra 中提前准备好的配置文件复制到 persist 目录下，以便 Scoop 进行 persist
+        因为部分配置文件，如果直接使用 New-Item 或 Set-Content，会出现编码错误
+
+    .EXAMPLE
+        A-Copy-Item "$bucketsdir\$bucket\extra\$app\InputTip.ini" "$persist_dir\InputTip.ini"
+
+    .NOTES
+        文件或目录名必须对应，以下是错误写法
+        A-Copy-Item "$bucketsdir\$bucket\extra\$app\InputTip.ini" $persist_dir
+    #>
+    param (
+        [string]$Path,
+        [string]$Destination
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        error "Source path does not exist: $Path"
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+
+    $sourceItem = Get-Item -LiteralPath $Path
+    $targetDir = Split-Path $Destination -Parent
+
+    A-Ensure-Directory $targetDir
+
+    $needCopy = $true
+
+    if (Test-Path -LiteralPath $Destination) {
+        $targetItem = Get-Item -LiteralPath $Destination
+
+        if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
+            $needCopy = $false
+        }
+        else {
+            A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
+            $needCopy = $true
+        }
+    }
+
+    if ($needCopy) {
+        try {
+            Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
+            Write-Host "Copying $Path => $Destination"
+        }
+        catch {
+            error $_.Exception.Message
+            A-Show-IssueCreationPrompt
             A-Exit
         }
     }
