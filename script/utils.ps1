@@ -104,6 +104,15 @@ function A-Start-Install {
             Copy-Item -Path "$home\$target" -Destination "$persist_dir\$target" -Recurse -Force
         }
     }
+    if ($manifest.env_set) {
+        $manifest.env_set.PSObject.Properties | ForEach-Object {
+            [System.Environment]::SetEnvironmentVariable($_.Name, $ExecutionContext.InvokeCommand.ExpandString($_.Value), [System.EnvironmentVariableTarget]::Process)
+        }
+    }
+    A-Add-Path "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps" -SkipRecord
+    if ($manifest.env_add_path_expand) {
+        A-Add-Path $manifest.env_add_path_expand
+    }
     if ($manifest.link -and -not ($manifest.pre_install -match '^\s*A-New-Link$')) {
         if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
             A-Require-Admin
@@ -128,36 +137,13 @@ function A-Start-Uninstall {
     if ($version -in @('pending', 'deprecated')) {
         A-Deny-Update
     }
-
-    if ($manifest.font) {
-        A-Remove-Font
-    }
+    A-Remove-Font
     A-Remove-Path
     A-Remove-PowerToysRunPlugin
 }
 
 function A-Complete-Uninstall {
 
-}
-
-function A-Add-Path {
-    param(
-        [string[]]$Paths
-    )
-
-    if (get_config USE_ISOLATED_PATH) {
-        Add-Path -Path ('%' + $scoopPathEnvVar + '%') -Global:$global
-    }
-
-    $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
-    $Paths = $Paths | Where-Object { $_ -notin $oldPath }
-    if (-not $Paths) {
-        return
-    }
-
-    Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
-
-    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
 }
 
 function A-Ensure-Directory {
@@ -510,6 +496,9 @@ function A-Stop-Process {
 
     $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
     $Paths += $ExtraPaths
+    if ($manifest.env_add_path_expand) {
+        $Paths += $manifest.env_add_path_expand
+    }
 
     $processes = Get-Process
 
@@ -1779,7 +1768,6 @@ function A-Remove-ToRecycleBin {
     }
 }
 
-
 function A-Test-DirectoryNotEmpty {
     param(
         [string]$Path
@@ -2107,6 +2095,31 @@ function A-Remove-Font {
     }
 
     Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+}
+
+function A-Add-Path {
+    param(
+        [string[]]$Paths,
+        [switch]$SkipRecord
+    )
+
+    if (get_config USE_ISOLATED_PATH) {
+        Add-Path -Path ('%' + $scoopPathEnvVar + '%') -Global:$global
+    }
+
+    $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
+    $Paths = $Paths | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) } | Where-Object { $_ -notin $oldPath }
+    if (-not $Paths) {
+        return
+    }
+
+    Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
+
+    if ($SkipRecord) {
+        return
+    }
+
+    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
 }
 
 function A-Remove-Path {

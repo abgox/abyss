@@ -53,12 +53,18 @@
             },
             "minLength": 1,
             "minItems": 1,
+            "$ref": "#/definitions/use_string_if_single"
+        },
+        "use_string_if_single": {
             "if": {
                 "type": "array",
-                "minItems": 1
+                "items": {
+                    "type": "string"
+                }
             },
             "then": {
                 "not": {
+                    "minItems": 1,
                     "maxItems": 1
                 },
                 "errorMessage": "当数组只有一项时，应该使用字符串"
@@ -1735,12 +1741,12 @@
                 "array"
             ],
             "examples": [
-                "",
                 []
             ],
             "minLength": 1,
             "minItems": 1,
-            "uniqueItems": true
+            "uniqueItems": true,
+            "$ref": "#/definitions/use_string_if_single"
         },
         "env_set": {
             "title": "设置环境变量",
@@ -1852,19 +1858,7 @@
             "minLength": 1,
             "minItems": 1,
             "uniqueItems": true,
-            "if": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
-            },
-            "then": {
-                "not": {
-                    "minItems": 1,
-                    "maxItems": 1
-                },
-                "errorMessage": "当数组只有一项时，应该使用字符串"
-            }
+            "$ref": "#/definitions/use_string_if_single"
         },
         "shortcuts": {
             "type": "array",
@@ -3189,7 +3183,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3419,9 +3413,13 @@
                             ]
                         },
                         "env_add_path": {
+                            "markdownDescription": "- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果要指定 `$dir` 目录，请用 `.` 代替\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中\n- 如果需要包含 `$home`, `$env:AppData` 等变量，请使用 `env_add_path_expand`",
                             "type": [
                                 "string",
                                 "array"
+                            ],
+                            "examples": [
+                                []
                             ],
                             "anyOf": [
                                 {
@@ -3433,7 +3431,7 @@
                                             "not": {
                                                 "pattern": "\\$.+"
                                             },
-                                            "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                            "errorMessage": "它不能添加带有变量的路径\n请使用 env_add_path_expand"
                                         }
                                     ]
                                 },
@@ -3448,12 +3446,97 @@
                                                 "not": {
                                                     "pattern": "\\$.+"
                                                 },
-                                                "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                                "errorMessage": "它不能添加带有变量的路径\n请使用 env_add_path_expand"
                                             }
                                         ]
                                     }
                                 }
                             ]
+                        },
+                        "env_add_path_expand": {
+                            "title": "添加到环境变量 PATH 中的路径，允许包含变量",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 将指定目录添加到环境变量(当前用户) PATH 中\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会添加到环境变量(系统级) PATH 中\n- 不同于 `env_add_path`，它可以使用 `env_set` 定义的环境变量，或者 `$dir`, `$home`, `$env:AppData` 等\n- 它遵循所有权机制: 添加的变量只会被添加者删除",
+                            "type": [
+                                "string",
+                                "array"
+                            ],
+                            "examples": [
+                                []
+                            ],
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/str",
+                                            "examples": [
+                                                "$env:AppData\\xxx",
+                                                "$env:LocalAppData\\xxx",
+                                                "$env:ProgramData\\xxx",
+                                                "$dir\\xxx"
+                                            ]
+                                        },
+                                        {
+                                            "not": {
+                                                "anyOf": [
+                                                    {
+                                                        "const": "$home\\.local\\bin"
+                                                    },
+                                                    {
+                                                        "const": "$env:AppData\\local\\bin"
+                                                    },
+                                                    {
+                                                        "const": "$env:LocalAppData\\bin"
+                                                    },
+                                                    {
+                                                        "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
+                                                    }
+                                                ]
+                                            },
+                                            "errorMessage": "它会被 abyss 默认添加，不需要定义它"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/str",
+                                                "examples": [
+                                                    "$env:AppData\\xxx",
+                                                    "$env:LocalAppData\\xxx",
+                                                    "$env:ProgramData\\xxx",
+                                                    "$dir\\xxx"
+                                                ]
+                                            },
+                                            {
+                                                "not": {
+                                                    "anyOf": [
+                                                        {
+                                                            "const": "$home\\.local\\bin"
+                                                        },
+                                                        {
+                                                            "const": "$env:AppData\\local\\bin"
+                                                        },
+                                                        {
+                                                            "const": "$env:LocalAppData\\bin"
+                                                        },
+                                                        {
+                                                            "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
+                                                        }
+                                                    ]
+                                                },
+                                                "errorMessage": "它会被 abyss 默认添加，不需要定义它"
+                                            },
+                                            {
+                                                "pattern": "\\$.+",
+                                                "errorMessage": "请使用 env_add_path 添加不带变量的路径"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "$ref": "#/definitions/use_string_if_single"
                         },
                         "innosetup": {
                             "markdownDescription": "- 如果安装程序基于 `InnoSetup`，则设置为 `true`\n- 在 abyss 中，应该优先使用 `A-Install-Inno` 而不是此字段",
@@ -3535,7 +3618,7 @@
                                             "not": {
                                                 "pattern": "\\$.+"
                                             },
-                                            "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                            "errorMessage": "它不能添加带有变量的路径\n请使用 env_add_path_expand"
                                         }
                                     ]
                                 },
@@ -3552,7 +3635,7 @@
                                                         "not": {
                                                             "pattern": "\\$.+"
                                                         },
-                                                        "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                                        "errorMessage": "它不能添加带有变量的路径\n请使用 env_add_path_expand"
                                                     }
                                                 ]
                                             },
@@ -3568,7 +3651,7 @@
                                                                 "not": {
                                                                     "pattern": "\\$.+"
                                                                 },
-                                                                "errorMessage": "它不能添加带有变量的路径\n请在 pre_install 中使用 A-Add-Path"
+                                                                "errorMessage": "它不能添加带有变量的路径\n请使用 env_add_path_expand"
                                                             }
                                                         ]
                                                     },
@@ -3668,19 +3751,7 @@
                                                 }
                                             ]
                                         },
-                                        "if": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "then": {
-                                            "not": {
-                                                "minItems": 1,
-                                                "maxItems": 1
-                                            },
-                                            "errorMessage": "当数组只有一项时，应该使用字符串"
-                                        }
+                                        "$ref": "#/definitions/use_string_if_single"
                                     }
                                 }
                             ]
@@ -3992,14 +4063,6 @@
                                     "items": {
                                         "anyOf": [
                                             {},
-                                            {
-                                                "const": "A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"",
-                                                "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
-                                            },
-                                            {
-                                                "pattern": "A-Add-Path",
-                                                "markdownDescription": "添加环境变量\n- 它在 `pre_uninstall` 阶段会自动移除\n- 例如: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
-                                            },
                                             {
                                                 "const": "A-New-File \"$persist_dir\\xxx\" -Content 'xxx'",
                                                 "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"

@@ -53,12 +53,18 @@
             },
             "minLength": 1,
             "minItems": 1,
+            "$ref": "#/definitions/use_string_if_single"
+        },
+        "use_string_if_single": {
             "if": {
                 "type": "array",
-                "minItems": 1
+                "items": {
+                    "type": "string"
+                }
             },
             "then": {
                 "not": {
+                    "minItems": 1,
                     "maxItems": 1
                 },
                 "errorMessage": "When the array has only one item, it should be a string."
@@ -1735,12 +1741,12 @@
                 "array"
             ],
             "examples": [
-                "",
                 []
             ],
             "minLength": 1,
             "minItems": 1,
-            "uniqueItems": true
+            "uniqueItems": true,
+            "$ref": "#/definitions/use_string_if_single"
         },
         "env_set": {
             "title": "Set environment variables",
@@ -1852,19 +1858,7 @@
             "minLength": 1,
             "minItems": 1,
             "uniqueItems": true,
-            "if": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
-            },
-            "then": {
-                "not": {
-                    "minItems": 1,
-                    "maxItems": 1
-                },
-                "errorMessage": "When the array has only one item, it should be a string."
-            }
+            "$ref": "#/definitions/use_string_if_single"
         },
         "shortcuts": {
             "type": "array",
@@ -3189,7 +3183,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3419,9 +3413,13 @@
                             ]
                         },
                         "env_add_path": {
+                            "markdownDescription": "- Add the specified directory to the PATH environment variable (current user)\n- If you want to specify the `$dir` directory, please use `.` instead.\n- If the `--global` or `-g` parameter is used during installation, the directory will be added to the PATH environment variable (system level)\n- If it need to include variables such as `$home` and `$env:AppData`, please use `env_add_path_expand`",
                             "type": [
                                 "string",
                                 "array"
+                            ],
+                            "examples": [
+                                []
                             ],
                             "anyOf": [
                                 {
@@ -3433,7 +3431,7 @@
                                             "not": {
                                                 "pattern": "\\$.+"
                                             },
-                                            "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
+                                            "errorMessage": "It cannot add paths with variables.\nPlease use 'env_add_path_expand'."
                                         }
                                     ]
                                 },
@@ -3448,12 +3446,97 @@
                                                 "not": {
                                                     "pattern": "\\$.+"
                                                 },
-                                                "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
+                                                "errorMessage": "It cannot add paths with variables.\nPlease use 'env_add_path_expand'."
                                             }
                                         ]
                                     }
                                 }
                             ]
+                        },
+                        "env_add_path_expand": {
+                            "title": "Add the specified directory to the PATH environment variable (It allows variables)",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- Add the specified directory to the PATH environment variable (current user)\n- If you want to specify the `$dir` directory, please use `.` instead.\n- If the `--global` or `-g` parameter is used during installation, the directory will be added to the PATH environment variable (system level)\n- Unlike `env_add_path`, it can use environment variables defined by `env_set`, or such as `$dir`, `$home`, `$env:AppData`, etc.\n- It follows an ownership model: The added variables can only be deleted by the manifest who added them.",
+                            "type": [
+                                "string",
+                                "array"
+                            ],
+                            "examples": [
+                                []
+                            ],
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/str",
+                                            "examples": [
+                                                "$env:AppData\\xxx",
+                                                "$env:LocalAppData\\xxx",
+                                                "$env:ProgramData\\xxx",
+                                                "$dir\\xxx"
+                                            ]
+                                        },
+                                        {
+                                            "not": {
+                                                "anyOf": [
+                                                    {
+                                                        "const": "$home\\.local\\bin"
+                                                    },
+                                                    {
+                                                        "const": "$env:AppData\\local\\bin"
+                                                    },
+                                                    {
+                                                        "const": "$env:LocalAppData\\bin"
+                                                    },
+                                                    {
+                                                        "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
+                                                    }
+                                                ]
+                                            },
+                                            "errorMessage": "It will be added by abyss by default, so there's no need to define it."
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/definitions/str",
+                                                "examples": [
+                                                    "$env:AppData\\xxx",
+                                                    "$env:LocalAppData\\xxx",
+                                                    "$env:ProgramData\\xxx",
+                                                    "$dir\\xxx"
+                                                ]
+                                            },
+                                            {
+                                                "not": {
+                                                    "anyOf": [
+                                                        {
+                                                            "const": "$home\\.local\\bin"
+                                                        },
+                                                        {
+                                                            "const": "$env:AppData\\local\\bin"
+                                                        },
+                                                        {
+                                                            "const": "$env:LocalAppData\\bin"
+                                                        },
+                                                        {
+                                                            "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
+                                                        }
+                                                    ]
+                                                },
+                                                "errorMessage": "It will be added by abyss by default, so there's no need to define it."
+                                            },
+                                            {
+                                                "pattern": "\\$.+",
+                                                "errorMessage": "Please use 'env_add_path' to add a path without variables."
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "$ref": "#/definitions/use_string_if_single"
                         },
                         "innosetup": {
                             "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`\n- In abyss, it is recommended to use `A-Install-Inno` instead of this field",
@@ -3535,7 +3618,7 @@
                                             "not": {
                                                 "pattern": "\\$.+"
                                             },
-                                            "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
+                                            "errorMessage": "It cannot add paths with variables.\nPlease use 'env_add_path_expand'."
                                         }
                                     ]
                                 },
@@ -3552,7 +3635,7 @@
                                                         "not": {
                                                             "pattern": "\\$.+"
                                                         },
-                                                        "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
+                                                        "errorMessage": "It cannot add paths with variables.\nPlease use 'env_add_path_expand'."
                                                     }
                                                 ]
                                             },
@@ -3568,7 +3651,7 @@
                                                                 "not": {
                                                                     "pattern": "\\$.+"
                                                                 },
-                                                                "errorMessage": "It cannot add paths with variables.\nPlease use 'A-Add-Path' in 'pre_install'."
+                                                                "errorMessage": "It cannot add paths with variables.\nPlease use 'env_add_path_expand'."
                                                             }
                                                         ]
                                                     },
@@ -3668,19 +3751,7 @@
                                                 }
                                             ]
                                         },
-                                        "if": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "then": {
-                                            "not": {
-                                                "minItems": 1,
-                                                "maxItems": 1
-                                            },
-                                            "errorMessage": "When the array has only one item, it should be a string."
-                                        }
+                                        "$ref": "#/definitions/use_string_if_single"
                                     }
                                 }
                             ]
@@ -3992,14 +4063,6 @@
                                     "items": {
                                         "anyOf": [
                                             {},
-                                            {
-                                                "const": "A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"",
-                                                "markdownDescription": "Add environment variables\n- It will be automatically removed in `pre_uninstall`.\n- For example: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
-                                            },
-                                            {
-                                                "pattern": "A-Add-Path",
-                                                "markdownDescription": "Add environment variables\n- It will be automatically removed in `pre_uninstall`.\n- For example: `A-Add-Path \"$home\\xxx\", \"$env:ProgramFiles\\xxx\"`"
-                                            },
                                             {
                                                 "const": "A-New-File \"$persist_dir\\xxx\" -Content 'xxx'",
                                                 "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
