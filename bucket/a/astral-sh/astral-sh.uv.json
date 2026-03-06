@@ -26,12 +26,15 @@
         "app\\uvx.exe",
         "app\\uvw.exe"
     ],
+    "link": [
+        "$env:AppData\\uv",
+        "$env:LocalAppData\\uv"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Add-Path \"$home\\.local\\bin\"",
-        "A-New-LinkDirectory \"$env:AppData\\uv\", \"$env:LocalAppData\\uv\""
+        "A-Add-Path \"$home\\.local\\bin\""
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

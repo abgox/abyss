@@ -18,12 +18,16 @@
             "Wave"
         ]
     ],
+    "link": [
+        "$home\\.config\\waveterm",
+        "$env:LocalAppData\\waveterm"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$home\\.config\\waveterm\", \"$env:LocalAppData\\waveterm\"",
         "A-New-File \"$home\\.config\\waveterm\\settings.json\" -Content '{\"autoupdate:enabled\": false}'",
+        "A-New-Link",
         "A-Install-App -Uninstaller 'app\\Uninstall Wave.exe'"
     ],
     "post_install": [

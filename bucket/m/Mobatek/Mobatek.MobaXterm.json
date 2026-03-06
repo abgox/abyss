@@ -13,12 +13,12 @@
         }
     },
     "extract_to": "app",
+    "link": "$env:AppData\\MobaXterm",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\MobaXterm\"",
         "$msi = Get-ChildItem $dir '*.msi' -Recurse | Select-Object -First 1",
         "$fname = Join-Path 'app' $msi.Name",
         "A-Install-Msi"

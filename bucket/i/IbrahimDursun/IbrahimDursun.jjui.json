@@ -20,11 +20,14 @@
         "JJUI_CONFIG_DIR": "$persist_dir\\AppData\\Roaming\\jjui"
     },
     "bin": "app\\jjui.exe",
+    "link": [
+        "$env:AppData\\jjui",
+        "$env:LocalAppData\\jjui"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\jjui\", \"$env:LocalAppData\\jjui\"",
         "Get-ChildItem -Path $dir -Filter 'jjui*.exe' -Recurse | Select-Object -First 1 | Rename-Item -NewName 'jjui.exe'"
     ],
     "post_install": [

@@ -18,12 +18,15 @@
     "extract_dir": "mise",
     "extract_to": "app",
     "bin": "app\\bin\\mise.exe",
+    "link": [
+        "$home\\.config\\mise",
+        "$env:LocalAppData\\mise"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Add-Path \"$env:LocalAppData\\mise\\shims\"",
-        "A-New-LinkDirectory \"$home\\.config\\mise\", \"$env:LocalAppData\\mise\""
+        "A-Add-Path \"$env:LocalAppData\\mise\\shims\""
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

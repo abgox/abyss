@@ -28,11 +28,14 @@
     },
     "extract_to": "app",
     "bin": "app\\carapace.exe",
+    "link": [
+        "$env:AppData\\carapace",
+        "$env:LocalAppData\\carapace"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\carapace\", \"$env:LocalAppData\\carapace\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
