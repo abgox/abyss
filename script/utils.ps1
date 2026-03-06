@@ -128,14 +128,13 @@ function A-Start-Install {
     # https://abyss.abgox.com/features/data-persistence/link
     if ($manifest.link) {
         foreach ($item in $manifest.link) {
-            $path = if ($item -is [array]) { $item[0] } else { $item }
-            $expandPath = $ExecutionContext.InvokeCommand.ExpandString($path)
+            $expandPath = $ExecutionContext.InvokeCommand.ExpandString($item)
             if (Test-Path $expandPath) {
                 if ($expandPath -like "$dir\*") {
                     $to = $expandPath.Replace("$dir\app\", "$persist_dir\").Replace("$dir\", "$persist_dir\")
                 }
                 else {
-                    $to = $expandPath.Replace("$home", $persist_dir)
+                    $to = $expandPath.Replace("$home\", "$persist_dir\")
                 }
                 A-Copy-Item $expandPath $to
             }
@@ -156,7 +155,7 @@ function A-Start-Install {
             if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
                 A-Require-Admin
             }
-            A-New-Link $manifest.link
+            A-New-Link
         }
     }
 }
@@ -275,14 +274,35 @@ function A-New-Link {
     $filePaths = @()
     $dirPaths = @()
     foreach ($item in $manifest.link) {
-        if ($item -is [array] -and $item[1] -eq 'file') {
-            $filePaths += $item[0]
+        if (-not $item) {
             continue
         }
-        $dirPaths += $item
+        $isDir = $true
+        $expandPath = $ExecutionContext.InvokeCommand.ExpandString($item)
+        if (Test-Path $expandPath) {
+            if (Test-Path $expandPath -PathType Leaf) {
+                $filePaths += $expandPath
+            }
+            else {
+                $dirPaths += $expandPath
+            }
+        }
+        else {
+            if ($expandPath -like "$dir\*") {
+                $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
+            }
+            else {
+                $leaf = $expandPath.Replace("$home\", '')
+            }
+            $extraPath = "$bucketsdir\$bucket\extra\$app\$leaf"
+            if (Test-Path $extraPath -PathType Leaf) {
+                $filePaths += $expandPath
+            }
+            else {
+                $dirPaths += $expandPath
+            }
+        }
     }
-    $filePaths = $filePaths | Where-Object { $_ } | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
-    $dirPaths = $dirPaths | Where-Object { $_ } | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
     if ($filePaths) {
         A-New-LinkFile -LinkPaths $filePaths
     }
