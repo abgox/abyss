@@ -3226,7 +3226,7 @@
                         "new": {
                             "$ref": "#/definitions/str",
                             "title": "新的清单名称",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 在 [abyss](https://abyss.abgox.com) 中，无法安装版本号为 `renamed` 的清单\n- 如果尝试安装，它会被拒绝，并提示新的清单名称\n- 新的清单名称由 `new` 字段来定义"
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 在 [abyss](https://abyss.abgox.com) 中，无法安装版本号为 `renamed` 的清单\n- 如果尝试安装，它会被拒绝，并提示新的清单名称\n- 新的清单名称由 `new` 字段来定义\n- 如果存在 [link](https://abyss.abgox.com/features/data-persistence/link) 或者 [persist](https://abyss.abgox.com/features/data-persistence/persist)，会自动完成迁移"
                         },
                         "description": {
                             "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -3350,7 +3350,7 @@
                         },
                         "notes_cn": {
                             "title": "提示信息 (中文)",
-                            "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 `notes_cn` 而不是 `notes`\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `version` 为 [abyss](https://abyss.abgox.com) 定义的以下特殊值时，它也会作为相关的说明提示\n  - `pending`\n  - `renamed`\n  - `deprecated`",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 `notes_cn` 而不是 `notes`\n- 当 `version` 为 [abyss](https://abyss.abgox.com) 定义的以下特殊值时，它也会作为相关的说明提示\n  - `pending`\n  - `renamed`\n  - `deprecated`",
                             "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
@@ -3586,7 +3586,8 @@
                             ]
                         },
                         "conflicts": {
-                            "markdownDescription": "指定冲突的应用\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "title": "指定冲突的应用",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
                             "minItems": 1,
                             "uniqueItems": true,
@@ -3679,7 +3680,8 @@
                             ]
                         },
                         "commands": {
-                            "markdownDescription": "命令名称\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `bin` 字段无法准确定义时，就应该使用它",
+                            "title": "命令名称",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当 `bin` 字段无法准确定义时，就应该使用它",
                             "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
@@ -3887,7 +3889,7 @@
                                                             },
                                                             {
                                                                 "const": "$out",
-                                                                "markdownDescription": "默认的安装信息\n- 你也可以自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                                "markdownDescription": "默认的安装信息\n- 它提供了版本号、URL 等信息，可以被 `regex`字段匹配\n- 你也可以通过自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
                                                             }
                                                         ],
                                                         "allOf": [
@@ -4019,7 +4021,7 @@
                                 },
                                 "notes_cn": {
                                     "title": "提示信息 (中文)",
-                                    "markdownDescription": "- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段",
+                                    "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 安装软件之后的提示信息 (中文)\n- 如果当前环境是中文，则显示 notes_cn 而不是 notes",
                                     "$ref": "#/definitions/str_or_arr"
                                 },
                                 "architecture": {
@@ -4347,11 +4349,11 @@
                                             },
                                             {
                                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n- 常见的在 $env:LocalAppData 目录中，它们不涉及应用配置数据，会自动生成\n- 例如: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Require-Admin",

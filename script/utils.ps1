@@ -79,12 +79,15 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
+    # https://abyss.abgox.com/features/manifest-status-control
     if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
         A-Deny-Manifest $manifest.new
     }
+    # https://abyss.abgox.com/faq/deny-if-app-conflict
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
     }
+    # https://abyss.abgox.com/features/data-persistence/persist
     if ($manifest.persist) {
         foreach ($item in $manifest.persist) {
             if ($item -is [string]) {
@@ -122,6 +125,7 @@ function A-Start-Install {
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
+    # https://abyss.abgox.com/features/data-persistence/link
     if ($manifest.link) {
         foreach ($item in $manifest.link) {
             $path = if ($item -is [array]) { $item[0] } else { $item }
@@ -159,17 +163,17 @@ function A-Start-Install {
 
 function A-Complete-Install {
     if ($manifest.font) {
-        switch ($manifest.font) {
-            ttf { A-Add-Font ttf }
-            otf { A-Add-Font otf }
-            ttc { A-Add-Font ttc }
-            default { A-Add-Font }
+        if ($manifest.font -is [string]) {
+            A-Add-Font $manifest.font
+        }
+        else {
+            A-Add-Font
         }
     }
 }
 
 function A-Start-Uninstall {
-    # 如果新版本为 pending 或 deprecated，拒绝更新
+    # https://abyss.abgox.com/features/manifest-status-control
     if ($version -in @('pending', 'deprecated')) {
         A-Deny-Update
     }
@@ -179,7 +183,11 @@ function A-Start-Uninstall {
 }
 
 function A-Complete-Uninstall {
-
+    if ($manifest.link) {
+        foreach ($item in $manifest.link) {
+            A-Remove-ToRecycleBin $ExecutionContext.InvokeCommand.ExpandString($item)
+        }
+    }
 }
 
 function A-Ensure-Directory {
@@ -1138,43 +1146,6 @@ function A-Hold-App {
     } -ArgumentList $AppName
 }
 
-function A-Move-Persist {
-    <#
-    .SYNOPSIS
-        用于迁移 persist 目录下的数据到其他位置(在 pre_install 中使用)
-
-    .DESCRIPTION
-        它用于未来可能存在的清单文件更名
-        当清单文件更名后，需要使用它，并传入旧的清单名称
-        当用新的清单名称安装时，它会将 persist 中的旧目录用新的清单名称重命名，以实现 persist 的迁移
-        由于只有 abyss 使用了 Publisher.PackageIdentifier 这样的命名格式，迁移不会与官方或其他第三方仓库冲突
-    #>
-    param(
-        # 旧的清单名称(不包含 .json 后缀)
-        [array]$OldNames
-    )
-
-    if (A-Test-DirectoryNotEmpty $persist_dir) {
-        return
-    }
-
-    $dir = Split-Path $persist_dir -Parent
-
-    foreach ($oldName in $OldNames) {
-        $old = "$dir\$oldName"
-
-        if (A-Test-DirectoryNotEmpty $old) {
-            try {
-                Rename-Item -Path $old -NewName $app -Force -ErrorAction Stop
-            }
-            catch {
-                error $_.Exception.Message
-            }
-            break
-        }
-    }
-}
-
 function A-Get-UninstallEntryByAppName {
     param (
         [string]$AppNamePattern
@@ -1702,6 +1673,7 @@ function A-Deny-Manifest {
         }
         renamed {
             $msg = "'$app' is renamed to '$NewManifestName'."
+            A-Move-Persist
         }
     }
     if ($msg) {
@@ -1725,6 +1697,21 @@ function A-Deny-IfAppConflict {
             error "'$app' conflicts with '$_'."
             error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
             A-Exit
+        }
+    }
+}
+
+function A-Move-Persist {
+    if (-not $manifest.new) {
+        return
+    }
+    if (A-Test-DirectoryNotEmpty $persist_dir) {
+        Write-Host "Renaming $persist_dir => $(Join-Path (Split-Path $persist_dir -Parent) $manifest.new)"
+        try {
+            Rename-Item -Path $persist_dir -NewName $manifest.new -Force -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
         }
     }
 }
@@ -2365,7 +2352,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     $filename = $target.FullName
     if ($filename -match '\$env:[a-zA-Z_].*') {
         $filename = $filename.Replace("$dir\", '')
-        $target = [System.IO.FileInfo]::new((Invoke-Expression "`"$filename`""))
+        $target = [System.IO.FileInfo]::new($ExecutionContext.InvokeCommand.ExpandString($filename))
     }
 
     #endregion

@@ -3226,7 +3226,7 @@
                         "new": {
                             "$ref": "#/definitions/str",
                             "title": "New manifest name",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com).\n- In [abyss](https://abyss.abgox.com), the manifest with the version number `renamed` cannot be installed.\n- If you try to install it, it will be rejected and a new manifest name will be prompted.\n- The new manifest name is defined by the `new` field."
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- In [abyss](https://abyss.abgox.com), the manifest with the version number `renamed` cannot be installed.\n- If you try to install it, it will be rejected and a new manifest name will be prompted.\n- The new manifest name is defined by the `new` field.\n- If [link](https://abyss.abgox.com/features/data-persistence/link) or [persist](https://abyss.abgox.com/features/data-persistence/persist) exists, they will be automatically migrated."
                         },
                         "description": {
                             "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -3350,7 +3350,7 @@
                         },
                         "notes_cn": {
                             "title": "Notes (Chinese)",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com).\n- Chinese notes after installing the software.\n- If the current environment is Chinese, then display `notes_cn` instead of `notes`.\n- When `version` is [abyss](https://abyss.abgox.com) defined special values, it will also be displayed as a prompt.\n  - `pending`\n  - `renamed`\n  - `deprecated`\n- You can use some variables, which will be automatically replaced when displayed.\n  - `$dir`\n  - `$original_dir`\n  - `$persist_dir`\n  - `$app`\n  - `$version`\n  - `$env:ProgramFiles`\n  - `${env:ProgramFiles(x86)}`\n  - `$env:ProgramData`\n  - `$env:AppData`\n  - `$env:LocalAppData`",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- Chinese notes after installing the software.\n- If the current environment is Chinese, then display `notes_cn` instead of `notes`.\n- When `version` is [abyss](https://abyss.abgox.com) defined special values, it will also be displayed as a prompt.\n  - `pending`\n  - `renamed`\n  - `deprecated`\n- You can use some variables, which will be automatically replaced when displayed.\n  - `$dir`\n  - `$original_dir`\n  - `$persist_dir`\n  - `$app`\n  - `$version`\n  - `$env:ProgramFiles`\n  - `${env:ProgramFiles(x86)}`\n  - `$env:ProgramData`\n  - `$env:AppData`\n  - `$env:LocalAppData`",
                             "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
@@ -3586,7 +3586,8 @@
                             ]
                         },
                         "conflicts": {
-                            "markdownDescription": "Specified conflict apps\n- It is a special field of [abyss](https://abyss.abgox.com)\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "title": "Specified conflict apps",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
                             "minItems": 1,
                             "uniqueItems": true,
@@ -3679,7 +3680,8 @@
                             ]
                         },
                         "commands": {
-                            "markdownDescription": "Command Name\n- It is a special field of [abyss](https://abyss.abgox.com)\n- When `bin` field cannot define the command accurately, it should be used",
+                            "title": "Command Name",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- When `bin` field cannot define the command accurately, it should be used",
                             "$ref": "#/definitions/str_or_arr",
                             "examples": [
                                 []
@@ -3887,7 +3889,7 @@
                                                             },
                                                             {
                                                                 "const": "$out",
-                                                                "markdownDescription": "Default installer information.\n- It provides version number, URL, etc. that can be matched.\n- You can also customize to override them.\n- For example, you can append the following content after it:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
+                                                                "markdownDescription": "Default installer information.\n- It provides version number, URL, etc. that can be matched via `regex` field.\n- You can also customize to override them.\n- For example, you can append the following content after it:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
                                                             }
                                                         ],
                                                         "allOf": [
@@ -4019,7 +4021,7 @@
                                 },
                                 "notes_cn": {
                                     "title": "Notes (Chinese)",
-                                    "markdownDescription": "- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'\n- It is a special field of [abyss](https://abyss.abgox.com)",
+                                    "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- Chinese notes after installing the software.\n- If the current environment is Chinese, then display 'notes_cn' instead of 'notes'",
                                     "$ref": "#/definitions/str_or_arr"
                                 },
                                 "architecture": {
@@ -4347,11 +4349,11 @@
                                             },
                                             {
                                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                                "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
+                                                "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data and will be automatically generated.\n- For example: `A-Remove-TempData \"$env:LocalAppData\\xxx\", \"$env:LocalAppData\\yyy\"`"
+                                                "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Require-Admin",
