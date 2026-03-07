@@ -3183,7 +3183,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3407,6 +3407,38 @@
                                 }
                             ]
                         },
+                        "conflicts": {
+                            "title": "Specified conflict apps",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "errorMessage": "Please use the correct manifest name, like: abgox.PSCompletions"
+                            }
+                        },
+                        "location": {
+                            "title": "Specify the installation location of the app (if it is external)",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If the app is installed to some standard software directories, instead of scoop directory, then it needs to be specified using this field.\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- Refer to: https://abyss.abgox.com/faq/external-installation-directory",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str",
+                                    "examples": [
+                                        "$env:ProgramFiles\\xxx",
+                                        "${env:ProgramFiles(x86)}\\xxx",
+                                        "$env:ProgramData\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx"
+                                    ]
+                                },
+                                {
+                                    "pattern": "\\$env:.+|\\${env:.+",
+                                    "errorMessage": "Please use standard software directory, such as: $env:ProgramFiles\\xxx"
+                                }
+                            ]
+                        },
                         "extract_to": {
                             "examples": [
                                 "app"
@@ -3584,18 +3616,6 @@
                                     ]
                                 }
                             ]
-                        },
-                        "conflicts": {
-                            "title": "Specified conflict apps",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
-                            "type": "array",
-                            "minItems": 1,
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "minLength": 1,
-                                "errorMessage": "Please use the correct manifest name, like: abgox.PSCompletions"
-                            }
                         },
                         "bin": {
                             "markdownDescription": "- A string or array of strings representing programs (executables or scripts) to be made available on the user's PATH\n- If the program file is a GUI application and it doesn't accept any commandline arguments, no need to add it in `bin`\n- Example 1: Scoop will create a shim named `a`, so you can run a.exe by typing `a`\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- Example 2: Same as Example 1, but Scoop creates two shims: `a` and `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- Example 3: Same as Example 2, but the shims are named `ax` and `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- Example 4: Same as Example 3, but running the shims will automatically pass `--config $dir/config.json`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
@@ -4317,11 +4337,11 @@
                                             {},
                                             {
                                                 "const": "A-Stop-Process",
-                                                "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- By default, it will stop processes in the `$dir` directory.\n- Parameters:\n  - `-ExtraPaths`: Additional directories to search.\n  - `-ExtraProcessNames`: Process names to search.\n- Examples:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
+                                                "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- By default, it will stop processes in the `$dir` directory.\n- Parameters:\n  - `-ExtraPaths`: Additional directories to search.\n    - If the `location` and `env_add_path_expand` fields exist, they will be added automatically.\n  - `-ExtraProcessNames`: Process names to search.\n- Examples:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
                                                 "pattern": "A-Stop-Process",
-                                                "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- By default, it will stop processes in the `$dir` directory.\n- Parameters:\n  - `-ExtraPaths`: Additional directories to search.\n  - `-ExtraProcessNames`: Process names to search.\n- Examples:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
+                                                "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- By default, it will stop processes in the `$dir` directory.\n- Parameters:\n  - `-ExtraPaths`: Additional directories to search.\n    - If the `location` and `env_add_path_expand` fields exist, they will be added automatically.\n  - `-ExtraProcessNames`: Process names to search.\n- Examples:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
                                                 "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",

@@ -3183,7 +3183,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3407,6 +3407,38 @@
                                 }
                             ]
                         },
+                        "conflicts": {
+                            "title": "指定冲突的应用",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "errorMessage": "请使用正确的清单名称，例如: abgox.PSCompletions"
+                            }
+                        },
+                        "location": {
+                            "title": "指定应用的安装位置 (如果在外部)",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str",
+                                    "examples": [
+                                        "$env:ProgramFiles\\xxx",
+                                        "${env:ProgramFiles(x86)}\\xxx",
+                                        "$env:ProgramData\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx"
+                                    ]
+                                },
+                                {
+                                    "pattern": "\\$env:.+|\\${env:.+",
+                                    "errorMessage": "请使用标准的应用安装目录，例如: $env:ProgramFiles\\xxx"
+                                }
+                            ]
+                        },
                         "extract_to": {
                             "examples": [
                                 "app"
@@ -3584,18 +3616,6 @@
                                     ]
                                 }
                             ]
-                        },
-                        "conflicts": {
-                            "title": "指定冲突的应用",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
-                            "type": "array",
-                            "minItems": 1,
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "minLength": 1,
-                                "errorMessage": "请使用正确的清单名称，例如: abgox.PSCompletions"
-                            }
                         },
                         "bin": {
                             "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
@@ -4317,11 +4337,11 @@
                                             {},
                                             {
                                                 "const": "A-Stop-Process",
-                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
+                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n    - 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
                                                 "pattern": "A-Stop-Process",
-                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
+                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n    - 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
                                                 "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",

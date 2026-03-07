@@ -18,6 +18,7 @@ $abgox_abyss = @{
         EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
         PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
+        Info               = "$dir\abgox-abyss-Info.json"
     }
 }
 
@@ -161,6 +162,8 @@ function A-Start-Install {
 }
 
 function A-Complete-Install {
+    $info = @{}
+
     if ($manifest.font) {
         if ($manifest.font -is [string]) {
             A-Add-Font $manifest.font
@@ -169,6 +172,47 @@ function A-Complete-Install {
             A-Add-Font
         }
     }
+    if ($manifest.location) {
+        if (-not (Test-Path $ExecutionContext.InvokeCommand.ExpandString($manifest.location))) {
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+
+        $info.location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+
+        $note = if ($PSUICulture -like 'zh*') {
+            @(
+                "安装目录: $($manifest.location)",
+                '参考: https://abyss.abgox.com/faq/external-installation-directory'
+            )
+        }
+        else {
+            @(
+                "The installation directory: $($manifest.location)",
+                'Refer to: https://abyss.abgox.com/faq/external-installation-directory'
+            )
+        }
+        A-Show-Notes $note
+    }
+    else {
+        $items = Get-ChildItem $dir
+        $hasErr = $true
+        foreach ($item in $items) {
+            if ($item -is [System.IO.DirectoryInfo]) {
+                $hasErr = $false
+                break
+            }
+            if ($item -is [System.IO.FileInfo] -and $item.Name -notlike '*.json') {
+                $hasErr = $false
+                break
+            }
+        }
+        if ($hasErr) {
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+    }
+    $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
 }
 
 function A-Start-Uninstall {
@@ -498,11 +542,19 @@ function A-Stop-Process {
         return
     }
 
-    $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
+    $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
     $Paths += $ExtraPaths
     if ($manifest.env_add_path_expand) {
-        $Paths += $manifest.env_add_path_expand
+        $Paths += $manifest.env_add_path_expand | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
     }
+    if (Test-Path -LiteralPath $abgox_abyss.path.Info) {
+        $info = Get-Content $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+        if ($info.location) {
+            $Paths += $info.location
+        }
+    }
+
+    $Paths = $Paths | Sort-Object -Unique
 
     $processes = Get-Process
 
@@ -1647,12 +1699,18 @@ function A-Compare-Version {
 #region 以下的函数不应该在外部调用
 
 function A-Show-Notes {
-    $note = $manifest.notes
-
-    if ($PSUICulture -like 'zh*') {
-        $note = $manifest.notes_cn
+    param(
+        [string[]]$Content
+    )
+    if ($Content) {
+        $note = $Content | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
     }
-
+    else {
+        $note = $manifest.notes
+        if ($PSUICulture -like 'zh*') {
+            $note = $manifest.notes_cn
+        }
+    }
     if ($note) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Notes'
