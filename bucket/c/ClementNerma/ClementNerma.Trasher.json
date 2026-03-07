@@ -1,0 +1,54 @@
+{
+    "version": "4.4.1",
+    "description": "一个小型命令行实用程序，用于将 rm 命令替换为可移植的回收站目录系统 | A small command-line utility to replace 'rm' with a portable trash directory system",
+    "homepage": "https://github.com/ClementNerma/Trasher",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ClementNerma/Trasher/releases/download/v4.4.1/trasher-x86_64-pc-windows-gnu.tgz",
+            "hash": "9483eccc142cb3fdf2a84064820f7b1ef21cbe748123dfeaac4c5dfd42346cfd"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\trasher.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ClementNerma/Trasher/releases/download/v$version/trasher-x86_64-pc-windows-gnu.tgz"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
