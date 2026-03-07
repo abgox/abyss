@@ -5,20 +5,13 @@
     "license": {
         "identifier": "MPL-2.0"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Ablaze Floorp",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Ablaze Floorp",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/Floorp-Projects/Floorp/releases/download/v12.10.4/floorp-windows-x86_64.installer.exe",
             "hash": "77e92624ad6eafa817400cc3ef41c02001d02aa5c7b283b302be50c000424150"
         }
     },
+    "location": "$env:ProgramFiles\\Ablaze Floorp",
     "link": "$env:AppData\\Floorp",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -37,7 +30,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Ablaze Floorp\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\Floorp\""

@@ -5,14 +5,6 @@
     "license": {
         "identifier": "MPL-2.0"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Zen Browser",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Zen Browser",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/zen-browser/desktop/releases/download/1.19.1b/zen.installer.exe",
@@ -23,6 +15,7 @@
             "hash": "7530184b48bc910dc6f8ea7c770412d874b4b31350cb5895086a799b90554b19"
         }
     },
+    "location": "$env:ProgramFiles\\Zen Browser",
     "link": "$env:AppData\\zen",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,7 +36,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Zen Browser\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:ProgramFiles\\Zen Browser\",\"$env:LocalAppData\\zen\""

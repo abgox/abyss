@@ -5,20 +5,13 @@
     "license": {
         "identifier": "GPL-3.0-only"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\ProtonPass",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\ProtonPass",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://proton.me/download/pass/windows/ProtonPass_Setup_1.34.2.exe",
             "hash": "2db4da4afec0521eb4228d145998167f7773e154003cf16d7996d464238a3e4b"
         }
     },
+    "location": "$env:LocalAppData\\ProtonPass",
     "link": "$env:AppData\\Proton Pass",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +28,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process \"$env:LocalAppData\\ProtonPass\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App -ArgumentList '--uninstall'",
         "A-Remove-TempData \"$env:LocalAppData\\ProtonPass\""

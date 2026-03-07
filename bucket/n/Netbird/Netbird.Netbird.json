@@ -5,14 +5,6 @@
     "license": {
         "identifier": "BSD-3-Clause"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Netbird",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Netbird",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/netbirdio/netbird/releases/download/v0.66.2/netbird_installer_0.66.2_windows_amd64.exe",
@@ -23,6 +15,7 @@
             "hash": "27944a9b405bb6a621241d9e116ae1cf0d6bd18cbdb8a9b2c872538699a5d2dc"
         }
     },
+    "location": "$env:ProgramFiles\\Netbird",
     "link": "$env:ProgramData\\Netbird",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -41,7 +34,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Netbird\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App"
     ],
