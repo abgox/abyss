@@ -21,7 +21,7 @@
 
 ---
 
-|App (830)|Tag|Description|
+|App (831)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -344,6 +344,7 @@
 |[fraxiinus.ReplayBook](https://www.fraxiinus.dev/ReplayBook/)|<a href="./bucket/f/fraxiinus/fraxiinus.ReplayBook.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Play, manage, and inspect League of Legends replays|
 |[Freelensapp.Freelens](https://freelensapp.github.io/)|<a href="./bucket/f/Freelensapp/Freelensapp.Freelens.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open-source user interface designed for managing Kubernetes clusters|
 |[Freeplane.Freeplane](https://freeplane.org/)|<a href="./bucket/f/Freeplane/Freeplane.Freeplane.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open source software application that supports thinking, sharing information, getting things done at work, in school and at home|
+|[fselect.fselect](https://fselect.rocks/)|<a href="./bucket/f/fselect/fselect.fselect.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Find files with SQL-like queries|
 |[Game1024.OpenSpeedy](https://github.com/game1024/OpenSpeedy)|<a href="./bucket/g/Game1024/Game1024.OpenSpeedy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|An open-source and free game speed tool that helps you break frame rate limitations and provides a smoother, silkier gaming acceleration experience|
 |[Geeks3D.FurMark.1](https://geeks3d.com/furmark/)|<a href="./bucket/g/Geeks3D/Geeks3D.FurMark.1.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A lightweight and very intensive graphics card and GPU stress test|
 |[Geeks3D.FurMark.2](https://geeks3d.com/furmark/)|<a href="./bucket/g/Geeks3D/Geeks3D.FurMark.2.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A lightweight and very intensive graphics card and GPU stress test|

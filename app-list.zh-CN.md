@@ -21,7 +21,7 @@
 
 ---
 
-|App (830)|Tag|Description|
+|App (831)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -344,6 +344,7 @@
 |[fraxiinus.ReplayBook](https://www.fraxiinus.dev/ReplayBook/)|<a href="./bucket/f/fraxiinus/fraxiinus.ReplayBook.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|播放、管理和查看英雄联盟(LOL) 的回放|
 |[Freelensapp.Freelens](https://freelensapp.github.io/)|<a href="./bucket/f/Freelensapp/Freelensapp.Freelens.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个免费且开源的用户界面，专为管理 Kubernetes 集群而设计|
 |[Freeplane.Freeplane](https://freeplane.org/)|<a href="./bucket/f/Freeplane/Freeplane.Freeplane.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费/自由开源软件，支持思维整理、信息共享以及工作学习与家庭事务的高效管理|
+|[fselect.fselect](https://fselect.rocks/)|<a href="./bucket/f/fselect/fselect.fselect.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|使用类 SQL 查询查找文件|
 |[Game1024.OpenSpeedy](https://github.com/game1024/OpenSpeedy)|<a href="./bucket/g/Game1024/Game1024.OpenSpeedy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款开源免费的游戏变速工具，助您突破帧率限制，带来更流畅丝滑的游戏加速体验|
 |[Geeks3D.FurMark.1](https://geeks3d.com/furmark/)|<a href="./bucket/g/Geeks3D/Geeks3D.FurMark.1.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款轻量级且强度极高的显卡和 GPU 压力测试工具|
 |[Geeks3D.FurMark.2](https://geeks3d.com/furmark/)|<a href="./bucket/g/Geeks3D/Geeks3D.FurMark.2.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款轻量级且强度极高的显卡和 GPU 压力测试工具|
