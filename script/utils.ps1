@@ -212,7 +212,10 @@ function A-Complete-Install {
             A-Exit
         }
     }
-    $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
+
+    if ($info.Count) {
+        $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
+    }
 }
 
 function A-Start-Uninstall {
