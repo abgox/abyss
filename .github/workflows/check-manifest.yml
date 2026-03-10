@@ -116,10 +116,31 @@ jobs:
 
               $line = @()
 
-              # homepage
+              # Manifest
               $line += if ($c.homepage) { "[$m]($($c.homepage))" } else { $m }
 
-              # check winget package
+              # Required Fields
+              $fields = @(
+                  'version',
+                  'description',
+                  'homepage',
+                  'license',
+                  'architecture',
+                  'pre_install',
+                  'post_install',
+                  'pre_uninstall',
+                  'post_uninstall'
+              )
+              $pass = $true
+              foreach ($field in $fields) {
+                  if (-not $c.$field) {
+                      $pass = $false
+                      break
+                  }
+              }
+              $line += if ($pass) { 'Yes' } else { 'No ⚠️' }
+
+              # In Winget
               $path = "$letter/$($m.Replace('.', '/'))"
               $api = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$path"
               $url = "https://github.com/microsoft/winget-pkgs/blob/master/manifests/$path"
@@ -128,14 +149,14 @@ jobs:
                   $line += "[Yes]($url)"
               }
               catch {
-                  $line += "[No]($url)"
+                  $line += "[No]($url) ⚠️"
               }
 
-              # type
+              # Type
               $type = if ($c.psmodule) { 'psmodule' } elseif ($c.font) { 'font' } else { $null }
               $line += if ($type) { $type } else { '' }
 
-              # persistence
+              # Persistence
               $persistence = @()
               if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') { $persistence += 'link' }
               if ($c.persist) { $persistence += 'persist' }
@@ -154,8 +175,8 @@ jobs:
               $results = @(
                   $marker,
                   '',
-                  '| Manifest | In Winget | Type | Persistence |',
-                  '| :-: | :-: | :-: | :-: |'
+                  '| Manifest | Required Fields | In Winget | Type | Persistence |',
+                  '| :-: | :-: | :-: | :-: | :-: |'
               ) + $results
           }
           else {
