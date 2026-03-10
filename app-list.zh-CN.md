@@ -21,7 +21,7 @@
 
 ---
 
-|App (833)|Tag|Description|
+|App (834)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -696,6 +696,7 @@
 |[rocksdanister.LivelyWallpaper](https://rocksdanister.com/lively)|<a href="./bucket/r/rocksdanister/rocksdanister.LivelyWallpaper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款免费开源的软件，它能让用户设置动态桌面壁纸和屏幕保护程序|
 |[RSSNext.Folo](https://follow.is/)|<a href="./bucket/r/RSSNext/RSSNext.Folo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在一个地方关注所有事情|
 |[rsteube.Carapace](https://carapace.sh/)|<a href="./bucket/r/rsteube/rsteube.Carapace.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|多 shell、多命令、参数补全器|
+|[rsteube.Carapace.nightly](https://carapace.sh/)|<a href="./bucket/r/rsteube/rsteube.Carapace.nightly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|多 shell、多命令、参数补全器|
 |[rubickCenter.Rubick](https://rubickcenter.github.io/docs)|<a href="./bucket/r/rubickCenter/rubickCenter.Rubick.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于 electron 的开源工具箱，自由集成丰富插件|
 |[RubyMetric.chsrc](https://chsrc.run/)|<a href="./bucket/r/RubyMetric/RubyMetric.chsrc.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|为每个软件在所有地方更换源|
 |[Ruffle.Ruffle.Nightly](https://ruffle.rs/)|<a href="./bucket/r/Ruffle/Ruffle.Ruffle.Nightly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个用 Rust 编程语言编写的 Adobe Flash Player 模拟器|
