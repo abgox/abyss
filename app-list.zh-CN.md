@@ -21,7 +21,7 @@
 
 ---
 
-|App (831)|Tag|Description|
+|App (833)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -640,6 +640,8 @@
 |[onozaty.xml2csv](https://github.com/onozaty/xml2csv)|<a href="./bucket/o/onozaty/onozaty.xml2csv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个命令行工具，可将 XML 文件转换为 CSV 文件|
 |[open-ani.animeko](https://animeko.org/)|<a href="./bucket/o/open-ani/open-ani.animeko.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|集找番、追番、看番的一站式弹幕追番平台|
 |[OpenAI.Codex](https://github.com/openai/codex)|<a href="./bucket/o/OpenAI/OpenAI.Codex.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款在终端中运行的开源本地编码代理|
+|[OpenCLICollective.cfl](https://github.com/open-cli-collective/confluence-cli)|<a href="./bucket/o/OpenCLICollective/OpenCLICollective.cfl.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个命令行界面，用于管理 Atlassian Confluence Cloud|
+|[OpenCLICollective.gro](https://github.com/open-cli-collective/google-readonly)|<a href="./bucket/o/OpenCLICollective/OpenCLICollective.gro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个只读的命令行界面，用于管理谷歌服务|
 |[OpenJS.NodeJS](https://nodejs.org/)|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个免费、开源、跨平台的 JavaScript 运行时环境|
 |[OpenJS.NodeJS.LTS](https://nodejs.org/)|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.LTS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个免费、开源、跨平台的 JavaScript 运行时环境|
 |[OptiPNG.OptiPNG](https://optipng.sourceforge.net/)|<a href="./bucket/o/OptiPNG/OptiPNG.OptiPNG.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款 PNG 优化工具，它能重新压缩图像文件以减小其大小，且不会丢失任何信息|

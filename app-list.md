@@ -21,7 +21,7 @@
 
 ---
 
-|App (831)|Tag|Description|
+|App (833)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -640,6 +640,8 @@
 |[onozaty.xml2csv](https://github.com/onozaty/xml2csv)|<a href="./bucket/o/onozaty/onozaty.xml2csv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A command-line tool that converts XML to CSV|
 |[open-ani.animeko](https://animeko.org/)|<a href="./bucket/o/open-ani/open-ani.animeko.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An all-in-one bullet-screen anime platform for finding, following, and watching anime|
 |[OpenAI.Codex](https://github.com/openai/codex)|<a href="./bucket/o/OpenAI/OpenAI.Codex.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|An open-source local coding agent that runs in your terminal|
+|[OpenCLICollective.cfl](https://github.com/open-cli-collective/confluence-cli)|<a href="./bucket/o/OpenCLICollective/OpenCLICollective.cfl.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Command-line interface for Atlassian Confluence Cloud|
+|[OpenCLICollective.gro](https://github.com/open-cli-collective/google-readonly)|<a href="./bucket/o/OpenCLICollective/OpenCLICollective.gro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A read-only command-line interface for Google services|
 |[OpenJS.NodeJS](https://nodejs.org/)|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A free, open-source, cross-platform JavaScript runtime environment|
 |[OpenJS.NodeJS.LTS](https://nodejs.org/)|<a href="./bucket/o/OpenJS/OpenJS.NodeJS.LTS.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A free, open-source, cross-platform JavaScript runtime environment|
 |[OptiPNG.OptiPNG](https://optipng.sourceforge.net/)|<a href="./bucket/o/OptiPNG/OptiPNG.OptiPNG.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A PNG optimizer that recompresses image files to a smaller size, without losing any information|
