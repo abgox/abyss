@@ -116,21 +116,24 @@ jobs:
 
               $line = @()
 
+              # homepage
+              $line += if ($c.homepage) { "[$m]($($c.homepage))" } else { $m }
+
               # check winget package
               $path = "$letter/$($m.Replace('.', '/'))"
               $api = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$path"
               $url = "https://github.com/microsoft/winget-pkgs/blob/master/manifests/$path"
               try {
                   $res = Invoke-RestMethod -Uri $api -Headers $headers -ErrorAction stop
-                  $line += "$m ([Winget Package]($url))"
+                  $line += "[Yes]($url)"
               }
               catch {
-                  $line += $m
+                  $line += "[No]($url)"
               }
 
               # type
               $type = if ($c.psmodule) { 'psmodule' } elseif ($c.font) { 'font' } else { $null }
-              $line += if ($type) { $type }else { '' }
+              $line += if ($type) { $type } else { '' }
 
               # persistence
               $persistence = @()
@@ -151,8 +154,8 @@ jobs:
               $results = @(
                   $marker,
                   '',
-                  '| Manifest | Type | Persistence |',
-                  '| :-: | :-: | :-: |'
+                  '| Manifest | In Winget | Type | Persistence |',
+                  '| :-: | :-: | :-: | :-: |'
               ) + $results
           }
           else {
