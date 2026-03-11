@@ -122,7 +122,6 @@ function A-Start-Install {
             [System.Environment]::SetEnvironmentVariable($_.Name, $ExecutionContext.InvokeCommand.ExpandString($_.Value), [System.EnvironmentVariableTarget]::Process)
         }
     }
-    A-Add-Path "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps" -SkipRecord
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
@@ -2224,8 +2223,7 @@ function A-Remove-Font {
 
 function A-Add-Path {
     param(
-        [string[]]$Paths,
-        [switch]$SkipRecord
+        [string[]]$Paths
     )
 
     if (get_config USE_ISOLATED_PATH) {
@@ -2240,10 +2238,6 @@ function A-Add-Path {
 
     Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
 
-    if ($SkipRecord) {
-        return
-    }
-
     @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
 }
 
@@ -2253,7 +2247,9 @@ function A-Remove-Path {
         return
     }
 
-    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths
+    $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
+
+    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
     if (-not $Path) {
         return
     }
