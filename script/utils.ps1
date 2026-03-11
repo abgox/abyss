@@ -220,8 +220,11 @@ function A-Complete-Install {
 
 function A-Start-Uninstall {
     # https://abyss.abgox.com/features/manifest-status-control
-    if ($version -in @('pending', 'deprecated')) {
+    if ($version -in 'pending', 'deprecated') {
         A-Deny-Update
+    }
+    if ($version -eq 'renamed') {
+        A-Move-Persistence
     }
     A-Remove-Font
     A-Remove-Path
@@ -1753,7 +1756,7 @@ function A-Deny-Manifest {
         }
         renamed {
             $msg = "'$app' is renamed to '$NewManifestName'."
-            A-Move-Persist
+            A-Move-Persistence
         }
     }
     if ($msg) {
@@ -1781,17 +1784,36 @@ function A-Deny-IfAppConflict {
     }
 }
 
-function A-Move-Persist {
+function A-Move-Persistence {
     if (-not $manifest.new) {
         return
     }
     if (A-Test-DirectoryNotEmpty $persist_dir) {
-        Write-Host "Renaming $persist_dir => $(Join-Path (Split-Path $persist_dir -Parent) $manifest.new)"
+        $target = Join-Path (Split-Path $persist_dir -Parent) $manifest.new
+        if (A-Test-DirectoryNotEmpty $target) {
+            return
+        }
+
+        Write-Host "Renaming $persist_dir => $target"
         try {
             Rename-Item -Path $persist_dir -NewName $manifest.new -Force -ErrorAction Stop
         }
         catch {
             error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+
+        if ($cmd -eq 'update') {
+            Write-Host "Linking $persist_dir => $target"
+            try {
+                New-Item -ItemType Junction -Path $persist_dir -Target $target -Force -ErrorAction Stop | Out-Null
+            }
+            catch {
+                error $_.Exception.Message
+                A-Show-IssueCreationPrompt
+                A-Exit
+            }
         }
     }
 }
