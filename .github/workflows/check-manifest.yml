@@ -160,13 +160,16 @@ jobs:
               # Persistence
               $persistence = @()
               if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') { $persistence += 'link' }
-              if ($c.persist) { $persistence += 'persist' }
+              if ($c.persist) { $persistence += 'persist ⚠️' }
               if ($persistence) {
                   $line += $persistence -join '<br />'
               }
               else {
                   $line += ''
               }
+
+              # Location
+              $line += if ($c.location) { '`' + $c.location + '`' } else { 'In Scoop' }
 
               $results += '|' + ($line -join '|') + '|'
           }
@@ -176,8 +179,8 @@ jobs:
               $results = @(
                   $marker,
                   '',
-                  '| Manifest | Required Fields | In Winget | Type | Persistence |',
-                  '| :-: | :-: | :-: | :-: | :-: |'
+                  '| Manifest | Required Fields | In Winget | Type | Persistence | Location |',
+                  '| :-: | :-: | :-: | :-: | :-: | :-: |'
               ) + $results
           }
           else {
