@@ -92,28 +92,30 @@ function A-Start-Install {
     if ($manifest.persist) {
         foreach ($item in $manifest.persist) {
             if ($item -is [string]) {
-                $path = "$dir\$item"
-                if (Test-Path $path) {
-                    A-Copy-Item $path "$persist_dir\$item"
+                $source = $item
+                $target = $item
+            }
+            else {
+                $source = $item[0]
+                $target = $item[1]
+            }
+            $from = "$dir\$source"
+            $to = "$persist_dir\$target"
+            if (Test-Path $from) {
+                A-Copy-Item $from $to
+            }
+            $from = "$bucketsdir\$bucket\extra\$app\$target"
+            if (Test-Path $from) {
+                A-Copy-Item $from $to
+            }
+            $standardPath = $target -match 'AppData\\(Roaming|Local)\\.*'
+            if ($standardPath) {
+                $from = Join-Path $home $target
+                $exists = Test-Path $from -PathType Container
+                $isLink = A-Test-Link $from
+                if ($exists -and -not $isLink) {
+                    A-Copy-Item $from $to
                 }
-                $path = "$bucketsdir\$bucket\extra\$app\$item"
-                if (Test-Path $path) {
-                    A-Copy-Item $path "$persist_dir\$item"
-                }
-                continue
-            }
-            $source = $item[0]
-            $target = $item[1]
-            $path = "$dir\$source"
-            if (Test-Path $path) {
-                A-Copy-Item $path "$persist_dir\$target"
-            }
-            $path = "$bucketsdir\$bucket\extra\$app\$target"
-            if (Test-Path $path) {
-                A-Copy-Item $path "$persist_dir\$target"
-            }
-            if ((Test-Path "$home\$target") -and -not (A-Test-Link "$home\$target")) {
-                A-Copy-Item "$home\$target" "$persist_dir\$target"
             }
         }
     }
@@ -1792,8 +1794,7 @@ function A-Move-Persistence {
         if (A-Test-DirectoryNotEmpty $target) {
             return
         }
-
-        Write-Host "Renaming $persist_dir => $target"
+        Write-Host "Migrating $persist_dir => $target"
         try {
             Rename-Item -Path $persist_dir -NewName $manifest.new -Force -ErrorAction Stop
         }
