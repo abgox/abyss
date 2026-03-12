@@ -38,6 +38,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
       MARKER: "<!-- comment-by-bot-for-check-manifest -->"
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Find or create comment
         id: comment
@@ -183,14 +184,16 @@ jobs:
               $results = @(
                   $marker,
                   '',
-                  'No manifests detected in this PR.'
+                  'No manifests in PR.'
               )
           }
 
           $results + @(
               '',
               '---',
-              'Comment `/check` to run the check again.'
+              'Comment `/check` to run the check again.',
+              '',
+              "[_View the workflow run for details._]($env:RUN_URL)"
           ) | Out-File result.md
 
       - name: Comment PR
