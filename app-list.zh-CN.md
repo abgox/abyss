@@ -21,7 +21,7 @@
 
 ---
 
-|App (834)|Tag|Description|
+|App (835)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -664,6 +664,7 @@
 |[PixPin.PixPin.Beta](https://pixpin.cn/)|<a href="./bucket/p/PixPin/PixPin.PixPin.Beta.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个功能强大使用简单的截图/贴图/录屏工具|
 |[Planshit.Tai](https://github.com/Planshit/Tai)|<a href="./bucket/p/Planshit/Planshit.Tai.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|在 Windows 上统计软件使用时长和网站浏览时长|
 |[pnpm.pnpm](https://pnpm.io/)|<a href="./bucket/p/pnpm/pnpm.pnpm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款快速且节省磁盘空间的 Node 包管理器|
+|[Postman.Postman](https://www.postman.com/)|<a href="./bucket/p/Postman/Postman.Postman.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|API 开发协作平台|
 |[PowerShell.CompletionPredictor](https://github.com/PowerShell/CompletionPredictor)|<a href="./bucket/p/PowerShell/PowerShell.CompletionPredictor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个适用于 PSReadLine 预测性智能感知功能的 PowerShell 命令行自动补全插件|
 |[PowerShell.PowerShellGet](https://github.com/PowerShell/PSResourceGet)|<a href="./bucket/p/PowerShell/PowerShell.PowerShellGet.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，包含用于发现、安装、更新和发布 PowerShell 产物 (如模块、DSC 资源、角色功能和脚本) 的命令|
 |[PowerShell.PSReadLine](https://github.com/PowerShell/PSReadLine)|<a href="./bucket/p/PowerShell/PowerShell.PSReadLine.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个受 bash 启发的 PowerShell readline 实现|
