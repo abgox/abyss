@@ -22,21 +22,22 @@ if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
 . $env:SCOOP_HOME\lib\json.ps1
 
 $order = [ordered]@{
-    '##'           = ''
-    version        = ''
-    description    = ''
-    homepage       = ''
-    license        = [ordered]@{
+    '##'                = ''
+    version             = ''
+    new                 = '' # abyss
+    description         = ''
+    homepage            = ''
+    license             = [ordered]@{
         identifier = ''
         url        = ''
     }
-    notes          = ''
-    notes_cn       = ''
-    depends        = ''
-    suggest        = ''
+    notes               = ''
+    notes_cn            = '' # abyss
+    depends             = ''
+    suggest             = ''
     # url            = ''
     # hash           = ''
-    architecture   = [ordered]@{
+    architecture        = [ordered]@{
         '64bit' = [ordered]@{
             url          = ''
             hash         = ''
@@ -77,24 +78,29 @@ $order = [ordered]@{
         #     # uninstaller  = ''
         # }
     }
-    extract_dir    = ''
-    extract_to     = ''
-    env_set        = ''
-    env_add_path   = ''
-    innosetup      = ''
-    psmodule       = ''
-    bin            = ''
-    commands       = ''
-    shortcuts      = ''
-    persist        = ''
-    pre_install    = ''
+    conflicts           = '' # abyss
+    location            = '' # abyss
+    extract_dir         = ''
+    extract_to          = ''
+    env_set             = ''
+    env_add_path        = ''
+    env_add_path_expand = '' # abyss
+    innosetup           = ''
+    psmodule            = ''
+    font                = '' # abyss
+    bin                 = ''
+    commands            = '' # abyss
+    shortcuts           = ''
+    link                = '' # abyss
+    persist             = ''
+    pre_install         = ''
     # installer      = ''
-    post_install   = ''
-    pre_uninstall  = ''
+    post_install        = ''
+    pre_uninstall       = ''
     # uninstaller    = ''
-    post_uninstall = ''
-    checkver       = ''
-    autoupdate     = [ordered]@{
+    post_uninstall      = ''
+    checkver            = ''
+    autoupdate          = [ordered]@{
         architecture = [ordered]@{
             '64bit' = [ordered]@{
                 url          = ''
@@ -187,10 +193,10 @@ function Sort-JsonByOrder {
 }
 
 if ($Recent) {
-    Write-Host "::group::Recent Manifests" -ForegroundColor Cyan
+    Write-Host '::group::Recent Manifests' -ForegroundColor Cyan
 
     $guid = [Guid]::NewGuid()
-    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- "bucket/" |
+    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
     ForEach-Object {
         if ($_ -eq '') { return }
         if ($_ -eq $guid) {
@@ -211,7 +217,7 @@ if ($Recent) {
         [System.IO.FileInfo]$fullPath
     }
 
-    Write-Host "::endgroup::" -ForegroundColor Cyan
+    Write-Host '::endgroup::' -ForegroundColor Cyan
 }
 else {
     $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"

@@ -5,7 +5,7 @@ on:
     types: [opened]
 
 concurrency:
-  group: manifest-check-lock
+  group: manifest-update-lock
 
 jobs:
   issue-handler:
@@ -14,9 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Get latest changes
-        run: git pull
+        with:
+          ref: ${{ github.event.repository.default_branch}}
 
       - name: Issue Handler
         uses: ScoopInstaller/GithubActions@main

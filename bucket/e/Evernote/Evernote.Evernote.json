@@ -1,30 +1,23 @@
 {
-    "version": "11.3.4",
+    "version": "11.4.4",
     "description": "在一处记住所有内容，并通过笔记、任务和日程处理一切 | Remember everything and tackle any project with your notes, tasks, and schedule all in one place",
     "homepage": "https://evernote.com/",
     "license": {
         "identifier": "Unknown",
         "url": "https://evernote.com/legal/terms-of-service"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\Programs\\Evernote",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\Programs\\Evernote",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://win.desktop.evernote.com/builds/Evernote-11.3.4-win-ddl-stage-20260206175230-6cb812f65a006866d7a2b249726d81f6a45bccd6-setup.exe",
-            "hash": "afca9486888fb92d505bac236ab5012a0bc4542536790ed2b8aa8b24b7165f20"
+            "url": "https://win.desktop.evernote.com/builds/Evernote-11.4.4-win-ddl-stage-20260220155030-dd509b08615e2fdea11ad70433ca6b826c0cb02d-setup.exe",
+            "hash": "36d05cd97423691d7cd7ece1af9a82f8a9ab14c85d86b710f1ac673ddacd8f2b"
         }
     },
+    "location": "$env:LocalAppData\\Programs\\Evernote",
+    "link": "$env:AppData\\Evernote",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Evernote\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\Programs\\Evernote\\Uninstall Evernote.exe\" -ArgumentList '/CurrentUser','/S'"
     ],
     "post_install": [
@@ -36,7 +29,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process \"$env:LocalAppData\\Programs\\Evernote\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\evernote-client-updater\""
