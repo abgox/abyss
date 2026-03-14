@@ -79,6 +79,7 @@ $order = [ordered]@{
         # }
     }
     conflicts           = '' # abyss
+    location            = '' # abyss
     extract_dir         = ''
     extract_to          = ''
     env_set             = ''
