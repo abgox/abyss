@@ -17,12 +17,11 @@
         "RIPGREP_CONFIG_PATH": "$persist_dir\\.ripgreprc"
     },
     "bin": "app\\rg.exe",
-    "persist": ".ripgreprc",
+    "link": "$home\\.ripgreprc",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-New-File \"$persist_dir\\.ripgreprc\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -33,7 +32,8 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,7 +43,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'BurntSushi.ripgrep.GNU' 'zip'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'BurntSushi.ripgrep.GNU' 'zip'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

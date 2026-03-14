@@ -15,11 +15,11 @@
             "hash": "c3db984ce7c6bef110a7c47ccd7caab460a01288eeb37d2f23638d50047036db"
         }
     },
+    "link": "$home\\.affinity",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$home\\.affinity\"",
         "A-Add-MsixPackage 'Canva.Affinity_8a0j1tnjnt4a4'"
     ],
     "post_install": [
@@ -42,7 +42,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Canva.Affinity' 'msix'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Canva.Affinity' 'msix'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

@@ -18,12 +18,14 @@
             "Oracle SQL Developer"
         ]
     ],
+    "link": [
+        "$env:AppData\\sqldeveloper",
+        "$env:AppData\\SQL Developer"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-Deny-Manifest",
-        "A-New-LinkDirectory \"$env:AppData\\sqldeveloper\",\"$env:AppData\\SQL Developer\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -46,11 +48,10 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Oracle.SQLDeveloper' 'zip'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Oracle.SQLDeveloper' 'zip'",
             "$out"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-        "replace": "pending"
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
     },
     "autoupdate": {
         "architecture": {

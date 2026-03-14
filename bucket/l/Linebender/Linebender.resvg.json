@@ -1,0 +1,54 @@
+{
+    "version": "0.47.0",
+    "description": "一个 SVG 渲染库 | An SVG rendering library",
+    "homepage": "https://github.com/linebender/resvg",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/linebender/resvg/releases/download/v0.47.0/resvg-win64.zip",
+            "hash": "5684e59ceaa53ce720b49efb441b0918ae99d04e8ce3f6f753664524592d67f1"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\resvg.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/linebender/resvg/releases/download/v$version/resvg-win64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

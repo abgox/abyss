@@ -1,5 +1,5 @@
 {
-    "version": "2.4.9.2",
+    "version": "2.4.9.6",
     "description": "一个功能强大使用简单的截图/贴图/录屏工具 | A powerful and simple screenshot/stick/screen recording tool",
     "homepage": "https://pixpin.cn/",
     "license": {
@@ -8,10 +8,14 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.pixpinapp.com/PixPin_cn_zh-cn_2.4.9.2.exe",
-            "hash": "5639a699c75c11055085abacc2fb91b18a8e27a0286d36b3347a576e6bd98e4a"
+            "url": "https://download.pixpinapp.com/PixPin_cn_zh-cn_2.4.9.6.exe",
+            "hash": "620b58c6d6cf647c8c3ab6cc9ad60caca3864b3d9f5aee53febd766f477d7008"
         }
     },
+    "conflicts": [
+        "PixPin.PixPin",
+        "PixPin.PixPin.Beta"
+    ],
     "bin": "app\\PixPin.exe",
     "shortcuts": [
         [
@@ -19,13 +23,12 @@
             "PixPin"
         ]
     ],
+    "link": "$env:LocalAppData\\PixPin",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-IfAppConflict 'PixPin.PixPin', 'PixPin.PixPin.Beta'",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:LocalAppData\\PixPin\"",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -50,7 +53,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'PixPin.PixPin.Beta' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'PixPin.PixPin.Beta' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

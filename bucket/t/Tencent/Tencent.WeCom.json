@@ -6,34 +6,29 @@
         "identifier": "Unknown",
         "url": "https://work.weixin.qq.com/nl/eula"
     },
-    "notes": [
-        "The installation directory: ${env:ProgramFiles(x86)}\\WXWork",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: ${env:ProgramFiles(x86)}\\WXWork",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
             "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
         }
     },
+    "location": "${env:ProgramFiles(x86)}\\WXWork",
     "shortcuts": [
         [
             "${env:ProgramFiles(x86)}\\WXWork\\WXWork.exe",
             "企业微信"
         ]
     ],
+    "link": [
+        "$env:AppData\\Tencent\\WXWork",
+        "$home\\Documents\\WXWork"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-Manifest",
         "A-Require-Admin",
-        "A-Install-App -Uninstaller \"${env:ProgramFiles(x86)}\\WXWork\\Uninstall.exe\" -ArgumentList '/S'",
-        "A-New-LinkDirectory \"$env:AppData\\Tencent\\WXWork\", \"$home\\Documents\\WXWork\""
+        "A-Install-App -Uninstaller \"${env:ProgramFiles(x86)}\\WXWork\\Uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,7 +40,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"${env:ProgramFiles(x86)}\\WXWork\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App"
     ],
@@ -57,11 +52,10 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Tencent.WeCom' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Tencent.WeCom' 'exe'",
             "$out"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-        "replace": "pending"
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
     },
     "autoupdate": {
         "architecture": {

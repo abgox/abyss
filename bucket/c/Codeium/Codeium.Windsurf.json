@@ -1,5 +1,5 @@
 {
-    "version": "1.13.12",
+    "version": "1.9577.27",
     "description": "一个强大的 AI IDE | A powerful AI IDE",
     "homepage": "https://windsurf.com/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://windsurf-stable.codeiumdata.com/win32-x64-user/stable/aa644d109002a89ca18e1ba5fe9355859b4f0565/WindsurfUserSetup-x64-1.13.12.exe",
-            "hash": "7032fc1304467cdb1233dd7072e8f0ee8730ef70b22ebed0a7a0890597e79bb5"
+            "url": "https://windsurf-stable.codeiumdata.com/win32-x64-user/stable/d8f5ffde018f40c5787712b4ce2bcadcfffcf7a2/WindsurfUserSetup-x64-1.9577.27.exe",
+            "hash": "f7fff239ab50a1be8a27476cdc7d611501ae08195d249d43792f8822643ea35a"
         }
     },
     "env_add_path": "app\\bin",
@@ -20,11 +20,14 @@
             "Windsurf"
         ]
     ],
+    "link": [
+        "$env:AppData\\Windsurf",
+        "$home\\.windsurf"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Windsurf\",\"$home\\.windsurf\"",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -48,7 +51,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Codeium.Windsurf' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Codeium.Windsurf' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

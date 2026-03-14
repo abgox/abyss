@@ -17,12 +17,12 @@
             "Neat Download Manager"
         ]
     ],
+    "link": "$env:AppData\\NeatDM",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\NeatDM\"",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -47,7 +47,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'JavadMotallebi.NeatDownloadManager' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'JavadMotallebi.NeatDownloadManager' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
