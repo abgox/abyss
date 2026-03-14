@@ -1,34 +1,27 @@
 {
-    "version": "3.4.2",
+    "version": "3.5.0",
     "description": "rclone 之上的一个轻便、透明的层（桌面图形用户界面），能以更用户友好的方式管理你的远程存储和任务 | A light, transparent layer (desktop GUI) on top of rclone to manage your remotes & tasks in a more user-friendly way",
     "homepage": "https://rcloneui.com/",
     "license": {
         "identifier": "Apache-2.0"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Rclone UI",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Rclone UI",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.4.2/Rclone.UI_x64.exe",
-            "hash": "c294b43fad5cbc3a2cf8b3498aac1bf1a154a4828310544481ffa7914f0a52fb"
+            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.0/Rclone.UI_x64.exe",
+            "hash": "4d065ad00d641753cada3ff3850bba5417d64401d88b5554f6708231dc326371"
         },
         "arm64": {
-            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.4.2/Rclone.UI_arm64.exe",
-            "hash": "26b6864533578ad41c41440439babef721a2a2218ff5faacba2ac05157b4bedf"
+            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.0/Rclone.UI_arm64.exe",
+            "hash": "9129217663de743f9ca2cab18cd702d576d678e044d743727c1959a72c77799e"
         }
     },
+    "location": "$env:ProgramFiles\\Rclone UI",
+    "link": "$env:AppData\\com.rclone.ui",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\com.rclone.ui\"",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Rclone UI\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
@@ -41,7 +34,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Rclone UI\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\com.rclone.ui\""

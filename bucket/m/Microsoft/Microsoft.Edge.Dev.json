@@ -6,14 +6,6 @@
         "identifier": "Freeware",
         "url": "https://www.microsoft.com/servicesagreement"
     },
-    "notes": [
-        "The installation directory: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: ${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/a9930a1a-2355-43d5-a4cb-6739ef6be877/MicrosoftEdgeDevEnterpriseX64.msi#/dl.msi_",
@@ -24,18 +16,19 @@
             "hash": "cfb1d23b20005cbd0392c13a179df0143546f502ff447aba85242e12e8345230"
         }
     },
+    "location": "${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
     "shortcuts": [
         [
             "${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev\\Application\\msedge.exe",
             "Microsoft Edge Dev"
         ]
     ],
+    "link": "$env:LocalAppData\\Microsoft\\Edge Dev\\User Data",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Microsoft\\Edge Dev\\User Data\"",
         "A-Install-Msi"
     ],
     "post_install": [

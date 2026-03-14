@@ -1,30 +1,23 @@
 {
-    "version": "34.0.1",
+    "version": "34.1.0",
     "description": "Pale Moon 基于 Firefox 构建，是一款以 Goanna 为引擎、注重效率和自定义功能的网页浏览器 | Pale Moon is built on Firefox, and is Goanna-based web browser focusing on efficiency and customization",
     "homepage": "https://www.palemoon.org/",
     "license": {
         "identifier": "MPL-2.0"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Pale Moon",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Pale Moon",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://rm-eu.palemoon.org/release/palemoon-34.0.1.win64.installer.exe",
-            "hash": "0ba74fe20822b714b60e0b781a3b5252833c98f95e93a7552099cd7b71c95f1b"
+            "url": "https://rm-eu.palemoon.org/release/palemoon-34.1.0.win64.installer.exe",
+            "hash": "2154b4feb8284a4e42d88b7611efa833250d5bc3914c07783fa9a82d488d73d9"
         }
     },
+    "location": "$env:ProgramFiles\\Pale Moon",
+    "link": "$env:AppData\\Moonchild Productions\\Pale Moon",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\Moonchild Productions\\Pale Moon\"",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Pale Moon\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
     ],
     "post_install": [
@@ -37,7 +30,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Pale Moon\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\Moonchild Productions\\Pale Moon\""
