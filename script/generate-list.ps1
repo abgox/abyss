@@ -116,7 +116,7 @@ foreach ($path in $PathList) {
         }
 
         ## Link
-        $isLink = Test-ScriptPattern $json '(?<!#.*)(A-New-LinkDirectory|A-New-LinkFile)'
+        $isLink = $json.link -or (Test-ScriptPattern $json '(?<!#.*)(A-New-LinkDirectory|A-New-LinkFile)')
         if ($isLink) {
             $tag += '[Link](https://abyss.abgox.com/features/data-persistence#link)'
         }
