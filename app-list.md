@@ -21,7 +21,7 @@
 
 ---
 
-|App (835)|Tag|Description|
+|App (836)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -34,6 +34,7 @@
 |[2dust.v2rayN](https://github.com/2dust/v2rayN)|<a href="./bucket/2/2dust/2dust.v2rayN.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A V2Ray client for Windows, support Xray & v2fly core|
 |[3Dflow.3DFZephyr.Free](https://www.3dflow.net/3df-zephyr-free/)|<a href="./bucket/3/3Dflow/3Dflow.3DFZephyr.Free.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A photogrammetry software solution by 3Dflow to automatically reconstruct 3D models from photos|
 |[4gray.iptvnator](https://iptvnator.vercel.app/)|<a href="./bucket/4/4gray/4gray.iptvnator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A video player application that provides support for the playback of IPTV playlists (m3u, m3u8)|
+|[5mdt.WinGoDarkTray](https://github.com/5mdt/WinGoDarkTray)|<a href="./bucket/5/5mdt/5mdt.WinGoDarkTray.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A windows app to toggle light and dark mode from the system tray|
 |[5rahim.Seanime](https://seanime.rahim.app/)|<a href="./bucket/5/5rahim/5rahim.Seanime.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Free and open-source media server packed with features for anime and manga enthusiasts|
 |[64Gram.64Gram](https://github.com/TDesktop-x64/tdesktop)|<a href="./bucket/6/64Gram/64Gram.64Gram.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Unofficial Telegram Desktop|
 |[70sh1.eddy](https://github.com/70sh1/eddy)|<a href="./bucket/7/70sh1/70sh1.eddy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Simple, fast CLI file encryption tool|
