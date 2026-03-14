@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: manifest-check-lock
+  group: manifest-update-lock
 
 permissions:
   contents: write
@@ -18,16 +18,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Get latest changes
-        run: git pull
+        with:
+          ref: ${{ github.event.repository.default_branch}}
+          fetch-depth: 50
 
       - name: Sort JSON Files
         shell: pwsh
         run: |
           git clone --depth 1 https://github.com/ScoopInstaller/Scoop scoop
           $env:SCOOP_HOME = ".\scoop"
-          .\script\sort-json.ps1
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+              .\script\sort-json.ps1
+          } else {
+              .\script\sort-json.ps1 -Recent
+          }
 
       - name: Commit changes if any
         id: changes
