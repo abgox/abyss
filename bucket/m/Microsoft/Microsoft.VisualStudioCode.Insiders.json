@@ -1,5 +1,5 @@
 {
-    "version": "1.109.0-6a4f1d",
+    "version": "1.112.0-5382d3",
     "description": "(Insiders 版本) vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器 | (Insiders Edition) vscode - A lightweight but powerful source code editor",
     "homepage": "https://code.visualstudio.com/",
     "license": {
@@ -24,12 +24,12 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://update.code.visualstudio.com/1.109.0-insider/win32-x64-archive/insider#/dl.7z",
-            "hash": "fdf2236877e1abd916785fe2516c764eb549c6df444cb2de2e3341066d8c5cc9"
+            "url": "https://update.code.visualstudio.com/1.112.0-insider/win32-x64-archive/insider#/dl.7z",
+            "hash": "019a19c60fa8db1a7f89722510d3e4e09bfc91a52589a9fb3c40a37decb60add"
         },
         "arm64": {
-            "url": "https://update.code.visualstudio.com/1.109.0-insider/win32-arm64-archive/insider#/dl.7z",
-            "hash": "41c799fd526730d78297c53494b3653755f95b49c27b5e44404929b739898d70"
+            "url": "https://update.code.visualstudio.com/1.112.0-insider/win32-arm64-archive/insider#/dl.7z",
+            "hash": "cab0fc0c8dd6db6d9013964de072aca45e42cd25883227d9b62590ca7ac41a0c"
         }
     },
     "extract_to": "app",
@@ -41,21 +41,28 @@
             "Visual Studio Code - Insiders"
         ]
     ],
+    "link": [
+        "$env:AppData\\Code - Insiders",
+        "$home\\.vscode-insiders"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Code - Insiders\",\"$home\\.vscode-insiders\"",
         " ",
-        "$dirpath = \"$dir\\app\".Replace('\\', '\\\\')",
-        "$exepath = \"$dir\\app\\Code - Insiders.exe\".Replace('\\', '\\\\')",
+        "$_dir_path = \"$dir\\app\".Replace('\\', '\\\\')",
+        "$_exe_path = \"$dir\\app\\Code - Insiders.exe\".Replace('\\', '\\\\')",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extra\\$app\" -Filter *.reg | ForEach-Object {",
         "    $content = Get-Content $_.FullName",
-        "    $content = $content.Replace('$codedir', $dirpath).Replace('$code', $exepath).Replace('&Code', 'Code &Insiders')",
+        "    $content = $content.Replace('$code_dir', $_dir_path).Replace('$code', $_exe_path).Replace('&Code', 'Code &Insiders')",
         "    if ($global) {",
         "      $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
         "    }",
         "    $content | Set-Content -Path \"$dir\\$($_.Name)\"",
+        "}",
+        "$_build_dir = Get-ChildItem \"$dir\\app\" -Directory | Where-Object { $_.Name -match '^[a-f0-9]{10,}$' } | Select-Object -First 1 -ExpandProperty FullName",
+        "if ($_build_dir -and (Test-Path \"$_build_dir\\resources\")) {",
+        "    New-Item -ItemType Junction -Path \"$dir\\app\\resources\" -Target \"$_build_dir\\resources\" | Out-Null",
         "}"
     ],
     "post_install": [
@@ -70,7 +77,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "if ($cmd -eq 'uninstall') {",
-        "    Get-ChildItem $dir -Filter uninstall*.reg | ForEach-Object {",
+        "    Get-ChildItem $dir -File -Filter uninstall-*.reg | ForEach-Object {",
         "        reg import $_.FullName >nul 2>&1",
         "    }",
         "}"

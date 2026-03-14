@@ -17,11 +17,11 @@
             "阿里云盘"
         ]
     ],
+    "link": "$env:AppData\\aDrive",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\aDrive\"",
         "A-Install-App -Uninstaller 'app\\Uninstall.exe'"
     ],
     "post_install": [
@@ -45,7 +45,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Alibaba.aDrive' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Alibaba.aDrive' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

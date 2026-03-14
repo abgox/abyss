@@ -1,28 +1,22 @@
 {
-    "version": "0.97.0",
+    "version": "0.97.2",
     "description": "一组实用程序，供高级用户调整和简化他们的 Windows 体验以提高生产力 | A set of utilities for power users to tune and streamline their Windows experience for greater productivity",
     "homepage": "https://github.com/microsoft/PowerToys",
     "license": {
         "identifier": "MIT"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\PowerToys",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\PowerToys",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.97.0/PowerToysUserSetup-0.97.0-x64.exe",
-            "hash": "b8ec0033f9ba6a6d628f2f826e1b00d6b9f9a6869d46d108c5b08b560a46890f"
+            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.97.2/PowerToysUserSetup-0.97.2-x64.exe",
+            "hash": "54a39f62334f7481c1bdde8abf4928f2e74f100a049f50c7339dabfd34134c98"
         },
         "arm64": {
-            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.97.0/PowerToysUserSetup-0.97.0-arm64.exe",
-            "hash": "aed4001d4c3e974faf5d2d46d640547a25be718d8c5feb20f4c9a1c1976d837d"
+            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.97.2/PowerToysUserSetup-0.97.2-arm64.exe",
+            "hash": "bb24aee4b0b8ebdc007d04a84843d44008ab585192cf145816f4c07c99251be0"
         }
     },
+    "location": "$env:LocalAppData\\PowerToys",
+    "link": "$env:LocalAppData\\Microsoft\\PowerToys",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -35,7 +29,6 @@
         "Start-Sleep -Seconds 5",
         "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
         "# 安装程序启动时不能进行链接, 会出现内存访问错误, 因此等待安装完成并终止相关进程后再创建链接",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Microsoft\\PowerToys\"",
         "A-Hold-App"
     ],
     "post_install": [
@@ -58,27 +51,21 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Microsoft.PowerToys' 'exe'",
-            "$out"
+            "A-Get-VersionFromGithubAPI"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "regex": "(.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.x64_user.InstallerSha256"
-                }
+                "url": "https://github.com/microsoft/PowerToys/releases/download/v$version/PowerToysUserSetup-$version-x64.exe"
             },
             "arm64": {
-                "url": "$matchArm64",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.arm64_user.InstallerSha256"
-                }
+                "url": "https://github.com/microsoft/PowerToys/releases/download/v$version/PowerToysUserSetup-$version-arm64.exe"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

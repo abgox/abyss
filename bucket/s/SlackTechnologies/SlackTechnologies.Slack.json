@@ -1,5 +1,5 @@
 {
-    "version": "4.47.69",
+    "version": "4.48.100",
     "description": "一个团队沟通和协作工具 | A team communication and collaboration tool",
     "homepage": "https://www.slack.com/",
     "license": {
@@ -7,20 +7,20 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.47.69/Slack.msix",
-            "hash": "5dad0dd8fddb79d068e580e5b2bfd564fc2858c983b17125a70378f727ec3055"
+            "url": "https://downloads.slack-edge.com/desktop-releases/windows/x64/4.48.100/Slack.msix",
+            "hash": "93d5e6d9271d8b4a4798df1a4af2c85a305334ce8c36e7e81bd36b2c10eda3bc"
         },
         "arm64": {
-            "url": "https://downloads.slack-edge.com/desktop-releases/windows/arm64/4.47.69/Slack.msix",
-            "hash": "318b47fd229684511b86a16c4f873630e0fc2623ac7d2f8b33f105862f20baa3"
+            "url": "https://downloads.slack-edge.com/desktop-releases/windows/arm64/4.48.100/Slack.msix",
+            "hash": "373311c580d7988e30136bbbb551523e36160ca9de13185b6a8a767ba1d4618b"
         }
     },
+    "link": "$env:LocalAppData\\Packages\\com.tinyspeck.slackdesktop_8yrtsj140pw4g\\LocalCache\\Roaming\\Slack",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Add-MsixPackage 'com.tinyspeck.slackdesktop_8yrtsj140pw4g'",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Packages\\com.tinyspeck.slackdesktop_8yrtsj140pw4g\\LocalCache\\Roaming\\Slack\""
+        "A-Add-MsixPackage 'com.tinyspeck.slackdesktop_8yrtsj140pw4g'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,7 +43,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'SlackTechnologies.Slack' 'msix'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'SlackTechnologies.Slack' 'msix'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

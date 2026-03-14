@@ -11,11 +11,11 @@
             "hash": "aad69b592d31d5fdebe09600526b144884ede13a5d6d1fccbe4bbf950b2754a0"
         }
     },
+    "link": "$env:AppData\\com.kitlib.kite",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\com.kitlib.kite\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\kite\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
@@ -40,7 +40,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'KitLib.Kite' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'KitLib.Kite' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

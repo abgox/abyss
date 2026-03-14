@@ -1,5 +1,5 @@
 {
-    "version": "0.8.140",
+    "version": "0.11.34",
     "description": "一款智能代理 IDE，助您高效工作，具备规范制定、方向引导和钩子功能等特性 | An agentic IDE that helps you do your best work with features such as specs, steering, and hooks",
     "homepage": "https://kiro.dev/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://prod.download.desktop.kiro.dev/releases/stable/win32-x64/signed/0.8.140/kiro-ide-0.8.140-stable-win32-x64.exe",
-            "hash": "3bec711f83a049bf4e373719eb1e419407c5e7653cfdb5043c4b53cf94d363ef"
+            "url": "https://prod.download.desktop.kiro.dev/releases/stable/win32-x64/signed/0.11.34/kiro-ide-0.11.34-stable-win32-x64.exe",
+            "hash": "5183aa632feec9334488bf06a6280616f6d6f2cfd1b6cba284d2cdd11c408ae4"
         }
     },
     "env_add_path": "app\\bin",
@@ -20,11 +20,14 @@
             "Kiro"
         ]
     ],
+    "link": [
+        "$env:AppData\\Kiro",
+        "$home\\.kiro"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Kiro\",\"$home\\.kiro\"",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -48,7 +51,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Amazon.Kiro' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Amazon.Kiro' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

@@ -5,20 +5,13 @@
     "license": {
         "identifier": "GPL-2.0-or-later"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Meld",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Meld",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://download.gnome.org/binaries/win32/meld/3.22/Meld-3.22.2-mingw.msi#/dl.msi_",
             "hash": "e1525657ff0e0d9762619b4930fa758756d5e766967764bd12c2f3914f16ece8"
         }
     },
+    "location": "$env:ProgramFiles\\Meld",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -46,7 +39,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Meld.Meld' 'msi'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Meld.Meld' 'msi'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

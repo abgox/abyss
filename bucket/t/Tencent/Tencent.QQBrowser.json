@@ -1,6 +1,6 @@
 {
     "version": "pending",
-    "description": "QQ浏览器 - 腾讯官方出品，基于 Chromium 内核开发，启动速度、打开网页速度更快的浏览器 | Tencent's official Chromium-based browser with faster startup and web page opening speed",
+    "description": "QQ 浏览器 - 腾讯官方出品，基于 Chromium 内核开发，启动速度、打开网页速度更快的浏览器 | Tencent's official Chromium-based browser with faster startup and web page opening speed",
     "homepage": "https://browser.qq.com/",
     "license": {
         "identifier": "Unknown"
@@ -17,12 +17,14 @@
             "QQ浏览器"
         ]
     ],
+    "link": [
+        "$env:AppData\\Tencent\\QQBrowser",
+        "$env:LocalAppData\\Tencent\\QQBrowser"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-Manifest",
-        "A-New-LinkDirectory \"$env:AppData\\Tencent\\QQBrowser\",\"$env:LocalAppData\\Tencent\\QQBrowser\"",
         "A-Install-App -Uninstaller 'xxx'"
     ],
     "post_install": [
@@ -46,11 +48,10 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Tencent.QQBrowser' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Tencent.QQBrowser' 'exe'",
             "$out"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-        "replace": "pending"
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
     },
     "autoupdate": {
         "architecture": {

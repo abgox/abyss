@@ -1,5 +1,5 @@
 {
-    "version": "1.1.6+23",
+    "version": "1.1.8+26",
     "description": "一个 Flutter LLM 聊天客户端 | A Flutter LLM Chat Client",
     "homepage": "https://kelivo.psycheas.top/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Chevey339/kelivo/releases/download/v1.1.6/Kelivo_windows_1.1.6+23_setup.exe",
-            "hash": "45cbc9719f227835063b02b1c2a4855fd2b97c42d5db54754f567c6c17d465c0"
+            "url": "https://github.com/Chevey339/kelivo/releases/download/v1.1.8/Kelivo_windows_1.1.8+26_setup.exe",
+            "hash": "4dc5d8336b7e63aeb6b9fee026d43a84e1b25faaa937354d2ce7e512291f57a4"
         }
     },
     "shortcuts": [
@@ -17,12 +17,15 @@
             "Kelivo"
         ]
     ],
+    "link": [
+        "$env:AppData\\com.psyche\\kelivo",
+        "$env:LocalAppData\\com.psyche\\kelivo"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\com.psyche\\kelivo\", \"$env:LocalAppData\\com.psyche\\kelivo\"",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -47,7 +50,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Psyche.Kelivo' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Psyche.Kelivo' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

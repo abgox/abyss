@@ -1,5 +1,5 @@
 {
-    "version": "3.0.0",
+    "version": "3.1.1",
     "description": "汽水音乐，字节跳动的音乐平台 | A music platform by ByteDance",
     "homepage": "https://music.douyin.com/",
     "license": {
@@ -7,21 +7,21 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://lf-luna-release.qishui.com/obj/luna-release/3.0.0/290101097/SodaMusic-v3.0.0-official-win32_x64.exe",
-            "hash": "b7b3ef937609893016f3b844b88a46f1b1245734fa8cf144432ad353d249e1d5"
+            "url": "https://lf-luna-release.qishui.com/obj/luna-release/3.1.1/319550287/SodaMusic-v3.1.1-official-win32_x64.exe",
+            "hash": "549943c8b4d965aae709d055ddba8481b16f063a754a4f34b5fd33ab8a86e73c"
         }
     },
     "shortcuts": [
         [
             "app\\Soda Music\\SodaMusicLauncher.exe",
-            "Soda Music 汽水音乐"
+            "汽水音乐"
         ]
     ],
+    "link": "$env:AppData\\SodaMusic",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\SodaMusic\"",
         "A-Install-App -Uninstaller 'app\\Soda Music\\unins000.exe'",
         "A-Hold-App"
     ],
@@ -45,7 +45,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'ByteDance.SodaMusic' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'ByteDance.SodaMusic' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
