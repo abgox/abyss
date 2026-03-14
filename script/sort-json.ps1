@@ -1,5 +1,10 @@
 ﻿#Requires -Version 7.0
 
+param(
+    [string]$App = '*',
+    [switch]$Recent
+)
+
 if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
     $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
 }
@@ -17,21 +22,22 @@ if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
 . $env:SCOOP_HOME\lib\json.ps1
 
 $order = [ordered]@{
-    '##'           = ''
-    version        = ''
-    description    = ''
-    homepage       = ''
-    license        = [ordered]@{
+    '##'                = ''
+    version             = ''
+    new                 = '' # abyss
+    description         = ''
+    homepage            = ''
+    license             = [ordered]@{
         identifier = ''
         url        = ''
     }
-    notes          = ''
-    notes_cn       = ''
-    depends        = ''
-    suggest        = ''
+    notes               = ''
+    notes_cn            = '' # abyss
+    depends             = ''
+    suggest             = ''
     # url            = ''
     # hash           = ''
-    architecture   = [ordered]@{
+    architecture        = [ordered]@{
         '64bit' = [ordered]@{
             url          = ''
             hash         = ''
@@ -58,25 +64,96 @@ $order = [ordered]@{
             # post_install = ''
             # uninstaller  = ''
         }
+        # '32bit' = [ordered]@{
+        #     url          = ''
+        #     hash         = ''
+        #     extract_dir  = ''
+        #     extract_to   = ''
+        #     env_add_path = ''
+        #     bin          = ''
+        #     shortcuts    = ''
+        #     # pre_install  = ''
+        #     # installer    = ''
+        #     # post_install = ''
+        #     # uninstaller  = ''
+        # }
     }
-    extract_dir    = ''
-    extract_to     = ''
-    env_set        = ''
-    env_add_path   = ''
-    innosetup      = ''
-    psmodule       = ''
-    commands       = ''
-    bin            = ''
-    shortcuts      = ''
-    persist        = ''
-    pre_install    = ''
+    conflicts           = '' # abyss
+    location            = '' # abyss
+    extract_dir         = ''
+    extract_to          = ''
+    env_set             = ''
+    env_add_path        = ''
+    env_add_path_expand = '' # abyss
+    innosetup           = ''
+    psmodule            = ''
+    font                = '' # abyss
+    bin                 = ''
+    commands            = '' # abyss
+    shortcuts           = ''
+    link                = '' # abyss
+    persist             = ''
+    pre_install         = ''
     # installer      = ''
-    post_install   = ''
-    pre_uninstall  = ''
+    post_install        = ''
+    pre_uninstall       = ''
     # uninstaller    = ''
-    post_uninstall = ''
-    checkver       = ''
-    autoupdate     = ''
+    post_uninstall      = ''
+    checkver            = ''
+    autoupdate          = [ordered]@{
+        architecture = [ordered]@{
+            '64bit' = [ordered]@{
+                url          = ''
+                hash         = ''
+                extract_dir  = ''
+                extract_to   = ''
+                env_add_path = ''
+                bin          = ''
+                shortcuts    = ''
+                # pre_install  = ''
+                # installer    = ''
+                # post_install = ''
+                # uninstaller  = ''
+            }
+            'arm64' = [ordered]@{
+                url          = ''
+                hash         = ''
+                extract_dir  = ''
+                extract_to   = ''
+                env_add_path = ''
+                bin          = ''
+                shortcuts    = ''
+                # pre_install  = ''
+                # installer    = ''
+                # post_install = ''
+                # uninstaller  = ''
+            }
+            # '32bit' = [ordered]@{
+            #     url          = ''
+            #     hash         = ''
+            #     extract_dir  = ''
+            #     extract_to   = ''
+            #     env_add_path = ''
+            #     bin          = ''
+            #     shortcuts    = ''
+            #     # pre_install  = ''
+            #     # installer    = ''
+            #     # post_install = ''
+            #     # uninstaller  = ''
+            # }
+        }
+        hash         = ''
+        extract_dir  = ''
+        extract_to   = ''
+        env_set      = ''
+        env_add_path = ''
+        innosetup    = ''
+        psmodule     = ''
+        bin          = ''
+        commands     = ''
+        shortcuts    = ''
+        persist      = ''
+    }
 }
 
 $root = Split-Path $PSScriptRoot -Parent
@@ -115,7 +192,36 @@ function Sort-JsonByOrder {
     return $result
 }
 
-$manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter *.json
+if ($Recent) {
+    Write-Host '::group::Recent Manifests' -ForegroundColor Cyan
+
+    $guid = [Guid]::NewGuid()
+    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
+    ForEach-Object {
+        if ($_ -eq '') { return }
+        if ($_ -eq $guid) {
+            if ($current) {
+                $current
+            }
+            $current = @()
+        }
+        else {
+            $current += $_
+        }
+    } |
+    Where-Object { $_ -match '\.json$' } |
+    Sort-Object -Unique |
+    ForEach-Object {
+        Write-Host $_
+        $fullPath = Join-Path $root $_
+        [System.IO.FileInfo]$fullPath
+    }
+
+    Write-Host '::endgroup::' -ForegroundColor Cyan
+}
+else {
+    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
+}
 
 foreach ($m in $manifests) {
     $content = Get-Content $m.FullName -Raw
