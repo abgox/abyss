@@ -1,34 +1,30 @@
 {
-    "version": "144.0.7559.132-1.1",
+    "version": "145.0.7632.159-1.1",
     "description": "不依赖谷歌网络服务的 Google Chromium 浏览器 | Google Chromium without dependency on Google web services",
     "homepage": "https://github.com/ungoogled-software/ungoogled-chromium-windows",
     "license": {
         "identifier": "BSD-3-Clause"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\Chromium",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\Chromium",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/144.0.7559.132-1.1/ungoogled-chromium_144.0.7559.132-1.1_installer_x64.exe",
-            "hash": "37f158fe0384cab08224a946d5a708fdbbf41b80e91b422e1641fb78ba119ad8"
+            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/145.0.7632.159-1.1/ungoogled-chromium_145.0.7632.159-1.1_installer_x64.exe",
+            "hash": "c633c4c85d03ce5c6472280825a90ca8f0470dc901328167e3d820fad6e9cb47"
         },
         "arm64": {
-            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/144.0.7559.132-1.1/ungoogled-chromium_144.0.7559.132-1.1_installer_arm64.exe",
-            "hash": "3238e3e6aa288c66ca55e3c9cdc2426ebc87ff20991b6e123130ccbd09b2a698"
+            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/145.0.7632.159-1.1/ungoogled-chromium_145.0.7632.159-1.1_installer_arm64.exe",
+            "hash": "af6f08d2c7af58efd4a5879197cef44079b313cc606f0a4d14738fd6e6aabb61"
         }
     },
+    "conflicts": [
+        "Hibbiki.Chromium",
+        "eloston.ungoogled-chromium"
+    ],
+    "location": "$env:LocalAppData\\Chromium",
+    "link": "$env:LocalAppData\\Chromium\\User Data",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-IfAppConflict 'Hibbiki.Chromium', 'eloston.ungoogled-chromium'",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Chromium\\User Data\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\Chromium\\Application\\chrome.exe\" -ArgumentList '--silent','--install'"
     ],
     "post_install": [
