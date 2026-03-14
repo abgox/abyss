@@ -158,8 +158,8 @@ if ($has) {
     $results = @(
         $marker,
         '',
-        '| Manifest | Required Fields | In Winget | Type | Persistence | Location | Extra |',
-        '| :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
+        '| Manifest | In Winget | Type | Persistence | Location | Extra |',
+        '| :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 }
 else {
