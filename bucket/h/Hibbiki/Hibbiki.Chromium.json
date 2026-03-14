@@ -1,33 +1,26 @@
 {
-    "version": "145.0.7632.110-r1568190",
+    "version": "146.0.7680.76-r1582197",
     "description": "适用于 Windows 64 位的稳定版 Chromium 构建版本 | Stable Chromium build for Windows 64-bit, nothing fancy",
     "homepage": "https://github.com/Hibbiki/chromium-win64",
     "license": {
         "identifier": "BSD-3-Clause"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\Chromium",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\Chromium",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Hibbiki/chromium-win64/releases/download/v145.0.7632.110-r1568190/mini_installer.exe",
-            "hash": "3885bf177ef57e48e2aa8aed6d79e71369902e752e292296169da5a08b42a106"
+            "url": "https://github.com/Hibbiki/chromium-win64/releases/download/v146.0.7680.76-r1582197/mini_installer.exe",
+            "hash": "7232d1ccc7083960acfbba25d3f060435b0cfe2af161bb79c18c19e27fdbdc99"
         }
     },
     "conflicts": [
         "Hibbiki.Chromium",
         "eloston.ungoogled-chromium"
     ],
+    "location": "$env:LocalAppData\\Chromium",
+    "link": "$env:LocalAppData\\Chromium\\User Data",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Chromium\\User Data\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\Chromium\\Application\\chrome.exe\" -ArgumentList '--silent','--install'"
     ],
     "post_install": [
