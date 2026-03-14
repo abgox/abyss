@@ -1,5 +1,5 @@
 {
-    "version": "2.69.3",
+    "version": "2.70.0",
     "description": "安全地在多台不同的机器上管理你的配置文件 | Manage your dotfiles across multiple diverse machines, securely",
     "homepage": "https://chezmoi.io/",
     "license": {
@@ -7,21 +7,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/twpayne/chezmoi/releases/download/v2.69.3/chezmoi_2.69.3_windows_amd64.zip",
-            "hash": "6504c72d9e11c57217a6c62586b588bc506f604618d7660a86b848165584af45"
+            "url": "https://github.com/twpayne/chezmoi/releases/download/v2.70.0/chezmoi_2.70.0_windows_amd64.zip",
+            "hash": "bd75e4892ed22d5ab767c06242fc72c23c5848ad5b1aea27fd95aec03c10c777"
         },
         "arm64": {
-            "url": "https://github.com/twpayne/chezmoi/releases/download/v2.69.3/chezmoi_2.69.3_windows_arm64.zip",
-            "hash": "b0e89e30b49aefcea785dd777a7175c7f72cabf470fd94b6ef8de9aa5f9fc317"
+            "url": "https://github.com/twpayne/chezmoi/releases/download/v2.70.0/chezmoi_2.70.0_windows_arm64.zip",
+            "hash": "f8e20a7207be9db942b4402a8d3e403b1534b61e9e93687671f0fdc22fe380bd"
         }
     },
     "extract_to": "app",
     "bin": "app\\chezmoi.exe",
+    "link": [
+        "$home\\.config\\chezmoi",
+        "$home\\.local\\share\\chezmoi"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-New-LinkDirectory \"$home\\.config\\chezmoi\",\"$home\\.local\\share\\chezmoi\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

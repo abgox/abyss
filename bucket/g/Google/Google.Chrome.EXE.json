@@ -1,35 +1,28 @@
 {
-    "version": "144.0.7559.97",
+    "version": "145.0.7632.160",
     "description": "谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造 | Chrome Browser - Fast, secure, and free web browser, built for the modern web",
     "homepage": "https://www.google.com/intl/zh-CN/chrome/",
     "license": {
         "identifier": "Freeware",
         "url": "https://www.google.com/intl/zh-CN/chrome/terms/"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Google\\Chrome",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Google\\Chrome",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://dl.google.com/release2/chrome/bjd6wfixseytdq5tsf6amm7x5m_144.0.7559.97/144.0.7559.97_chrome_installer_uncompressed.exe",
-            "hash": "735a35cd041a9d03faecf3d85e85d7d4e063cfd26efc67727ddaa2b221874b2d"
+            "url": "https://dl.google.com/release2/chrome/nuloamky47wcog6772kpqu2zyu_145.0.7632.160/145.0.7632.160_chrome_installer_uncompressed.exe",
+            "hash": "99508495d81d8b221e9cc0ba65121af390efeec937c18717cc9fb53bd575f747"
         },
         "arm64": {
-            "url": "https://dl.google.com/release2/chrome/adn4t5qyvyfxghfzjdudgn5jyebq_144.0.7559.97/144.0.7559.97_chrome_installer_uncompressed.exe",
-            "hash": "618830582d82f6b8c44ebe8010b67b93ae4ef3027278f616dd7ee7c2211db1bd"
+            "url": "https://dl.google.com/release2/chrome/ac2tqvcvseklslry3rhs6q2lfmua_145.0.7632.160/145.0.7632.160_chrome_installer_uncompressed.exe",
+            "hash": "eae22db37dacda3ea18361741c6048a08350cd8256b28288bb84b7c4cdc06432"
         }
     },
+    "location": "$env:ProgramFiles\\Google\\Chrome",
+    "link": "$env:LocalAppData\\Google\\Chrome\\User Data",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Google\\Chrome\\User Data\"",
         "A-Install-App -ArgumentList '--system-level','--do-not-launch-chrome'"
     ],
     "post_install": [
@@ -54,7 +47,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Google.Chrome.EXE' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Google.Chrome.EXE' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

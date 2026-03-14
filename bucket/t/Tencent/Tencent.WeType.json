@@ -6,14 +6,6 @@
         "identifier": "Unknown",
         "url": "https://wetype.wxqcloud.qq.com/page/article/index/14.html"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Tencent\\WeType",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Tencent\\WeType",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://download.z.weixin.qq.com/app/win/WeTypeSetup_1.4.3.8_3.exe",
@@ -24,6 +16,7 @@
             "hash": "22ec92dac7f84c6c19f06809ead8d082c96052b4d217e9d72ed255442aeafc61"
         }
     },
+    "location": "$env:ProgramFiles\\Tencent\\WeType",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -52,7 +45,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Tencent.WeType' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Tencent.WeType' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

@@ -18,11 +18,11 @@
             "uTools"
         ]
     ],
+    "link": "$env:AppData\\uTools",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\uTools\"",
         "A-Install-App -Uninstaller 'app\\Uninstall uTools.exe'"
     ],
     "post_install": [
@@ -47,7 +47,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Yuanli.uTools' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Yuanli.uTools' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

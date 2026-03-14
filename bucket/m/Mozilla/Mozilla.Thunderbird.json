@@ -24,12 +24,14 @@
             "-P"
         ]
     ],
+    "link": [
+        "$env:AppData\\Thunderbird",
+        "$env:LocalAppData\\Thunderbird"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-Manifest",
-        "A-New-LinkDirectory \"$env:AppData\\Thunderbird\",\"$env:LocalAppData\\Thunderbird\"",
         "A-Install-App -Uninstaller 'app\\uninstall\\helper.exe' -ArgumentList '/S','/PreventRebootRequired=true',\"/InstallDirectoryPath='$dir\\app'\""
     ],
     "post_install": [
@@ -53,11 +55,10 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Mozilla.Thunderbird' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Mozilla.Thunderbird' 'exe'",
             "$out"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-        "replace": "pending"
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
     },
     "autoupdate": {
         "architecture": {

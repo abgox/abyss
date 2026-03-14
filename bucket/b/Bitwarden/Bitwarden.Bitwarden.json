@@ -1,5 +1,5 @@
 {
-    "version": "2025.12.1",
+    "version": "2026.1.1",
     "description": "适用于个人、团队和企业组织的密码管理解决方案 | Password management solutions for individuals, teams, and business organizations",
     "homepage": "https://bitwarden.com/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/bitwarden/clients/releases/download/desktop-v2025.12.1/Bitwarden-Installer-2025.12.1.exe",
-            "hash": "026072d8d7c023c6bcc2a23f351457779dc8a6297d4e2a1603ef2d974a4f00f9"
+            "url": "https://github.com/bitwarden/clients/releases/download/desktop-v2026.1.1/Bitwarden-Installer-2026.1.1.exe",
+            "hash": "933ca08733844f71069308647a7ad702224aa178f81fcc7995fa39a6e44fdb40"
         }
     },
     "shortcuts": [
@@ -17,11 +17,11 @@
             "Bitwarden"
         ]
     ],
+    "link": "$env:AppData\\Bitwarden",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Bitwarden\"",
         "A-Install-App -Uninstaller 'app\\Uninstall Bitwarden.exe'"
     ],
     "post_install": [
@@ -43,8 +43,11 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://github.com/bitwarden/clients/releases",
-        "regex": "href=\"/.+/.+/tree/desktop-(?:v|V)?([^\"?]+)"
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "desktop-(.+)"
     },
     "autoupdate": {
         "architecture": {

@@ -1,5 +1,5 @@
 {
-    "version": "2.51.0",
+    "version": "2.57.0",
     "description": "腾讯元宝，腾讯的一款 AI 智能助手 | An AI assistant by Tencent",
     "homepage": "https://yuanbao.tencent.com/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://cdn-hybrid-prod.hunyuan.tencent.com/Desktop/official/facf76db629b69d0e7fe8188e73dc517/yuanbao_2.51.0.623_x64.exe",
-            "hash": "48d5df4a4d3830d65a73407cb7ba1cfbb62cce1380ee7718adbb3bed7d22b424"
+            "url": "https://cdn-hybrid-prod.hunyuan.tencent.com/Desktop/official/f29ac5f8c04fe52ff9ce20a411baa01b/yuanbao_2.57.0.634_x64.exe",
+            "hash": "6c3dd9f46cf72a356f1582f462ae0b23f2bf00105d30733ef96e97e3a76b8282"
         }
     },
     "shortcuts": [
@@ -17,12 +17,12 @@
             "腾讯元宝"
         ]
     ],
+    "link": "$env:AppData\\Tencent\\Yuanbao",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\Tencent\\Yuanbao\"",
         "A-Install-App -Uninstaller 'app\\Yuanbao\\uninstall.exe'"
     ],
     "post_install": [
@@ -48,7 +48,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Tencent.Yuanbao' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Tencent.Yuanbao' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
