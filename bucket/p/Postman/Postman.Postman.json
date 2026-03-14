@@ -1,29 +1,26 @@
 {
-    "version": "0.39.1",
-    "description": "适用于 Jujutsu (jj) 的图形用户界面 | A GUI for Jujutsu (jj)",
-    "homepage": "https://github.com/gulbanana/gg",
+    "version": "12.1.4",
+    "description": "API 开发协作平台 | The Collaboration Platform for API Development",
+    "homepage": "https://www.postman.com/",
     "license": {
-        "identifier": "Apache-2.0"
+        "identifier": "Proprietary"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/gulbanana/gg/releases/download/v0.39.1/gg_0.39.1_x64-setup.exe",
-            "hash": "1221f72e4368c3c2fbd5a7c0aaf793668e788da6bfe34e4cf4a7f3bf78550e50"
+            "url": "https://dl.pstmn.io/download/version/12.1.4/windows_64#/dl.exe",
+            "hash": "a0945d3c63461c634fcf58542582d232a55c013c9df76bd3acb924a1fbda5d76"
         }
     },
-    "bin": "app\\gg.exe",
-    "shortcuts": [
-        [
-            "app\\gg.exe",
-            "gg"
-        ]
+    "location": "$env:LocalAppData\\Postman",
+    "link": [
+        "$env:AppData\\Postman",
+        "$home\\Postman"
     ],
-    "link": "$env:AppData\\au.gulbanana.gg",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+        "A-Install-App -Uninstaller \"$env:LocalAppData\\Postman\\Update.exe\" -ArgumentList '--silent'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,8 +33,8 @@
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-App",
-        "A-Remove-TempData \"$env:LocalAppData\\au.gulbanana.gg\""
+        "A-Uninstall-App -ArgumentList '--uninstall'",
+        "A-Remove-TempData \"$env:LocalAppData\\Postman\""
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,20 +42,14 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\script\\utils.ps1",
-            "A-Get-VersionFromGithubAPI"
-        ],
-        "regex": "(.+)"
+        "url": "https://dl.pstmn.io/changelog?channel=stable&platform=win64",
+        "jsonpath": "$.changelog[0].name"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/gulbanana/gg/releases/download/v$version/gg_$version_x64-setup.exe"
+                "url": "https://dl.pstmn.io/download/version/$version/windows_64#/dl.exe"
             }
-        },
-        "hash": {
-            "mode": "github"
         }
     }
 }

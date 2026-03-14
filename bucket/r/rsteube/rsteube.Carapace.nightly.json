@@ -1,5 +1,5 @@
 {
-    "version": "1.6.3",
+    "version": "2026-03-14",
     "description": "多 shell、多命令、参数补全器 | multi-shell, multi-command, argument completer",
     "homepage": "https://carapace.sh/",
     "license": {
@@ -18,12 +18,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/carapace-sh/carapace-bin/releases/download/v1.6.3/carapace-bin_1.6.3_windows_amd64.zip",
-            "hash": "74da06809744399003f6a3ad65449dcfcdce7b4c7c52967230770db93459cc7f"
+            "url": "https://github.com/carapace-sh/nightly/releases/download/2026-03-14/carapace-bin_1.6.3-SNAPSHOT-008facf2_windows_amd64.zip",
+            "hash": "30c2da8a5057b21f9a9f3bf9a9221164ce66ff5c5a63005c2f315d285bd2446b"
         },
         "arm64": {
-            "url": "https://github.com/carapace-sh/carapace-bin/releases/download/v1.6.3/carapace-bin_1.6.3_windows_arm64.zip",
-            "hash": "3b5c35591ee86a40de735d398aecf8ff06ec635758d22c35af7012d899da9e44"
+            "url": "https://github.com/carapace-sh/nightly/releases/download/2026-03-14/carapace-bin_1.6.3-SNAPSHOT-008facf2_windows_arm64.zip",
+            "hash": "47869009bfef27cccd0f20f4f20830edc4dfac0ca792b24a3977234a8c87c269"
         }
     },
     "conflicts": [
@@ -62,19 +62,16 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\script\\utils.ps1",
-            "A-Get-VersionFromGithubAPI"
-        ],
-        "regex": "(.+)"
+        "url": "https://api.github.com/repos/carapace-sh/nightly/releases/latest",
+        "regex": "/download/([^/]+)/carapace-bin_(?<ver>[\\d.]+)-SNAPSHOT-(?<hash>[a-f0-9]+)_windows_amd64.zip"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/carapace-sh/carapace-bin/releases/download/v$version/carapace-bin_$version_windows_amd64.zip"
+                "url": "https://github.com/carapace-sh/nightly/releases/download/$version/carapace-bin_$matchVer-SNAPSHOT-$matchHash_windows_amd64.zip"
             },
             "arm64": {
-                "url": "https://github.com/carapace-sh/carapace-bin/releases/download/v$version/carapace-bin_$version_windows_arm64.zip"
+                "url": "https://github.com/carapace-sh/nightly/releases/download/$version/carapace-bin_$matchVer-SNAPSHOT-$matchHash_windows_arm64.zip"
             }
         },
         "hash": {

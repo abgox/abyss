@@ -3504,27 +3504,16 @@
                                                 "$env:AppData\\xxx",
                                                 "$env:LocalAppData\\xxx",
                                                 "$env:ProgramData\\xxx",
-                                                "$dir\\xxx"
+                                                "$dir\\xxx",
+                                                "$home\\.local\\bin",
+                                                "$env:AppData\\local\\bin",
+                                                "$env:LocalAppData\\bin",
+                                                "$env:LocalAppData\\Microsoft\\WindowsApps"
                                             ]
                                         },
                                         {
-                                            "not": {
-                                                "anyOf": [
-                                                    {
-                                                        "const": "$home\\.local\\bin"
-                                                    },
-                                                    {
-                                                        "const": "$env:AppData\\local\\bin"
-                                                    },
-                                                    {
-                                                        "const": "$env:LocalAppData\\bin"
-                                                    },
-                                                    {
-                                                        "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
-                                                    }
-                                                ]
-                                            },
-                                            "errorMessage": "它会被 abyss 默认添加，不需要定义它"
+                                            "pattern": "\\$.+",
+                                            "errorMessage": "请使用 env_add_path 添加不带变量的路径"
                                         }
                                     ]
                                 },
@@ -3538,27 +3527,12 @@
                                                     "$env:AppData\\xxx",
                                                     "$env:LocalAppData\\xxx",
                                                     "$env:ProgramData\\xxx",
-                                                    "$dir\\xxx"
+                                                    "$dir\\xxx",
+                                                    "$home\\.local\\bin",
+                                                    "$env:AppData\\local\\bin",
+                                                    "$env:LocalAppData\\bin",
+                                                    "$env:LocalAppData\\Microsoft\\WindowsApps"
                                                 ]
-                                            },
-                                            {
-                                                "not": {
-                                                    "anyOf": [
-                                                        {
-                                                            "const": "$home\\.local\\bin"
-                                                        },
-                                                        {
-                                                            "const": "$env:AppData\\local\\bin"
-                                                        },
-                                                        {
-                                                            "const": "$env:LocalAppData\\bin"
-                                                        },
-                                                        {
-                                                            "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
-                                                        }
-                                                    ]
-                                                },
-                                                "errorMessage": "它会被 abyss 默认添加，不需要定义它"
                                             },
                                             {
                                                 "pattern": "\\$.+",
@@ -3718,7 +3692,7 @@
                             ]
                         },
                         "link": {
-                            "markdownDescription": "使用 `Junction` 或 `SymbolicLink` 去 [link](https://abyss.abgox.com/features/data-persistence/link) 应用数据\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认会进行目录链接，如果需要进行文件链接，请参考下方内容，在 `extra` 目录中创建对应的文件\n### 对于清单编写者\n- 你只需要在 `extra` 目录下创建一个和应用名称相同的目录，然后放入需要的文件或目录即可\n- 假设当前的清单是: `abgox.test`\n- 假设定义了以下的 link\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- 你可以在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 添加目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则先进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
+                            "markdownDescription": "使用 `Junction` 或 `SymbolicLink` 去 [link](https://abyss.abgox.com/features/data-persistence/link) 应用数据\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n### 示例\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 link\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- 如果存在数据文件或目录，则会自动迁移\n  - `$env:AppData\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$home\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 创建目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n  - 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
                             "type": [
                                 "string",
                                 "array"
@@ -3779,7 +3753,7 @@
                             ]
                         },
                         "persist": {
-                            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- Scoop 默认会进行目录链接，如果需要进行文件链接，请参考下方内容，在 `extra` 目录中创建对应的文件\n### 对于清单编写者\n- 你只需要在 `extra` 目录下创建一个和应用名称相同的目录，然后放入需要的文件或目录即可\n- 假设当前的清单是: `abgox.test`\n- 假设定义了以下的 persist\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- Scoop 会默认进行目录链接 (除非 `data.json` 提前作为文件存在，否则也会视为目录)\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 你可以在 `extra` 目录下创建 `abgox.test` 目录\n  - 添加目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则先进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### abyss 对 persist 的高要求\n- 在 [abyss](https://abyss.abgox.com) 中，使用 [persist](https://abyss.abgox.com/features/data-persistence/persist) 有较高的要求，要做到能够随时和 [link](https://abyss.abgox.com/features/data-persistence/link) 无缝切换\n- 举个例子，如果默认数据目录是 `$home\\.config\\xxx`，根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\.config\\xxx`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n- 因此，它只能使用下方的写法，`<source>` 合理即可，但目标目录必须是 `.config\\xxx`，不允许改变\n```json\n  \"persist\": [\n    [\"<source>\", \".config\\\\xxx\"]\n  ]\n  ```",
+                            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n### 示例\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 persist:\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- 如果存在数据文件或目录，则会自动迁移\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录\n  - 创建目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### 限制\n- 如果默认数据存储在标准数据目录下，需要改用 `link`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n  - `$home\\xxx`\n  - ...\n- 如果是便捷式应用 (Portable)，可以继续使用 `persist`，但限制对它的定义\n  - 假设默认数据目录是 `$env:AppData\\xxx`\n  - 根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\AppData\\Roaming\\xxx`\n  - 因此，它只能使用以下定义，其中的 `AppData\\Roaming\\xxx` 不可变\n  ```json\n    \"persist\": [\n      [\"<source>\", \"AppData\\\\Roaming\\\\xxx\"]\n    ]\n    ```",
                             "examples": [
                                 []
                             ]
