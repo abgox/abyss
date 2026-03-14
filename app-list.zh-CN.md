@@ -21,7 +21,7 @@
 
 ---
 
-|App (835)|Tag|Description|
+|App (836)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -34,6 +34,7 @@
 |[2dust.v2rayN](https://github.com/2dust/v2rayN)|<a href="./bucket/2/2dust/2dust.v2rayN.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心|
 |[3Dflow.3DFZephyr.Free](https://www.3dflow.net/3df-zephyr-free/)|<a href="./bucket/3/3Dflow/3Dflow.3DFZephyr.Free.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款由 3Dflow 提供，可根据照片自动重建三维模型的摄影测量软件解决方案|
 |[4gray.iptvnator](https://iptvnator.vercel.app/)|<a href="./bucket/4/4gray/4gray.iptvnator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个支持 IPTV 播放列表播放 (m3u、m3u8) 的视频播放器应用程序|
+|[5mdt.WinGoDarkTray](https://github.com/5mdt/WinGoDarkTray)|<a href="./bucket/5/5mdt/5mdt.WinGoDarkTray.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款可从系统托盘切换明暗模式的 Windows 应用程序|
 |[5rahim.Seanime](https://seanime.rahim.app/)|<a href="./bucket/5/5rahim/5rahim.Seanime.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|免费开源的媒体服务器，为动漫爱好者提供丰富功能|
 |[64Gram.64Gram](https://github.com/TDesktop-x64/tdesktop)|<a href="./bucket/6/64Gram/64Gram.64Gram.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|非官方的 Telegram 桌面版|
 |[70sh1.eddy](https://github.com/70sh1/eddy)|<a href="./bucket/7/70sh1/70sh1.eddy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|简单、快速的命令行界面文件加密工具|
