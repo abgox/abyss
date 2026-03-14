@@ -1,37 +1,31 @@
 {
-    "version": "2.52.0",
+    "version": "2.53.0.2",
     "description": "一个分布式版本控制系统 | A distributed version control system",
     "homepage": "https://gitforwindows.org/",
     "license": {
         "identifier": "Freeware"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Git",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Git",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/Git-2.52.0-64-bit.exe",
-            "hash": "d8de7a3152266c8bb13577eab850ea1df6dccf8c2aa48be5b4a1c58b7190d62c"
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.2/Git-2.53.0.2-64-bit.exe",
+            "hash": "194362cf24cd0db4b573096108460a34c7f80a20c5f2aa60d06ef817be9f73a1"
         },
         "arm64": {
-            "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/Git-2.52.0-arm64.exe",
-            "hash": "ac77636c9240da04aa9306dd6cb99d0e6283a506d6f4ea01df5ab5630408f24e"
+            "url": "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.2/Git-2.53.0.2-arm64.exe",
+            "hash": "07f74afb072a95993d58fbcc3979f7e53ce0cfc10d574f484766c54f73e21d1b"
         }
     },
+    "location": "$env:ProgramFiles\\Git",
+    "env_add_path_expand": "$env:ProgramFiles\\Git\\bin",
+    "link": [
+        "$home\\.gitconfig",
+        "$home\\.gitmessage"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Add-Path \"$env:ProgramFiles\\Git\\bin\"",
-        "A-New-File \"$persist_dir\\.gitconfig\"",
-        "A-New-File \"$persist_dir\\.gitmessage\"",
-        "A-New-LinkFile \"$home\\.gitconfig\",\"$home\\.gitmessage\"",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList '/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar'"
     ],
     "post_install": [
@@ -44,7 +38,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Git\"",
+        "A-Stop-Process",
         "A-Uninstall-App -ArgumentList '/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART'",
         "A-Remove-Link"
     ],

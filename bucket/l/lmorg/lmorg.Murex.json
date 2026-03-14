@@ -1,0 +1,70 @@
+{
+    "version": "7.2.1001",
+    "description": "一个更智能、更直观且更易读的 Shell | A smarter, more intuitive, and readable shell",
+    "homepage": "https://murex.rocks/",
+    "license": {
+        "identifier": "GPL-2.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://nojs.murex.rocks/bin/latest/murex-windows-amd64.exe.zip",
+            "hash": "80eeae3466b7ba2375655e7c552101d476ccc696bafa8dc4bcd644a34771733a",
+            "bin": [
+                [
+                    "app\\bin\\murex-7.2-windows-amd64.exe",
+                    "murex"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "link": [
+        "$home\\.murex_modules",
+        "$home\\.murex_preload",
+        "$home\\.murex_profile",
+        "$home\\.murex_history"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/lmorg/murex",
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://nojs.murex.rocks/bin/latest/murex-windows-amd64.exe.zip",
+                "bin": [
+                    [
+                        "app\\bin\\murex-$majorVersion.$minorVersion-windows-amd64.exe",
+                        "murex"
+                    ]
+                ]
+            }
+        }
+    }
+}
