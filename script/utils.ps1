@@ -18,6 +18,7 @@ $abgox_abyss = @{
         EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
         PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
+        Info               = "$dir\abgox-abyss-Info.json"
     }
 }
 
@@ -91,28 +92,30 @@ function A-Start-Install {
     if ($manifest.persist) {
         foreach ($item in $manifest.persist) {
             if ($item -is [string]) {
-                $path = "$dir\$item"
-                if (Test-Path $path) {
-                    A-Copy-Item $path "$persist_dir\$item"
+                $source = $item
+                $target = $item
+            }
+            else {
+                $source = $item[0]
+                $target = $item[1]
+            }
+            $from = "$dir\$source"
+            $to = "$persist_dir\$target"
+            if (Test-Path $from) {
+                A-Copy-Item $from $to
+            }
+            $from = "$bucketsdir\$bucket\extra\$app\$target"
+            if (Test-Path $from) {
+                A-Copy-Item $from $to
+            }
+            $standardPath = $target -match 'AppData\\(Roaming|Local)\\.*'
+            if ($standardPath) {
+                $from = Join-Path $home $target
+                $exists = Test-Path $from -PathType Container
+                $isLink = A-Test-Link $from
+                if ($exists -and -not $isLink) {
+                    A-Copy-Item $from $to
                 }
-                $path = "$bucketsdir\$bucket\extra\$app\$item"
-                if (Test-Path $path) {
-                    A-Copy-Item $path "$persist_dir\$item"
-                }
-                continue
-            }
-            $source = $item[0]
-            $target = $item[1]
-            $path = "$dir\$source"
-            if (Test-Path $path) {
-                A-Copy-Item $path "$persist_dir\$target"
-            }
-            $path = "$bucketsdir\$bucket\extra\$app\$target"
-            if (Test-Path $path) {
-                A-Copy-Item $path "$persist_dir\$target"
-            }
-            if ((Test-Path "$home\$target") -and -not (A-Test-Link "$home\$target")) {
-                A-Copy-Item "$home\$target" "$persist_dir\$target"
             }
         }
     }
@@ -121,7 +124,6 @@ function A-Start-Install {
             [System.Environment]::SetEnvironmentVariable($_.Name, $ExecutionContext.InvokeCommand.ExpandString($_.Value), [System.EnvironmentVariableTarget]::Process)
         }
     }
-    A-Add-Path "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps" -SkipRecord
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
@@ -161,6 +163,8 @@ function A-Start-Install {
 }
 
 function A-Complete-Install {
+    $info = @{}
+
     if ($manifest.font) {
         if ($manifest.font -is [string]) {
             A-Add-Font $manifest.font
@@ -169,12 +173,59 @@ function A-Complete-Install {
             A-Add-Font
         }
     }
+    if ($manifest.location) {
+        if (-not (Test-Path $ExecutionContext.InvokeCommand.ExpandString($manifest.location))) {
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+
+        $info.location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+
+        $note = if ($PSUICulture -like 'zh*') {
+            @(
+                "安装目录: $($manifest.location)",
+                '参考: https://abyss.abgox.com/faq/external-installation-directory'
+            )
+        }
+        else {
+            @(
+                "The installation directory: $($manifest.location)",
+                'Refer to: https://abyss.abgox.com/faq/external-installation-directory'
+            )
+        }
+        A-Show-Notes $note
+    }
+    else {
+        $items = Get-ChildItem $dir
+        $hasErr = $true
+        foreach ($item in $items) {
+            if ($item -is [System.IO.DirectoryInfo]) {
+                $hasErr = $false
+                break
+            }
+            if ($item -is [System.IO.FileInfo] -and $item.Name -notlike '*.json') {
+                $hasErr = $false
+                break
+            }
+        }
+        if ($hasErr) {
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+    }
+
+    if ($info.Count) {
+        $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
+    }
 }
 
 function A-Start-Uninstall {
     # https://abyss.abgox.com/features/manifest-status-control
-    if ($version -in @('pending', 'deprecated')) {
+    if ($version -in 'pending', 'deprecated') {
         A-Deny-Update
+    }
+    if ($version -eq 'renamed') {
+        A-Move-Persistence
     }
     A-Remove-Font
     A-Remove-Path
@@ -498,11 +549,19 @@ function A-Stop-Process {
         return
     }
 
-    $Paths = @($dir, (Split-Path $dir -Parent) + '\current')
+    $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
     $Paths += $ExtraPaths
     if ($manifest.env_add_path_expand) {
-        $Paths += $manifest.env_add_path_expand
+        $Paths += $manifest.env_add_path_expand | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
     }
+    if (Test-Path -LiteralPath $abgox_abyss.path.Info) {
+        $info = Get-Content $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+        if ($info.location) {
+            $Paths += $info.location
+        }
+    }
+
+    $Paths = $Paths | Sort-Object -Unique
 
     $processes = Get-Process
 
@@ -1647,12 +1706,18 @@ function A-Compare-Version {
 #region 以下的函数不应该在外部调用
 
 function A-Show-Notes {
-    $note = $manifest.notes
-
-    if ($PSUICulture -like 'zh*') {
-        $note = $manifest.notes_cn
+    param(
+        [string[]]$Content
+    )
+    if ($Content) {
+        $note = $Content | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
     }
-
+    else {
+        $note = $manifest.notes
+        if ($PSUICulture -like 'zh*') {
+            $note = $manifest.notes_cn
+        }
+    }
     if ($note) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Notes'
@@ -1692,7 +1757,7 @@ function A-Deny-Manifest {
         }
         renamed {
             $msg = "'$app' is renamed to '$NewManifestName'."
-            A-Move-Persist
+            A-Move-Persistence
         }
     }
     if ($msg) {
@@ -1720,17 +1785,35 @@ function A-Deny-IfAppConflict {
     }
 }
 
-function A-Move-Persist {
+function A-Move-Persistence {
     if (-not $manifest.new) {
         return
     }
     if (A-Test-DirectoryNotEmpty $persist_dir) {
-        Write-Host "Renaming $persist_dir => $(Join-Path (Split-Path $persist_dir -Parent) $manifest.new)"
+        $target = Join-Path (Split-Path $persist_dir -Parent) $manifest.new
+        if (A-Test-DirectoryNotEmpty $target) {
+            return
+        }
+        Write-Host "Migrating $persist_dir => $target"
         try {
             Rename-Item -Path $persist_dir -NewName $manifest.new -Force -ErrorAction Stop
         }
         catch {
             error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+
+        if ($cmd -eq 'update') {
+            Write-Host "Linking $persist_dir => $target"
+            try {
+                New-Item -ItemType Junction -Path $persist_dir -Target $target -Force -ErrorAction Stop | Out-Null
+            }
+            catch {
+                error $_.Exception.Message
+                A-Show-IssueCreationPrompt
+                A-Exit
+            }
         }
     }
 }
@@ -2141,8 +2224,7 @@ function A-Remove-Font {
 
 function A-Add-Path {
     param(
-        [string[]]$Paths,
-        [switch]$SkipRecord
+        [string[]]$Paths
     )
 
     if (get_config USE_ISOLATED_PATH) {
@@ -2157,10 +2239,6 @@ function A-Add-Path {
 
     Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
 
-    if ($SkipRecord) {
-        return
-    }
-
     @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
 }
 
@@ -2170,7 +2248,9 @@ function A-Remove-Path {
         return
     }
 
-    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths
+    $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
+
+    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
     if (-not $Path) {
         return
     }

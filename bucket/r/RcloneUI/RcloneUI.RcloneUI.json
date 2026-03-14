@@ -5,14 +5,6 @@
     "license": {
         "identifier": "Apache-2.0"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Rclone UI",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Rclone UI",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.0/Rclone.UI_x64.exe",
@@ -23,6 +15,7 @@
             "hash": "9129217663de743f9ca2cab18cd702d576d678e044d743727c1959a72c77799e"
         }
     },
+    "location": "$env:ProgramFiles\\Rclone UI",
     "link": "$env:AppData\\com.rclone.ui",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -41,7 +34,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Rclone UI\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\com.rclone.ui\""

@@ -3183,7 +3183,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3407,6 +3407,38 @@
                                 }
                             ]
                         },
+                        "conflicts": {
+                            "title": "指定冲突的应用",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "errorMessage": "请使用正确的清单名称，例如: abgox.PSCompletions"
+                            }
+                        },
+                        "location": {
+                            "title": "指定应用的安装位置 (如果在外部)",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str",
+                                    "examples": [
+                                        "$env:ProgramFiles\\xxx",
+                                        "${env:ProgramFiles(x86)}\\xxx",
+                                        "$env:ProgramData\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx"
+                                    ]
+                                },
+                                {
+                                    "pattern": "\\$env:.+|\\${env:.+",
+                                    "errorMessage": "请使用标准的应用安装目录，例如: $env:ProgramFiles\\xxx"
+                                }
+                            ]
+                        },
                         "extract_to": {
                             "examples": [
                                 "app"
@@ -3472,27 +3504,16 @@
                                                 "$env:AppData\\xxx",
                                                 "$env:LocalAppData\\xxx",
                                                 "$env:ProgramData\\xxx",
-                                                "$dir\\xxx"
+                                                "$dir\\xxx",
+                                                "$home\\.local\\bin",
+                                                "$env:AppData\\local\\bin",
+                                                "$env:LocalAppData\\bin",
+                                                "$env:LocalAppData\\Microsoft\\WindowsApps"
                                             ]
                                         },
                                         {
-                                            "not": {
-                                                "anyOf": [
-                                                    {
-                                                        "const": "$home\\.local\\bin"
-                                                    },
-                                                    {
-                                                        "const": "$env:AppData\\local\\bin"
-                                                    },
-                                                    {
-                                                        "const": "$env:LocalAppData\\bin"
-                                                    },
-                                                    {
-                                                        "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
-                                                    }
-                                                ]
-                                            },
-                                            "errorMessage": "它会被 abyss 默认添加，不需要定义它"
+                                            "pattern": "\\$.+",
+                                            "errorMessage": "请使用 env_add_path 添加不带变量的路径"
                                         }
                                     ]
                                 },
@@ -3506,27 +3527,12 @@
                                                     "$env:AppData\\xxx",
                                                     "$env:LocalAppData\\xxx",
                                                     "$env:ProgramData\\xxx",
-                                                    "$dir\\xxx"
+                                                    "$dir\\xxx",
+                                                    "$home\\.local\\bin",
+                                                    "$env:AppData\\local\\bin",
+                                                    "$env:LocalAppData\\bin",
+                                                    "$env:LocalAppData\\Microsoft\\WindowsApps"
                                                 ]
-                                            },
-                                            {
-                                                "not": {
-                                                    "anyOf": [
-                                                        {
-                                                            "const": "$home\\.local\\bin"
-                                                        },
-                                                        {
-                                                            "const": "$env:AppData\\local\\bin"
-                                                        },
-                                                        {
-                                                            "const": "$env:LocalAppData\\bin"
-                                                        },
-                                                        {
-                                                            "const": "$env:LocalAppData\\Microsoft\\WindowsApps"
-                                                        }
-                                                    ]
-                                                },
-                                                "errorMessage": "它会被 abyss 默认添加，不需要定义它"
                                             },
                                             {
                                                 "pattern": "\\$.+",
@@ -3584,18 +3590,6 @@
                                     ]
                                 }
                             ]
-                        },
-                        "conflicts": {
-                            "title": "指定冲突的应用",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
-                            "type": "array",
-                            "minItems": 1,
-                            "uniqueItems": true,
-                            "items": {
-                                "type": "string",
-                                "minLength": 1,
-                                "errorMessage": "请使用正确的清单名称，例如: abgox.PSCompletions"
-                            }
                         },
                         "bin": {
                             "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
@@ -3698,7 +3692,7 @@
                             ]
                         },
                         "link": {
-                            "markdownDescription": "使用 `Junction` 或 `SymbolicLink` 去 [link](https://abyss.abgox.com/features/data-persistence/link) 应用数据\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认会进行目录链接，如果需要进行文件链接，请参考下方内容，在 `extra` 目录中创建对应的文件\n### 对于清单编写者\n- 你只需要在 `extra` 目录下创建一个和应用名称相同的目录，然后放入需要的文件或目录即可\n- 假设当前的清单是: `abgox.test`\n- 假设定义了以下的 link\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- 你可以在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 添加目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则先进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
+                            "markdownDescription": "使用 `Junction` 或 `SymbolicLink` 去 [link](https://abyss.abgox.com/features/data-persistence/link) 应用数据\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n### 示例\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 link\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- 如果存在数据文件或目录，则会自动迁移\n  - `$env:AppData\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$home\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 创建目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n  - 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
                             "type": [
                                 "string",
                                 "array"
@@ -3759,7 +3753,7 @@
                             ]
                         },
                         "persist": {
-                            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- Scoop 默认会进行目录链接，如果需要进行文件链接，请参考下方内容，在 `extra` 目录中创建对应的文件\n### 对于清单编写者\n- 你只需要在 `extra` 目录下创建一个和应用名称相同的目录，然后放入需要的文件或目录即可\n- 假设当前的清单是: `abgox.test`\n- 假设定义了以下的 persist\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- Scoop 会默认进行目录链接 (除非 `data.json` 提前作为文件存在，否则也会视为目录)\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 你可以在 `extra` 目录下创建 `abgox.test` 目录\n  - 添加目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则先进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### abyss 对 persist 的高要求\n- 在 [abyss](https://abyss.abgox.com) 中，使用 [persist](https://abyss.abgox.com/features/data-persistence/persist) 有较高的要求，要做到能够随时和 [link](https://abyss.abgox.com/features/data-persistence/link) 无缝切换\n- 举个例子，如果默认数据目录是 `$home\\.config\\xxx`，根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\.config\\xxx`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n- 因此，它只能使用下方的写法，`<source>` 合理即可，但目标目录必须是 `.config\\xxx`，不允许改变\n```json\n  \"persist\": [\n    [\"<source>\", \".config\\\\xxx\"]\n  ]\n  ```",
+                            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n### 示例\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 persist:\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- 如果存在数据文件或目录，则会自动迁移\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录\n  - 创建目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### 限制\n- 如果默认数据存储在标准数据目录下，需要改用 `link`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n  - `$home\\xxx`\n  - ...\n- 如果是便捷式应用 (Portable)，可以继续使用 `persist`，但限制对它的定义\n  - 假设默认数据目录是 `$env:AppData\\xxx`\n  - 根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\AppData\\Roaming\\xxx`\n  - 因此，它只能使用以下定义，其中的 `AppData\\Roaming\\xxx` 不可变\n  ```json\n    \"persist\": [\n      [\"<source>\", \"AppData\\\\Roaming\\\\xxx\"]\n    ]\n    ```",
                             "examples": [
                                 []
                             ]
@@ -4317,11 +4311,11 @@
                                             {},
                                             {
                                                 "const": "A-Stop-Process",
-                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
+                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n    - 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
                                                 "pattern": "A-Stop-Process",
-                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
+                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n    - 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
                                                 "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
