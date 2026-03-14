@@ -1,5 +1,5 @@
 {
-    "version": "10.29.3",
+    "version": "10.32.1",
     "description": "一款快速且节省磁盘空间的 Node 包管理器 | A fast and disk space efficient Node package manager",
     "homepage": "https://pnpm.io/",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/pnpm/pnpm/releases/download/v10.29.3/pnpm-win-x64.exe#/pnpm.exe",
-            "hash": "51a217ad98e138a346da4a43c81bbc64a8ba6df7e2afa7bf5456a163f9105635"
+            "url": "https://github.com/pnpm/pnpm/releases/download/v10.32.1/pnpm-win-x64.exe#/pnpm.exe",
+            "hash": "849141504c83bcd08a3d84dc20d43cff2584d672138d28c33ad62bdac809e7f2"
         },
         "arm64": {
-            "url": "https://github.com/pnpm/pnpm/releases/download/v10.29.3/pnpm-win-arm64.exe#/pnpm.exe",
-            "hash": "e44b391668bf3142d4a118ca0221172e5a3e7c72acf50d948572854464f80b62"
+            "url": "https://github.com/pnpm/pnpm/releases/download/v10.32.1/pnpm-win-arm64.exe#/pnpm.exe",
+            "hash": "6b18a614367c127f76ca8f68eaa88b3415f9921929a40b608279069c240c0826"
         }
     },
     "bin": [
@@ -23,11 +23,15 @@
             "dlx"
         ]
     ],
+    "link": [
+        "$env:LocalAppData\\pnpm",
+        "$env:LocalAppData\\pnpm-state",
+        "$env:LocalAppData\\pnpm-cache"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-New-LinkDirectory \"$env:LocalAppData\\pnpm\",\"$env:LocalAppData\\pnpm-state\",\"$env:LocalAppData\\pnpm-cache\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

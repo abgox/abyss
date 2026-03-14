@@ -1,5 +1,5 @@
 {
-    "version": "0.0.16",
+    "version": "0.0.23",
     "description": "一款速度极快的 Python 类型检查器和语言服务器，用 Rust 编写 | An extremely fast Python type checker and language server, written in Rust",
     "homepage": "https://docs.astral.sh/ty/",
     "license": {
@@ -7,21 +7,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/astral-sh/ty/releases/download/0.0.16/ty-x86_64-pc-windows-msvc.zip",
-            "hash": "cf96f9be553130e7ddc425b0798af6f671b6ba9c37290062c60054f811f6f6d9"
+            "url": "https://github.com/astral-sh/ty/releases/download/0.0.23/ty-x86_64-pc-windows-msvc.zip",
+            "hash": "7a1c32809b33e06573cc0714fabe6cd0445d57697c1096504ee456db514485b1"
         },
         "arm64": {
-            "url": "https://github.com/astral-sh/ty/releases/download/0.0.16/ty-aarch64-pc-windows-msvc.zip",
-            "hash": "b97cc94b53b01538ed8f51dc7cae36374f6ed1ab525acfbea85c6efe5ff5b411"
+            "url": "https://github.com/astral-sh/ty/releases/download/0.0.23/ty-aarch64-pc-windows-msvc.zip",
+            "hash": "96bf9171be83b728bded78fe0f9d19141bfa75e51d9d57c833b9506517131b85"
         }
     },
     "extract_to": "app",
     "bin": "app\\ty.exe",
+    "link": [
+        "$env:AppData\\ty",
+        "$env:LocalAppData\\ty"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\ty\", \"$env:LocalAppData\\ty\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
