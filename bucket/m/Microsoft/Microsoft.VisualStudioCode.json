@@ -1,5 +1,5 @@
 {
-    "version": "1.109.0",
+    "version": "1.111.0",
     "description": "vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器 | vscode - A lightweight but powerful source code editor",
     "homepage": "https://code.visualstudio.com/",
     "license": {
@@ -24,12 +24,12 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://update.code.visualstudio.com/1.109.0/win32-x64-archive/stable#/dl.7z",
-            "hash": "10d4919100f063e0228c3e93460250c2490f02a7b080cf216a46e0efcc08f391"
+            "url": "https://update.code.visualstudio.com/1.111.0/win32-x64-archive/stable#/dl.7z",
+            "hash": "abd6310024dfc1f30158537bced7920238f07b63337599d1f726079a99d395e4"
         },
         "arm64": {
-            "url": "https://update.code.visualstudio.com/1.109.0/win32-arm64-archive/stable#/dl.7z",
-            "hash": "8f9fef4c98419ab2108d900f8199b408d35af5b93abfae794b9359bf7997b021"
+            "url": "https://update.code.visualstudio.com/1.111.0/win32-arm64-archive/stable#/dl.7z",
+            "hash": "8eebfb8999434cff17b71aa9519a6614887e771f7c67b1c717f13b93fc862858"
         }
     },
     "extract_to": "app",
@@ -41,21 +41,28 @@
             "Visual Studio Code"
         ]
     ],
+    "link": [
+        "$env:AppData\\Code",
+        "$home\\.vscode"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Code\", \"$home\\.vscode\"",
         " ",
-        "$dirpath = \"$dir\\app\".Replace('\\', '\\\\')",
-        "$exepath = \"$dir\\app\\Code.exe\".Replace('\\', '\\\\')",
+        "$_dir_path = \"$dir\\app\".Replace('\\', '\\\\')",
+        "$_exe_path = \"$dir\\app\\Code.exe\".Replace('\\', '\\\\')",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extra\\$app\" -Filter *.reg | ForEach-Object {",
         "    $content = Get-Content $_.FullName",
-        "    $content = $content.Replace('$codedir', $dirpath).Replace('$code', $exepath)",
+        "    $content = $content.Replace('$code_dir', $_dir_path).Replace('$code', $_exe_path)",
         "    if ($global) {",
         "      $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
         "    }",
         "    $content | Set-Content -Path \"$dir\\$($_.Name)\"",
+        "}",
+        "$_build_dir = Get-ChildItem \"$dir\\app\" -Directory | Where-Object { $_.Name -match '^[a-f0-9]{10,}$' } | Select-Object -First 1 -ExpandProperty FullName",
+        "if ($_build_dir -and (Test-Path \"$_build_dir\\resources\")) {",
+        "    New-Item -ItemType Junction -Path \"$dir\\app\\resources\" -Target \"$_build_dir\\resources\" | Out-Null",
         "}"
     ],
     "post_install": [
@@ -70,7 +77,7 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "if ($cmd -eq 'uninstall') {",
-        "    Get-ChildItem $dir -Filter uninstall*.reg | ForEach-Object {",
+        "    Get-ChildItem $dir -File -Filter uninstall-*.reg | ForEach-Object {",
         "        reg import $_.FullName >nul 2>&1",
         "    }",
         "}"

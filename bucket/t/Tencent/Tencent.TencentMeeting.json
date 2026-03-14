@@ -5,26 +5,19 @@
     "license": {
         "identifier": "Freemium"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Tencent\\WeMeet",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Tencent\\WeMeet",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
             "url": "https://updatecdn.meeting.qq.com/cos/300f04a98325264e070897991b2bfe78/TencentMeeting_0300000000_3.41.10.435_x86_64.publish.exe",
             "hash": "0c1fe0faa642416e8714be559ced134ff14e0098e895d43dd37ad1445c54c6b4"
         }
     },
+    "location": "$env:ProgramFiles\\Tencent\\WeMeet",
+    "link": "$env:AppData\\Tencent\\WeMeet",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\Tencent\\WeMeet\"",
         "A-Install-App -ArgumentList '/SilentInstall=0','/StartProcess=0'"
     ],
     "post_install": [
@@ -37,7 +30,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Tencent\\WeMeet\"",
+        "A-Stop-Process",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Tencent\\WeMeet\" WeMeetUninstall.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Remove-Link",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName",

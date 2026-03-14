@@ -1,42 +1,35 @@
 {
-    "version": "144.0.3719.104",
+    "version": "145.0.3800.97",
     "description": "微软 Edge 浏览器 - 一款由微软创建和开发的跨平台网络浏览器 | Microsoft Edge - A cross-platform web browser created and developed by Microsoft",
     "homepage": "https://www.microsoft.com/edge",
     "license": {
         "identifier": "Freeware",
         "url": "https://www.microsoft.com/servicesagreement"
     },
-    "notes": [
-        "The installation directory: ${env:ProgramFiles(x86)}\\Microsoft\\Edge",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: ${env:ProgramFiles(x86)}\\Microsoft\\Edge",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/17cbcabf-84f9-4081-b05d-ddf9ac6ef15a/MicrosoftEdgeEnterpriseX64.msi#/dl.msi_",
-            "hash": "e998f77833d41d77760b41c97cc5b4b9d7c9e373e1eed5e63a38a1c1a4831828"
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/cabe9a30-78f3-4857-96ca-067e3d62274e/MicrosoftEdgeEnterpriseX64.msi#/dl.msi_",
+            "hash": "8d91c95bac815182a4a1a6946c70fea7d8e5fa5ca771dde5103ef43b1cfeb5f5"
         },
         "arm64": {
-            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/a0c02398-4171-421f-9f0c-17ce33fabf74/MicrosoftEdgeEnterpriseARM64.msi#/dl.msi_",
-            "hash": "79c357ffc54bc8f7f4e3c46036e091831590b8c738255fb46341e17c2fe448c3"
+            "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/b1ae9b7e-40a8-4b69-af50-11e3827adcdf/MicrosoftEdgeEnterpriseARM64.msi#/dl.msi_",
+            "hash": "7a36b404a0996880810c60aa55e163215c306201b611f62f7696775f40143dcb"
         }
     },
+    "location": "${env:ProgramFiles(x86)}\\Microsoft\\Edge",
     "shortcuts": [
         [
             "${env:ProgramFiles(x86)}\\Microsoft\\Edge\\Application\\msedge.exe",
             "Microsoft Edge"
         ]
     ],
+    "link": "$env:LocalAppData\\Microsoft\\Edge\\User Data",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-Stop-Process \"${env:ProgramFiles(x86)}\\Microsoft\\Edge\"",
-        "A-New-LinkDirectory \"$env:LocalAppData\\Microsoft\\Edge\\User Data\"",
+        "A-Stop-Process",
         "A-Install-Msi"
     ],
     "post_install": [

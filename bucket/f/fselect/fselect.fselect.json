@@ -1,0 +1,54 @@
+{
+    "version": "0.9.3",
+    "description": "使用类 SQL 查询查找文件 | Find files with SQL-like queries",
+    "homepage": "https://fselect.rocks/",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jhspetersson/fselect/releases/download/0.9.3/fselect-x86_64-win.zip",
+            "hash": "bfb68f1cf8d614b4c1b88ee7d1a369c616b7d6ccdbee1dddc45b74f1fc93dc7d"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\fselect.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jhspetersson/fselect/releases/download/$version/fselect-x86_64-win.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

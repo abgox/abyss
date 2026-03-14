@@ -1,5 +1,5 @@
 {
-    "version": "14.6.10",
+    "version": "15.2.2",
     "description": "Rime 小狼毫配置: 万象拼音输入方案 (虎码首末) | Rime Weasel Configuration: Wanxiang-Pinyin (tiger)",
     "homepage": "https://github.com/amzxyz/rime_wanxiang",
     "license": {
@@ -13,20 +13,29 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v14.6.10/rime-wanxiang-tiger-fuzhu.zip",
-            "hash": "7da622daa7c5ccd60ae945ebb969ef224959ea72133466ab16c47d27b8ff696b"
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v15.2.2/rime-wanxiang-tiger-fuzhu.zip",
+            "hash": "809e043a103394703c3efc239d54c00553a674077ba4b815f97e7124f2fcf15c"
         },
         "arm64": {
-            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v14.6.10/rime-wanxiang-tiger-fuzhu.zip",
-            "hash": "7da622daa7c5ccd60ae945ebb969ef224959ea72133466ab16c47d27b8ff696b"
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v15.2.2/rime-wanxiang-tiger-fuzhu.zip",
+            "hash": "809e043a103394703c3efc239d54c00553a674077ba4b815f97e7124f2fcf15c"
         }
     },
+    "conflicts": [
+        "amzxyz.rime_wanxiang",
+        "amzxyz.rime_wanxiang.shouyou",
+        "amzxyz.rime_wanxiang.zrm",
+        "amzxyz.rime_wanxiang.tiger",
+        "amzxyz.rime_wanxiang.moqi",
+        "amzxyz.rime_wanxiang.flypy",
+        "amzxyz.rime_wanxiang.wubi",
+        "amzxyz.rime_wanxiang.hanxin"
+    ],
     "extract_to": "app",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-IfAppConflict 'amzxyz.rime_wanxiang', 'amzxyz.rime_wanxiang.shouyou', 'amzxyz.rime_wanxiang.zrm', 'amzxyz.rime_wanxiang.tiger', 'amzxyz.rime_wanxiang.moqi', 'amzxyz.rime_wanxiang.flypy', 'amzxyz.rime_wanxiang.wubi', 'amzxyz.rime_wanxiang.hanxin'",
         "A-Ensure-Directory \"$env:AppData\\Rime\"",
         "Write-Host \"Copying $dir\\app\\* => $env:AppData\\Rime\" -ForegroundColor Yellow",
         "Copy-Item $dir\\app\\* $env:AppData\\Rime -Recurse -Force"
