@@ -1,5 +1,5 @@
 {
-    "version": "2.0.0",
+    "version": "2.0.2",
     "description": "一个友好的 Godot 版本管理器 | A friendly Godot version manager",
     "homepage": "https://fgvm.dev/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/patricktcoakley/fgvm/releases/download/v2.0.0/fgvm-win-x64.zip",
-            "hash": "f65e2086d5414d0616c5f9c8761157bbcd5531647ffb816a7542d1c266d7348a"
+            "url": "https://github.com/patricktcoakley/fgvm/releases/download/v2.0.2/fgvm-win-x64.zip",
+            "hash": "9d6dc3bc6b81e374fe3bd28dae4720129665a0cecdf8d1ae7a40ad5e33acbbcb"
         }
     },
     "extract_to": "app",
@@ -17,7 +17,7 @@
     },
     "env_add_path": "fgvm\\bin",
     "bin": "app\\fgvm.exe",
-    "persist": "fgvm",
+    "link": "$home\\fgvm",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -32,7 +32,8 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

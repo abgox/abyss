@@ -1,33 +1,26 @@
 {
-    "version": "3.2.12",
+    "version": "3.2.14",
     "description": "屏幕共享和屏幕演示：将任何设备转换为计算机的辅助屏幕 | Screen sharing and present screen: Turn any device into a secondary screen for your computer",
     "homepage": "https://deskreen.com/",
     "license": {
         "identifier": "AGPL-3.0-only"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\Programs\\deskreen-ce",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\Programs\\deskreen-ce",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/pavlobu/deskreen/releases/download/v3.2.12/deskreen-ce-3.2.12-x64.msi#/dl.msi_",
-            "hash": "48a4005503c2e45f490e16d9cc3d22f6ffec6c8e2b18ccaca7d4bec0f50a2332"
+            "url": "https://github.com/pavlobu/deskreen/releases/download/v3.2.14/deskreen-ce-3.2.14-x64.msi#/dl.msi_",
+            "hash": "ccb1f16d58466776b1272428d1966edbeb0ba5fa22f8617915cdf076a093e503"
         },
         "arm64": {
-            "url": "https://github.com/pavlobu/deskreen/releases/download/v3.2.12/deskreen-ce-3.2.12-arm64.msi#/dl.msi_",
-            "hash": "9cc8f62d217334e82444e563aeb6e5770aabddfdae3be6445a1c3f5cb35c874f"
+            "url": "https://github.com/pavlobu/deskreen/releases/download/v3.2.14/deskreen-ce-3.2.14-arm64.msi#/dl.msi_",
+            "hash": "d4a4c67386aa14d07a1b6bda638c5933f4d5b4939ef89b6670c93d11e8be8382"
         }
     },
+    "location": "$env:LocalAppData\\Programs\\deskreen-ce",
+    "link": "$env:AppData\\deskreen-ce",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\deskreen-ce\"",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -39,7 +32,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process \"$env:LocalAppData\\Programs\\deskreen-ce\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Msi"
     ],
