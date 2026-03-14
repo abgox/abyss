@@ -10,7 +10,7 @@ function Add-GithubLabel {
         [String[]]$Label
     )
 
-    Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/issues/$pr/labels" -Headers $headers -Method Post -Body @{ labels = $Label }
+    Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/issues/$pr/labels" -Headers $headers -Method Post -Body (@{ labels = $Label } | ConvertTo-Json) -ContentType 'application/json'
 }
 
 function Remove-GithubLabel {
@@ -158,8 +158,8 @@ if ($has) {
     $results = @(
         $marker,
         '',
-        '| Manifest | Required Fields | In Winget | Type | Persistence | Location | Extra |',
-        '| :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
+        '| Manifest | In Winget | Type | Persistence | Location | Extra |',
+        '| :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 }
 else {
