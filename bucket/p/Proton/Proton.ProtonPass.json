@@ -1,29 +1,22 @@
 {
-    "version": "1.34.1",
+    "version": "1.35.0",
     "description": "开源且加密的密码管理器 | Open-source and encrypted password manager",
     "homepage": "https://proton.me/pass",
     "license": {
         "identifier": "GPL-3.0-only"
     },
-    "notes": [
-        "The installation directory: $env:LocalAppData\\ProtonPass",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:LocalAppData\\ProtonPass",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://proton.me/download/pass/windows/ProtonPass_Setup_1.34.1.exe",
-            "hash": "f1cf8ae285ddb55fed1849af493e84fd256a6b287cba2fb56ec2613710b71cb8"
+            "url": "https://proton.me/download/pass/windows/ProtonPass_Setup_1.35.0.exe",
+            "hash": "7db7f5d775f5bad343a2a7f84bdd0670aa78e95069f3680fec13d3847d9110c3"
         }
     },
+    "location": "$env:LocalAppData\\ProtonPass",
+    "link": "$env:AppData\\Proton Pass",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Proton Pass\"",
         "A-Install-App -Uninstaller \"$env:LocalAppData\\ProtonPass\\Update.exe\""
     ],
     "post_install": [
@@ -35,7 +28,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process \"$env:LocalAppData\\ProtonPass\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App -ArgumentList '--uninstall'",
         "A-Remove-TempData \"$env:LocalAppData\\ProtonPass\""

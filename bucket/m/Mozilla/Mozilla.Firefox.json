@@ -1,35 +1,28 @@
 {
-    "version": "147.0.2",
+    "version": "148.0.2",
     "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发 | Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries",
     "homepage": "https://www.mozilla.org/firefox",
     "license": {
         "identifier": "MPL-2.0",
         "url": "https://www.mozilla.org/MPL/2.0"
     },
-    "notes": [
-        "The installation directory: $env:ProgramFiles\\Mozilla Firefox",
-        "Refer to: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
-    "notes_cn": [
-        "安装目录: $env:ProgramFiles\\Mozilla Firefox",
-        "参考: https://abyss.abgox.com/faq/external-installation-directory"
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/147.0.2/win64/en-US/Firefox%20Setup%20147.0.2.exe",
-            "hash": "9c78bb97f6ea4f4a7e978a6c03d7cc6121db92daf2c5a2d223f9b0a31daf3edd"
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/148.0.2/win64/en-US/Firefox%20Setup%20148.0.2.exe",
+            "hash": "cd037c70015aaf17ae65d09734fbe295e1b8419164b076f1702ba9b8399ddbd8"
         },
         "arm64": {
-            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/147.0.2/win64-aarch64/en-US/Firefox%20Setup%20147.0.2.exe",
-            "hash": "62e87a2292dac2ed67bd80e448a6abed1b2e6a14e80177c76c4ac3c3b16a7793"
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/148.0.2/win64-aarch64/en-US/Firefox%20Setup%20148.0.2.exe",
+            "hash": "8604c960199a5914ee7d8e6e53719df0b81d954238240381bbdd29ff5bb10cc8"
         }
     },
+    "location": "$env:ProgramFiles\\Mozilla Firefox",
+    "link": "$env:AppData\\Mozilla\\Firefox",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\Mozilla\\Firefox\"",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Mozilla Firefox\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
     ],
     "post_install": [
@@ -42,7 +35,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "A-Stop-Process \"$env:ProgramFiles\\Mozilla Firefox\"",
+        "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
         "A-Remove-TempData \"$env:LocalAppData\\Mozilla\\Firefox\""
