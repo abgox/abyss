@@ -1,5 +1,5 @@
 {
-    "version": "3.0.3.0",
+    "version": "3.1.0.0",
     "description": "123 云盘，一款云存储服务产品 | A cloud storage service product",
     "homepage": "https://www.123pan.com/",
     "license": {
@@ -8,16 +8,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://app.123957.com/pc-pro/windows/303/123pan_3.0.3.exe",
-            "hash": "3bc010566d9b208843d82ba44e8a5a030d0e0d5d595ea45133db4a2c3448675c"
+            "url": "https://app.123957.com/pc-pro/windows/310/123pan_3.1.0.exe",
+            "hash": "9183f1ca8acc22a682c01610e1a1ece07c18ce77781bc2f43f65db63a847a41b"
         }
     },
+    "link": "$env:AppData\\123pan\\config.json",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkFile \"$env:AppData\\123pan\\config.json\"",
         "A-Install-App -ArgumentList '/S'",
         "A-Hold-App"
     ],
@@ -42,7 +42,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget '123.123pan' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget '123.123pan' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

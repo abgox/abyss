@@ -1,0 +1,62 @@
+{
+    "version": "0.25.3",
+    "description": "一款友好且快速的发送 HTTP 请求的工具 | Friendly and fast tool for sending HTTP requests",
+    "homepage": "https://github.com/ducaale/xh",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ducaale/xh/releases/download/v0.25.3/xh-v0.25.3-x86_64-pc-windows-msvc.zip",
+            "hash": "49f60a01324ce42726ce1f8bcdff4b376b1e8533aed33d7a107a3cd70f040236",
+            "extract_dir": "xh-v0.25.3-x86_64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\xh.exe",
+        [
+            "app\\xh.exe",
+            "xhs"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ducaale/xh/releases/download/v$version/xh-v$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "xh-v$version-x86_64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

@@ -11,12 +11,12 @@
             "hash": "a0061e4ad44a02e5f0603ef2695c0f130bf45746e7f0d89da065a51c9c3ec7ad"
         }
     },
+    "link": "$env:AppData\\com.seelen.seelen-ui",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Add-MsixPackage 'Seelen.SeelenUI_p6yyn03m1894e'",
-        "A-New-LinkDirectory \"$env:AppData\\com.seelen.seelen-ui\""
+        "A-Add-MsixPackage 'Seelen.SeelenUI_p6yyn03m1894e'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,7 +40,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Seelen.SeelenUI' 'msix'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Seelen.SeelenUI' 'msix'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

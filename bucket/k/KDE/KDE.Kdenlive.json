@@ -1,5 +1,5 @@
 {
-    "version": "25.12.1",
+    "version": "25.12.3",
     "description": "免费开源的视频编辑器 | Free and Open Source Video Editor",
     "homepage": "https://kdenlive.org/",
     "license": {
@@ -8,18 +8,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.kde.org/stable/kdenlive/25.12/windows/kdenlive-25.12.1.exe",
-            "hash": "63ce996abfd04e13ae9a0a08ae0a0b402cbfc8b03626d5d92ff5661b958e7023"
+            "url": "https://download.kde.org/stable/kdenlive/25.12/windows/kdenlive-25.12.3.exe",
+            "hash": "f0ecab2ffca1b812de51c0c9556ed4480e1c9d611e32d67b79106965819a42c4"
         }
     },
+    "link": "$env:LocalAppData\\kdenliverc",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-File \"$env:LocalAppData\\kdenliverc\"",
-        "A-New-LinkFile \"$env:LocalAppData\\kdenliverc\"",
-        "A-New-LinkDirectory \"$env:AppData\\kdenlive\"",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\kdenlive\\uninstall.exe\""
     ],
     "post_install": [
@@ -45,7 +43,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'KDE.Kdenlive' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'KDE.Kdenlive' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

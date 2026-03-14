@@ -1,5 +1,5 @@
 {
-    "version": "0.18.5",
+    "version": "0.18.6",
     "description": "一款适用于在现有工作流程基础上处理同步分支的 Git 客户端 | A Git client for simultaneous branches on top of your existing workflow",
     "homepage": "https://gitbutler.com/",
     "license": {
@@ -7,16 +7,19 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://releases.gitbutler.com/releases/release/0.18.5-2775/windows/x86_64/GitButler_0.18.5_x64_en-US.msi#/dl.msi_",
-            "hash": "aa4d4a821d7bcbd019f71b161e6e85a036124f5d53b125cfb0b8d3bd5efac0d8"
+            "url": "https://releases.gitbutler.com/releases/release/0.18.6-2781/windows/x86_64/GitButler_0.18.6_x64_en-US.msi#/dl.msi_",
+            "hash": "1d8d8b58e463fbabbc0a148bae0a4faeebaa1587c96161653afe9dc60f63a3d4"
         }
     },
+    "link": [
+        "$env:AppData\\com.gitbutler.app",
+        "$env:AppData\\gitbutler"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "A-New-LinkDirectory \"$env:AppData\\com.gitbutler.app\",\"$env:AppData\\gitbutler\"",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -42,7 +45,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'GitButler.GitButler' 'msi'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'GitButler.GitButler' 'msi'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"

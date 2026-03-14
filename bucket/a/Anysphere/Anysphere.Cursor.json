@@ -1,5 +1,5 @@
 {
-    "version": "2.4.21",
+    "version": "2.6.19",
     "description": "一个 AI 代码编辑器 | The AI Code Editor",
     "homepage": "https://www.cursor.com/",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://downloads.cursor.com/production/dc8361355d709f306d5159635a677a571b277bcc/win32/x64/user-setup/CursorUserSetup-x64-2.4.21.exe",
-            "hash": "1429d09b628ce5af85539e627aef740e1a91b90f54edd0c116d1fbd3ef33cee4"
+            "url": "https://downloads.cursor.com/production/224838f96445be37e3db643a163a817c15b3606c/win32/x64/user-setup/CursorUserSetup-x64-2.6.19.exe",
+            "hash": "5ccfa69ceee2a2f501041def1c0520f5d86fbb57e977d691a2b162fd3fe56bd8"
         },
         "arm64": {
-            "url": "https://downloads.cursor.com/production/dc8361355d709f306d5159635a677a571b277bcc/win32/arm64/user-setup/CursorUserSetup-arm64-2.4.21.exe",
-            "hash": "1810d8f9abbe1fb43c7595e1166eeace5289613f29b3bf3c710f5bec1c6cc0a0"
+            "url": "https://downloads.cursor.com/production/224838f96445be37e3db643a163a817c15b3606c/win32/arm64/user-setup/CursorUserSetup-arm64-2.6.19.exe",
+            "hash": "c84dc4d48984157162b84c27fae955a889949a357a5821dbea5674ea1e113870"
         }
     },
     "bin": "app\\Cursor.exe",
@@ -22,11 +22,14 @@
             "Cursor"
         ]
     ],
+    "link": [
+        "$env:AppData\\Cursor",
+        "$home\\.cursor"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Cursor\",\"$home\\.cursor\"",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -50,7 +53,7 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$InstallerInfo, $out = A-Get-InstallerInfoFromWinget 'Anysphere.Cursor' 'exe'",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Anysphere.Cursor' 'exe'",
             "$out"
         ],
         "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
