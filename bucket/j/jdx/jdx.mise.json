@@ -1,5 +1,5 @@
 {
-    "version": "2026.2.15",
+    "version": "2026.3.9",
     "description": "多语言工具版本管理器、环境变量管理器和任务运行器 | Polyglot tool version manager, env vars manager and task runner",
     "homepage": "https://mise.jdx.dev/",
     "license": {
@@ -7,23 +7,26 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/jdx/mise/releases/download/v2026.2.15/mise-v2026.2.15-windows-x64.zip",
-            "hash": "4b1ef579b99222814158e77c82c6ef2c639d0da196d9110e6199695d27cfc1f0"
+            "url": "https://github.com/jdx/mise/releases/download/v2026.3.9/mise-v2026.3.9-windows-x64.zip",
+            "hash": "f3f99193ec04b2d5e89f3d68904b80416361474e5b1c26f94a6494e321f5d178"
         },
         "arm64": {
-            "url": "https://github.com/jdx/mise/releases/download/v2026.2.15/mise-v2026.2.15-windows-arm64.zip",
-            "hash": "a27bc7f0d0c954a72a6dada6f46e3b48729e0244cffface355ba272cb5d7501c"
+            "url": "https://github.com/jdx/mise/releases/download/v2026.3.9/mise-v2026.3.9-windows-arm64.zip",
+            "hash": "b4624d2d8de88fa08409a7980eac5bf44eed881ac351382110a8b589cc3897ab"
         }
     },
     "extract_dir": "mise",
     "extract_to": "app",
+    "env_add_path_expand": "$env:LocalAppData\\mise\\shims",
     "bin": "app\\bin\\mise.exe",
+    "link": [
+        "$home\\.config\\mise",
+        "$env:LocalAppData\\mise"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-Add-Path \"$env:LocalAppData\\mise\\shims\"",
-        "A-New-LinkDirectory \"$home\\.config\\mise\", \"$env:LocalAppData\\mise\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

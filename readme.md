@@ -36,7 +36,8 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) is a well-designed Scoop bucket, aims to provide a Winget-like solution with [data persistence](https://abyss.abgox.com/features/data-persistence).
+> - [abyss](https://abyss.abgox.com) is an engineered and opinionated Scoop bucket.
+> - It aims to provide a Winget-like solution with [data persistence](https://abyss.abgox.com/features/data-persistence).
 > - Its manifests are based on [utils.ps1](./script/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
 
 ## Features
@@ -45,7 +46,7 @@
 >
 > Unlike the standard Scoop bucket, [abyss](https://abyss.abgox.com) includes some extra features.
 
-- [Manifest State Control](https://abyss.abgox.com/features/manifest-state-control)
+- [Manifest Status Control](https://abyss.abgox.com/features/manifest-status-control)
 - [Enhanced Data Persistence](https://abyss.abgox.com/features/data-persistence)
 - [Flexible App Installation Solution](https://abyss.abgox.com/features/install-solution)
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/features/extra-features)
