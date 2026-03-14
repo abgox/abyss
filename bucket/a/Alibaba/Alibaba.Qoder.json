@@ -1,5 +1,5 @@
 {
-    "version": "0.5.2",
+    "version": "0.7.1",
     "description": "用于现实软件的自主智能编程平台 | Agentic Coding Platform for Real Software",
     "homepage": "https://qoder.com/",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.qoder.com/release/latest/QoderUserSetup-x64.exe",
-            "hash": "83c49a511e4a1175f36f05a7a105eb9ea55838953fe752688a7d93cbc3bd38c6"
+            "url": "https://download.qoder.com/release/0.7.1/QoderUserSetup-x64.exe",
+            "hash": "6dd067d35c8ab9464796b986c53bab1facd1c07f9fc69a7f056b62acc71b0d01"
         }
     },
     "env_add_path": "app\\bin",
@@ -49,13 +49,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://center.qoder.sh/algo/api/update/win32-x64-user/stable/0.0.0",
-        "jsonpath": "$.productVersion"
+        "url": "https://github.com/QoderAI/changelog",
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://download.qoder.com/release/latest/QoderUserSetup-x64.exe"
+                "url": "https://download.qoder.com/release/$version/QoderUserSetup-x64.exe"
             }
         }
     }
