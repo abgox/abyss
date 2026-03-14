@@ -1,0 +1,68 @@
+{
+    "version": "1.11.1",
+    "description": "集桌面与 Docker 功能于一体的 AI 应用程序，内置 RAG、AI 代理等多种功能 | The all-in-one Desktop & Docker AI application with built-in RAG, AI agents, and more",
+    "homepage": "https://anythingllm.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.anythingllm.com/latest/AnythingLLMDesktop.exe",
+            "hash": "8fba280a964dfd16a3fa814050bb76d47bb80e77d79f28f4572d184fdbc99639"
+        },
+        "arm64": {
+            "url": "https://cdn.anythingllm.com/latest/AnythingLLMDesktop-Arm64.exe",
+            "hash": "2e6efeb18b2a1155e1c22dcb9a187621633dd4b85f97d08ae8fdff077e685970"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\AnythingLLM.exe",
+            "AnythingLLM"
+        ]
+    ],
+    "link": "$env:AppData\\anythingllm-desktop",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall AnythingLLM.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\anythingllm-desktop-updater\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/Mintplex-Labs/anything-llm",
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.anythingllm.com/latest/AnythingLLMDesktop.exe"
+            },
+            "arm64": {
+                "url": "https://cdn.anythingllm.com/latest/AnythingLLMDesktop-Arm64.exe"
+            }
+        }
+    }
+}

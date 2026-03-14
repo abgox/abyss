@@ -13,25 +13,18 @@
     },
     "extract_to": "app",
     "env_set": {
-        "DVM_DIR": "$persist_dir\\.dvm",
-        "DENO_DIR": "$persist_dir\\.deno",
-        "DENO_INSTALL_ROOT": "$persist_dir\\.deno\\bin"
+        "DVM_DIR": "$persist_dir\\.dvm"
     },
-    "env_add_path": [
-        ".dvm\\bin",
-        ".deno\\bin"
-    ],
+    "env_add_path": ".dvm\\bin",
     "bin": "app\\dvm.exe",
-    "persist": [
-        ".dvm",
-        ".deno"
+    "link": [
+        "$home\\.dvm",
+        "$home\\.dvmrc"
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "A-New-File \"$home\\.dvmrc\"",
-        "A-New-LinkFile \"$home\\.dvmrc\""
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

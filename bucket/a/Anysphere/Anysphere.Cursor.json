@@ -1,5 +1,5 @@
 {
-    "version": "2.4.27",
+    "version": "2.6.19",
     "description": "一个 AI 代码编辑器 | The AI Code Editor",
     "homepage": "https://www.cursor.com/",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://downloads.cursor.com/production/4f2b772756b8f609e1354b3063de282ccbe7a69b/win32/x64/user-setup/CursorUserSetup-x64-2.4.27.exe",
-            "hash": "ce051b7d50b430e8ce078ba24e5a2b67ec8655329e8e4a53fa3a22bd30c1d16e"
+            "url": "https://downloads.cursor.com/production/224838f96445be37e3db643a163a817c15b3606c/win32/x64/user-setup/CursorUserSetup-x64-2.6.19.exe",
+            "hash": "5ccfa69ceee2a2f501041def1c0520f5d86fbb57e977d691a2b162fd3fe56bd8"
         },
         "arm64": {
-            "url": "https://downloads.cursor.com/production/4f2b772756b8f609e1354b3063de282ccbe7a69b/win32/arm64/user-setup/CursorUserSetup-arm64-2.4.27.exe",
-            "hash": "2e9e9ca4a5d35098d29c9b60e75d59ba9562206371975f3773fb01eaa9b3ad93"
+            "url": "https://downloads.cursor.com/production/224838f96445be37e3db643a163a817c15b3606c/win32/arm64/user-setup/CursorUserSetup-arm64-2.6.19.exe",
+            "hash": "c84dc4d48984157162b84c27fae955a889949a357a5821dbea5674ea1e113870"
         }
     },
     "bin": "app\\Cursor.exe",
@@ -22,11 +22,14 @@
             "Cursor"
         ]
     ],
+    "link": [
+        "$env:AppData\\Cursor",
+        "$home\\.cursor"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-New-LinkDirectory \"$env:AppData\\Cursor\",\"$home\\.cursor\"",
         "A-Install-Inno"
     ],
     "post_install": [
