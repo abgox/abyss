@@ -1,0 +1,56 @@
+{
+    "version": "0.3.1",
+    "description": "人类可读的 ANSI 序列 | Human-readable ANSI sequences",
+    "homepage": "https://github.com/charmbracelet/sequin",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/charmbracelet/sequin/releases/download/v0.3.1/sequin_0.3.1_Windows_x86_64.zip",
+            "hash": "7f10e402491cd5eecb5bb2bda74faea48b24d96f7c280819a827f5dcc47438e7",
+            "extract_dir": "sequin_0.3.1_Windows_x86_64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\sequin.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/charmbracelet/sequin/releases/download/v$version/sequin_$version_Windows_x86_64.zip",
+                "extract_dir": "sequin_$version_Windows_x86_64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "version": "0.1.13",
+    "description": "基于 Qwen3-TTS 的开源语音合成平台 | The open-source voice synthesis studio powered by Qwen3-TTS",
+    "homepage": "https://voicebox.sh/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jamiepine/voicebox/releases/download/v0.1.13/Voicebox_0.1.13_x64-setup.exe",
+            "hash": "0e039f9ef42a5a2ccfe5f714b303c2b1e600ed5af2c45335a56b2bf380200a4f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\voicebox.exe",
+            "Voicebox"
+        ]
+    ],
+    "link": "$env:AppData\\sh.voicebox.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\sh.voicebox.app\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jamiepine/voicebox/releases/download/v$version/Voicebox_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
