@@ -13,13 +13,12 @@
             "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
         }
     },
+    "link": "$env:AppData\\Mozilla\\Firefox",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Deny-Manifest",
-        "A-Add-MsixPackage 'Mozilla.MozillaFirefox_jag0gd4e3s9p2'",
-        "A-New-LinkDirectory \"$env:AppData\\Mozilla\\Firefox\""
+        "A-Add-MsixPackage 'Mozilla.MozillaFirefox_jag0gd4e3s9p2'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -45,8 +44,7 @@
             "$res, $out = A-Get-InstallerInfoFromWinget 'Mozilla.Firefox.MSIX' 'msix'",
             "$out"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-        "replace": "pending"
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
     },
     "autoupdate": {
         "architecture": {

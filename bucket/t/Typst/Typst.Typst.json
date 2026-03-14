@@ -1,0 +1,63 @@
+{
+    "version": "0.14.2",
+    "description": "一款全新的基于标记的排版系统，其功能与 LaTeX 不相上下，但却更易于学习和使用 | A new markup-based typesetting system that is designed to be as powerful as LaTeX while being much easier to learn and use",
+    "homepage": "https://typst.app/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/typst/typst/releases/download/v0.14.2/typst-x86_64-pc-windows-msvc.zip",
+            "hash": "51353994ac83218c3497052e89b2c432c53b9d4439cdc1b361e2ea4798ebfc13",
+            "extract_dir": "typst-x86_64-pc-windows-msvc"
+        },
+        "arm64": {
+            "url": "https://github.com/typst/typst/releases/download/v0.14.2/typst-aarch64-pc-windows-msvc.zip",
+            "hash": "1c4aaa0de000ab1787dda354c34f4fa1fe3c2525d3d038e692a3d7daa333d551",
+            "extract_dir": "typst-aarch64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\typst.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/typst/typst/releases/download/v$version/typst-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/typst/typst/releases/download/v$version/typst-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
