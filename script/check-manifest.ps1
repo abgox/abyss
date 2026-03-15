@@ -76,6 +76,9 @@ foreach ($file in $files) {
 
     $line = @()
 
+    # Status
+    $line += $file.status
+
     # Manifest
     $line += if ($c.homepage) { "[$m]($($c.homepage))" } else { $m }
 
@@ -105,8 +108,14 @@ foreach ($file in $files) {
         $add_label += 'missing-required-field'
     }
 
-    # Status
-    $line += $file.status
+    # Type
+    $type = @()
+    if ($c.psmodule) { $type += 'psmodule' }
+    if ($c.font) { $type += 'font' }
+    $download_url = $c.architecture.'64bit', $c.architecture.arm64 | Select-Object -First 1
+    $extension = $download_url.Split('.')[-1]
+    $type += $extension.Replace('msi_', 'msi')
+    $line += $type -join ', '
 
     # In Winget
     $path = "$letter/$($m.Replace('.', '/'))"
@@ -122,36 +131,29 @@ foreach ($file in $files) {
         $add_label += 'manifest-name-review-needed'
     }
 
-    # Type
-    $type = if ($c.psmodule) { 'psmodule' } elseif ($c.font) { 'font' } else { $null }
-    $line += if ($type) { $type } else { '' }
+    # Location
+    $line += if ($c.location) { '`' + $c.location + '`' } else { 'Scoop' }
 
     # Permission
-    $permissions = @()
+    $permission = ''
     if ($c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)') {
-        $permissions += '[Require admin](https://abyss.abgox.com/faq/require-admin)'
-    }
-    foreach ($l in $c.link) {
-        if ($l -like '$dir\*') {
-            $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
-        }
-        else {
-            $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
-        }
-        if (Test-Path "extra/$m/$path" -PathType Leaf) {
-            $permissions += '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-            break
-        }
-    }
-    if ($permissions) {
-        $line += $permissions -join '<br />'
+        $permission = '[Require admin](https://abyss.abgox.com/faq/require-admin)'
     }
     else {
-        $line += ''
+        foreach ($l in $c.link) {
+            if ($l -like '$dir\*') {
+                $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
+            }
+            else {
+                $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+            }
+            if (Test-Path "extra/$m/$path" -PathType Leaf) {
+                $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                break
+            }
+        }
     }
-
-    # Location
-    $line += if ($c.location) { '`' + $c.location + '`' } else { 'In Scoop' }
+    $line += $permission
 
     # Persistence
     $persistence = @()
@@ -165,12 +167,7 @@ foreach ($file in $files) {
     else {
         $rm_label += 'data-persistence-review-needed'
     }
-    if ($persistence) {
-        $line += $persistence -join '<br />'
-    }
-    else {
-        $line += ''
-    }
+    $line += if ($persistence) { $persistence -join ', ' } else { '' }
 
     # Extra
     $line += if (Test-Path "extra/$m") { "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)" } else { 'No' }
@@ -191,14 +188,14 @@ $guide = @'
 
 <br />
 
-- **Manifest**: The manifest name.
 - **Status**: The status of the manifest in the PR.
-- **In Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
+- **Manifest**: The manifest name.
 - **Type**: The manifest type.
-- **Permission**: The permission required to install or uninstall the app.
+- **In Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
 - **Location**: The installation location of the app.
+- **Permission**: The permission required to install or uninstall the app.
 - **Persistence**: The persistence method used for app data.
-- **Extra**: Whether extra files or directories for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
+- **Extra**: Whether extra files or directories exist for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
 
 </details>
 
@@ -209,7 +206,7 @@ if ($has) {
         $marker,
         $guide,
         '',
-        '| Manifest | Status | In Winget | Type | Permission | Location | Persistence | Extra |',
+        '| Status | Manifest | Type | In Winget | Location | Permission | Persistence | Extra |',
         '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 }
