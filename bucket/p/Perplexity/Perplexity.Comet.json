@@ -1,0 +1,57 @@
+{
+    "version": "145.0.7632.899",
+    "description": "基于 Chromium 的浏览器，集成了由 Perplexity 驱动的先进人工智能功能 | A Chromium-based browser that integrates advanced AI capabilities powered by Perplexity",
+    "homepage": "https://perplexity.ai/comet",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.perplexity.ai/rest/browser/download?platform=win_x64&channel=stable#/dl.exe",
+            "hash": "5ce5b2c5ee81930d5dabb65415245e3f09e0ce74c6e8ab39f22a5511cd8a860a"
+        }
+    },
+    "location": "$env:ProgramFiles\\Perplexity\\Comet",
+    "link": "$env:LocalAppData\\Perplexity\\Comet\\User Data",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-App -ArgumentList '--system-level','--do-not-launch-chrome'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Perplexity\\Comet\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
+        "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--chrome','--uninstall','--system-level','--multi-install','--force-uninstall'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Perplexity.Comet' ''",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.perplexity.ai/rest/browser/download?platform=win_x64&channel=stable#/dl.exe"
+            }
+        }
+    }
+}
