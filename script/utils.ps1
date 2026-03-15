@@ -1071,7 +1071,7 @@ function A-Uninstall-Manually {
     foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
         if (Test-Path -LiteralPath $p) {
-            if ((Get-ChildItem -LiteralPath $p -File -Recurse).Count -eq 0) {
+            if (-not (Get-ChildItem -LiteralPath $p -File -Recurse | Select-Object -First 1)) {
                 try {
                     Remove-Item $p -Force -Recurse -ErrorAction Stop
                     continue
@@ -1856,7 +1856,7 @@ function A-Copy-Item {
         $targetItem = Get-Item -LiteralPath $Destination
 
         if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
-            $needCopy = $targetItem.PSIsContainer -and (Get-ChildItem -LiteralPath $Destination -File -Recurse).Count -eq 0
+            $needCopy = $targetItem.PSIsContainer -and -not (A-Test-DirectoryNotEmpty $Destination)
         }
         else {
             $needCopy = $true
