@@ -1856,15 +1856,15 @@ function A-Copy-Item {
         $targetItem = Get-Item -LiteralPath $Destination
 
         if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
-            $needCopy = $false
+            $needCopy = $targetItem.PSIsContainer -and (Get-ChildItem -LiteralPath $Destination -File -Recurse).Count -eq 0
         }
         else {
-            A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
             $needCopy = $true
         }
     }
 
     if ($needCopy) {
+        A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
             Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
             Write-Host "Copying $Path => $Destination"
