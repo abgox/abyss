@@ -112,7 +112,7 @@ foreach ($file in $files) {
     $type = @()
     if ($c.psmodule) { $type += 'psmodule' }
     if ($c.font) { $type += 'font' }
-    $download_url = $c.architecture.64bit, $c.architecture.arm64 | Select-Object -First 1
+    $download_url = $c.architecture.'64bit', $c.architecture.arm64 | Select-Object -First 1
     $extension = $download_url.Split('.')[-1]
     $type += $extension.Replace('msi_', 'msi')
     $line += $type -join ', '
