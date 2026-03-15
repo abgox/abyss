@@ -105,6 +105,9 @@ foreach ($file in $files) {
         $add_label += 'missing-required-field'
     }
 
+    # Status
+    $line += $file.status
+
     # In Winget
     $path = "$letter/$($m.Replace('.', '/'))"
     $api = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$path"
@@ -123,11 +126,40 @@ foreach ($file in $files) {
     $type = if ($c.psmodule) { 'psmodule' } elseif ($c.font) { 'font' } else { $null }
     $line += if ($type) { $type } else { '' }
 
+    # Permission
+    $permissions = @()
+    if ($c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)') {
+        $permissions += '[Require admin](https://abyss.abgox.com/faq/require-admin)'
+    }
+    foreach ($l in $c.link) {
+        if ($l -like '$dir\*') {
+            $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
+        }
+        else {
+            $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+        }
+        if (Test-Path "extra/$m/$path" -PathType Leaf) {
+            $permissions += '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+            break
+        }
+    }
+    if ($permissions) {
+        $line += $permissions -join '<br />'
+    }
+    else {
+        $line += ''
+    }
+
+    # Location
+    $line += if ($c.location) { '`' + $c.location + '`' } else { 'In Scoop' }
+
     # Persistence
     $persistence = @()
-    if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') { $persistence += 'link' }
+    if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') {
+        $persistence += '[link](https://abyss.abgox.com/features/data-persistence/#link)'
+    }
     if ($c.persist) {
-        $persistence += 'persist ⚠️'
+        $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist) ⚠️'
         $add_label += 'data-persistence-review-needed'
     }
     else {
@@ -140,9 +172,6 @@ foreach ($file in $files) {
         $line += ''
     }
 
-    # Location
-    $line += if ($c.location) { '`' + $c.location + '`' } else { 'In Scoop' }
-
     # Extra
     $line += if (Test-Path "extra/$m") { "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)" } else { 'No' }
 
@@ -154,12 +183,34 @@ Write-Host '::endgroup::'
 if ($add_label) { Add-GithubLabel ($add_label | Sort-Object -Unique) }
 if ($rm_label) { Remove-GithubLabel ($rm_label | Sort-Object -Unique) }
 
+$guide = @'
+
+<details>
+
+<summary>Guide</summary>
+
+<br />
+
+- **Manifest**: The manifest name.
+- **Status**: The status of the manifest in the PR.
+- **In Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
+- **Type**: The manifest type.
+- **Permission**: The permission required to install or uninstall the app.
+- **Location**: The installation location of the app.
+- **Persistence**: The persistence method used for app data.
+- **Extra**: Whether extra files or directories for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
+
+</details>
+
+'@
+
 if ($has) {
     $results = @(
         $marker,
+        $guide,
         '',
-        '| Manifest | In Winget | Type | Persistence | Location | Extra |',
-        '| :-: | :-: | :-: | :-: | :-: | :-: |'
+        '| Manifest | Status | In Winget | Type | Permission | Location | Persistence | Extra |',
+        '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 }
 else {
@@ -170,10 +221,11 @@ else {
     )
 }
 
-$results + @(
-    '',
-    '---',
-    # 'Comment `/check` to run the check again.',
-    '',
-    "[_View the workflow run for details._]($env:RUN_URL)"
-) | Out-File result.md
+# $results + @(
+#     '',
+#     '---',
+#     'Comment `/check` to run the check again.',
+#     "[_View the workflow run for details._]($env:RUN_URL)"
+# ) | Out-File result.md
+
+$results | Out-File result.md
