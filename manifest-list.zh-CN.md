@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (836)|Tag|Description|
+|Manifest (837)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -628,6 +628,7 @@
 |[NomanDhoni.BlinkEye](https://blinkeye.app/)|<a href="./bucket/n/NomanDhoni/NomanDhoni.BlinkEye.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款极简主义的护眼提醒应用，旨在减轻长时间使用屏幕时的眼睛疲劳|
 |[Notion.Notion](https://www.notion.so/)|<a href="./bucket/n/Notion/Notion.Notion.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个崭新的工具，将你的多个工作应用融为一体，并成为你和团队的一站式工作空间|
 |[Nushell.Nushell](https://www.nushell.sh/)|<a href="./bucket/n/Nushell/Nushell.Nushell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一种用 Rust 编写的新型 shell|
+|[Nushell.Nushell.Nightly](https://www.nushell.sh/)|<a href="./bucket/n/Nushell/Nushell.Nushell.Nightly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一种用 Rust 编写的新型 shell|
 |[Obsidian.Obsidian](https://obsidian.md/)|<a href="./bucket/o/Obsidian/Obsidian.Obsidian.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|强大的知识库，基于 Markdown 文件|
 |[OBSProject.OBSStudio](https://obsproject.com/)|<a href="./bucket/o/OBSProject/OBSProject.OBSStudio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于视频录制和直播的免费开源软件|
 |[OctasoftLtd.WSLUI](https://wsl-ui.octasoft.co.uk/)|<a href="./bucket/o/OctasoftLtd/OctasoftLtd.WSLUI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|WSL-UI - 一款轻量级桌面应用程序，用于管理 Windows 子系统 Linux（WSL）发行版|

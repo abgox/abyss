@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (836)|Tag|Description|
+|Manifest (837)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -628,6 +628,7 @@
 |[NomanDhoni.BlinkEye](https://blinkeye.app/)|<a href="./bucket/n/NomanDhoni/NomanDhoni.BlinkEye.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A minimalist eye-care reminder app designed to reduce eye strain during extended screen usage|
 |[Notion.Notion](https://www.notion.so/)|<a href="./bucket/n/Notion/Notion.Notion.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A new tool that blends your everyday work apps into one. It's the all-in-one workspace for you and your team|
 |[Nushell.Nushell](https://www.nushell.sh/)|<a href="./bucket/n/Nushell/Nushell.Nushell.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A new type of shell written in Rust|
+|[Nushell.Nushell.Nightly](https://www.nushell.sh/)|<a href="./bucket/n/Nushell/Nushell.Nushell.Nightly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A new type of shell written in Rust|
 |[Obsidian.Obsidian](https://obsidian.md/)|<a href="./bucket/o/Obsidian/Obsidian.Obsidian.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Powerful knowledge base that works on top of a local folder of plain text Markdown files|
 |[OBSProject.OBSStudio](https://obsproject.com/)|<a href="./bucket/o/OBSProject/OBSProject.OBSStudio.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Free and open source software for video recording and live streaming|
 |[OctasoftLtd.WSLUI](https://wsl-ui.octasoft.co.uk/)|<a href="./bucket/o/OctasoftLtd/OctasoftLtd.WSLUI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|WSL-UI - A lightweight desktop application to manage Windows Subsystem for Linux (WSL) distributions|
