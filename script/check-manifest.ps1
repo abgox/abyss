@@ -53,9 +53,12 @@ while ($true) {
 }
 
 $results = @()
-$add_label = @()
-$rm_label = @()
-$has = $false
+$labels = @{
+    'missing-required-field'         = $false
+    'manifest-name-review-needed'    = $false
+    'data-persistence-review-needed' = $false
+}
+$has_manifest = $false
 
 Write-Host '::group::Manifests'
 
@@ -63,7 +66,7 @@ foreach ($file in $files) {
     if ($file.filename -notmatch '^bucket.*/(.+)\.json$') {
         continue
     }
-    $has = $true
+    $has_manifest = $true
     $m = $matches[1]
     Write-Host $m
 
@@ -94,18 +97,11 @@ foreach ($file in $files) {
         'pre_uninstall',
         'post_uninstall'
     )
-    $pass = $true
     foreach ($field in $fields) {
         if (-not $c.$field) {
-            $pass = $false
+            $labels.'missing-required-field' = $true
             break
         }
-    }
-    if ($pass) {
-        $rm_label += 'missing-required-field'
-    }
-    else {
-        $add_label += 'missing-required-field'
     }
 
     # Type
@@ -122,7 +118,7 @@ foreach ($file in $files) {
     }
     else {
         $line += '⚠️'
-        $add_label += 'missing-required-field'
+        $labels.'missing-required-field' = $true
     }
 
     # In Winget
@@ -132,11 +128,10 @@ foreach ($file in $files) {
     try {
         $res = Invoke-RestMethod -Uri $api -Headers $headers -ErrorAction stop
         $line += "[Yes]($url)"
-        $rm_label += 'manifest-name-review-needed'
     }
     catch {
         $line += "[No]($url) ⚠️"
-        $add_label += 'manifest-name-review-needed'
+        $labels.'manifest-name-review-needed' = $true
     }
 
     # Location
@@ -170,10 +165,7 @@ foreach ($file in $files) {
     }
     if ($c.persist) {
         $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist) ⚠️'
-        $add_label += 'data-persistence-review-needed'
-    }
-    else {
-        $rm_label += 'data-persistence-review-needed'
+        $labels.'data-persistence-review-needed' = $true
     }
     $line += if ($persistence) { $persistence -join ', ' } else { '' }
 
@@ -185,8 +177,13 @@ foreach ($file in $files) {
 
 Write-Host '::endgroup::'
 
-if ($add_label) { Add-GithubLabel ($add_label | Sort-Object -Unique) }
-if ($rm_label) { Remove-GithubLabel ($rm_label | Sort-Object -Unique) }
+$add_labels = @()
+$rm_labels = @()
+
+$labels.Keys | ForEach-Object { if ($labels.$_) { $add_labels += $_ } else { $rm_labels += $_ } }
+
+if ($add_labels) { Add-GithubLabel $add_labels }
+if ($rm_labels) { Remove-GithubLabel $rm_labels }
 
 $guide = @'
 
@@ -209,7 +206,7 @@ $guide = @'
 
 '@
 
-if ($has) {
+if ($has_manifest) {
     $results = @(
         $marker,
         $guide,
