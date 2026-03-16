@@ -1,6 +1,6 @@
-# App List
+# Manifest List
 
-[简体中文](./app-list.zh-CN.md) | [English](./app-list.md) | [Website](https://abyss.abgox.com/app-list)
+[简体中文](./manifest-list.zh-CN.md) | [English](./manifest-list.md) | [Website](https://abyss.abgox.com/manifest-list)
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-|App (836)|Tag|Description|
+|Manifest (836)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|

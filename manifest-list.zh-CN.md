@@ -1,6 +1,6 @@
-# 应用列表
+# 清单列表
 
-[English](./app-list.md) | [简体中文](./app-list.zh-CN.md) | [官网](https://abyss.abgox.com/app-list)
+[English](./manifest-list.md) | [简体中文](./manifest-list.zh-CN.md) | [官网](https://abyss.abgox.com/manifest-list)
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-|App (836)|Tag|Description|
+|Manifest (836)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
