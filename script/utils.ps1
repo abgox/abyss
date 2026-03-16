@@ -2446,10 +2446,9 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
         }
     }
 
-    # 支持在 shortcuts 中使用以 $env:xxx 环境变量开头的路径
-    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
+    # XXX: https://github.com/ScoopInstaller/Scoop/issues/6605
     $filename = $target.FullName
-    if ($filename -match '\$env:[a-zA-Z_].*') {
+    if ($filename -match '^\$\{?(env:|home)') {
         $filename = $filename.Replace("$dir\", '')
         $target = [System.IO.FileInfo]::new($ExecutionContext.InvokeCommand.ExpandString($filename))
     }
