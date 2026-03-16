@@ -2063,7 +2063,7 @@
         },
         "checkver": {
             "title": "版本检查配置",
-            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置",
+            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置\n- 参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate",
             "type": [
                 "string",
                 "object"
@@ -3943,11 +3943,15 @@
                                                             {},
                                                             {
                                                                 "const": "A-Get-VersionFromGithubAPI",
-                                                                "markdownDescription": "从 GitHub 仓库获取应用的最新发布版本 (Release)\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "从 Github 获取最新的发布版本 `Latest Stable Release`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
                                                             },
                                                             {
                                                                 "const": "A-Get-PreVersionFromGithubAPI",
-                                                                "markdownDescription": "从 GitHub 仓库获取应用的最新预发布版本 (Pre-Release)\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "从 Github 获取最新的预发布版本 `Latest Pre-Release`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                            },
+                                                            {
+                                                                "const": "A-Get-NewestVersionFromGithubAPI",
+                                                                "markdownDescription": "从 Github 获取最新的版本 `Latest Release`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
                                                             },
                                                             {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
@@ -5130,7 +5134,7 @@
                                                 "properties": {
                                                     "script": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)(A-Get-VersionFromGithubAPI|A-Get-PreVersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
+                                                            "pattern": "(?<!#.*)(A-Get-(Pre|Newest)?VersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
                                                         }
                                                     }
                                                 }
@@ -5591,7 +5595,7 @@
                                 "properties": {
                                     "script": {
                                         "contains": {
-                                            "pattern": "(?<!#.*)A-Get-VersionFromGithubAPI"
+                                            "pattern": "(?<!#.*)A-Get-(Pre|Newest)?VersionFromGithubAPI"
                                         }
                                     }
                                 }
@@ -5603,13 +5607,7 @@
                             "checkver": {
                                 "required": [
                                     "regex"
-                                ],
-                                "properties": {
-                                    "regex": {
-                                        "pattern": "\\(\\.\\+\\)",
-                                        "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须包含 (.+)"
-                                    }
-                                }
+                                ]
                             }
                         },
                         "if": {
@@ -5627,7 +5625,7 @@
                                     "properties": {
                                         "url": {
                                             "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)",
-                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，url 只能是 Github 仓库或 REST API，例如:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
+                                            "errorMessage": "由于 script 使用了 A-Get-(Pre|Newest)?VersionFromGithubAPI，url 只能是 Github 仓库或 REST API，例如:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
                                         }
                                     }
                                 }
@@ -5646,13 +5644,13 @@
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
-                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须是一个 Github URL，否则请定义 checkver.url"
+                                                                    "errorMessage": "由于 script 使用了 A-Get-(Pre|Newest)?VersionFromGithubAPI，它必须是一个 Github URL，否则请定义 checkver.url"
                                                                 },
                                                                 {
                                                                     "contains": {
                                                                         "pattern": "^https://github\\.com/[^/]+/[^/]+"
                                                                     },
-                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它至少有一个 Github URL，否则请定义 checkver.url"
+                                                                    "errorMessage": "由于 script 使用了 A-Get-(Pre|Newest)?VersionFromGithubAPI，它至少有一个 Github URL，否则请定义 checkver.url"
                                                                 }
                                                             ]
                                                         }

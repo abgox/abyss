@@ -1251,7 +1251,8 @@ function A-Get-UninstallEntryByAppName {
 
 function A-Get-VersionFromGithubAPI {
     param (
-        [switch]$PreRelease
+        [switch]$PreRelease,
+        [switch]$Newest
     )
     if ($json.version -in 'pending', 'renamed', 'deprecated') {
         return $json.version
@@ -1263,18 +1264,8 @@ function A-Get-VersionFromGithubAPI {
             return
         }
 
-        $url = if ($json.autoupdate.architecture.'64bit'.url) {
-            $json.autoupdate.architecture.'64bit'.url
-        }
-        elseif ($json.autoupdate.architecture.arm64.url) {
-            $json.autoupdate.architecture.arm64.url
-        }
-        elseif ($json.autoupdate.architecture.'32bit'.url) {
-            $json.autoupdate.architecture.'32bit'.url
-        }
-        else {
-            $json.autoupdate.url
-        }
+        $arch = $json.autoupdate.architecture
+        $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
 
         if ($url -is [array]) {
             $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
@@ -1312,7 +1303,7 @@ function A-Get-VersionFromGithubAPI {
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
 
-    if ($PreRelease) {
+    if ($PreRelease -or $Newest) {
         $url = $url -replace '/latest$', ''
     }
 
@@ -1351,6 +1342,10 @@ function A-Get-VersionFromGithubAPI {
 
 function A-Get-PreVersionFromGithubAPI {
     A-Get-VersionFromGithubAPI -PreRelease
+}
+
+function A-Get-NewestVersionFromGithubAPI {
+    A-Get-VersionFromGithubAPI -Newest
 }
 
 function A-Get-VersionFromPage {
