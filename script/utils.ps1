@@ -2542,8 +2542,23 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
         $psd1 = Import-PowerShellDataFile -LiteralPath "$scoopdir\modules\$($manifest.psmodule.name)\$($manifest.psmodule.name).psd1" -ErrorAction SilentlyContinue
         $cmds += @($psd1.CmdletsToExport, $psd1.FunctionsToExport, $psd1.AliasesToExport) | Where-Object { $_ -ne '*' }
     }
+    $bin = $manifest.bin, $manifest.architecture.$architecture.bin | Select-Object -First 1
+    if ($bin -is [string]) {
+        $cmds += Split-Path $bin -Leaf
+    }
+    elseif ($bin -is [array]) {
+        foreach ($b in $bin) {
+            if ($b -is [string]) {
+                $cmds += Split-Path $b -Leaf
+            }
+            elseif ($b -is [array]) {
+                $cmds += $b[1]
+            }
+        }
+    }
+
     $out = [System.Collections.Generic.HashSet[string]]::new()
-    $cmds | ForEach-Object { $_ -and $out.Add($_) } | Out-Null
+    $cmds | ForEach-Object { $_ -and !$out.Contains($_) -and $out.Add($_) } | Out-Null
     if ($out.Count) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Commands'
