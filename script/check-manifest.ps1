@@ -143,16 +143,26 @@ foreach ($file in $files) {
         $permission = '[Require admin](https://abyss.abgox.com/faq/require-admin)'
     }
     else {
-        foreach ($l in $c.link) {
-            if ($l -like '$dir\*') {
-                $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
-            }
-            else {
-                $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
-            }
-            if (Test-Path "extra/$m/$path" -PathType Leaf) {
-                $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-                break
+        if ($c.pre_install -match '(?<!#.*)A-New-LinkFile') {
+            $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+        }
+        else {
+            foreach ($l in $c.link) {
+                if ($l -like '$dir\*') {
+                    $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
+                }
+                else {
+                    try {
+                        $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+                    }
+                    catch {
+                        continue
+                    }
+                }
+                if (Test-Path "$PSScriptRoot\..\extra\$m\$path" -PathType Leaf) {
+                    $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                    break
+                }
             }
         }
     }

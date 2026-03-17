@@ -133,6 +133,25 @@ foreach ($path in $PathList) {
         if ($RequireAdminOrDevMode) {
             $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
         }
+        else {
+            foreach ($l in $json.link) {
+                if ($l -like '$dir\*') {
+                    $p = $l.Replace('$dir\app\', '').Replace('$dir\', '')
+                }
+                else {
+                    try {
+                        $p = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+                    }
+                    catch {
+                        continue
+                    }
+                }
+                if (Test-Path "$PSScriptRoot\..\extra\$app\$p" -PathType Leaf) {
+                    $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                    break
+                }
+            }
+        }
 
         ## DenyUpdate
         $DenyUpdate = Test-ScriptPattern $json '(?<!#.*)A-Deny-Update'
