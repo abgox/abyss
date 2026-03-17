@@ -1071,7 +1071,7 @@ function A-Uninstall-Manually {
     foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
         if (Test-Path -LiteralPath $p) {
-            if ((Get-ChildItem -LiteralPath $p -File -Recurse).Count -eq 0) {
+            if (-not (Get-ChildItem -LiteralPath $p -File -Recurse | Select-Object -First 1)) {
                 try {
                     Remove-Item $p -Force -Recurse -ErrorAction Stop
                     continue
@@ -1251,10 +1251,16 @@ function A-Get-UninstallEntryByAppName {
 
 function A-Get-VersionFromGithubAPI {
     param (
-        [switch]$PreRelease
+        [switch]$Latest,
+        [switch]$PreRelease,
+        [switch]$Newest
     )
     if ($json.version -in 'pending', 'renamed', 'deprecated') {
         return $json.version
+    }
+    if (-not $json.checkver.regex) {
+        Write-Error "${app}: Requires 'checkver.regex'."
+        return
     }
 
     if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
@@ -1263,18 +1269,8 @@ function A-Get-VersionFromGithubAPI {
             return
         }
 
-        $url = if ($json.autoupdate.architecture.'64bit'.url) {
-            $json.autoupdate.architecture.'64bit'.url
-        }
-        elseif ($json.autoupdate.architecture.arm64.url) {
-            $json.autoupdate.architecture.arm64.url
-        }
-        elseif ($json.autoupdate.architecture.'32bit'.url) {
-            $json.autoupdate.architecture.'32bit'.url
-        }
-        else {
-            $json.autoupdate.url
-        }
+        $arch = $json.autoupdate.architecture
+        $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
 
         if ($url -is [array]) {
             $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
@@ -1310,18 +1306,27 @@ function A-Get-VersionFromGithubAPI {
         }
     }
 
-    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
+    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases'
 
-    if ($PreRelease) {
-        $url = $url -replace '/latest$', ''
+    if ($Latest) {
+        $url += '/latest'
     }
 
     try {
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-        if ($PreRelease) {
-            $releaseInfo = $releaseInfo | Where-Object { $_.prerelease }
+        if ($Latest) {
+            return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
         }
-        return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
+        foreach ($item in $releaseInfo) {
+            if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
+                continue
+            }
+            $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
+            if ($v -match $json.checkver.regex) {
+                return $v
+            }
+        }
+        return
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1341,16 +1346,33 @@ function A-Get-VersionFromGithubAPI {
             Start-Sleep -Seconds 10
 
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-            if ($PreRelease) {
-                $releaseInfo = $releaseInfo | Where-Object { $_.prerelease }
+            if ($Latest) {
+                return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
             }
-            return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
+            foreach ($item in $releaseInfo) {
+                if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
+                    continue
+                }
+                $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
+                if ($v -match $json.checkver.regex) {
+                    return $v
+                }
+            }
+            return
         }
     }
 }
 
+function A-Get-LatestVersionFromGithubAPI {
+    A-Get-VersionFromGithubAPI -Latest
+}
+
 function A-Get-PreVersionFromGithubAPI {
     A-Get-VersionFromGithubAPI -PreRelease
+}
+
+function A-Get-NewestVersionFromGithubAPI {
+    A-Get-VersionFromGithubAPI -Newest
 }
 
 function A-Get-VersionFromPage {
@@ -1856,15 +1878,15 @@ function A-Copy-Item {
         $targetItem = Get-Item -LiteralPath $Destination
 
         if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
-            $needCopy = $false
+            $needCopy = $targetItem.PSIsContainer -and -not (A-Test-DirectoryNotEmpty $Destination)
         }
         else {
-            A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
             $needCopy = $true
         }
     }
 
     if ($needCopy) {
+        A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
             Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
             Write-Host "Copying $Path => $Destination"
@@ -2446,10 +2468,9 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
         }
     }
 
-    # 支持在 shortcuts 中使用以 $env:xxx 环境变量开头的路径
-    # XXX: 如果使用 scoop reset xxx 重置某个应用，会导致问题
+    # XXX: https://github.com/ScoopInstaller/Scoop/issues/6605
     $filename = $target.FullName
-    if ($filename -match '\$env:[a-zA-Z_].*') {
+    if ($filename -match '^\$\{?(env:|home)') {
         $filename = $filename.Replace("$dir\", '')
         $target = [System.IO.FileInfo]::new($ExecutionContext.InvokeCommand.ExpandString($filename))
     }
@@ -2521,8 +2542,23 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
         $psd1 = Import-PowerShellDataFile -LiteralPath "$scoopdir\modules\$($manifest.psmodule.name)\$($manifest.psmodule.name).psd1" -ErrorAction SilentlyContinue
         $cmds += @($psd1.CmdletsToExport, $psd1.FunctionsToExport, $psd1.AliasesToExport) | Where-Object { $_ -ne '*' }
     }
+    $bin = $manifest.bin, $manifest.architecture.$architecture.bin | Select-Object -First 1
+    if ($bin -is [string]) {
+        $cmds += Split-Path $bin -Leaf
+    }
+    elseif ($bin -is [array]) {
+        foreach ($b in $bin) {
+            if ($b -is [string]) {
+                $cmds += Split-Path $b -Leaf
+            }
+            elseif ($b -is [array]) {
+                $cmds += $b[1]
+            }
+        }
+    }
+
     $out = [System.Collections.Generic.HashSet[string]]::new()
-    $cmds | ForEach-Object { $_ -and $out.Add($_) } | Out-Null
+    $cmds | ForEach-Object { $_ -and !$out.Contains($_) -and $out.Add($_) } | Out-Null
     if ($out.Count) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Commands'

@@ -53,9 +53,12 @@ while ($true) {
 }
 
 $results = @()
-$add_label = @()
-$rm_label = @()
-$has = $false
+$labels = @{
+    'missing-required-field'         = $false
+    'manifest-name-review-needed'    = $false
+    'data-persistence-review-needed' = $false
+}
+$has_manifest = $false
 
 Write-Host '::group::Manifests'
 
@@ -63,7 +66,7 @@ foreach ($file in $files) {
     if ($file.filename -notmatch '^bucket.*/(.+)\.json$') {
         continue
     }
-    $has = $true
+    $has_manifest = $true
     $m = $matches[1]
     Write-Host $m
 
@@ -75,6 +78,9 @@ foreach ($file in $files) {
     $c = Invoke-RestMethod -Uri $file.raw_url -Headers $headers
 
     $line = @()
+
+    # Status
+    $line += $file.status
 
     # Manifest
     $line += if ($c.homepage) { "[$m]($($c.homepage))" } else { $m }
@@ -91,18 +97,28 @@ foreach ($file in $files) {
         'pre_uninstall',
         'post_uninstall'
     )
-    $pass = $true
     foreach ($field in $fields) {
         if (-not $c.$field) {
-            $pass = $false
+            $labels.'missing-required-field' = $true
             break
         }
     }
-    if ($pass) {
-        $rm_label += 'missing-required-field'
+
+    # Type
+    $type = @()
+    if ($c.psmodule) { $type += 'psmodule' }
+    if ($c.font) { $type += 'font' }
+    $download_url = $c.architecture.'64bit'.url, $c.architecture.arm64.url, $c.url | Select-Object -First 1
+    if ($download_url) {
+        $download_url | ForEach-Object {
+            $extension = $_.Split('.')[-1]
+            $type += $extension.Replace('msi_', 'msi')
+        }
+        $line += $type -join ', '
     }
     else {
-        $add_label += 'missing-required-field'
+        $line += '⚠️'
+        $labels.'missing-required-field' = $true
     }
 
     # In Winget
@@ -112,36 +128,56 @@ foreach ($file in $files) {
     try {
         $res = Invoke-RestMethod -Uri $api -Headers $headers -ErrorAction stop
         $line += "[Yes]($url)"
-        $rm_label += 'manifest-name-review-needed'
     }
     catch {
         $line += "[No]($url) ⚠️"
-        $add_label += 'manifest-name-review-needed'
-    }
-
-    # Type
-    $type = if ($c.psmodule) { 'psmodule' } elseif ($c.font) { 'font' } else { $null }
-    $line += if ($type) { $type } else { '' }
-
-    # Persistence
-    $persistence = @()
-    if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') { $persistence += 'link' }
-    if ($c.persist) {
-        $persistence += 'persist ⚠️'
-        $add_label += 'data-persistence-review-needed'
-    }
-    else {
-        $rm_label += 'data-persistence-review-needed'
-    }
-    if ($persistence) {
-        $line += $persistence -join '<br />'
-    }
-    else {
-        $line += ''
+        $labels.'manifest-name-review-needed' = $true
     }
 
     # Location
-    $line += if ($c.location) { '`' + $c.location + '`' } else { 'In Scoop' }
+    $line += if ($c.location) { '`' + $c.location + '`' } else { 'Scoop' }
+
+    # Permission
+    $permission = ''
+    if ($c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)') {
+        $permission = '[Require admin](https://abyss.abgox.com/faq/require-admin)'
+    }
+    else {
+        if ($c.pre_install -match '(?<!#.*)A-New-LinkFile') {
+            $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+        }
+        else {
+            foreach ($l in $c.link) {
+                if ($l -like '$dir\*') {
+                    $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
+                }
+                else {
+                    try {
+                        $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+                    }
+                    catch {
+                        continue
+                    }
+                }
+                if (Test-Path "$PSScriptRoot\..\extra\$m\$path" -PathType Leaf) {
+                    $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                    break
+                }
+            }
+        }
+    }
+    $line += $permission
+
+    # Persistence
+    $persistence = @()
+    if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') {
+        $persistence += '[link](https://abyss.abgox.com/features/data-persistence/#link)'
+    }
+    if ($c.persist) {
+        $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist) ⚠️'
+        $labels.'data-persistence-review-needed' = $true
+    }
+    $line += if ($persistence) { $persistence -join ', ' } else { '' }
 
     # Extra
     $line += if (Test-Path "extra/$m") { "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)" } else { 'No' }
@@ -151,15 +187,42 @@ foreach ($file in $files) {
 
 Write-Host '::endgroup::'
 
-if ($add_label) { Add-GithubLabel ($add_label | Sort-Object -Unique) }
-if ($rm_label) { Remove-GithubLabel ($rm_label | Sort-Object -Unique) }
+$add_labels = @()
+$rm_labels = @()
 
-if ($has) {
+$labels.Keys | ForEach-Object { if ($labels.$_) { $add_labels += $_ } else { $rm_labels += $_ } }
+
+if ($add_labels) { Add-GithubLabel $add_labels }
+if ($rm_labels) { Remove-GithubLabel $rm_labels }
+
+$guide = @'
+
+<details>
+
+<summary>Guide</summary>
+
+<br />
+
+- **Status**: The status of the manifest in the PR.
+- **Manifest**: The manifest name.
+- **Type**: The manifest type.
+- **In Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
+- **Location**: The installation location of the app.
+- **Permission**: The permission required to install or uninstall the app.
+- **Persistence**: The persistence method used for app data.
+- **Extra**: Whether extra files or directories exist for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
+
+</details>
+
+'@
+
+if ($has_manifest) {
     $results = @(
         $marker,
+        $guide,
         '',
-        '| Manifest | In Winget | Type | Persistence | Location | Extra |',
-        '| :-: | :-: | :-: | :-: | :-: | :-: |'
+        '| Status | Manifest | Type | In Winget | Location | Permission | Persistence | Extra |',
+        '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 }
 else {
@@ -170,10 +233,11 @@ else {
     )
 }
 
-$results + @(
-    '',
-    '---',
-    # 'Comment `/check` to run the check again.',
-    '',
-    "[_View the workflow run for details._]($env:RUN_URL)"
-) | Out-File result.md
+# $results + @(
+#     '',
+#     '---',
+#     'Comment `/check` to run the check again.',
+#     "[_View the workflow run for details._]($env:RUN_URL)"
+# ) | Out-File result.md
+
+$results | Out-File result.md

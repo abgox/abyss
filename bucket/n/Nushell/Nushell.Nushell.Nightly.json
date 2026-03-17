@@ -1,32 +1,36 @@
 {
-    "version": "1.2.27",
-    "description": "专为终端打造的 AI 编程助手 | The AI coding agent built for the terminal",
-    "homepage": "https://opencode.ai/",
+    "version": "0.111.1-nightly.15",
+    "description": "一种用 Rust 编写的新型 shell | A new type of shell written in Rust",
+    "homepage": "https://www.nushell.sh/",
     "license": {
         "identifier": "MIT"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/sst/opencode/releases/download/v1.2.27/opencode-windows-x64.zip",
-            "hash": "9e2e43568e6f952e8c7cb77b934fbff53f454f0213688f24f3c3769b69703e84"
+            "url": "https://github.com/nushell/nightly/releases/download/0.111.1-nightly.15+b36b7ee/nu-0.111.1-nightly.15-x86_64-pc-windows-msvc.zip",
+            "hash": "cafb845e43269f9e54d90f18a12a2bc0a04a26f06bad949501fa42f48275becf"
         },
         "arm64": {
-            "url": "https://github.com/sst/opencode/releases/download/v1.2.27/opencode-windows-arm64.zip",
-            "hash": "2b3446cfa26a9ef5f527c24f4e67350632a475fdadef28c98d520496244bdbda"
+            "url": "https://github.com/nushell/nightly/releases/download/0.111.1-nightly.15+b36b7ee/nu-0.111.1-nightly.15-aarch64-pc-windows-msvc.zip",
+            "hash": "59229bf4f0aae64c9350861c6e2a160bc9d755eea30d3ac53a1f4067dc4cf124"
         }
     },
+    "conflicts": [
+        "Nushell.Nushell",
+        "Nushell.Nushell.Nightly"
+    ],
     "extract_to": "app",
-    "bin": "app\\opencode.exe",
+    "bin": "app\\nu.exe",
     "shortcuts": [
         [
-            "app\\opencode.exe",
-            "OpenCode"
+            "app\\nu.exe",
+            "Nushell",
+            "--execute \"cd ~\""
         ]
     ],
     "link": [
-        "$home\\.config\\opencode",
-        "$home\\.local\\share\\opencode",
-        "$home\\.local\\state\\opencode"
+        "$env:AppData\\nushell",
+        "$env:LocalAppData\\nushell"
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,8 +47,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Remove-TempData \"$home\\.cache\\opencode\""
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -54,17 +57,17 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "A-Get-VersionFromGithubAPI"
+            "A-Get-NewestVersionFromGithubAPI"
         ],
-        "regex": "(.+)"
+        "regex": "(.+)(?<hash>\\+.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/sst/opencode/releases/download/v$version/opencode-windows-x64.zip"
+                "url": "https://github.com/nushell/nightly/releases/download/$version$matchHash/nu-$version-x86_64-pc-windows-msvc.zip"
             },
             "arm64": {
-                "url": "https://github.com/sst/opencode/releases/download/v$version/opencode-windows-arm64.zip"
+                "url": "https://github.com/nushell/nightly/releases/download/$version$matchHash/nu-$version-aarch64-pc-windows-msvc.zip"
             }
         },
         "hash": {

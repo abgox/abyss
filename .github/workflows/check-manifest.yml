@@ -37,7 +37,7 @@ jobs:
       REPO: ${{ github.repository }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
-      MARKER: "<!-- comment-by-bot-for-check-manifest -->"
+      MARKER: "<!-- bot:check-manifest -->"
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Find or create comment
@@ -55,7 +55,7 @@ jobs:
               per_page: 100
             })
 
-            let comment = comments.data.find(c => c.body && c.body.includes(marker))
+            let comment = comments.data.find(c => c.body?.includes(marker) && c.user?.type === "Bot")
 
             const body = `${marker}
 
@@ -63,12 +63,14 @@ jobs:
             `
 
             if (comment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: comment.id,
-                body
-              })
+              if (context.eventName === "issue_comment"){
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: comment.id,
+                  body
+                })
+              }
               core.setOutput("comment_id", comment.id)
             } else {
               const res = await github.rest.issues.createComment({
