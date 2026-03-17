@@ -1251,11 +1251,16 @@ function A-Get-UninstallEntryByAppName {
 
 function A-Get-VersionFromGithubAPI {
     param (
+        [switch]$Latest,
         [switch]$PreRelease,
         [switch]$Newest
     )
     if ($json.version -in 'pending', 'renamed', 'deprecated') {
         return $json.version
+    }
+    if (-not $json.checkver.regex) {
+        Write-Error "${app}: Requires 'checkver.regex'."
+        return
     }
 
     if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
@@ -1301,18 +1306,27 @@ function A-Get-VersionFromGithubAPI {
         }
     }
 
-    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases/latest'
+    $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases'
 
-    if ($PreRelease -or $Newest) {
-        $url = $url -replace '/latest$', ''
+    if ($Latest) {
+        $url += '/latest'
     }
 
     try {
         $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-        if ($PreRelease) {
-            $releaseInfo = $releaseInfo | Where-Object { $_.prerelease }
+        if ($Latest) {
+            return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
         }
-        return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
+        foreach ($item in $releaseInfo) {
+            if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
+                continue
+            }
+            $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
+            if ($v -match $json.checkver.regex) {
+                return $v
+            }
+        }
+        return
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1332,12 +1346,25 @@ function A-Get-VersionFromGithubAPI {
             Start-Sleep -Seconds 10
 
             $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
-            if ($PreRelease) {
-                $releaseInfo = $releaseInfo | Where-Object { $_.prerelease }
+            if ($Latest) {
+                return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
             }
-            return @($releaseInfo)[0].tag_name -replace '[vV](?=\d+\.)', ''
+            foreach ($item in $releaseInfo) {
+                if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
+                    continue
+                }
+                $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
+                if ($v -match $json.checkver.regex) {
+                    return $v
+                }
+            }
+            return
         }
     }
+}
+
+function A-Get-LatestVersionFromGithubAPI {
+    A-Get-VersionFromGithubAPI -Latest
 }
 
 function A-Get-PreVersionFromGithubAPI {

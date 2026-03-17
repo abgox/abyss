@@ -3408,10 +3408,10 @@
                             ]
                         },
                         "conflicts": {
-                            "title": "Specified conflict apps",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If there is some apps conflict, the installation will be rejected.\n- It needs an array containing the manifest names.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "title": "Manifests with conflicts",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- It needs an array of mutually exclusive manifest names\n- If there is some manifests conflict, the installation will be rejected.\n- Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
-                            "minItems": 1,
+                            "minItems": 2,
                             "uniqueItems": true,
                             "items": {
                                 "type": "string",
@@ -3420,7 +3420,7 @@
                             }
                         },
                         "location": {
-                            "title": "Specify the installation location of the app (if it is external)",
+                            "title": "The installation location of the app (if it is external)",
                             "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If the app is installed to some standard software directories, instead of scoop directory, then it needs to be specified using this field.\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- Refer to: https://abyss.abgox.com/faq/external-installation-directory",
                             "allOf": [
                                 {
@@ -3702,12 +3702,39 @@
                             ],
                             "uniqueItems": true,
                             "minItems": 1,
-                            "allOf": [
+                            "oneOf": [
                                 {
-                                    "if": {
-                                        "type": "string"
-                                    },
-                                    "then": {
+                                    "type": "string",
+                                    "examples": [
+                                        "$home\\xxx",
+                                        "$home\\.config\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx",
+                                        "$env:ProgramData\\xxx"
+                                    ],
+                                    "minLength": 1,
+                                    "allOf": [
+                                        {
+                                            "pattern": "^\\$",
+                                            "errorMessage": "It only allows paths that start with a variable.\nFor ordinary relative paths, please use the persist field."
+                                        },
+                                        {
+                                            "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                            "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\nLike: $env:AppData\\\\Code"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "examples": [
+                                            "$home\\xxx",
+                                            "$home\\.config\\xxx",
+                                            "$env:AppData\\xxx",
+                                            "$env:LocalAppData\\xxx",
+                                            "$env:ProgramData\\xxx"
+                                        ],
                                         "minLength": 1,
                                         "allOf": [
                                             {
@@ -3719,36 +3746,8 @@
                                                 "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\nLike: $env:AppData\\\\Code"
                                             }
                                         ]
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "type": "array"
                                     },
-                                    "then": {
-                                        "items": {
-                                            "type": "string",
-                                            "examples": [
-                                                "$home\\xxx",
-                                                "$home\\.config\\xxx",
-                                                "$env:AppData\\xxx",
-                                                "$env:LocalAppData\\xxx",
-                                                "$env:ProgramData\\xxx"
-                                            ],
-                                            "minLength": 1,
-                                            "allOf": [
-                                                {
-                                                    "pattern": "^\\$",
-                                                    "errorMessage": "It only allows paths that start with a variable.\nFor ordinary relative paths, please use the persist field."
-                                                },
-                                                {
-                                                    "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
-                                                    "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\nLike: $env:AppData\\\\Code"
-                                                }
-                                            ]
-                                        },
-                                        "$ref": "#/definitions/use_string_if_single"
-                                    }
+                                    "$ref": "#/definitions/use_string_if_single"
                                 }
                             ]
                         },
@@ -3943,15 +3942,19 @@
                                                             {},
                                                             {
                                                                 "const": "A-Get-VersionFromGithubAPI",
-                                                                "markdownDescription": "Get the version from Github: `Latest Stable Release`\n- It will filter out the `v` or `V` prefix.\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "Get the latest release version from Github\n- It will include `1`, `3` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
+                                                            },
+                                                            {
+                                                                "const": "A-Get-LatestVersionFromGithubAPI",
+                                                                "markdownDescription": "Get the latest release version from Github\n- It will include `1` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
                                                                 "const": "A-Get-PreVersionFromGithubAPI",
-                                                                "markdownDescription": "Get the version from Github: `Latest Pre-Release`\n- It will filter out the `v` or `V` prefix.\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "Get the latest pre-release version from Github\n- It will include `2` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
                                                                 "const": "A-Get-NewestVersionFromGithubAPI",
-                                                                "markdownDescription": "Get the version from Github: `Latest Release`\n- It will filter out the `v` or `V` prefix.\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "Get the latest release version from Github\n- It will include `1`, `2`, `3` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
@@ -5134,7 +5137,7 @@
                                                 "properties": {
                                                     "script": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)(A-Get-(Pre|Newest)?VersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
+                                                            "pattern": "(?<!#.*)(A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
                                                         }
                                                     }
                                                 }
@@ -5595,7 +5598,7 @@
                                 "properties": {
                                     "script": {
                                         "contains": {
-                                            "pattern": "(?<!#.*)A-Get-(Pre|Newest)?VersionFromGithubAPI"
+                                            "pattern": "(?<!#.*)A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI"
                                         }
                                     }
                                 }
@@ -5625,7 +5628,7 @@
                                     "properties": {
                                         "url": {
                                             "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)",
-                                            "errorMessage": "Since 'A-Get-(Pre|Newest)?VersionFromGithubAPI' is used, it must be a Github URL or REST API, like:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
+                                            "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI' is used, it must be a Github URL or REST API, like:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
                                         }
                                     }
                                 }
@@ -5644,13 +5647,13 @@
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
-                                                                    "errorMessage": "Since 'A-Get-(Pre|Newest)?VersionFromGithubAPI' is used, it must be a Github URL. Otherwise, please define 'checkver.url'."
+                                                                    "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI' is used, it must be a Github URL. Otherwise, please define 'checkver.url'."
                                                                 },
                                                                 {
                                                                     "contains": {
                                                                         "pattern": "^https://github\\.com/[^/]+/[^/]+"
                                                                     },
-                                                                    "errorMessage": "Since 'A-Get-(Pre|Newest)?VersionFromGithubAPI' is used, it has at least one Github URL. Otherwise, please define 'checkver.url'."
+                                                                    "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI' is used, it has at least one Github URL. Otherwise, please define 'checkver.url'."
                                                                 }
                                                             ]
                                                         }
