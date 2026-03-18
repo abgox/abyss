@@ -563,14 +563,12 @@ function A-Stop-Process {
 
     $Paths = $Paths | Sort-Object -Unique
 
-    $processes = Get-Process
-
     foreach ($app_dir in $Paths) {
-        $matched = $processes.where({ $_.MainModule.FileName -like "$app_dir\*" })
+        $matched = (Get-Process).Where({ $_.Path -like "$app_dir\*" })
         foreach ($p in $matched) {
             try {
                 if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
-                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
                     Stop-Process -Id $p.Id -Force -ErrorAction Stop
                 }
             }
@@ -590,7 +588,7 @@ function A-Stop-Process {
         $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
         if ($p) {
             try {
-                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
                 Stop-Process -Id $p.Id -Force -ErrorAction Stop
             }
             catch {
@@ -610,9 +608,8 @@ function A-Stop-Process {
     # 再次检查是否存在未终止的相关进程
     # 这里参考了 Scoop 的官方检查逻辑，以确保一致性
     # https://github.com/ScoopInstaller/Scoop/blob/ebd8c036fa0d2e1dc93bca44c10eeee36c0d233e/lib/install.ps1#L534
-    $processes = Get-Process
     foreach ($app_dir in $Paths) {
-        $running_processes = $processes.Where({ $_.Path -like "$app_dir\*" }) | Out-String
+        $running_processes = (Get-Process).Where({ $_.Path -like "$app_dir\*" }) | Out-String
         if ($running_processes) {
             error "The following instances of `"$app`" are still running. Close them and try again."
             Write-Host $running_processes
@@ -1079,6 +1076,7 @@ function A-Uninstall-Manually {
                 catch {}
             }
             error 'It requires you to uninstall it manually.'
+            error $p
             error 'Refer to: https://abyss.abgox.com/faq/uninstall-manually'
             A-Exit
         }
