@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (838)|Tag|Description|
+|Manifest (839)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -104,6 +104,7 @@
 |[Appest.Dida](https://www.dida365.com/)|<a href="./bucket/a/Appest/Appest.Dida.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|滴答清单，一款轻便的待办事项 (Todo)、日程管理 (GTD) 应用|
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="./bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的 Notion 替代品，数据和定制由你掌控|
 |[appmakes.Typora](https://typora.io/)|<a href="./bucket/a/appmakes/appmakes.Typora.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个 Markdown 编辑器和阅读器，所见即所得|
+|[asciinema.agg](https://github.com/asciinema/agg)|<a href="./bucket/a/asciinema/asciinema.agg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款用于从终端会话记录生成动画 GIF 文件的命令行工具|
 |[astral-sh.ruff](https://docs.astral.sh/ruff/)|<a href="./bucket/a/astral-sh/astral-sh.ruff.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款由 Rust 编写的极快速的 Python 代码检查工具和代码格式化工具|
 |[astral-sh.ty](https://docs.astral.sh/ty/)|<a href="./bucket/a/astral-sh/astral-sh.ty.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款速度极快的 Python 类型检查器和语言服务器，用 Rust 编写|
 |[astral-sh.uv](https://docs.astral.sh/uv/)|<a href="./bucket/a/astral-sh/astral-sh.uv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个极其快速的 Python 包和项目管理器，用 Rust 编写|

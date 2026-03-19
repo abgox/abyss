@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (838)|Tag|Description|
+|Manifest (839)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -104,6 +104,7 @@
 |[Appest.Dida](https://www.dida365.com/)|<a href="./bucket/a/Appest/Appest.Dida.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Dida is a powerful to-do & task management app|
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="./bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open-source alternative to Notion. You are in charge of your data and customizations|
 |[appmakes.Typora](https://typora.io/)|<a href="./bucket/a/appmakes/appmakes.Typora.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Markdown editor and reader|
+|[asciinema.agg](https://github.com/asciinema/agg)|<a href="./bucket/a/asciinema/asciinema.agg.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A command-line tool for generating animated GIF files from terminal session recordings|
 |[astral-sh.ruff](https://docs.astral.sh/ruff/)|<a href="./bucket/a/astral-sh/astral-sh.ruff.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|An extremely fast Python linter and code formatter, written in Rust|
 |[astral-sh.ty](https://docs.astral.sh/ty/)|<a href="./bucket/a/astral-sh/astral-sh.ty.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An extremely fast Python type checker and language server, written in Rust|
 |[astral-sh.uv](https://docs.astral.sh/uv/)|<a href="./bucket/a/astral-sh/astral-sh.uv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An extremely fast Python package and project manager, written in Rust|
