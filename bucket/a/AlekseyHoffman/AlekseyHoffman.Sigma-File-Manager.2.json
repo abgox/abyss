@@ -1,5 +1,5 @@
 {
-    "version": "2.0.0-beta.2",
+    "version": "2.0.0-beta.1",
     "description": "一款免费、开源、快速发展的现代文件管理器 (explorer) 应用程序 | A free, open-source, quickly evolving, modern file manager (explorer) app",
     "homepage": "https://sigma-file-manager.vercel.app/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v2.0.0-beta.2/Sigma-File-Manager-2.0.0-beta.2-Windows-Setup.exe",
-            "hash": "78f29dbc7103494743230d486f9facd4c844b98ab1089feb980ae38d3b6c8c73"
+            "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v2.0.0-beta.1/Sigma.File.Manager_2.0.0-beta.1_x64-setup.exe",
+            "hash": "f1fa873e18aef1e014f869ea0629798c8d36c697baa5083fd605f8a35517476f"
         }
     },
     "shortcuts": [
@@ -17,15 +17,12 @@
             "Sigma file manager"
         ]
     ],
-    "link": [
-        "$env:AppData\\Sigma file manager",
-        "$home\\.sigma-file-manager"
-    ],
+    "link": "$env:AppData\\com.sigma-file-manager.app",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller 'app\\Uninstall Sigma file manager.exe'"
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -39,11 +36,28 @@
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
-        "A-Remove-TempData \"$env:LocalAppData\\sigma-file-manager-updater\""
+        "A-Remove-TempData \"$env:LocalAppData\\com.sigma-file-manager.app\""
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Complete-Uninstall"
-    ]
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v$version/Sigma.File.Manager_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
 }
