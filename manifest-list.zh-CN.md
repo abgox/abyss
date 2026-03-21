@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (839)|Tag|Description|
+|Manifest (841)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -78,6 +78,7 @@
 |[altair-graphql.altair](https://altairgraphql.dev/)|<a href="./bucket/a/altair-graphql/altair-graphql.altair.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于所有平台、功能丰富的 GraphQL 客户端|
 |[alvesvaren.resizer2](https://github.com/alvesvaren/resizer2)|<a href="./bucket/a/alvesvaren/alvesvaren.resizer2.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|使用 Win + 鼠标组合键，像在 KDE 系统中那样调整和移动 Windows 系统上的窗口|
 |[Amazon.Kiro](https://kiro.dev/)|<a href="./bucket/a/Amazon/Amazon.Kiro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款智能代理 IDE，助您高效工作，具备规范制定、方向引导和钩子功能等特性|
+|[ameshkov.dnslookup](https://github.com/ameshkov/dnslookup)|<a href="./bucket/a/ameshkov/ameshkov.dnslookup.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个简单的命令行工具，用于向指定服务器进行 DNS 查询|
 |[amir1376.ABDownloadManager](https://abdownloadmanager.com/)|<a href="./bucket/a/amir1376/amir1376.ABDownloadManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款能加快你下载速度的下载管理器|
 |[AmN.yasb](https://yasb.dev/)|<a href="./bucket/a/AmN/AmN.yasb.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款用 Python 编写的具有高度可配置性的 Windows 状态栏|
 |[amzxyz.rime_wanxiang](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (标准版)|
@@ -284,6 +285,7 @@
 |[cURL.cURL](https://curl.se/)|<a href="./bucket/c/cURL/cURL.cURL.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用于通过 URL 传输数据的命令行工具和库|
 |[dahlbyk.posh-git](https://github.com/dahlbyk/posh-git)|<a href="./bucket/d/dahlbyk/dahlbyk.posh-git.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个将 Git 和 PowerShell 集成的 PowerShell 模块，它通过提供可在 PowerShell 提示符中显示的 Git 状态摘要信息来实现集成|
 |[dail8859.NotepadNext](https://github.com/dail8859/NotepadNext)|<a href="./bucket/d/dail8859/dail8859.NotepadNext.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Notepad++ 的跨平台重新实现|
+|[dandavison.delta](https://dandavison.github.io/delta/)|<a href="./bucket/d/dandavison/dandavison.delta.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款用于 git、diff、grep 和 blame 输出的语法高亮分页器|
 |[Dangbei.XiaowangScreenshot](https://www.xiaowang.com/)|<a href="./bucket/d/Dangbei/Dangbei.XiaowangScreenshot.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|小旺 AI 截图，一款接入 DeepSeek 的 AI 截图神器，轻巧、好用、免费、无广告|
 |[Daum.PotPlayer](https://potplayer.daum.net/)|<a href="./bucket/d/Daum/Daum.PotPlayer.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|高度可定制的媒体播放器|
 |[Davlind.PSColor](https://github.com/Davlind/PSColor)|<a href="./bucket/d/Davlind/Davlind.PSColor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[NoUpdate](https://abyss.abgox.com/faq/no-update)<br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，为 files、services、select-string 等提供基本颜色高亮显示|
