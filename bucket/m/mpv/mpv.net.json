@@ -1,0 +1,63 @@
+{
+    "version": "7.1.2.0",
+    "description": "一款具有现代图形用户界面的 Windows 媒体播放器 | A media player for Windows with a modern GUI",
+    "homepage": "https://github.com/mpvnet-player/mpv.net",
+    "license": {
+        "identifier": "GPL-2.0-only"
+    },
+    "depends": "abyss/Microsoft.DotNet.DesktopRuntime.10",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mpvnet-player/mpv.net/releases/download/v7.1.2.0/mpv.net-v7.1.2.0-setup-x64.exe",
+            "hash": "d9ad12a9bc007576506eb632bef0d79389eb0c25d113ab4e22dcb75e386b81d7"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\mpvnet.exe",
+            "mpv.net"
+        ]
+    ],
+    "link": "$env:AppData\\mpv.net",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mpvnet-player/mpv.net/releases/download/v$version/mpv.net-v$version-setup-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
