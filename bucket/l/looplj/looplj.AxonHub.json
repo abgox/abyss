@@ -1,0 +1,61 @@
+{
+    "version": "0.9.6",
+    "description": "一个现代化的人工智能网关系统，提供统一的 OpenAI（聊天补全、响应）、Anthropic、Gemini 以及人工智能软件开发工具包兼容的应用程序接口 | A modern AI gateway system that provides a unified OpenAI (Chat Completion, Responses), Anthropic, Gemini and AI SDK compatible API",
+    "homepage": "https://axonhub.onrender.com/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/looplj/axonhub/releases/download/v0.9.6/axonhub_0.9.6_windows_amd64.zip",
+            "hash": "5416d747e8073208fe331ec910eadb50c38dbecb2f998023d6fb26bbcd4f7a59"
+        },
+        "arm64": {
+            "url": "https://github.com/looplj/axonhub/releases/download/v0.9.6/axonhub_0.9.6_windows_arm64.zip",
+            "hash": "e86da0526daeaf1415f9052b5acf9c5d2ebd7d5a6aff7439ffa1595606713664"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\axonhub.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/looplj/axonhub/releases/download/v$version/axonhub_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/looplj/axonhub/releases/download/v$version/axonhub_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
