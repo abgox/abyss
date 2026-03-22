@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (841)|Tag|Description|
+|Manifest (842)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -726,6 +726,7 @@
 |[SejinChun.Imagine](https://www.nyam.pe.kr/dev/imagine/)|<a href="./bucket/s/SejinChun/SejinChun.Imagine.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于 Windows 系统的免费、轻量级图像和动画查看器|
 |[sharkdp.bat](https://github.com/sharkdp/bat)|<a href="./bucket/s/sharkdp/sharkdp.bat.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个具有语法高亮和 Git 集成功能的 cat(1) 克隆版本|
 |[sharkdp.fd](https://github.com/sharkdp/fd)|<a href="./bucket/s/sharkdp/sharkdp.fd.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|find 的简单、快速和用户友好的替代方案|
+|[sharkdp.hyperfine](https://github.com/sharkdp/hyperfine)|<a href="./bucket/s/sharkdp/sharkdp.hyperfine.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款命令行基准测试工具|
 |[sigoden.Argc](https://github.com/sigoden/argc)|<a href="./bucket/s/sigoden/sigoden.Argc.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 Bash CLI 框架，也是 Bash Command Runner|
 |[sigoden.Argc-completions](https://github.com/sigoden/argc-completions)|<a href="./bucket/s/sigoden/sigoden.Argc-completions.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|适用于 1000 多个命令的 bash、zsh、fish、powershell、nushell 自动补全功能|
 |[sigoden.Dufs](https://github.com/sigoden/dufs)|<a href="./bucket/s/sigoden/sigoden.Dufs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个支持静态服务、上传、搜索、访问控制、webdav 等的文件服务器...|

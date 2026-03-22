@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (841)|Tag|Description|
+|Manifest (842)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -726,6 +726,7 @@
 |[SejinChun.Imagine](https://www.nyam.pe.kr/dev/imagine/)|<a href="./bucket/s/SejinChun/SejinChun.Imagine.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free, lightweight image and animation viewer for Windows|
 |[sharkdp.bat](https://github.com/sharkdp/bat)|<a href="./bucket/s/sharkdp/sharkdp.bat.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cat(1) clone with syntax highlighting and Git integration|
 |[sharkdp.fd](https://github.com/sharkdp/fd)|<a href="./bucket/s/sharkdp/sharkdp.fd.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A simple, fast and user-friendly alternative to 'find'|
+|[sharkdp.hyperfine](https://github.com/sharkdp/hyperfine)|<a href="./bucket/s/sharkdp/sharkdp.hyperfine.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A command-line benchmarking tool|
 |[sigoden.Argc](https://github.com/sigoden/argc)|<a href="./bucket/s/sigoden/sigoden.Argc.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A Bash CLI framework, also a Bash command runner|
 |[sigoden.Argc-completions](https://github.com/sigoden/argc-completions)|<a href="./bucket/s/sigoden/sigoden.Argc-completions.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|{bash,zsh,fish,powershell,nushell}-completions for 1000+ commands|
 |[sigoden.Dufs](https://github.com/sigoden/dufs)|<a href="./bucket/s/sigoden/sigoden.Dufs.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A file server that supports static serving, uploading, searching, accessing control, webdav...|
