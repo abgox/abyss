@@ -2542,12 +2542,12 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     }
     $bin = $manifest.bin, $manifest.architecture.$architecture.bin | Select-Object -First 1
     if ($bin -is [string]) {
-        $cmds += Split-Path $bin -Leaf
+        $cmds += (Split-Path $bin -Leaf) -replace '\.exe$', ''
     }
     elseif ($bin -is [array]) {
         foreach ($b in $bin) {
             if ($b -is [string]) {
-                $cmds += Split-Path $b -Leaf
+                $cmds += (Split-Path $b -Leaf) -replace '\.exe$', ''
             }
             elseif ($b -is [array]) {
                 $cmds += $b[1]
