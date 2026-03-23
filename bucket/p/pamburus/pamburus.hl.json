@@ -1,0 +1,63 @@
+{
+    "version": "0.36.0",
+    "description": "高性能的日志查看器和处理器，可将 JSON 和 logfmt 格式的日志转换为人类可读的输出 | High-performance log viewer and processor that transforms logs in JSON and logfmt formats into a human-readable output",
+    "homepage": "https://github.com/pamburus/hl",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pamburus/hl/releases/download/v0.36.0/hl-windows.zip",
+            "hash": "0b06d906331def677106fe7fb69ef5f19a82f23c4b4c764478acde7ea9db83dc"
+        },
+        "arm64": {
+            "url": "https://github.com/pamburus/hl/releases/download/v0.36.0/hl-windows-arm64.zip",
+            "hash": "6893662a7d6165885d0b49681225202bea1be3b32c832c890c2d8891709b7009"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\hl.exe",
+    "link": "$env:AppData\\hl",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pamburus/hl/releases/download/v$version/hl-windows.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/pamburus/hl/releases/download/v$version/hl-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
