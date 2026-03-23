@@ -25,6 +25,18 @@
     </a>
 </p>
 
+<p align="center">
+    <a href="https://github.com/abgox/abyss/actions/workflows/excavator.yml">
+        <img src="https://github.com/abgox/abyss/actions/workflows/excavator.yml/badge.svg" alt="excavator" />
+    </a>
+    <a href="./manifest-list.zh-CN.md">
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%2Fraw%2Fmain%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
+    </a>
+    <a href="https://github.com/abgox/abyss/commits">
+        <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
+    </a>
+</p>
+
 ---
 
 <p align="center">
@@ -114,11 +126,11 @@
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
 
-## 应用列表
+## 清单列表
 
 > [!Tip]
 >
-> 在 [官网](https://abyss.abgox.com) 上查看: https://abyss.abgox.com/app-list
+> 在 [官网](https://abyss.abgox.com) 上查看: https://abyss.abgox.com/manifest-list
 
-- [简体中文](./app-list.zh-CN.md)
-- [English](./app-list.md)
+- [简体中文](./manifest-list.zh-CN.md)
+- [English](./manifest-list.md)
