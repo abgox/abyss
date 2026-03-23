@@ -1,7 +1,7 @@
 #Requires -PSEdition Core
 
 param(
-    [array]$PathList = @('app-list.md', 'app-list.zh-CN.md')
+    [array]$PathList = @('manifest-list.md', 'manifest-list.zh-CN.md')
 )
 
 $manifests = Get-ChildItem "$PSScriptRoot\..\bucket" -Recurse -Filter *.json | Sort-Object { $_.BaseName }
@@ -62,7 +62,7 @@ function Test-ScriptPattern {
 function Get-StaticContent($path) {
     $content = Get-Content -Path $path -Encoding UTF8
 
-    $match = $content | Select-String -Pattern '\|App \(\d+\)\|Tag\|Description\|'
+    $match = $content | Select-String -Pattern '\|Manifest \(\d+\)\|Tag\|Description\|'
 
     if ($match) {
         $matchLineNumber = ([array]$match.LineNumber)[0]
@@ -71,9 +71,10 @@ function Get-StaticContent($path) {
     }
 }
 
+@{ count = $manifests.Length } | ConvertTo-Json | Out-File "$PSScriptRoot\..\manifest-list.json" -Encoding UTF8 -Force
 
 foreach ($path in $PathList) {
-    $content = @("|App ($($manifests.Length))|Tag|Description|", '|-|:-:|-|')
+    $content = @("|Manifest ($($manifests.Length))|Tag|Description|", '|-|:-:|-|')
 
     $isCN = $path -like '*cn*.md'
 
@@ -132,6 +133,25 @@ foreach ($path in $PathList) {
         if ($RequireAdminOrDevMode) {
             $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
         }
+        else {
+            foreach ($l in $json.link) {
+                if ($l -like '$dir\*') {
+                    $p = $l.Replace('$dir\app\', '').Replace('$dir\', '')
+                }
+                else {
+                    try {
+                        $p = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+                    }
+                    catch {
+                        continue
+                    }
+                }
+                if (Test-Path "$PSScriptRoot\..\extra\$app\$p" -PathType Leaf) {
+                    $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                    break
+                }
+            }
+        }
 
         ## DenyUpdate
         $DenyUpdate = Test-ScriptPattern $json '(?<!#.*)A-Deny-Update'
@@ -176,7 +196,6 @@ foreach ($path in $PathList) {
                 $description[$i] = @("($($matches[1]))", $matches[2].Trim()) -join '<br/>'
             }
         }
-
 
         if ($path -like '*cn*.md') {
             $info += $description[0]
