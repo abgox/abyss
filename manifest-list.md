@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (842)|Tag|Description|
+|Manifest (844)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -657,6 +657,8 @@
 |[Oven-sh.Bun](https://bun.sh/)|<a href="./bucket/o/Oven-sh/Oven-sh.Bun.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Incredibly fast JavaScript runtime, bundler, test runner, and package manager|
 |[oxc-project.oxfmt](https://oxc.rs/docs/guide/usage/formatter.html)|<a href="./bucket/o/oxc-project/oxc-project.oxfmt.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A Prettier-compatible code formatter|
 |[oxc-project.oxlint](https://oxc.rs/docs/guide/usage/linter.html)|<a href="./bucket/o/oxc-project/oxc-project.oxlint.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A high-performance linter for JavaScript and TypeScript|
+|[pamburus.hl](https://github.com/pamburus/hl)|<a href="./bucket/p/pamburus/pamburus.hl.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|High-performance log viewer and processor that transforms logs in JSON and logfmt formats into a human-readable output|
+|[pamburus.termframe](https://github.com/pamburus/termframe)|<a href="./bucket/p/pamburus/pamburus.termframe.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A non-interactive terminal emulator that executes a single command, renders its output in an internal virtual session, and exports a screenshot as an SVG file|
 |[PasteBar.PasteBar](https://www.pastebar.app/)|<a href="./bucket/p/PasteBar/PasteBar.PasteBar.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Limitless, Free Clipboard Manager|
 |[patricktcoakley.fgvm](https://fgvm.dev/)|<a href="./bucket/p/patricktcoakley/patricktcoakley.fgvm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A friendly Godot version manager|
 |[pavlobu.deskreen](https://deskreen.com/)|<a href="./bucket/p/pavlobu/pavlobu.deskreen.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Screen sharing and present screen: Turn any device into a secondary screen for your computer|

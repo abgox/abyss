@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (842)|Tag|Description|
+|Manifest (844)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -657,6 +657,8 @@
 |[Oven-sh.Bun](https://bun.sh/)|<a href="./bucket/o/Oven-sh/Oven-sh.Bun.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|速度极快的 JavaScript 运行时、打包工具、测试运行器和包管理器|
 |[oxc-project.oxfmt](https://oxc.rs/docs/guide/usage/formatter.html)|<a href="./bucket/o/oxc-project/oxc-project.oxfmt.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个与 Prettier 兼容的代码格式化工具|
 |[oxc-project.oxlint](https://oxc.rs/docs/guide/usage/linter.html)|<a href="./bucket/o/oxc-project/oxc-project.oxlint.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款高性能 JavaScript 和 TypeScript 代码检查工具|
+|[pamburus.hl](https://github.com/pamburus/hl)|<a href="./bucket/p/pamburus/pamburus.hl.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|高性能的日志查看器和处理器，可将 JSON 和 logfmt 格式的日志转换为人类可读的输出|
+|[pamburus.termframe](https://github.com/pamburus/termframe)|<a href="./bucket/p/pamburus/pamburus.termframe.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个非交互式终端模拟器，它能执行单个命令，在内部虚拟会话中渲染其输出，并将屏幕截图导出为 SVG 文件|
 |[PasteBar.PasteBar](https://www.pastebar.app/)|<a href="./bucket/p/PasteBar/PasteBar.PasteBar.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|无限制的、免费的剪贴板管理器|
 |[patricktcoakley.fgvm](https://fgvm.dev/)|<a href="./bucket/p/patricktcoakley/patricktcoakley.fgvm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个友好的 Godot 版本管理器|
 |[pavlobu.deskreen](https://deskreen.com/)|<a href="./bucket/p/pavlobu/pavlobu.deskreen.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|屏幕共享和屏幕演示：将任何设备转换为计算机的辅助屏幕|
