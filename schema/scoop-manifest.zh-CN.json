@@ -2063,7 +2063,7 @@
         },
         "checkver": {
             "title": "版本检查配置",
-            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置",
+            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置\n- 参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate",
             "type": [
                 "string",
                 "object"
@@ -3408,10 +3408,10 @@
                             ]
                         },
                         "conflicts": {
-                            "title": "指定冲突的应用",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用冲突，则拒绝安装\n- 它需要一个数组，包含需要检查的清单名称\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
+                            "title": "冲突的清单",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它需要一个数组，包含互斥的清单名称\n- 如果清单冲突，则拒绝安装\n- 参考: https://abyss.abgox.com/faq/deny-if-app-conflict",
                             "type": "array",
-                            "minItems": 1,
+                            "minItems": 2,
                             "uniqueItems": true,
                             "items": {
                                 "type": "string",
@@ -3420,7 +3420,7 @@
                             }
                         },
                         "location": {
-                            "title": "指定应用的安装位置 (如果在外部)",
+                            "title": "应用的安装位置 (如果在外部)",
                             "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
                             "allOf": [
                                 {
@@ -3702,12 +3702,39 @@
                             ],
                             "uniqueItems": true,
                             "minItems": 1,
-                            "allOf": [
+                            "oneOf": [
                                 {
-                                    "if": {
-                                        "type": "string"
-                                    },
-                                    "then": {
+                                    "type": "string",
+                                    "examples": [
+                                        "$home\\xxx",
+                                        "$home\\.config\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx",
+                                        "$env:ProgramData\\xxx"
+                                    ],
+                                    "minLength": 1,
+                                    "allOf": [
+                                        {
+                                            "pattern": "^\\$",
+                                            "errorMessage": "它只允许以变量开头的路径，普通的相对路径，请使用 persist 字段"
+                                        },
+                                        {
+                                            "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                            "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\n参考: $env:AppData\\\\Code"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "examples": [
+                                            "$home\\xxx",
+                                            "$home\\.config\\xxx",
+                                            "$env:AppData\\xxx",
+                                            "$env:LocalAppData\\xxx",
+                                            "$env:ProgramData\\xxx"
+                                        ],
                                         "minLength": 1,
                                         "allOf": [
                                             {
@@ -3719,36 +3746,8 @@
                                                 "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\n参考: $env:AppData\\\\Code"
                                             }
                                         ]
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "type": "array"
                                     },
-                                    "then": {
-                                        "items": {
-                                            "type": "string",
-                                            "examples": [
-                                                "$home\\xxx",
-                                                "$home\\.config\\xxx",
-                                                "$env:AppData\\xxx",
-                                                "$env:LocalAppData\\xxx",
-                                                "$env:ProgramData\\xxx"
-                                            ],
-                                            "minLength": 1,
-                                            "allOf": [
-                                                {
-                                                    "pattern": "^\\$",
-                                                    "errorMessage": "它只允许以变量开头的路径，普通的相对路径，请使用 persist 字段"
-                                                },
-                                                {
-                                                    "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
-                                                    "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData\n参考: $env:AppData\\\\Code"
-                                                }
-                                            ]
-                                        },
-                                        "$ref": "#/definitions/use_string_if_single"
-                                    }
+                                    "$ref": "#/definitions/use_string_if_single"
                                 }
                             ]
                         },
@@ -3943,11 +3942,19 @@
                                                             {},
                                                             {
                                                                 "const": "A-Get-VersionFromGithubAPI",
-                                                                "markdownDescription": "从 GitHub 仓库获取应用的最新发布版本 (Release)\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
+                                                            },
+                                                            {
+                                                                "const": "A-Get-LatestVersionFromGithubAPI",
+                                                                "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
                                                             },
                                                             {
                                                                 "const": "A-Get-PreVersionFromGithubAPI",
-                                                                "markdownDescription": "从 GitHub 仓库获取应用的最新预发布版本 (Pre-Release)\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`"
+                                                                "markdownDescription": "从 Github 获取最新的预发布版本\n- 它会包含版本类型中的 `2`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
+                                                            },
+                                                            {
+                                                                "const": "A-Get-NewestVersionFromGithubAPI",
+                                                                "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `2`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
                                                             },
                                                             {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
@@ -5130,7 +5137,7 @@
                                                 "properties": {
                                                     "script": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)(A-Get-VersionFromGithubAPI|A-Get-PreVersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
+                                                            "pattern": "(?<!#.*)(A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
                                                         }
                                                     }
                                                 }
@@ -5591,7 +5598,7 @@
                                 "properties": {
                                     "script": {
                                         "contains": {
-                                            "pattern": "(?<!#.*)A-Get-VersionFromGithubAPI"
+                                            "pattern": "(?<!#.*)A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI"
                                         }
                                     }
                                 }
@@ -5603,13 +5610,7 @@
                             "checkver": {
                                 "required": [
                                     "regex"
-                                ],
-                                "properties": {
-                                    "regex": {
-                                        "pattern": "\\(\\.\\+\\)",
-                                        "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须包含 (.+)"
-                                    }
-                                }
+                                ]
                             }
                         },
                         "if": {
@@ -5627,7 +5628,7 @@
                                     "properties": {
                                         "url": {
                                             "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)",
-                                            "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，url 只能是 Github 仓库或 REST API，例如:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
+                                            "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI，url 只能是 Github 仓库或 REST API，例如:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
                                         }
                                     }
                                 }
@@ -5646,13 +5647,13 @@
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
-                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它必须是一个 Github URL，否则请定义 checkver.url"
+                                                                    "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI，它必须是一个 Github URL，否则请定义 checkver.url"
                                                                 },
                                                                 {
                                                                     "contains": {
                                                                         "pattern": "^https://github\\.com/[^/]+/[^/]+"
                                                                     },
-                                                                    "errorMessage": "由于 script 使用了 A-Get-VersionFromGithubAPI，它至少有一个 Github URL，否则请定义 checkver.url"
+                                                                    "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI，它至少有一个 Github URL，否则请定义 checkver.url"
                                                                 }
                                                             ]
                                                         }
