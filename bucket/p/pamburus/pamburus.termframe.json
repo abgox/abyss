@@ -1,0 +1,63 @@
+{
+    "version": "0.8.3",
+    "description": "一个非交互式终端模拟器，它能执行单个命令，在内部虚拟会话中渲染其输出，并将屏幕截图导出为 SVG 文件 | A non-interactive terminal emulator that executes a single command, renders its output in an internal virtual session, and exports a screenshot as an SVG file",
+    "homepage": "https://github.com/pamburus/termframe",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pamburus/termframe/releases/download/v0.8.3/termframe-windows.zip",
+            "hash": "d091ade193e4fa5beea3696a2a2ecaeaa99b9507462d89faf1b63536056c9fff"
+        },
+        "arm64": {
+            "url": "https://github.com/pamburus/termframe/releases/download/v0.8.3/termframe-windows-arm64.zip",
+            "hash": "5859454c88567b17c6c5de9721e7e04e97f9f9deffe289b4e643d859ca847d52"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\termframe.exe",
+    "link": "$env:AppData\\termframe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pamburus/termframe/releases/download/v$version/termframe-windows.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/pamburus/termframe/releases/download/v$version/termframe-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
