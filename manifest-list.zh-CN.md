@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (844)|Tag|Description|
+|Manifest (845)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -243,6 +243,7 @@
 |[ByteDance.Trae](https://www.trae.ai/)|<a href="./bucket/b/ByteDance/ByteDance.Trae.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|字节跳动的一个 AI 驱动的代码 IDE|
 |[ByteDance.Trae.CN](https://www.trae.com.cn/)|<a href="./bucket/b/ByteDance/ByteDance.Trae.CN.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|字节跳动的一个 AI 驱动的代码 IDE|
 |[c0re100.qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition)|<a href="./bucket/c/c0re100/c0re100.qBittorrent-Enhanced-Edition.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|非官方的 qBittorrent BitTorrent 客户端（增强版）|
+|[CaddyServer.Caddy](https://caddyserver.com/)|<a href="./bucket/c/CaddyServer/CaddyServer.Caddy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|快速且可扩展的多平台 HTTP/1-2-3 Web 服务器，具备自动 HTTPS 功能|
 |[cangjie-lang.SDK](https://cangjie-lang.cn/)|<a href="./bucket/c/cangjie-lang/cangjie-lang.SDK.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|仓颉编程语言是一款面向全场景智能的新一代编程语言，主打原生智能化、天生全场景、高性能、强安全|
 |[Canva.Affinity](https://www.affinity.studio/)|<a href="./bucket/c/Canva/Canva.Affinity.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|屡获殊荣的集成平面设计、照片编辑和出版解决方案|
 |[CapSoftware.Cap](https://cap.so/)|<a href="./bucket/c/CapSoftware/CapSoftware.Cap.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|美观且便于分享的屏幕录制内容|

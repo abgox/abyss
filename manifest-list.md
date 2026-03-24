@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (844)|Tag|Description|
+|Manifest (845)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -243,6 +243,7 @@
 |[ByteDance.Trae](https://www.trae.ai/)|<a href="./bucket/b/ByteDance/ByteDance.Trae.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|An AI-powered code IDE by ByteDance|
 |[ByteDance.Trae.CN](https://www.trae.com.cn/)|<a href="./bucket/b/ByteDance/ByteDance.Trae.CN.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|An AI-powered code IDE by ByteDance|
 |[c0re100.qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition)|<a href="./bucket/c/c0re100/c0re100.qBittorrent-Enhanced-Edition.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Unofficial qBittorrent BitTorrent client (Enhanced Edition)|
+|[CaddyServer.Caddy](https://caddyserver.com/)|<a href="./bucket/c/CaddyServer/CaddyServer.Caddy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS|
 |[cangjie-lang.SDK](https://cangjie-lang.cn/)|<a href="./bucket/c/cangjie-lang/cangjie-lang.SDK.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|The Cangjie programming language is a new-generation programming language for all-scenario intelligence, focusing on native intelligence, all-scenario capabilities from the start, high performance, and strong security|
 |[Canva.Affinity](https://www.affinity.studio/)|<a href="./bucket/c/Canva/Canva.Affinity.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|Award-winning integrated graphic design, photo-editing and publishing solution|
 |[CapSoftware.Cap](https://cap.so/)|<a href="./bucket/c/CapSoftware/CapSoftware.Cap.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Beautiful, shareable screen recordings|
