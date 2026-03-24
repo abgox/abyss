@@ -8,20 +8,30 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/oxc-project/oxc/releases/download/apps_v1.57.0/oxfmt-x86_64-pc-windows-msvc.zip",
-            "hash": "8dd144e5152aaef5d5191d963683f060582df3d58a3c67e98a2bb9af515a1d59"
+            "hash": "8dd144e5152aaef5d5191d963683f060582df3d58a3c67e98a2bb9af515a1d59",
+            "bin": [
+                [
+                    "app\\oxfmt-x86_64-pc-windows-msvc.exe",
+                    "oxfmt"
+                ]
+            ]
         },
         "arm64": {
             "url": "https://github.com/oxc-project/oxc/releases/download/apps_v1.57.0/oxfmt-aarch64-pc-windows-msvc.zip",
-            "hash": "d88d825725a1aef06ac2c9af663d787464ceb56bdb514dd527c294a6885e4c23"
+            "hash": "d88d825725a1aef06ac2c9af663d787464ceb56bdb514dd527c294a6885e4c23",
+            "bin": [
+                [
+                    "app\\oxfmt-aarch64-pc-windows-msvc.exe",
+                    "oxfmt"
+                ]
+            ]
         }
     },
     "extract_to": "app",
-    "bin": "app\\oxfmt.exe",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install",
-        "Get-ChildItem -Path $dir -Filter oxfmt*.exe -Recurse | Select-Object -First 1 | Rename-Item -NewName oxfmt.exe"
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
