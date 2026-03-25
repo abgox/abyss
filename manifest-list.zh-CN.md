@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (845)|Tag|Description|
+|Manifest (846)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -835,6 +835,7 @@
 |[Waterfox.Waterfox](https://www.waterfox.com/)|<a href="./bucket/w/Waterfox/Waterfox.Waterfox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Waterfox 基于 Firefox 构建，是一款注重隐私的网页浏览器，其设计旨在为你提供上网时的速度、控制权和安心体验|
 |[wez.wezterm](https://wezterm.org/)|<a href="./bucket/w/wez/wez.wezterm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款功能强大的跨平台终端模拟器和复用器|
 |[WINBIGFOX.TimeScribe](https://github.com/WINBIGFOX/TimeScribe)|<a href="./bucket/w/WINBIGFOX/WINBIGFOX.TimeScribe.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款现代、灵活的时间跟踪应用程序，用于记录和管理个人工作时间|
+|[Windos.BurntToast](https://github.com/Windos/BurntToast)|<a href="./bucket/w/Windos/Windos.BurntToast.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，用于创建和显示 Windows 上的 Toast 通知|
 |[WiXToolset.WiXToolset](https://www.firegiant.com/wixtoolset/)|<a href="./bucket/w/WiXToolset/WiXToolset.WiXToolset.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|可用于打造您的 Windows 安装体验的最强大工具集|
 |[wood3n.biu](https://github.com/wood3n/biu)|<a href="./bucket/w/wood3n/wood3n.biu.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于 Bilibili API 的跨平台桌面音乐播放器|
 |[xemu-project.xemu](https://xemu.app/)|<a href="./bucket/x/xemu-project/xemu-project.xemu.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费的开源应用程序，可模拟初代微软 Xbox 游戏机，让人们能够在 Windows、macOS 和 Linux 系统上玩初代 Xbox 游戏|
