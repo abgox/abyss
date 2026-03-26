@@ -552,7 +552,8 @@ function A-Stop-Process {
     $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
     $Paths += $ExtraPaths
     if ($manifest.env_add_path_expand) {
-        $Paths += $manifest.env_add_path_expand | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
+        $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
+        $Paths += $manifest.env_add_path_expand | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) } | Where-Object { $_ -notin $general_path }
     }
     if (Test-Path -LiteralPath $abgox_abyss.path.Info) {
         $info = Get-Content $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
