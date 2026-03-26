@@ -1,0 +1,61 @@
+{
+    "version": "0.8.1",
+    "description": "用 Rust 编写的 R 格式化工具和语言服务器 | R formatter and language server, written in Rust",
+    "homepage": "https://posit-dev.github.io/air/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/posit-dev/air/releases/download/0.8.1/air-x86_64-pc-windows-msvc.zip",
+            "hash": "f402beb440e86183161b03e6081f9ddd255f47132e8578f3d1b64d52166ea93e"
+        },
+        "arm64": {
+            "url": "https://github.com/posit-dev/air/releases/download/0.8.1/air-aarch64-pc-windows-msvc.zip",
+            "hash": "bd297dc7aca791b562d63a46e5554c5863d7b2ee28708d403c9e03589e573881"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\air.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/posit-dev/air/releases/download/$version/air-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/posit-dev/air/releases/download/$version/air-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
