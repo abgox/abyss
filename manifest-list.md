@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (846)|Tag|Description|
+|Manifest (847)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -673,6 +673,7 @@
 |[PixPin.PixPin.Beta](https://pixpin.cn/)|<a href="./bucket/p/PixPin/PixPin.PixPin.Beta.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A powerful and simple screenshot/stick/screen recording tool|
 |[Planshit.Tai](https://github.com/Planshit/Tai)|<a href="./bucket/p/Planshit/Planshit.Tai.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Count the duration of software usage and website browsing on Windows|
 |[pnpm.pnpm](https://pnpm.io/)|<a href="./bucket/p/pnpm/pnpm.pnpm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A fast and disk space efficient Node package manager|
+|[Posit.Air](https://posit-dev.github.io/air/)|<a href="./bucket/p/Posit/Posit.Air.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|R formatter and language server, written in Rust|
 |[Postman.Postman](https://www.postman.com/)|<a href="./bucket/p/Postman/Postman.Postman.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The Collaboration Platform for API Development|
 |[PowerShell.CompletionPredictor](https://github.com/PowerShell/CompletionPredictor)|<a href="./bucket/p/PowerShell/PowerShell.CompletionPredictor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A PowerShell command line auto-completion plugin for the PSReadLine Predictive Intellisense feature|
 |[PowerShell.PowerShellGet](https://github.com/PowerShell/PSResourceGet)|<a href="./bucket/p/PowerShell/PowerShell.PowerShellGet.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|PowerShell module with commands for discovering, installing, updating and publishing the PowerShell artifacts like Modules, DSC Resources, Role Capabilities and Scripts|
