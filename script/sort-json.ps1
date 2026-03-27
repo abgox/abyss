@@ -83,6 +83,7 @@ $order = [ordered]@{
     extract_dir         = ''
     extract_to          = ''
     env_set             = ''
+    env_set_shared      = '' # abyss
     env_add_path        = ''
     env_add_path_expand = '' # abyss
     innosetup           = ''

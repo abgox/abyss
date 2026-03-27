@@ -134,6 +134,9 @@ function A-Start-Install {
             [System.Environment]::SetEnvironmentVariable($_.Name, $ExecutionContext.InvokeCommand.ExpandString($_.Value), [System.EnvironmentVariableTarget]::Process)
         }
     }
+    if ($manifest.env_set_shared) {
+        A-Set-EnvVarShared
+    }
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
@@ -237,6 +240,9 @@ function A-Start-Uninstall {
     }
     if ($version -eq 'renamed') {
         A-Move-Persistence
+    }
+    if ($manifest.env_set_shared) {
+        A-Set-EnvVarShared -Remove
     }
     A-Remove-Font
     A-Remove-Path
@@ -2415,6 +2421,39 @@ function A-Get-GithubToken {
 $abgox_abyss.ScoopVersion = '0.5.3'
 
 #region 扩展 Scoop 部分功能
+
+# 它不属于 scoop core，但可能需要跟进 Scoop 最新变动
+function A-Set-EnvVarShared {
+    param(
+        [switch]$Remove
+    )
+
+    $env_set_shared = $manifest.env_set_shared
+
+    if ($Remove) {
+        $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            $owner = $env_set_shared.$name.owner
+            $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object { Test-Path "$scoopdir\apps\$_\current\manifest.json" }
+            if ($has_other_owner) {
+                return
+            }
+            Write-Output "Removing $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m"
+            Set-EnvVar -Name $name -Value $null -Global:$global
+            if (Test-Path env:\$name) { Remove-Item env:\$name }
+        }
+    }
+    else {
+        $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            $val = $ExecutionContext.InvokeCommand.ExpandString($env_set_shared.$name.value)
+            # $owner = $env_set_shared.$name.owner
+            Write-Output "Setting $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m = $([char]0x1b)[35m$val$([char]0x1b)[0m"
+            Set-EnvVar -Name $name -Value $val -Global:$global
+            Set-Content env:\$name $val
+        }
+    }
+}
 
 function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global) {
     #region 新增: 支持 abyss 的特性

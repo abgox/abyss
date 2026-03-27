@@ -1751,27 +1751,25 @@
         "env_set": {
             "title": "Set environment variables",
             "markdownDescription": "- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)\n- Available variables:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ...",
-            "type": "object",
-            "examples": [
-                {}
-            ],
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "$ref": "#/definitions/str",
-                        "examples": [
-                            "$dir\\xxx",
-                            "$persist_dir\\xxx"
-                        ]
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "Property names cannot be empty strings"
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/str",
+                            "examples": [
+                                "$dir\\xxx",
+                                "$persist_dir\\xxx"
+                            ]
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "Property names cannot be empty strings"
+                }
+            ]
         },
         "psmodule": {
             "title": "PowerShell module",
@@ -2469,21 +2467,22 @@
         "suggest": {
             "title": "Suggested Dependencies",
             "markdownDescription": "- Suggested dependencies of the app\n- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions",
-            "type": "object",
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "markdownDescription": "- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions\n- If it is an array, it means that if any of the dependencies in the array are installed, the feature will be considered as **implemented**",
-                        "$ref": "#/definitions/str_or_arr"
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "Property names are not allowed to be empty strings."
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "markdownDescription": "- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions\n- If it is an array, it means that if any of the dependencies in the array are installed, the feature will be considered as **implemented**",
+                            "$ref": "#/definitions/str_or_arr"
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "Property names cannot be empty strings"
+                }
+            ]
         },
         "notes": {
             "$ref": "#/definitions/notes"
@@ -3185,7 +3184,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3444,6 +3443,46 @@
                         "extract_to": {
                             "examples": [
                                 "app"
+                            ]
+                        },
+                        "env_set_shared": {
+                            "title": "Set environment variables (shared)",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)\n### Differences from env_set\n- Unlike `env_set`, it requires specifying the owner of these environment variables\n- When uninstalling an app, the environment variables will not be removed if they still have an owner",
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "patternProperties": {
+                                        "^.+$": {
+                                            "type": "object",
+                                            "required": [
+                                                "value",
+                                                "owner"
+                                            ],
+                                            "properties": {
+                                                "value": {
+                                                    "$ref": "#/definitions/str",
+                                                    "title": "The value of the environment variable",
+                                                    "markdownDescription": "- It is the same as the value set in `env_set`\n- Available variables:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ..."
+                                                },
+                                                "owner": {
+                                                    "title": "The owner of the environment variable",
+                                                    "markdownDescription": "- This is the difference from `env_set`, it requires specifying the owner of these environment variables\n- When uninstalling an app, the environment variables will not be removed if they still have an owner",
+                                                    "type": "array",
+                                                    "minItems": 2,
+                                                    "uniqueItems": true,
+                                                    "items": {
+                                                        "$ref": "#/definitions/str"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "minProperties": 1,
+                                    "additionalProperties": false,
+                                    "errorMessage": "Property names cannot be empty strings"
+                                }
                             ]
                         },
                         "env_add_path": {
