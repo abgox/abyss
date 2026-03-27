@@ -2,10 +2,6 @@
 
 Set-StrictMode -Off
 
-if ($PSEdition -eq 'Desktop') {
-    Add-Type -AssemblyName Microsoft.VisualBasic
-}
-
 # 存储 abyss 相关的变量
 $abgox_abyss = @{
     path = @{
@@ -19,6 +15,20 @@ $abgox_abyss = @{
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
         PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
         Info               = "$dir\abgox-abyss-Info.json"
+    }
+}
+
+if ($PSEdition -eq 'Desktop') {
+    Add-Type -AssemblyName Microsoft.VisualBasic
+
+    $abgox_abyss.requestTimeout = @{
+        TimeoutSec = 60
+    }
+}
+else {
+    $abgox_abyss.requestTimeout = @{
+        ConnectionTimeoutSeconds = 30
+        OperationTimeoutSeconds  = 60
     }
 }
 
@@ -1312,14 +1322,22 @@ function A-Get-VersionFromGithubAPI {
     }
 
     try {
-        $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+        $requestTimeout = $abgox_abyss.requestTimeout
+        $res = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
         if ($Latest) {
-            return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
+            return $res.tag_name -replace '[vV](?=\d+\.)', ''
         }
+        elseif ($Newest) {
+            $releaseInfo = $res
+        }
+        elseif ($PreRelease) {
+            $releaseInfo = $res | Where-Object { $_.prerelease }
+        }
+        else {
+            $releaseInfo = $res | Where-Object { -not $_.prerelease }
+        }
+
         foreach ($item in $releaseInfo) {
-            if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
-                continue
-            }
             $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
             if ($v -match $json.checkver.regex) {
                 return $v
@@ -1344,14 +1362,22 @@ function A-Get-VersionFromGithubAPI {
 
             Start-Sleep -Seconds 10
 
-            $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+            $requestTimeout = $abgox_abyss.requestTimeout
+            $res = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
             if ($Latest) {
-                return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
+                return $res.tag_name -replace '[vV](?=\d+\.)', ''
             }
+            elseif ($Newest) {
+                $releaseInfo = $res
+            }
+            elseif ($PreRelease) {
+                $releaseInfo = $res | Where-Object { $_.prerelease }
+            }
+            else {
+                $releaseInfo = $res | Where-Object { -not $_.prerelease }
+            }
+
             foreach ($item in $releaseInfo) {
-                if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
-                    continue
-                }
                 $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
                 if ($v -match $json.checkver.regex) {
                     return $v
@@ -1497,7 +1523,8 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     try {
-        $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+        $requestTimeout = $abgox_abyss.requestTimeout
+        $versions = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1515,7 +1542,8 @@ function A-Get-InstallerInfoFromWinget {
 
             Start-Sleep -Seconds 10
 
-            $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+            $requestTimeout = $abgox_abyss.requestTimeout
+            $versions = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
         }
         else {
             return
@@ -1544,7 +1572,8 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
+        $requestTimeout = $abgox_abyss.requestTimeout
+        $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1562,7 +1591,8 @@ function A-Get-InstallerInfoFromWinget {
 
             Start-Sleep -Seconds 10
 
-            $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
+            $requestTimeout = $abgox_abyss.requestTimeout
+            $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
         }
         else {
             return
