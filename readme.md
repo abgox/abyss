@@ -29,7 +29,7 @@
     <a href="https://www.microsoft.com/windows">
         <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
     </a>
-    <a href="#清单列表">
+    <a href="#manifest-list">
         <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%2Fraw%2Fmain%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
