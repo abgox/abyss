@@ -11,7 +11,7 @@ $abgox_abyss = @{
         InstallInno        = "$dir\abgox-abyss-A-Install-Inno.json"
         InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
         MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
-        EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
+        EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
         PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
         Info               = "$dir\abgox-abyss-Info.json"
@@ -184,12 +184,13 @@ function A-Complete-Install {
         }
     }
     if ($manifest.location) {
-        if (-not (Test-Path $ExecutionContext.InvokeCommand.ExpandString($manifest.location))) {
+        $location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        if (-not (Test-Path $location)) {
             A-Show-IssueCreationPrompt
             A-Exit
         }
 
-        $info.location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        $info.location = $location
 
         $note = if ($PSUICulture -like 'zh*') {
             @(
@@ -243,9 +244,13 @@ function A-Start-Uninstall {
 }
 
 function A-Complete-Uninstall {
-    if ($manifest.link) {
-        foreach ($item in $manifest.link) {
-            A-Remove-ToRecycleBin $ExecutionContext.InvokeCommand.ExpandString($item)
+    # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
+    $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
+        if (Test-Path -LiteralPath $_) {
+            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
+            foreach ($p in $LinkPaths) {
+                A-Remove-ToRecycleBin $p
+            }
         }
     }
 }
@@ -459,7 +464,7 @@ function A-Remove-Link {
     #     return
     # }
 
-    @($abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory) | ForEach-Object {
+    $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
             $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
 
@@ -561,9 +566,11 @@ function A-Stop-Process {
 
     $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
     $Paths += $ExtraPaths
-    if ($manifest.env_add_path_expand) {
+
+    # 由于字段可能包含可展开的变量，应该使用安装时展开的值，以避免安装和卸载期间环境变量变化导致的不一致性
+    if (Test-Path -LiteralPath $abgox_abyss.path.EnvPath) {
         $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
-        $Paths += $manifest.env_add_path_expand | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) } | Where-Object { $_ -notin $general_path }
+        $Paths += Get-Content $abgox_abyss.path.EnvPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
     }
     if (Test-Path -LiteralPath $abgox_abyss.path.Info) {
         $info = Get-Content $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
@@ -2290,11 +2297,11 @@ function A-Add-Path {
 
     Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
 
-    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
+    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvPath -Force -Encoding utf8
 }
 
 function A-Remove-Path {
-    $OutFile = $abgox_abyss.path.EnvVar
+    $OutFile = $abgox_abyss.path.EnvPath
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
     }
