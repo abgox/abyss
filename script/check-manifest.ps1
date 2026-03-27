@@ -61,11 +61,21 @@ $labels = @{
 $has_manifest = $false
 
 $extra_dir = "$PSScriptRoot\..\extra"
+$pr_extra_files = @()
+$pr_extra_files_removed = @()
 
 Write-Host '::group::Manifests'
 
 foreach ($file in $files) {
     if ($file.filename -notmatch '^bucket.*/(.+)\.json$') {
+        if ($files.filename -like 'extra/*') {
+            if ($files.status -eq 'removed') {
+                $pr_extra_files_removed += $files.filename
+            }
+            else {
+                $pr_extra_files += $files.filename
+            }
+        }
         continue
     }
     $has_manifest = $true
@@ -167,8 +177,17 @@ foreach ($file in $files) {
                     }
                 }
                 if (Test-Path "$extra_dir\$m\$path" -PathType Leaf) {
+                    if ("extra/$m/$path" -in $pr_extra_files_removed) {
+                        continue
+                    }
                     $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
                     break
+                }
+                else {
+                    if ("extra/$m/$path" -in $pr_extra_files) {
+                        $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                        break
+                    }
                 }
             }
         }
@@ -192,7 +211,15 @@ foreach ($file in $files) {
     $line += if ($persistence) { $persistence -join ', ' } else { '' }
 
     # Extra
-    $line += if (Test-Path "$extra_dir\$m") { "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)" } else { 'No' }
+    $line += if (Test-Path "$extra_dir\$m") {
+        "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)"
+    }
+    elseif ($pr_extra_files -like "extra/$m/*") {
+        'Yes'
+    }
+    else {
+        'No'
+    }
 
     $results += '|' + ($line -join '|') + '|'
 }
