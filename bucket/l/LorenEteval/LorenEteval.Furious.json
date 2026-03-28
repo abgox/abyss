@@ -1,0 +1,61 @@
+{
+    "version": "0.6.1",
+    "description": "一款基于 PySide6 的 GUI 代理客户端，支持 Xray-core 和 hysteria | A GUI proxy client based on PySide6. Support Xray-core & hysteria",
+    "homepage": "https://github.com/LorenEteval/Furious",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LorenEteval/Furious/releases/download/0.6.1/Furious-0.6.1-windows-amd64.zip",
+            "hash": "ed09e63d85b15abef11276ccbaf49c41047e360b5f5864674198fd7e70b4ab8c"
+        }
+    },
+    "extract_dir": "Furious-0.6.1-windows",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Furious.exe",
+            "Furious"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LorenEteval/Furious/releases/download/$version/Furious-$version-windows-amd64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "extract_dir": "Furious-$version-windows"
+    }
+}
