@@ -60,10 +60,22 @@ $labels = @{
 }
 $has_manifest = $false
 
+$extra_dir = "$PSScriptRoot\..\extra"
+$pr_extra_files = @()
+$pr_extra_files_removed = @()
+
 Write-Host '::group::Manifests'
 
 foreach ($file in $files) {
     if ($file.filename -notmatch '^bucket.*/(.+)\.json$') {
+        if ($files.filename -like 'extra/*') {
+            if ($files.status -eq 'removed') {
+                $pr_extra_files_removed += $files.filename
+            }
+            else {
+                $pr_extra_files += $files.filename
+            }
+        }
         continue
     }
     $has_manifest = $true
@@ -130,8 +142,13 @@ foreach ($file in $files) {
         $line += "[Yes]($url)"
     }
     catch {
-        $line += "[No]($url) ⚠️"
-        $labels.'manifest-name-review-needed' = $true
+        if ($file.status -eq 'added') {
+            $line += "[No]($url) ⚠️"
+            $labels.'manifest-name-review-needed' = $true
+        }
+        else {
+            $line += "[No]($url)"
+        }
     }
 
     # Location
@@ -159,9 +176,18 @@ foreach ($file in $files) {
                         continue
                     }
                 }
-                if (Test-Path "$PSScriptRoot\..\extra\$m\$path" -PathType Leaf) {
+                if (Test-Path "$extra_dir\$m\$path" -PathType Leaf) {
+                    if ("extra/$m/$path" -in $pr_extra_files_removed) {
+                        continue
+                    }
                     $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
                     break
+                }
+                else {
+                    if ("extra/$m/$path" -in $pr_extra_files) {
+                        $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                        break
+                    }
                 }
             }
         }
@@ -174,13 +200,26 @@ foreach ($file in $files) {
         $persistence += '[link](https://abyss.abgox.com/features/data-persistence/#link)'
     }
     if ($c.persist) {
-        $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist) ⚠️'
-        $labels.'data-persistence-review-needed' = $true
+        if ($file.status -eq 'added') {
+            $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist) ⚠️'
+            $labels.'data-persistence-review-needed' = $true
+        }
+        else {
+            $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist)'
+        }
     }
     $line += if ($persistence) { $persistence -join ', ' } else { '' }
 
     # Extra
-    $line += if (Test-Path "extra/$m") { "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)" } else { 'No' }
+    $line += if (Test-Path "$extra_dir\$m") {
+        "[Yes](https://github.com/abgox/abyss/tree/main/extra/$m)"
+    }
+    elseif ($pr_extra_files -like "extra/$m/*") {
+        'Yes'
+    }
+    else {
+        'No'
+    }
 
     $results += '|' + ($line -join '|') + '|'
 }

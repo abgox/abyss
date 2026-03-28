@@ -1751,27 +1751,26 @@
         "env_set": {
             "title": "设置环境变量",
             "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ...",
-            "type": "object",
-            "examples": [
-                {}
-            ],
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "$ref": "#/definitions/str",
-                        "examples": [
-                            "$dir\\xxx",
-                            "$persist_dir\\xxx"
-                        ]
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "不允许属性名为空字符串"
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/str",
+                            "title": "环境变量的键 (Key)",
+                            "examples": [
+                                "$dir\\xxx",
+                                "$persist_dir\\xxx"
+                            ]
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "不允许属性名为空字符串"
+                }
+            ]
         },
         "psmodule": {
             "title": "PowerShell 模块",
@@ -2106,7 +2105,9 @@
                             "markdownDescription": "查找版本的 RegEx (正则表达式)",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "(.+)"
+                                "(.+)",
+                                "^([\\d.]+)$",
+                                "^(?<version>[\\d.]+)$"
                             ]
                         },
                         "jsonpath": {
@@ -2467,21 +2468,22 @@
         "suggest": {
             "title": "建议的依赖项",
             "markdownDescription": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为 **已实现**，用户不会看到任何建议",
-            "type": "object",
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "markdownDescription": "- 当指定的建议已经安装，则不会显示该建议。\n- 如果是一个数组，它表示只要数组中任意一个建议被安装，则不会显示该建议",
-                        "$ref": "#/definitions/str_or_arr"
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "不允许属性名为空字符串"
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "markdownDescription": "- 当指定的建议已经安装，则不会显示该建议。\n- 如果是一个数组，它表示只要数组中任意一个建议被安装，则不会显示该建议",
+                            "$ref": "#/definitions/str_or_arr"
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "不允许属性名为空字符串"
+                }
+            ]
         },
         "notes": {
             "$ref": "#/definitions/notes"
@@ -3183,7 +3185,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3442,6 +3444,47 @@
                         "extract_to": {
                             "examples": [
                                 "app"
+                            ]
+                        },
+                        "env_set_shared": {
+                            "title": "设置环境变量 (共享)",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n### 与 env_set 的区别\n- 不同于 `env_set`，它需要指定这些环境变量的持有者\n- 当卸载应用时，如果环境变量还存在持有者，则不移除",
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "patternProperties": {
+                                        "^.+$": {
+                                            "type": "object",
+                                            "title": "环境变量的键 (Key)",
+                                            "required": [
+                                                "value",
+                                                "owner"
+                                            ],
+                                            "properties": {
+                                                "value": {
+                                                    "$ref": "#/definitions/str",
+                                                    "title": "环境变量的值 (Value)",
+                                                    "markdownDescription": "- 它等同于 `env_set` 设置的值\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ..."
+                                                },
+                                                "owner": {
+                                                    "title": "环境变量的持有者 (Owner)",
+                                                    "markdownDescription": "- 这是和 `env_set` 最大的区别，它需要指定这些环境变量的持有者\n- 当卸载应用时，如果环境变量还存在持有者，则不移除",
+                                                    "type": "array",
+                                                    "minItems": 2,
+                                                    "uniqueItems": true,
+                                                    "items": {
+                                                        "$ref": "#/definitions/str"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "minProperties": 1,
+                                    "additionalProperties": false,
+                                    "errorMessage": "不允许属性名为空字符串"
+                                }
                             ]
                         },
                         "env_add_path": {

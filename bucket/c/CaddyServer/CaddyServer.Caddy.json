@@ -1,0 +1,61 @@
+{
+    "version": "2.11.2",
+    "description": "快速且可扩展的多平台 HTTP/1-2-3 Web 服务器，具备自动 HTTPS 功能 | Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS",
+    "homepage": "https://caddyserver.com/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/caddyserver/caddy/releases/download/v2.11.2/caddy_2.11.2_windows_amd64.zip",
+            "hash": "2902d2a278597e4983d70ed6d694fcab36b29b0b7d109771c59d7da7147afad8"
+        },
+        "arm64": {
+            "url": "https://github.com/caddyserver/caddy/releases/download/v2.11.2/caddy_2.11.2_windows_arm64.zip",
+            "hash": "891073849f5fbafd7a573fed0c5a09b68ad5590035e4fc5977e0e758fd7ea776"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\caddy.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/caddyserver/caddy/releases/download/v$version/caddy_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/caddyserver/caddy/releases/download/v$version/caddy_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

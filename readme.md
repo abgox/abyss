@@ -26,10 +26,10 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/abgox/abyss/actions/workflows/excavator.yml">
-        <img src="https://github.com/abgox/abyss/actions/workflows/excavator.yml/badge.svg" alt="excavator" />
+    <a href="https://www.microsoft.com/windows">
+        <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
     </a>
-    <a href="./manifest-list.md">
+    <a href="#manifest-list">
         <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%2Fraw%2Fmain%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
@@ -84,8 +84,6 @@
 
 - [Scoop](https://scoop.sh/)
 - [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
-- [Scoop bucket - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
-- [Scoop App-Manifest - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
 ## If you are currently using Scoop
 
@@ -99,7 +97,7 @@
     scoop bucket add abyss https://gitee.com/abgox/abyss
     ```
 
-2.  Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com).
+2.  Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com) in [PowerShell](https://www.microsoft.com/powershell).
 
     ```shell
     scoop install abyss/abgox.PSCompletions

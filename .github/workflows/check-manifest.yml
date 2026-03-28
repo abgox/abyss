@@ -3,11 +3,9 @@ name: Check Manifest
 on:
   pull_request_target:
     types: [opened, synchronize]
-  issue_comment:
-    types: [created] # /check
 
 concurrency:
-  group: check-manifest-${{ github.event.pull_request.number || github.event.issue.number }}
+  group: check-manifest-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
@@ -19,26 +17,12 @@ jobs:
   check:
     name: Check Manifest
     runs-on: windows-latest
-    if: |
-      github.event_name == 'pull_request_target' ||
-      (
-        github.event_name == 'issue_comment' &&
-        github.event.issue.pull_request &&
-        startsWith(github.event.comment.body, '/check') &&
-        (
-          github.event.comment.user.login == github.event.issue.user.login ||
-          contains(
-            fromJson('["OWNER","MEMBER","COLLABORATOR","CONTRIBUTOR"]'),
-            github.event.comment.author_association
-          )
-        )
-      )
     env:
       REPO: ${{ github.repository }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
       MARKER: "<!-- bot:check-manifest -->"
-      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      # RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Find or create comment
         id: comment
@@ -46,7 +30,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const pr = context.payload.pull_request?.number || context.payload.issue?.number
+            const pr = process.env.PR_NUMBER
             const marker = process.env.MARKER
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -63,14 +47,6 @@ jobs:
             `
 
             if (comment) {
-              if (context.eventName === "issue_comment"){
-                await github.rest.issues.updateComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: comment.id,
-                  body
-                })
-              }
               core.setOutput("comment_id", comment.id)
             } else {
               const res = await github.rest.issues.createComment({

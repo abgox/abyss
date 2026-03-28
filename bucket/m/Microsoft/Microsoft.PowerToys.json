@@ -1,5 +1,5 @@
 {
-    "version": "0.97.2",
+    "version": "0.98.1",
     "description": "一组实用程序，供高级用户调整和简化他们的 Windows 体验以提高生产力 | A set of utilities for power users to tune and streamline their Windows experience for greater productivity",
     "homepage": "https://github.com/microsoft/PowerToys",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.97.2/PowerToysUserSetup-0.97.2-x64.exe",
-            "hash": "54a39f62334f7481c1bdde8abf4928f2e74f100a049f50c7339dabfd34134c98"
+            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.98.1/PowerToysUserSetup-0.98.1-x64.exe",
+            "hash": "fc417bf42d6497a87682286fb541d4fa789ef0e4a812571bc0c2e4d591e63caa"
         },
         "arm64": {
-            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.97.2/PowerToysUserSetup-0.97.2-arm64.exe",
-            "hash": "bb24aee4b0b8ebdc007d04a84843d44008ab585192cf145816f4c07c99251be0"
+            "url": "https://github.com/microsoft/PowerToys/releases/download/v0.98.1/PowerToysUserSetup-0.98.1-arm64.exe",
+            "hash": "dd9f1e0243a16adaa831f8e1119ae7394cb031b5b12401a0a243880f8f099545"
         }
     },
     "location": "$env:LocalAppData\\PowerToys",
@@ -26,9 +26,6 @@
         "Get-ChildItem $dir -Recurse -Filter '*.msi' | Select-Object -First 1 | ForEach-Object { Move-Item $_.FullName \"$dir\\dl.msi\" -Force }",
         "Remove-Item \"$dir\\.tmp\", \"$dir\\$fname\" -Force -Recurse -ErrorAction SilentlyContinue",
         "A-Install-Msi -ArgumentList '/i', \"`\"$dir\\dl.msi`\"\", '/passive', '/norestart'",
-        "Start-Sleep -Seconds 5",
-        "A-Stop-Process \"$env:LocalAppData\\PowerToys\" 'Microsoft.CmdPal.UI'",
-        "# 安装程序启动时不能进行链接, 会出现内存访问错误, 因此等待安装完成并终止相关进程后再创建链接",
         "A-Hold-App"
     ],
     "post_install": [

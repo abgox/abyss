@@ -2,10 +2,6 @@
 
 Set-StrictMode -Off
 
-if ($PSEdition -eq 'Desktop') {
-    Add-Type -AssemblyName Microsoft.VisualBasic
-}
-
 # 存储 abyss 相关的变量
 $abgox_abyss = @{
     path = @{
@@ -15,10 +11,24 @@ $abgox_abyss = @{
         InstallInno        = "$dir\abgox-abyss-A-Install-Inno.json"
         InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
         MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
-        EnvVar             = "$dir\abgox-abyss-A-Add-Path.json"
+        EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
         PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
         Info               = "$dir\abgox-abyss-Info.json"
+    }
+}
+
+if ($PSEdition -eq 'Desktop') {
+    Add-Type -AssemblyName Microsoft.VisualBasic
+
+    $abgox_abyss.requestTimeout = @{
+        TimeoutSec = 60
+    }
+}
+else {
+    $abgox_abyss.requestTimeout = @{
+        ConnectionTimeoutSeconds = 30
+        OperationTimeoutSeconds  = 60
     }
 }
 
@@ -124,6 +134,9 @@ function A-Start-Install {
             [System.Environment]::SetEnvironmentVariable($_.Name, $ExecutionContext.InvokeCommand.ExpandString($_.Value), [System.EnvironmentVariableTarget]::Process)
         }
     }
+    if ($manifest.env_set_shared) {
+        A-Set-EnvVarShared
+    }
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
@@ -174,12 +187,13 @@ function A-Complete-Install {
         }
     }
     if ($manifest.location) {
-        if (-not (Test-Path $ExecutionContext.InvokeCommand.ExpandString($manifest.location))) {
+        $location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        if (-not (Test-Path $location)) {
             A-Show-IssueCreationPrompt
             A-Exit
         }
 
-        $info.location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        $info.location = $location
 
         $note = if ($PSUICulture -like 'zh*') {
             @(
@@ -227,15 +241,22 @@ function A-Start-Uninstall {
     if ($version -eq 'renamed') {
         A-Move-Persistence
     }
+    if ($manifest.env_set_shared) {
+        A-Set-EnvVarShared -Remove
+    }
     A-Remove-Font
     A-Remove-Path
     A-Remove-PowerToysRunPlugin
 }
 
 function A-Complete-Uninstall {
-    if ($manifest.link) {
-        foreach ($item in $manifest.link) {
-            A-Remove-ToRecycleBin $ExecutionContext.InvokeCommand.ExpandString($item)
+    # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
+    $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
+        if (Test-Path -LiteralPath $_) {
+            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
+            foreach ($p in $LinkPaths) {
+                A-Remove-ToRecycleBin $p
+            }
         }
     }
 }
@@ -449,7 +470,7 @@ function A-Remove-Link {
     #     return
     # }
 
-    @($abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory) | ForEach-Object {
+    $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
             $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
 
@@ -551,8 +572,11 @@ function A-Stop-Process {
 
     $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
     $Paths += $ExtraPaths
-    if ($manifest.env_add_path_expand) {
-        $Paths += $manifest.env_add_path_expand | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
+
+    # 由于字段可能包含可展开的变量，应该使用安装时展开的值，以避免安装和卸载期间环境变量变化导致的不一致性
+    if (Test-Path -LiteralPath $abgox_abyss.path.EnvPath) {
+        $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
+        $Paths += Get-Content $abgox_abyss.path.EnvPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
     }
     if (Test-Path -LiteralPath $abgox_abyss.path.Info) {
         $info = Get-Content $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
@@ -563,14 +587,12 @@ function A-Stop-Process {
 
     $Paths = $Paths | Sort-Object -Unique
 
-    $processes = Get-Process
-
     foreach ($app_dir in $Paths) {
-        $matched = $processes.where({ $_.MainModule.FileName -like "$app_dir\*" })
+        $matched = (Get-Process).Where({ $_.Path -like "$app_dir\*" })
         foreach ($p in $matched) {
             try {
                 if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
-                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
                     Stop-Process -Id $p.Id -Force -ErrorAction Stop
                 }
             }
@@ -590,7 +612,7 @@ function A-Stop-Process {
         $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
         if ($p) {
             try {
-                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.MainModule.FileName))"
+                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
                 Stop-Process -Id $p.Id -Force -ErrorAction Stop
             }
             catch {
@@ -610,9 +632,8 @@ function A-Stop-Process {
     # 再次检查是否存在未终止的相关进程
     # 这里参考了 Scoop 的官方检查逻辑，以确保一致性
     # https://github.com/ScoopInstaller/Scoop/blob/ebd8c036fa0d2e1dc93bca44c10eeee36c0d233e/lib/install.ps1#L534
-    $processes = Get-Process
     foreach ($app_dir in $Paths) {
-        $running_processes = $processes.Where({ $_.Path -like "$app_dir\*" }) | Out-String
+        $running_processes = (Get-Process).Where({ $_.Path -like "$app_dir\*" }) | Out-String
         if ($running_processes) {
             error "The following instances of `"$app`" are still running. Close them and try again."
             Write-Host $running_processes
@@ -1079,6 +1100,7 @@ function A-Uninstall-Manually {
                 catch {}
             }
             error 'It requires you to uninstall it manually.'
+            error $p
             error 'Refer to: https://abyss.abgox.com/faq/uninstall-manually'
             A-Exit
         }
@@ -1313,14 +1335,22 @@ function A-Get-VersionFromGithubAPI {
     }
 
     try {
-        $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+        $requestTimeout = $abgox_abyss.requestTimeout
+        $res = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
         if ($Latest) {
-            return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
+            return $res.tag_name -replace '[vV](?=\d+\.)', ''
         }
+        elseif ($Newest) {
+            $releaseInfo = $res
+        }
+        elseif ($PreRelease) {
+            $releaseInfo = $res | Where-Object { $_.prerelease }
+        }
+        else {
+            $releaseInfo = $res | Where-Object { -not $_.prerelease }
+        }
+
         foreach ($item in $releaseInfo) {
-            if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
-                continue
-            }
             $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
             if ($v -match $json.checkver.regex) {
                 return $v
@@ -1345,14 +1375,22 @@ function A-Get-VersionFromGithubAPI {
 
             Start-Sleep -Seconds 10
 
-            $releaseInfo = Invoke-RestMethod -Uri $url -Headers $headers
+            $requestTimeout = $abgox_abyss.requestTimeout
+            $res = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
             if ($Latest) {
-                return $releaseInfo.tag_name -replace '[vV](?=\d+\.)', ''
+                return $res.tag_name -replace '[vV](?=\d+\.)', ''
             }
+            elseif ($Newest) {
+                $releaseInfo = $res
+            }
+            elseif ($PreRelease) {
+                $releaseInfo = $res | Where-Object { $_.prerelease }
+            }
+            else {
+                $releaseInfo = $res | Where-Object { -not $_.prerelease }
+            }
+
             foreach ($item in $releaseInfo) {
-                if ($item.prerelease -and -not ($PreRelease -or $Newest)) {
-                    continue
-                }
                 $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
                 if ($v -match $json.checkver.regex) {
                     return $v
@@ -1498,7 +1536,8 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     try {
-        $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+        $requestTimeout = $abgox_abyss.requestTimeout
+        $versions = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1516,7 +1555,8 @@ function A-Get-InstallerInfoFromWinget {
 
             Start-Sleep -Seconds 10
 
-            $versions = Invoke-RestMethod -Uri $url -Headers $headers | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+            $requestTimeout = $abgox_abyss.requestTimeout
+            $versions = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
         }
         else {
             return
@@ -1545,7 +1585,8 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     try {
-        $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
+        $requestTimeout = $abgox_abyss.requestTimeout
+        $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
     }
     catch {
         Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1563,7 +1604,8 @@ function A-Get-InstallerInfoFromWinget {
 
             Start-Sleep -Seconds 10
 
-            $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers
+            $requestTimeout = $abgox_abyss.requestTimeout
+            $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
         }
         else {
             return
@@ -2261,11 +2303,11 @@ function A-Add-Path {
 
     Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
 
-    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvVar -Force -Encoding utf8
+    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvPath -Force -Encoding utf8
 }
 
 function A-Remove-Path {
-    $OutFile = $abgox_abyss.path.EnvVar
+    $OutFile = $abgox_abyss.path.EnvPath
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
     }
@@ -2379,6 +2421,39 @@ function A-Get-GithubToken {
 $abgox_abyss.ScoopVersion = '0.5.3'
 
 #region 扩展 Scoop 部分功能
+
+# 它不属于 scoop core，但可能需要跟进 Scoop 最新变动
+function A-Set-EnvVarShared {
+    param(
+        [switch]$Remove
+    )
+
+    $env_set_shared = $manifest.env_set_shared
+
+    if ($Remove) {
+        $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            $owner = $env_set_shared.$name.owner
+            $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object { Test-Path "$scoopdir\apps\$_\current\manifest.json" }
+            if ($has_other_owner) {
+                return
+            }
+            Write-Output "Removing $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m"
+            Set-EnvVar -Name $name -Value $null -Global:$global
+            if (Test-Path env:\$name) { Remove-Item env:\$name }
+        }
+    }
+    else {
+        $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
+            $name = $_.Name
+            $val = $ExecutionContext.InvokeCommand.ExpandString($env_set_shared.$name.value)
+            # $owner = $env_set_shared.$name.owner
+            Write-Output "Setting $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m = $([char]0x1b)[35m$val$([char]0x1b)[0m"
+            Set-EnvVar -Name $name -Value $val -Global:$global
+            Set-Content env:\$name $val
+        }
+    }
+}
 
 function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, $arguments, [System.IO.FileInfo]$icon, $global) {
     #region 新增: 支持 abyss 的特性
@@ -2544,12 +2619,12 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     }
     $bin = $manifest.bin, $manifest.architecture.$architecture.bin | Select-Object -First 1
     if ($bin -is [string]) {
-        $cmds += Split-Path $bin -Leaf
+        $cmds += (Split-Path $bin -Leaf) -replace '\.exe$', ''
     }
     elseif ($bin -is [array]) {
         foreach ($b in $bin) {
             if ($b -is [string]) {
-                $cmds += Split-Path $b -Leaf
+                $cmds += (Split-Path $b -Leaf) -replace '\.exe$', ''
             }
             elseif ($b -is [array]) {
                 $cmds += $b[1]
