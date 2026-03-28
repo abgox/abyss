@@ -18,11 +18,122 @@ jobs:
           ref: ${{ github.event.repository.default_branch}}
 
       - name: Issue Handler
+        id: issue-handler
         uses: ScoopInstaller/GithubActions@main
         # uses: abgox/ScoopInstaller-GithubActions@main
-        if: github.event.action == 'opened' || (github.event.action == 'labeled' && contains(github.event.issue.labels.*.name, 'verify'))
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get created PR number
+        id: get-pr
+        if: steps.issue-handler.outcome == 'success'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issueTitle = context.payload.issue.title;
+            console.log(`Issue title: ${issueTitle}`);
+
+            const prefix = issueTitle.replace(/:\s*hash check failed\s*$/i, '');
+            const expectedPrTitle = prefix + ": Fix hash";
+
+            console.log(`Looking for PR title with: "${expectedPrTitle}"`);
+
+            const { data: pulls } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 30,
+              sort: 'created',
+              direction: 'desc'
+            });
+
+            let foundPr = null;
+
+            for (const pr of pulls) {
+              if (pr.title == expectedPrTitle) {
+                foundPr = pr;
+                break;
+              }
+            }
+
+            if (foundPr) {
+              core.setOutput('pr-number', foundPr.number);
+              core.setOutput('pr-author', foundPr.user.login);
+              console.log(`✅ Found PR #${foundPr.number} by ${foundPr.user.login}: ${foundPr.title}`);
+            } else {
+              console.log(`❌ No matching PR found for issue title: ${issueTitle}`);
+            }
+
+      - name: Auto Merge
+        if: |
+          steps.get-pr.outcome == 'success' &&
+          steps.get-pr.outputs.pr-number != '' &&
+          steps.get-pr.outputs.pr-author == 'github-actions[bot]'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ steps.get-pr.outputs.pr-number }};
+            console.log(`🔄 Merging PR #${prNumber} (created by github-actions[bot])`);
+
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              merge_method: "squash"
+            });
+
+      - name: Close linked Issue after merge
+        if: |
+          success() &&
+          steps.get-pr.outputs.pr-number != '' &&
+          steps.get-pr.outputs.pr-author == 'github-actions[bot]'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.issue.number;
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              state: 'closed'
+            });
+            console.log(`✅ Closed issue #${issueNumber}`);
+
+      - name: Delete head branch (only if not from fork)
+        if: |
+          success() &&
+          steps.get-pr.outputs.pr-number != '' &&
+          steps.get-pr.outputs.pr-author == 'github-actions[bot]'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ steps.get-pr.outputs.pr-number }};
+
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            if (!pr.head.repo.fork) {
+              const branch = pr.head.ref;
+              console.log(`🗑️ Deleting branch: ${branch}`);
+              try {
+                await github.rest.git.deleteRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `heads/${branch}`
+                });
+                console.log(`✅ Successfully deleted branch: ${branch}`);
+              } catch (error) {
+                console.log(`⚠️ Failed to delete branch ${branch}: ${error.message}`);
+              }
+            } else {
+              console.log(`ℹ️ PR is from fork, skipping branch deletion`);
+            }
 
   sync-repos:
     name: Sync Repos
