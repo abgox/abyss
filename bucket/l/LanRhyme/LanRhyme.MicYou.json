@@ -1,0 +1,60 @@
+{
+    "version": "1.1.1-20260220-0620",
+    "description": "一款强大的工具，能将您的安卓设备变成适用于电脑的高品质无线麦克风 | A powerful tool that turns your Android device into a high-quality wireless microphone for your PC",
+    "homepage": "https://micyou.netlify.app/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LanRhyme/MicYou/releases/download/v1.1.1-20260220-0620/MicYou-Win-1.1.1-installer.exe",
+            "hash": "e19519e894c41e2fc806fdcd9a0e565f0253d75ff0edcf5455b02d77f79565df"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\MicYou.exe",
+            "MicYou"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LanRhyme/MicYou/releases/download/v$version/MicYou-Win-$matchHead-installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
