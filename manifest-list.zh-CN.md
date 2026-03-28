@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (848)|Tag|Description|
+|Manifest (849)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -667,6 +667,7 @@
 |[pbek.QOwnNotes](https://www.qownnotes.org/)|<a href="./bucket/p/pbek/pbek.QOwnNotes.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款支持 Markdown 格式且能与 Nextcloud / ownCloud 集成的纯文本文件记事本和待办事项管理器|
 |[PDFgear.PDFgear](https://www.pdfgear.com/)|<a href="./bucket/p/PDFgear/PDFgear.PDFgear.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款功能齐全的 PDF 管理软件|
 |[PDFsam.PDFsam](https://pdfsam.org/)|<a href="./bucket/p/PDFsam/PDFsam.PDFsam.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款免费/自由、开源、多平台软件，用于拆分、合并、提取页面、混合和旋转 PDF 文件|
+|[Perplexity.Comet](https://perplexity.ai/comet)|<a href="./bucket/p/Perplexity/Perplexity.Comet.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|基于 Chromium 的浏览器，集成了由 Perplexity 驱动的先进人工智能功能|
 |[PeterPawlowski.foobar2000](https://www.foobar2000.org/)|<a href="./bucket/p/PeterPawlowski/PeterPawlowski.foobar2000.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款适用于 Windows 平台的高级免费音频播放器|
 |[PicGo.PicGo](https://molunerfinn.com/PicGo/)|<a href="./bucket/p/PicGo/PicGo.PicGo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|由 vue-cli-electron-builder 构建的简洁美观的图片上传工具|
 |[pingbird.Puro](https://puro.dev/)|<a href="./bucket/p/pingbird/pingbird.Puro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款强大的 Flutter 版本安装与升级工具|

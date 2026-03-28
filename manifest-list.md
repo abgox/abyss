@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (848)|Tag|Description|
+|Manifest (849)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -667,6 +667,7 @@
 |[pbek.QOwnNotes](https://www.qownnotes.org/)|<a href="./bucket/p/pbek/pbek.QOwnNotes.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A plain-text file notepad and todo-list manager with Markdown support and Nextcloud / ownCloud integration|
 |[PDFgear.PDFgear](https://www.pdfgear.com/)|<a href="./bucket/p/PDFgear/PDFgear.PDFgear.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A piece of full-featured PDF management software|
 |[PDFsam.PDFsam](https://pdfsam.org/)|<a href="./bucket/p/PDFsam/PDFsam.PDFsam.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A free, open source, multi-platform software designed to split, merge, extract pages, mix and rotate PDF files|
+|[Perplexity.Comet](https://perplexity.ai/comet)|<a href="./bucket/p/Perplexity/Perplexity.Comet.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A Chromium-based browser that integrates advanced AI capabilities powered by Perplexity|
 |[PeterPawlowski.foobar2000](https://www.foobar2000.org/)|<a href="./bucket/p/PeterPawlowski/PeterPawlowski.foobar2000.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|An advanced freeware audio player for the Windows platform|
 |[PicGo.PicGo](https://molunerfinn.com/PicGo/)|<a href="./bucket/p/PicGo/PicGo.PicGo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A simple & beautiful tool for pictures uploading built by vue-cli-electron-builder|
 |[pingbird.Puro](https://puro.dev/)|<a href="./bucket/p/pingbird/pingbird.Puro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A powerful tool for installing and upgrading Flutter versions|
