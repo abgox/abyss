@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (847)|Tag|Description|
+|Manifest (848)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -221,6 +221,7 @@
 |[Bin-Huang.Chatbox](https://chatboxai.app/)|<a href="./bucket/b/Bin-Huang/Bin-Huang.Chatbox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A desktop client for ChatGPT, Claude and other LLMs|
 |[BiomeJs.Biome](https://biomejs.dev/)|<a href="./bucket/b/BiomeJs/BiomeJs.Biome.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A fast formatter for JavaScript, TypeScript, JSX, TSX, JSON, HTML, CSS and GraphQL that scores 97% compatibility with Prettier, saving CI and developer time|
 |[Bitwarden.Bitwarden](https://bitwarden.com/)|<a href="./bucket/b/Bitwarden/Bitwarden.Bitwarden.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Password management solutions for individuals, teams, and business organizations|
+|[Bitwarden.CLI](https://bitwarden.com/)|<a href="./bucket/b/Bitwarden/Bitwarden.CLI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Password management solutions for individuals, teams, and business organizations|
 |[BlastApps.FluentSearch](https://github.com/adirh3/Fluent-Search)|<a href="./bucket/b/BlastApps/BlastApps.FluentSearch.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|With it, you can search for running apps, browser tabs, in-app content, files and more|
 |[BluePointLilac.ContextMenuManager](https://github.com/BluePointLilac/ContextMenuManager)|<a href="./bucket/b/BluePointLilac/BluePointLilac.ContextMenuManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A pure Windows context menu manager|
 |[Boeing.config-file-validator](https://boeing.github.io/config-file-validator/)|<a href="./bucket/b/Boeing/Boeing.config-file-validator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|CLI tool to validate different configuration file types|

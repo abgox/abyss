@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (847)|Tag|Description|
+|Manifest (848)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -221,6 +221,7 @@
 |[Bin-Huang.Chatbox](https://chatboxai.app/)|<a href="./bucket/b/Bin-Huang/Bin-Huang.Chatbox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可使用 ChatGPT、Claude 和其他 LLM 的桌面客户端|
 |[BiomeJs.Biome](https://biomejs.dev/)|<a href="./bucket/b/BiomeJs/BiomeJs.Biome.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个适用于 JavaScript、TypeScript、JSX、JSON、CSS 和 GraphQL 的快速格式化工具，与 Prettier 有高达 97% 的兼容覆盖率，能有效节约持续化集成和开发者的时间|
 |[Bitwarden.Bitwarden](https://bitwarden.com/)|<a href="./bucket/b/Bitwarden/Bitwarden.Bitwarden.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于个人、团队和企业组织的密码管理解决方案|
+|[Bitwarden.CLI](https://bitwarden.com/)|<a href="./bucket/b/Bitwarden/Bitwarden.CLI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于个人、团队和企业组织的密码管理解决方案|
 |[BlastApps.FluentSearch](https://github.com/adirh3/Fluent-Search)|<a href="./bucket/b/BlastApps/BlastApps.FluentSearch.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|使用它，你可以搜索正在运行的应用程序、浏览器标签、应用程序内内容、文件等|
 |[BluePointLilac.ContextMenuManager](https://github.com/BluePointLilac/ContextMenuManager)|<a href="./bucket/b/BluePointLilac/BluePointLilac.ContextMenuManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个纯粹的 Windows 右键菜单管理程序|
 |[Boeing.config-file-validator](https://boeing.github.io/config-file-validator/)|<a href="./bucket/b/Boeing/Boeing.config-file-validator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用于验证不同类型的配置文件的命令行工具|
