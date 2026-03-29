@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (850)|Tag|Description|
+|Manifest (851)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -110,6 +110,7 @@
 |[astral-sh.ty](https://docs.astral.sh/ty/)|<a href="./bucket/a/astral-sh/astral-sh.ty.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An extremely fast Python type checker and language server, written in Rust|
 |[astral-sh.uv](https://docs.astral.sh/uv/)|<a href="./bucket/a/astral-sh/astral-sh.uv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An extremely fast Python package and project manager, written in Rust|
 |[asxez.MusicBox](https://github.com/asxez/MusicBox)|<a href="./bucket/a/asxez/asxez.MusicBox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A pretty local music player|
+|[AuraMarker.Lattics](https://lattics.zineapi.com/)|<a href="./bucket/a/AuraMarker/AuraMarker.Lattics.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|"Brain-like" Knowledge Management Notes|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="./bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - A free, open source macro-creation and automation software utility that allows users to automate repetitive tasks|
 |[ayangweb.BongoCat](https://github.com/ayangweb/BongoCat)|<a href="./bucket/a/ayangweb/ayangweb.BongoCat.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cross-platform desktop pet|
 |[B3log.SiYuan](https://b3log.org/siyuan/)|<a href="./bucket/b/B3log/B3log.SiYuan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A privacy-first, self-hosted, fully open source personal knowledge management software|

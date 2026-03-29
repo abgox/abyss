@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (850)|Tag|Description|
+|Manifest (851)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -110,6 +110,7 @@
 |[astral-sh.ty](https://docs.astral.sh/ty/)|<a href="./bucket/a/astral-sh/astral-sh.ty.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款速度极快的 Python 类型检查器和语言服务器，用 Rust 编写|
 |[astral-sh.uv](https://docs.astral.sh/uv/)|<a href="./bucket/a/astral-sh/astral-sh.uv.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个极其快速的 Python 包和项目管理器，用 Rust 编写|
 |[asxez.MusicBox](https://github.com/asxez/MusicBox)|<a href="./bucket/a/asxez/asxez.MusicBox.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款高颜值的本地音乐播放器|
+|[AuraMarker.Lattics](https://lattics.zineapi.com/)|<a href="./bucket/a/AuraMarker/AuraMarker.Lattics.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|「类脑式」知识管理笔记与写作|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="./bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - 一款免费的开源宏创建和自动化软件工具，允许用户自动执行重复性任务|
 |[ayangweb.BongoCat](https://github.com/ayangweb/BongoCat)|<a href="./bucket/a/ayangweb/ayangweb.BongoCat.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台桌宠|
 |[B3log.SiYuan](https://b3log.org/siyuan/)|<a href="./bucket/b/B3log/B3log.SiYuan.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款以隐私为首要原则、可自行托管且完全开源的个人知识管理软件|
