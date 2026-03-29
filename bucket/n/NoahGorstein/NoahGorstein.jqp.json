@@ -1,0 +1,63 @@
+{
+    "version": "0.8.0",
+    "description": "一个用于调试体验 jq 的终端交互式工具 | A TUI playground to experiment with jq",
+    "homepage": "https://github.com/noahgorstein/jqp",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/noahgorstein/jqp/releases/download/v0.8.0/jqp_Windows_x86_64.tar.gz",
+            "hash": "9d62970c1355705c7050788f70fe597f65f1fe808a7b29fc34876c90bf509c17"
+        },
+        "arm64": {
+            "url": "https://github.com/noahgorstein/jqp/releases/download/v0.8.0/jqp_Windows_arm64.tar.gz",
+            "hash": "097fdb13c151c933f8e131c7d7429a14482df947c8343c425b60660625ba01bc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\jqp.exe",
+    "link": "$home\\.jqp.yaml",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/noahgorstein/jqp/releases/download/v$version/jqp_Windows_x86_64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/noahgorstein/jqp/releases/download/v$version/jqp_Windows_arm64.tar.gz"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
