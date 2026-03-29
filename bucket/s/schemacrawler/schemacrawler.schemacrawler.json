@@ -1,0 +1,59 @@
+{
+    "version": "17.7.0",
+    "description": "免费的数据库模式发现与理解工具 | Free database schema discovery and comprehension tool",
+    "homepage": "http://www.schemacrawler.com/",
+    "license": {
+        "identifier": "EPL-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/schemacrawler/SchemaCrawler-Installers/releases/download/v17.7.0/SchemaCrawler-17.7.0.msi#/dl.msi_",
+            "hash": "92808daa34f90e18d9397bf9324afb73345095fdf032f249fe7f67700b7df9d1"
+        }
+    },
+    "location": "$env:ProgramFiles\\SchemaCrawler",
+    "env_add_path_expand": "$env:ProgramFiles\\SchemaCrawler",
+    "commands": "SchemaCrawler",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Msi"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Msi"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/schemacrawler/SchemaCrawler-Installers/releases/download/v$version/SchemaCrawler-$version.msi#/dl.msi_"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
