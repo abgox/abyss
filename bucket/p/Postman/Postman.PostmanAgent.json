@@ -1,0 +1,55 @@
+{
+    "version": "0.4.86",
+    "description": "克服浏览器的跨域资源共享（CORS）限制，方便从浏览器版本的 Postman 发送 API 请求 | Overcome the Cross-Origin Resource Sharing (CORS) limitations of browsers, and facilitate API request sending from your browser version of Postman",
+    "homepage": "https://www.postman.com/downloads/postman-agent/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://dl-agent.pstmn.io/download/version/0.4.86/windows_64#/dl.exe",
+            "hash": "bcc549bb9b41d92e2f16680a7102a3afe75b5ac1b8daea4412be7cb1c3de2acb"
+        }
+    },
+    "location": "$env:LocalAppData\\Postman-Agent",
+    "link": [
+        "$env:AppData\\PostmanAgent",
+        "$home\\Postman Agent"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller \"$env:LocalAppData\\Postman-Agent\\Update.exe\" -ArgumentList '--silent'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App -ArgumentList '--uninstall'",
+        "A-Remove-TempData \"$env:LocalAppData\\Postman-Agent\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://dl-agent.pstmn.io/changelog?channel=stable&platform=win64",
+        "jsonpath": "$.changelog[0].name"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dl-agent.pstmn.io/download/version/$version/windows_64#/dl.exe"
+            }
+        }
+    }
+}
