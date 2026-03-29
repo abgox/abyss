@@ -1,0 +1,62 @@
+{
+    "version": "2.7.5",
+    "description": "一款 ePub 可视化 XHTML 编辑器 | An ePub visual XHTML editor",
+    "homepage": "https://github.com/Sigil-Ebook/PageEdit",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Sigil-Ebook/PageEdit/releases/download/2.7.5/PageEdit-2.7.5-Windows-x64-Setup.exe",
+            "hash": "2516927c1d8d547dd2040fc87b2cd50fef63275836ba298fe39e9d6db448856e"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\PageEdit.exe",
+            "PageEdit"
+        ]
+    ],
+    "link": "$env:LocalAppData\\sigil-ebook\\pageedit",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Sigil-Ebook/PageEdit/releases/download/$version/PageEdit-$version-Windows-x64-Setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
