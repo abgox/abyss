@@ -11,8 +11,6 @@
             "hash": "e3091de70c337109585bd34cfd8b9ecc2cf7cfc96959c7927eadfcc84f47c6c0"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "shortcuts": [
         [
             "app\\karing.exe",
@@ -28,7 +26,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -39,7 +39,9 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

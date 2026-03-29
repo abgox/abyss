@@ -11,8 +11,6 @@
             "hash": "e2d26712c9cdb2d54a1281aa0991f5b7502b009800039a906ac3f0ce59667c0c"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "shortcuts": [
         [
             "app\\TickTick.exe",
@@ -23,7 +21,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,8 +34,10 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

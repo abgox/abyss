@@ -16,8 +16,6 @@
             "hash": "a02c78dcd5e1d77d4d4802b5d46cc24f319ecb789809bd7d473969d5d16e0452"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "bin": "app\\Typora.exe",
     "shortcuts": [
         [
@@ -29,7 +27,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -40,8 +40,10 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

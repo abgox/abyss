@@ -11,8 +11,6 @@
             "hash": "6de289fa6686eed253b0362661af5406c5501386d7b710de7909352381890d7d"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "shortcuts": [
         [
             "app\\fdm.exe",
@@ -23,7 +21,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,8 +34,10 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
