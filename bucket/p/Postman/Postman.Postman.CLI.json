@@ -1,0 +1,50 @@
+{
+    "version": "1.32.0",
+    "description": "Postman 的一款安全的命令行配套工具 | A secure command-line companion for Postman",
+    "homepage": "https://learning.postman.com/docs/postman-cli/postman-cli-overview/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://dl-cli.pstmn.io/download/version/1.32.0/win64#/dl.zip",
+            "hash": "045153b6ff1a67b597d19ac0f90d717cfc65ae4f46f9206365beeba42b7ad644"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\postman-cli.exe",
+    "link": "$home\\.postman",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://dl-cli.pstmn.io/changelog?channel=stable&platform=win64",
+        "jsonpath": "$.changelog[0].name"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://dl-cli.pstmn.io/download/version/$version/win64#/dl.zip"
+            }
+        }
+    }
+}
