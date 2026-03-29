@@ -12,8 +12,6 @@
             "hash": "9e863839d5fdad7eaba3be098b370d46bc8f479cdd795efa744d7bb3acc95ae5"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "bin": "app\\arenc.exe",
     "shortcuts": [
         [
@@ -25,7 +23,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,8 +36,10 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

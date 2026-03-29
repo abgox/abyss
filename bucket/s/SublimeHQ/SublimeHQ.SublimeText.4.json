@@ -12,8 +12,6 @@
             "hash": "3d3c70e51aef08f85d7160bcc70793bed9acec250973090ab67d98987bce7c7e"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "bin": "app\\subl.exe",
     "shortcuts": [
         [
@@ -30,7 +28,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -41,7 +41,9 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
