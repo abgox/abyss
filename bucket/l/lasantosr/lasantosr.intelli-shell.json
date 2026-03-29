@@ -1,0 +1,63 @@
+{
+    "version": "3.4.0",
+    "description": "一个功能强大的命令模板和代码片段管理器，适用于你的 shell | A powerful command template and snippet manager for your shell",
+    "homepage": "https://lasantosr.github.io/intelli-shell/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/lasantosr/intelli-shell/releases/download/v3.4.0/intelli-shell-x86_64-pc-windows-msvc.zip",
+            "hash": "319455ab9f00b6313b16bcac29ba88658c41b59cad38bc74c93df0584cb36f66"
+        },
+        "arm64": {
+            "url": "https://github.com/lasantosr/intelli-shell/releases/download/v3.4.0/intelli-shell-aarch64-pc-windows-msvc.zip",
+            "hash": "97c321220d1f6791b311e5b8497e10b4c2bdc6438f8d0fe8d5090fcad2b6550b"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\intelli-shell.exe",
+    "link": "$env:AppData\\IntelliShell\\Intelli-Shell",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/lasantosr/intelli-shell/releases/download/v$version/intelli-shell-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/lasantosr/intelli-shell/releases/download/v$version/intelli-shell-aarch64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
