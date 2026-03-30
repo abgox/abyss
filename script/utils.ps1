@@ -19,8 +19,6 @@ $abgox_abyss = @{
 }
 
 if ($PSEdition -eq 'Desktop') {
-    Add-Type -AssemblyName Microsoft.VisualBasic
-
     $abgox_abyss.requestTimeout = @{
         TimeoutSec = 60
     }
@@ -208,24 +206,6 @@ function A-Complete-Install {
             )
         }
         A-Show-Notes $note
-    }
-    else {
-        $items = Get-ChildItem $dir
-        $hasErr = $true
-        foreach ($item in $items) {
-            if ($item -is [System.IO.DirectoryInfo]) {
-                $hasErr = $false
-                break
-            }
-            if ($item -is [System.IO.FileInfo] -and $item.Name -notlike '*.json') {
-                $hasErr = $false
-                break
-            }
-        }
-        if ($hasErr) {
-            A-Show-IssueCreationPrompt
-            A-Exit
-        }
     }
 
     if ($info.Count) {
@@ -1949,12 +1929,8 @@ function A-Remove-ToRecycleBin {
     if (-not (Test-Path -LiteralPath $Path)) {
         return
     }
-    if ((Get-Item $Path).PSIsContainer) {
-        [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($Path, 'OnlyErrorDialogs', 'SendToRecycleBin')
-    }
-    else {
-        [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($Path, 'OnlyErrorDialogs', 'SendToRecycleBin')
-    }
+    $shell = New-Object -ComObject Shell.Application
+    $shell.Namespace(0).ParseName($Path).InvokeVerb('delete')
 }
 
 function A-Test-DirectoryNotEmpty {
@@ -2615,7 +2591,7 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     if ($manifest.psmodule) {
         Remove-Item "$dir\_rels", "$dir\package", "$dir\*Content*.xml" -Recurse -ErrorAction SilentlyContinue
         $psd1 = Import-PowerShellDataFile -LiteralPath "$scoopdir\modules\$($manifest.psmodule.name)\$($manifest.psmodule.name).psd1" -ErrorAction SilentlyContinue
-        $cmds += @($psd1.CmdletsToExport, $psd1.FunctionsToExport, $psd1.AliasesToExport) | Where-Object { $_ -ne '*' }
+        $cmds += @($psd1.CmdletsToExport) + @($psd1.FunctionsToExport) + @($psd1.AliasesToExport) | Where-Object { $_ -ne '*' }
     }
     $bin = $manifest.bin, $manifest.architecture.$architecture.bin | Select-Object -First 1
     if ($bin -is [string]) {
