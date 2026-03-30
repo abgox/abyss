@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (851)|Tag|Description|
+|Manifest (852)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -101,6 +101,7 @@
 |[Anysphere.Cursor](https://www.cursor.com/)|<a href="./bucket/a/Anysphere/Anysphere.Cursor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个 AI 代码编辑器|
 |[AnyTXT.AnyTXTSearcher](https://anytxt.net/)|<a href="./bucket/a/AnyTXT/AnyTXT.AnyTXTSearcher.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款拥有强大全文搜索引擎的桌面搜索工具|
 |[AnyTXT.AnyTXTSearcher.OCR](https://anytxt.net/)|<a href="./bucket/a/AnyTXT/AnyTXT.AnyTXTSearcher.OCR.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款拥有强大全文搜索引擎的桌面搜索工具|
+|[Apipost.ApiPost](https://www.apipost.cn/)|<a href="./bucket/a/Apipost/Apipost.ApiPost.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|AI 驱动的新一代 API 开发管理工具|
 |[AppByTroye.KoodoReader](https://koodo.960960.xyz/)|<a href="./bucket/a/AppByTroye/AppByTroye.KoodoReader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台的电子书阅读器|
 |[Appest.Dida](https://www.dida365.com/)|<a href="./bucket/a/Appest/Appest.Dida.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|滴答清单，一款轻便的待办事项 (Todo)、日程管理 (GTD) 应用|
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="./bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的 Notion 替代品，数据和定制由你掌控|

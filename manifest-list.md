@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (851)|Tag|Description|
+|Manifest (852)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -101,6 +101,7 @@
 |[Anysphere.Cursor](https://www.cursor.com/)|<a href="./bucket/a/Anysphere/Anysphere.Cursor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The AI Code Editor|
 |[AnyTXT.AnyTXTSearcher](https://anytxt.net/)|<a href="./bucket/a/AnyTXT/AnyTXT.AnyTXTSearcher.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A Desktop Search Tool with A Powerful Full-Text Search Engine|
 |[AnyTXT.AnyTXTSearcher.OCR](https://anytxt.net/)|<a href="./bucket/a/AnyTXT/AnyTXT.AnyTXTSearcher.OCR.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A Desktop Search Tool with A Powerful Full-Text Search Engine|
+|[Apipost.ApiPost](https://www.apipost.cn/)|<a href="./bucket/a/Apipost/Apipost.ApiPost.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|AI-driven next-generation API development management tool|
 |[AppByTroye.KoodoReader](https://koodo.960960.xyz/)|<a href="./bucket/a/AppByTroye/AppByTroye.KoodoReader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cross-platform ebook reader|
 |[Appest.Dida](https://www.dida365.com/)|<a href="./bucket/a/Appest/Appest.Dida.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Dida is a powerful to-do & task management app|
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="./bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open-source alternative to Notion. You are in charge of your data and customizations|
