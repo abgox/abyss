@@ -99,19 +99,3 @@ jobs:
               repo: context.repo.repo,
               ref: `heads/${branch}`
             });
-
-      - name: Check rate limit
-        shell: pwsh
-        run: |
-          # Check rate limit
-          $headers = @{
-              Authorization = "Bearer $env:GITHUB_TOKEN"
-              Accept        = 'application/vnd.github.v3+json'
-          }
-          try {
-              $response = Invoke-RestMethod -Uri 'https://api.github.com/rate_limit' -Headers $headers
-              Write-Output $response.rate
-          }
-          catch {
-              Write-Output 'Failed to check rate limit'
-          }
