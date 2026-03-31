@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (852)|Tag|Description|
+|Manifest (853)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -93,6 +93,7 @@
 |[amzxyz.rime_wanxiang.zrm](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.zrm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (zrm)|
 |[AndrewCantino.McFly](https://github.com/cantino/mcfly)|<a href="./bucket/a/AndrewCantino/AndrewCantino.McFly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Fly through your shell history|
 |[Andromeda.Andromeda](https://tryandromeda.dev/)|<a href="./bucket/a/Andromeda/Andromeda.Andromeda.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A modern, fast, and secure JavaScript & TypeScript runtime|
+|[AnInsomniacy.MotrixNext](https://github.com/AnInsomniacy/motrix-next)|<a href="./bucket/a/AnInsomniacy/AnInsomniacy.MotrixNext.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A full-featured download manager|
 |[Anthropic.ClaudeCode](https://www.anthropic.com/claude-code)|<a href="./bucket/a/Anthropic/Anthropic.ClaudeCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Unleash Claude's raw power directly in your terminal|
 |[antonreshetov.massCode](https://masscode.io/)|<a href="./bucket/a/antonreshetov/antonreshetov.massCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open source code snippet manager for developers|
 |[Anxcye.AnxReader](https://anx.anxcye.com/)|<a href="./bucket/a/Anxcye/Anxcye.AnxReader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A thoughtfully crafted e-book reader for book lovers|

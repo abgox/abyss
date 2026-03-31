@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (852)|Tag|Description|
+|Manifest (853)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -93,6 +93,7 @@
 |[amzxyz.rime_wanxiang.zrm](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.zrm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (自然码)|
 |[AndrewCantino.McFly](https://github.com/cantino/mcfly)|<a href="./bucket/a/AndrewCantino/AndrewCantino.McFly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在你的 shell 历史中快速穿梭|
 |[Andromeda.Andromeda](https://tryandromeda.dev/)|<a href="./bucket/a/Andromeda/Andromeda.Andromeda.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个现代化、快速且安全的 JavaScript 和 TypeScript 运行时环境|
+|[AnInsomniacy.MotrixNext](https://github.com/AnInsomniacy/motrix-next)|<a href="./bucket/a/AnInsomniacy/AnInsomniacy.MotrixNext.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款功能齐全的下载管理器|
 |[Anthropic.ClaudeCode](https://www.anthropic.com/claude-code)|<a href="./bucket/a/Anthropic/Anthropic.ClaudeCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在终端中直接释放 Claude 的强大功能|
 |[antonreshetov.massCode](https://masscode.io/)|<a href="./bucket/a/antonreshetov/antonreshetov.massCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款面向开发者的免费开源代码片段管理器|
 |[Anxcye.AnxReader](https://anx.anxcye.com/)|<a href="./bucket/a/Anxcye/Anxcye.AnxReader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款为书迷精心打造的电子书阅读器|
