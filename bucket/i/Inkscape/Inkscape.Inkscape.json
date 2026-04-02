@@ -1,0 +1,70 @@
+{
+    "version": "1.4.3",
+    "description": "一款专业的矢量图形软件 | A professional vector graphics software",
+    "homepage": "https://inkscape.org/",
+    "license": {
+        "identifier": "GPL-2.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://media.inkscape.org/dl/resources/file/inkscape-1.4.3.exe",
+            "hash": "79a8b45eeda8c88990da3719e4cac629a1816db6307123227e66789fd5489b6b"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\bin\\inkview.exe",
+            "Inkview"
+        ],
+        [
+            "app\\bin\\inkscape.exe",
+            "Inkscape"
+        ]
+    ],
+    "link": "$env:AppData\\inkscape",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-App -Uninstaller 'app\\Uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Inkscape.Inkscape' 'exe'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
