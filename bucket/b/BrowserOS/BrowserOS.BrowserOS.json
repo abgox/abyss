@@ -11,8 +11,11 @@
             "hash": "dda9acbb40d40ab11680b2c7dc87d3baca189b6add92475b9634db4c137a1b7c"
         }
     },
-    "location": "$env:ProgramFiles\\BrowserOS\\BrowserOS",
-    "link": "$env:LocalAppData\\BrowserOS\\BrowserOS\\User Data",
+    "location": "$env:ProgramFiles\\Chromium\\Application",
+    "link": [
+        "$env:LocalAppData\\BrowserOS\\BrowserOS\\User Data",
+        "$home\\.browseros"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -30,7 +33,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Require-Admin",
-        "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\BrowserOS\\BrowserOS\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
+        "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Chromium\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall','--system-level','--multi-install','--force-uninstall'",
         "A-Remove-Link"
     ],
@@ -44,7 +47,7 @@
             ". $pwd\\script\\utils.ps1",
             "A-Get-VersionFromGithubAPI"
         ],
-        "regex": "(.+)"
+        "regex": "^([\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {
