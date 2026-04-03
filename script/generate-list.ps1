@@ -104,6 +104,9 @@ foreach ($path in $PathList) {
             renamed {
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/></a>'
             }
+            virtual {
+                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/virtual-%23149599" style="display:inline" alt="virtual"/></a>'
+            }
             default {
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>'
                 # $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" style="display:inline" alt="version" /></a>'

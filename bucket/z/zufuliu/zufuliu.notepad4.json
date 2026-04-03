@@ -47,6 +47,9 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "$manifest.persist | ForEach-Object {",
+        "   Rename-Item -Path \"$dir\\app\\$($_[1])-default\" -NewName $_[1] -ErrorAction SilentlyContinue",
+        "}",
         "A-Start-Install"
     ],
     "post_install": [

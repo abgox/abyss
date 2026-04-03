@@ -3192,7 +3192,7 @@
                 {
                     "properties": {
                         "version": {
-                            "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special values to control manifest status: `pending`, `renamed`, `deprecated`",
+                            "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special values to control manifest status: `pending`, `renamed`, `deprecated`, `virtual`",
                             "anyOf": [
                                 {},
                                 {
@@ -3214,6 +3214,14 @@
                                 {
                                     "enum": [
                                         "deprecated"
+                                    ],
+                                    "markdownEnumDescriptions": [
+                                        "[abyss](https://abyss.abgox.com) special value to control manifest status, refer to [Manifest Status Control](https://abyss.abgox.com/features/manifest-status-control)"
+                                    ]
+                                },
+                                {
+                                    "enum": [
+                                        "virtual"
                                     ],
                                     "markdownEnumDescriptions": [
                                         "[abyss](https://abyss.abgox.com) special value to control manifest status, refer to [Manifest Status Control](https://abyss.abgox.com/features/manifest-status-control)"
@@ -3423,7 +3431,7 @@
                         },
                         "location": {
                             "title": "The installation location of the app (if it is external)",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If the app is installed to some standard software directories, instead of scoop directory, then it needs to be specified using this field.\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- Refer to: https://abyss.abgox.com/faq/external-installation-directory",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If the app is installed to some standard software directories, instead of scoop directory, then it needs to be specified using this field.\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- If the version is `virtual`, it means the assumed installation location of the app.\n- Refer to: https://abyss.abgox.com/faq/external-installation-directory",
                             "allOf": [
                                 {
                                     "$ref": "#/definitions/str",
@@ -3591,7 +3599,9 @@
                             "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`\n- In abyss, it is recommended to use `A-Install-Inno` instead of this field",
                             "enum": [
                                 true
-                            ]
+                            ],
+                            "not": true,
+                            "errorMessage": "Please use 'A-Install-Inno' instead of 'innosetup' field"
                         },
                         "font": {
                             "title": "Install as a font manifest",
@@ -4023,6 +4033,14 @@
                                         {},
                                         {
                                             "enum": [
+                                                "nightly"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "Ensure that when checking for updates, the new version is `nightly`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
                                                 "pending"
                                             ],
                                             "markdownEnumDescriptions": [
@@ -4043,6 +4061,14 @@
                                             ],
                                             "markdownEnumDescriptions": [
                                                 "Ensure that when checking for updates, the new version is `deprecated`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
+                                                "virtual"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "Ensure that when checking for updates, the new version is `virtual`"
                                             ]
                                         }
                                     ]
@@ -4127,6 +4153,10 @@
                                             {
                                                 "const": "A-Install-Inno",
                                                 "markdownDescription": "Use `innosetup` installer."
+                                            },
+                                            {
+                                                "const": "A-Install-Burn",
+                                                "markdownDescription": "Use `burn` installer."
                                             },
                                             {
                                                 "const": "A-Install-Msi",
@@ -4408,20 +4438,16 @@
                                                 "markdownDescription": "Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
                                             },
                                             {
-                                                "const": "A-Uninstall-Msi",
-                                                "markdownDescription": "Uninstall the application (`msi`)"
-                                            },
-                                            {
-                                                "pattern": "A-Uninstall-Msi",
-                                                "markdownDescription": "Uninstall the application (`msi`)"
-                                            },
-                                            {
                                                 "const": "A-Uninstall-Inno",
                                                 "markdownDescription": "Uninstall the application (`InnoSetup`)"
                                             },
                                             {
-                                                "pattern": "A-Uninstall-Inno",
-                                                "markdownDescription": "Uninstall the application (`InnoSetup`)"
+                                                "const": "A-Uninstall-Burn",
+                                                "markdownDescription": "Uninstall the application (`burn`)"
+                                            },
+                                            {
+                                                "const": "A-Uninstall-Msi",
+                                                "markdownDescription": "Uninstall the application (`msi`)"
                                             },
                                             {
                                                 "const": "A-Uninstall-Manually 'app'",
@@ -4744,6 +4770,27 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)(A-Uninstall-Burn|A-Uninstall-Manually)"
+                                                    },
+                                                    "errorMessage": "'A-Install-Burn' is used in 'pre_install', while 'A-Uninstall-Burn' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
                                                         "pattern": "(?<!#.*)A-Install-Msi"
                                                     }
                                                 }
@@ -4907,6 +4954,27 @@
                                                         "pattern": "(?<!#.*)A-Install-Inno"
                                                     },
                                                     "errorMessage": "'A-Uninstall-Inno' is used in 'pre_uninstall', while 'A-Install-Inno' is missing in 'pre_install'"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Uninstall-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    },
+                                                    "errorMessage": "'A-Uninstall-Burn' is used in 'pre_uninstall', while 'A-Install-Burn' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -5171,7 +5239,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             },
                                             "checkver": {
                                                 "required": [
@@ -5272,6 +5340,30 @@
                                                         }
                                                     }
                                                 }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^virtual$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^virtual$",
+                                                                    "errorMessage": "When the version is 'virtual', it must be 'virtual'."
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         ]
                                     }
@@ -5285,7 +5377,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             }
                                         }
                                     },
@@ -5302,10 +5394,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                    "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                                 },
                                                                 "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             },
                                                             "hash": {
                                                                 "type": [
@@ -5314,10 +5406,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                    "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                                 },
                                                                 "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             }
                                                         }
                                                     }
