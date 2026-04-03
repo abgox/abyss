@@ -9,6 +9,7 @@ $abgox_abyss = @{
         LinkDirectory      = "$dir\abgox-abyss-A-New-LinkDirectory.json"
         InstallApp         = "$dir\abgox-abyss-A-Install-App.json"
         InstallInno        = "$dir\abgox-abyss-A-Install-Inno.json"
+        InstallBurn        = "$dir\abgox-abyss-A-Install-Burn.json"
         InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
         MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
         EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
@@ -892,6 +893,105 @@ function A-Uninstall-Inno {
     }
 
     Write-Host "Running the uninstaller: $($Uninstaller.Name)"
+
+    $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
+
+    try {
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
+}
+
+function A-Install-Burn {
+    param(
+        [array]$ArgumentList
+    )
+
+    # $fname 由 Scoop 提供，即下载的文件名
+    $Installer = Join-Path $dir ($fname | Select-Object -First 1)
+
+    if (!(Test-Path -LiteralPath $Installer)) {
+        error "'$Installer' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+
+    $logPath = "$env:TEMP\scoop_$($app)_$($version)_install_burn.log"
+
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $ArgumentList = @('/quiet', '/norestart', '/log', $logPath)
+    }
+
+    $InstallerFileName = Split-Path $Installer -Leaf
+
+    Write-Host "Running the installer: $InstallerFileName"
+
+    try {
+        $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru
+        $process | Wait-Process -ErrorAction Stop
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        $process | Stop-Process -Force -ErrorAction SilentlyContinue
+        A-Exit
+    }
+
+    $log = Get-Content $logPath -ErrorAction SilentlyContinue
+    $guid = $log | Select-String 'WixBundleProviderKey = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+    $Uninstaller = Get-ChildItem "C:\ProgramData\Package Cache\$guid" -File -Filter *.exe -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+
+    if (-not $Uninstaller) {
+        $Uninstaller = $Installer
+    }
+
+    @{
+        Installer    = $Installer
+        ArgumentList = $ArgumentList
+        Uninstaller  = $Uninstaller
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallBurn -Force -Encoding utf8
+
+    if ($Uninstaller -and !(Test-Path -LiteralPath $Uninstaller)) {
+        error "'$Uninstaller' not found."
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+}
+
+function A-Uninstall-Burn {
+    param(
+        [array]$ArgumentList = @('/uninstall', '/quiet')
+    )
+
+    $InstallerInfoPath = $abgox_abyss.path.InstallBurn
+
+    if (Test-Path -LiteralPath $InstallerInfoPath) {
+        try {
+            $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+        }
+        catch {
+            error $_.Exception.Message
+            return
+        }
+    }
+    else {
+        return
+    }
+
+    $Uninstaller = $InstallerInfo.Uninstaller
+    $UninstallerName = Split-Path $Uninstaller -Leaf
+
+    if (-not $Uninstaller) {
+        warn "'$UninstallerName' not found."
+        return
+    }
+
+    Write-Host "Running the uninstaller: $UninstallerName"
 
     $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
 

@@ -3599,7 +3599,9 @@
                             "markdownDescription": "- 如果安装程序基于 `InnoSetup`，则设置为 `true`\n- 在 abyss 中，应该优先使用 `A-Install-Inno` 而不是此字段",
                             "enum": [
                                 true
-                            ]
+                            ],
+                            "not": true,
+                            "errorMessage": "请使用 A-Install-Inno 而不是 innosetup 字段"
                         },
                         "font": {
                             "title": "作为字体清单安装",
@@ -4031,6 +4033,14 @@
                                         {},
                                         {
                                             "enum": [
+                                                "nightly"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "确保检查更新时，新版本为 `nightly`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
                                                 "pending"
                                             ],
                                             "markdownEnumDescriptions": [
@@ -4143,6 +4153,10 @@
                                             {
                                                 "const": "A-Install-Inno",
                                                 "markdownDescription": "使用 innosetup 安装程序"
+                                            },
+                                            {
+                                                "const": "A-Install-Burn",
+                                                "markdownDescription": "使用 burn 安装程序"
                                             },
                                             {
                                                 "const": "A-Install-Msi",
@@ -4424,20 +4438,16 @@
                                                 "markdownDescription": "禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用\n- 参考: https://abyss.abgox.com/faq/deny-update"
                                             },
                                             {
-                                                "const": "A-Uninstall-Msi",
-                                                "markdownDescription": "卸载应用 (`msi`)"
-                                            },
-                                            {
-                                                "pattern": "A-Uninstall-Msi",
-                                                "markdownDescription": "卸载应用 (`msi`)"
-                                            },
-                                            {
                                                 "const": "A-Uninstall-Inno",
                                                 "markdownDescription": "卸载应用 (`innosetup`)"
                                             },
                                             {
-                                                "pattern": "A-Uninstall-Inno",
-                                                "markdownDescription": "卸载应用 (`innosetup`)"
+                                                "const": "A-Uninstall-Burn",
+                                                "markdownDescription": "卸载应用 (`burn`)"
+                                            },
+                                            {
+                                                "const": "A-Uninstall-Msi",
+                                                "markdownDescription": "卸载应用 (`msi`)"
                                             },
                                             {
                                                 "const": "A-Uninstall-Manually 'app'",
@@ -4760,6 +4770,27 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)(A-Uninstall-Burn|A-Uninstall-Manually)"
+                                                    },
+                                                    "errorMessage": "pre_install 中使用了 A-Install-Burn，而 pre_uninstall 中缺少 A-Uninstall-Burn 或 A-Uninstall-Manually"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
                                                         "pattern": "(?<!#.*)A-Install-Msi"
                                                     }
                                                 }
@@ -4923,6 +4954,27 @@
                                                         "pattern": "(?<!#.*)A-Install-Inno"
                                                     },
                                                     "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Inno，而 pre_install 中缺少 A-Install-Inno"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Uninstall-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    },
+                                                    "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Burn，而 pre_install 中缺少 A-Install-Burn"
                                                 }
                                             }
                                         }

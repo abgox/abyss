@@ -3599,7 +3599,9 @@
                             "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`\n- In abyss, it is recommended to use `A-Install-Inno` instead of this field",
                             "enum": [
                                 true
-                            ]
+                            ],
+                            "not": true,
+                            "errorMessage": "Please use 'A-Install-Inno' instead of 'innosetup' field"
                         },
                         "font": {
                             "title": "Install as a font manifest",
@@ -4031,6 +4033,14 @@
                                         {},
                                         {
                                             "enum": [
+                                                "nightly"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "Ensure that when checking for updates, the new version is `nightly`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
                                                 "pending"
                                             ],
                                             "markdownEnumDescriptions": [
@@ -4143,6 +4153,10 @@
                                             {
                                                 "const": "A-Install-Inno",
                                                 "markdownDescription": "Use `innosetup` installer."
+                                            },
+                                            {
+                                                "const": "A-Install-Burn",
+                                                "markdownDescription": "Use `burn` installer."
                                             },
                                             {
                                                 "const": "A-Install-Msi",
@@ -4424,20 +4438,16 @@
                                                 "markdownDescription": "Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
                                             },
                                             {
-                                                "const": "A-Uninstall-Msi",
-                                                "markdownDescription": "Uninstall the application (`msi`)"
-                                            },
-                                            {
-                                                "pattern": "A-Uninstall-Msi",
-                                                "markdownDescription": "Uninstall the application (`msi`)"
-                                            },
-                                            {
                                                 "const": "A-Uninstall-Inno",
                                                 "markdownDescription": "Uninstall the application (`InnoSetup`)"
                                             },
                                             {
-                                                "pattern": "A-Uninstall-Inno",
-                                                "markdownDescription": "Uninstall the application (`InnoSetup`)"
+                                                "const": "A-Uninstall-Burn",
+                                                "markdownDescription": "Uninstall the application (`burn`)"
+                                            },
+                                            {
+                                                "const": "A-Uninstall-Msi",
+                                                "markdownDescription": "Uninstall the application (`msi`)"
                                             },
                                             {
                                                 "const": "A-Uninstall-Manually 'app'",
@@ -4760,6 +4770,27 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)(A-Uninstall-Burn|A-Uninstall-Manually)"
+                                                    },
+                                                    "errorMessage": "'A-Install-Burn' is used in 'pre_install', while 'A-Uninstall-Burn' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
                                                         "pattern": "(?<!#.*)A-Install-Msi"
                                                     }
                                                 }
@@ -4923,6 +4954,27 @@
                                                         "pattern": "(?<!#.*)A-Install-Inno"
                                                     },
                                                     "errorMessage": "'A-Uninstall-Inno' is used in 'pre_uninstall', while 'A-Install-Inno' is missing in 'pre_install'"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Uninstall-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    },
+                                                    "errorMessage": "'A-Uninstall-Burn' is used in 'pre_uninstall', while 'A-Install-Burn' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
