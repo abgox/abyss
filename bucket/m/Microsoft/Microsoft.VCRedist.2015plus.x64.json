@@ -16,8 +16,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
         "A-Require-Admin",
-        "Copy-Item -Path \"$dir\\$fname\" \"$dir\\uninstall-$fname\"",
-        "A-Install-App -Uninstaller \"$dir\\uninstall-$fname\" -ArgumentList '/quiet', '/norestart'"
+        "A-Install-Burn"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -30,7 +29,7 @@
         "A-Start-Uninstall",
         "A-Require-Admin",
         "A-Stop-Process",
-        "A-Uninstall-App -ArgumentList '/uninstall', '/quiet'"
+        "A-Uninstall-Burn"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
