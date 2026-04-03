@@ -13,11 +13,11 @@
 
 |Badge|Description|
 |:-:|-|
-|<img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/>|它是可用的，可以正常安装或更新|
-|<img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/>|它是待定的，无法安装<br/>如果在 `pending` 之前完成安装，则无法通过 Scoop 更新|
-|<img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/>|它已被弃用，无法安装<br/>如果在 `deprecated` 之前完成安装，则无法通过 Scoop 更新|
-|<img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/>|它已被重命名，安装或更新都会失败<br/>在错误信息中会显示新的名称，你应该使用新的名称进行安装<br/>如果存在 [Persist](https://abyss.abgox.com/features/data-persistence#persist) 或 [Link](https://abyss.abgox.com/features/data-persistence#link) 的数据，会自动迁移|
-
+|<img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/>|它是可用的，可以通过 Scoop 安装或更新|
+|<img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/>|它是待定的，安装会被拒绝<br/>如果在 `pending` 之前完成安装，则通过 Scoop 更新会被拒绝|
+|<img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/>|它已被弃用，安装会被拒绝<br/>如果在 `deprecated` 之前完成安装，则通过 Scoop 更新会被拒绝|
+|<img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/>|它已被重命名，安装或更新都会被拒绝<br/>错误信息中包含新的名称，你应该使用它进行安装<br/>如果存在 [Persist](https://abyss.abgox.com/features/data-persistence#persist) 或 [Link](https://abyss.abgox.com/features/data-persistence#link) 的数据，会自动迁移|
+|<img src="https://img.shields.io/badge/virtual-%23149599" style="display:inline" alt="virtual"/>|它是虚拟的，不进行实际的应用安装<br/>它只会通过 [Persist](https://abyss.abgox.com/features/data-persistence#persist) 或 [Link](https://abyss.abgox.com/features/data-persistence#link) 进行数据持久化|
 
 ---
 

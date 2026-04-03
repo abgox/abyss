@@ -3192,7 +3192,7 @@
                 {
                     "properties": {
                         "version": {
-                            "markdownDescription": "- 软件的版本号\n- [abyss](https://abyss.abgox.com) 提供了特殊值用来实现 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control): `pending`、`renamed`、`deprecated`",
+                            "markdownDescription": "- 软件的版本号\n- [abyss](https://abyss.abgox.com) 提供了特殊值用来实现 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control): `pending`、`renamed`、`deprecated`, `virtual`",
                             "anyOf": [
                                 {},
                                 {
@@ -3214,6 +3214,14 @@
                                 {
                                     "enum": [
                                         "deprecated"
+                                    ],
+                                    "markdownEnumDescriptions": [
+                                        "[abyss](https://abyss.abgox.com) 中用于指定清单状态的特殊值，参考 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control)"
+                                    ]
+                                },
+                                {
+                                    "enum": [
+                                        "virtual"
                                     ],
                                     "markdownEnumDescriptions": [
                                         "[abyss](https://abyss.abgox.com) 中用于指定清单状态的特殊值，参考 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control)"
@@ -3423,7 +3431,7 @@
                         },
                         "location": {
                             "title": "应用的安装位置 (如果在外部)",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 如果版本号为 `virtual`，则它表示应用假定的安装位置\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
                             "allOf": [
                                 {
                                     "$ref": "#/definitions/str",
@@ -4043,6 +4051,14 @@
                                             ],
                                             "markdownEnumDescriptions": [
                                                 "确保检查更新时，新版本为 `deprecated`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
+                                                "virtual"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "确保检查更新时，新版本为 `virtual`"
                                             ]
                                         }
                                     ]
@@ -5171,7 +5187,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             },
                                             "checkver": {
                                                 "required": [
@@ -5272,6 +5288,30 @@
                                                         }
                                                     }
                                                 }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^virtual$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^virtual$",
+                                                                    "errorMessage": "version 为 virtual 时，它只能是 virtual"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         ]
                                     }
@@ -5285,7 +5325,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             }
                                         }
                                     },
@@ -5302,10 +5342,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    "errorMessage": "version 为 pending|renamed|deprecated|virtual 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
                                                                 },
                                                                 "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "version 为 pending|renamed|deprecated|virtual 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             },
                                                             "hash": {
                                                                 "type": [
@@ -5314,10 +5354,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                    "errorMessage": "version 为 ppending|renamed|deprecated|virtual 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
                                                                 },
                                                                 "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                "errorMessage": "version 为 ppending|renamed|deprecated|virtual 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
                                                             }
                                                         }
                                                     }

@@ -550,7 +550,12 @@ function A-Stop-Process {
         return
     }
 
-    $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
+    if ($manifest.location -or $version -eq 'virtual') {
+        $Paths = @($manifest.location)
+    }
+    else {
+        $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
+    }
     $Paths += $ExtraPaths
 
     # 由于字段可能包含可展开的变量，应该使用安装时展开的值，以避免安装和卸载期间环境变量变化导致的不一致性
@@ -1257,7 +1262,7 @@ function A-Get-VersionFromGithubAPI {
         [switch]$PreRelease,
         [switch]$Newest
     )
-    if ($json.version -in 'pending', 'renamed', 'deprecated') {
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
         return $json.version
     }
     if (-not $json.checkver.regex) {
@@ -1407,7 +1412,7 @@ function A-Get-VersionFromPage {
         [string]$Url
     )
 
-    if ($json.version -in 'pending', 'renamed', 'deprecated') {
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
         return $json.version
     }
 
@@ -1481,7 +1486,7 @@ function A-Get-InstallerInfoFromWinget {
         [string]$MaxExclusiveVersion
     )
 
-    if ($json.version -in 'pending', 'renamed', 'deprecated') {
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
         $out = @("ver:$($json.version);")
         return $installerInfo, $out
     }
@@ -1901,9 +1906,6 @@ function A-Copy-Item {
 
         if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
             $needCopy = $targetItem.PSIsContainer -and -not (A-Test-DirectoryNotEmpty $Destination)
-        }
-        else {
-            $needCopy = $true
         }
     }
 
