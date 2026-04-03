@@ -105,7 +105,7 @@ foreach ($path in $PathList) {
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/></a>'
             }
             virtual {
-                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/virtual-%23149599" style="display:inline" alt="virtual"/>'
+                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/virtual-%23149599" style="display:inline" alt="virtual"/></a>'
             }
             default {
                 $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>'
