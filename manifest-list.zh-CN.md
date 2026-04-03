@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (860)|Tag|Description|
+|Manifest (861)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -529,6 +529,7 @@
 |[Microsoft.PowerShell.Preview](https://github.com/PowerShell/PowerShell)|<a href="./bucket/m/Microsoft/Microsoft.PowerShell.Preview.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Msix](https://abyss.abgox.com/faq/msix)|pwsh - 一个跨平台的 PowerShell Core|
 |[Microsoft.PowerToys](https://github.com/microsoft/PowerToys)|<a href="./bucket/m/Microsoft/Microsoft.PowerToys.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|一组实用程序，供高级用户调整和简化他们的 Windows 体验以提高生产力|
 |[Microsoft.Teams](https://github.com/microsoft/winget-pkgs/tree/master/manifests/m/Microsoft/Teams)|<a href="./bucket/m/Microsoft/Microsoft.Teams.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|使用更快、更简单、更智能和更灵活的 Teams，更有效地进行协作|
+|[Microsoft.VCRedist.2015plus.x64](https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist)|<a href="./bucket/m/Microsoft/Microsoft.VCRedist.2015plus.x64.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Microsoft Visual C++ v14 可再发行组件包（x64）|
 |[Microsoft.VisualStudioCode](https://code.visualstudio.com/)|<a href="./bucket/m/Microsoft/Microsoft.VisualStudioCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器|
 |[Microsoft.VisualStudioCode.CLI](https://code.visualstudio.com/)|<a href="./bucket/m/Microsoft/Microsoft.VisualStudioCode.CLI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器|
 |[Microsoft.VisualStudioCode.Insiders](https://code.visualstudio.com/)|<a href="./bucket/m/Microsoft/Microsoft.VisualStudioCode.Insiders.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|(Insiders 版本)<br/>vscode - 一个轻量级、功能强大，插件生态丰富的文件编辑器|
