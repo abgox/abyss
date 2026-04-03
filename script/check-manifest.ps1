@@ -123,7 +123,7 @@ foreach ($file in $files) {
     $download_url = $c.architecture.'64bit'.url, $c.architecture.arm64.url, $c.url | Select-Object -First 1
     if ($download_url) {
         $download_url | ForEach-Object {
-            $extension = $_.Split('.')[-1]
+            $extension = $_.Split('/')[-1].Split('.')[-1]
             $type += $extension.Replace('msi_', 'msi')
         }
         $line += $type -join ', '
