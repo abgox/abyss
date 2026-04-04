@@ -1,0 +1,63 @@
+{
+    "version": "7.9",
+    "description": "(NR: narrow, NF: Nerd Font, CN: Chinese) 一款开源的 2:1 等宽字体 | (NR: narrow, NF: Nerd Font, CN: Chinese) An open source 2:1 monospaced font",
+    "homepage": "https://github.com/subframe7536/maple-font",
+    "license": {
+        "identifier": "OFL-1.1"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/maple-font/releases/download/v7.9-0/MapleMonoNR-NF-CN-unhinted.zip",
+            "hash": "5d31b9f8bf05d14f24e2348de58db32554f7d88a2d24d04bc29d64545efaef78"
+        },
+        "arm64": {
+            "url": "https://github.com/abgox/maple-font/releases/download/v7.9-0/MapleMonoNR-NF-CN-unhinted.zip",
+            "hash": "5d31b9f8bf05d14f24e2348de58db32554f7d88a2d24d04bc29d64545efaef78"
+        }
+    },
+    "conflicts": [
+        "subframe7536.Maple-Mono.NR-NF-CN",
+        "subframe7536.Maple-Mono.NR-NF-CN-Unhinted"
+    ],
+    "font": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/subframe7536/maple-font/releases/download/v$version/MapleMonoNR-NF-CN-unhinted.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/subframe7536/maple-font/releases/download/v$version/MapleMonoNR-NF-CN-unhinted.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
