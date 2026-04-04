@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (861)|Tag|Description|
+|Manifest (863)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -96,6 +96,8 @@
 |[Andromeda.Andromeda](https://tryandromeda.dev/)|<a href="./bucket/a/Andromeda/Andromeda.Andromeda.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A modern, fast, and secure JavaScript & TypeScript runtime|
 |[AnInsomniacy.MotrixNext](https://github.com/AnInsomniacy/motrix-next)|<a href="./bucket/a/AnInsomniacy/AnInsomniacy.MotrixNext.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A full-featured download manager|
 |[Anthropic.ClaudeCode](https://www.anthropic.com/claude-code)|<a href="./bucket/a/Anthropic/Anthropic.ClaudeCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Unleash Claude's raw power directly in your terminal|
+|[antonmedv.fx](https://fx.wtf/)|<a href="./bucket/a/antonmedv/antonmedv.fx.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Terminal JSON viewer & processor|
+|[antonmedv.walk](https://github.com/antonmedv/walk)|<a href="./bucket/a/antonmedv/antonmedv.walk.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Terminal file manager|
 |[antonreshetov.massCode](https://masscode.io/)|<a href="./bucket/a/antonreshetov/antonreshetov.massCode.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A free and open source code snippet manager for developers|
 |[Anxcye.AnxReader](https://anx.anxcye.com/)|<a href="./bucket/a/Anxcye/Anxcye.AnxReader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A thoughtfully crafted e-book reader for book lovers|
 |[AnyAssociation.Anytype](https://anytype.io/)|<a href="./bucket/a/AnyAssociation/AnyAssociation.Anytype.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Local-first, E2E encrypted software for creating and storing tasks, notes, ideas, documents, workflows, and more|
