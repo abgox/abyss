@@ -943,8 +943,11 @@ function A-Install-Burn {
     }
 
     $log = Get-Content $logPath -ErrorAction SilentlyContinue
-    $guid = $log | Select-String 'WixBundleProviderKey = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-    $Uninstaller = Get-ChildItem "C:\ProgramData\Package Cache\$guid" -File -Filter *.exe -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+    $guid = $log | Select-String 'WixBundleProviderKey = ([0-9A-Fa-f\-]{36})' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
+    if (-not $guid) {
+        $guid = $log | Select-String 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\{([0-9A-Fa-f\-]{36})\}' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
+    }
+    $Uninstaller = Get-ChildItem "C:\ProgramData\Package Cache\{$guid}" -File -Filter *.exe -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
 
     if (-not $Uninstaller) {
         $Uninstaller = $Installer
@@ -1068,10 +1071,10 @@ function A-Install-Msi {
     @{
         Installer      = $Installer
         Uninstaller    = $Installer
-        ProductCode    = $log | Select-String 'ProductCode = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-        ProductName    = $log | Select-String 'ProductName = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-        ProductVersion = $log | Select-String 'ProductVersion = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
-        Manufacturer   = $log | Select-String 'Manufacturer = (.+)' -AllMatches | ForEach-Object { $_.Matches.Groups[1].Value }
+        ProductCode    = $log | Select-String 'ProductCode = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
+        ProductName    = $log | Select-String 'ProductName = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
+        ProductVersion = $log | Select-String 'ProductVersion = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
+        Manufacturer   = $log | Select-String 'Manufacturer = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
         ArgumentList   = $ArgumentList
     } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
 }
