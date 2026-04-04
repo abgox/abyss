@@ -1370,28 +1370,26 @@ function A-Get-VersionFromGithubAPI {
         return
     }
 
-    if ($url -notlike 'https://github.com/*/*' -and $url -notlike 'https://api.github.com/*') {
-        if (-not $json) {
-            Write-Host "::error::`$json is invalid." -ForegroundColor Red
-            return
-        }
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
+    }
 
-        $arch = $json.autoupdate.architecture
-        $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
+    $arch = $json.autoupdate.architecture
+    $url = $json.checkver.url, $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
 
-        if ($url -is [array]) {
-            $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
-        }
+    if ($url -is [array]) {
+        $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
+    }
 
-        if (-not $url) {
-            Write-Host "::error::`$url is invalid." -ForegroundColor Red
-            return
-        }
+    if (-not $url) {
+        Write-Host "::error::`$url is invalid." -ForegroundColor Red
+        return
+    }
 
-        if ($url -notlike 'https://github.com/*/*') {
-            Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
-            return
-        }
+    if ($url -notlike 'https://github.com/*/*') {
+        Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
+        return
     }
 
     $headers = @{
