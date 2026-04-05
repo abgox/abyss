@@ -2199,8 +2199,18 @@ function A-Add-AppxPackage {
         [string]$Path
     )
 
+    $params = @{
+        Path                      = $Path
+        ForceApplicationShutdown  = $true
+        ForceUpdateFromAnyVersion = $true
+        ErrorAction               = 'Stop'
+    }
+    if ((Get-Command Add-AppxPackage).Parameters.Keys -like 'AllowUnsigned') {
+        $params.AllowUnsigned = $true
+    }
+
     try {
-        Add-AppxPackage -Path $Path -AllowUnsigned -ForceApplicationShutdown -ForceUpdateFromAnyVersion -ErrorAction Stop
+        Add-AppxPackage @params
     }
     catch {
         error $_.Exception.Message
