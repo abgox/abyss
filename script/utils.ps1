@@ -2200,13 +2200,19 @@ function A-Add-AppxPackage {
     )
 
     $params = @{
-        Path                      = $Path
-        ForceApplicationShutdown  = $true
-        ForceUpdateFromAnyVersion = $true
-        ErrorAction               = 'Stop'
+        Path        = $Path
+        ErrorAction = 'Stop'
     }
-    if ((Get-Command Add-AppxPackage).Parameters.Keys -like 'AllowUnsigned') {
-        $params.AllowUnsigned = $true
+    $advancedFeatures = @(
+        'ForceApplicationShutdown',
+        'ForceUpdateFromAnyVersion',
+        'AllowUnsigned'
+    )
+    $supportedKeys = (Get-Command Add-AppxPackage).Parameters.Keys
+    foreach ($key in $advancedFeatures) {
+        if ($supportedKeys -contains $key) {
+            $params[$key] = $true
+        }
     }
 
     try {
@@ -2243,7 +2249,14 @@ function A-Remove-AppxPackage {
         if ($package.InstallLocation) {
             Get-Process | Where-Object { $_.Path -and $_.Path -like "*$($package.InstallLocation)*" } | Stop-Process -Force -ErrorAction SilentlyContinue
         }
-        $package | Remove-AppxPackage
+        $params = @{
+            Package = $package
+        }
+        $supportedKeys = (Get-Command Remove-AppxPackage).Parameters.Keys
+        if ($supportedKeys -contains 'PreserveRoamableApplicationData') {
+            $params['PreserveRoamableApplicationData'] = $true
+        }
+        Remove-AppxPackage @params
     }
 }
 
