@@ -74,11 +74,11 @@ jobs:
         run: git pull
 
       - name: Excavate
-        uses: ScoopInstaller/GithubActions@main
-        # uses: abgox/ScoopInstaller-GithubActions@main
+        # uses: ScoopInstaller/GithubActions@main
+        uses: abgox/ScoopInstaller-GithubActions@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SCOOP_REPO: https://github.com/abgox/Scoop
+          SCOOP_REPO: https://github.com/abgox/ScoopInstaller-Scoop
           SCOOP_BRANCH: abyss
           SKIP_UPDATED: 1
           THROW_ERROR: 0
@@ -143,6 +143,7 @@ jobs:
           git add -u
           # scoop update 会忽略以 (chore) 开头的提交
           git commit -m "(chore): automatically update some content [skip ci]"
+          git pull --rebase origin ${{ github.event.repository.default_branch}}
           git push
 
   update-docs:
@@ -161,6 +162,7 @@ jobs:
           .\scripts\update-manifest-list.ps1
           git add -u
           git commit -m "chore: automatically update some content"
+          git pull --rebase origin main
           git push --force
 
   sync-repos:
