@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (913)|Tag|Description|
+|Manifest (914)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -908,6 +908,7 @@
 |[xemu-project.xemu](https://xemu.app/)|<a href="./bucket/x/xemu-project/xemu-project.xemu.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费的开源应用程序，可模拟初代微软 Xbox 游戏机，让人们能够在 Windows、macOS 和 Linux 系统上玩初代 Xbox 游戏|
 |[xfangfang.Wiliwili](https://xfangfang.github.io/wiliwili)|<a href="./bucket/x/xfangfang/xfangfang.Wiliwili.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个专为手柄用户设计的第三方 B 站客户端|
 |[xiaobai.MyuneMusic](https://github.com/xiaobaimc/myune_music)|<a href="./bucket/x/xiaobai/xiaobai.MyuneMusic.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个基于 Flutter (Dart) 实现的简易本地音乐播放器|
+|[XiaoYouChR.GhostDownloader](https://www.gd3.top/)|<a href="./bucket/x/XiaoYouChR/XiaoYouChR.GhostDownloader.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于 AI 的下一代跨平台多线程下载器|
 |[XIU2.UACWhitelistTool](https://github.com/XIU2/UACWhitelistTool)|<a href="./bucket/x/XIU2/XIU2.UACWhitelistTool.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个可以添加 UAC 白名单的小工具|
 |[xpipe-io.xpipe](https://xpipe.io/)|<a href="./bucket/x/xpipe-io/xpipe-io.xpipe.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一种新型的 shell 连接枢纽和远程文件管理器，它允许你从本地机器访问你的整个服务器基础设施|
 |[xushengfeng.eSearch](https://esearch-app.netlify.app/)|<a href="./bucket/x/xushengfeng/xushengfeng.eSearch.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|截屏、离线 OCR、搜索翻译、以图搜图、贴图、录屏、万向滚动截屏、屏幕翻译|
