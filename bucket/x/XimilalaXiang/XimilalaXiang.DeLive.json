@@ -1,0 +1,63 @@
+{
+    "version": "1.4.2",
+    "description": "系统级音频捕获 & 云端与本地 ASR 一体化桌面应用 | System-Level Audio Capture & Cloud and Local ASR in One Desktop App",
+    "homepage": "https://github.com/XimilalaXiang/DeLive",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/XimilalaXiang/DeLive/releases/download/v1.4.2/DeLive-1.4.2-x64.exe",
+            "hash": "7d9a01102c6d826d5196c9ca48c950270974785d4c6aad9525d4669b8b56bc29"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\DeLive.exe",
+            "DeLive"
+        ]
+    ],
+    "link": "$env:AppData\\delive",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall DeLive.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\delive-updater\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/XimilalaXiang/DeLive/releases/download/v$version/DeLive-$version-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
