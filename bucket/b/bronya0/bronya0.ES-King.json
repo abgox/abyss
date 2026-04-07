@@ -1,0 +1,63 @@
+{
+    "version": "0.31",
+    "description": "一个现代、实用的 ES 本地客户端 | A modern and practical elasticsearch GUI client",
+    "homepage": "https://github.com/Bronya0/ES-King",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Bronya0/ES-King/releases/download/v0.31/ES-King-v0.31-windows-x64.7z",
+            "hash": "e0aef6c839102d2d19f7e3c97bf3a260d509bfc095532f2503dd0cc0c498cdc2"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\ES-King.exe",
+    "shortcuts": [
+        [
+            "app\\ES-King.exe",
+            "ES-King"
+        ]
+    ],
+    "link": "$home\\.es-king",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:AppData\\ES-King.exe\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Bronya0/ES-King/releases/download/v$version/ES-King-v$version-windows-x64.7z"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
