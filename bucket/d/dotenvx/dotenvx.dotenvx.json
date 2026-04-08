@@ -1,0 +1,54 @@
+{
+    "version": "1.60.2",
+    "description": "一款安全的 dotenv | A secure dotenv",
+    "homepage": "https://dotenvx.com/",
+    "license": {
+        "identifier": "BSD-3-Clause"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dotenvx/dotenvx/releases/download/v1.60.2/dotenvx-1.60.2-windows-x86_64.zip",
+            "hash": "60250726a87e5083ab0dac545363372805dc8e45889638e175ef70dece65bfca"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\dotenvx.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dotenvx/dotenvx/releases/download/v$version/dotenvx-$version-windows-x86_64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
