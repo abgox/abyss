@@ -52,24 +52,24 @@ jobs:
               throw error;
             }
 
-  prepare-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      segments: ${{ steps.set.outputs.segments }}
-    steps:
-      - id: set
-        shell: pwsh
-        run: |
-          $json = ${{ secrets.SEGMENTS }} | ConvertTo-Json -Compress
-          "segments=$json" >> $env:GITHUB_OUTPUT
-
   excavate:
     name: Excavate
     runs-on: windows-latest
-    needs: prepare-matrix
     strategy:
       matrix:
-        segment: ${{ fromJson(needs.prepare-matrix.outputs.segments) }}
+        segment:
+          - "0-3"
+          - "4-6"
+          - "7-9"
+          - "a-c"
+          - "d-f"
+          - "g-i"
+          - "j-l"
+          - "m-o"
+          - "p-r"
+          - "s-u"
+          - "v-x"
+          - "y-z"
     env:
       TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
       SEGMENT: ${{ matrix.segment }}
