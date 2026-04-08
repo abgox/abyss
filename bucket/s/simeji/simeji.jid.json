@@ -1,0 +1,63 @@
+{
+    "version": "1.1.1",
+    "description": "JSON 增量挖掘工具。通过类似 jq 的过滤查询语句交互式深入解析 JSON 数据 | JSON Incremental Digger. Drill down JSON interactively by using filtering queries like jq",
+    "homepage": "https://github.com/simeji/jid",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/simeji/jid/releases/download/v1.1.1/jid_windows_amd64.zip",
+            "hash": "e4b82c539faca92ea1c6a24e65b1427bef62a04d6e357943d8716f97cbdeabb1"
+        },
+        "arm64": {
+            "url": "https://github.com/simeji/jid/releases/download/v1.1.1/jid_windows_arm64.zip",
+            "hash": "59ef4e4104f4c29469f8039fb8bbb7c71577f1f2887262e3d6840c9b0b1eb0e0"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\jid.exe",
+    "link": "$env:AppData\\jid",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/simeji/jid/releases/download/v$version/jid_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/simeji/jid/releases/download/v$version/jid_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
