@@ -808,7 +808,7 @@ function A-Uninstall-App {
 
 function A-Install-Inno {
     param(
-        [string]$Uninstaller = 'app\unins000.exe',
+        [string]$Uninstaller,
         [array]$ArgumentList
     )
 
@@ -834,8 +834,6 @@ function A-Install-Inno {
             "/Dir=`"$dir\app`""
         )
     }
-
-    $Uninstaller = A-Get-AbsolutePath $Uninstaller
     $InstallerFileName = Split-Path $Installer -Leaf
 
     Write-Host "Running the installer: $InstallerFileName"
@@ -849,6 +847,13 @@ function A-Install-Inno {
         A-Show-IssueCreationPrompt
         $process | Stop-Process -Force -ErrorAction SilentlyContinue
         A-Exit
+    }
+
+    if ($PSBoundParameters.ContainsKey('Uninstaller')) {
+        $Uninstaller = A-Get-AbsolutePath $Uninstaller
+    }
+    else {
+        $Uninstaller = "$dir\app\unins000.exe", "$dir\app\uninstall\unins000.exe" | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
     }
 
     # $log = Get-Content $logPath -ErrorAction SilentlyContinue
