@@ -27,6 +27,9 @@ jobs:
     name: Sync Repos
     needs: issue-handler
     runs-on: ubuntu-latest
+    if: |
+      contains(github.event.issue.labels.*.name, 'hash-fix-needed') &&
+      contains(github.event.issue.labels.*.name, 'verified')
     continue-on-error: true
     steps:
       - uses: Yikun/hub-mirror-action@master
