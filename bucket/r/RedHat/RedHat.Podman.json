@@ -1,0 +1,65 @@
+{
+    "version": "5.8.1",
+    "description": "用于开发、管理、运行 OCI 容器的无守护程序容器引擎 | A daemonless container engine for developing, managing, and running OCI Containers",
+    "homepage": "https://podman.io/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/containers/podman/releases/download/v5.8.1/podman-5.8.1-setup.exe",
+            "hash": "7b66b6caa88d070f5454d6effa7bbc7387b964f6d0d97df320f04ccca205ffe1"
+        }
+    },
+    "commands": "podman",
+    "location": "$env:ProgramFiles\\RedHat\\Podman",
+    "link": [
+        "$home\\.config\\containers\\podman",
+        "$home\\.local\\share\\containers",
+        "$env:AppData\\containers",
+        "$env:ProgramData\\containers"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Burn"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Burn"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/containers/podman/releases/download/v$version/podman-$version-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
