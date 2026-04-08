@@ -1,0 +1,61 @@
+{
+    "version": "0.10.0",
+    "description": "一款功能全面、特性丰富的 TOML 工具包 | A versatile, feature-rich TOML toolkit",
+    "homepage": "https://taplo.tamasfe.dev/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-windows-x86_64.zip",
+            "hash": "1615eed140039bd58e7089109883b1c434de5d6de8f64a993e6e8c80ca57bdf9"
+        },
+        "arm64": {
+            "url": "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-windows-aarch64.zip",
+            "hash": "65a50c5d3b78f6014e6bc6d64eb6dc1d4992bc236589c9bb29e5609fc3454674"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\taplo.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tamasfe/taplo/releases/download/$version/taplo-windows-x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/tamasfe/taplo/releases/download/$version/taplo-windows-aarch64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
