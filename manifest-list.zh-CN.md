@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (925)|Tag|Description|
+|Manifest (926)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -286,6 +286,7 @@
 |[CommandLine.Wave](https://www.waveterm.dev/)|<a href="./bucket/c/CommandLine/CommandLine.Wave.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|具有超能力的开源终端，集成文件预览、文件编辑、人工智能、网页浏览和工作区组织|
 |[commercialhaskell.stack](http://haskellstack.org/)|<a href="./bucket/c/commercialhaskell/commercialhaskell.stack.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款用于开发 Haskell 项目的程序|
 |[CoreyHayward.PowerToysRun-ClipboardManager](https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager)|<a href="./bucket/c/CoreyHayward/CoreyHayward.PowerToysRun-ClipboardManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一个 PowerToys Run 插件，用于轻松搜索和粘贴剪贴板历史记录|
+|[Cosine.CLI](https://cosine.sh/)|<a href="./bucket/c/Cosine/Cosine.CLI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于终端的 AI 驱动的编码智能体|
 |[CPUID.CPU-Z](https://www.cpuid.com/softwares/cpu-z.html)|<a href="./bucket/c/CPUID/CPUID.CPU-Z.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|系统信息软件|
 |[Crate-CI.Typos](https://github.com/crate-ci/typos)|<a href="./bucket/c/Crate-CI/Crate-CI.Typos.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|源代码拼写检查器|
 |[Cretezy.lazyjj](https://github.com/Cretezy/lazyjj)|<a href="./bucket/c/Cretezy/Cretezy.lazyjj.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a>|Jujutsu/jj 的终端用户界面 (TUI)|

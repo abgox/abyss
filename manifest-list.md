@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (925)|Tag|Description|
+|Manifest (926)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -287,6 +287,7 @@
 |[CommandLine.Wave](https://www.waveterm.dev/)|<a href="./bucket/c/CommandLine/CommandLine.Wave.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open-source terminal with superpowers, integrating file previews, file editing, AI, web browsing, and workspace organization|
 |[commercialhaskell.stack](http://haskellstack.org/)|<a href="./bucket/c/commercialhaskell/commercialhaskell.stack.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A program for developing Haskell projects|
 |[CoreyHayward.PowerToysRun-ClipboardManager](https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager)|<a href="./bucket/c/CoreyHayward/CoreyHayward.PowerToysRun-ClipboardManager.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|A PowerToys Run plugin for easily searching and pasting the clipboard history|
+|[Cosine.CLI](https://cosine.sh/)|<a href="./bucket/c/Cosine/Cosine.CLI.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|AI-powered coding agent for the terminal|
 |[CPUID.CPU-Z](https://www.cpuid.com/softwares/cpu-z.html)|<a href="./bucket/c/CPUID/CPUID.CPU-Z.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|System information software|
 |[Crate-CI.Typos](https://github.com/crate-ci/typos)|<a href="./bucket/c/Crate-CI/Crate-CI.Typos.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Source code spell checker|
 |[Cretezy.lazyjj](https://github.com/Cretezy/lazyjj)|<a href="./bucket/c/Cretezy/Cretezy.lazyjj.json"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a>|TUI for Jujutsu/jj|
