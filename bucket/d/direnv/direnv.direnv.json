@@ -1,0 +1,65 @@
+{
+    "version": "2.37.1",
+    "description": "用于管理当前目录下环境变量的 Shell 扩展 | Shell extension to manage environment variables per current directory",
+    "homepage": "https://direnv.net/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/direnv/direnv/releases/download/v2.37.1/direnv.windows-amd64#/direnv.exe",
+            "hash": "d96fc8b7cf020c2d4c1dbbc2ccec5fd1cab05b51c491f02c8527a7fa6c50a1cd"
+        },
+        "arm64": {
+            "url": "https://github.com/direnv/direnv/releases/download/v2.37.1/direnv.windows-arm64#/direnv.exe",
+            "hash": "6802f722f5ef12562d6e3e15c26f39e34b337e5be12ea22f17284552cd782298"
+        }
+    },
+    "bin": "direnv.exe",
+    "env_set": {
+        "DIRENV_CONFIG": "$env:AppData\\direnv"
+    },
+    "link": "$env:AppData\\direnv",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/direnv/direnv/releases/download/v$version/direnv.windows-amd64#/direnv.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/direnv/direnv/releases/download/v$version/direnv.windows-arm64#/direnv.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
