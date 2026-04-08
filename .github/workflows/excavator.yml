@@ -55,9 +55,23 @@ jobs:
   excavate:
     name: Excavate
     runs-on: windows-latest
+    strategy:
+      matrix:
+        segment:
+          - "0-2"
+          - "3-5"
+          - "6-9"
+          - "a-c"
+          - "d-f"
+          - "g-i"
+          - "j-l"
+          - "m-o"
+          - "p-r"
+          - "s-u"
+          - "v-z"
     env:
-      # github_pat_x,github_pat_y
       TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
+      SEGMENT: ${{ matrix.segment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -70,9 +84,6 @@ jobs:
         shell: pwsh
         run: $env:PS_MODULE_LIST -split ',' | ForEach-Object { Install-Module $_ -Repository PSGallery -Force }
 
-      - name: Get latest changes
-        run: git pull
-
       - name: Excavate
         # uses: ScoopInstaller/GithubActions@main
         uses: abgox/ScoopInstaller-GithubActions@abyss
@@ -82,16 +93,21 @@ jobs:
           SCOOP_BRANCH: abyss
           SKIP_UPDATED: 1
           THROW_ERROR: 0
+          SEGMENT: ${{ matrix.segment }}
 
+  check-rate-limit:
+    name: Check rate limit
+    needs: excavate
+    runs-on: windows-latest
+    env:
+      TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
+    steps:
       - name: Check rate limit
         shell: pwsh
         run: |
           # Check rate limit for each token
           Write-Output "::group::GitHub API Rate Limits"
-          $headers = @{
-              "Accept" = "application/vnd.github.v3+json"
-              "X-GitHub-Api-Version" = "2022-11-28"
-          }
+          $headers = @{}
           $tokens = $env:TOKEN_POOL.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           for ($i = 0; $i -lt $tokens.Count; $i++) {
               $t = $tokens[$i]
