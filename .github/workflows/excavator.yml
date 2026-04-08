@@ -58,7 +58,10 @@ jobs:
       segments: ${{ steps.set.outputs.segments }}
     steps:
       - id: set
-        run: echo "segments=${{ secrets.SEGMENTS }}" >> $GITHUB_OUTPUT
+        shell: pwsh
+        run: |
+          $json = ${{ secrets.SEGMENTS }} | ConvertTo-Json -Compress
+          "segments=$json" >> $env:GITHUB_OUTPUT
 
   excavate:
     name: Excavate
