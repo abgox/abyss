@@ -1,0 +1,63 @@
+{
+    "version": "22.7.0",
+    "description": "一款 Git 插件，可新增 Git 命令，让协作软件开发更高效、更安全 | Git plugin that adds Git commands that make collaborative software development more efficient and safe",
+    "homepage": "https://www.git-town.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/git-town/git-town/releases/download/v22.7.0/git-town_windows_intel_64.zip",
+            "hash": "2ffb605701df9f4146247f51e7437af5b2c1b6efc82865f9fb8c3f1441f4fbf9"
+        },
+        "arm64": {
+            "url": "https://github.com/git-town/git-town/releases/download/v22.7.0/git-town_windows_arm_64.zip",
+            "hash": "530b4157ea7d542c7ccbd7bae7a042cf43a532e066ecfaab45ae31b7fcf8844d"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\git-town.exe",
+    "link": "$env:AppData\\git-town",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/git-town/git-town/releases/download/v$version/git-town_windows_intel_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/git-town/git-town/releases/download/v$version/git-town_windows_arm_64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
