@@ -1,0 +1,63 @@
+{
+    "version": "0.2.0",
+    "description": "小巧、快速、随处可部署 —— 自动化繁琐任务，释放你的创造力 | Tiny, Fast, and Deployable anywhere - automate the mundane, unleash your creativity",
+    "homepage": "https://picoclaw.io/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sipeed/picoclaw/releases/download/v0.2.0/picoclaw_Windows_x86_64.zip",
+            "hash": "84e2f7be74eed14620df2adcc08d018bdce610d93bfb919decd30ee0c239d0d0"
+        },
+        "arm64": {
+            "url": "https://github.com/sipeed/picoclaw/releases/download/v0.2.0/picoclaw_Windows_arm64.zip",
+            "hash": "6476a3eba291477f6a918240d93c5fcd38905973e8184be9d226984e4f4c1ad7"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\picoclaw.exe",
+    "link": "$home\\.picoclaw",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sipeed/picoclaw/releases/download/v$version/picoclaw_Windows_x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/sipeed/picoclaw/releases/download/v$version/picoclaw_Windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
