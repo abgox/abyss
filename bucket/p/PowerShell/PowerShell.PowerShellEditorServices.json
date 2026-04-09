@@ -1,0 +1,64 @@
+{
+    "version": "4.5.0",
+    "description": "一个通用平台，可在任意编辑器或应用程序中为 PowerShell 开发提供支持 | A common platform for PowerShell development support in any editor or application",
+    "homepage": "https://github.com/PowerShell/PowerShellEditorServices",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/PowerShell/PowerShellEditorServices/releases/download/v4.5.0/PowerShellEditorServices.zip",
+            "hash": "a4e2988328963d4ee6008a68a39484d7de2f9698ed1ec264a344566fdaa6464e"
+        },
+        "arm64": {
+            "url": "https://github.com/PowerShell/PowerShellEditorServices/releases/download/v4.5.0/PowerShellEditorServices.zip",
+            "hash": "a4e2988328963d4ee6008a68a39484d7de2f9698ed1ec264a344566fdaa6464e"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\PowerShellEditorServices\\Start-EditorServices.ps1",
+        "app\\PowerShellEditorServices\\InvokePesterStub.ps1"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/PowerShell/PowerShellEditorServices/releases/download/v$version/PowerShellEditorServices.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/PowerShell/PowerShellEditorServices/releases/download/v$version/PowerShellEditorServices.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
