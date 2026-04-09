@@ -1,0 +1,58 @@
+{
+    "version": "0.4.0",
+    "description": "一款极速的 CMake 文件格式化工具 | A lightning-fast CMake file formatter",
+    "homepage": "https://cmakefmt.dev/",
+    "license": {
+        "identifier": "MIT|Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cmakefmt/cmakefmt/releases/download/v0.4.0/cmakefmt-0.4.0-x86_64-pc-windows-msvc.zip",
+            "hash": "cd9d0f7a24797b6490aea1caddd5860b5fb40fdd7ee4435ddbe8a20b27bca294",
+            "extract_dir": "cmakefmt-0.4.0-x86_64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\cmakefmt.exe",
+    "link": "$home\\.cmakefmt.yaml",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cmakefmt/cmakefmt/releases/download/v$version/cmakefmt-$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "cmakefmt-$version-x86_64-pc-windows-msvc"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
