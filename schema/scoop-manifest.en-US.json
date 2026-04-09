@@ -4010,6 +4010,10 @@
                                                                 "markdownDescription": "Get the latest release version from Github\n- It will include `1`, `2`, `3` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
+                                                                "const": "A-Get-VersionFromPowerShellGallery",
+                                                                "markdownDescription": "Get the version from [PowerShell Gallery](https://www.powershellgallery.com/)"
+                                                            },
+                                                            {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "Get installer information of specified application in Winget."
                                                             }
@@ -4072,6 +4076,22 @@
                                             ]
                                         }
                                     ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "script"
+                                ]
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "If you do not use the 'script' field, you must specify the 'url' field"
                                 }
                             }
                         },

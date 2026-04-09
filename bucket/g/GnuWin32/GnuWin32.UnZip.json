@@ -1,0 +1,64 @@
+{
+    "version": "5.51-1",
+    "description": "一种用于提取 .zip 格式压缩归档文件（压缩包）的实用工具 | An extraction utility for archives compressed in .zip format (also called \"zipfiles\")",
+    "homepage": "https://gnuwin32.sourceforge.net/packages/unzip.htm",
+    "license": {
+        "identifier": "GnuWin License"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://sourceforge.net/projects/gnuwin32/files/unzip/5.51-1/unzip-5.51-1.exe/download#/dl.exe",
+            "hash": "126d38c479aebd65a163613424b9f1f57e46bebf7e6be5a4cc20f31891c29d94"
+        }
+    },
+    "env_add_path": "app\\bin",
+    "commands": [
+        "unzip",
+        "funzip",
+        "zipinfo"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Require-Admin",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Require-Admin",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'GnuWin32.UnZip' ''",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX86#/dl.exe",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x86_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

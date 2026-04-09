@@ -4010,6 +4010,10 @@
                                                                 "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `2`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
                                                             },
                                                             {
+                                                                "const": "A-Get-VersionFromPowerShellGallery",
+                                                                "markdownDescription": "从 [PowerShell Gallery](https://www.powershellgallery.com/) 获取版本"
+                                                            },
+                                                            {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息"
                                                             }
@@ -4072,6 +4076,22 @@
                                             ]
                                         }
                                     ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "script"
+                                ]
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "如果不使用 script，则必须指定 url 字段"
                                 }
                             }
                         },

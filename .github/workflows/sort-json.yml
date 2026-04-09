@@ -37,12 +37,4 @@ jobs:
         id: changes
         shell: pwsh
         run: |
-          git add -u
-          if (git status --porcelain) {
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-            # scoop update 会忽略以 (chore) 开头的提交
-            git commit -m "(chore): automatically sort json files [skip ci]"
-            git push
-          }
+          .\script\push-change.ps1 -message "(chore): automatically sort json files [skip ci]"
