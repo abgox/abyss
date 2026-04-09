@@ -1370,16 +1370,15 @@ function A-Get-VersionFromGithubAPI {
         [switch]$PreRelease,
         [switch]$Newest
     )
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
+    }
     if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
         return $json.version
     }
     if (-not $json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
-        return
-    }
-
-    if (-not $json) {
-        Write-Host "::error::`$json is invalid." -ForegroundColor Red
         return
     }
 
@@ -1389,12 +1388,10 @@ function A-Get-VersionFromGithubAPI {
     if ($url -is [array]) {
         $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
     }
-
     if (-not $url) {
         Write-Host "::error::`$url is invalid." -ForegroundColor Red
         return
     }
-
     if ($url -notlike 'https://github.com/*/*') {
         Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
         return
@@ -1502,6 +1499,33 @@ function A-Get-PreVersionFromGithubAPI {
 
 function A-Get-NewestVersionFromGithubAPI {
     A-Get-VersionFromGithubAPI -Newest
+}
+
+function A-Get-VersionFromPowerShellGallery {
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
+    }
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+        return $json.version
+    }
+    if (-not $json.checkver.regex) {
+        Write-Error "${app}: Requires 'checkver.regex'."
+        return
+    }
+
+    $module_name = $json.psmodule.name
+
+    if (-not $module_name) {
+        Write-Host "::error::`$json.psmodule.name is invalid." -ForegroundColor Red
+        return
+    }
+
+    $requestTimeout = $abgox_abyss.requestTimeout
+    Invoke-RestMethod "https://www.powershellgallery.com/packages/$($module_name.ToLower())" @requestTimeout |
+    Select-String -Pattern '<h2>([\d.]+)</h2>' |
+    ForEach-Object { $_.Matches.Groups[1].Value } |
+    Select-Object -First 1
 }
 
 function A-Get-VersionFromPage {
