@@ -1597,6 +1597,11 @@ function A-Get-InstallerInfoFromWinget {
         return $installerInfo, $out
     }
 
+    if (-not (Get-Command 'ConvertFrom-Yaml' -ErrorAction SilentlyContinue)) {
+        error 'Please install yaml module: scoop install abyss/cloudbase.powershell-yaml'
+        return
+    }
+
     $tempFile = "$PSScriptRoot\..\temp-autoupdate.json"
     Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
 
