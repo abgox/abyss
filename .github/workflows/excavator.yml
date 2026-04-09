@@ -79,7 +79,15 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch}}
 
+      - name: Cache Module
+        id: cache-module
+        uses: actions/cache@v5
+        with:
+          path: ~/Documents/PowerShell/Modules
+          key: ${{ runner.os }}-modules-${{ secrets.PS_MODULE_LIST }}
+
       - name: Install module
+        if: steps.cache-module.outputs.cache-hit != 'true'
         env:
           PS_MODULE_LIST: ${{ secrets.PS_MODULE_LIST }}
         shell: pwsh
