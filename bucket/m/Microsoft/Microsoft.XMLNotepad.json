@@ -1,0 +1,56 @@
+{
+    "version": "2.9.0.21",
+    "description": "一款 Windows 程序，可为浏览和编辑 XML 文档提供简洁直观的用户界面 | A Windows program that provides a simple intuitive User Interface for browsing and editing XML documents",
+    "homepage": "https://microsoft.github.io/XmlNotepad/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/microsoft/XmlNotepad/releases/download/2.9.0.21/XmlNotepadPackage_2.9.0.21_AnyCPU.msixbundle",
+            "hash": "61e53435db1ad637d6cd9593bf85871a1dc02d772df17edf9c13418926b4a74c"
+        }
+    },
+    "link": "$env:LocalAppData\\Packages\\43906ChrisLovett.XmlNotepad_hndwmj480pefj\\LocalCache\\Roaming\\Microsoft\\Xml Notepad",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Add-MsixPackage '43906ChrisLovett.XmlNotepad_hndwmj480pefj'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Remove-MsixPackage"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/microsoft/XmlNotepad/releases/download/$version/XmlNotepadPackage_$version_AnyCPU.msixbundle"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
