@@ -133,7 +133,7 @@ foreach ($file in $files) {
         $labels.'missing-required-field' = $true
     }
 
-    # In Winget
+    # Winget
     $path = "$letter/$($m.Replace('.', '/'))"
     $api = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$path"
     $url = "https://github.com/microsoft/winget-pkgs/blob/master/manifests/$path"
@@ -154,45 +154,12 @@ foreach ($file in $files) {
     # Location
     $line += if ($c.location) { '`' + $c.location + '`' } else { 'Scoop' }
 
-    # Permission
-    $permission = ''
+    # Admin
+    $admin = 'No'
     if ($c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)') {
-        $permission = '[Require admin](https://abyss.abgox.com/faq/require-admin)'
+        $admin = 'Yes'
     }
-    else {
-        if ($c.pre_install -match '(?<!#.*)A-New-LinkFile') {
-            $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-        }
-        else {
-            foreach ($l in $c.link) {
-                if ($l -like '$dir\*') {
-                    $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
-                }
-                else {
-                    try {
-                        $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
-                    }
-                    catch {
-                        continue
-                    }
-                }
-                if (Test-Path "$extra_dir\$m\$path" -PathType Leaf) {
-                    if ("extra/$m/$path" -in $pr_extra_files_removed) {
-                        continue
-                    }
-                    $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-                    break
-                }
-                else {
-                    if ("extra/$m/$path" -in $pr_extra_files) {
-                        $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-                        break
-                    }
-                }
-            }
-        }
-    }
-    $line += $permission
+    $line += "[$admin](https://abyss.abgox.com/faq/require-admin)"
 
     # Persistence
     $persistence = @()
@@ -245,9 +212,9 @@ $guide = @'
 - **Status**: The status of the manifest in the PR.
 - **Manifest**: The manifest name.
 - **Type**: The manifest type.
-- **In Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
+- **Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
 - **Location**: The installation location of the app.
-- **Permission**: The permission required to install or uninstall the app.
+- **Admin**: Whether the app requires admin permission to install or uninstall.
 - **Persistence**: The persistence method used for app data.
 - **Extra**: Whether extra files or directories exist for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
 
@@ -260,7 +227,7 @@ if ($has_manifest) {
         $marker,
         $guide,
         '',
-        '| Status | Manifest | Type | In Winget | Location | Permission | Persistence | Extra |',
+        '| Status | Manifest | Type | Winget | Location | Admin | Persistence | Extra |',
         '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 }
