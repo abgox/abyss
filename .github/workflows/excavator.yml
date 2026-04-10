@@ -90,7 +90,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/Documents/PowerShell/Modules
-          key: ${{ runner.os }}-modules-${{ secrets.PS_MODULE_LIST }}
+          key: PowerShell-Modules
 
       - name: Install module
         if: steps.cache-module.outputs.cache-hit != 'true'
@@ -180,12 +180,10 @@ jobs:
       - name: Update Docs
         shell: pwsh
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git abyss-docs
+          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
           cd abyss-docs
           .\scripts\update-manifest-list.ps1
-          .\script\push-change.ps1
+          .\scripts\push-change.ps1
 
   sync-repos:
     name: Sync Repos
