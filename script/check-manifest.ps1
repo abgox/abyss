@@ -231,25 +231,16 @@ if ($has_manifest) {
         '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 
-    .\script\sort-json.ps1
-
-    git -c core.safecrlf=false add -u
-    $json_changes = git status --porcelain | Where-Object { $_ -match '\.json$' }
-    if ($json_changes) {
-        $results += @(
-            '',
-            '> [!WARNING]',
-            '>',
-            '> Run the following script to sort JSON:',
-            '>',
-            '> ```powershell',
-            '> .\script\sort-json.ps1',
-            '> ```'
-        )
-    }
-    else {
-        Write-Host 'No JSON changes detected, no need to sort JSON.'
-    }
+    $results += @(
+        '',
+        '> [!TIP]',
+        '>',
+        '> Please run the following script before merging.',
+        '>',
+        '> ```powershell',
+        '> .\script\sort-json.ps1',
+        '> ```'
+    )
 }
 else {
     $results = @(
