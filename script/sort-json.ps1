@@ -5,13 +5,20 @@ param(
     [switch]$All
 )
 
-if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
-    $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
-}
-
 if (-not $env:SCOOP_HOME) {
-    Write-Host "::error::`$env:SCOOP_HOME is not set." -ForegroundColor Red
-    exit 1
+    if ($env:GITHUB_ACTIONS) {
+        $env:SCOOP_HOME = "$env:Temp\ScoopInstaller-Scoop"
+        git clone --depth 1 --branch abyss https://github.com/abgox/ScoopInstaller-Scoop $env:SCOOP_HOME
+    }
+    else {
+        try {
+            $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
+        }
+        catch {
+            Write-Host "::error::`$env:SCOOP_HOME is not set." -ForegroundColor Red
+            exit 1
+        }
+    }
 }
 
 if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {

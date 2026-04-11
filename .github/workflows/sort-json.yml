@@ -1,4 +1,4 @@
-name: Sort JSON Files
+name: Sort JSON
 
 on:
   workflow_dispatch:
@@ -22,11 +22,9 @@ jobs:
           ref: ${{ github.event.repository.default_branch}}
           fetch-depth: 50
 
-      - name: Sort JSON Files
+      - name: Sort JSON
         shell: pwsh
         run: |
-          git clone --depth 1 --branch abyss https://github.com/abgox/ScoopInstaller-Scoop
-          $env:SCOOP_HOME = ".\ScoopInstaller-Scoop"
           $manual = "${{ github.event_name }}" -eq "workflow_dispatch"
           .\script\sort-json.ps1 -All:$manual
 
@@ -34,4 +32,4 @@ jobs:
         id: changes
         shell: pwsh
         run: |
-          .\script\push-change.ps1 -message "(chore): automatically sort json files [skip ci]"
+          .\script\push-change.ps1 -message "(chore): automatically sort json [skip ci]"
