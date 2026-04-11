@@ -1,5 +1,5 @@
 {
-    "version": "3.6.6",
+    "version": "3.6.9",
     "description": "一款功能齐全的下载管理器 | A full-featured download manager",
     "homepage": "https://github.com/AnInsomniacy/motrix-next",
     "license": {
@@ -7,26 +7,22 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.6/MotrixNext_3.6.6_x64-setup.exe",
-            "hash": "7813570ed140884ddd4d5b1f0922d39d1193d1542dd0689a4ed63ab3360a8e9a"
+            "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.9/MotrixNext_3.6.9_x64-setup.exe",
+            "hash": "61e49765da94e8a02f28f79cf526f9bcdb8fbaf3b7fc19a3dfa93a806712a91d"
         },
         "arm64": {
-            "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.6/MotrixNext_3.6.6_arm64-setup.exe",
-            "hash": "023880037e12d09331b8b38c14d5d3ac62b8a2f8af842dd23b400e098618316d"
+            "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.9/MotrixNext_3.6.9_arm64-setup.exe",
+            "hash": "34b6ee37bd1ac51cfda63c19310aeeb4723a6779143ab69c3da3f92fdf88be82"
         }
     },
-    "shortcuts": [
-        [
-            "app\\motrix-next.exe",
-            "MotrixNext"
-        ]
-    ],
+    "location": "$env:ProgramFiles\\MotrixNext",
     "link": "$env:AppData\\com.motrix.next",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+        "A-Require-Admin",
+        "A-Install-App -Uninstaller \"$env:ProgramFiles\\MotrixNext\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -37,6 +33,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
+        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",

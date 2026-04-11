@@ -27,11 +27,8 @@ jobs:
         run: |
           git clone --depth 1 --branch abyss https://github.com/abgox/ScoopInstaller-Scoop
           $env:SCOOP_HOME = ".\ScoopInstaller-Scoop"
-          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
-              .\script\sort-json.ps1
-          } else {
-              .\script\sort-json.ps1 -Recent
-          }
+          $manual = "${{ github.event_name }}" -eq "workflow_dispatch"
+          .\script\sort-json.ps1 -All:$manual
 
       - name: Commit changes if any
         id: changes

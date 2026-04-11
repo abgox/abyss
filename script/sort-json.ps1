@@ -2,7 +2,7 @@
 
 param(
     [string]$App = '*',
-    [switch]$Recent
+    [switch]$All
 )
 
 if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
@@ -193,9 +193,10 @@ function Sort-JsonByOrder {
     return $result
 }
 
-if ($Recent) {
-    Write-Host '::group::Recent Manifests' -ForegroundColor Cyan
-
+if ($All) {
+    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
+}
+else {
     $guid = [Guid]::NewGuid()
     $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
     ForEach-Object {
@@ -209,28 +210,20 @@ if ($Recent) {
         else {
             $current += $_
         }
-    } |
-    Where-Object { $_ -match '\.json$' } |
-    Sort-Object -Unique |
-    ForEach-Object {
-        Write-Host $_
-        $fullPath = Join-Path $root $_
-        [System.IO.FileInfo]$fullPath
     }
-
-    Write-Host '::endgroup::' -ForegroundColor Cyan
-}
-else {
-    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
+    $changedManifests = git ls-files --modified --others --exclude-standard -- 'bucket/'
+    $manifests = $manifests + $changedManifests |
+    Where-Object { $_ -match '\.json$' } |
+    Sort-Object -Unique
 }
 
 foreach ($m in $manifests) {
-    $content = Get-Content $m.FullName -Raw
+    $content = Get-Content $m -Raw
     try {
         $json = $content | ConvertFrom-Json -AsHashtable -ErrorAction Stop
     }
     catch {
-        Write-Host "::error::Failed to convert $($m.FullName) to JSON: $_" -ForegroundColor Red
+        Write-Host "::error::Failed to convert $m to JSON: $_" -ForegroundColor Red
         continue
     }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
@@ -239,5 +232,6 @@ foreach ($m in $manifests) {
     if ($new -eq $old) {
         continue
     }
-    Set-Content -LiteralPath $m.FullName -Value $new -Encoding utf8
+    Write-Host "Processing: $m"
+    $new | Out-File -LiteralPath $m -NoNewline -Encoding utf8
 }

@@ -230,6 +230,23 @@ if ($has_manifest) {
         '| Status | Manifest | Type | Winget | Location | Admin | Persistence | Extra |',
         '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
+
+    .\script\sort-json.ps1
+
+    git -c core.safecrlf=false add -u
+    $json_changes = git status --porcelain | Where-Object { $_ -match '\.json$' }
+    if ($json_changes) {
+        $results += @(
+            '',
+            '> [!WARNING]',
+            '>',
+            '> Run the following script to sort JSON:',
+            '>',
+            '> ```powershell',
+            '> .\script\sort-json.ps1',
+            '> ```'
+        )
+    }
 }
 else {
     $results = @(
