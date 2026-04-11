@@ -1,0 +1,75 @@
+{
+    "version": "20260314",
+    "description": "Rime 小狼毫词库: 萌娘百科词库 (小鹤) | Rime Weasel Dictionary: Moetype (flypy)",
+    "homepage": "https://github.com/suiginko/moetype",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "notes": "You need to redeploy in Rime Weasel",
+    "notes_cn": "你需要在小狼毫中进行重新部署",
+    "suggest": {
+        "rime": "abyss/Rime.Weasel",
+        "model": "abyss/amzxyz.rime_wanxiang.model"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/suiginko/moetype/releases/download/20260314/flypy_moe.dict.yaml",
+            "hash": "4c3fd097f8acb2e8789b6bab73b17b6733a64b287d1aef7d84028fc834ddaa0c"
+        },
+        "arm64": {
+            "url": "https://github.com/suiginko/moetype/releases/download/20260314/flypy_moe.dict.yaml",
+            "hash": "4c3fd097f8acb2e8789b6bab73b17b6733a64b287d1aef7d84028fc834ddaa0c"
+        }
+    },
+    "conflicts": [
+        "suiginko.moetype.flypy",
+        "suiginko.moetype.moqi",
+        "suiginko.moetype.toneless",
+        "suiginko.moetype.tone",
+        "suiginko.moetype.zrm"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Ensure-Directory \"$env:AppData\\Rime\"",
+        "Write-Host \"Copying $dir\\flypy_moe.dict.yaml => $env:AppData\\Rime\" -ForegroundColor Yellow",
+        "Copy-Item \"$dir\\flypy_moe.dict.yaml\" $env:AppData\\Rime -Force"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "Remove-Item \"$env:AppData\\Rime\\flypy_moe.dict.yaml\" -Force -ErrorAction SilentlyContinue"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/suiginko/moetype/releases/download/$version/flypy_moe.dict.yaml"
+            },
+            "arm64": {
+                "url": "https://github.com/suiginko/moetype/releases/download/$version/flypy_moe.dict.yaml"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

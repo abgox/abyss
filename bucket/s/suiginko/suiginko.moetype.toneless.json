@@ -1,0 +1,75 @@
+{
+    "version": "20260314",
+    "description": "Rime 小狼毫词库: 萌娘百科词库 (无声调) | Rime Weasel Dictionary: Moetype (toneless)",
+    "homepage": "https://github.com/suiginko/moetype",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "notes": "You need to redeploy in Rime Weasel",
+    "notes_cn": "你需要在小狼毫中进行重新部署",
+    "suggest": {
+        "rime": "abyss/Rime.Weasel",
+        "model": "abyss/amzxyz.rime_wanxiang.model"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/suiginko/moetype/releases/download/20260314/toneless_moe.dict.yaml",
+            "hash": "3bad5df8b63fd9eb79025739fc3c3899d9958ceb4e681e6ec6e8b944b62a3bdf"
+        },
+        "arm64": {
+            "url": "https://github.com/suiginko/moetype/releases/download/20260314/toneless_moe.dict.yaml",
+            "hash": "3bad5df8b63fd9eb79025739fc3c3899d9958ceb4e681e6ec6e8b944b62a3bdf"
+        }
+    },
+    "conflicts": [
+        "suiginko.moetype.flypy",
+        "suiginko.moetype.moqi",
+        "suiginko.moetype.toneless",
+        "suiginko.moetype.tone",
+        "suiginko.moetype.zrm"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Ensure-Directory \"$env:AppData\\Rime\"",
+        "Write-Host \"Copying $dir\\toneless_moe.dict.yaml => $env:AppData\\Rime\" -ForegroundColor Yellow",
+        "Copy-Item \"$dir\\toneless_moe.dict.yaml\" $env:AppData\\Rime -Force"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "Remove-Item \"$env:AppData\\Rime\\toneless_moe.dict.yaml\" -Force -ErrorAction SilentlyContinue"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/suiginko/moetype/releases/download/$version/toneless_moe.dict.yaml"
+            },
+            "arm64": {
+                "url": "https://github.com/suiginko/moetype/releases/download/$version/toneless_moe.dict.yaml"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
