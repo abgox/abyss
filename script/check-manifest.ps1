@@ -235,7 +235,7 @@ if ($has_manifest) {
         '',
         '> [!TIP]',
         '>',
-        '> Please run the following script before merging.',
+        '> Please run it to sort JSON and push again.',
         '>',
         '> ```powershell',
         '> .\script\sort-json.ps1',
