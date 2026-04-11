@@ -247,6 +247,9 @@ if ($has_manifest) {
             '> ```'
         )
     }
+    else {
+        Write-Host 'No JSON changes detected, no need to sort JSON.'
+    }
 }
 else {
     $results = @(

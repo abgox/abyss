@@ -240,5 +240,5 @@ foreach ($m in $manifests) {
         continue
     }
     Write-Host "Processing: $m"
-    $new | Out-File -LiteralPath $m -NoNewline -Encoding utf8
+    Set-Content -LiteralPath $m -Value $new -Encoding utf8
 }
