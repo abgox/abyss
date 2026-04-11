@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (933)|Tag|Description|
+|Manifest (935)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -88,8 +88,10 @@
 |[amzxyz.rime_wanxiang.model.mini](https://github.com/amzxyz/RIME-LMDG)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.model.mini.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Rime 小狼毫配置: 万象语法模型|
 |[amzxyz.rime_wanxiang.moqi](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.moqi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (墨奇)|
 |[amzxyz.rime_wanxiang.shouyou](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.shouyou.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (首右)|
+|[amzxyz.rime_wanxiang.shyplus](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.shyplus.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (首右+)|
 |[amzxyz.rime_wanxiang.tiger](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.tiger.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (虎码首末)|
 |[amzxyz.rime_wanxiang.wubi](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.wubi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (五笔前2)|
+|[amzxyz.rime_wanxiang.wx](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.wx.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (万象)|
 |[amzxyz.rime_wanxiang.zrm](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.zrm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫配置: 万象拼音输入方案 (自然码)|
 |[AnderssonPeter.PowerType](https://github.com/AnderssonPeter/PowerType)|<a href="./bucket/a/AnderssonPeter/AnderssonPeter.PowerType.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|PowerShell 的自动补全功能|
 |[AndrewCantino.McFly](https://github.com/cantino/mcfly)|<a href="./bucket/a/AndrewCantino/AndrewCantino.McFly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在你的 shell 历史中快速穿梭|

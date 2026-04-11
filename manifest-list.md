@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (933)|Tag|Description|
+|Manifest (935)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -89,8 +89,10 @@
 |[amzxyz.rime_wanxiang.model.mini](https://github.com/amzxyz/RIME-LMDG)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.model.mini.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Rime Weasel Configuration: Wanxiang syntax model|
 |[amzxyz.rime_wanxiang.moqi](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.moqi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (moqi)|
 |[amzxyz.rime_wanxiang.shouyou](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.shouyou.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (shouyou)|
+|[amzxyz.rime_wanxiang.shyplus](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.shyplus.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (shouyouplus)|
 |[amzxyz.rime_wanxiang.tiger](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.tiger.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (tiger)|
 |[amzxyz.rime_wanxiang.wubi](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.wubi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (wubi)|
+|[amzxyz.rime_wanxiang.wx](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.wx.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (wanxiang)|
 |[amzxyz.rime_wanxiang.zrm](https://github.com/amzxyz/rime_wanxiang)|<a href="./bucket/a/amzxyz/amzxyz.rime_wanxiang.zrm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime Weasel Configuration: Wanxiang-Pinyin (zrm)|
 |[AnderssonPeter.PowerType](https://github.com/AnderssonPeter/PowerType)|<a href="./bucket/a/AnderssonPeter/AnderssonPeter.PowerType.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|Autocomplete for PowerShell|
 |[AndrewCantino.McFly](https://github.com/cantino/mcfly)|<a href="./bucket/a/AndrewCantino/AndrewCantino.McFly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Fly through your shell history|
