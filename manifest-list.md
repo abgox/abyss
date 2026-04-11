@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (931)|Tag|Description|
+|Manifest (932)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -941,6 +941,7 @@
 |[zan8in.afrog](https://github.com/zan8in/afrog)|<a href="./bucket/z/zan8in/zan8in.afrog.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Security Tool for Bug Bounty, Pentest and Red Teaming|
 |[zditor.zditor](https://www.zditor.com/)|<a href="./bucket/z/zditor/zditor.zditor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Typora-like document editor with faster performance, smart AI assistance, and Git integration|
 |[ZedIndustries.Zed](https://zed.dev/)|<a href="./bucket/z/ZedIndustries/ZedIndustries.Zed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter|
+|[ZedIndustries.Zed.Preview](https://zed.dev/)|<a href="./bucket/z/ZedIndustries/ZedIndustries.Zed.Preview.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter|
 |[Zen-Team.Zen-Browser](https://zen-browser.app/)|<a href="./bucket/z/Zen-Team/Zen-Team.Zen-Browser.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A firefox-based browser with the aim of pushing your productivity to a new level|
 |[Zettlr.Zettlr](https://github.com/Zettlr/Zettlr)|<a href="./bucket/z/Zettlr/Zettlr.Zettlr.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Markdown editor for supporting one-stop publication workbench|
 |[ZGGSONG.STranslate](https://stranslate.zggsong.com/)|<a href="./bucket/z/ZGGSONG/ZGGSONG.STranslate.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A ready-to-go translation ocr tool|

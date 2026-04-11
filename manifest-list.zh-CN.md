@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (931)|Tag|Description|
+|Manifest (932)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -940,6 +940,7 @@
 |[zan8in.afrog](https://github.com/zan8in/afrog)|<a href="./bucket/z/zan8in/zan8in.afrog.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款适用于漏洞赏金、渗透测试和红队演练的安全工具|
 |[zditor.zditor](https://www.zditor.com/)|<a href="./bucket/z/zditor/zditor.zditor.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款类似 Typora 的文档编辑器，拥有更快的性能、智能 AI 辅助和 Git 集成|
 |[ZedIndustries.Zed](https://zed.dev/)|<a href="./bucket/z/ZedIndustries/ZedIndustries.Zed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款高性能的多人协作代码编辑器，由 Atom 和 Tree-sitter 的开发者打造|
+|[ZedIndustries.Zed.Preview](https://zed.dev/)|<a href="./bucket/z/ZedIndustries/ZedIndustries.Zed.Preview.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款高性能的多人协作代码编辑器，由 Atom 和 Tree-sitter 的开发者打造|
 |[Zen-Team.Zen-Browser](https://zen-browser.app/)|<a href="./bucket/z/Zen-Team/Zen-Team.Zen-Browser.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款基于火狐的浏览器，旨在将您的工作效率提升到新高度|
 |[Zettlr.Zettlr](https://github.com/Zettlr/Zettlr)|<a href="./bucket/z/Zettlr/Zettlr.Zettlr.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个 Markdown 编辑器，用于支持一站式出版服务|
 |[ZGGSONG.STranslate](https://stranslate.zggsong.com/)|<a href="./bucket/z/ZGGSONG/ZGGSONG.STranslate.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款即用即走的翻译、OCR 工具|
