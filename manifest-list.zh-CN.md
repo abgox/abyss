@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (932)|Tag|Description|
+|Manifest (933)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -898,6 +898,7 @@
 |[uutils.diffutils](https://uutils.github.io/diffutils/)|<a href="./bucket/u/uutils/uutils.diffutils.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用 Rust 实现的 diffutils 替代品|
 |[uutils.findutils](https://uutils.github.io/findutils/)|<a href="./bucket/u/uutils/uutils.findutils.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用 Rust 实现的 findutils 替代品|
 |[uutils.sed](https://github.com/uutils/sed)|<a href="./bucket/u/uutils/uutils.sed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|用 Rust 实现的 sed 替代品|
+|[Veirt.weathr](https://github.com/Veirt/weathr)|<a href="./bucket/v/Veirt/Veirt.weathr.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款带有 ASCII 动画的终端天气应用|
 |[venera-app.venera](https://github.com/venera-app/venera)|<a href="./bucket/v/venera-app/venera-app.venera.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款支持阅读本地和网络漫画的漫画阅读器|
 |[Vercel.Hyper](https://hyper.is/)|<a href="./bucket/v/Vercel/Vercel.Hyper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个基于 Web 技术构建的终端|
 |[viarotel.Escrcpy](https://github.com/viarotel-org/escrcpy)|<a href="./bucket/v/viarotel/viarotel.Escrcpy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|使用图形化的 Scrcpy 显示和控制您的 Android 设备，由 Electron 驱动|

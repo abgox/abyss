@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (932)|Tag|Description|
+|Manifest (933)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -899,6 +899,7 @@
 |[uutils.diffutils](https://uutils.github.io/diffutils/)|<a href="./bucket/u/uutils/uutils.diffutils.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Drop-in replacement of diffutils in Rust|
 |[uutils.findutils](https://uutils.github.io/findutils/)|<a href="./bucket/u/uutils/uutils.findutils.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Drop-in replacement of findutils in Rust|
 |[uutils.sed](https://github.com/uutils/sed)|<a href="./bucket/u/uutils/uutils.sed.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Drop-in replacement of sed in Rust|
+|[Veirt.weathr](https://github.com/Veirt/weathr)|<a href="./bucket/v/Veirt/Veirt.weathr.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal weather app with ascii animation|
 |[venera-app.venera](https://github.com/venera-app/venera)|<a href="./bucket/v/venera-app/venera-app.venera.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A comic reader that support reading local and network comics|
 |[Vercel.Hyper](https://hyper.is/)|<a href="./bucket/v/Vercel/Vercel.Hyper.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal built on web technologies|
 |[viarotel.Escrcpy](https://github.com/viarotel-org/escrcpy)|<a href="./bucket/v/viarotel/viarotel.Escrcpy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Graphical Scrcpy to display and control Android, devices powered by Electron|
