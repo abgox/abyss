@@ -1,0 +1,60 @@
+{
+    "version": "0.6.0",
+    "description": "一款现代化、高性能且轻量级的 WSL 实例管理控制面板 | A modern, high-performance, and lightweight WSL instance management dashboard",
+    "homepage": "https://github.com/owu/wsl-dashboard",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/owu/wsl-dashboard/releases/download/v0.6.0/wsldashboard.v0.6.0.exe#/wsldashboard.exe",
+            "hash": "b6050108f2efe4526131ee9cff79484f1b165577c18829fe96e3d7df5738b70b"
+        }
+    },
+    "shortcuts": [
+        [
+            "wsldashboard.exe",
+            "WSL Dashboard"
+        ]
+    ],
+    "link": "$home\\.wsldashboard",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/owu/wsl-dashboard/releases/download/v$version/wsldashboard.v$version.exe#/wsldashboard.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
