@@ -204,12 +204,16 @@ if ($All) {
 }
 else {
     $guid = [guid]::NewGuid()
-    $manifests = switch -Regex (git log --since="1 day ago" --name-only --pretty=format:$guid -- 'bucket/') {
-        "^$guid$" {
-            if ($current) { , $current }
+    $manifests = git log --since="1 day ago" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
+    ForEach-Object {
+        if ($_ -eq '') { return }
+        if ($_ -eq $guid) {
+            if ($current) {
+                $current
+            }
             $current = @()
         }
-        '^bucket/.+' {
+        else {
             $current += $_
         }
     }
