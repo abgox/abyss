@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (941)|Tag|Description|
+|Manifest (942)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -715,6 +715,7 @@
 |[psake.psake](https://psake.dev/)|<a href="bucket/p/psake/psake.psake.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A build automation tool written in PowerShell|
 |[Psyche.Kelivo](https://kelivo.psycheas.top/)|<a href="bucket/p/Psyche/Psyche.Kelivo.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A Flutter LLM Chat Client|
 |[purocean.YankNote](https://yank-note.com/)|<a href="bucket/p/purocean/purocean.YankNote.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A highly extensible Markdown editor|
+|[PuTTY.PuTTY](https://www.chiark.greenend.org.uk/)|<a href="bucket/p/PuTTY/PuTTY.PuTTY.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A free implementation of SSH and Telnet for Windows and Unix platforms, along with an xterm terminal emulator|
 |[Pylogmon.pot](https://pot-app.com/)|<a href="bucket/p/Pylogmon/Pylogmon.pot.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cross-platform software for text translation and OCR|
 |[qBittorrent.qBittorrent](https://www.qbittorrent.org/)|<a href="bucket/q/qBittorrent/qBittorrent.qBittorrent.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Free and reliable P2P Bittorent client|
 |[QL-Win.QuickLook](https://github.com/QL-Win/QuickLook)|<a href="bucket/q/QL-Win/QL-Win.QuickLook.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Bring macOS 'Quick Look' feature to Windows|

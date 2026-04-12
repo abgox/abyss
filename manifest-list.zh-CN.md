@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (941)|Tag|Description|
+|Manifest (942)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -714,6 +714,7 @@
 |[psake.psake](https://psake.dev/)|<a href="bucket/p/psake/psake.psake.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个用 PowerShell 编写的构建自动化工具|
 |[Psyche.Kelivo](https://kelivo.psycheas.top/)|<a href="bucket/p/Psyche/Psyche.Kelivo.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个 Flutter LLM 聊天客户端|
 |[purocean.YankNote](https://yank-note.com/)|<a href="bucket/p/purocean/purocean.YankNote.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|高度可扩展的 Markdown 编辑器|
+|[PuTTY.PuTTY](https://www.chiark.greenend.org.uk/)|<a href="bucket/p/PuTTY/PuTTY.PuTTY.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个适用于 Windows 和 Unix 平台的 SSH 和 Telnet 的免费实现，以及一个 xterm 终端模拟器|
 |[Pylogmon.pot](https://pot-app.com/)|<a href="bucket/p/Pylogmon/Pylogmon.pot.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台的划词翻译和 OCR 软件|
 |[qBittorrent.qBittorrent](https://www.qbittorrent.org/)|<a href="bucket/q/qBittorrent/qBittorrent.qBittorrent.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|免费（自由）可靠的 P2P Bittorent 客户端|
 |[QL-Win.QuickLook](https://github.com/QL-Win/QuickLook)|<a href="bucket/q/QL-Win/QL-Win.QuickLook.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|将 macOS 的 '快速查看' 功能引入 Windows|
