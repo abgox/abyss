@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (936)|Tag|Description|
+|Manifest (941)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -859,6 +859,11 @@
 |[subframe7536.Maple-Mono.SL-NF-CN-Unhinted](https://github.com/subframe7536/maple-font)|<a href="./bucket/s/subframe7536/subframe7536.Maple-Mono.SL-NF-CN-Unhinted.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Font](https://abyss.abgox.com/faq/font)|(SL: Slim, NF: Nerd Font, CN: Chinese, Unhinted: No-FontHinting)<br/>一款开源的 2:1 等宽字体|
 |[subframe7536.Maple-Mono.SL-NF-Unhinted](https://github.com/subframe7536/maple-font)|<a href="./bucket/s/subframe7536/subframe7536.Maple-Mono.SL-NF-Unhinted.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Font](https://abyss.abgox.com/faq/font)|(SL: Slim, NF: Nerd Font, Unhinted: No-FontHinting)<br/>一款开源的 2:1 等宽字体|
 |[SublimeHQ.SublimeText.4](https://www.sublimetext.com/)|<a href="./bucket/s/SublimeHQ/SublimeHQ.SublimeText.4.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款用于代码、标记和散文的复杂跨平台文本编辑器|
+|[suiginko.moetype.flypy](https://github.com/suiginko/moetype)|<a href="./bucket/s/suiginko/suiginko.moetype.flypy.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫词库: 萌娘百科词库 (小鹤)|
+|[suiginko.moetype.moqi](https://github.com/suiginko/moetype)|<a href="./bucket/s/suiginko/suiginko.moetype.moqi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫词库: 萌娘百科词库 (墨奇)|
+|[suiginko.moetype.tone](https://github.com/suiginko/moetype)|<a href="./bucket/s/suiginko/suiginko.moetype.tone.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫词库: 萌娘百科词库 (带声调)|
+|[suiginko.moetype.toneless](https://github.com/suiginko/moetype)|<a href="./bucket/s/suiginko/suiginko.moetype.toneless.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫词库: 萌娘百科词库 (无声调)|
+|[suiginko.moetype.zrm](https://github.com/suiginko/moetype)|<a href="./bucket/s/suiginko/suiginko.moetype.zrm.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|Rime 小狼毫词库: 萌娘百科词库 (自然码)|
 |[sxyazi.yazi](https://github.com/sxyazi/yazi)|<a href="./bucket/s/sxyazi/sxyazi.yazi.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个用 Rust 编写的终端文件管理器，基于非阻塞异步 I/O|
 |[sxyazi.yazi.nightly](https://github.com/sxyazi/yazi)|<a href="./bucket/s/sxyazi/sxyazi.yazi.nightly.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[NoUpdate](https://abyss.abgox.com/faq/no-update)|一个用 Rust 编写的终端文件管理器，基于非阻塞异步 I/O|
 |[tamasfe.taplo](https://taplo.tamasfe.dev/)|<a href="./bucket/t/tamasfe/tamasfe.taplo.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款功能全面、特性丰富的 TOML 工具包|
