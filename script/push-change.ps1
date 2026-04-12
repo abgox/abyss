@@ -7,8 +7,8 @@
 
 git -c core.safecrlf=false add -u
 
-$has_change = git status --porcelain
-if (-not $has_change) {
+$change = git status --porcelain
+if (-not $change) {
     Write-Host 'No changes to commit.' -ForegroundColor Green
     return
 }
@@ -36,3 +36,5 @@ for ($i = 0; $i -lt 5; $i++) {
     }
     break
 }
+
+$change
