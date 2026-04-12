@@ -1,0 +1,78 @@
+{
+    "version": "7.20.3",
+    "description": "一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心 | A V2Ray client for Windows, support Xray & v2fly core",
+    "homepage": "https://github.com/2dust/v2rayN",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/2dust/v2rayN/releases/download/7.20.3/v2rayN-windows-64-desktop.zip",
+            "hash": "556fef7d8f6e9e9383431f34dda904a75efbe9097fc89b93544a8ec47b82ac23",
+            "extract_dir": "v2rayN-windows-64"
+        },
+        "arm64": {
+            "url": "https://github.com/2dust/v2rayN/releases/download/7.20.3/v2rayN-windows-arm64-desktop.zip",
+            "hash": "938b20b31ecaf61aff6c2fdd8557b2560233f96fbb5af544e1170d25efa420c9",
+            "extract_dir": "v2rayN-windows-arm64"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\v2rayN.exe",
+            "v2rayN Preview"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\guiConfigs",
+            "guiConfigs"
+        ],
+        [
+            "app\\binConfigs",
+            "binConfigs"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-PreVersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/2dust/v2rayN/releases/download/$version/v2rayN-windows-64-desktop.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/2dust/v2rayN/releases/download/$version/v2rayN-windows-arm64-desktop.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
