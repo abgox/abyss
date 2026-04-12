@@ -1,7 +1,6 @@
 ﻿#Requires -Version 7.0
 
 param(
-    [string]$App = '*',
     [switch]$All
 )
 
@@ -201,20 +200,16 @@ function Sort-JsonByOrder {
 }
 
 if ($All) {
-    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
+    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter '*.json'
 }
 else {
-    $guid = [Guid]::NewGuid()
-    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
-    ForEach-Object {
-        if ($_ -eq '') { return }
-        if ($_ -eq $guid) {
-            if ($current) {
-                $current
-            }
+    $guid = [guid]::NewGuid()
+    $manifests = switch -Regex (git log --since="1 day ago" --name-only --pretty=format:$guid -- 'bucket/') {
+        "^$guid$" {
+            if ($current) { , $current }
             $current = @()
         }
-        else {
+        '^bucket/.+' {
             $current += $_
         }
     }
