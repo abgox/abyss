@@ -52,6 +52,33 @@ jobs:
               throw error;
             }
 
+  update-content:
+    name: Update Content
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.repository.default_branch}}
+
+      - name: Generate list
+        shell: pwsh
+        run: |
+          .\script\generate-list.ps1
+
+      - name: Commit and push changes
+        shell: pwsh
+        run: |
+          $has_change = .\script\push-change.ps1 -message "(chore): automatically update some content [skip ci]"
+          if (-not $has_change) {
+              return
+          }
+          # Update Docs
+          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
+          cd abyss-docs
+          .\scripts\update-manifest-list.ps1
+          .\scripts\push-change.ps1
+
   excavate:
     name: Excavate
     runs-on: windows-latest
@@ -137,57 +164,9 @@ jobs:
           }
           Write-Output "::endgroup::"
 
-  update-content:
-    name: Update Content
-    needs: excavate
-    runs-on: windows-latest
-    outputs:
-      has_changes: ${{ steps.changes.outputs.has_changes }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.repository.default_branch}}
-
-      - name: Generate list and update content
-        shell: pwsh
-        run: |
-          .\script\generate-list.ps1
-
-      - name: Check for changes
-        id: changes
-        shell: pwsh
-        run: |
-          git add -u
-          if (git status --porcelain) {
-              "has_changes=true" >> $env:GITHUB_OUTPUT
-          } else {
-              "has_changes=false" >> $env:GITHUB_OUTPUT
-          }
-
-      - name: Commit and push changes
-        if: steps.changes.outputs.has_changes == 'true'
-        shell: pwsh
-        run: |
-          .\script\push-change.ps1 -message "(chore): automatically update some content [skip ci]"
-
-  update-docs:
-    name: Update Docs
-    needs: update-content
-    if: needs.update-content.outputs.has_changes == 'true'
-    runs-on: windows-latest
-    steps:
-      - name: Update Docs
-        shell: pwsh
-        run: |
-          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
-          cd abyss-docs
-          .\scripts\update-manifest-list.ps1
-          .\scripts\push-change.ps1
-
   sync-repos:
     name: Sync Repos
-    needs: update-content
+    needs: excavate
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
