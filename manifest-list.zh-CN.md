@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (935)|Tag|Description|
+|Manifest (936)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="./bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="./bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -32,6 +32,7 @@
 |[2BrightSparks.SyncBackPro](https://www.2brightsparks.com/download-syncbackpro.html)|<a href="./bucket/2/2BrightSparks/2BrightSparks.SyncBackPro.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款提供给专业人士用于备份、同步和恢复数据文件的工具|
 |[2BrightSparks.SyncBackSE](https://www.2brightsparks.com/download-syncbackse.html)|<a href="./bucket/2/2BrightSparks/2BrightSparks.SyncBackSE.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|面向家庭用户备份个人数据的理想 Windows 解决方案|
 |[2dust.v2rayN](https://github.com/2dust/v2rayN)|<a href="./bucket/2/2dust/2dust.v2rayN.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心|
+|[2dust.v2rayN.Preview](https://github.com/2dust/v2rayN)|<a href="./bucket/2/2dust/2dust.v2rayN.Preview.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个适用于 Windows 的 V2Ray 客户端，支持 Xray & v2fly 核心|
 |[3Dflow.3DFZephyr.Free](https://www.3dflow.net/3df-zephyr-free/)|<a href="./bucket/3/3Dflow/3Dflow.3DFZephyr.Free.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一款由 3Dflow 提供，可根据照片自动重建三维模型的摄影测量软件解决方案|
 |[4gray.iptvnator](https://iptvnator.vercel.app/)|<a href="./bucket/4/4gray/4gray.iptvnator.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个支持 IPTV 播放列表播放 (m3u、m3u8) 的视频播放器应用程序|
 |[5mdt.WinGoDarkTray](https://github.com/5mdt/WinGoDarkTray)|<a href="./bucket/5/5mdt/5mdt.WinGoDarkTray.json"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>|一款可从系统托盘切换明暗模式的 Windows 应用程序|
