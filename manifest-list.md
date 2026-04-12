@@ -13,11 +13,11 @@
 
 |Badge|Description|
 |:-:|-|
-|<img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/>|It is active, and can be installed or updated by Scoop.|
-|<img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/>|It is pending, and cannot be installed.<br/>If the installation is completed before `pending`, it cannot be updated by Scoop.|
-|<img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/>|It has been deprecated, and cannot be installed.<br/>If the installation is completed before `deprecated`, it cannot be updated by Scoop.|
-|<img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/>|It has been renamed, and cannot be installed or updated.<br/>The error message includes the new name, and you should use it to install.<br/>If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.|
-|<img src="https://img.shields.io/badge/virtual-%23149599" style="display:inline" alt="virtual"/>|It is virtual, and does not actually install this app.<br/> It only performs data persistence through [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link).|
+|<img src="https://img.shields.io/badge/active-080"/>|It is active, and can be installed or updated by Scoop.|
+|<img src="https://img.shields.io/badge/pending-85e"/>|It is pending, and cannot be installed.<br/>If the installation is completed before `pending`, it cannot be updated by Scoop.|
+|<img src="https://img.shields.io/badge/deprecated-c22"/>|It has been deprecated, and cannot be installed.<br/>If the installation is completed before `deprecated`, it cannot be updated by Scoop.|
+|<img src="https://img.shields.io/badge/renamed-26e"/>|It has been renamed, and cannot be installed or updated.<br/>The error message includes the new name, and you should use it to install.<br/>If there is data from [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link), it will be migrated automatically.|
+|<img src="https://img.shields.io/badge/virtual-188"/>|It is virtual, and does not actually install this app.<br/> It only performs data persistence through [Persist](https://abyss.abgox.com/features/data-persistence#persist) or [Link](https://abyss.abgox.com/features/data-persistence#link).|
 
 
 ---
