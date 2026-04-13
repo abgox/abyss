@@ -1,0 +1,63 @@
+{
+    "version": "1.1.0.37",
+    "description": "Everything 的命令行界面 | The Command Line Interface for 'Everything'",
+    "homepage": "https://www.voidtools.com/support/everything/command_line_interface/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/voidtools/ES/releases/download/1.1.0.37/ES-1.1.0.37.x64.zip",
+            "hash": "7a57670d9152068d05876c58858c82fe6d3915a9df2c819f4de8801e2929d3a7"
+        },
+        "arm64": {
+            "url": "https://github.com/voidtools/ES/releases/download/1.1.0.37/ES-1.1.0.37.ARM64.zip",
+            "hash": "774dba860c3cecab95de43c95266754adfc8e92c7c59d6564a3b5dbaeb20dca8"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\es.exe",
+    "link": "$env:AppData\\voidtools\\es",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/voidtools/ES/releases/download/$version/ES-$version.x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/voidtools/ES/releases/download/$version/ES-$version.ARM64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
