@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (942)|Tag|Description|
+|Manifest (943)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -916,6 +916,7 @@
 |[vkbo.novelWriter](https://novelwriter.io/)|<a href="bucket/v/vkbo/vkbo.novelWriter.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款类 Markdown 的文本编辑器，专为撰写小说和由许多较小的纯文本文档组成的大型项目而设计|
 |[VladElaina.Catime](https://vladelaina.github.io/Catime/)|<a href="bucket/v/VladElaina/VladElaina.Catime.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款超轻量级的 Windows 倒计时工具，具有番茄钟功能，透明界面和丰富的自定义选项|
 |[voidtools.Everything](https://www.voidtools.com/)|<a href="bucket/v/voidtools/voidtools.Everything.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|文件搜索工具，基于名称快速定位文件和文件夹|
+|[voidtools.Everything.Cli](https://www.voidtools.com/support/everything/command_line_interface/)|<a href="bucket/v/voidtools/voidtools.Everything.Cli.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Everything 的命令行界面|
 |[voidtools.Everything.Lite](https://www.voidtools.com/)|<a href="bucket/v/voidtools/voidtools.Everything.Lite.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|(Lite 版本，不包含 IPC 和 ETP/FTP/HTTP 服务器)<br/>文件搜索工具，基于名称快速定位文件和文件夹|
 |[Volta.Volta](https://volta.sh/)|<a href="bucket/v/Volta/Volta.Volta.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|轻松上手的 JavaScript 工具管理器，它是快速的、可靠的、通用的|
 |[Vovsoft.Vov-Sticky-Notes](https://vovsoft.com/software/vov-sticky-notes/)|<a href="bucket/v/Vovsoft/Vovsoft.Vov-Sticky-Notes.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|创建数字贴纸和提醒事项|

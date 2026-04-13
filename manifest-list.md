@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (942)|Tag|Description|
+|Manifest (943)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -917,6 +917,7 @@
 |[vkbo.novelWriter](https://novelwriter.io/)|<a href="bucket/v/vkbo/vkbo.novelWriter.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A markdown-like text editor designed for writing novels and larger projects of many smaller plain text documents|
 |[VladElaina.Catime](https://vladelaina.github.io/Catime/)|<a href="bucket/v/VladElaina/VladElaina.Catime.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An ultra-lightweight Windows countdown tool with Pomodoro functionality, featuring a transparent interface and rich customization options|
 |[voidtools.Everything](https://www.voidtools.com/)|<a href="bucket/v/voidtools/voidtools.Everything.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Locate files and folders by name instantly|
+|[voidtools.Everything.Cli](https://www.voidtools.com/support/everything/command_line_interface/)|<a href="bucket/v/voidtools/voidtools.Everything.Cli.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The Command Line Interface for 'Everything'|
 |[voidtools.Everything.Lite](https://www.voidtools.com/)|<a href="bucket/v/voidtools/voidtools.Everything.Lite.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|(lite version, does not contain IPC and ETP/FTP/HTTP servers)<br/>Locate files and folders by name instantly|
 |[Volta.Volta](https://volta.sh/)|<a href="bucket/v/Volta/Volta.Volta.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|The Hassle-Free JavaScript Tool Manager, and it's fast, reliable, and universal|
 |[Vovsoft.Vov-Sticky-Notes](https://vovsoft.com/software/vov-sticky-notes/)|<a href="bucket/v/Vovsoft/Vovsoft.Vov-Sticky-Notes.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Creates digital stickers and reminders|
