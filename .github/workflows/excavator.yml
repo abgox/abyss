@@ -15,7 +15,7 @@ jobs:
       ScoopNewVersion: ${{ steps.scoop-new-version.outputs.ScoopNewVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Check Scoop Version
         id: scoop-new-version
@@ -25,7 +25,7 @@ jobs:
 
       - name: Reopen Issue
         if: steps.scoop-new-version.outputs.ScoopNewVersion != ''
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -57,7 +57,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.repository.default_branch}}
 
@@ -108,7 +108,7 @@ jobs:
       SEGMENT: ${{ matrix.segment }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.repository.default_branch}}
 

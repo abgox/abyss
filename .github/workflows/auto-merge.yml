@@ -19,10 +19,10 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'auto-merge')
     steps:
       - name: Checkout PR branch
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Merge PR
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -35,7 +35,7 @@ jobs:
 
       - name: Close linked Issue
         if: success()
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -86,7 +86,7 @@ jobs:
 
       - name: Delete branch
         if: success() && !github.event.pull_request.head.repo.fork
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
