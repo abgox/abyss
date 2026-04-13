@@ -223,6 +223,8 @@ else {
     Sort-Object -Unique
 }
 
+Write-Host 'Sorting JSON...'
+
 foreach ($m in $manifests) {
     $content = Get-Content $m -Raw
     try {
