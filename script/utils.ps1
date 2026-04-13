@@ -1374,12 +1374,12 @@ function A-Get-VersionFromGithubAPI {
         Write-Host "::error::`$json is invalid." -ForegroundColor Red
         return
     }
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return $json.version
-    }
     if (-not $json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
+    }
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
     }
 
     $arch = $json.autoupdate.architecture
@@ -1506,12 +1506,12 @@ function A-Get-VersionFromPowerShellGallery {
         Write-Host "::error::`$json is invalid." -ForegroundColor Red
         return
     }
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return $json.version
-    }
     if (-not $json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
+    }
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
     }
 
     $module_name = $json.psmodule.name
@@ -1531,27 +1531,27 @@ function A-Get-VersionFromPowerShellGallery {
 function A-Get-VersionFromPage {
     <#
     .SYNOPSIS
-        从指定的 Url 页面获取版本号。
+        从指定的 json.checkver.url 页面获取版本号。
 
     .DESCRIPTION
-        从指定的 Url 页面获取版本号。
-        它会等待页面的 js 加载完成，然后使用指定的 Regex 匹配页面内容获取版本号。
+        从指定的 json.checkver.url 页面获取版本号。
+        它会等待页面的 js 加载完成，然后使用指定的 json.checkver.regex 匹配页面内容获取版本号。
     #>
-    param(
-        [string]$Regex,
-        [string]$Url
-    )
 
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
+    }
+    if (-not $json.checkver.url) {
+        Write-Error "${app}: Requires 'checkver.url'."
+        return
+    }
+    if (-not $json.checkver.regex) {
+        Write-Error "${app}: Requires 'checkver.regex'."
+        return
+    }
     if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return $json.version
-    }
-
-    if (!$PSBoundParameters.ContainsKey('Regex')) {
-        return $null
-    }
-
-    if (!$PSBoundParameters.ContainsKey('Url')) {
-        return $null
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
     }
 
     try {
@@ -1564,11 +1564,17 @@ function A-Get-VersionFromPage {
         return $null
     }
 
-    $Page = python "$PSScriptRoot\get-page.py" $Url
-    $Matches = [regex]::Matches($Page, $Regex)
+    $page = python "$PSScriptRoot\get-page.py" $json.checkver.url
+    $match = [regex]::Match($page, $json.checkver.regex)
 
-    if ($Matches) {
-        return $Matches[0].Groups[1].Value
+    if ($match.Success) {
+        $v = if ($match.Groups['version'].Success) {
+            $match.Groups['version'].Value
+        }
+        else {
+            $match.Groups[1].Value
+        }
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $v
     }
 }
 
@@ -2547,6 +2553,31 @@ function A-Get-GithubToken {
     if ($tokens) {
         return $tokens[$order - 1]
     }
+}
+
+function A-New-MatchedString {
+    param (
+        [string]$RegexPattern,
+        [string]$TargetValue
+    )
+
+    $re = [regex]$RegexPattern
+    $groupNames = $re.GetGroupNames()
+
+    if ($groupNames -contains 'version') {
+        $targetGroupName = 'version'
+    }
+    elseif ($re.GroupNumberFromName(1) -ne -1) {
+        $targetGroupName = '1'
+    }
+    else {
+        return $TargetValue
+    }
+
+    $groupPattern = "\((?:\?<${targetGroupName}>|).*?\)"
+    $result = [regex]::Replace($RegexPattern, $groupPattern, $TargetValue)
+
+    return $result -replace '^\^|\$$', '' -replace '\((?:\?<.*?>|).*?\)', '' -replace '[\(\)]', '' -replace '\\(.)', '$1'
 }
 
 #endregion
