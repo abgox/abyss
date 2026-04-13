@@ -2,7 +2,7 @@ name: Excavator
 on:
   workflow_dispatch:
   schedule:
-    - cron: "18 * * * *"
+    - cron: "22 */2 * * *"
 
 # concurrency:
 #   group: manifest-update-lock
@@ -148,7 +148,6 @@ jobs:
         shell: pwsh
         run: |
           # Check rate limit for each token
-          Write-Output "::group::GitHub API Rate Limits"
           $headers = @{}
           $tokens = $env:TOKEN_POOL.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           for ($i = 0; $i -lt $tokens.Count; $i++) {
@@ -162,7 +161,6 @@ jobs:
                   Write-Output "Token $($i + 1) : Failed to check rate limit"
               }
           }
-          Write-Output "::endgroup::"
 
   sync-repos:
     name: Sync Repos
