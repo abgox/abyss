@@ -8,7 +8,7 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://7-zip.org/a/7z2600-x64.msi#/dl.msi_",
+            "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-x64.msi#/dl.msi_",
             "hash": "c388d0444871ca11b21237001af158cfddad7e137851795e5b65cee69b518495"
         }
     },
@@ -44,20 +44,18 @@
     "checkver": {
         "script": [
             ". $pwd\\script\\utils.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget '7zip.7zip' 'msi'",
-            "$out"
+            "A-Get-VersionFromGithubAPI"
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "regex": "(.+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64#/dl.msi_",
-                "hash": {
-                    "url": "temp-autoupdate.json",
-                    "jsonpath": "$.x64_machine.InstallerSha256"
-                }
+                "url": "https://github.com/ip7z/7zip/releases/download/$version/7z$cleanVersion-x64.msi#/dl.msi_"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }
