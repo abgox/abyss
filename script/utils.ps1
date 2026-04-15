@@ -231,6 +231,10 @@ function A-Start-Uninstall {
 }
 
 function A-Complete-Uninstall {
+    if ($manifest.location) {
+        A-Remove-TempData $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+    }
+
     # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
