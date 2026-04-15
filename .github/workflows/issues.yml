@@ -28,12 +28,27 @@ jobs:
     name: Sync Repos
     needs: issue-handler
     runs-on: ubuntu-latest
-    if: |
-      contains(join(github.event.issue.labels.*.name, ','), 'hash-fix-needed') &&
-      contains(join(github.event.issue.labels.*.name, ','), 'verified')
-    continue-on-error: true
     steps:
-      - uses: abgox/hub-mirror-action@abgox
+      - name: Fetch Latest Labels
+        id: check_labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            const labels = issue.data.labels.map(l => l.name);
+            console.log(`Current labels: ${labels}`);
+            const result = labels.includes('hash-fix-needed') && labels.includes('verified');
+            console.log(`Result: ${result}`);
+            core.setOutput("result", result)
+
+      - name: Run Sync
+        if: steps.check_labels.outputs.result == 'true'
+        uses: abgox/hub-mirror-action@abgox
+        continue-on-error: true
         with:
           src: github/abgox
           dst: gitee/abgox
