@@ -122,7 +122,7 @@ jobs:
       - name: Install module
         if: steps.cache-module.outputs.cache-hit != 'true'
         env:
-          PS_MODULE_LIST: ${{ secrets.PS_MODULE_LIST }}
+          PS_MODULE_LIST: ${{ vars.PS_MODULE_LIST }}
         shell: pwsh
         run: $env:PS_MODULE_LIST -split ',' | ForEach-Object { Install-Module $_ -Repository PSGallery -Force }
 
@@ -168,7 +168,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: Yikun/hub-mirror-action@master
+      - uses: abgox/hub-mirror-action@abgox
         with:
           src: github/abgox
           dst: gitee/abgox

@@ -29,11 +29,11 @@ jobs:
     needs: issue-handler
     runs-on: ubuntu-latest
     if: |
-      contains(github.event.issue.labels.*.name, 'hash-fix-needed') &&
-      contains(github.event.issue.labels.*.name, 'verified')
+      contains(join(github.event.issue.labels.*.name, ','), 'hash-fix-needed') &&
+      contains(join(github.event.issue.labels.*.name, ','), 'verified')
     continue-on-error: true
     steps:
-      - uses: Yikun/hub-mirror-action@master
+      - uses: abgox/hub-mirror-action@abgox
         with:
           src: github/abgox
           dst: gitee/abgox
