@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (943)|Tag|Description|
+|Manifest (947)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -306,6 +306,7 @@
 |[DCloud.HBuilderX](https://www.dcloud.io/hbuilderx.html)|<a href="bucket/d/DCloud/DCloud.HBuilderX.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|DCloud 旗下的代码编辑器|
 |[deanxv.DoneHub](https://github.com/deanxv/done-hub)|<a href="bucket/d/deanxv/deanxv.DoneHub.json"><img src="https://img.shields.io/badge/active-080"/></a>|一站式 OpenAI API 聚合服务|
 |[DearVa.Everywhere](https://everywhere.sylinko.com/)|<a href="bucket/d/DearVa/DearVa.Everywhere.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个具有上下文感知能力的交互式人工智能助手，拥有简洁现代的用户界面和强大的集成功能|
+|[debugtheworldbot.keyStats](https://keystats.vercel.app/)|<a href="bucket/d/debugtheworldbot/debugtheworldbot.keyStats.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Windows 键盘和鼠标统计工具 - 跟踪你的打字和点击统计数据|
 |[DeltaChat.DeltaChat](https://github.com/deltachat/deltachat-desktop)|<a href="bucket/d/DeltaChat/DeltaChat.DeltaChat.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于桌面端、带有聊天共享工具和游戏的去中心化私人即时通讯软件|
 |[DenoLand.Deno](https://deno.com/)|<a href="bucket/d/DenoLand/DenoLand.Deno.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个适用于 JavaScript 和 TypeScript 的现代运行时环境|
 |[derceg.ExplorerPlusPlus](https://explorerplusplus.com/)|<a href="bucket/d/derceg/derceg.ExplorerPlusPlus.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款适用于 Windows 系统的轻量且快速的文件管理器|
@@ -703,6 +704,8 @@
 |[pnpm.pnpm](https://pnpm.io/)|<a href="bucket/p/pnpm/pnpm.pnpm.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款快速且节省磁盘空间的 Node 包管理器|
 |[Posit.Air](https://posit-dev.github.io/air/)|<a href="bucket/p/Posit/Posit.Air.json"><img src="https://img.shields.io/badge/active-080"/></a>|用 Rust 编写的 R 格式化工具和语言服务器|
 |[Postman.Postman](https://www.postman.com/)|<a href="bucket/p/Postman/Postman.Postman.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|API 开发协作平台|
+|[Postman.Postman.CLI](https://learning.postman.com/docs/postman-cli/postman-cli-overview/)|<a href="bucket/p/Postman/Postman.Postman.CLI.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Postman 的一款安全的命令行配套工具|
+|[Postman.PostmanAgent](https://www.postman.com/downloads/postman-agent/)|<a href="bucket/p/Postman/Postman.PostmanAgent.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|克服浏览器的跨域资源共享（CORS）限制，方便从浏览器版本的 Postman 发送 API 请求|
 |[PowerShell.CompletionPredictor](https://github.com/PowerShell/CompletionPredictor)|<a href="bucket/p/PowerShell/PowerShell.CompletionPredictor.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个适用于 PSReadLine 预测性智能感知功能的 PowerShell 命令行自动补全插件|
 |[PowerShell.PowerShellGet](https://github.com/PowerShell/PSResourceGet)|<a href="bucket/p/PowerShell/PowerShell.PowerShellGet.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，包含用于发现、安装、更新和发布 PowerShell 产物 (如模块、DSC 资源、角色功能和脚本) 的命令|
 |[PowerShell.PSReadLine](https://github.com/PowerShell/PSReadLine)|<a href="bucket/p/PowerShell/PowerShell.PSReadLine.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个受 bash 启发的 PowerShell readline 实现|
@@ -713,6 +716,7 @@
 |[Proton.ProtonPass](https://proton.me/pass)|<a href="bucket/p/Proton/Proton.ProtonPass.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|开源且加密的密码管理器|
 |[psake.psake](https://psake.dev/)|<a href="bucket/p/psake/psake.psake.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个用 PowerShell 编写的构建自动化工具|
 |[Psyche.Kelivo](https://kelivo.psycheas.top/)|<a href="bucket/p/Psyche/Psyche.Kelivo.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个 Flutter LLM 聊天客户端|
+|[Pulover.PuloversMacroCreator](https://github.com/Pulover/PuloversMacroCreator)|<a href="bucket/p/Pulover/Pulover.PuloversMacroCreator.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|基于 AutoHotkey 语言的免费自动化工具和脚本生成器|
 |[purocean.YankNote](https://yank-note.com/)|<a href="bucket/p/purocean/purocean.YankNote.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|高度可扩展的 Markdown 编辑器|
 |[PuTTY.PuTTY](https://www.chiark.greenend.org.uk/)|<a href="bucket/p/PuTTY/PuTTY.PuTTY.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个适用于 Windows 和 Unix 平台的 SSH 和 Telnet 的免费实现，以及一个 xterm 终端模拟器|
 |[Pylogmon.pot](https://pot-app.com/)|<a href="bucket/p/Pylogmon/Pylogmon.pot.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台的划词翻译和 OCR 软件|
