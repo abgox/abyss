@@ -21,7 +21,7 @@
 
 ---
 
-|Manifest (948)|Tag|Description|
+|Manifest (949)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -773,6 +773,7 @@
 |[sigoden.Dufs](https://github.com/sigoden/dufs)|<a href="bucket/s/sigoden/sigoden.Dufs.json"><img src="https://img.shields.io/badge/active-080"/></a>|一个支持静态服务、上传、搜索、访问控制、webdav 等的文件服务器...|
 |[simonmichael.hledger](https://hledger.org/)|<a href="bucket/s/simonmichael/simonmichael.hledger.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款功能强大、速度快、直观的纯文本会计工具，具有 CLI、TUI 和 Web 界面|
 |[sinelaw.fresh](https://sinelaw.github.io/fresh/)|<a href="bucket/s/sinelaw/sinelaw.fresh.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个基于终端的文本编辑器|
+|[Sipeed.PicoClaw](https://picoclaw.io/)|<a href="bucket/s/Sipeed/Sipeed.PicoClaw.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|小巧、快速、随处可部署 —— 自动化繁琐任务，释放你的创造力|
 |[SkyArc.LANDrop](https://landrop.app/)|<a href="bucket/s/SkyArc/SkyArc.LANDrop.json"><img src="https://img.shields.io/badge/active-080"/></a>|将任何文件拖放到局域网内的任何设备上|
 |[SlackTechnologies.Slack](https://www.slack.com/)|<a href="bucket/s/SlackTechnologies/SlackTechnologies.Slack.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|一个团队沟通和协作工具|
 |[Snyk.Snyk](https://snyk.io/)|<a href="bucket/s/Snyk/Snyk.Snyk.json"><img src="https://img.shields.io/badge/active-080"/></a>|Snyk CLI 会扫描并监控你的项目，以查找安全漏洞|

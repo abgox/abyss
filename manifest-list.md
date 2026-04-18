@@ -22,7 +22,7 @@
 
 ---
 
-|Manifest (948)|Tag|Description|
+|Manifest (949)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -774,6 +774,7 @@
 |[sigoden.Dufs](https://github.com/sigoden/dufs)|<a href="bucket/s/sigoden/sigoden.Dufs.json"><img src="https://img.shields.io/badge/active-080"/></a>|A file server that supports static serving, uploading, searching, accessing control, webdav...|
 |[simonmichael.hledger](https://hledger.org/)|<a href="bucket/s/simonmichael/simonmichael.hledger.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Robust, fast, intuitive plain text accounting tool with CLI, TUI and web interfaces|
 |[sinelaw.fresh](https://sinelaw.github.io/fresh/)|<a href="bucket/s/sinelaw/sinelaw.fresh.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal-based text editor|
+|[Sipeed.PicoClaw](https://picoclaw.io/)|<a href="bucket/s/Sipeed/Sipeed.PicoClaw.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Tiny, Fast, and Deployable anywhere - automate the mundane, unleash your creativity|
 |[SkyArc.LANDrop](https://landrop.app/)|<a href="bucket/s/SkyArc/SkyArc.LANDrop.json"><img src="https://img.shields.io/badge/active-080"/></a>|Drop any files to any devices on your LAN|
 |[SlackTechnologies.Slack](https://www.slack.com/)|<a href="bucket/s/SlackTechnologies/SlackTechnologies.Slack.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|A team communication and collaboration tool|
 |[Snyk.Snyk](https://snyk.io/)|<a href="bucket/s/Snyk/Snyk.Snyk.json"><img src="https://img.shields.io/badge/active-080"/></a>|Snyk CLI scans and monitors your projects for security vulnerabilities|
