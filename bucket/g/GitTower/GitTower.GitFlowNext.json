@@ -1,0 +1,65 @@
+{
+    "version": "1.0.0",
+    "description": "现代化的 git-flow 实现 | A modern reimplementation of git-flow",
+    "homepage": "https://github.com/gittower/git-flow-next",
+    "license": {
+        "identifier": "BSD-2-Clause"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gittower/git-flow-next/releases/download/v1.0.0/git-flow-next-v1.0.0-windows-amd64.zip",
+            "hash": "ca0ccb362d3aeddf88287241e7d62544378675c84aca2a41864d7868c957ea0a",
+            "bin": [
+                [
+                    "app\\git-flow-v1.0.0-windows-amd64.exe",
+                    "git-flow"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gittower/git-flow-next/releases/download/v$version/git-flow-next-v$version-windows-amd64.zip",
+                "bin": [
+                    [
+                        "app\\git-flow-v$version-windows-amd64.exe",
+                        "git-flow.exe"
+                    ]
+                ]
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
