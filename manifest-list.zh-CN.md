@@ -1,5 +1,3 @@
-# 清单列表
-
 [English](./manifest-list.md) | [简体中文](./manifest-list.zh-CN.md) | [官网](https://abyss.abgox.com/manifest-list)
 
 ---

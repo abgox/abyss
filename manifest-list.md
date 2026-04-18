@@ -1,5 +1,3 @@
-# Manifest List
-
 [简体中文](./manifest-list.zh-CN.md) | [English](./manifest-list.md) | [Website](https://abyss.abgox.com/manifest-list)
 
 ---
