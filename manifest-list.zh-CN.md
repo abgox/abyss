@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (949)|Tag|Description|
+|Manifest (952)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -348,6 +348,7 @@
 |[EvotecIT.PSWriteHTML](https://github.com/EvotecIT/PSWriteHTML)|<a href="bucket/e/EvotecIT/EvotecIT.PSWriteHTML.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个 PowerShell 模块，无需任何 HTML、CSS 或 JavaScript 知识，就能生成精美的 HTML 报告、页面和电子邮件|
 |[eza-community.eza](https://eza.rocks/)|<a href="bucket/e/eza-community/eza-community.eza.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款针对古老的文件列表命令行程序 ls 的现代替代工具|
 |[Fabio286.antares](https://antares-sql.app/)|<a href="bucket/f/Fabio286/Fabio286.antares.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款现代化、快速且以生产力为导向的 SQL 客户端，注重用户体验 (UX)|
+|[Factormystic.DefaultProgramsEditor](https://defaultprogramseditor.com/)|<a href="bucket/f/Factormystic/Factormystic.DefaultProgramsEditor.json"><img src="https://img.shields.io/badge/active-080"/></a>|轻松修复 Windows 中的文件关联设置，包括右键菜单项、图标及描述信息|
 |[FarManager.FarManager](https://www.farmanager.com/)|<a href="bucket/f/FarManager/FarManager.FarManager.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个用于在 Windows 操作系统中管理文件和档案的程序，Far Manager 以文本模式运行，并为执行大多数必要操作提供简单直观的界面|
 |[Fastfetch-cli.Fastfetch](https://github.com/fastfetch-cli/fastfetch)|<a href="bucket/f/Fastfetch-cli/Fastfetch-cli.Fastfetch.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款持续维护、功能丰富且注重性能、类 neofetch 的系统信息查看工具|
 |[FastStone.Viewer](https://www.faststone.org/FSViewerDetail.htm)|<a href="bucket/f/FastStone/FastStone.Viewer.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Faststone Image Viewer 是一个快速，稳定，用户友好的图像浏览器，转换器和编辑器|
@@ -524,6 +525,7 @@
 |[MarkText.MarkText](https://www.marktext.cc/)|<a href="bucket/m/MarkText/MarkText.MarkText.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简单优雅的 MarkDown 编辑器|
 |[max-sixty.worktrunk](https://worktrunk.dev/)|<a href="bucket/m/max-sixty/max-sixty.worktrunk.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于 Git 工作树管理的命令行界面，专为并行人工智能代理工作流设计|
 |[mdgrs-mei.WinUIShell](https://github.com/mdgrs-mei/WinUIShell)|<a href="bucket/m/mdgrs-mei/mdgrs-mei.WinUIShell.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|使用 PowerShell 编写 WinUI 3 脚本|
+|[Meituan.CatPaw](https://catpaw.meituan.com/)|<a href="bucket/m/Meituan/Meituan.CatPaw.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|AI 编程 Agent|
 |[Meituan.TabbitBrowser](https://www.tabbit-ai.com/)|<a href="bucket/m/Meituan/Meituan.TabbitBrowser.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|新一代 AI 原生浏览器，理解你的上下文、帮你组织工作、执行任务、无限可能|
 |[Meituan.TabbitBrowser.CN](https://www.tabbit-ai.com/)|<a href="bucket/m/Meituan/Meituan.TabbitBrowser.CN.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|新一代 AI 原生浏览器，理解你的上下文、帮你组织工作、执行任务、无限可能|
 |[Meld.Meld](https://meldmerge.org/)|<a href="bucket/m/Meld/Meld.Meld.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|可视化差异与合并工具|
@@ -774,6 +776,7 @@
 |[Sipeed.PicoClaw](https://picoclaw.io/)|<a href="bucket/s/Sipeed/Sipeed.PicoClaw.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|小巧、快速、随处可部署 —— 自动化繁琐任务，释放你的创造力|
 |[SkyArc.LANDrop](https://landrop.app/)|<a href="bucket/s/SkyArc/SkyArc.LANDrop.json"><img src="https://img.shields.io/badge/active-080"/></a>|将任何文件拖放到局域网内的任何设备上|
 |[SlackTechnologies.Slack](https://www.slack.com/)|<a href="bucket/s/SlackTechnologies/SlackTechnologies.Slack.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|一个团队沟通和协作工具|
+|[Smartsheet.Smartsheet](https://www.smartsheet.com/)|<a href="bucket/s/Smartsheet/Smartsheet.Smartsheet.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在 Smartsheet 中动态计划、执行和报告工作，而无需在浏览器选项卡之间来回切换|
 |[Snyk.Snyk](https://snyk.io/)|<a href="bucket/s/Snyk/Snyk.Snyk.json"><img src="https://img.shields.io/badge/active-080"/></a>|Snyk CLI 会扫描并监控你的项目，以查找安全漏洞|
 |[SoftDeluxe.FreeDownloadManager](https://www.freedownloadmanager.org/)|<a href="bucket/s/SoftDeluxe/SoftDeluxe.FreeDownloadManager.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|一个强大的下载管理器|
 |[Softplicity.CoolUtilsMailViewer](https://www.coolutils.com/MailViewer)|<a href="bucket/s/Softplicity/Softplicity.CoolUtilsMailViewer.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[RequireAdmin](https://abyss.abgox.com/faq/require-admin)|Coolutils' Mail Viewer 是一款免费程序，可让您查看 MSG、EML、EMLX、P7M、ICS、VCF 和 winmail.dat(TNEF) 文件|
