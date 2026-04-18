@@ -1,0 +1,70 @@
+{
+    "version": "1.6.5",
+    "description": "一款定制化 Discord 应用，旨在为你提供更出色的性能表现 | A custom Discord App aiming to give you better performance",
+    "homepage": "https://vesktop.dev/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Vencord/Vesktop/releases/download/v1.6.5/Vesktop-Setup-1.6.5.exe",
+            "hash": "e9199c6721daf51ff6493889ab1cf39858fb0ab1ae9fe7543c6a2a6dee1292d6"
+        },
+        "arm64": {
+            "url": "https://github.com/Vencord/Vesktop/releases/download/v1.6.5/Vesktop-Setup-1.6.5.exe",
+            "hash": "e9199c6721daf51ff6493889ab1cf39858fb0ab1ae9fe7543c6a2a6dee1292d6"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\vesktop.exe",
+            "Vesktop"
+        ]
+    ],
+    "link": "$env:AppData\\vesktop",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Vesktop.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\vesktop-updater\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Vencord/Vesktop/releases/download/v$version/Vesktop-Setup-$version.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/Vencord/Vesktop/releases/download/v$version/Vesktop-Setup-$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
