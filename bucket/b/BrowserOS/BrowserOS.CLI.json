@@ -1,0 +1,61 @@
+{
+    "version": "0.2.2",
+    "description": "一个命令行界面，通过 MCP 控制 BrowserOS | A command-line interface for controlling BrowserOS via MCP",
+    "homepage": "https://browseros.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/browseros-ai/BrowserOS/releases/download/browseros-cli-v0.2.2/browseros-cli_windows_amd64.exe#/browseros-cli.exe",
+            "hash": "bcd7a08fd4232c5d61dfba107ea5a403f1523a657f799c25b03ffef4f80054e7"
+        },
+        "arm64": {
+            "url": "https://github.com/browseros-ai/BrowserOS/releases/download/browseros-cli-v0.2.2/browseros-cli_windows_arm64.exe#/browseros-cli.exe",
+            "hash": "8cadd3e4de973eddcf880c57ed80c1af97d0013d72b4f4ff6400472e5e7c5b29"
+        }
+    },
+    "bin": "browseros-cli.exe",
+    "link": "$home\\.config\\browseros-cli",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "browseros-cli-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/browseros-ai/BrowserOS/releases/download/browseros-cli-v$version/browseros-cli_windows_amd64.exe#/browseros-cli.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/browseros-ai/BrowserOS/releases/download/browseros-cli-v$version/browseros-cli_windows_arm64.exe#/browseros-cli.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
