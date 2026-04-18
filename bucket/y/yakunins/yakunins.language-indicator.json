@@ -1,0 +1,58 @@
+{
+    "version": "0.7",
+    "description": "按语言设置文本插入符号和鼠标光标的样式，也称为语言指示器 | Per-language text caret and mouse cursor styling, aka language indicator",
+    "homepage": "https://github.com/yakunins/language-indicator",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/yakunins/language-indicator/releases/download/v0.7/language-indicator.exe",
+            "hash": "dc073ec75932b6a62758d96749b99e49bda38ea1cb5d7289d4d93af79695a1eb"
+        }
+    },
+    "shortcuts": [
+        [
+            "language-indicator.exe",
+            "language-indicator"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yakunins/language-indicator/releases/download/v$version/language-indicator.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
