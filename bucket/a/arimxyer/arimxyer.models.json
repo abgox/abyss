@@ -1,0 +1,56 @@
+{
+    "version": "0.9.7",
+    "description": "一个快速的用于浏览 AI 模型、基准测试和编码智能体的终端用户界面（TUI） | A fast TUI for browsing AI models, benchmarks, and coding agents",
+    "homepage": "https://github.com/arimxyer/models",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/arimxyer/models/releases/download/v0.9.7/models-x86_64-pc-windows-msvc.zip",
+            "hash": "64f7e36de075e0fce3bd78852e3727c9f4bcce8fd61c551074a8ef8a3a716e32"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\models.exe",
+    "link": "$env:AppData\\models",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/arimxyer/models/releases/download/v$version/models-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
