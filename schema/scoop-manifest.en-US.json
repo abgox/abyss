@@ -3185,7 +3185,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3810,6 +3810,14 @@
                                 []
                             ]
                         },
+                        "admin": {
+                            "title": "Require admin permission to run",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- When set to `true`, it terminates the current operation if the user is not an admin.\n- Refer to: https://abyss.abgox.com/faq/require-admin",
+                            "type": "boolean",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "pre_install": {
                             "items": {
                                 "allOf": [
@@ -4199,10 +4207,6 @@
                                                 "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
                                             },
                                             {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "Require admin permission to run\n- Refer to: https://abyss.abgox.com/faq/require-admin"
-                                            },
-                                            {
                                                 "const": "A-Ensure-Directory",
                                                 "markdownDescription": "Ensure the specified directory path exists\n- If no parameter is given, ensure `$persist_dir` path exists\n- Example: `A-Ensure-Directory 'xxx'`"
                                             },
@@ -4304,24 +4308,6 @@
                                             }
                                         ]
                                     }
-                                },
-                                {
-                                    "if": {
-                                        "contains": {
-                                            "const": "A-Require-Admin"
-                                        }
-                                    },
-                                    "then": {
-                                        "items": [
-                                            {},
-                                            {},
-                                            {},
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "errorMessage": "'A-Require-Admin' must be placed here as the fourth item in the array"
-                                            }
-                                        ]
-                                    }
                                 }
                             ]
                         },
@@ -4418,19 +4404,19 @@
                                                 "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- By default, it will stop processes in the `$dir` directory.\n- Parameters:\n  - `-ExtraPaths`: Additional directories to search.\n    - If the `location` and `env_add_path_expand` fields exist, they will be added automatically.\n  - `-ExtraProcessNames`: Process names to search.\n- Examples:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
+                                                "const": "A-Stop-Service 'xxx' | A-Remove-Service",
                                                 "markdownDescription": "Try to stop and remove specified application services to ensure successful uninstallation."
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin | A-Remove-Service",
+                                                "pattern": "A-Stop-Service .* | A-Remove-Service",
                                                 "markdownDescription": "Try to stop and remove specified application services to ensure successful uninstallation."
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin",
+                                                "const": "A-Stop-Service 'xxx'",
                                                 "markdownDescription": "Try to stop specified application services to ensure successful uninstallation."
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin",
+                                                "pattern": "A-Stop-Service .*",
                                                 "markdownDescription": "Try to stop specified application services to ensure successful uninstallation."
                                             },
                                             {
@@ -4448,10 +4434,6 @@
                                             {
                                                 "pattern": "A-Remove-TempData",
                                                 "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
-                                            },
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "Require running with administrator permission.\n- Refer to: https://abyss.abgox.com/faq/require-admin"
                                             },
                                             {
                                                 "const": "A-Deny-Update",
@@ -4507,42 +4489,7 @@
                                                 "const": "A-Deny-Update",
                                                 "errorMessage": "There is 'A-Deny-Update' in the array, so here can only be it."
                                             }
-                                        ],
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it."
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it or 'A-Deny-Update'."
-                                                }
-                                            ]
-                                        }
+                                        ]
                                     }
                                 }
                             ]
@@ -4709,34 +4656,6 @@
                             {
                                 "$comment": "Check whether the corresponding functions in pre_uninstall exist according to the functions used in pre_install, such as A-Install-App/A-Uninstall-App",
                                 "allOf": [
-                                    {
-                                        "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Require-Admin"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "pre_uninstall": {
-                                                    "if": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Uninstall-Manually"
-                                                        }
-                                                    },
-                                                    "else": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Require-Admin"
-                                                        },
-                                                        "errorMessage": "'A-Require-Admin' is used in 'pre_install', while 'A-Require-Admin' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
                                     {
                                         "if": {
                                             "required": [

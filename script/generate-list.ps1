@@ -126,15 +126,15 @@ foreach ($path in $PathList) {
         }
 
         ## RequireAdmin
-        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)'
+        $RequireAdmin = $json.admin -or (Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin)')
         if ($RequireAdmin) {
-            $tag += '[RequireAdmin](https://abyss.abgox.com/faq/require-admin)'
+            $tag += '[Admin](https://abyss.abgox.com/faq/require-admin)'
         }
         else {
             ## RequireAdminOrDevMode
             $RequireAdminOrDevMode = Test-ScriptPattern $json '(?<!#.*)A-New-LinkFile'
             if ($RequireAdminOrDevMode) {
-                $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                $tag += '[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
             }
             else {
                 foreach ($l in $json.link) {
@@ -150,7 +150,7 @@ foreach ($path in $PathList) {
                         }
                     }
                     if (Test-Path "$PSScriptRoot\..\extra\$app\$p" -PathType Leaf) {
-                        $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                        $tag += '[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
                         break
                     }
                 }

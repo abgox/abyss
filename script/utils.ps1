@@ -93,6 +93,10 @@ function A-Start-Install {
     if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
         A-Deny-Manifest $manifest.new
     }
+    # https://abyss.abgox.com/faq/require-admin
+    if ($manifest.admin) {
+        A-Require-Admin
+    }
     # https://abyss.abgox.com/faq/deny-if-app-conflict
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
@@ -166,9 +170,6 @@ function A-Start-Install {
             }
         }
         if (-not ($manifest.pre_install -match '^\s*A-New-Link$')) {
-            if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
-                A-Require-Admin
-            }
             A-New-Link
         }
     }
@@ -221,6 +222,9 @@ function A-Start-Uninstall {
     }
     if ($version -eq 'renamed') {
         A-Move-Persistence
+    }
+    if ($manifest.admin) {
+        A-Require-Admin
     }
     if ($manifest.env_set_shared) {
         A-Set-EnvVarShared -Remove
@@ -634,13 +638,8 @@ function A-Stop-Process {
 
 function A-Stop-Service {
     param(
-        [string]$ServiceName,
-        [switch]$RequireAdmin
+        [string]$ServiceName
     )
-
-    if (-not $abgox_abyss.isAdmin -and $RequireAdmin) {
-        A-Require-Admin
-    }
 
     $service = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
     if (-not $service) {

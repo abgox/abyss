@@ -157,7 +157,7 @@ foreach ($file in $files) {
 
     # Admin
     $admin = 'No'
-    if ($c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)') {
+    if ($c.admin -or $c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin)') {
         $admin = 'Yes'
     }
     $line += "[$admin](https://abyss.abgox.com/faq/require-admin)"
