@@ -30,11 +30,11 @@
             "AppData\\Roaming\\mihomo-party"
         ]
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "# 安装完成后自动启动一次，以解决首次启动必须使用管理员权限的问题",
         "$null = Start-Job -ScriptBlock {",
         "    param($dir)",
@@ -53,7 +53,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process"
     ],
     "post_uninstall": [

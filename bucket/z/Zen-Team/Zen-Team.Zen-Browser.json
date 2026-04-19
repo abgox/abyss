@@ -17,11 +17,11 @@
     },
     "location": "$env:ProgramFiles\\Zen Browser",
     "link": "$env:AppData\\zen",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "# 不能使用 /D=$dir 安装到 Scoop 目录下，只能使用标准安装目录 $env:ProgramFiles\\Zen Browser",
         "# 如果安装到 Scoop 目录下，每次重新安装/更新都会自动新建 Profile 用户配置，而不是使用旧的用户配置",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Zen Browser\\uninstall\\helper.exe\" -ArgumentList '/S'"
@@ -35,7 +35,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",

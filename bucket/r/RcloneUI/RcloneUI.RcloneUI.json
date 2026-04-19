@@ -17,11 +17,11 @@
     },
     "location": "$env:ProgramFiles\\Rclone UI",
     "link": "$env:AppData\\com.rclone.ui",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Rclone UI\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
@@ -33,7 +33,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",

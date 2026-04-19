@@ -14,6 +14,7 @@
     },
     "location": "$env:LocalAppData\\Yandex\\YandexBrowser",
     "link": "$env:LocalAppData\\Yandex\\YandexBrowser\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -29,7 +30,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "$Uninstaller = Get-ChildItem \"$env:LocalAppData\\Yandex\\YandexBrowser\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall', '--force-uninstall'",

@@ -14,11 +14,11 @@
     },
     "location": "$env:ProgramFiles\\7-Zip",
     "env_add_path_expand": "$env:ProgramFiles\\7-Zip",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -30,10 +30,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "if ($cmd -eq 'update') {",
-        "  A-Require-Admin",
-        "  return",
-        "}",
+        "if ($cmd -eq 'update') { return }",
         "A-Uninstall-Manually"
     ],
     "post_uninstall": [

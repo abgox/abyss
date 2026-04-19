@@ -15,11 +15,11 @@
             "hash": "7fdafbfc1acf04621fcc910d7ad9797b68a3d44afb98b73ff6f518759a31124e"
         }
     },
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -ArgumentList '/quiet', '/norestart'"
     ],
     "post_install": [
@@ -31,7 +31,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "$UninstallEntry = A-Get-UninstallEntryByAppName \"^Microsoft Windows Desktop Runtime $version\"",
         "A-Uninstall-App -Uninstaller $UninstallEntry.BundleCachePath -ArgumentList '/uninstall', '/quiet'"

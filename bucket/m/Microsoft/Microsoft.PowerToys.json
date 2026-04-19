@@ -17,11 +17,11 @@
     },
     "location": "$env:LocalAppData\\PowerToys",
     "link": "$env:LocalAppData\\Microsoft\\PowerToys",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "Expand-DarkArchive \"$dir\\$fname\" \"$dir\\.tmp\"",
         "Get-ChildItem $dir -Recurse -Filter '*.msi' | Select-Object -First 1 | ForEach-Object { Move-Item $_.FullName \"$dir\\dl.msi\" -Force }",
         "Remove-Item \"$dir\\.tmp\", \"$dir\\$fname\" -Force -Recurse -ErrorAction SilentlyContinue",

@@ -21,11 +21,11 @@
         "$home\\.gitconfig",
         "$home\\.gitmessage"
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Git\\unins000.exe\" -ArgumentList '/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar'"
     ],
     "post_install": [
@@ -37,7 +37,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Uninstall-App -ArgumentList '/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART'",
         "A-Remove-Link"

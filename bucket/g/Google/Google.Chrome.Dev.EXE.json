@@ -18,11 +18,11 @@
     },
     "location": "$env:ProgramFiles\\Google\\Chrome Dev",
     "link": "$env:LocalAppData\\Google\\Chrome Dev\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -ArgumentList '--chrome-dev','--do-not-launch-chrome','--system-level'"
     ],
     "post_install": [
@@ -34,7 +34,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Google\\Chrome Dev\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--chrome-dev','--uninstall','--system-level','--multi-install','--force-uninstall'",
         "A-Remove-Link"
