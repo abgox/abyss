@@ -1,5 +1,5 @@
 {
-    "version": "147.0.7727.24",
+    "version": "148.0.7778.40",
     "description": "(Beta 版本) 谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造 | (Beta version) Chrome Browser - Fast, secure, and free web browser, built for the modern web",
     "homepage": "https://www.google.com/intl/zh-CN/chrome/",
     "license": {
@@ -8,21 +8,21 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dl.google.com/release2/chrome/pehast3lsyifjvdytbq6vjfh4m_147.0.7727.24/147.0.7727.24_chrome_installer_uncompressed.exe",
-            "hash": "6546e795b8aae85b2f9b6c6c21f7a9b39e61ca1b919dee8ca1551329bd04a123"
+            "url": "https://dl.google.com/release2/chrome/eionbwxyrlwvjxdpj344rotiqu_148.0.7778.40/148.0.7778.40_chrome_installer_uncompressed.exe",
+            "hash": "fb1383baa7e9384d8eb8fbdf8211d4b351001f7a20d92c15ebf74e31f1e0af78"
         },
         "arm64": {
-            "url": "https://dl.google.com/release2/chrome/acnvpwuecmr33g66q556rctkvjma_147.0.7727.24/147.0.7727.24_chrome_installer_uncompressed.exe",
-            "hash": "767a28051626dcad5fb15366bd4cb3272aa50c872c9b6971ba01df8f1af767c5"
+            "url": "https://dl.google.com/release2/chrome/adqw4bjqz6vnar3h6bm5usvy3gga_148.0.7778.40/148.0.7778.40_chrome_installer_uncompressed.exe",
+            "hash": "75e2dbce4bae7fd8a7c80099ba81f2bfd0f5bf3a21f5a334d518e88be721abe5"
         }
     },
     "location": "$env:ProgramFiles\\Google\\Chrome Beta",
     "link": "$env:LocalAppData\\Google\\Chrome Beta\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -ArgumentList '--chrome-beta','--do-not-launch-chrome','--system-level'"
     ],
     "post_install": [
@@ -34,7 +34,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Google\\Chrome Beta\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--chrome-beta','--uninstall','--system-level','--multi-install','--force-uninstall'",
         "A-Remove-Link"

@@ -1,5 +1,5 @@
 {
-    "version": "146.0.7680.153-1.1",
+    "version": "147.0.7727.55-1.1",
     "description": "不依赖谷歌网络服务的 Google Chromium 浏览器 | Google Chromium without dependency on Google web services",
     "homepage": "https://github.com/ungoogled-software/ungoogled-chromium-windows",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/146.0.7680.153-1.1/ungoogled-chromium_146.0.7680.153-1.1_installer_x64.exe",
-            "hash": "5040018f6c69eaa347573988f882825d627bfe09b7ef9963f21f80fdc8c98c77"
+            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/147.0.7727.55-1.1/ungoogled-chromium_147.0.7727.55-1.1_installer_x64.exe",
+            "hash": "cf2a56139d7a0f9f387b17b70f9f3a2585d058be39dba0dabc9f30e14847f140"
         },
         "arm64": {
-            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/146.0.7680.153-1.1/ungoogled-chromium_146.0.7680.153-1.1_installer_arm64.exe",
-            "hash": "3f20166169aa2bb3cffa1d965b784069e74d64f771b2e0f3a96b6277a3f23181"
+            "url": "https://github.com/ungoogled-software/ungoogled-chromium-windows/releases/download/147.0.7727.55-1.1/ungoogled-chromium_147.0.7727.55-1.1_installer_arm64.exe",
+            "hash": "0ce5f0067a174d1615caf27ae914bf51f9fa1aa19c051dda67daafb08c9328bc"
         }
     },
     "conflicts": [
@@ -25,7 +25,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller \"$env:LocalAppData\\Chromium\\Application\\chrome.exe\" -ArgumentList '--silent','--install'"
+        "A-Install-App -Uninstaller \"$env:LocalAppData\\Chromium\\Application\\chrome.exe\" -ArgumentList '--silent', '--install'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -36,7 +36,8 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-Manually \"$env:LocalAppData\\Chromium\\Application\"",
+        "$Uninstaller = Get-ChildItem \"$env:LocalAppData\\Chromium\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
+        "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--uninstall', '--force-uninstall'",
         "A-Remove-Link"
     ],
     "post_uninstall": [

@@ -17,18 +17,12 @@
         }
     },
     "location": "${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev",
-    "shortcuts": [
-        [
-            "${env:ProgramFiles(x86)}\\Microsoft\\Edge Dev\\Application\\msedge.exe",
-            "Microsoft Edge Dev"
-        ]
-    ],
     "link": "$env:LocalAppData\\Microsoft\\Edge Dev\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -40,7 +34,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Uninstall-Msi",
         "A-Remove-Link"
     ],

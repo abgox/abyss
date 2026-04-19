@@ -1,0 +1,78 @@
+{
+    "version": "0.233.2-pre",
+    "description": "一款高性能的多人协作代码编辑器，由 Atom 和 Tree-sitter 的开发者打造 | A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter",
+    "homepage": "https://zed.dev/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zed-industries/zed/releases/download/v0.233.2-pre/Zed-x86_64.exe",
+            "hash": "8dadafb186d3df4ecdd501a95cc6a3bda594ae01e7ecb4960518121501d7080e"
+        },
+        "arm64": {
+            "url": "https://github.com/zed-industries/zed/releases/download/v0.233.2-pre/Zed-aarch64.exe",
+            "hash": "83b38b9126f47a03ee0276c02eea76424ad2dc2fef9fb9dac02ba698dffe445f"
+        }
+    },
+    "conflicts": [
+        "ZedIndustries.Zed",
+        "ZedIndustries.Zed.Preview"
+    ],
+    "env_add_path": "app\\bin",
+    "commands": "zed",
+    "shortcuts": [
+        [
+            "app\\Zed.exe",
+            "Zed Preview"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\Zed",
+        "$env:LocalAppData\\Zed"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-PreVersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zed-industries/zed/releases/download/v$version/Zed-x86_64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/zed-industries/zed/releases/download/v$version/Zed-aarch64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

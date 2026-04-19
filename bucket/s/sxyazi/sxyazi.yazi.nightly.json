@@ -1,0 +1,59 @@
+{
+    "version": "nightly",
+    "description": "一个用 Rust 编写的终端文件管理器，基于非阻塞异步 I/O | A terminal file manager written in Rust, based on non-blocking async I/O",
+    "homepage": "https://github.com/sxyazi/yazi",
+    "license": {
+        "identifier": "MIT"
+    },
+    "suggest": {
+        "fd": "abyss/sharkdp.fd",
+        "ripgrep": "abyss/BurntSushi.ripgrep.MSVC"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sxyazi/yazi/releases/download/nightly/yazi-x86_64-pc-windows-msvc.zip",
+            "hash": "98ee3e4e6fe12c753e3a68b982999c84ff0cf58ce0d26475231087b836307c18",
+            "extract_dir": "yazi-x86_64-pc-windows-msvc"
+        },
+        "arm64": {
+            "url": "https://github.com/sxyazi/yazi/releases/download/nightly/yazi-aarch64-pc-windows-msvc.zip",
+            "hash": "44924e39f528fc8abde8d67cc728ccf0c5d7b903f2f1bc23e43d581201a825a7",
+            "extract_dir": "yazi-aarch64-pc-windows-msvc"
+        }
+    },
+    "conflicts": [
+        "sxyazi.yazi",
+        "sxyazi.yazi.nightly"
+    ],
+    "extract_to": "app",
+    "env_set": {
+        "YAZI_FILE_ONE": "$env:ProgramFiles\\Git\\usr\\bin\\file.exe"
+    },
+    "bin": [
+        "app\\ya.exe",
+        "app\\yazi.exe"
+    ],
+    "link": "$env:AppData\\yazi",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ]
+}
