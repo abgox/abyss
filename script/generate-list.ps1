@@ -96,16 +96,19 @@ foreach ($path in $PathList) {
 
         switch ($json.version) {
             deprecated {
-                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/deprecated-%23d73a49" style="display:inline" alt="deprecated"/></a>'
+                $tag += '<a href="bucket/' + $p + '"><img src="https://img.shields.io/badge/deprecated-c22"/></a>'
             }
             pending {
-                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/pending-%238957e5" style="display:inline" alt="pending"/></a>'
+                $tag += '<a href="bucket/' + $p + '"><img src="https://img.shields.io/badge/pending-85e"/></a>'
             }
             renamed {
-                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/renamed-%231f6feb" style="display:inline" alt="renamed"/></a>'
+                $tag += '<a href="bucket/' + $p + '"><img src="https://img.shields.io/badge/renamed-26e"/></a>'
+            }
+            virtual {
+                $tag += '<a href="bucket/' + $p + '"><img src="https://img.shields.io/badge/virtual-188"/></a>'
             }
             default {
-                $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/active-%2328a745" style="display:inline" alt="active"/></a>'
+                $tag += '<a href="bucket/' + $p + '"><img src="https://img.shields.io/badge/active-080"/></a>'
                 # $tag += '<a href="./bucket/' + $p + '"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Fmain%2Fbucket%2F' + $p + '&query=%24.version&prefix=v&label=%20" style="display:inline" alt="version" /></a>'
             }
         }
@@ -123,32 +126,33 @@ foreach ($path in $PathList) {
         }
 
         ## RequireAdmin
-        $RequireAdmin = Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)'
+        $RequireAdmin = $json.admin -or (Test-ScriptPattern $json '(?<!#.*)(A-Require-Admin)')
         if ($RequireAdmin) {
-            $tag += '[RequireAdmin](https://abyss.abgox.com/faq/require-admin)'
-        }
-
-        ## RequireAdminOrDevMode
-        $RequireAdminOrDevMode = Test-ScriptPattern $json '(?<!#.*)A-New-LinkFile'
-        if ($RequireAdminOrDevMode) {
-            $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+            $tag += '[Admin](https://abyss.abgox.com/faq/require-admin)'
         }
         else {
-            foreach ($l in $json.link) {
-                if ($l -like '$dir\*') {
-                    $p = $l.Replace('$dir\app\', '').Replace('$dir\', '')
-                }
-                else {
-                    try {
-                        $p = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+            ## RequireAdminOrDevMode
+            $RequireAdminOrDevMode = Test-ScriptPattern $json '(?<!#.*)A-New-LinkFile'
+            if ($RequireAdminOrDevMode) {
+                $tag += '[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+            }
+            else {
+                foreach ($l in $json.link) {
+                    if ($l -like '$dir\*') {
+                        $p = $l.Replace('$dir\app\', '').Replace('$dir\', '')
                     }
-                    catch {
-                        continue
+                    else {
+                        try {
+                            $p = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
+                        }
+                        catch {
+                            continue
+                        }
                     }
-                }
-                if (Test-Path "$PSScriptRoot\..\extra\$app\$p" -PathType Leaf) {
-                    $tag += '[RequireAdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-                    break
+                    if (Test-Path "$PSScriptRoot\..\extra\$app\$p" -PathType Leaf) {
+                        $tag += '[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
+                        break
+                    }
                 }
             }
         }

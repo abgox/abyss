@@ -1,0 +1,61 @@
+{
+    "version": "0.26.8",
+    "description": "面向编程工具的增量解析系统 | An incremental parsing system for programming tools",
+    "homepage": "https://tree-sitter.github.io/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.8/tree-sitter-cli-windows-x64.zip",
+            "hash": "8d8b8b0dc0a94a2d757af227d65970e349725d445375d1eb1641595d5c691b25"
+        },
+        "arm64": {
+            "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.8/tree-sitter-cli-windows-arm64.zip",
+            "hash": "e02434ccc463df1834cdf8f810eec9d74c3d4cbcc6fb16082748af83751c1be7"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\tree-sitter.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v$version/tree-sitter-cli-windows-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/tree-sitter/tree-sitter/releases/download/v$version/tree-sitter-cli-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

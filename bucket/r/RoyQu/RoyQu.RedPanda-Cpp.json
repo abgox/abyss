@@ -1,0 +1,62 @@
+{
+    "version": "3.4",
+    "description": "跨平台、轻量易用的开源 C/C++ 集成开发环境 | A powerful, lighweight and cross-platform C/C++ IDE",
+    "homepage": "https://github.com/royqh1979/RedPanda-CPP",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "notes": "Due to Scoop's naming limit, 'RoyQu.RedPanda-C++' is named 'RoyQu.RedPanda-Cpp'",
+    "notes_cn": "由于 Scoop 的命名限制, 'RoyQu.RedPanda-C++' 被命名为 'RoyQu.RedPanda-Cpp'",
+    "architecture": {
+        "64bit": {
+            "url": "https://sourceforge.net/projects/redpanda-cpp/files/v3.4/RedPanda.C++.3.4.win64.MinGW64_11.5.0.Setup.exe/download#/dl.exe",
+            "hash": "f2fc1b37b252d0cb417a9c8cef3813d8e032d3d875ce50913063dd7aa6b0f21f"
+        }
+    },
+    "location": "$env:ProgramFiles\\RedPanda-Cpp",
+    "link": "$env:AppData\\RedPandaIDE",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller $env:ProgramFiles\\RedPanda-Cpp\\uninstall.exe"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'RoyQu.RedPanda-C++' ''",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64#/dl.exe",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}

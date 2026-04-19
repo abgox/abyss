@@ -1,0 +1,57 @@
+{
+    "version": "0.25.0",
+    "description": "安全、开源的 OpenClaw 替代方案，运行在 NEAR AI 云的加密环境中 | The secure, open-source alternative to OpenClaw that runs in encrypted enclaves on NEAR AI Cloud",
+    "homepage": "https://www.ironclaw.com/",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nearai/ironclaw/releases/download/ironclaw-v0.25.0/ironclaw-x86_64-pc-windows-msvc.tar.gz",
+            "hash": "41b40b44633db22c54f6f4f8d867e09455103b713613fc050160f98bc513b3c3",
+            "extract_dir": "ironclaw-x86_64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\ironclaw.exe",
+    "link": "$home\\.ironclaw",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "ironclaw-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nearai/ironclaw/releases/download/ironclaw-v$version/ironclaw-x86_64-pc-windows-msvc.tar.gz"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
