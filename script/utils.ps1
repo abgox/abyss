@@ -556,7 +556,7 @@ function A-Stop-Process {
     }
 
     if ($manifest.location -or $version -eq 'virtual') {
-        $Paths = @($manifest.location)
+        $Paths = @($ExecutionContext.InvokeCommand.ExpandString($manifest.location))
     }
     else {
         $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
@@ -1185,6 +1185,9 @@ function A-Uninstall-Manually {
     param(
         [array]$Paths
     )
+    if ($manifest.location) {
+        $Paths += $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+    }
 
     foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
