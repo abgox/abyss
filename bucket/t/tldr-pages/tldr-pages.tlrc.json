@@ -1,0 +1,59 @@
+{
+    "version": "1.13.0",
+    "description": "一个用 Rust 编写的 tldr 客户端 | A tldr client written in rust",
+    "homepage": "https://tldr.sh/tlrc/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tldr-pages/tlrc/releases/download/v1.13.0/tlrc-v1.13.0-x86_64-pc-windows-msvc.zip",
+            "hash": "d26fa0e5e190513b66a7834945846370aced3f945f681f901ebbe55e1b11901d"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\tldr.exe",
+    "link": [
+        "$env:AppData\\tlrc",
+        "$env:LocalAppData\\tlrc"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tldr-pages/tlrc/releases/download/v$version/tlrc-v$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

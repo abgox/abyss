@@ -1,0 +1,66 @@
+{
+    "version": "3.7.2",
+    "description": "一款功能齐全的下载管理器 | A full-featured download manager",
+    "homepage": "https://github.com/AnInsomniacy/motrix-next",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v3.7.2/MotrixNext_3.7.2_x64-setup.exe",
+            "hash": "9e1a436bb529f2d8ea39444df75c3972a1c69ce7b533ae38f2c074c3d3f8340a"
+        },
+        "arm64": {
+            "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v3.7.2/MotrixNext_3.7.2_arm64-setup.exe",
+            "hash": "8b853f07d439ab57efa73c50f1cd256b77a1df732260a2060ecefe80550d4b8a"
+        }
+    },
+    "location": "$env:ProgramFiles\\MotrixNext",
+    "link": "$env:AppData\\com.motrix.next",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller \"$env:ProgramFiles\\MotrixNext\\uninstall.exe\" -ArgumentList '/S'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\com.motrix.next\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v$version/MotrixNext_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/AnInsomniacy/motrix-next/releases/download/v$version/MotrixNext_$version_arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

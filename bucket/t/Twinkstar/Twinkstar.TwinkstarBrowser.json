@@ -13,11 +13,11 @@
     },
     "location": "$env:ProgramFiles\\Twinkstar Browser",
     "link": "$env:LocalAppData\\Twinkstar\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Twinkstar Browser\\Uninstall.exe\" -ArgumentList '-silent'",
         "A-Hold-App"
     ],
@@ -30,7 +30,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-Manually \"$env:ProgramFiles\\Twinkstar Browser\"",
+        "A-Uninstall-Manually",
         "A-Remove-Link",
         "A-Remove-TempData \"$env:LocalAppData\\Twinkstar\""
     ],

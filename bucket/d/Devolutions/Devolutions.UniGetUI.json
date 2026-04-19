@@ -1,0 +1,88 @@
+{
+    "version": "pending",
+    "description": "适用于 Windows 平台上主流命令行包管理器的直观图形用户界面 | An intuitive GUI for the most common CLI package managers on Windows",
+    "homepage": "https://devolutions.net/unigetui/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "notes": [
+        "The pending status of UniGetUI will not be removed in abyss until the following issues are resolved:",
+        "   1. Conflict with scoop-i18n; once installed, scoop-i18n will stop working directly.",
+        "   2. Poor compatibility with Scoop; some manifests containing only standard fields cannot be installed and updated properly.",
+        "   3. The relevant data existing under the standard data directory cannot be persisted normally.",
+        "   4. If a link is created for the $env:LocalAppData\\UniGetUI directory, the installation process will fail silently.",
+        "   5. The installation log of UniGetUI contains garbled text, making it unreadable."
+    ],
+    "notes_cn": [
+        "在以下问题解决之前，abyss 中不会移除 UniGetUI 的 pending 状态:",
+        "   1. 和 scoop-i18n 冲突，当安装它后，scoop-i18n 会直接失效",
+        "   2. 和 scoop 的兼容性较差，部分仅含标准字段的清单都无法正常安装和更新",
+        "   3. 标准数据目录下存在的相关数据无法正常持久化",
+        "   4. 如果为 $env:LocalAppData\\UniGetUI 目录创建 link，则安装程序会静默失败",
+        "   5. UniGetUI 中的安装日志存在乱码信息，日志可读性较差"
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        },
+        "arm64": {
+            "url": "https://github.com/abgox/abyss/releases/download/empty/empty",
+            "hash": "36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\UniGetUI.exe",
+            "UniGetUI"
+        ]
+    ],
+    "link": [
+        "$env:LocalAppData\\UniGetUI\\Configuration",
+        "$env:LocalAppData\\UniGetUI\\CachedLanguageFiles"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Devolutions/UniGetUI/releases/download/v$version/UniGetUI.Installer.x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/Devolutions/UniGetUI/releases/download/v$version/UniGetUI.Installer.arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

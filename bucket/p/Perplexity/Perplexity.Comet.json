@@ -1,5 +1,5 @@
 {
-    "version": "145.1.7632.3200",
+    "version": "145.2.7632.5936",
     "description": "基于 Chromium 的浏览器，集成了由 Perplexity 驱动的先进人工智能功能 | A Chromium-based browser that integrates advanced AI capabilities powered by Perplexity",
     "homepage": "https://perplexity.ai/comet",
     "license": {
@@ -8,16 +8,16 @@
     "architecture": {
         "64bit": {
             "url": "https://www.perplexity.ai/rest/browser/download?platform=win_x64&channel=stable#/dl.exe",
-            "hash": "f2c3c519c349291d9106693034883f7c74b7f26c42c88637de8c17a426106dc8"
+            "hash": "99ce4e8dec49087f62ad3e157ea5345e03cd2b7e0fd29990dc312a8ab247d32b"
         }
     },
     "location": "$env:ProgramFiles\\Perplexity\\Comet",
     "link": "$env:LocalAppData\\Perplexity\\Comet\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -ArgumentList '--system-level','--do-not-launch-chrome'"
     ],
     "post_install": [
@@ -29,7 +29,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Perplexity\\Comet\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--chrome','--uninstall','--system-level','--multi-install','--force-uninstall'",
         "A-Remove-Link"

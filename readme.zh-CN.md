@@ -29,7 +29,7 @@
     <a href="https://www.microsoft.com/windows">
         <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
     </a>
-    <a href="#清单列表">
+    <a href="manifest-list.zh-CN.md">
         <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%2Fraw%2Fmain%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
@@ -48,7 +48,7 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个精心设计且有独特见解的 Scoop bucket
+> - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh/) bucket
 > - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
 > - 它的清单是基于 [utils.ps1](./script/utils.ps1) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
@@ -119,7 +119,7 @@
 
 ## 如果无法访问 Github 资源
 
-[scoop-tools](https://scoop-tools.abgox.com) 是一个很好的解决方案，它允许你临时使用替换之后的代理 url 来下载安装包
+[scoop-tools](https://scoop-tools.abgox.com) 允许你临时使用替换之后的代理 url 来下载安装包
 
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools

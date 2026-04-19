@@ -1,5 +1,5 @@
 {
-    "version": "12.12.0",
+    "version": "12.12.1",
     "description": "Floorp 基于 Firefox 构建，是一款具备卓越隐私保护功能和高度灵活性的新型浏览器 | Floorp is built on Firefox, and is a new browser with excellent privacy & flexibility",
     "homepage": "https://floorp.app/",
     "license": {
@@ -7,17 +7,17 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Floorp-Projects/Floorp/releases/download/v12.12.0/floorp-windows-x86_64.installer.exe",
-            "hash": "2477fcdf13a672b422bc968d484993b29a629e5c38891777cfddb0a32369906f"
+            "url": "https://github.com/Floorp-Projects/Floorp/releases/download/v12.12.1/floorp-windows-x86_64.installer.exe",
+            "hash": "1a3c19a80e02e5ae54331ecbf637dafdb4abba880d4b472f39cf40c0fa9afbe4"
         }
     },
     "location": "$env:ProgramFiles\\Ablaze Floorp",
     "link": "$env:AppData\\Floorp",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Ablaze Floorp\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
     ],
     "post_install": [
@@ -29,7 +29,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",
