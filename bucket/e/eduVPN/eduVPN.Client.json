@@ -17,11 +17,11 @@
         }
     },
     "location": "$env:ProgramFiles\\eduVPN",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -33,7 +33,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Uninstall-Msi",
         "A-Remove-TempData \"$env:ProgramFiles\\eduVPN\", \"$env:LocalAppData\\eduVPN\""
     ],

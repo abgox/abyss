@@ -11,6 +11,10 @@
             "hash": "35a6ec0eff7aa65e3987f14223bfb9df831eaab2964eb441ed6cad4356d252ff"
         }
     },
+    "conflicts": [
+        "wez.wezterm",
+        "wez.wezterm.nightly"
+    ],
     "bin": [
         "app\\wezterm.exe",
         "app\\wezterm-gui.exe"
@@ -22,11 +26,11 @@
         ]
     ],
     "link": "$home\\.config\\wezterm",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-Inno"
     ],
     "post_install": [
@@ -38,7 +42,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-Inno"

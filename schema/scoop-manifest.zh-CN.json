@@ -3185,7 +3185,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3810,6 +3810,14 @@
                                 []
                             ]
                         },
+                        "admin": {
+                            "title": "要求以管理员权限运行",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当设置为 `true` 时，如果用户不是管理员权限，则终止当前操作\n- 参考: https://abyss.abgox.com/faq/require-admin",
+                            "type": "boolean",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "pre_install": {
                             "items": {
                                 "allOf": [
@@ -4010,6 +4018,10 @@
                                                                 "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `2`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
                                                             },
                                                             {
+                                                                "const": "A-Get-VersionFromPowerShellGallery",
+                                                                "markdownDescription": "从 [PowerShell Gallery](https://www.powershellgallery.com/) 获取版本"
+                                                            },
+                                                            {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息"
                                                             }
@@ -4072,6 +4084,22 @@
                                             ]
                                         }
                                     ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "script"
+                                ]
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "如果不使用 script，则必须指定 url 字段"
                                 }
                             }
                         },
@@ -4179,10 +4207,6 @@
                                                 "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
                                             },
                                             {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "要求以管理员权限运行\n- 参考: https://abyss.abgox.com/faq/require-admin"
-                                            },
-                                            {
                                                 "const": "A-Ensure-Directory",
                                                 "markdownDescription": "确保指定目录路径存在\n- 如果不传递参数，则确保 `$persist_dir` 路径存在\n- 例如: `A-Ensure-Directory 'xxx'`"
                                             },
@@ -4284,24 +4308,6 @@
                                             }
                                         ]
                                     }
-                                },
-                                {
-                                    "if": {
-                                        "contains": {
-                                            "const": "A-Require-Admin"
-                                        }
-                                    },
-                                    "then": {
-                                        "items": [
-                                            {},
-                                            {},
-                                            {},
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "errorMessage": "A-Require-Admin 必须放在这里，作为数组的第四项"
-                                            }
-                                        ]
-                                    }
                                 }
                             ]
                         },
@@ -4398,19 +4404,19 @@
                                                 "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n    - 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
+                                                "const": "A-Stop-Service 'xxx' | A-Remove-Service",
                                                 "markdownDescription": "尝试停止并移除指定的应用服务，以确保能正常卸载"
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin | A-Remove-Service",
+                                                "pattern": "A-Stop-Service .* | A-Remove-Service",
                                                 "markdownDescription": "尝试停止并移除指定的应用服务，以确保能正常卸载"
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin",
+                                                "const": "A-Stop-Service 'xxx'",
                                                 "markdownDescription": "尝试停止指定的应用服务，以确保能正常卸载"
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin",
+                                                "pattern": "A-Stop-Service .*",
                                                 "markdownDescription": "尝试停止指定的应用服务，以确保能正常卸载"
                                             },
                                             {
@@ -4430,10 +4436,6 @@
                                                 "markdownDescription": "移除指定的一些临时数据文件\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "要求以管理员权限运行\n- 参考: https://abyss.abgox.com/faq/require-admin"
-                                            },
-                                            {
                                                 "const": "A-Deny-Update",
                                                 "markdownDescription": "禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用\n- 参考: https://abyss.abgox.com/faq/deny-update"
                                             },
@@ -4450,12 +4452,12 @@
                                                 "markdownDescription": "卸载应用 (`msi`)"
                                             },
                                             {
-                                                "const": "A-Uninstall-Manually 'app'",
-                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
+                                                "const": "A-Uninstall-Manually",
+                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果存在 `location` 字段，它会默认添加到目录参数中\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                             },
                                             {
                                                 "pattern": "A-Uninstall-Manually",
-                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
+                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果存在 `location` 字段，它会默认添加到目录参数中\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                             },
                                             {
                                                 "const": "A-Uninstall-App",
@@ -4487,42 +4489,7 @@
                                                 "const": "A-Deny-Update",
                                                 "errorMessage": "数组中存在 A-Deny-Update，因此这一项只能是它"
                                             }
-                                        ],
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它或者 A-Deny-Update"
-                                                }
-                                            ]
-                                        }
+                                        ]
                                     }
                                 }
                             ]
@@ -4689,34 +4656,6 @@
                             {
                                 "$comment": "根据 pre_install 使用的函数，检查 pre_uninstall 中的对应函数是否存在，如 A-Install-App/A-Uninstall-App",
                                 "allOf": [
-                                    {
-                                        "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Require-Admin"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "pre_uninstall": {
-                                                    "if": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Uninstall-Manually"
-                                                        }
-                                                    },
-                                                    "else": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Require-Admin"
-                                                        },
-                                                        "errorMessage": "pre_install 中使用了 A-Require-Admin，而 pre_uninstall 中缺少 A-Require-Admin 或 A-Uninstall-Manually"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
                                     {
                                         "if": {
                                             "required": [

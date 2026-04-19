@@ -11,9 +11,10 @@ jobs:
   issue-handler:
     name: Issue Handler
     runs-on: windows-latest
+    if: ${{ !contains(github.event.issue.title, '[Bug]') && !contains(github.event.issue.title, '[Request]') }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.repository.default_branch}}
 
@@ -27,9 +28,27 @@ jobs:
     name: Sync Repos
     needs: issue-handler
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
-      - uses: Yikun/hub-mirror-action@master
+      - name: Fetch Latest Labels
+        id: check_labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            const labels = issue.data.labels.map(l => l.name);
+            console.log(`Current labels: ${labels}`);
+            const result = labels.includes('hash-fix-needed') && labels.includes('verified');
+            console.log(`Result: ${result}`);
+            return result
+
+      - name: Run Sync
+        if: steps.check_labels.outputs.result == 'true'
+        uses: abgox/hub-mirror-action@abgox
+        continue-on-error: true
         with:
           src: github/abgox
           dst: gitee/abgox

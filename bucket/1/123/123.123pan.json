@@ -1,5 +1,5 @@
 {
-    "version": "3.1.2.0",
+    "version": "3.1.4.0",
     "description": "123 云盘，一款云存储服务产品 | A cloud storage service product",
     "homepage": "https://www.123pan.com/",
     "license": {
@@ -8,16 +8,17 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://app.123957.com/pc-pro/windows/312/123pan_3.1.2.exe",
-            "hash": "4228d5194354561debaa9679f339a68937db0e071bc19319945d7d1ca03e9a0d"
+            "url": "https://app.123957.com/pc-pro/windows/314/123pan_3.1.4.exe",
+            "hash": "c23d209ae2df7865d2d8881f65e64c7252b948504ca12d474115dbc0fd8e51b3"
         }
     },
+    "location": "$env:LocalAppData\\123pan",
     "link": "$env:AppData\\123pan\\config.json",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -ArgumentList '/S'",
         "A-Hold-App"
     ],
@@ -30,7 +31,7 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-Manually \"$env:LocalAppData\\123pan\"",
+        "A-Uninstall-Manually",
         "A-Remove-Link",
         "A-Remove-TempData \"$env:AppData\\123pan\""
     ],

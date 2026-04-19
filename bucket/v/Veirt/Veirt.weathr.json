@@ -1,0 +1,65 @@
+{
+    "version": "1.4.0",
+    "description": "一款带有 ASCII 动画的终端天气应用 | A terminal weather app with ascii animation",
+    "homepage": "https://github.com/Veirt/weathr",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Veirt/weathr/releases/download/v1.4.0/weathr-windows-amd64.exe#/weathr.exe",
+            "hash": "f9000404fdb875f5f1cc67d8f08a851ca2dd0bf8ac6826be41ddab01b354a531"
+        },
+        "arm64": {
+            "url": "https://github.com/Veirt/weathr/releases/download/v1.4.0/weathr-windows-arm64.exe#/weathr.exe",
+            "hash": "3d1e33679985c94aa18ac64643d45ab241d60300089b35fdf46cc26f447269ea"
+        }
+    },
+    "bin": "weathr.exe",
+    "link": [
+        "$env:AppData\\weathr",
+        "$env:LocalAppData\\weathr"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Veirt/weathr/releases/download/v$version/weathr-windows-amd64.exe#/weathr.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/Veirt/weathr/releases/download/v$version/weathr-windows-arm64.exe#/weathr.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

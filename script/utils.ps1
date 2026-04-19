@@ -93,6 +93,10 @@ function A-Start-Install {
     if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
         A-Deny-Manifest $manifest.new
     }
+    # https://abyss.abgox.com/faq/require-admin
+    if ($manifest.admin) {
+        A-Require-Admin
+    }
     # https://abyss.abgox.com/faq/deny-if-app-conflict
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
@@ -166,9 +170,6 @@ function A-Start-Install {
             }
         }
         if (-not ($manifest.pre_install -match '^\s*A-New-Link$')) {
-            if ($manifest.pre_install -match '(?<!#.*)A-Require-Admin$') {
-                A-Require-Admin
-            }
             A-New-Link
         }
     }
@@ -222,6 +223,9 @@ function A-Start-Uninstall {
     if ($version -eq 'renamed') {
         A-Move-Persistence
     }
+    if ($manifest.admin) {
+        A-Require-Admin
+    }
     if ($manifest.env_set_shared) {
         A-Set-EnvVarShared -Remove
     }
@@ -231,6 +235,10 @@ function A-Start-Uninstall {
 }
 
 function A-Complete-Uninstall {
+    if ($manifest.location) {
+        A-Remove-TempData $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+    }
+
     # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
@@ -552,7 +560,7 @@ function A-Stop-Process {
     }
 
     if ($manifest.location -or $version -eq 'virtual') {
-        $Paths = @($manifest.location)
+        $Paths = @($ExecutionContext.InvokeCommand.ExpandString($manifest.location))
     }
     else {
         $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
@@ -630,13 +638,8 @@ function A-Stop-Process {
 
 function A-Stop-Service {
     param(
-        [string]$ServiceName,
-        [switch]$RequireAdmin
+        [string]$ServiceName
     )
-
-    if (-not $abgox_abyss.isAdmin -and $RequireAdmin) {
-        A-Require-Admin
-    }
 
     $service = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
     if (-not $service) {
@@ -1181,6 +1184,9 @@ function A-Uninstall-Manually {
     param(
         [array]$Paths
     )
+    if ($manifest.location) {
+        $Paths += $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+    }
 
     foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
@@ -1370,17 +1376,16 @@ function A-Get-VersionFromGithubAPI {
         [switch]$PreRelease,
         [switch]$Newest
     )
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return $json.version
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
     }
     if (-not $json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
     }
-
-    if (-not $json) {
-        Write-Host "::error::`$json is invalid." -ForegroundColor Red
-        return
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
     }
 
     $arch = $json.autoupdate.architecture
@@ -1389,12 +1394,10 @@ function A-Get-VersionFromGithubAPI {
     if ($url -is [array]) {
         $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
     }
-
     if (-not $url) {
         Write-Host "::error::`$url is invalid." -ForegroundColor Red
         return
     }
-
     if ($url -notlike 'https://github.com/*/*') {
         Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
         return
@@ -1504,30 +1507,57 @@ function A-Get-NewestVersionFromGithubAPI {
     A-Get-VersionFromGithubAPI -Newest
 }
 
+function A-Get-VersionFromPowerShellGallery {
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
+    }
+    if (-not $json.checkver.regex) {
+        Write-Error "${app}: Requires 'checkver.regex'."
+        return
+    }
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
+    }
+
+    $module_name = $json.psmodule.name
+
+    if (-not $module_name) {
+        Write-Host "::error::`$json.psmodule.name is invalid." -ForegroundColor Red
+        return
+    }
+
+    $requestTimeout = $abgox_abyss.requestTimeout
+    Invoke-RestMethod "https://www.powershellgallery.com/packages/$($module_name.ToLower())" @requestTimeout |
+    Select-String -Pattern '<h2>([\d.]+)</h2>' |
+    ForEach-Object { $_.Matches.Groups[1].Value } |
+    Select-Object -First 1
+}
+
 function A-Get-VersionFromPage {
     <#
     .SYNOPSIS
-        从指定的 Url 页面获取版本号。
+        从指定的 json.checkver.url 页面获取版本号。
 
     .DESCRIPTION
-        从指定的 Url 页面获取版本号。
-        它会等待页面的 js 加载完成，然后使用指定的 Regex 匹配页面内容获取版本号。
+        从指定的 json.checkver.url 页面获取版本号。
+        它会等待页面的 js 加载完成，然后使用指定的 json.checkver.regex 匹配页面内容获取版本号。
     #>
-    param(
-        [string]$Regex,
-        [string]$Url
-    )
 
+    if (-not $json) {
+        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        return
+    }
+    if (-not $json.checkver.url) {
+        Write-Error "${app}: Requires 'checkver.url'."
+        return
+    }
+    if (-not $json.checkver.regex) {
+        Write-Error "${app}: Requires 'checkver.regex'."
+        return
+    }
     if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return $json.version
-    }
-
-    if (!$PSBoundParameters.ContainsKey('Regex')) {
-        return $null
-    }
-
-    if (!$PSBoundParameters.ContainsKey('Url')) {
-        return $null
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
     }
 
     try {
@@ -1540,11 +1570,17 @@ function A-Get-VersionFromPage {
         return $null
     }
 
-    $Page = python "$PSScriptRoot\get-page.py" $Url
-    $Matches = [regex]::Matches($Page, $Regex)
+    $page = python "$PSScriptRoot\get-page.py" $json.checkver.url
+    $match = [regex]::Match($page, $json.checkver.regex)
 
-    if ($Matches) {
-        return $Matches[0].Groups[1].Value
+    if ($match.Success) {
+        $v = if ($match.Groups['version'].Success) {
+            $match.Groups['version'].Value
+        }
+        else {
+            $match.Groups[1].Value
+        }
+        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $v
     }
 }
 
@@ -1595,6 +1631,11 @@ function A-Get-InstallerInfoFromWinget {
     if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
         $out = @("ver:$($json.version);")
         return $installerInfo, $out
+    }
+
+    if (-not (Get-Command 'ConvertFrom-Yaml' -ErrorAction SilentlyContinue)) {
+        error 'Please install yaml module: scoop install abyss/cloudbase.powershell-yaml'
+        return
     }
 
     $tempFile = "$PSScriptRoot\..\temp-autoupdate.json"
@@ -2518,6 +2559,31 @@ function A-Get-GithubToken {
     if ($tokens) {
         return $tokens[$order - 1]
     }
+}
+
+function A-New-MatchedString {
+    param (
+        [string]$RegexPattern,
+        [string]$TargetValue
+    )
+
+    $re = [regex]$RegexPattern
+    $groupNames = $re.GetGroupNames()
+
+    if ($groupNames -contains 'version') {
+        $targetGroupName = 'version'
+    }
+    elseif ($re.GroupNumberFromName(1) -ne -1) {
+        $targetGroupName = '1'
+    }
+    else {
+        return $TargetValue
+    }
+
+    $groupPattern = "\((?:\?<${targetGroupName}>|).*?\)"
+    $result = [regex]::Replace($RegexPattern, $groupPattern, $TargetValue)
+
+    return $result -replace '^\^|\$$', '' -replace '\((?:\?<.*?>|).*?\)', '' -replace '[\(\)]', '' -replace '\\(.)', '$1'
 }
 
 #endregion

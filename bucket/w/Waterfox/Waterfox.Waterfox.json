@@ -1,5 +1,5 @@
 {
-    "version": "6.6.10",
+    "version": "6.6.11",
     "description": "Waterfox 基于 Firefox 构建，是一款注重隐私的网页浏览器，其设计旨在为你提供上网时的速度、控制权和安心体验 | Waterfox is built on Firefox, and is the privacy-focused web browser engineered to give you speed, control, and peace of mind on the internet",
     "homepage": "https://www.waterfox.com/",
     "license": {
@@ -7,17 +7,17 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://cdn.waterfox.com/waterfox/releases/6.6.10/WINNT_x86_64/Waterfox%20Setup%206.6.10.exe",
-            "hash": "58d5efe853c745ec7bf5497d432b62bd3103af5e9562312104bffd87695836aa"
+            "url": "https://cdn.waterfox.com/waterfox/releases/6.6.11/WINNT_x86_64/Waterfox%20Setup%206.6.11.exe",
+            "hash": "33a51457140b88c22c5879061a67e24b937a4941a146178d4d796bcc68e7cc51"
         }
     },
     "location": "$env:ProgramFiles\\Waterfox",
     "link": "$env:AppData\\Waterfox",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Waterfox\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
     ],
     "post_install": [
@@ -29,7 +29,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",

@@ -1,0 +1,59 @@
+{
+    "version": "0.28.1",
+    "description": "用 Rust 编写的超快速 Git 终端界面 | Blazing fast terminal-ui for git written in rust",
+    "homepage": "https://github.com/gitui-org/gitui",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gitui-org/gitui/releases/download/v0.28.1/gitui-win.tar.gz",
+            "hash": "fab116ccdf9ae4e17378db912d76cc26e60aefd2226f44e665120dea166867e4"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gitui.exe",
+    "link": [
+        "$env:AppData\\gitui",
+        "$env:LocalAppData\\gitui"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gitui-org/gitui/releases/download/v$version/gitui-win.tar.gz"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

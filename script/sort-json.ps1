@@ -1,17 +1,23 @@
 ﻿#Requires -Version 7.0
 
 param(
-    [string]$App = '*',
-    [switch]$Recent
+    [switch]$All
 )
 
-if (-not $env:GITHUB_ACTIONS -and -not $env:SCOOP_HOME) {
-    $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
-}
-
 if (-not $env:SCOOP_HOME) {
-    Write-Host "::error::`$env:SCOOP_HOME is not set." -ForegroundColor Red
-    exit 1
+    if ($env:GITHUB_ACTIONS) {
+        $env:SCOOP_HOME = "$env:Temp\ScoopInstaller-Scoop"
+        git clone --depth 1 --branch abyss https://github.com/abgox/ScoopInstaller-Scoop $env:SCOOP_HOME
+    }
+    else {
+        try {
+            $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
+        }
+        catch {
+            Write-Host "::error::`$env:SCOOP_HOME is not set." -ForegroundColor Red
+            exit 1
+        }
+    }
 }
 
 if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
@@ -94,6 +100,7 @@ $order = [ordered]@{
     shortcuts           = ''
     link                = '' # abyss
     persist             = ''
+    admin               = '' # abyss
     pre_install         = ''
     # installer      = ''
     post_install        = ''
@@ -193,11 +200,12 @@ function Sort-JsonByOrder {
     return $result
 }
 
-if ($Recent) {
-    Write-Host '::group::Recent Manifests' -ForegroundColor Cyan
-
-    $guid = [Guid]::NewGuid()
-    $manifests = git log --since="$([DateTime]::UtcNow.AddDays(-1))" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
+if ($All) {
+    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter '*.json'
+}
+else {
+    $guid = [guid]::NewGuid()
+    $manifests = git log --since="1 day ago" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
     ForEach-Object {
         if ($_ -eq '') { return }
         if ($_ -eq $guid) {
@@ -209,28 +217,22 @@ if ($Recent) {
         else {
             $current += $_
         }
-    } |
-    Where-Object { $_ -match '\.json$' } |
-    Sort-Object -Unique |
-    ForEach-Object {
-        Write-Host $_
-        $fullPath = Join-Path $root $_
-        [System.IO.FileInfo]$fullPath
     }
+    $changedManifests = git ls-files --modified --others --exclude-standard -- 'bucket/'
+    $manifests = $manifests + $changedManifests |
+    Where-Object { $_ -match '\.json$' } |
+    Sort-Object -Unique
+}
 
-    Write-Host '::endgroup::' -ForegroundColor Cyan
-}
-else {
-    $manifests = Get-ChildItem "$root\bucket" -Recurse -File -Filter "$App.json"
-}
+Write-Host 'Sorting JSON...'
 
 foreach ($m in $manifests) {
-    $content = Get-Content $m.FullName -Raw
+    $content = Get-Content $m -Raw
     try {
         $json = $content | ConvertFrom-Json -AsHashtable -ErrorAction Stop
     }
     catch {
-        Write-Host "::error::Failed to convert $($m.FullName) to JSON: $_" -ForegroundColor Red
+        Write-Host "::error::Failed to convert $m to JSON: $_" -ForegroundColor Red
         continue
     }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
@@ -239,5 +241,6 @@ foreach ($m in $manifests) {
     if ($new -eq $old) {
         continue
     }
-    Set-Content -LiteralPath $m.FullName -Value $new -Encoding utf8
+    Write-Host "Processing: $m"
+    Set-Content -LiteralPath $m -Value $new -Encoding utf8
 }

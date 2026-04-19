@@ -13,11 +13,11 @@
         }
     },
     "location": "$env:ProgramFiles\\Tencent\\QQNT",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "$DataDir = \"$home\\Documents\\Tencent Files\"",
         "$PersistDir = $DataDir.Replace($home, $persist_dir)",
         "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
@@ -39,7 +39,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Deny-Update",
-        "A-Uninstall-Manually \"$env:ProgramFiles\\Tencent\\QQNT\"",
+        "A-Uninstall-Manually",
         "A-Remove-Link"
     ],
     "post_uninstall": [

@@ -57,6 +57,7 @@ $labels = @{
     'missing-required-field'         = $false
     'manifest-name-review-needed'    = $false
     'data-persistence-review-needed' = $false
+    'json-sorting-needed'            = $false
 }
 $has_manifest = $false
 
@@ -133,7 +134,7 @@ foreach ($file in $files) {
         $labels.'missing-required-field' = $true
     }
 
-    # In Winget
+    # Winget
     $path = "$letter/$($m.Replace('.', '/'))"
     $api = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$path"
     $url = "https://github.com/microsoft/winget-pkgs/blob/master/manifests/$path"
@@ -154,45 +155,12 @@ foreach ($file in $files) {
     # Location
     $line += if ($c.location) { '`' + $c.location + '`' } else { 'Scoop' }
 
-    # Permission
-    $permission = ''
-    if ($c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin|A-Stop-Service.+?-RequireAdmin)') {
-        $permission = '[Require admin](https://abyss.abgox.com/faq/require-admin)'
+    # Admin
+    $admin = 'No'
+    if ($c.admin -or $c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin)') {
+        $admin = 'Yes'
     }
-    else {
-        if ($c.pre_install -match '(?<!#.*)A-New-LinkFile') {
-            $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-        }
-        else {
-            foreach ($l in $c.link) {
-                if ($l -like '$dir\*') {
-                    $path = $l.Replace('$dir\app\', '').Replace('$dir\', '')
-                }
-                else {
-                    try {
-                        $path = $ExecutionContext.InvokeCommand.ExpandString($l).Replace("$home\", '')
-                    }
-                    catch {
-                        continue
-                    }
-                }
-                if (Test-Path "$extra_dir\$m\$path" -PathType Leaf) {
-                    if ("extra/$m/$path" -in $pr_extra_files_removed) {
-                        continue
-                    }
-                    $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-                    break
-                }
-                else {
-                    if ("extra/$m/$path" -in $pr_extra_files) {
-                        $permission = '[Require admin or developer mode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)'
-                        break
-                    }
-                }
-            }
-        }
-    }
-    $line += $permission
+    $line += "[$admin](https://abyss.abgox.com/faq/require-admin)"
 
     # Persistence
     $persistence = @()
@@ -226,14 +194,6 @@ foreach ($file in $files) {
 
 Write-Host '::endgroup::'
 
-$add_labels = @()
-$rm_labels = @()
-
-$labels.Keys | ForEach-Object { if ($labels.$_) { $add_labels += $_ } else { $rm_labels += $_ } }
-
-if ($add_labels) { Add-GithubLabel $add_labels }
-if ($rm_labels) { Remove-GithubLabel $rm_labels }
-
 $guide = @'
 
 <details>
@@ -245,9 +205,9 @@ $guide = @'
 - **Status**: The status of the manifest in the PR.
 - **Manifest**: The manifest name.
 - **Type**: The manifest type.
-- **In Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
+- **Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
 - **Location**: The installation location of the app.
-- **Permission**: The permission required to install or uninstall the app.
+- **Admin**: Whether the app requires admin permission to install or uninstall.
 - **Persistence**: The persistence method used for app data.
 - **Extra**: Whether extra files or directories exist for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
 
@@ -260,9 +220,30 @@ if ($has_manifest) {
         $marker,
         $guide,
         '',
-        '| Status | Manifest | Type | In Winget | Location | Permission | Persistence | Extra |',
+        '| Status | Manifest | Type | Winget | Location | Admin | Persistence | Extra |',
         '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
+
+    .\script\sort-json.ps1
+
+    git -c core.safecrlf=false add -u
+    $json_changes = git status --porcelain | Where-Object { $_ -match '\.json$' }
+    if ($json_changes) {
+        $results += @(
+            '',
+            '> [!WARNING]',
+            '>',
+            '> Please run it to sort JSON and commit again.',
+            '>',
+            '> ```powershell',
+            '> .\script\sort-json.ps1',
+            '> ```'
+        )
+        $labels.'json-sorting-needed' = $true
+    }
+    else {
+        Write-Host 'No JSON changes detected, no need to sort JSON.'
+    }
 }
 else {
     $results = @(
@@ -272,11 +253,14 @@ else {
     )
 }
 
-# $results + @(
-#     '',
-#     '---',
-#     'Comment `/check` to run the check again.',
-#     "[_View the workflow run for details._]($env:RUN_URL)"
-# ) | Out-File result.md
-
 $results | Out-File result.md
+
+
+# Labels
+$add_labels = @()
+$rm_labels = @()
+
+$labels.Keys | ForEach-Object { if ($labels.$_) { $add_labels += $_ } else { $rm_labels += $_ } }
+
+if ($add_labels) { Add-GithubLabel $add_labels }
+if ($rm_labels) { Remove-GithubLabel $rm_labels }

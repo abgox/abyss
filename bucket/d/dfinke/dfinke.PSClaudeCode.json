@@ -1,0 +1,60 @@
+{
+    "version": "1.1.0",
+    "description": "基于 Anthropic 构建 Claude Code 的 PowerShell 模块，包含工具交互的参考实现 | A PowerShell module for building Claude Code using Anthropic, with reference implementations for tool-based interactions",
+    "homepage": "https://github.com/dfinke/PSClaudeCode",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dfinke/PSClaudeCode/archive/refs/tags/v1.1.0.zip",
+            "hash": "9ca69293391f5878a158f0b397e30d90b03b47b5b68be0e0bf92374ed1628da8"
+        },
+        "arm64": {
+            "url": "https://github.com/dfinke/PSClaudeCode/archive/refs/tags/v1.1.0.zip",
+            "hash": "9ca69293391f5878a158f0b397e30d90b03b47b5b68be0e0bf92374ed1628da8"
+        }
+    },
+    "extract_dir": "PSClaudeCode-1.1.0",
+    "psmodule": {
+        "name": "PSClaudeCode"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dfinke/PSClaudeCode/archive/refs/tags/v$version.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/dfinke/PSClaudeCode/archive/refs/tags/v$version.zip"
+            }
+        },
+        "extract_dir": "PSClaudeCode-$version"
+    }
+}
