@@ -220,19 +220,19 @@ else {
     }
     $changedManifests = git ls-files --modified --others --exclude-standard -- 'bucket/'
     $manifests = $manifests + $changedManifests |
-    Where-Object { $_ -match '\.json$' } |
+    Where-Object { $_ -match '\.json$' -and (Test-Path $_) } |
     Sort-Object -Unique
 }
 
 Write-Host 'Sorting JSON...'
 
 foreach ($m in $manifests) {
-    $content = Get-Content $m -Raw
     try {
+        $content = Get-Content $m -Raw -ErrorAction Stop
         $json = $content | ConvertFrom-Json -AsHashtable -ErrorAction Stop
     }
     catch {
-        Write-Host "::error::Failed to convert $m to JSON: $_" -ForegroundColor Red
+        Write-Host "::error::Failed to convert JSON: $_" -ForegroundColor Red
         continue
     }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
