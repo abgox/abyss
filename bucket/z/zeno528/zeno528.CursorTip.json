@@ -1,0 +1,71 @@
+{
+    "version": "2.0.9",
+    "description": "轻量 Windows 桌面状态提示工具，在屏幕上实时显示键盘状态和剪贴板操作反馈 | A lightweight Windows desktop status prompt tool that displays real-time keyboard status and clipboard operation feedback on the screen",
+    "homepage": "https://github.com/zeno528/CursorTip",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zeno528/CursorTip/releases/download/v2.0.9/CursorTip_v2.0.9.zip",
+            "hash": "2378259b89287e9ca50c19219f258e547666de87ff452f47888e9c48ddaf1b30"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\CursorTip_v2.0.9.exe",
+            "CursorTip"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\config.ini",
+            "config.ini"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zeno528/CursorTip/releases/download/v$version/CursorTip_v$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        },
+        "shortcuts": [
+            [
+                "app\\CursorTip_v$version.exe",
+                "CursorTip"
+            ]
+        ]
+    }
+}
