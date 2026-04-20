@@ -1,0 +1,63 @@
+{
+    "version": "1.1.24",
+    "description": "一款开源屏幕录制器和编辑器，适合制作操作讲解、演示、产品视频等内容 | An open-source screen recorder and editor for walkthroughs, demos, product videos, and more",
+    "homepage": "https://recordly.dev/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/webadderall/Recordly/releases/download/v1.1.24/Recordly-windows-x64.exe",
+            "hash": "f1e189d24813cda33bbdef553b022e47a421e983a3c3f16c03780dc6cb06096f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Recordly.exe",
+            "Recordly"
+        ]
+    ],
+    "link": "$env:AppData\\Recordly",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Recordly.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\recordly-updater\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/webadderall/Recordly/releases/download/v$version/Recordly-windows-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
