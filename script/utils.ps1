@@ -694,7 +694,7 @@ function A-Install-App {
     param(
         # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
         [string]$Uninstaller,
-        [array]$ArgumentList = @('/S', "/D=$dir\app"),
+        [array]$ArgumentList,
         [string]$SleepSec = 3
     )
 
@@ -707,17 +707,19 @@ function A-Install-App {
         A-Exit
     }
 
+    if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
+        $ArgumentList = @('/S')
+        if (-not $manifest.admin) {
+            $ArgumentList += '/CurrentUser'
+        }
+        if (-not $manifest.location) {
+            $ArgumentList += "/D=$dir\app"
+        }
+    }
+
     $InstallerFileName = Split-Path $Installer -Leaf
 
     Write-Host "Running the installer: $InstallerFileName"
-
-    $Uninstaller = A-Get-AbsolutePath $Uninstaller
-
-    @{
-        Installer    = $Installer
-        ArgumentList = $ArgumentList
-        Uninstaller  = $Uninstaller
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallApp -Force -Encoding utf8
 
     try {
         $process = Start-Process $Installer -ArgumentList $ArgumentList -PassThru -WindowStyle Hidden
@@ -729,6 +731,19 @@ function A-Install-App {
         $process | Stop-Process -Force -ErrorAction SilentlyContinue
         A-Exit
     }
+
+    $Uninstaller = if ($manifest.location) {
+        A-Get-AbsolutePath $Uninstaller $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+    }
+    else {
+        A-Get-AbsolutePath $Uninstaller
+    }
+
+    @{
+        Installer    = $Installer
+        ArgumentList = $ArgumentList
+        Uninstaller  = $Uninstaller
+    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallApp -Force -Encoding utf8
 
     Start-Sleep -Seconds $SleepSec
 
@@ -1632,7 +1647,7 @@ function A-Get-InstallerInfoFromWinget {
         如: 25.0.0 表示获取到的最新版本不能高于 25.0.0
     #>
     param(
-        [string]$Package,
+        [string]$PackageIdentifier,
         [string]$InstallerType,
         [string]$MaxExclusiveVersion
     )
@@ -1669,10 +1684,8 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-    $rootDir = $Package.ToLower()[0]
-
-    $PackageIdentifier = $Package
-    $PackagePath = $Package -replace '\.', '/'
+    $rootDir = $PackageIdentifier.ToLower()[0]
+    $PackagePath = $PackageIdentifier -replace '\.', '/'
 
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
