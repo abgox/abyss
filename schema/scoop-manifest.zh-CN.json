@@ -1794,8 +1794,7 @@
             "additionalProperties": false
         },
         "bin": {
-            "title": "程序（可执行文件或脚本）字符串或字符串数组",
-            "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"a.exe\", \"b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\"], \n    [\"b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
+            "markdownDescription": "程序（可执行文件或脚本）字符串或字符串数组\n\n- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n\n### 示例\n\n1. Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 `a.exe`\n\n   ```json\n   \"bin\": \"a.exe\"\n   ```\n\n2. 和 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n\n   ```json\n   \"bin\": [\"a.exe\", \"b.exe\"]\n   ```\n\n3. 和 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n\n```json\n    \"bin\": [\n        [\n            \"a.exe\",\n            \"ax\"\n        ],\n        [\n            \"b.exe\",\n            \"bx\"\n        ]\n    ]\n```\n\n4. 和 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n\n```json\n\"bin\": [\n    [\n        \"a.exe\",\n        \"ax\",\n        \"--config $dir/config.json\"\n    ],\n    [\n        \"b.exe\",\n        \"bx\",\n        \"--config $dir/config.json\"\n    ]\n]\n```",
             "type": [
                 "string",
                 "array"
@@ -1912,8 +1911,7 @@
             "uniqueItems": true
         },
         "persist": {
-            "title": "持久化数据",
-            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- 需要注意: Scoop 默认会进行目录链接，如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n- 示例 1: Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n```json\n  \"persist\": \"data\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会进行多次链接\n```json\n  \"persist\": [\"data\", \"config.json\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是额外指定了目标位置\n```json\n  \"persist\": [\n    [\"app\\\\data\", \"userData\"], \n    [\"app\\\\config.json\", \"config.json\"]\n  ]\n  ```",
+            "markdownDescription": "[持久化数据](https://github.com/ScoopInstaller/Scoop/wiki/Persistent-data)\n\n- Scoop 将对指定的目录和文件进行数据持久化\n\n### 注意\n\n- Scoop 默认会进行目录链接\n- 如果你希望进行文件链接，你需要先在安装脚本中创建此文件\n\n### 示例\n\n1. Scoop 会进行目录链接: `$dir\\data` => `$persist_dir\\data`\n\n```json\n\"persist\": \"data\"\n```\n\n2. 和 1 的效果差不多，只是 Scoop 会进行多次链接\n\n```json\n\"persist\": [\n    \"data\",\n    \"config.json\"\n]\n```\n\n3. 和 2 的效果差不多，只是额外指定了目标位置\n\n```json\n\"persist\": [\n    [\n        \"app\\\\data\",\n        \"userData\"\n    ],\n    [\n        \"app\\\\config.json\",\n        \"config.json\"\n    ]\n]\n```",
             "type": [
                 "string",
                 "array"
@@ -2098,11 +2096,11 @@
                             }
                         },
                         "re": {
-                            "markdownDescription": "re 是 regex 的别名\n查找版本的 RegEx (正则表达式)",
+                            "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 限制版本号格式为数字和点号\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- 可以使用命名捕获组将版本号存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- 严格匹配首尾\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
                             "$ref": "#/definitions/str"
                         },
                         "regex": {
-                            "markdownDescription": "查找版本的 RegEx (正则表达式)",
+                            "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 限制版本号格式为数字和点号\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- 可以使用命名捕获组将版本号存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- 严格匹配首尾\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
                             "$ref": "#/definitions/str",
                             "examples": [
                                 "(.+)",
@@ -2111,11 +2109,11 @@
                             ]
                         },
                         "jsonpath": {
-                            "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
+                            "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n\n### 示例\n\n- 提取 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 字段的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
                             "$ref": "#/definitions/str"
                         },
                         "jp": {
-                            "markdownDescription": "jp 是 jsonpath 的别名\n使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
+                            "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n\n### 示例\n\n- 提取 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 字段的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
                             "$ref": "#/definitions/str"
                         },
                         "xpath": {
@@ -2285,11 +2283,11 @@
                     ]
                 },
                 "jp": {
-                    "markdownDescription": "JSONPath 表达式提取 hash (别名：jsonpath)\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
+                    "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n\n### 示例\n\n- 提取 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 字段的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
                     "$ref": "#/definitions/str"
                 },
                 "jsonpath": {
-                    "markdownDescription": "JSONPath 表达式提取 hash (别名：jp)\n- 使用示例:\n    - `\"$.version\"`: 提取 `version` 字段的值\n    - `\"$..[?(@.productVersion || @.version)]\"`: 提取 `productVersion` 或 `version` 字段的值\n    - `\"$.assets[?(@.name == 'xxx')].updated_at\"`: 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n    - `\"$..['productVersion','version']\"`:\n      - 提取这两个字段的值，并形成一个数组\n      - 如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`",
+                    "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n\n### 示例\n\n- 提取 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 字段的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的字段中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 字段的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
                     "$ref": "#/definitions/str"
                 },
                 "xpath": {
@@ -3645,8 +3643,9 @@
                             ]
                         },
                         "bin": {
-                            "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n- 示例 1: Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 a.exe\n```json\n  \"bin\": \"app\\\\a.exe\"\n  ```\n- 示例 2: 和示例 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n```json\n  \"bin\": [\"app\\\\a.exe\", \"app\\\\b.exe\"]\n  ```\n- 示例 3: 和示例 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\"], \n    [\"app\\\\b.exe\", \"bx\"]\n  ]\n  ```\n- 示例 4: 和示例 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n```json\n  \"bin\": [\n    [\"app\\\\a.exe\", \"ax\", \"--config $dir/config.json\"], \n    [\"app\\\\b.exe\", \"bx\", \"--config $dir/config.json\"]\n  ]\n  ```",
+                            "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n\n### 示例\n\n1. Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 `a.exe`\n\n   ```json\n   \"bin\": \"app\\\\a.exe\"\n   ```\n\n2. 和 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n\n   ```json\n   \"bin\": [\n       \"app\\\\a.exe\",\n       \"app\\\\b.exe\"\n   ]\n   ```\n\n3. 和 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n\n   ```json\n   \"bin\": [\n       [\n           \"app\\\\a.exe\",\n           \"ax\"\n       ],\n       [\n           \"app\\\\b.exe\",\n           \"bx\"\n       ]\n   ]\n   ```\n\n4. 和 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n\n   ```json\n   \"bin\": [\n       [\n           \"app\\\\a.exe\",\n           \"ax\",\n           \"--config $dir/config.json\"\n       ],\n       [\n           \"app\\\\b.exe\",\n           \"bx\",\n           \"--config $dir/config.json\"\n       ]\n   ]\n   ```",
                             "examples": [
+                                "xxx.exe",
                                 "app\\xxx.exe",
                                 [],
                                 [
@@ -3745,7 +3744,7 @@
                             ]
                         },
                         "link": {
-                            "markdownDescription": "使用 `Junction` 或 `SymbolicLink` 去 [link](https://abyss.abgox.com/features/data-persistence/link) 应用数据\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n### 示例\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 link\n```json\n  \"link\": [\n    \"$env:AppData\\\\test\",\n    \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n```\n- 如果存在数据文件或目录，则会自动迁移\n  - `$env:AppData\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$home\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 创建目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n  - 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
+                            "markdownDescription": "数据持久化 [link](https://abyss.abgox.com/features/data-persistence/link)\n\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它会根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 在 `$persist_dir` 中生成对应的目录结构\n- 它会在 `pre_install` 的 `A-Start-Install` 中自动执行，也可以使用 `A-New-Link` 手动执行\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n\n### 示例\n\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 link\n\n  ```json\n  \"link\": [\n      \"$env:AppData\\\\test\",\n      \"$home\\\\.config\\\\test\\\\data.json\"\n  ]\n  ```\n\n- 如果存在数据文件或目录，则会自动迁移\n  - `$env:AppData\\test` => `$persist_dir\\AppData\\Roaming\\test`\n  - `$home\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录，它使用类似 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule) 的结构映射\n  - 创建目录: `AppData\\Roaming\\test` (只有目录不为空才需要)\n  - 创建文件: `.config\\test\\data.json`\n  - 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\AppData\\Roaming\\test` => `$persist_dir\\AppData\\Roaming\\test`\n    - `$bucketsdir\\$bucket\\extra\\abgox.test\\.config\\test\\data.json` => `$persist_dir\\.config\\test\\data.json`\n- 一些常见的目录结构映射 (实际上就是移除了 `$home`)\n  - `$env:AppData` => `AppData\\Roaming`\n  - `$env:LocalAppData` => `AppData\\Local`\n  - `$home\\.config` => `.config`\n  - `$home\\data.json` => `data.json`",
                             "type": [
                                 "string",
                                 "array"
@@ -3805,7 +3804,7 @@
                             ]
                         },
                         "persist": {
-                            "markdownDescription": "- Scoop 将对指定的目录和文件进行数据持久化\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n### 示例\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 persist:\n```json\n  \"persist\": [\n    \"config\",\n    \"data.json\"\n  ]\n```\n- 如果存在数据文件或目录，则会自动迁移\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录\n  - 创建目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n### 限制\n- 如果默认数据存储在标准数据目录下，需要改用 `link`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n  - `$home\\xxx`\n  - ...\n- 如果是便捷式应用 (Portable)，可以继续使用 `persist`，但限制对它的定义\n  - 假设默认数据目录是 `$env:AppData\\xxx`\n  - 根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\AppData\\Roaming\\xxx`\n  - 因此，它只能使用以下定义，其中的 `AppData\\Roaming\\xxx` 不可变\n  ```json\n    \"persist\": [\n      [\"<source>\", \"AppData\\\\Roaming\\\\xxx\"]\n    ]\n    ```",
+                            "markdownDescription": "数据持久化 [persist](https://abyss.abgox.com/features/data-persistence/persist)\n\n- Scoop 将对指定的目录和文件进行数据持久化\n- 它默认进行目录链接，除非 `$persist_dir` 下存在数据文件\n\n### 示例\n\n- 假设当前的清单是: `abgox.test`\n- 假设定义了 persist:\n\n  ```json\n  \"persist\": [\n      \"config\",\n      \"data.json\"\n  ]\n  ```\n\n- 如果存在数据文件或目录，则会自动迁移\n  - `$dir\\config` => `$persist_dir\\config`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- 否则会尝试从 `extra` 目录中获取，如果也不存在，则创建为空目录\n  - 在 `extra` 目录下创建 `abgox.test` 目录\n  - 创建目录: `config` (只有目录不为空才需要)\n  - 创建文件: `data.json`\n- 如果文件或目录不存在，但在 `extra` 目录中存在，则进行复制\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\config` => `$persist_dir\\config`\n  - `$bucketsdir\\$bucket\\extra\\abgox.test\\data.json` => `$persist_dir\\data.json`\n\n### 限制\n\n- 如果默认数据存储在标准数据目录下，需要改用 `link`\n- 即使应用提供了环境变量可以自由的定义数据存储位置，但 abyss 不允许它影响 `$persist_dir` 下的目录稳定性\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n  - `$home\\xxx`\n  - ...\n- 如果是便捷式应用 (Portable)，可以继续使用 `persist`，但限制对它的定义\n  - 假设默认数据目录是 `$env:AppData\\xxx`\n  - 根据 [Link 规则](https://abyss.abgox.com/features/data-persistence/link-rule)，目标目录为 `$persist_dir\\AppData\\Roaming\\xxx`\n  - 因此，它只能使用以下定义，其中的 `AppData\\Roaming\\xxx` 不可变\n\n  ```json\n    \"persist\": [\n      [\"<source>\", \"AppData\\\\Roaming\\\\xxx\"]\n    ]\n  ```",
                             "examples": [
                                 []
                             ]
@@ -4192,19 +4191,19 @@
                                             },
                                             {
                                                 "const": "A-Install-App -Uninstaller 'app\\uninstall.exe'",
-                                                "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
+                                                "markdownDescription": "使用安装程序\n\n- `-Uninstaller`: 卸载程序的路径\n  - 如果是相对路径，会拼接 `$dir` 作为父目录\n- `-ArgumentList`: 安装程序的命令行参数\n  - 默认 `'/S', \"/D=$dir\\app\"`\n- `-SleepSec`: 安装程序运行完成后的等待秒数\n  - 默认 `3`\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\uninstall.exe'\"\n  ```\n\n- 如果是 [Electron](https://www.electronjs.org/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\Uninstall xxx.exe'\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Install-App -Uninstaller 'app\\Uninstall xxx.exe'",
-                                                "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
+                                                "markdownDescription": "使用安装程序\n\n- `-Uninstaller`: 卸载程序的路径\n  - 如果是相对路径，会拼接 `$dir` 作为父目录\n- `-ArgumentList`: 安装程序的命令行参数\n  - 默认 `'/S', \"/D=$dir\\app\"`\n- `-SleepSec`: 安装程序运行完成后的等待秒数\n  - 默认 `3`\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\uninstall.exe'\"\n  ```\n\n- 如果是 [Electron](https://www.electronjs.org/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\Uninstall xxx.exe'\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Install-App -Uninstaller 'app\\xxx.exe' -ArgumentList '/CurrentUser','/VerySilent','/S',\"/D=$dir\\app\"",
-                                                "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
+                                                "markdownDescription": "使用安装程序\n\n- `-Uninstaller`: 卸载程序的路径\n  - 如果是相对路径，会拼接 `$dir` 作为父目录\n- `-ArgumentList`: 安装程序的命令行参数\n  - 默认 `'/S', \"/D=$dir\\app\"`\n- `-SleepSec`: 安装程序运行完成后的等待秒数\n  - 默认 `3`\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\uninstall.exe'\"\n  ```\n\n- 如果是 [Electron](https://www.electronjs.org/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\Uninstall xxx.exe'\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Install-App",
-                                                "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
+                                                "markdownDescription": "使用安装程序\n\n- `-Uninstaller`: 卸载程序的路径\n  - 如果是相对路径，会拼接 `$dir` 作为父目录\n- `-ArgumentList`: 安装程序的命令行参数\n  - 默认 `'/S', \"/D=$dir\\app\"`\n- `-SleepSec`: 安装程序运行完成后的等待秒数\n  - 默认 `3`\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\uninstall.exe'\"\n  ```\n\n- 如果是 [Electron](https://www.electronjs.org/) 开发的应用\n\n  ```json\n  \"A-Install-App -Uninstaller 'app\\\\Uninstall xxx.exe'\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Ensure-Directory",
@@ -4244,11 +4243,11 @@
                                             },
                                             {
                                                 "const": "A-Add-MsixPackage 'PackageFamilyName'",
-                                                "markdownDescription": "安装 AppX/Msix 包\n- 示例: `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                "markdownDescription": "安装 AppX/Msix 包\n\n### 示例\n\n- 添加 `Microsoft.PowerShell_8wekyb3d8bbwe`\n\n  ```json\n  \"A-Add-MsixPackage Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Add-MsixPackage",
-                                                "markdownDescription": "安装 AppX/Msix 包\n- 示例: `A-Add-MsixPackage 'Microsoft.PowerShell_8wekyb3d8bbwe'`"
+                                                "markdownDescription": "安装 AppX/Msix 包\n\n### 示例\n\n- 添加 `Microsoft.PowerShell_8wekyb3d8bbwe`\n\n  ```json\n  \"A-Add-MsixPackage Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Add-PowerToysRunPlugin 'xxx'",
@@ -4397,11 +4396,11 @@
                                             {},
                                             {
                                                 "const": "A-Stop-Process",
-                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n- 它可以传入一个数组，允许绝对路径或进程名称\n- 示例:\n  - `A-Stop-Process 'aaa'`\n  - `A-Stop-Process \"$env:AppData\\xxx\", 'yyy'`"
+                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n\n### 示例\n\n- 尝试暂停目录下的应用进程，默认包含 `$dir` 以及 `location` 和 `env_add_path_expand` 字段定义的目录\n\n  ```json\n  \"A-Stop-Process\"\n  ```\n\n- 额外包含名称为 `aaa` 的进程\n\n  ```json\n  \"A-Stop-Process 'aaa'\"\n  ```\n\n- 额外包含 `$env:AppData\\xxx` 下的所有进程，以及名称为 `yyy` 的进程\n\n  ```json\n  \"A-Stop-Process \\\"$env:AppData\\\\xxx\\\", 'yyy'\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Stop-Process",
-                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n- 它可以传入一个数组，允许绝对路径或进程名称\n- 示例:\n  - `A-Stop-Process 'aaa'`\n  - `A-Stop-Process \"$env:AppData\\xxx\", 'yyy'`"
+                                                "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n\n### 示例\n\n- 尝试暂停目录下的应用进程，默认包含 `$dir` 以及 `location` 和 `env_add_path_expand` 字段定义的目录\n\n  ```json\n  \"A-Stop-Process\"\n  ```\n\n- 额外包含名称为 `aaa` 的进程\n\n  ```json\n  \"A-Stop-Process 'aaa'\"\n  ```\n\n- 额外包含 `$env:AppData\\xxx` 下的所有进程，以及名称为 `yyy` 的进程\n\n  ```json\n  \"A-Stop-Process \\\"$env:AppData\\\\xxx\\\", 'yyy'\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Stop-Service 'xxx' | A-Remove-Service",
@@ -4429,11 +4428,11 @@
                                             },
                                             {
                                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 应用，`$env:LocalAppData\\\\xxx` 通常包含 `EBWebView`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- 如果是 [Electron](https://electronjs.org/) 应用，`$env:LocalAppData\\\\xxx-updater` 通常是更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 应用，`$env:LocalAppData\\\\xxx` 通常包含 `EBWebView`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- 如果是 [Electron](https://electronjs.org/) 应用，`$env:LocalAppData\\\\xxx-updater` 通常是更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Deny-Update",
@@ -4464,7 +4463,7 @@
                                                 "markdownDescription": "使用卸载程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `-SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                             },
                                             {
-                                                "const": "A-Uninstall-App -Uninstaller 'app\\uninstall.exe' -ArgumentList '/VerySilent', '/Force'",
+                                                "const": "A-Uninstall-App -ArgumentList '/VerySilent', '/Force'",
                                                 "markdownDescription": "使用卸载程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `-SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
                                             },
                                             {
