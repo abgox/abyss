@@ -11,6 +11,7 @@
             "hash": "571866439c64687ac05c419fd422bf2f2e06b8d21edbd0291eac539f607c1eb2"
         }
     },
+    "location": "$env:LocalAppData\\dyad",
     "link": "$env:AppData\\dyad",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -27,10 +28,9 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process \"$env:LocalAppData\\dyad\"",
+        "A-Stop-Process",
         "A-Uninstall-App -ArgumentList '--uninstall'",
-        "A-Remove-Link",
-        "A-Remove-TempData \"$env:LocalAppData\\dyad\""
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

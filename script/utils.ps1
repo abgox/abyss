@@ -540,22 +540,31 @@ function A-Stop-Process {
         该函数用于查找并终止从指定目录路径加载模块的所有进程。
         函数默认会搜索 $dir 和 $dir\current 目录。
 
-    .PARAMETER ExtraPaths
-        要搜索运行中可执行文件的额外目录路径数组。
-
-    .PARAMETER ExtraProcessNames
-        要搜索的额外进程名称数组。
+    .PARAMETER Extra
+        要搜索运行中可执行文件的额外目录路径(绝对路径)或进程名称。
 
     .NOTES
-        Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
+        Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非指定绝对路径
     #>
     param(
-        [string[]]$ExtraPaths,
-        [string[]]$ExtraProcessNames
+        [string[]]$Extra
     )
 
-    # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非显示指定 ExtraPaths
-    if (-not $abgox_abyss.uninstallActionLevel.Contains('1') -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$PSBoundParameters.ContainsKey('ExtraPaths'))) {
+    $ExtraPaths = @()
+    $ExtraProcessNames = @()
+    foreach ($e in $Extra) {
+        if ([System.IO.Path]::IsPathRooted($e)) {
+            if (Test-Path -LiteralPath $e) {
+                $ExtraPaths += $e
+            }
+        }
+        else {
+            $ExtraProcessNames += $e
+        }
+    }
+
+    # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非指定绝对路径
+    if (-not $abgox_abyss.uninstallActionLevel.Contains('1') -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$ExtraPaths)) {
         return
     }
 
