@@ -1,5 +1,5 @@
 {
-    "version": "3.5.1",
+    "version": "3.5.3",
     "description": "rclone 之上的一个轻便、透明的层（桌面图形用户界面），能以更用户友好的方式管理你的远程存储和任务 | A light, transparent layer (desktop GUI) on top of rclone to manage your remotes & tasks in a more user-friendly way",
     "homepage": "https://rcloneui.com/",
     "license": {
@@ -7,21 +7,21 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.1/Rclone.UI_x64.exe",
-            "hash": "6031fd50bb0999a5c9d93155c4e0461347d06898f27f9bd38f3decd186f22624"
+            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.3/Rclone.UI_x64.exe",
+            "hash": "533331b920b5f3dcac9eca7bc55eec79ff92a9dd3ed73a794260d3b108b81310"
         },
         "arm64": {
-            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.1/Rclone.UI_arm64.exe",
-            "hash": "df425659c2171877423c1a2ebeea33a73194bba022b096d8d1d836edbb72314a"
+            "url": "https://github.com/rclone-ui/rclone-ui/releases/download/v3.5.3/Rclone.UI_arm64.exe",
+            "hash": "1f41168f5330f565a3aec7684ca06cdb0f323b6bc5fbe455d6112aa25a25df22"
         }
     },
     "location": "$env:ProgramFiles\\Rclone UI",
     "link": "$env:AppData\\com.rclone.ui",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Rclone UI\\uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
@@ -33,7 +33,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",

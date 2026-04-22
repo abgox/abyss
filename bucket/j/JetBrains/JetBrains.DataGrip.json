@@ -1,5 +1,5 @@
 {
-    "version": "2025.3.5",
+    "version": "2026.1.2",
     "description": "JetBrains 的 IDE 产品，用于处理数据库 | A IDE by JetBrains for database processing",
     "homepage": "https://www.jetbrains.com/datagrip/",
     "license": {
@@ -8,12 +8,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download.jetbrains.com/datagrip/datagrip-2025.3.5.exe",
-            "hash": "0508212fa3d6f3e13c45b1e994b4fbe76c6f017506aa61fba672c2974194d5e0"
+            "url": "https://download.jetbrains.com/datagrip/datagrip-2026.1.2.exe",
+            "hash": "5aff34f5af4164205e68c1b9f2ac7713bd39512f108983348f0ff90d70d80afa"
         },
         "arm64": {
-            "url": "https://download.jetbrains.com/datagrip/datagrip-2025.3.5-aarch64.exe",
-            "hash": "e303ef008aec8d482445033746661a4a04931e846e7672611c9ab8095fbd4557"
+            "url": "https://download.jetbrains.com/datagrip/datagrip-2026.1.2-aarch64.exe",
+            "hash": "d930177d067e670d1b4f36c81ebd6e376bd033d601d4eec5e6f8b88694a1f53f"
         }
     },
     "bin": [
@@ -25,14 +25,14 @@
     "shortcuts": [
         [
             "app\\bin\\datagrip64.exe",
-            "DataGrip 2025.3.5"
+            "DataGrip 2026.1.2"
         ]
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "$versionPart = $version -split '\\.'",
         "$versionShort = \"$($versionPart[0]).$($versionPart[1])\"",
         "$DataDir = \"DataGrip$versionShort\"",
@@ -49,7 +49,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Uninstall-App -ArgumentList '/S'",
         "A-Remove-Link",

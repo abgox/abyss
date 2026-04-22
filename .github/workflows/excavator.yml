@@ -2,10 +2,10 @@ name: Excavator
 on:
   workflow_dispatch:
   schedule:
-    - cron: "18 * * * *"
+    - cron: "22 */2 * * *"
 
-concurrency:
-  group: manifest-update-lock
+# concurrency:
+#   group: manifest-update-lock
 
 jobs:
   check-scoop-version:
@@ -15,7 +15,7 @@ jobs:
       ScoopNewVersion: ${{ steps.scoop-new-version.outputs.ScoopNewVersion }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Check Scoop Version
         id: scoop-new-version
@@ -25,7 +25,7 @@ jobs:
 
       - name: Reopen Issue
         if: steps.scoop-new-version.outputs.ScoopNewVersion != ''
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -52,45 +52,103 @@ jobs:
               throw error;
             }
 
-  excavate:
-    name: Excavate
+  update-content:
+    name: Update Content
     runs-on: windows-latest
-    env:
-      # github_pat_x,github_pat_y
-      TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.repository.default_branch}}
 
+      - name: Generate list
+        shell: pwsh
+        run: |
+          .\script\generate-list.ps1
+
+      - name: Commit and push changes
+        shell: pwsh
+        run: |
+          $has_change = .\script\push-change.ps1 -message "(chore): automatically update some content [skip ci]"
+          if (-not $has_change) {
+              return
+          }
+          # Update Docs
+          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
+          cd abyss-docs
+          .\scripts\update-manifest-list.ps1
+          .\scripts\push-change.ps1
+
+  excavate:
+    name: Excavate
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        segment:
+          - "0-1"
+          - "2-3"
+          - "4-5"
+          - "6-7"
+          - "8-9"
+          - "a-b"
+          - "c-d"
+          - "e-f"
+          - "g-h"
+          - "i-j"
+          - "k-l"
+          - "m-n"
+          - "o-p"
+          - "q-r"
+          - "s-t"
+          - "u-v"
+          - "w-x"
+          - "y-z"
+    env:
+      TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
+      SEGMENT: ${{ matrix.segment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch}}
+
+      - name: Cache Module
+        id: cache-module
+        uses: actions/cache@v5
+        with:
+          path: ~/Documents/PowerShell/Modules
+          key: PowerShell-Modules
+
       - name: Install module
+        if: steps.cache-module.outputs.cache-hit != 'true'
         env:
-          PS_MODULE_LIST: ${{ secrets.PS_MODULE_LIST }}
+          PS_MODULE_LIST: ${{ vars.PS_MODULE_LIST }}
         shell: pwsh
         run: $env:PS_MODULE_LIST -split ',' | ForEach-Object { Install-Module $_ -Repository PSGallery -Force }
 
-      - name: Get latest changes
-        run: git pull
-
       - name: Excavate
-        uses: ScoopInstaller/GithubActions@main
-        # uses: abgox/ScoopInstaller-GithubActions@main
+        # uses: ScoopInstaller/GithubActions@main
+        uses: abgox/ScoopInstaller-GithubActions@abyss
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SCOOP_BRANCH: develop
+          SCOOP_REPO: https://github.com/abgox/ScoopInstaller-Scoop
+          SCOOP_BRANCH: abyss
           SKIP_UPDATED: 1
           THROW_ERROR: 0
+          SEGMENT: ${{ matrix.segment }}
 
+  check-rate-limit:
+    name: Check rate limit
+    needs: excavate
+    runs-on: windows-latest
+    env:
+      TOKEN_POOL: ${{ secrets.TOKEN_POOL }}
+    steps:
       - name: Check rate limit
         shell: pwsh
         run: |
           # Check rate limit for each token
-          Write-Output "::group::GitHub API Rate Limits"
-          $headers = @{
-              "Accept" = "application/vnd.github.v3+json"
-              "X-GitHub-Api-Version" = "2022-11-28"
-          }
+          $headers = @{}
           $tokens = $env:TOKEN_POOL.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           for ($i = 0; $i -lt $tokens.Count; $i++) {
               $t = $tokens[$i]
@@ -103,72 +161,14 @@ jobs:
                   Write-Output "Token $($i + 1) : Failed to check rate limit"
               }
           }
-          Write-Output "::endgroup::"
-
-  update-content:
-    name: Update Content
-    needs: excavate
-    runs-on: windows-latest
-    outputs:
-      has_changes: ${{ steps.changes.outputs.has_changes }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.repository.default_branch}}
-
-      - name: Generate list and update content
-        shell: pwsh
-        run: |
-          .\script\generate-list.ps1
-
-      - name: Check for changes
-        id: changes
-        shell: pwsh
-        run: |
-          git add -u
-          if (git status --porcelain) {
-              "has_changes=true" >> $env:GITHUB_OUTPUT
-          } else {
-              "has_changes=false" >> $env:GITHUB_OUTPUT
-          }
-
-      - name: Commit and push changes
-        if: steps.changes.outputs.has_changes == 'true'
-        shell: pwsh
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -u
-          # scoop update 会忽略以 (chore) 开头的提交
-          git commit -m "(chore): automatically update some content [skip ci]"
-          git push
-
-  update-docs:
-    name: Update Docs
-    needs: update-content
-    if: needs.update-content.outputs.has_changes == 'true'
-    runs-on: windows-latest
-    steps:
-      - name: Update Docs
-        shell: pwsh
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git abyss-docs
-          cd abyss-docs
-          .\scripts\update-manifest-list.ps1
-          git add -u
-          git commit -m "chore: automatically update some content"
-          git push --force
 
   sync-repos:
     name: Sync Repos
-    needs: update-content
+    needs: excavate
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: Yikun/hub-mirror-action@master
+      - uses: abgox/hub-mirror-action@abgox
         with:
           src: github/abgox
           dst: gitee/abgox

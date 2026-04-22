@@ -1,0 +1,60 @@
+{
+    "version": "2.5.0",
+    "description": "一款用于对比和修补 JSON 与 YAML 数据的命令行工具 | A commandline utility for diffing and patching JSON and YAML values",
+    "homepage": "https://github.com/josephburnett/jd",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/josephburnett/jd/releases/download/v2.5.0/jd-amd64-windows.exe#/jd.exe",
+            "hash": "08e078258477b3d981bdfc40987f824f825135d612c90c4f5fdce63fc69f949d"
+        },
+        "arm64": {
+            "url": "https://github.com/josephburnett/jd/releases/download/v2.5.0/jd-arm64-windows.exe#/jd.exe",
+            "hash": "e6da231d4c3bf4df14cfefe153d5765553cc3a2efe3efaebbe4c2a8820d8c4e5"
+        }
+    },
+    "bin": "jd.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/josephburnett/jd/releases/download/v$version/jd-amd64-windows.exe#/jd.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/josephburnett/jd/releases/download/v$version/jd-arm64-windows.exe#/jd.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

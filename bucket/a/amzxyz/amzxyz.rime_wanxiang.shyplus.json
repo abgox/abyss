@@ -1,0 +1,81 @@
+{
+    "version": "15.8.4",
+    "description": "Rime 小狼毫配置: 万象拼音输入方案 (首右+) | Rime Weasel Configuration: Wanxiang-Pinyin (shouyouplus)",
+    "homepage": "https://github.com/amzxyz/rime_wanxiang",
+    "license": {
+        "identifier": "CC-BY-4.0"
+    },
+    "notes": "You need to redeploy in Rime Weasel",
+    "notes_cn": "你需要在小狼毫中进行重新部署",
+    "suggest": {
+        "rime": "abyss/Rime.Weasel",
+        "model": "abyss/amzxyz.rime_wanxiang.model"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v15.8.4/rime-wanxiang-shyplus-fuzhu.zip",
+            "hash": "6cddffdd3ee1551edee4479375044f3efafcfd34a5a72ea4caeffa6df17db687"
+        },
+        "arm64": {
+            "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v15.8.4/rime-wanxiang-shyplus-fuzhu.zip",
+            "hash": "6cddffdd3ee1551edee4479375044f3efafcfd34a5a72ea4caeffa6df17db687"
+        }
+    },
+    "conflicts": [
+        "amzxyz.rime_wanxiang",
+        "amzxyz.rime_wanxiang.shouyou",
+        "amzxyz.rime_wanxiang.zrm",
+        "amzxyz.rime_wanxiang.tiger",
+        "amzxyz.rime_wanxiang.moqi",
+        "amzxyz.rime_wanxiang.flypy",
+        "amzxyz.rime_wanxiang.wubi",
+        "amzxyz.rime_wanxiang.hanxin",
+        "amzxyz.rime_wanxiang.shyplus",
+        "amzxyz.rime_wanxiang.wx"
+    ],
+    "extract_to": "app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Ensure-Directory \"$env:AppData\\Rime\"",
+        "Write-Host \"Copying $dir\\app\\* => $env:AppData\\Rime\" -ForegroundColor Yellow",
+        "Copy-Item $dir\\app\\* $env:AppData\\Rime -Recurse -Force"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "(Get-ChildItem \"$dir\\app\" -Recurse -File).FullName.Replace(\"$dir\\app\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v$version/rime-wanxiang-shyplus-fuzhu.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/amzxyz/rime_wanxiang/releases/download/v$version/rime-wanxiang-shyplus-fuzhu.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

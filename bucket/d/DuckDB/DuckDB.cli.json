@@ -1,0 +1,63 @@
+{
+    "version": "1.5.2",
+    "description": "一种用于过程分析的 SQL 数据库管理系统 | An analytical in-process SQL database management system",
+    "homepage": "http://www.duckdb.org/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/duckdb/duckdb/releases/download/v1.5.2/duckdb_cli-windows-amd64.zip",
+            "hash": "d7b4f5774419c2e9eb14cb7361d3488821ef0244f8af461fd2c6fcb6f43bc3e0"
+        },
+        "arm64": {
+            "url": "https://github.com/duckdb/duckdb/releases/download/v1.5.2/duckdb_cli-windows-arm64.zip",
+            "hash": "7908e22d25e6991f45e895b1613277e2a600eec6721253f45ce10cde6a3ffdaf"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\duckdb.exe",
+    "link": "$home\\.duckdb",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/duckdb/duckdb/releases/download/v$version/duckdb_cli-windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/duckdb/duckdb/releases/download/v$version/duckdb_cli-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

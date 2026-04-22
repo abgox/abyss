@@ -1,5 +1,5 @@
 {
-    "version": "6.33.1.6648",
+    "version": "6.33.2.6656",
     "description": "一个强大的下载管理器 | A powerful download manager",
     "homepage": "https://www.freedownloadmanager.org/",
     "license": {
@@ -8,11 +8,9 @@
     "architecture": {
         "64bit": {
             "url": "https://files2.freedownloadmanager.org/6/latest/fdm_x64_setup.exe",
-            "hash": "e02c33be8aa8f28c64a114302dbb4c8044d40491936a089754152b7fec5b2e3e"
+            "hash": "6de289fa6686eed253b0362661af5406c5501386d7b710de7909352381890d7d"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "shortcuts": [
         [
             "app\\fdm.exe",
@@ -20,10 +18,12 @@
         ]
     ],
     "link": "$env:LocalAppData\\Softdeluxe\\Free Download Manager",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +35,8 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

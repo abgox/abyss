@@ -1,5 +1,5 @@
 {
-    "version": "4.1.8.28",
+    "version": "4.1.8.107",
     "description": "微信，腾讯的一款聊天通讯工具 | A chat communication tool by Tencent",
     "homepage": "https://www.wechat.com/",
     "license": {
@@ -9,7 +9,7 @@
     "architecture": {
         "64bit": {
             "url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.8.exe",
-            "hash": "55bbdca56f2e931e6958f99446cc893c5bbf4a60370f7133afe29e135d52d14b"
+            "hash": "b79aa3fdfd208d64f38fcc354684f9af213c05993c6f603521f2813930362b90"
         }
     },
     "location": "$env:ProgramFiles\\Tencent\\Weixin",
@@ -17,13 +17,12 @@
         "$env:AppData\\Tencent\\xwechat",
         "$home\\Documents\\xwechat_files"
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
-        "A-Install-App -Uninstaller \"$env:ProgramFiles\\Tencent\\Weixin\\Uninstall.exe\" -ArgumentList '/S'",
-        "# 安装程序会清理 $env:AppData\\Tencent\\xwechat，所以安装完成后再进行链接"
+        "A-Install-App -Uninstaller \"$env:ProgramFiles\\Tencent\\Weixin\\Uninstall.exe\" -ArgumentList '/S'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +33,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App"

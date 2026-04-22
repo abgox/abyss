@@ -1,0 +1,101 @@
+name: Auto Merge PR
+
+on:
+  pull_request_target:
+    types: [labeled]
+
+# concurrency:
+#   group: manifest-update-lock
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-merge:
+    name: Auto Merge PR
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'auto-merge')
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+
+      - name: Merge PR
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              merge_method: "squash"
+            });
+
+      - name: Close linked Issue
+        if: success()
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+
+            // 使用 GraphQL 查询 PR 关联的所有将要关闭的 Issues
+            const query = `
+              query($owner: String!, $repo: String!, $prNumber: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  pullRequest(number: $prNumber) {
+                    closingIssuesReferences(first: 10) {
+                      nodes {
+                        number
+                        title
+                        state
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+
+            const result = await github.graphql(query, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              prNumber: prNumber
+            });
+
+            const linkedIssues = result.repository.pullRequest.closingIssuesReferences.nodes || [];
+
+            if (linkedIssues.length === 0) {
+              console.log("No linked issues found via closingIssuesReferences");
+            } else {
+              for (const issue of linkedIssues) {
+                console.log(`Found linked issue #${issue.number}: ${issue.title}`);
+
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                  state_reason: 'completed'
+                });
+
+                console.log(`✅ Closed issue #${issue.number}`);
+              }
+            }
+
+      - name: Delete branch
+        if: success() && !github.event.pull_request.head.repo.fork
+        uses: actions/github-script@v9
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            console.log(`Deleting branch: ${branch}`);
+
+            await github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${branch}`
+            });

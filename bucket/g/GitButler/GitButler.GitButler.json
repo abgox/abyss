@@ -1,5 +1,5 @@
 {
-    "version": "0.19.6",
+    "version": "0.19.9",
     "description": "一款适用于在现有工作流程基础上处理同步分支的 Git 客户端 | A Git client for simultaneous branches on top of your existing workflow",
     "homepage": "https://gitbutler.com/",
     "license": {
@@ -7,19 +7,19 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://releases.gitbutler.com/releases/release/0.19.6-2922/windows/x86_64/GitButler_0.19.6_x64_en-US.msi#/dl.msi_",
-            "hash": "4914b62dd79a63fb3d675079f359fed3e7843a4109657b1051cf9b7dfd46e3b2"
+            "url": "https://releases.gitbutler.com/releases/release/0.19.9-2990/windows/x86_64/GitButler_0.19.9_x64_en-US.msi#/dl.msi_",
+            "hash": "978583acf73a642de61446cfebd0acffbb0e38a34a0400f6c719cc0b041576d8"
         }
     },
     "link": [
         "$env:AppData\\com.gitbutler.app",
         "$env:AppData\\gitbutler"
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -31,7 +31,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process \"$env:ProgramFiles\\GitButler\"",
         "A-Remove-Link",
         "A-Uninstall-Msi",

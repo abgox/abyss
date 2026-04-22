@@ -26,10 +26,10 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/abgox/abyss/actions/workflows/excavator.yml">
-        <img src="https://github.com/abgox/abyss/actions/workflows/excavator.yml/badge.svg" alt="excavator" />
+    <a href="https://www.microsoft.com/windows">
+        <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
     </a>
-    <a href="./manifest-list.md">
+    <a href="manifest-list.md">
         <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%2Fraw%2Fmain%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
@@ -48,7 +48,7 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) is an engineered and opinionated Scoop bucket.
+> - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop](https://scoop.sh/) bucket.
 > - It aims to provide a Winget-like solution with [data persistence](https://abyss.abgox.com/features/data-persistence).
 > - Its manifests are based on [utils.ps1](./script/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
 
@@ -79,17 +79,15 @@
 
 > [!Tip]
 >
-> - If you cannot access Github, it is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors).
+> - It is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors) if you cannot access Github.
 > - It allows you to install and use Scoop normally without accessing Github.
 
 - [Scoop](https://scoop.sh/)
 - [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
-- [Scoop bucket - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/Buckets)
-- [Scoop App-Manifest - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
 
 ## If you are currently using Scoop
 
-1.  Add the [abyss](https://abyss.abgox.com) bucket ([Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss)).
+1.  Add the [abyss](https://abyss.abgox.com) bucket from [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
 
     ```shell
     scoop bucket add abyss https://github.com/abgox/abyss
@@ -99,7 +97,7 @@
     scoop bucket add abyss https://gitee.com/abgox/abyss
     ```
 
-2.  Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com).
+2.  Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com) in [PowerShell](https://www.microsoft.com/powershell).
 
     ```shell
     scoop install abyss/abgox.PSCompletions
@@ -121,7 +119,7 @@
 
 ## If you cannot access Github resources
 
-[scoop-tools](https://scoop-tools.abgox.com) is a good solution that allows you to temporarily use the replaced proxy URL to download app packages.
+[scoop-tools](https://scoop-tools.abgox.com) allows you to temporarily use the replaced proxy URL to download app packages.
 
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools

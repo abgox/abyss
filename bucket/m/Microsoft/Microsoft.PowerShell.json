@@ -1,5 +1,5 @@
 {
-    "version": "7.6.0",
+    "version": "7.6.1",
     "description": "pwsh - 一个跨平台的 PowerShell Core | pwsh - A cross-platform PowerShell Core",
     "homepage": "https://github.com/PowerShell/PowerShell",
     "license": {
@@ -7,20 +7,35 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/PowerShell-7.6.0.msixbundle",
-            "hash": "730ba500de62e0f6b47f0293233ea6fd046536562a615dd3b532ffe90231e617"
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1.msixbundle",
+            "hash": "fa8af93288d9e3ee94aebc01cbea18a4174bcc9ff810c6d621ac0b18112a66a8"
         },
         "arm64": {
-            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/PowerShell-7.6.0.msixbundle",
-            "hash": "730ba500de62e0f6b47f0293233ea6fd046536562a615dd3b532ffe90231e617"
+            "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1.msixbundle",
+            "hash": "fa8af93288d9e3ee94aebc01cbea18a4174bcc9ff810c6d621ac0b18112a66a8"
         }
     },
-    "env_set": {
-        "POWERSHELL_UPDATECHECK": "Off",
-        "POWERSHELL_TELEMETRY_OPTOUT": "1"
+    "env_set_shared": {
+        "POWERSHELL_UPDATECHECK": {
+            "value": "Off",
+            "owner": [
+                "Microsoft.PowerShell",
+                "Microsoft.PowerShell.Preview"
+            ]
+        },
+        "POWERSHELL_TELEMETRY_OPTOUT": {
+            "value": "1",
+            "owner": [
+                "Microsoft.PowerShell",
+                "Microsoft.PowerShell.Preview"
+            ]
+        }
     },
     "commands": "pwsh",
-    "link": "$home\\Documents\\PowerShell",
+    "link": [
+        "$home\\Documents\\PowerShell",
+        "$env:AppData\\Microsoft\\Windows\\PowerShell"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",

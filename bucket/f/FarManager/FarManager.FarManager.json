@@ -1,5 +1,5 @@
 {
-    "version": "3.0.6644",
+    "version": "3.0.6666",
     "description": "一个用于在 Windows 操作系统中管理文件和档案的程序，Far Manager 以文本模式运行，并为执行大多数必要操作提供简单直观的界面 | A program for managing files and archives in Windows operating systems. Far Manager works in text mode and provides a simple and intuitive interface for performing most of the necessary actions",
     "homepage": "https://www.farmanager.com/",
     "license": {
@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://www.farmanager.com/files/Far30b6644.x64.20260212.msi#/dl.msi_",
-            "hash": "a9585d68b39acd24745bac64e7a5807f12b62adbd32c4bdd8a4355c52888ddbd"
+            "url": "https://www.farmanager.com/files/Far30b6666.x64.20260324.msi#/dl.msi_",
+            "hash": "66162fb5f25baa577756515aa61afe9e4f39e76c234b2cc6a66f47bf4cad9c3f"
         },
         "arm64": {
-            "url": "https://www.farmanager.com/files/Far30b6644.ARM64.20260212.msi#/dl.msi_",
-            "hash": "a7c7830e0178bd20e6f1f228d68611e47ea11823ec8ef1b284e70a12522b19fe"
+            "url": "https://www.farmanager.com/files/Far30b6666.ARM64.20260324.msi#/dl.msi_",
+            "hash": "90887ca73ed0e74e551ddf9e4ebdf126a43fad381d16b58f62201cccac2c5508"
         }
     },
     "env_add_path_expand": "$env:ProgramFiles\\Far Manager",
@@ -21,11 +21,11 @@
         "$env:LocalAppData\\Far Manager",
         "$env:ProgramFiles\\Far Manager\\Far.exe.ini"
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-Msi"
     ],
     "post_install": [
@@ -37,7 +37,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Uninstall-Msi",
         "A-Remove-Link"
     ],

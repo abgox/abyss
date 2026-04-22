@@ -1,5 +1,5 @@
 {
-    "version": "146.0.7680.80",
+    "version": "147.0.7727.102",
     "description": "谷歌浏览器 - 快速、安全且免费的网络浏览器，专为现代网络打造 | Chrome Browser - Fast, secure, and free web browser, built for the modern web",
     "homepage": "https://www.google.com/intl/zh-CN/chrome/",
     "license": {
@@ -8,21 +8,21 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dl.google.com/release2/chrome/ibri7lfgg7xtuw7b7hwml2e4iu_146.0.7680.80/146.0.7680.80_chrome_installer_uncompressed.exe",
-            "hash": "4b11e912e234caaab0010da4667143b204bb2407d7a6b781530a768aa13d683e"
+            "url": "https://dl.google.com/release2/chrome/acvgrsrei7jvzxd7zat65etfjdxa_147.0.7727.102/147.0.7727.102_chrome_installer_uncompressed.exe",
+            "hash": "55809b1cdd008f1b1b8e9d39706a3d2883f7d1232393597e65fd186cca96e072"
         },
         "arm64": {
-            "url": "https://dl.google.com/release2/chrome/acog2kejf5zhkowhkdkbebnfl5ua_146.0.7680.80/146.0.7680.80_chrome_installer_uncompressed.exe",
-            "hash": "7e8900243a3b3ecd430f4da653067c5deeae309019187ffbfcb7191fcb3c4b42"
+            "url": "https://dl.google.com/release2/chrome/adem7q4zxiq7odz5jbgqtc3zvuwa_147.0.7727.102/147.0.7727.102_chrome_installer_uncompressed.exe",
+            "hash": "159d1a23b97cd78d816e61b217771aa46c1e40cabcaa4f40a2259835dc1c41b6"
         }
     },
     "location": "$env:ProgramFiles\\Google\\Chrome",
     "link": "$env:LocalAppData\\Google\\Chrome\\User Data",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -ArgumentList '--system-level','--do-not-launch-chrome'"
     ],
     "post_install": [
@@ -34,7 +34,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Google\\Chrome\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Uninstall-App -Uninstaller $Uninstaller.FullName -ArgumentList '--chrome','--uninstall','--system-level','--multi-install','--force-uninstall'",
         "A-Remove-Link"

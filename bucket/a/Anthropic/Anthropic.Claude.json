@@ -1,0 +1,73 @@
+{
+    "version": "1.3883.0",
+    "description": "Claude 桌面客户端 - 你电脑上的 AI 伙伴。快速、专注，专为深度工作而设计 | Claude Desktop Client - Your AI partner on desktop. Fast, focused, and designed for deep work",
+    "homepage": "https://claude.com/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://downloads.claude.ai/releases/win32/x64/1.3883.0/Claude-93ff6cb984386882b4bd9b6bca80d4cf5af8e13b.msix",
+            "hash": "fb0a8be3b3ef9964eb80413912fb704f0ec9bfff5b4e75aaf3f0e17803d1b4f5"
+        },
+        "arm64": {
+            "url": "https://downloads.claude.ai/releases/win32/arm64/1.3883.0/Claude-93ff6cb984386882b4bd9b6bca80d4cf5af8e13b.msix",
+            "hash": "32f6ad56d20e8ffac73cdd8f6a9aeb1961891dc756eea627e6e00168498dc181"
+        }
+    },
+    "link": [
+        "$env:LocalAppData\\Packages\\Claude_pzs8sxrjxfjjc\\LocalCache\\Roaming\\Claude",
+        "$env:LocalAppData\\Packages\\Claude_pzs8sxrjxfjjc\\LocalCache\\Roaming\\Claude-3p"
+    ],
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Add-MsixPackage 'Claude_pzs8sxrjxfjjc'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Remove-MsixPackage",
+        "A-Remove-Link",
+        "A-Remove-TempData \"$env:ProgramData\\Claude\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Anthropic.Claude' 'msix'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}

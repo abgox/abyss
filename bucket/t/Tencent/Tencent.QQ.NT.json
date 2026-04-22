@@ -1,5 +1,5 @@
 {
-    "version": "9.9.28.46494",
+    "version": "9.9.29.47354",
     "description": "(NT 版本) QQ，腾讯的一款聊天通讯工具 | (NT version) A chat communication tool by Tencent",
     "homepage": "https://im.qq.com/",
     "license": {
@@ -8,16 +8,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.28_260311_x64_01.exe",
-            "hash": "6b10ed4214c90ab6db8911a62e2db99074bad659b60f712e99a6cd1869318bea"
+            "url": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Windows/QQ_9.9.29_260401_x64_01.exe",
+            "hash": "d52601a3224d29364f03f4948a487ecd2710db1921383730801d795397e0a808"
         }
     },
     "location": "$env:ProgramFiles\\Tencent\\QQNT",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "$DataDir = \"$home\\Documents\\Tencent Files\"",
         "$PersistDir = $DataDir.Replace($home, $persist_dir)",
         "$SubDir1 = Get-ChildItem $DataDir -Directory -Depth 2 | ForEach-Object { if ($_.FullName -like \"$DataDir\\*\\nt_qq\") { Split-Path (Split-Path $_.FullName -Parent) -Leaf } }",
@@ -39,7 +39,7 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Deny-Update",
-        "A-Uninstall-Manually \"$env:ProgramFiles\\Tencent\\QQNT\"",
+        "A-Uninstall-Manually",
         "A-Remove-Link"
     ],
     "post_uninstall": [

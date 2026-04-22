@@ -1,0 +1,62 @@
+{
+    "version": "1.43",
+    "description": "Windows 键盘和鼠标统计工具 - 跟踪你的打字和点击统计数据 | Keyboard & Mouse Stats for Windows - track your typing and clicking statistics",
+    "homepage": "https://keystats.vercel.app/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/debugtheworldbot/keyStats/releases/download/v1.43/KeyStats-Windows-1.43.zip",
+            "hash": "4e0f5ed3fe04d12ed270391f74929470f50813b8f680009119d9d18cce8c81e0"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\KeyStats.exe",
+    "shortcuts": [
+        [
+            "app\\KeyStats.exe",
+            "KeyStats"
+        ]
+    ],
+    "link": "$env:LocalAppData\\KeyStats",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/debugtheworldbot/keyStats/releases/download/v$version/KeyStats-Windows-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

@@ -1,5 +1,5 @@
 {
-    "version": "148.0.2",
+    "version": "150.0",
     "description": "Firefox 火狐浏览器是一款免费开源的网络浏览器，由 Mozilla 基金会及其子公司开发 | Firefox Browser is a free, open-source web browser developed by the Mozilla Foundation and its subsidiaries",
     "homepage": "https://www.mozilla.org/firefox",
     "license": {
@@ -8,21 +8,21 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/148.0.2/win64/en-US/Firefox%20Setup%20148.0.2.exe",
-            "hash": "cd037c70015aaf17ae65d09734fbe295e1b8419164b076f1702ba9b8399ddbd8"
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/150.0/win64/en-US/Firefox%20Setup%20150.0.exe",
+            "hash": "7029e4b01635fcc24ca553a292af99d88ba11e502c45c12f1a4b9c10c3757076"
         },
         "arm64": {
-            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/148.0.2/win64-aarch64/en-US/Firefox%20Setup%20148.0.2.exe",
-            "hash": "8604c960199a5914ee7d8e6e53719df0b81d954238240381bbdd29ff5bb10cc8"
+            "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/150.0/win64-aarch64/en-US/Firefox%20Setup%20150.0.exe",
+            "hash": "d38e8d061147111301bffa02486900f4702e994719a66acff9903a20a93c55bc"
         }
     },
     "location": "$env:ProgramFiles\\Mozilla Firefox",
     "link": "$env:AppData\\Mozilla\\Firefox",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Require-Admin",
         "A-Install-App -Uninstaller \"$env:ProgramFiles\\Mozilla Firefox\\uninstall\\helper.exe\" -ArgumentList '/S','/PreventRebootRequired=true'"
     ],
     "post_install": [
@@ -34,7 +34,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "A-Stop-Process",
         "A-Remove-Link",
         "A-Uninstall-App",

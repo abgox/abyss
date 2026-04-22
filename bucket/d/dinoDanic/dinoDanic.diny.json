@@ -1,5 +1,5 @@
 {
-    "version": "0.6",
+    "version": "0.7.7",
     "description": "根据 git diff 生成有意义的提交信息 | Generate meaningful commit messages from git diff",
     "homepage": "https://diny-cli.vercel.app/",
     "license": {
@@ -7,16 +7,17 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/dinoDanic/diny/releases/download/v0.6/diny_Windows_x86_64.zip",
-            "hash": "f7f5a55f593bdc5699f796cf2d88a614244897e75f908b0be9229ed262698009"
+            "url": "https://github.com/dinoDanic/diny/releases/download/v0.7.7/diny_Windows_x86_64.zip",
+            "hash": "a535d7b06e554ef313c08b81c22115c835a369623f3f39ad97c6cd7f426303de"
         },
         "arm64": {
-            "url": "https://github.com/dinoDanic/diny/releases/download/v0.6/diny_Windows_arm64.zip",
-            "hash": "cc4459fff0e99879ef162beb310288566e1709c94f07b92745d77d14ee6793d0"
+            "url": "https://github.com/dinoDanic/diny/releases/download/v0.7.7/diny_Windows_arm64.zip",
+            "hash": "114b58ba12f33214fc447a2496f9b20dedd0130b61d30bab5dbe09976c37c6d6"
         }
     },
     "extract_to": "app",
     "bin": "app\\diny.exe",
+    "link": "$home\\.config\\diny",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -31,7 +32,8 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

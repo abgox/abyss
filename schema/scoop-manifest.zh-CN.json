@@ -1751,27 +1751,26 @@
         "env_set": {
             "title": "设置环境变量",
             "markdownDescription": "- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ...",
-            "type": "object",
-            "examples": [
-                {}
-            ],
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "$ref": "#/definitions/str",
-                        "examples": [
-                            "$dir\\xxx",
-                            "$persist_dir\\xxx"
-                        ]
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "不允许属性名为空字符串"
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/str",
+                            "title": "环境变量的键 (Key)",
+                            "examples": [
+                                "$dir\\xxx",
+                                "$persist_dir\\xxx"
+                            ]
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "不允许属性名为空字符串"
+                }
+            ]
         },
         "psmodule": {
             "title": "PowerShell 模块",
@@ -2106,7 +2105,9 @@
                             "markdownDescription": "查找版本的 RegEx (正则表达式)",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "(.+)"
+                                "(.+)",
+                                "^([\\d.]+)$",
+                                "^(?<version>[\\d.]+)$"
                             ]
                         },
                         "jsonpath": {
@@ -2467,21 +2468,22 @@
         "suggest": {
             "title": "建议的依赖项",
             "markdownDescription": "- 显示一条消息，建议提供补充功能的可选应用程序\n- 如果已经安装了针对该功能建议的任何应用程序，则该功能将被视为 **已实现**，用户不会看到任何建议",
-            "type": "object",
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "markdownDescription": "- 当指定的建议已经安装，则不会显示该建议。\n- 如果是一个数组，它表示只要数组中任意一个建议被安装，则不会显示该建议",
-                        "$ref": "#/definitions/str_or_arr"
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "不允许属性名为空字符串"
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "markdownDescription": "- 当指定的建议已经安装，则不会显示该建议。\n- 如果是一个数组，它表示只要数组中任意一个建议被安装，则不会显示该建议",
+                            "$ref": "#/definitions/str_or_arr"
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "不允许属性名为空字符串"
+                }
+            ]
         },
         "notes": {
             "$ref": "#/definitions/notes"
@@ -3183,14 +3185,14 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
                 {
                     "properties": {
                         "version": {
-                            "markdownDescription": "- 软件的版本号\n- [abyss](https://abyss.abgox.com) 提供了特殊值用来实现 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control): `pending`、`renamed`、`deprecated`",
+                            "markdownDescription": "- 软件的版本号\n- [abyss](https://abyss.abgox.com) 提供了特殊值用来实现 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control): `pending`、`renamed`、`deprecated`, `virtual`",
                             "anyOf": [
                                 {},
                                 {
@@ -3212,6 +3214,14 @@
                                 {
                                     "enum": [
                                         "deprecated"
+                                    ],
+                                    "markdownEnumDescriptions": [
+                                        "[abyss](https://abyss.abgox.com) 中用于指定清单状态的特殊值，参考 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control)"
+                                    ]
+                                },
+                                {
+                                    "enum": [
+                                        "virtual"
                                     ],
                                     "markdownEnumDescriptions": [
                                         "[abyss](https://abyss.abgox.com) 中用于指定清单状态的特殊值，参考 [清单状态控制](https://abyss.abgox.com/features/manifest-status-control)"
@@ -3421,7 +3431,7 @@
                         },
                         "location": {
                             "title": "应用的安装位置 (如果在外部)",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 如果版本号为 `virtual`，则它表示应用假定的安装位置\n- 参考: https://abyss.abgox.com/faq/external-installation-directory",
                             "allOf": [
                                 {
                                     "$ref": "#/definitions/str",
@@ -3442,6 +3452,47 @@
                         "extract_to": {
                             "examples": [
                                 "app"
+                            ]
+                        },
+                        "env_set_shared": {
+                            "title": "设置环境变量 (共享)",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 为用户设置一个或多个环境变量(当前用户)\n- 如果安装时使用了 `--global` 或 `-g` 参数，则会设置到环境变量(系统级) 中\n### 与 env_set 的区别\n- 不同于 `env_set`，它需要指定这些环境变量的持有者\n- 当卸载应用时，如果环境变量还存在持有者，则不移除",
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "patternProperties": {
+                                        "^.+$": {
+                                            "type": "object",
+                                            "title": "环境变量的键 (Key)",
+                                            "required": [
+                                                "value",
+                                                "owner"
+                                            ],
+                                            "properties": {
+                                                "value": {
+                                                    "$ref": "#/definitions/str",
+                                                    "title": "环境变量的值 (Value)",
+                                                    "markdownDescription": "- 它等同于 `env_set` 设置的值\n- 一些可用的变量:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ..."
+                                                },
+                                                "owner": {
+                                                    "title": "环境变量的持有者 (Owner)",
+                                                    "markdownDescription": "- 这是和 `env_set` 最大的区别，它需要指定这些环境变量的持有者\n- 当卸载应用时，如果环境变量还存在持有者，则不移除",
+                                                    "type": "array",
+                                                    "minItems": 2,
+                                                    "uniqueItems": true,
+                                                    "items": {
+                                                        "$ref": "#/definitions/str"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "minProperties": 1,
+                                    "additionalProperties": false,
+                                    "errorMessage": "不允许属性名为空字符串"
+                                }
                             ]
                         },
                         "env_add_path": {
@@ -3548,7 +3599,9 @@
                             "markdownDescription": "- 如果安装程序基于 `InnoSetup`，则设置为 `true`\n- 在 abyss 中，应该优先使用 `A-Install-Inno` 而不是此字段",
                             "enum": [
                                 true
-                            ]
+                            ],
+                            "not": true,
+                            "errorMessage": "请使用 A-Install-Inno 而不是 innosetup 字段"
                         },
                         "font": {
                             "title": "作为字体清单安装",
@@ -3757,6 +3810,14 @@
                                 []
                             ]
                         },
+                        "admin": {
+                            "title": "要求以管理员权限运行",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当设置为 `true` 时，如果用户不是管理员权限，则终止当前操作\n- 参考: https://abyss.abgox.com/faq/require-admin",
+                            "type": "boolean",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "pre_install": {
                             "items": {
                                 "allOf": [
@@ -3957,6 +4018,10 @@
                                                                 "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `2`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
                                                             },
                                                             {
+                                                                "const": "A-Get-VersionFromPowerShellGallery",
+                                                                "markdownDescription": "从 [PowerShell Gallery](https://www.powershellgallery.com/) 获取版本"
+                                                            },
+                                                            {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息"
                                                             }
@@ -3980,6 +4045,14 @@
                                         {},
                                         {
                                             "enum": [
+                                                "nightly"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "确保检查更新时，新版本为 `nightly`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
                                                 "pending"
                                             ],
                                             "markdownEnumDescriptions": [
@@ -4001,8 +4074,32 @@
                                             "markdownEnumDescriptions": [
                                                 "确保检查更新时，新版本为 `deprecated`"
                                             ]
+                                        },
+                                        {
+                                            "enum": [
+                                                "virtual"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "确保检查更新时，新版本为 `virtual`"
+                                            ]
                                         }
                                     ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "script"
+                                ]
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "如果不使用 script，则必须指定 url 字段"
                                 }
                             }
                         },
@@ -4086,6 +4183,10 @@
                                                 "markdownDescription": "使用 innosetup 安装程序"
                                             },
                                             {
+                                                "const": "A-Install-Burn",
+                                                "markdownDescription": "使用 burn 安装程序"
+                                            },
+                                            {
                                                 "const": "A-Install-Msi",
                                                 "markdownDescription": "使用 msi 安装程序"
                                             },
@@ -4104,10 +4205,6 @@
                                             {
                                                 "pattern": "A-Install-App",
                                                 "markdownDescription": "使用安装程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 安装程序的命令行参数\n    - 默认 `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: 安装程序运行完成后的等待秒数\n    - 默认 `3`"
-                                            },
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "要求以管理员权限运行\n- 参考: https://abyss.abgox.com/faq/require-admin"
                                             },
                                             {
                                                 "const": "A-Ensure-Directory",
@@ -4211,24 +4308,6 @@
                                             }
                                         ]
                                     }
-                                },
-                                {
-                                    "if": {
-                                        "contains": {
-                                            "const": "A-Require-Admin"
-                                        }
-                                    },
-                                    "then": {
-                                        "items": [
-                                            {},
-                                            {},
-                                            {},
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "errorMessage": "A-Require-Admin 必须放在这里，作为数组的第四项"
-                                            }
-                                        ]
-                                    }
                                 }
                             ]
                         },
@@ -4325,19 +4404,19 @@
                                                 "markdownDescription": "尝试暂停应用进程，以确保能正常卸载\n- 默认会暂停 `$dir` 目录下的进程\n- 参数:\n  - `-ExtraPaths`: 要搜索的额外目录\n    - 如果存在 `location` 和 `env_add_path_expand` 字段，会自动添加\n  - `-ExtraProcessNames`: 要搜索的进程名称\n- 示例:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
+                                                "const": "A-Stop-Service 'xxx' | A-Remove-Service",
                                                 "markdownDescription": "尝试停止并移除指定的应用服务，以确保能正常卸载"
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin | A-Remove-Service",
+                                                "pattern": "A-Stop-Service .* | A-Remove-Service",
                                                 "markdownDescription": "尝试停止并移除指定的应用服务，以确保能正常卸载"
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin",
+                                                "const": "A-Stop-Service 'xxx'",
                                                 "markdownDescription": "尝试停止指定的应用服务，以确保能正常卸载"
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin",
+                                                "pattern": "A-Stop-Service .*",
                                                 "markdownDescription": "尝试停止指定的应用服务，以确保能正常卸载"
                                             },
                                             {
@@ -4357,36 +4436,28 @@
                                                 "markdownDescription": "移除指定的一些临时数据文件\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "要求以管理员权限运行\n- 参考: https://abyss.abgox.com/faq/require-admin"
-                                            },
-                                            {
                                                 "const": "A-Deny-Update",
                                                 "markdownDescription": "禁止通过 Scoop 更新\n- 它通常与 `pre_install` 中的 `A-Hold-App` 搭配使用\n- 参考: https://abyss.abgox.com/faq/deny-update"
-                                            },
-                                            {
-                                                "const": "A-Uninstall-Msi",
-                                                "markdownDescription": "卸载应用 (`msi`)"
-                                            },
-                                            {
-                                                "pattern": "A-Uninstall-Msi",
-                                                "markdownDescription": "卸载应用 (`msi`)"
                                             },
                                             {
                                                 "const": "A-Uninstall-Inno",
                                                 "markdownDescription": "卸载应用 (`innosetup`)"
                                             },
                                             {
-                                                "pattern": "A-Uninstall-Inno",
-                                                "markdownDescription": "卸载应用 (`innosetup`)"
+                                                "const": "A-Uninstall-Burn",
+                                                "markdownDescription": "卸载应用 (`burn`)"
                                             },
                                             {
-                                                "const": "A-Uninstall-Manually 'app'",
-                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
+                                                "const": "A-Uninstall-Msi",
+                                                "markdownDescription": "卸载应用 (`msi`)"
+                                            },
+                                            {
+                                                "const": "A-Uninstall-Manually",
+                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果存在 `location` 字段，它会默认添加到目录参数中\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                             },
                                             {
                                                 "pattern": "A-Uninstall-Manually",
-                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
+                                                "markdownDescription": "需要用户手动卸载应用\n- 它需要传入一个或多个目录作为参数\n- 如果存在 `location` 字段，它会默认添加到目录参数中\n- 如果传入相对目录，如 `'app'`，则会拼接为 `$dir\\app`\n- 仅当这些目录下没有任何文件时，才能顺利完成 Scoop 的卸载操作\n- 参考: https://abyss.abgox.com/faq/uninstall-manually"
                                             },
                                             {
                                                 "const": "A-Uninstall-App",
@@ -4418,42 +4489,7 @@
                                                 "const": "A-Deny-Update",
                                                 "errorMessage": "数组中存在 A-Deny-Update，因此这一项只能是它"
                                             }
-                                        ],
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它"
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "数组中存在 A-Require-Admin，因此这一项只能是它或者 A-Deny-Update"
-                                                }
-                                            ]
-                                        }
+                                        ]
                                     }
                                 }
                             ]
@@ -4622,34 +4658,6 @@
                                 "allOf": [
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Require-Admin"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "pre_uninstall": {
-                                                    "if": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Uninstall-Manually"
-                                                        }
-                                                    },
-                                                    "else": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Require-Admin"
-                                                        },
-                                                        "errorMessage": "pre_install 中使用了 A-Require-Admin，而 pre_uninstall 中缺少 A-Require-Admin 或 A-Uninstall-Manually"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "if": {
                                             "required": [
                                                 "link"
                                             ]
@@ -4692,6 +4700,27 @@
                                                         "pattern": "(?<!#.*)(A-Uninstall-Inno|A-Uninstall-Manually)"
                                                     },
                                                     "errorMessage": "pre_install 中使用了 A-Install-Inno，而 pre_uninstall 中缺少 A-Uninstall-Inno 或 A-Uninstall-Manually"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)(A-Uninstall-Burn|A-Uninstall-Manually)"
+                                                    },
+                                                    "errorMessage": "pre_install 中使用了 A-Install-Burn，而 pre_uninstall 中缺少 A-Uninstall-Burn 或 A-Uninstall-Manually"
                                                 }
                                             }
                                         }
@@ -4864,6 +4893,27 @@
                                                         "pattern": "(?<!#.*)A-Install-Inno"
                                                     },
                                                     "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Inno，而 pre_install 中缺少 A-Install-Inno"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Uninstall-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    },
+                                                    "errorMessage": "pre_uninstall 中使用了 A-Uninstall-Burn，而 pre_install 中缺少 A-Install-Burn"
                                                 }
                                             }
                                         }
@@ -5128,7 +5178,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             },
                                             "checkver": {
                                                 "required": [
@@ -5229,6 +5279,30 @@
                                                         }
                                                     }
                                                 }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^virtual$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^virtual$",
+                                                                    "errorMessage": "version 为 virtual 时，它只能是 virtual"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         ]
                                     }
@@ -5242,7 +5316,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             }
                                         }
                                     },
@@ -5259,10 +5333,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    "errorMessage": "version 为 pending|renamed|deprecated|virtual 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
                                                                 },
                                                                 "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "version 为 pending|renamed|deprecated|virtual 时，url 只能是 https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             },
                                                             "hash": {
                                                                 "type": [
@@ -5271,10 +5345,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                    "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                    "errorMessage": "version 为 ppending|renamed|deprecated|virtual 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
                                                                 },
                                                                 "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "version 为 pending|renamed|deprecated 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
+                                                                "errorMessage": "version 为 ppending|renamed|deprecated|virtual 时，url 只能是 36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068"
                                                             }
                                                         }
                                                     }

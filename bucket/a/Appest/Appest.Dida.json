@@ -1,5 +1,5 @@
 {
-    "version": "8.0.3.0",
+    "version": "8.0.6.0",
     "description": "滴答清单，一款轻便的待办事项 (Todo)、日程管理 (GTD) 应用 | Dida is a powerful to-do & task management app",
     "homepage": "https://www.dida365.com/",
     "license": {
@@ -7,12 +7,10 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://cdn.dida365.cn/download/win64/dida_win_setup_release_x64_8030.exe",
-            "hash": "e2d26712c9cdb2d54a1281aa0991f5b7502b009800039a906ac3f0ce59667c0c"
+            "url": "https://cdn.dida365.cn/download/win64/dida_win_setup_release_x64_8060.exe",
+            "hash": "607c8049e7017f8284a377c1e0b583f343b8af7bef164ad4a0f0bbfcf3310151"
         }
     },
-    "extract_to": "app",
-    "innosetup": true,
     "shortcuts": [
         [
             "app\\TickTick.exe",
@@ -20,10 +18,12 @@
         ]
     ],
     "link": "$env:AppData\\Tick_Tick",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Install-Inno"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +35,8 @@
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",

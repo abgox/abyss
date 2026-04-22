@@ -1,0 +1,66 @@
+{
+    "version": "1.0.17",
+    "description": "一款面向飞书开放平台的命令行工具 | A command-line tool for Lark/Feishu Open Platform",
+    "homepage": "https://www.larksuite.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/larksuite/cli/releases/download/v1.0.17/lark-cli-1.0.17-windows-amd64.zip",
+            "hash": "bf83b4775501f448cfabdae3384831c834c041395f21335b83c3233ae14a7f2e"
+        },
+        "arm64": {
+            "url": "https://github.com/larksuite/cli/releases/download/v1.0.17/lark-cli-1.0.17-windows-arm64.zip",
+            "hash": "0c6ddc593e28727fcbd9c71dea41242765439c0a3eb3f01e17999aaba7649dbd"
+        }
+    },
+    "extract_to": "app",
+    "env_set": {
+        "LARKSUITE_CLI_CONFIG_DIR": "$persist_dir\\.lark-cli"
+    },
+    "bin": "app\\lark-cli.exe",
+    "link": "$home\\.lark-cli",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/larksuite/cli/releases/download/v$version/lark-cli-$version-windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/larksuite/cli/releases/download/v$version/lark-cli-$version-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

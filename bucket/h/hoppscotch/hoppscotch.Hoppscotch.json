@@ -1,0 +1,66 @@
+{
+    "version": "26.3.1-0",
+    "description": "一款可跨平台运行的桌面应用程序，助力你创建和管理各类 API 请求 | A cross-platform desktop application that helps you create and manage API requests",
+    "homepage": "https://hoppscotch.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/hoppscotch/releases/releases/download/v26.3.1-0/Hoppscotch_SelfHost_win_x64_portable.zip",
+            "hash": "af99461e07556dcee5aa2a4bcc7860d67564a2a0b02a6715ba7972c0230643a8"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\hoppscotch-desktop.exe",
+            "Hoppscotch"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\hoppscotch-desktop-data",
+            "AppData\\Roaming\\io.hoppscotch.desktop"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-TempData \"$env:LocalAppData\\io.hoppscotch.desktop\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/hoppscotch/releases/releases/download/v$version/Hoppscotch_SelfHost_win_x64_portable.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}

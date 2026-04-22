@@ -1,5 +1,5 @@
 {
-    "version": "2026.03.23.010600",
+    "version": "2026.04.20.170650",
     "description": "Rime 小狼毫配置: 万象语法模型 | Rime Weasel Configuration: Wanxiang syntax model",
     "homepage": "https://github.com/amzxyz/RIME-LMDG",
     "license": {
@@ -14,13 +14,14 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram",
-            "hash": "49f21b08d0e83a1f3b5a5f42eb40a822a6f96e14e563be758402e5df8663066b"
+            "hash": "ec3e51a153d9a0fb74efa19c92ebe0a04da54c78193f18a6501786280afd7b2b"
         },
         "arm64": {
             "url": "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram",
-            "hash": "49f21b08d0e83a1f3b5a5f42eb40a822a6f96e14e563be758402e5df8663066b"
+            "hash": "ec3e51a153d9a0fb74efa19c92ebe0a04da54c78193f18a6501786280afd7b2b"
         }
     },
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
@@ -38,7 +39,6 @@
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Uninstall",
-        "A-Require-Admin",
         "Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1 | Stop-Process -Force -ErrorAction SilentlyContinue",
         "Remove-Item \"$env:AppData\\Rime\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue"
     ],

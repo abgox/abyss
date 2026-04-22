@@ -1751,27 +1751,26 @@
         "env_set": {
             "title": "Set environment variables",
             "markdownDescription": "- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)\n- Available variables:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ...",
-            "type": "object",
-            "examples": [
-                {}
-            ],
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "$ref": "#/definitions/str",
-                        "examples": [
-                            "$dir\\xxx",
-                            "$persist_dir\\xxx"
-                        ]
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "Property names cannot be empty strings"
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/str",
+                            "title": "The key of the environment variable",
+                            "examples": [
+                                "$dir\\xxx",
+                                "$persist_dir\\xxx"
+                            ]
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "Property names cannot be empty strings"
+                }
+            ]
         },
         "psmodule": {
             "title": "PowerShell module",
@@ -2106,7 +2105,9 @@
                             "markdownDescription": "RegEx to find the version on the homepage",
                             "$ref": "#/definitions/str",
                             "examples": [
-                                "(.+)"
+                                "(.+)",
+                                "^([\\d.]+)$",
+                                "^(?<version>[\\d.]+)$"
                             ]
                         },
                         "jsonpath": {
@@ -2467,21 +2468,22 @@
         "suggest": {
             "title": "Suggested Dependencies",
             "markdownDescription": "- Suggested dependencies of the app\n- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions",
-            "type": "object",
-            "if": {
-                "type": "object"
-            },
-            "then": {
-                "patternProperties": {
-                    "^.+$": {
-                        "markdownDescription": "- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions\n- If it is an array, it means that if any of the dependencies in the array are installed, the feature will be considered as **implemented**",
-                        "$ref": "#/definitions/str_or_arr"
-                    }
+            "allOf": [
+                {
+                    "type": "object"
                 },
-                "minProperties": 1,
-                "additionalProperties": false,
-                "errorMessage": "Property names are not allowed to be empty strings."
-            }
+                {
+                    "patternProperties": {
+                        "^.+$": {
+                            "markdownDescription": "- If any of the suggested dependencies are already installed, the feature will be considered as **implemented**, and the user will not see any suggestions\n- If it is an array, it means that if any of the dependencies in the array are installed, the feature will be considered as **implemented**",
+                            "$ref": "#/definitions/str_or_arr"
+                        }
+                    },
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "errorMessage": "Property names cannot be empty strings"
+                }
+            ]
         },
         "notes": {
             "$ref": "#/definitions/notes"
@@ -3183,14 +3185,14 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
                 {
                     "properties": {
                         "version": {
-                            "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special values to control manifest status: `pending`, `renamed`, `deprecated`",
+                            "markdownDescription": "- Version number of the software.\n- [abyss](https://abyss.abgox.com) provides special values to control manifest status: `pending`, `renamed`, `deprecated`, `virtual`",
                             "anyOf": [
                                 {},
                                 {
@@ -3212,6 +3214,14 @@
                                 {
                                     "enum": [
                                         "deprecated"
+                                    ],
+                                    "markdownEnumDescriptions": [
+                                        "[abyss](https://abyss.abgox.com) special value to control manifest status, refer to [Manifest Status Control](https://abyss.abgox.com/features/manifest-status-control)"
+                                    ]
+                                },
+                                {
+                                    "enum": [
+                                        "virtual"
                                     ],
                                     "markdownEnumDescriptions": [
                                         "[abyss](https://abyss.abgox.com) special value to control manifest status, refer to [Manifest Status Control](https://abyss.abgox.com/features/manifest-status-control)"
@@ -3421,7 +3431,7 @@
                         },
                         "location": {
                             "title": "The installation location of the app (if it is external)",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If the app is installed to some standard software directories, instead of scoop directory, then it needs to be specified using this field.\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- Refer to: https://abyss.abgox.com/faq/external-installation-directory",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- If the app is installed to some standard software directories, instead of scoop directory, then it needs to be specified using this field.\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- If the version is `virtual`, it means the assumed installation location of the app.\n- Refer to: https://abyss.abgox.com/faq/external-installation-directory",
                             "allOf": [
                                 {
                                     "$ref": "#/definitions/str",
@@ -3442,6 +3452,47 @@
                         "extract_to": {
                             "examples": [
                                 "app"
+                            ]
+                        },
+                        "env_set_shared": {
+                            "title": "Set environment variables (shared)",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- Set one or more environment variables (current user)\n- If the `--global` or `-g` parameter is used during installation, the variables will be set in the system environment variables (system level)\n### Differences from env_set\n- Unlike `env_set`, it requires specifying the owner of these environment variables\n- When uninstalling an app, the environment variables will not be removed if they still have an owner",
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "patternProperties": {
+                                        "^.+$": {
+                                            "type": "object",
+                                            "title": "The key of the environment variable",
+                                            "required": [
+                                                "value",
+                                                "owner"
+                                            ],
+                                            "properties": {
+                                                "value": {
+                                                    "$ref": "#/definitions/str",
+                                                    "title": "The value of the environment variable",
+                                                    "markdownDescription": "- It is the same as the value set in `env_set`\n- Available variables:\n  - `$dir`\n  - `$persist_dir`\n  - `$home`\n  - `$env:AppData`\n  - ..."
+                                                },
+                                                "owner": {
+                                                    "title": "The owner of the environment variable",
+                                                    "markdownDescription": "- This is the difference from `env_set`, it requires specifying the owner of these environment variables\n- When uninstalling an app, the environment variables will not be removed if they still have an owner",
+                                                    "type": "array",
+                                                    "minItems": 2,
+                                                    "uniqueItems": true,
+                                                    "items": {
+                                                        "$ref": "#/definitions/str"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "minProperties": 1,
+                                    "additionalProperties": false,
+                                    "errorMessage": "Property names cannot be empty strings"
+                                }
                             ]
                         },
                         "env_add_path": {
@@ -3548,7 +3599,9 @@
                             "markdownDescription": "- If the installer is based on `InnoSetup`, set it to `true`\n- In abyss, it is recommended to use `A-Install-Inno` instead of this field",
                             "enum": [
                                 true
-                            ]
+                            ],
+                            "not": true,
+                            "errorMessage": "Please use 'A-Install-Inno' instead of 'innosetup' field"
                         },
                         "font": {
                             "title": "Install as a font manifest",
@@ -3757,6 +3810,14 @@
                                 []
                             ]
                         },
+                        "admin": {
+                            "title": "Require admin permission to run",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- When set to `true`, it terminates the current operation if the user is not an admin.\n- Refer to: https://abyss.abgox.com/faq/require-admin",
+                            "type": "boolean",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "pre_install": {
                             "items": {
                                 "allOf": [
@@ -3957,6 +4018,10 @@
                                                                 "markdownDescription": "Get the latest release version from Github\n- It will include `1`, `2`, `3` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
+                                                                "const": "A-Get-VersionFromPowerShellGallery",
+                                                                "markdownDescription": "Get the version from [PowerShell Gallery](https://www.powershellgallery.com/)"
+                                                            },
+                                                            {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "Get installer information of specified application in Winget."
                                                             }
@@ -3980,6 +4045,14 @@
                                         {},
                                         {
                                             "enum": [
+                                                "nightly"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "Ensure that when checking for updates, the new version is `nightly`"
+                                            ]
+                                        },
+                                        {
+                                            "enum": [
                                                 "pending"
                                             ],
                                             "markdownEnumDescriptions": [
@@ -4001,8 +4074,32 @@
                                             "markdownEnumDescriptions": [
                                                 "Ensure that when checking for updates, the new version is `deprecated`"
                                             ]
+                                        },
+                                        {
+                                            "enum": [
+                                                "virtual"
+                                            ],
+                                            "markdownEnumDescriptions": [
+                                                "Ensure that when checking for updates, the new version is `virtual`"
+                                            ]
                                         }
                                     ]
+                                }
+                            },
+                            "if": {
+                                "required": [
+                                    "script"
+                                ]
+                            },
+                            "else": {
+                                "if": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                },
+                                "else": {
+                                    "not": true,
+                                    "errorMessage": "If you do not use the 'script' field, you must specify the 'url' field"
                                 }
                             }
                         },
@@ -4086,6 +4183,10 @@
                                                 "markdownDescription": "Use `innosetup` installer."
                                             },
                                             {
+                                                "const": "A-Install-Burn",
+                                                "markdownDescription": "Use `burn` installer."
+                                            },
+                                            {
                                                 "const": "A-Install-Msi",
                                                 "markdownDescription": "Use `msi` installer."
                                             },
@@ -4104,10 +4205,6 @@
                                             {
                                                 "pattern": "A-Install-App",
                                                 "markdownDescription": "Use the installer\n  - `-Uninstaller`: The file path of the Uninstaller\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the installer\n    - Default: `'/S', \"/D=$dir\\app\"`\n  - `-SleepSec`: The seconds to wait after the installer\n    - Default: `3`"
-                                            },
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "Require admin permission to run\n- Refer to: https://abyss.abgox.com/faq/require-admin"
                                             },
                                             {
                                                 "const": "A-Ensure-Directory",
@@ -4211,24 +4308,6 @@
                                             }
                                         ]
                                     }
-                                },
-                                {
-                                    "if": {
-                                        "contains": {
-                                            "const": "A-Require-Admin"
-                                        }
-                                    },
-                                    "then": {
-                                        "items": [
-                                            {},
-                                            {},
-                                            {},
-                                            {
-                                                "const": "A-Require-Admin",
-                                                "errorMessage": "'A-Require-Admin' must be placed here as the fourth item in the array"
-                                            }
-                                        ]
-                                    }
                                 }
                             ]
                         },
@@ -4325,19 +4404,19 @@
                                                 "markdownDescription": "Try to stop processes to ensure successful uninstallation.\n- By default, it will stop processes in the `$dir` directory.\n- Parameters:\n  - `-ExtraPaths`: Additional directories to search.\n    - If the `location` and `env_add_path_expand` fields exist, they will be added automatically.\n  - `-ExtraProcessNames`: Process names to search.\n- Examples:\n  - `A-Stop-Process 'aaa','bbb' 'xxx','yyy'`\n  - `A-Stop-Process -ExtraPaths 'aaa','bbb' -ExtraProcessNames 'xxx','yyy'`"
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin | A-Remove-Service",
+                                                "const": "A-Stop-Service 'xxx' | A-Remove-Service",
                                                 "markdownDescription": "Try to stop and remove specified application services to ensure successful uninstallation."
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin | A-Remove-Service",
+                                                "pattern": "A-Stop-Service .* | A-Remove-Service",
                                                 "markdownDescription": "Try to stop and remove specified application services to ensure successful uninstallation."
                                             },
                                             {
-                                                "const": "A-Stop-Service 'xxx' -RequireAdmin",
+                                                "const": "A-Stop-Service 'xxx'",
                                                 "markdownDescription": "Try to stop specified application services to ensure successful uninstallation."
                                             },
                                             {
-                                                "pattern": "A-Stop-Service .* -RequireAdmin",
+                                                "pattern": "A-Stop-Service .*",
                                                 "markdownDescription": "Try to stop specified application services to ensure successful uninstallation."
                                             },
                                             {
@@ -4357,36 +4436,28 @@
                                                 "markdownDescription": "Remove specified temporary data files.\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
-                                                "const": "A-Require-Admin",
-                                                "markdownDescription": "Require running with administrator permission.\n- Refer to: https://abyss.abgox.com/faq/require-admin"
-                                            },
-                                            {
                                                 "const": "A-Deny-Update",
                                                 "markdownDescription": "Deny updating via Scoop.\n- It is usually used with `A-Hold-App` in `pre_install`.\n- Refer to: https://abyss.abgox.com/faq/deny-manifest"
-                                            },
-                                            {
-                                                "const": "A-Uninstall-Msi",
-                                                "markdownDescription": "Uninstall the application (`msi`)"
-                                            },
-                                            {
-                                                "pattern": "A-Uninstall-Msi",
-                                                "markdownDescription": "Uninstall the application (`msi`)"
                                             },
                                             {
                                                 "const": "A-Uninstall-Inno",
                                                 "markdownDescription": "Uninstall the application (`InnoSetup`)"
                                             },
                                             {
-                                                "pattern": "A-Uninstall-Inno",
-                                                "markdownDescription": "Uninstall the application (`InnoSetup`)"
+                                                "const": "A-Uninstall-Burn",
+                                                "markdownDescription": "Uninstall the application (`burn`)"
                                             },
                                             {
-                                                "const": "A-Uninstall-Manually 'app'",
-                                                "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
+                                                "const": "A-Uninstall-Msi",
+                                                "markdownDescription": "Uninstall the application (`msi`)"
+                                            },
+                                            {
+                                                "const": "A-Uninstall-Manually",
+                                                "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If `location` field exists, it will be added to the list of directories.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
                                             },
                                             {
                                                 "pattern": "A-Uninstall-Manually",
-                                                "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
+                                                "markdownDescription": "Require user to manually uninstall the application.\n- It requires one or more directories as parameters.\n- If `location` field exists, it will be added to the list of directories.\n- If a relative directory is passed, such as `'app'`, it will be concatenated as `$dir\\app`.\n- Only when there are no files in these directories, will Scoop's uninstallation process be completed normally.\n- Refer to: https://abyss.abgox.com/faq/uninstall-manually"
                                             },
                                             {
                                                 "const": "A-Uninstall-App",
@@ -4418,42 +4489,7 @@
                                                 "const": "A-Deny-Update",
                                                 "errorMessage": "There is 'A-Deny-Update' in the array, so here can only be it."
                                             }
-                                        ],
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it."
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "contains": {
-                                                "const": "A-Require-Admin"
-                                            }
-                                        },
-                                        "then": {
-                                            "items": [
-                                                {},
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "A-Require-Admin",
-                                                    "errorMessage": "There is 'A-Require-Admin' in the array, so here can only be it or 'A-Deny-Update'."
-                                                }
-                                            ]
-                                        }
+                                        ]
                                     }
                                 }
                             ]
@@ -4622,34 +4658,6 @@
                                 "allOf": [
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Require-Admin"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "pre_uninstall": {
-                                                    "if": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Uninstall-Manually"
-                                                        }
-                                                    },
-                                                    "else": {
-                                                        "contains": {
-                                                            "pattern": "(?<!#.*)A-Require-Admin"
-                                                        },
-                                                        "errorMessage": "'A-Require-Admin' is used in 'pre_install', while 'A-Require-Admin' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "if": {
                                             "required": [
                                                 "link"
                                             ]
@@ -4692,6 +4700,27 @@
                                                         "pattern": "(?<!#.*)(A-Uninstall-Inno|A-Uninstall-Manually)"
                                                     },
                                                     "errorMessage": "'A-Install-Inno' is used in 'pre_install', while 'A-Uninstall-Inno' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)(A-Uninstall-Burn|A-Uninstall-Manually)"
+                                                    },
+                                                    "errorMessage": "'A-Install-Burn' is used in 'pre_install', while 'A-Uninstall-Burn' or 'A-Uninstall-Manually' is missing in 'pre_uninstall'"
                                                 }
                                             }
                                         }
@@ -4864,6 +4893,27 @@
                                                         "pattern": "(?<!#.*)A-Install-Inno"
                                                     },
                                                     "errorMessage": "'A-Uninstall-Inno' is used in 'pre_uninstall', while 'A-Install-Inno' is missing in 'pre_install'"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Uninstall-Burn"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-Burn"
+                                                    },
+                                                    "errorMessage": "'A-Uninstall-Burn' is used in 'pre_uninstall', while 'A-Install-Burn' is missing in 'pre_install'"
                                                 }
                                             }
                                         }
@@ -5128,7 +5178,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             },
                                             "checkver": {
                                                 "required": [
@@ -5229,6 +5279,30 @@
                                                         }
                                                     }
                                                 }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "version": {
+                                                            "pattern": "^virtual$"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "checkver": {
+                                                            "required": [
+                                                                "replace"
+                                                            ],
+                                                            "properties": {
+                                                                "replace": {
+                                                                    "pattern": "^virtual$",
+                                                                    "errorMessage": "When the version is 'virtual', it must be 'virtual'."
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         ]
                                     }
@@ -5242,7 +5316,7 @@
                                     "if": {
                                         "properties": {
                                             "version": {
-                                                "pattern": "^pending|renamed|deprecated$"
+                                                "pattern": "^pending|renamed|deprecated|virtual$"
                                             }
                                         }
                                     },
@@ -5259,10 +5333,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                    "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                                 },
                                                                 "pattern": "^https://github.com/abgox/abyss/releases/download/empty/empty$",
-                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             },
                                                             "hash": {
                                                                 "type": [
@@ -5271,10 +5345,10 @@
                                                                 ],
                                                                 "items": {
                                                                     "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                    "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                    "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                                 },
                                                                 "pattern": "^36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068$",
-                                                                "errorMessage": "When the version is pending|renamed|deprecated, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
+                                                                "errorMessage": "When the version is pending|renamed|deprecated|virtual, it must be https://github.com/abgox/abyss/releases/download/empty/empty"
                                                             }
                                                         }
                                                     }
