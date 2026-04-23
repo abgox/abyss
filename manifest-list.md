@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (958)|Tag|Description|
+|Manifest (959)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -379,6 +379,7 @@
 |[gerardog.gsudo](https://gerardog.github.io/gsudo/)|<a href="bucket/g/gerardog/gerardog.gsudo.json"><img src="https://img.shields.io/badge/active-080"/></a>|A sudo equivalent for Windows, with a similar user-experience as the original Unix/Linux sudo|
 |[ghost-him.ZeroLaunch-rs](https://zerolaunch.ghost-him.com/)|<a href="bucket/g/ghost-him/ghost-him.ZeroLaunch-rs.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A Windows smart launcher that understands your typing. It excels at Pinyin and fuzzy matching, and can optionally add AI semantic understanding—so typos and vague queries still get instant results|
 |[Giorgiotani.Peazip](https://peazip.github.io/)|<a href="bucket/g/Giorgiotani/Giorgiotani.Peazip.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A free file archiver utility and rar extractor|
+|[git-cola.git-cola](https://git-cola.github.io/)|<a href="bucket/g/git-cola/git-cola.git-cola.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A powerful Git GUI with a slick and intuitive user interface|
 |[Git.Git](https://gitforwindows.org/)|<a href="bucket/g/Git/Git.Git.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A distributed version control system|
 |[Git.MinGit](https://gitforwindows.org/)|<a href="bucket/g/Git/Git.MinGit.json"><img src="https://img.shields.io/badge/active-080"/></a>|An intentionally minimal, non-interactive distribution of Git for Windows, with third-party applications as its intended audience|
 |[Git.MinGit.BusyBox](https://gitforwindows.org/)|<a href="bucket/g/Git/Git.MinGit.BusyBox.json"><img src="https://img.shields.io/badge/active-080"/></a>|An intentionally minimal, non-interactive distribution of Git for Windows, with third-party applications as its intended audience|

@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (958)|Tag|Description|
+|Manifest (959)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -378,6 +378,7 @@
 |[gerardog.gsudo](https://gerardog.github.io/gsudo/)|<a href="bucket/g/gerardog/gerardog.gsudo.json"><img src="https://img.shields.io/badge/active-080"/></a>|Windows 上的一个 sudo 替代品，提供和 Unix/Linux 上的 sudo 相似的用户体验|
 |[ghost-him.ZeroLaunch-rs](https://zerolaunch.ghost-him.com/)|<a href="bucket/g/ghost-him/ghost-him.ZeroLaunch-rs.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款极速、隐私优先的 Windows 智能启动器，精通拼音与模糊匹配；可选本地 AI 语义检索，让错字与意图搜索也能秒速直达|
 |[Giorgiotani.Peazip](https://peazip.github.io/)|<a href="bucket/g/Giorgiotani/Giorgiotani.Peazip.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一款免费的文件归档工具和 rar 解压缩器|
+|[git-cola.git-cola](https://git-cola.github.io/)|<a href="bucket/g/git-cola/git-cola.git-cola.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一款功能强大的 Git 图形用户界面，拥有流畅且直观的用户界面|
 |[Git.Git](https://gitforwindows.org/)|<a href="bucket/g/Git/Git.Git.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个分布式版本控制系统|
 |[Git.MinGit](https://gitforwindows.org/)|<a href="bucket/g/Git/Git.MinGit.json"><img src="https://img.shields.io/badge/active-080"/></a>|一种特意设计的精简、非交互式的 Windows 版 Git 发行版，其目标用户是第三方应用程序|
 |[Git.MinGit.BusyBox](https://gitforwindows.org/)|<a href="bucket/g/Git/Git.MinGit.BusyBox.json"><img src="https://img.shields.io/badge/active-080"/></a>|一种特意设计的精简、非交互式的 Windows 版 Git 发行版，其目标用户是第三方应用程序|
