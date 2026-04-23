@@ -1,0 +1,65 @@
+{
+    "version": "4.18.2",
+    "description": "一款功能强大的 Git 图形用户界面，拥有流畅且直观的用户界面 | A powerful Git GUI with a slick and intuitive user interface",
+    "homepage": "https://git-cola.github.io/",
+    "license": {
+        "identifier": "GPL-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/git-cola/git-cola/releases/download/v4.18.2/git-cola-4.18.2.windows.zip",
+            "hash": "fd7fdbddce954d41f9093b1ba848ea585dcc8f3faaa886d035ba21f62de11aad"
+        }
+    },
+    "location": "$env:LocalAppData\\Programs\\git-cola",
+    "extract_to": "app",
+    "commands": [
+        "git-cola",
+        "git-dag"
+    ],
+    "link": "$home\\.config\\git-cola",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "$fname = \"app\\git-cola-$version.exe\"",
+        "A-Install-App -Uninstaller 'uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:AppData\\git-cola.launch.pyw.log\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/git-cola/git-cola/releases/download/v$version/git-cola-$version.windows.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
