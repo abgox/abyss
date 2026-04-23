@@ -1558,16 +1558,7 @@ function A-Get-VersionFromPowerShellGallery {
     Select-Object -First 1
 }
 
-function A-Get-VersionFromPage {
-    <#
-    .SYNOPSIS
-        从指定的 json.checkver.url 页面获取版本号。
-
-    .DESCRIPTION
-        从指定的 json.checkver.url 页面获取版本号。
-        它会等待页面的 js 加载完成，然后使用指定的 json.checkver.regex 匹配页面内容获取版本号。
-    #>
-
+function A-Get-DynamicPageFromUrl {
     if (-not $json) {
         Write-Host "::error::`$json is invalid." -ForegroundColor Red
         return
@@ -1581,30 +1572,28 @@ function A-Get-VersionFromPage {
         return
     }
     if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
+        return $json.version
+    }
+
+    $edgePath = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
+    if (-not (Test-Path $edgePath)) {
+        $edgePath = 'msedge.exe'
     }
 
     try {
-        if ((pip freeze) -notmatch 'selenium') {
-            Write-Host 'Installing selenium...' -ForegroundColor Green
-            $null = pip install selenium
+        $args = @('--headless=new', '--disable-gpu', '--dump-dom', '--no-sandbox', '--virtual-time-budget=10000', $json.checkver.url)
+
+        $html = & $edgePath $args 2>$null | Out-String
+
+        if ([string]::IsNullOrWhiteSpace($html)) {
+            Write-Error "Failed to retrieve content from $($json.checkver.url)"
+            return
         }
+        $html
     }
     catch {
-        return $null
-    }
-
-    $page = python "$PSScriptRoot\get-page.py" $json.checkver.url
-    $match = [regex]::Match($page, $json.checkver.regex)
-
-    if ($match.Success) {
-        $v = if ($match.Groups['version'].Success) {
-            $match.Groups['version'].Value
-        }
-        else {
-            $match.Groups[1].Value
-        }
-        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $v
+        Write-Error "Edge execution failed: $($_.Exception.Message)"
+        return
     }
 }
 

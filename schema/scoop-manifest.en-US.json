@@ -4022,6 +4022,10 @@
                                                             {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "Get Installation Info from Winget\n\n- It requires two parameters:\n  - `PackageIdentifier`: The `PackageIdentifier` of the application in [winget-pkgs](https://github.com/microsoft/winget-pkgs).\n  - `InstallerType`: Specifies the installer file extension to extract packages from [winget-pkgs](https://github.com/microsoft/winget-pkgs) that match the URL suffix. Use an empty string for any type.\n- `$res`: The installer information parsed from [winget-pkgs](https://github.com/microsoft/winget-pkgs).\n- `$out`: The default installation info, providing default version matching content for the `regex` field. It can be used with `$res` for custom overrides.\n\n### Example\n\n- Get the installation info for Microsoft Edge and extract the package with a `.msi` URL suffix:\n\n  ```json\n  \"$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'\"\n  ```"
+                                                            },
+                                                            {
+                                                                "const": "A-Get-DynamicPageFromUrl",
+                                                                "markdownDescription": "Get the dynamic page content\n\n- It will execute up to 10 seconds of JavaScript to obtain the final DOM"
                                                             }
                                                         ]
                                                     }
@@ -4088,6 +4092,22 @@
                                 "required": [
                                     "script"
                                 ]
+                            },
+                            "then": {
+                                "if": {
+                                    "properties": {
+                                        "script": {
+                                            "contains": {
+                                                "const": "A-Get-DynamicPageFromUrl"
+                                            }
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                }
                             },
                             "else": {
                                 "if": {

@@ -4022,6 +4022,10 @@
                                                             {
                                                                 "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
                                                                 "markdownDescription": "获取 Winget 中指定应用的安装信息\n\n- 需要两个参数\n  - `PackageIdentifier`: 应用在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中的 `PackageIdentifier`\n  - `InstallerType`: 指定安装包类型后缀，以在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中提取 url 后缀匹配的安装包，空字符表示任意\n- `$res`: 从 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中解析的安装包信息\n- `$out`: 默认的安装信息，为 `regex` 字段提供默认的版本信息匹配内容，可以搭配 `$res` 进行自定义覆盖\n\n### 示例\n\n- 获取 Microsoft Edge 的安装包信息，提取 url 后缀为 `.msi` 的安装包信息\n\n  ```json\n  \"$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'\"\n  ```"
+                                                            },
+                                                            {
+                                                                "const": "A-Get-DynamicPageFromUrl",
+                                                                "markdownDescription": "获取动态加载的网页内容\n\n- 它会执行最多 10 秒的 JavaScript 以获取最终 DOM"
                                                             }
                                                         ]
                                                     }
@@ -4088,6 +4092,22 @@
                                 "required": [
                                     "script"
                                 ]
+                            },
+                            "then": {
+                                "if": {
+                                    "properties": {
+                                        "script": {
+                                            "contains": {
+                                                "const": "A-Get-DynamicPageFromUrl"
+                                            }
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "url"
+                                    ]
+                                }
                             },
                             "else": {
                                 "if": {
