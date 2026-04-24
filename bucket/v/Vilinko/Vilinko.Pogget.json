@@ -1,0 +1,62 @@
+{
+    "version": "0.3.80",
+    "description": "轻量强大的文件交互效率工具 | A lightweight and powerful file interaction efficiency tool",
+    "homepage": "https://pogget.vilinko.com/",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://down1.vilinko.com/download/pogget.zip",
+            "hash": "d3edd88ff043b1805ebf33ad9710c472cfcdea775bff4e700d80dea917e1fe57"
+        },
+        "arm64": {
+            "url": "https://down1.vilinko.com/download/pogget_arm64.zip",
+            "hash": "b14d46aadeed57889030dfb6ceeb3527d886198b0407f21d09d50ac6de989ba8"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Pogget.exe",
+            "Pogget"
+        ]
+    ],
+    "link": "$env:AppData\\Vilinko\\Pogget",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://down1.vilinko.com/res/logs/pogget_update.txt",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://down1.vilinko.com/download/pogget.zip"
+            },
+            "arm64": {
+                "url": "https://down1.vilinko.com/download/pogget_arm64.zip"
+            }
+        }
+    }
+}
