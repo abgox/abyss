@@ -1,0 +1,63 @@
+{
+    "version": "0.3.6",
+    "description": "现代化、跨平台的休息提醒应用 | A modern, cross-platform break reminder application",
+    "homepage": "https://github.com/pilgrimlyieu/Focust",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pilgrimlyieu/Focust/releases/download/v0.3.6/focust_0.3.6_windows_installer.exe",
+            "hash": "ad2b455b86c3f9ed4082c34aec984a115af38621bd71fe6269c597aa592659b6"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\focust.exe",
+            "Focust"
+        ]
+    ],
+    "link": "$env:AppData\\com.fesmoph.focust",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\com.fesmoph.focust\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pilgrimlyieu/Focust/releases/download/v$version/focust_$version_windows_installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
