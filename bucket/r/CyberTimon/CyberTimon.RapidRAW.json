@@ -1,0 +1,63 @@
+{
+    "version": "1.5.3",
+    "description": "一款美观、无损且支持 GPU 加速的 RAW 图像编辑器 | A beautiful, non-destructive, and GPU-accelerated RAW image editor",
+    "homepage": "https://github.com/CyberTimon/RapidRAW",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CyberTimon/RapidRAW/releases/download/v1.5.3/01_RapidRAW_v1.5.3_windows_x64.exe",
+            "hash": "370616b83b78ca712e6ece88a0d02019565ed8064ca23ec6e497ebc0c706a6e8"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\RapidRAW.exe",
+            "RapidRAW"
+        ]
+    ],
+    "link": "$env:AppData\\io.github.CyberTimon.RapidRAW",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\io.github.CyberTimon.RapidRAW\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CyberTimon/RapidRAW/releases/download/v$version/01_RapidRAW_v$version_windows_x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
