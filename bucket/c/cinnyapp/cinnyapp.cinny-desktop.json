@@ -1,0 +1,59 @@
+{
+    "version": "4.10.5",
+    "description": "一款主要注重简洁、优雅且安全界面的 matrix 客户端 | A matrix client focusing primarily on simple, elegant and secure interface",
+    "homepage": "https://github.com/cinnyapp/cinny-desktop",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cinnyapp/cinny-desktop/releases/download/v4.10.5/Cinny_desktop-x86_64.msi#/dl.msi_",
+            "hash": "b9e96b256805289989a8a1fae5e247193d6ab8bc4d5629768d18f6a95b0c8d02"
+        }
+    },
+    "location": "$env:ProgramFiles\\Cinny",
+    "link": "$env:AppData\\in.cinny.app",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Msi"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Msi",
+        "A-Remove-TempData \"$env:LocalAppData\\in.cinny.app\""
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cinnyapp/cinny-desktop/releases/download/v$version/Cinny_desktop-x86_64.msi#/dl.msi_"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
