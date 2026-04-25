@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (971)|Tag|Description|
+|Manifest (973)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -121,6 +121,7 @@
 |[asxez.MusicBox](https://github.com/asxez/MusicBox)|<a href="bucket/a/asxez/asxez.MusicBox.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款高颜值的本地音乐播放器|
 |[AuraMarker.Lattics](https://lattics.zineapi.com/)|<a href="bucket/a/AuraMarker/AuraMarker.Lattics.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|「类脑式」知识管理笔记与写作|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - 一款免费的开源宏创建和自动化软件工具，允许用户自动执行重复性任务|
+|[axllent.mailpit](https://mailpit.axllent.org/)|<a href="bucket/a/axllent/axllent.mailpit.json"><img src="https://img.shields.io/badge/active-080"/></a>|一款小巧、高效、低内存占用、无依赖、跨平台的电子邮件测试工具及面向开发者的 API|
 |[ayangweb.BongoCat](https://github.com/ayangweb/BongoCat)|<a href="bucket/a/ayangweb/ayangweb.BongoCat.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台桌宠|
 |[B3log.SiYuan](https://b3log.org/siyuan/)|<a href="bucket/b/B3log/B3log.SiYuan.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款以隐私为首要原则、可自行托管且完全开源的个人知识管理软件|
 |[Baidu.BaiduNetdisk](https://pan.baidu.com/download)|<a href="bucket/b/Baidu/Baidu.BaiduNetdisk.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|百度网盘|
@@ -440,6 +441,7 @@
 |[ilyagr.diffedit3](https://github.com/ilyagr/diffedit3)|<a href="bucket/i/ilyagr/ilyagr.diffedit3.json"><img src="https://img.shields.io/badge/active-080"/></a>|一个用于在三窗格视图中编辑差异的用户界面|
 |[ImputNet.Helium](https://helium.computer/)|<a href="bucket/i/ImputNet/ImputNet.Helium.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|这款基于 Chromium 的网页浏览器是为用户精心打造的。它默认具备出色的隐私保护功能，拥有公正的广告拦截能力，没有冗余内容，也不会带来干扰|
 |[imsyy.SPlayer](http://splayer.imsyy.top/)|<a href="bucket/i/imsyy/imsyy.SPlayer.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简约的音乐播放器|
+|[Infiniact.IATerm](https://www.iaterm.ai/)|<a href="bucket/i/Infiniact/Infiniact.IATerm.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|集成 AI 能力的下一代远程终端应用，支持多工作空间、SSH 连接和智能命令执行|
 |[Inkscape.Inkscape](https://inkscape.org/)|<a href="bucket/i/Inkscape/Inkscape.Inkscape.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一款专业的矢量图形软件|
 |[InkTimeRecord.TTime](https://ttime.timerecord.cn/)|<a href="bucket/i/InkTimeRecord/InkTimeRecord.TTime.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款简洁、高效、高颜值的输入、截图、划词翻译软件|
 |[Insco.FaFaRunner](https://www.fafarunner.com/)|<a href="bucket/i/Insco/Insco.FaFaRunner.json"><img src="https://img.shields.io/badge/active-080"/></a>|发发跑酷 - 享受流畅的游戏体验、惊艳的画面和无尽的乐趣|

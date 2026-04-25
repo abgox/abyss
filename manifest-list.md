@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (971)|Tag|Description|
+|Manifest (973)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -122,6 +122,7 @@
 |[asxez.MusicBox](https://github.com/asxez/MusicBox)|<a href="bucket/a/asxez/asxez.MusicBox.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A pretty local music player|
 |[AuraMarker.Lattics](https://lattics.zineapi.com/)|<a href="bucket/a/AuraMarker/AuraMarker.Lattics.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|"Brain-like" Knowledge Management Notes|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - A free, open source macro-creation and automation software utility that allows users to automate repetitive tasks|
+|[axllent.mailpit](https://mailpit.axllent.org/)|<a href="bucket/a/axllent/axllent.mailpit.json"><img src="https://img.shields.io/badge/active-080"/></a>|A small, fast, low memory, zero-dependency, multi-platform email testing tool & API for developers|
 |[ayangweb.BongoCat](https://github.com/ayangweb/BongoCat)|<a href="bucket/a/ayangweb/ayangweb.BongoCat.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cross-platform desktop pet|
 |[B3log.SiYuan](https://b3log.org/siyuan/)|<a href="bucket/b/B3log/B3log.SiYuan.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A privacy-first, self-hosted, fully open source personal knowledge management software|
 |[Baidu.BaiduNetdisk](https://pan.baidu.com/download)|<a href="bucket/b/Baidu/Baidu.BaiduNetdisk.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Baidu Netdisk for windows|
@@ -441,6 +442,7 @@
 |[ilyagr.diffedit3](https://github.com/ilyagr/diffedit3)|<a href="bucket/i/ilyagr/ilyagr.diffedit3.json"><img src="https://img.shields.io/badge/active-080"/></a>|A UI for editing diffs in a three-pane view|
 |[ImputNet.Helium](https://helium.computer/)|<a href="bucket/i/ImputNet/ImputNet.Helium.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|The Chromium-based web browser made for people, with love. Best privacy by default, unbiased ad-blocking, no bloat and no noise|
 |[imsyy.SPlayer](http://splayer.imsyy.top/)|<a href="bucket/i/imsyy/imsyy.SPlayer.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A simple music player|
+|[Infiniact.IATerm](https://www.iaterm.ai/)|<a href="bucket/i/Infiniact/Infiniact.IATerm.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Next-gen AI-powered remote terminal with multi-workspace, SSH connections and intelligent command execution|
 |[Inkscape.Inkscape](https://inkscape.org/)|<a href="bucket/i/Inkscape/Inkscape.Inkscape.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A professional vector graphics software|
 |[InkTimeRecord.TTime](https://ttime.timerecord.cn/)|<a href="bucket/i/InkTimeRecord/InkTimeRecord.TTime.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A concise, efficient, and high-quality input, screenshot, and word translation software|
 |[Insco.FaFaRunner](https://www.fafarunner.com/)|<a href="bucket/i/Insco/Insco.FaFaRunner.json"><img src="https://img.shields.io/badge/active-080"/></a>|FaFa Runner - Enjoy smooth gameplay, stunning graphics, and endless fun|
