@@ -1,0 +1,58 @@
+{
+    "version": "0.16.0",
+    "description": "适用于 PowerShell 的终端启动器与模糊查找工具 | Terminal Based Launcher and Fuzzy Finder for PowerShell",
+    "homepage": "https://github.com/mdgrs-mei/PowerShellRun",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/powershellrun.0.16.0.nupkg",
+            "hash": "4e9598434b267d91e79cfaa753171697fbe633d380d8da42015a338432fbbd1d"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/powershellrun.0.16.0.nupkg",
+            "hash": "4e9598434b267d91e79cfaa753171697fbe633d380d8da42015a338432fbbd1d"
+        }
+    },
+    "psmodule": {
+        "name": "PowerShellRun"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromPowerShellGallery"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/powershellrun.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/powershellrun.$version.nupkg"
+            }
+        }
+    }
+}
