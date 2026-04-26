@@ -1,0 +1,66 @@
+{
+    "version": "1.0.1",
+    "description": "一款简易工具，可禁用 Windows 11 文件资源管理器新版右键菜单中不需要的选项 | A simple tool that allows you to disable unwanted entries in Windows 11 Explorer new right-click context menu",
+    "homepage": "https://github.com/branhill/windows-11-context-menu-manager",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/branhill/windows-11-context-menu-manager/releases/download/v1.0.1/release_win-x64.zip",
+            "hash": "147015346f27d182248f6aa76679abead297de096f76f83fafcd844a592e29aa"
+        },
+        "arm64": {
+            "url": "https://github.com/branhill/windows-11-context-menu-manager/releases/download/v1.0.1/release_win-arm64.zip",
+            "hash": "715b91419559e0aa1bd3b28b6c6fb0b43e50133c1d324e83472b05eb36975b11"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Windows11ContextMenuManager.exe",
+            "Windows11 Context Menu Manager"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/branhill/windows-11-context-menu-manager/releases/download/v$version/release_win-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/branhill/windows-11-context-menu-manager/releases/download/v$version/release_win-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
