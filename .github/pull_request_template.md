@@ -1,4 +1,4 @@
 - Closes #XXX
-- See #xxx
+- See #XXX
 
 [_Contributing Guide_](https://abyss.abgox.com/contributing/)
