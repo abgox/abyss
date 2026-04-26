@@ -1,0 +1,58 @@
+{
+    "version": "0.2.0",
+    "description": "基于 Avalonia 构建、适用于 PowerShell 的跨平台桌面图形用户界面框架 | Cross-platform Desktop GUI framework for PowerShell powered by Avalonia",
+    "homepage": "https://github.com/mdgrs-mei/GliderUI",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.powershellgallery.com/packages/gliderui.0.2.0.nupkg",
+            "hash": "e68aba0de64e74ce79bf3a2b1a393345bff6d0cc24a89b0f1b235558f5dd33b9"
+        },
+        "arm64": {
+            "url": "https://cdn.powershellgallery.com/packages/gliderui.0.2.0.nupkg",
+            "hash": "e68aba0de64e74ce79bf3a2b1a393345bff6d0cc24a89b0f1b235558f5dd33b9"
+        }
+    },
+    "psmodule": {
+        "name": "GliderUI"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromPowerShellGallery"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.powershellgallery.com/packages/gliderui.$version.nupkg"
+            },
+            "arm64": {
+                "url": "https://cdn.powershellgallery.com/packages/gliderui.$version.nupkg"
+            }
+        }
+    }
+}
