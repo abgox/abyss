@@ -1,0 +1,59 @@
+{
+    "version": "0.1.0-1544",
+    "description": "面向未来的现代 shell | A modern shell for the future",
+    "homepage": "https://github.com/ClementNerma/ReShell",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ClementNerma/ReShell/releases/download/v0.1.0-1544/reshell-x86_64-pc-windows-gnu.tgz",
+            "hash": "c5bf10aa992815f11b191e7cc0c014afefda5d4bbeacc386af8e8d0f1b3329dd"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\reshell.exe",
+    "link": [
+        "$env:AppData\\reshell",
+        "$env:LocalAppData\\reshell"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ClementNerma/ReShell/releases/download/v$version/reshell-x86_64-pc-windows-gnu.tgz"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
