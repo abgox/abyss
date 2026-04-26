@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0.2",
+    "description": "一款功能强、可定制、跨平台，适用于班级多媒体屏幕的课表信息显示工具，可以一目了然地显示各种信息 | A powerful, customizable, cross-platform tool for displaying class schedule information on classroom multimedia screens, which can clearly show various types of information at a glance",
+    "homepage": "https://classisland.tech/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ClassIsland/ClassIsland/releases/download/2.0.0.2/ClassIsland_app_windows_x64_selfContained_folder.zip",
+            "hash": "43cf08a5c7a1bcf1af7186d4909305fe9e488ab572041ce7f624c2a7cd38c056"
+        },
+        "arm64": {
+            "url": "https://github.com/ClassIsland/ClassIsland/releases/download/2.0.0.2/ClassIsland_app_windows_arm64_selfContained_folder.zip",
+            "hash": "5c042417791fbb62e46d468ee754f68efcfa126eed58796cba3b8d20961ec770"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\ClassIsland.exe",
+            "ClassIsland"
+        ]
+    ],
+    "link": "$env:LocalAppData\\ClassIsland",
+    "persist": [
+        [
+            "app\\data",
+            "AppData\\Roaming\\ClassIsland"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ClassIsland/ClassIsland/releases/download/$version/ClassIsland_app_windows_x64_selfContained_folder.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/ClassIsland/ClassIsland/releases/download/$version/ClassIsland_app_windows_arm64_selfContained_folder.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
