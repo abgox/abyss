@@ -3183,7 +3183,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|cleanup|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3840,6 +3840,66 @@
                                 []
                             ]
                         },
+                        "cleanup": {
+                            "markdownDescription": "需要清理的临时数据\n\n- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它用于指定应用相关的临时数据，不包含用户数据\n- 如果有多个，请使用数组\n\n### 示例\n\n- [Tauri](https://tauri.app/) 通常会使用 `$env:LocalAppData\\\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\com.xxx.app\"\n  ```\n\n- [Electron](https://electronjs.org/) 通常会使用 `$env:LocalAppData\\\\xxx-updater` 存储更新程序\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```",
+                            "type": [
+                                "string",
+                                "array"
+                            ],
+                            "examples": [
+                                []
+                            ],
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "examples": [
+                                        "$home\\xxx",
+                                        "$home\\.config\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx",
+                                        "$env:ProgramData\\xxx"
+                                    ],
+                                    "minLength": 1,
+                                    "allOf": [
+                                        {
+                                            "pattern": "^\\$",
+                                            "errorMessage": "它只允许以变量开头的路径"
+                                        },
+                                        {
+                                            "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                            "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "examples": [
+                                            "$home\\xxx",
+                                            "$home\\.config\\xxx",
+                                            "$env:AppData\\xxx",
+                                            "$env:LocalAppData\\xxx",
+                                            "$env:ProgramData\\xxx"
+                                        ],
+                                        "minLength": 1,
+                                        "allOf": [
+                                            {
+                                                "pattern": "^\\$",
+                                                "errorMessage": "它只允许以变量开头的路径"
+                                            },
+                                            {
+                                                "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                                "errorMessage": "它应该使用标准数据目录: $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
+                                            }
+                                        ]
+                                    },
+                                    "$ref": "#/definitions/use_string_if_single"
+                                }
+                            ]
+                        },
                         "admin": {
                             "title": "要求以管理员权限运行",
                             "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 当设置为 `true` 时，如果用户不是管理员权限，则终止当前操作\n- 参考: https://abyss.abgox.com/faq/require-admin",
@@ -4478,11 +4538,11 @@
                                             },
                                             {
                                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 应用，`$env:LocalAppData\\\\xxx` 通常包含 `EBWebView`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- 如果是 [Electron](https://electronjs.org/) 应用，`$env:LocalAppData\\\\xxx-updater` 通常是更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- [Tauri](https://tauri.app/) 通常会使用 `$env:LocalAppData\\\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- [Electron](https://electronjs.org/) 通常会使用 `$env:LocalAppData\\\\xxx-updater` 存储更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 应用，通常使用 `$env:LocalAppData\\\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\com.xxx.app\\\"\n  ```\n\n- 如果是 [Electron](https://electronjs.org/) 应用，`$env:LocalAppData\\\\xxx-updater` 通常是更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- [Tauri](https://tauri.app/) 通常会使用 `$env:LocalAppData\\\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- [Electron](https://electronjs.org/) 通常会使用 `$env:LocalAppData\\\\xxx-updater` 存储更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Deny-Update",
@@ -4519,6 +4579,14 @@
                                             {
                                                 "pattern": "A-Uninstall-App",
                                                 "markdownDescription": "使用卸载程序\n  - `-Uninstaller`: 卸载程序的路径\n    - 默认为 `A-Install-App` 指定的卸载程序\n    - 如果是相对路径，会拼接 `$dir` 作为父目录\n  - `-ArgumentList`: 卸载程序的命令行参数\n    - 默认 `'/S'`\n  - `-SleepSec`: 卸载程序运行完成后的等待秒数\n    - 默认 `3`"
+                                            }
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-Remove-TempData"
+                                                },
+                                                "errorMessage": "请使用 cleanup 字段进行定义"
                                             }
                                         ]
                                     }

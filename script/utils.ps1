@@ -254,9 +254,14 @@ function A-Start-Uninstall {
 }
 
 function A-Complete-Uninstall {
+    $tempPath = @()
     if ($manifest.location) {
-        A-Remove-TempData $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        $tempPath += $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
     }
+    foreach ($c in $manifest.cleanup) {
+        $tempPath += $ExecutionContext.InvokeCommand.ExpandString($c)
+    }
+    A-Remove-TempData $tempPath
 
     # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
@@ -498,53 +503,6 @@ function A-Remove-Link {
                         error $_.Exception.Message
                     }
                 }
-            }
-        }
-    }
-}
-
-function A-Remove-TempData {
-    <#
-    .SYNOPSIS
-        删除临时数据目录或文件
-
-    .DESCRIPTION
-        该函数用于删除指定的临时数据目录或文件。
-        根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
-
-    .PARAMETER Paths
-        要删除的临时数据路径数组。
-        可以包含文件或目录路径。
-
-    .EXAMPLE
-        A-Remove-TempData -Paths "C:\Temp\Logs", "D:\Cache"
-        删除指定的两个临时数据目录
-    #>
-    param (
-        [array]$Paths
-    )
-
-    if ($cmd -eq 'update') {
-        return
-    }
-    if (-not ($abgox_abyss.uninstallActionLevel.Contains('3') -or $purge)) {
-        # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 3，则需要执行删除操作
-        return
-    }
-    foreach ($p in $Paths) {
-        if (Test-Path -LiteralPath $p) {
-            try {
-                Write-Host "Removing $p"
-                Remove-Item $p -Force -Recurse -ErrorAction Stop
-
-                $parent = Split-Path $p -Parent
-                if (-not (A-Test-DirectoryNotEmpty $parent)) {
-                    Write-Host "Removing $parent"
-                    Remove-Item $parent -Force -Recurse -ErrorAction Stop
-                }
-            }
-            catch {
-                error $_.Exception.Message
             }
         }
     }
@@ -2003,6 +1961,53 @@ function A-Deny-IfAppConflict {
             error "'$app' conflicts with '$_'."
             error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
             A-Exit
+        }
+    }
+}
+
+function A-Remove-TempData {
+    <#
+    .SYNOPSIS
+        删除临时数据目录或文件
+
+    .DESCRIPTION
+        该函数用于删除指定的临时数据目录或文件。
+        根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
+
+    .PARAMETER Paths
+        要删除的临时数据路径数组。
+        可以包含文件或目录路径。
+
+    .EXAMPLE
+        A-Remove-TempData -Paths "C:\Temp\Logs", "D:\Cache"
+        删除指定的两个临时数据目录
+    #>
+    param (
+        [array]$Paths
+    )
+
+    if ($cmd -eq 'update') {
+        return
+    }
+    if (-not ($abgox_abyss.uninstallActionLevel.Contains('3') -or $purge)) {
+        # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 3，则需要执行删除操作
+        return
+    }
+    foreach ($p in $Paths) {
+        if (Test-Path -LiteralPath $p) {
+            try {
+                Write-Host "Removing $p"
+                Remove-Item $p -Force -Recurse -ErrorAction Stop
+
+                $parent = Split-Path $p -Parent
+                if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                    Write-Host "Removing $parent"
+                    Remove-Item $parent -Force -Recurse -ErrorAction Stop
+                }
+            }
+            catch {
+                error $_.Exception.Message
+            }
         }
     }
 }

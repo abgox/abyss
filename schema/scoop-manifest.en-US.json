@@ -3183,7 +3183,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|cleanup|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3840,6 +3840,66 @@
                                 []
                             ]
                         },
+                        "cleanup": {
+                            "markdownDescription": "Temporary data to be cleaned up\n\n- It's a special field of [abyss](https://abyss.abgox.com)\n- It's used to specify the temporary data of the application, except the user data\n- If there are multiple, please use an array\n\n### Example\n\n- [Tauri](https://tauri.app/) application usually uses `ccom.xxx.app` to store `EBWebView` and `logs`.\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\com.xxx.app\"\n  ```\n\n- [Electron](https://electronjs.org/) application usually uses `$env:LocalAppData\\\\xxx-updater` to store the updater.\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```",
+                            "type": [
+                                "string",
+                                "array"
+                            ],
+                            "examples": [
+                                []
+                            ],
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "examples": [
+                                        "$home\\xxx",
+                                        "$home\\.config\\xxx",
+                                        "$env:AppData\\xxx",
+                                        "$env:LocalAppData\\xxx",
+                                        "$env:ProgramData\\xxx"
+                                    ],
+                                    "minLength": 1,
+                                    "allOf": [
+                                        {
+                                            "pattern": "^\\$",
+                                            "errorMessage": "It only allows paths that start with a variable."
+                                        },
+                                        {
+                                            "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                            "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "examples": [
+                                            "$home\\xxx",
+                                            "$home\\.config\\xxx",
+                                            "$env:AppData\\xxx",
+                                            "$env:LocalAppData\\xxx",
+                                            "$env:ProgramData\\xxx"
+                                        ],
+                                        "minLength": 1,
+                                        "allOf": [
+                                            {
+                                                "pattern": "^\\$",
+                                                "errorMessage": "It only allows paths that start with a variable."
+                                            },
+                                            {
+                                                "pattern": "^\\$(home|env:AppData|env:LocalAppData|env:ProgramData)\\\\.+",
+                                                "errorMessage": "It should use standard directory: $home, $env:AppData, $env:LocalAppData, $env:ProgramData"
+                                            }
+                                        ]
+                                    },
+                                    "$ref": "#/definitions/use_string_if_single"
+                                }
+                            ]
+                        },
                         "admin": {
                             "title": "Require admin permission to run",
                             "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- When set to `true`, it terminates the current operation if the user is not an admin.\n- Refer to: https://abyss.abgox.com/faq/require-admin",
@@ -4478,11 +4538,11 @@
                                             },
                                             {
                                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                                "markdownDescription": "Remove specified temporary data files.\n\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n\n### Example\n\n- If it is a [Tauri](https://tauri.app/) application, `$env:LocalAppData\\\\xxx` usually contains `EBWebView`.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- If it is an [Electron](https://electronjs.org/) application, `$env:LocalAppData\\\\xxx-updater` is usually the updater.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "Remove specified temporary data files.\n\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n\n### Example\n\n- [Tauri](https://tauri.app/) usually uses `$env:LocalAppData\\\\com.xxx.app` to store `EBWebView` and `logs`.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\com.xxx.app\\\"\n  ```\n\n- [Electron](https://electronjs.org/) usually uses `$env:LocalAppData\\\\xxx-updater` to store the updater.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "Remove specified temporary data files.\n\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n\n### Example\n\n- If it is a [Tauri](https://tauri.app/) application, `$env:LocalAppData\\\\com.xxx.app` is usually used to store `EBWebView` and `logs`.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\com.xxx.app\\\"\n  ```\n\n- If it is an [Electron](https://electronjs.org/) application, `$env:LocalAppData\\\\xxx-updater` is usually the updater.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "Remove specified temporary data files.\n\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n\n### Example\n\n- [Tauri](https://tauri.app/) usually uses `$env:LocalAppData\\\\com.xxx.app` to store `EBWebView` and `logs`.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\com.xxx.app\\\"\n  ```\n\n- [Electron](https://electronjs.org/) usually uses `$env:LocalAppData\\\\xxx-updater` to store the updater.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Deny-Update",
@@ -4519,6 +4579,14 @@
                                             {
                                                 "pattern": "A-Uninstall-App",
                                                 "markdownDescription": "Use the Uninstaller\n  - `-Uninstaller`: The file path of the Uninstaller\n    - Default: The uninstaller specified by `A-Install-App`\n    - If it is a relative path, it will join path with `$dir`\n  - `-ArgumentList`: Command-line parameters of the uninstaller\n    - Default: `'/S'`\n  - `-SleepSec`: The seconds to wait after the uninstaller\n    - Default: `3`"
+                                            }
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-Remove-TempData"
+                                                },
+                                                "errorMessage": "Please use the cleanup field"
                                             }
                                         ]
                                     }

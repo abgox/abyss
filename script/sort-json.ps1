@@ -100,6 +100,7 @@ $order = [ordered]@{
     shortcuts           = ''
     link                = '' # abyss
     persist             = ''
+    cleanup             = '' # abyss
     admin               = '' # abyss
     pre_install         = ''
     # installer      = ''
