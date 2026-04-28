@@ -30,7 +30,6 @@ if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
 $order = [ordered]@{
     '##'                = ''
     version             = ''
-    new                 = '' # abyss
     description         = ''
     homepage            = ''
     license             = [ordered]@{
@@ -84,6 +83,7 @@ $order = [ordered]@{
         #     # uninstaller  = ''
         # }
     }
+    renamed             = '' # abyss
     conflicts           = '' # abyss
     location            = '' # abyss
     extract_dir         = ''

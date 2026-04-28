@@ -3183,7 +3183,7 @@
             "markdownDescription": "- JSON Schema of the manifest for the [abyss](https://abyss.abgox.com) bucket\n- With some special style and conventions",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "It is not allowed."
             },
             "allOf": [
@@ -3230,11 +3230,6 @@
                                 "const": "0.0.0"
                             },
                             "errorMessage": "After the manifest is written, please run '.\\bin\\checkver.ps1 <app> -ForceUpdate' to update the manifest"
-                        },
-                        "new": {
-                            "$ref": "#/definitions/str",
-                            "title": "New manifest name",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- In [abyss](https://abyss.abgox.com), the manifest with the version number `renamed` cannot be installed.\n- If you try to install it, it will be rejected and a new manifest name will be prompted.\n- The new manifest name is defined by the `new` field.\n- If [link](https://abyss.abgox.com/features/data-persistence/link) or [persist](https://abyss.abgox.com/features/data-persistence/persist) exists, they will be automatically migrated."
                         },
                         "description": {
                             "markdownDescription": "- A brief description of the software.\n- It should include both Chinese and English descriptions.\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -3414,6 +3409,42 @@
                                     }
                                 }
                             ]
+                        },
+                        "renamed": {
+                            "title": "Renamed Manifest",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- It is used to define the old and new names of the renamed manifest.\n- It needs to be used in both the old and new manifests.\n- If [link](https://abyss.abgox.com/features/data-persistence/link) or [persist](https://abyss.abgox.com/features/data-persistence/persist) exists, they will be automatically migrated.\n\n### Example\n\n- Old manifest name is single\n\n  ```json\n  \"renamed\": {\n      \"new\": \"nerd-fonts.Hack\",\n      \"old\": \"nerd-fonts.Hack.NF\"\n  }\n  ```\n\n- Old manifest name is multiple\n\n  ```json\n  \"renamed\": {\n      \"new\": \"nerd-fonts.Hack\",\n      \"old\": [\n          \"nerd-fonts.Hack.NF\",\n          \"nerd-fonts.Hack.demo\"\n      ]\n  }\n  ```",
+                            "examples": [
+                                {
+                                    "new": "",
+                                    "old": ""
+                                }
+                            ],
+                            "additionalProperties": false,
+                            "required": [
+                                "new",
+                                "old"
+                            ],
+                            "properties": {
+                                "new": {
+                                    "description": "The new name of the manifest.",
+                                    "$ref": "#/definitions/str"
+                                },
+                                "old": {
+                                    "type": [
+                                        "string",
+                                        "array"
+                                    ],
+                                    "description": "The old name of the manifest.",
+                                    "items": {
+                                        "$ref": "#/definitions/str"
+                                    },
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/str"
+                                        }
+                                    ]
+                                }
+                            }
                         },
                         "conflicts": {
                             "title": "Manifests with conflicts",
@@ -4451,7 +4482,7 @@
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "Remove specified temporary data files.\n\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n\n### Example\n\n- If it is a [Tauri](https://tauri.app/) application, `$env:LocalAppData\\\\xxx` usually contains `EBWebView`.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- If it is an [Electron](https://electronjs.org/) application, `$env:LocalAppData\\\\xxx-updater` is usually the updater.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "Remove specified temporary data files.\n\n- Common in `$env:LocalAppData` directory, they do not involve application configuration data.\n\n### Example\n\n- If it is a [Tauri](https://tauri.app/) application, `$env:LocalAppData\\\\com.xxx.app` is usually used to store `EBWebView` and `logs`.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\com.xxx.app\\\"\n  ```\n\n- If it is an [Electron](https://electronjs.org/) application, `$env:LocalAppData\\\\xxx-updater` is usually the updater.\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Deny-Update",
@@ -5385,18 +5416,18 @@
                                     },
                                     "then": {
                                         "required": [
-                                            "new"
+                                            "renamed"
                                         ],
                                         "if": {
                                             "required": [
-                                                "new"
+                                                "renamed"
                                             ]
                                         },
                                         "else": {
                                             "properties": {
                                                 "version": {
                                                     "not": true,
-                                                    "errorMessage": "When the version is renamed, a new field is needed to specify the new manifest name"
+                                                    "errorMessage": "When the version is renamed, 'renamed' field is required to specify the new manifest name"
                                                 }
                                             }
                                         }

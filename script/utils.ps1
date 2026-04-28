@@ -91,7 +91,7 @@ $abgox_abyss.isDevMode = A-Test-DeveloperMode
 function A-Start-Install {
     # https://abyss.abgox.com/features/manifest-status-control
     if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
-        A-Deny-Manifest $manifest.new
+        A-Deny-Manifest
     }
     # https://abyss.abgox.com/faq/require-admin
     if ($manifest.admin) {
@@ -100,6 +100,10 @@ function A-Start-Install {
     # https://abyss.abgox.com/faq/deny-if-app-conflict
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
+    }
+    if ($manifest.renamed) {
+        A-Deny-IfAppConflict $manifest.renamed.old
+        A-Move-Persistence
     }
     # https://abyss.abgox.com/features/data-persistence/persist
     if ($manifest.persist) {
@@ -221,7 +225,22 @@ function A-Start-Uninstall {
         A-Deny-Update
     }
     if ($version -eq 'renamed') {
-        A-Move-Persistence
+        $new = $manifest.renamed.new
+        if (-not $new) {
+            try {
+                $new = Get-Content "$bucketsdir\$bucket\bucket\$($app[0])\$($app.Split('.', 2)[0])\$app.json" -Raw -Encoding utf8 -ErrorAction Stop | ConvertFrom-Json | Select-Object -ExpandProperty renamed | Select-Object -ExpandProperty new
+            }
+            catch {
+                error $_.Exception.Message
+                A-Exit
+            }
+        }
+        if ($cmd -eq 'update') {
+            error "'$app' is renamed to '$new'."
+            error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
+            A-Show-Notes
+            A-Exit
+        }
     }
     if ($manifest.admin) {
         A-Require-Admin
@@ -1950,9 +1969,6 @@ function A-Deny-Manifest {
     .SYNOPSIS
         拒绝清单文件，提示用户使用新的清单文件
     #>
-    param(
-        [string]$NewManifestName
-    )
 
     $msg = $null
     switch ($manifest.version) {
@@ -1963,8 +1979,7 @@ function A-Deny-Manifest {
             $msg = "'$app' is pending."
         }
         renamed {
-            $msg = "'$app' is renamed to '$NewManifestName'."
-            A-Move-Persistence
+            $msg = "'$app' is renamed to '$($manifest.renamed.new)'."
         }
     }
     if ($msg) {
@@ -1993,28 +2008,21 @@ function A-Deny-IfAppConflict {
 }
 
 function A-Move-Persistence {
-    if (-not $manifest.new) {
+    $old = $manifest.renamed.old
+    if (-not $old) {
         return
     }
-    if (A-Test-DirectoryNotEmpty $persist_dir) {
-        $target = Join-Path (Split-Path $persist_dir -Parent) $manifest.new
-        if (A-Test-DirectoryNotEmpty $target) {
-            return
-        }
-        Write-Host "Migrating $persist_dir => $target"
-        try {
-            Rename-Item -Path $persist_dir -NewName $manifest.new -Force -ErrorAction Stop
-        }
-        catch {
-            error $_.Exception.Message
-            A-Show-IssueCreationPrompt
-            A-Exit
-        }
-
-        if ($cmd -eq 'update') {
-            Write-Host "Linking $persist_dir => $target"
+    $parent = Split-Path $persist_dir -Parent
+    foreach ($o in $old) {
+        $old_path = Join-Path $parent $o
+        if (A-Test-DirectoryNotEmpty $old_path) {
+            $new_path = Join-Path $parent $app
+            if (A-Test-DirectoryNotEmpty $new_path) {
+                break
+            }
+            Write-Host "Migrating $old_path => $new_path"
             try {
-                New-Item -ItemType Junction -Path $persist_dir -Target $target -Force -ErrorAction Stop | Out-Null
+                Rename-Item -Path $old_path -NewName $app -Force -ErrorAction Stop
             }
             catch {
                 error $_.Exception.Message

@@ -3183,7 +3183,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|new|description|homepage|license|notes|notes_cn|depends|suggest|architecture|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3230,11 +3230,6 @@
                                 "const": "0.0.0"
                             },
                             "errorMessage": "清单编写完成后，请运行 .\\bin\\checkver.ps1 <app> -ForceUpdate 进行清单更新"
-                        },
-                        "new": {
-                            "$ref": "#/definitions/str",
-                            "title": "新的清单名称",
-                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 在 [abyss](https://abyss.abgox.com) 中，无法安装版本号为 `renamed` 的清单\n- 如果尝试安装，它会被拒绝，并提示新的清单名称\n- 新的清单名称由 `new` 字段来定义\n- 如果存在 [link](https://abyss.abgox.com/features/data-persistence/link) 或者 [persist](https://abyss.abgox.com/features/data-persistence/persist)，会自动完成迁移"
                         },
                         "description": {
                             "markdownDescription": "- 软件的简短描述\n- 需要包含中文和英文描述\n ```json\n\"description\": \"一个 xxx 软件，用于 xxx 功能 | A xxx software for xxx\"\n```",
@@ -3414,6 +3409,42 @@
                                     }
                                 }
                             ]
+                        },
+                        "renamed": {
+                            "title": "重命名清单",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它用来定义重命名清单的新旧名称\n- 它需要同时在新旧清单中使用\n- 如果存在 [link](https://abyss.abgox.com/features/data-persistence/link) 或者 [persist](https://abyss.abgox.com/features/data-persistence/persist)，会自动完成迁移\n\n### 示例\n\n- 旧的清单名称只有一个\n\n  ```json\n  \"renamed\": {\n      \"new\": \"nerd-fonts.Hack\",\n      \"old\": \"nerd-fonts.Hack.NF\"\n  }\n  ```\n\n- 旧的清单名称有多个\n\n  ```json\n  \"renamed\": {\n      \"new\": \"nerd-fonts.Hack\",\n      \"old\": [\n          \"nerd-fonts.Hack.NF\",\n          \"nerd-fonts.Hack.demo\"\n      ]\n  }\n  ```",
+                            "examples": [
+                                {
+                                    "new": "",
+                                    "old": ""
+                                }
+                            ],
+                            "additionalProperties": false,
+                            "required": [
+                                "new",
+                                "old"
+                            ],
+                            "properties": {
+                                "new": {
+                                    "markdownDescription": "新的清单名称",
+                                    "$ref": "#/definitions/str"
+                                },
+                                "old": {
+                                    "type": [
+                                        "string",
+                                        "array"
+                                    ],
+                                    "markdownDescription": "旧的清单名称",
+                                    "items": {
+                                        "$ref": "#/definitions/str"
+                                    },
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/str"
+                                        }
+                                    ]
+                                }
+                            }
                         },
                         "conflicts": {
                             "title": "冲突的清单",
@@ -4451,7 +4482,7 @@
                                             },
                                             {
                                                 "pattern": "A-Remove-TempData",
-                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 应用，`$env:LocalAppData\\\\xxx` 通常包含 `EBWebView`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\n  ```\n\n- 如果是 [Electron](https://electronjs.org/) 应用，`$env:LocalAppData\\\\xxx-updater` 通常是更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                                "markdownDescription": "移除指定的一些临时数据文件\n\n- 通常在 `$env:LocalAppData` 目录中，它们不涉及应用配置数据\n\n### 示例\n\n- 如果是 [Tauri](https://tauri.app/) 应用，通常使用 `$env:LocalAppData\\\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\com.xxx.app\\\"\n  ```\n\n- 如果是 [Electron](https://electronjs.org/) 应用，`$env:LocalAppData\\\\xxx-updater` 通常是更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                                             },
                                             {
                                                 "const": "A-Deny-Update",
@@ -5385,18 +5416,18 @@
                                     },
                                     "then": {
                                         "required": [
-                                            "new"
+                                            "renamed"
                                         ],
                                         "if": {
                                             "required": [
-                                                "new"
+                                                "renamed"
                                             ]
                                         },
                                         "else": {
                                             "properties": {
                                                 "version": {
                                                     "not": true,
-                                                    "errorMessage": "version 为 renamed 时，需要 new 字段去指定新的清单名称"
+                                                    "errorMessage": "version 为 renamed 时，需要 renamed 字段去指定新的清单名称"
                                                 }
                                             }
                                         }
