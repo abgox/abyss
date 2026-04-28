@@ -13,6 +13,7 @@
     },
     "location": "$env:ProgramFiles\\Tencent\\WeMeet",
     "link": "$env:AppData\\Tencent\\WeMeet",
+    "cleanup": "$env:AppData\\WeMeetApp",
     "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -32,8 +33,7 @@
         "A-Stop-Process",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Tencent\\WeMeet\" WeMeetUninstall.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
         "A-Remove-Link",
-        "A-Uninstall-App -Uninstaller $Uninstaller.FullName",
-        "A-Remove-TempData \"$env:AppData\\WeMeetApp\""
+        "A-Uninstall-App -Uninstaller $Uninstaller.FullName"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
