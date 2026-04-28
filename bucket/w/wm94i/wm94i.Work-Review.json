@@ -11,13 +11,18 @@
             "hash": "aebb80b961fbe0caabda6368b863fec02e0c5527787438350326fd9dc80bb732"
         }
     },
-    "location": "$env:LocalAppData\\Work Review",
+    "shortcuts": [
+        [
+            "app\\Work_Review.exe",
+            "Work Review"
+        ]
+    ],
     "link": "$env:AppData\\work-review",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\script\\utils.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller 'uninstall.exe'"
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -30,7 +35,8 @@
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "A-Uninstall-App"
+        "A-Uninstall-App",
+        "A-Remove-TempData \"$env:LocalAppData\\com.workreview.app\""
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
