@@ -4,9 +4,6 @@ on:
   issues:
     types: [opened]
 
-# concurrency:
-#   group: manifest-update-lock
-
 jobs:
   issue-handler:
     name: Issue Handler
@@ -31,7 +28,7 @@ jobs:
     steps:
       - name: Fetch Latest Labels
         id: check_labels
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const issue = await github.rest.issues.get({

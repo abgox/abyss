@@ -2,10 +2,7 @@ name: Excavator
 on:
   workflow_dispatch:
   schedule:
-    - cron: "22 */2 * * *"
-
-# concurrency:
-#   group: manifest-update-lock
+    - cron: "16 */2 * * *"
 
 jobs:
   check-scoop-version:
@@ -119,7 +116,7 @@ jobs:
           path: ~/Documents/PowerShell/Modules
           key: PowerShell-Modules
 
-      - name: Install module
+      - name: Install Module
         if: steps.cache-module.outputs.cache-hit != 'true'
         env:
           PS_MODULE_LIST: ${{ vars.PS_MODULE_LIST }}
