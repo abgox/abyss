@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (1005)|Tag|Description|
+|Manifest (1006)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -127,6 +127,7 @@
 |[AuraMarker.Lattics](https://lattics.zineapi.com/)|<a href="bucket/a/AuraMarker/AuraMarker.Lattics.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|"Brain-like" Knowledge Management Notes|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - A free, open source macro-creation and automation software utility that allows users to automate repetitive tasks|
 |[axllent.mailpit](https://mailpit.axllent.org/)|<a href="bucket/a/axllent/axllent.mailpit.json"><img src="https://img.shields.io/badge/active-080"/></a>|A small, fast, low memory, zero-dependency, multi-platform email testing tool & API for developers|
+|[axpnet.AeroFTP](https://www.aeroftp.app/)|<a href="bucket/a/axpnet/axpnet.AeroFTP.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A modern, multi-protocol file manager and FTP client with integrated AI, cloud sync, and military-grade encryption|
 |[ayangweb.BongoCat](https://github.com/ayangweb/BongoCat)|<a href="bucket/a/ayangweb/ayangweb.BongoCat.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A cross-platform desktop pet|
 |[B3log.SiYuan](https://b3log.org/siyuan/)|<a href="bucket/b/B3log/B3log.SiYuan.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A privacy-first, self-hosted, fully open source personal knowledge management software|
 |[Baidu.BaiduNetdisk](https://pan.baidu.com/download)|<a href="bucket/b/Baidu/Baidu.BaiduNetdisk.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|Baidu Netdisk for windows|

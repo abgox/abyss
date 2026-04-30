@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1005)|Tag|Description|
+|Manifest (1006)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -126,6 +126,7 @@
 |[AuraMarker.Lattics](https://lattics.zineapi.com/)|<a href="bucket/a/AuraMarker/AuraMarker.Lattics.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|「类脑式」知识管理笔记与写作|
 |[AutoHotkey.AutoHotkey](https://github.com/AutoHotkey/AutoHotkey)|<a href="bucket/a/AutoHotkey/AutoHotkey.AutoHotkey.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|AutoHotkey(AHK) - 一款免费的开源宏创建和自动化软件工具，允许用户自动执行重复性任务|
 |[axllent.mailpit](https://mailpit.axllent.org/)|<a href="bucket/a/axllent/axllent.mailpit.json"><img src="https://img.shields.io/badge/active-080"/></a>|一款小巧、高效、低内存占用、无依赖、跨平台的电子邮件测试工具及面向开发者的 API|
+|[axpnet.AeroFTP](https://www.aeroftp.app/)|<a href="bucket/a/axpnet/axpnet.AeroFTP.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款现代化、多协议的文件管理器与 FTP 客户端，内置人工智能、云端同步功能，并配备军用级加密技术|
 |[ayangweb.BongoCat](https://github.com/ayangweb/BongoCat)|<a href="bucket/a/ayangweb/ayangweb.BongoCat.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个跨平台桌宠|
 |[B3log.SiYuan](https://b3log.org/siyuan/)|<a href="bucket/b/B3log/B3log.SiYuan.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款以隐私为首要原则、可自行托管且完全开源的个人知识管理软件|
 |[Baidu.BaiduNetdisk](https://pan.baidu.com/download)|<a href="bucket/b/Baidu/Baidu.BaiduNetdisk.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|百度网盘|
