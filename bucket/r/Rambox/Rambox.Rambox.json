@@ -1,0 +1,63 @@
+{
+    "version": "2.6.3",
+    "description": "可将网页应用整合为一体且功能丰富的工具 | Tool for organizing web apps into one application with rich features",
+    "homepage": "https://rambox.app/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ramboxapp/download/releases/download/v2.6.3/Rambox-2.6.3-win-x64.exe",
+            "hash": "fc441bea4cc9573530abf3cf5fff60a4e403f5717fdb30f9b04b34d11d1a5fce"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Rambox.exe",
+            "Rambox"
+        ]
+    ],
+    "link": "$env:AppData\\rambox",
+    "cleanup": "$env:LocalAppData\\rambox-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Rambox.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ramboxapp/download/releases/download/v$version/Rambox-$version-win-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
