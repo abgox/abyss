@@ -1,0 +1,66 @@
+{
+    "version": "0.35.0",
+    "description": "一款美观、实用的终端邮件客户端 | A beautiful and functional email client for your terminal",
+    "homepage": "https://matcha.floatpane.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/floatpane/matcha/releases/download/v0.35.0/matcha_0.35.0_windows_amd64.zip",
+            "hash": "3732f70c88e0e8988b05f55dee9beb65d1e8d01e90181f72886e871c1bdd50fe"
+        },
+        "arm64": {
+            "url": "https://github.com/floatpane/matcha/releases/download/v0.35.0/matcha_0.35.0_windows_arm64.zip",
+            "hash": "1bd7deced9227f8bd38009696a7ee8363bb2e7ded14d1a9a8b6aca074dcce510"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\matcha.exe",
+    "link": [
+        "$home\\.config\\matcha",
+        "$home\\.cache\\matcha"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/floatpane/matcha/releases/download/v$version/matcha_$version_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/floatpane/matcha/releases/download/v$version/matcha_$version_windows_arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
