@@ -1,0 +1,70 @@
+{
+    "version": "26.4.30",
+    "description": "一款免费、开源、跨平台的视频编辑器 | A free, open source, cross-platform video editor",
+    "homepage": "https://www.shotcut.org/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mltframework/shotcut/releases/download/v26.4.30/shotcut-win64-26.4.30.zip",
+            "hash": "986e7a13ef5fcce00f98ae3fefd7bfc9d280c4ccb7a803a63d623caf0688cb6a"
+        },
+        "arm64": {
+            "url": "https://github.com/mltframework/shotcut/releases/download/v26.4.30/shotcut-win_ARM-26.4.30.zip",
+            "hash": "1f36f2f0fa8b1e7725c15dbec84ae373bddf85800732067c1f7d35891d3d2000"
+        }
+    },
+    "extract_dir": "Shotcut",
+    "extract_to": "app",
+    "bin": "app\\shotcut.exe",
+    "shortcuts": [
+        [
+            "app\\shotcut.exe",
+            "Shotcut"
+        ]
+    ],
+    "link": "$env:LocalAppData\\Meltytech\\Shotcut",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mltframework/shotcut/releases/download/v$version/shotcut-win64-$version.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/mltframework/shotcut/releases/download/v$version/shotcut-win_ARM-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
