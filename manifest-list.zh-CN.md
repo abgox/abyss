@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1006)|Tag|Description|
+|Manifest (1010)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -377,6 +377,7 @@
 |[FilesCommunity.Files](https://github.com/files-community)|<a href="bucket/f/FilesCommunity/FilesCommunity.Files.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|一款帮助用户整理文件和文件夹的现代文件管理器|
 |[FinalShell.FinalShell](https://www.hostbuf.com/t/988.html)|<a href="bucket/f/FinalShell/FinalShell.FinalShell.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|SSH 工具、服务器管理、开发运维工具|
 |[Flameshot.Flameshot](https://flameshot.org/)|<a href="bucket/f/Flameshot/Flameshot.Flameshot.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|功能强大且使用简单的屏幕截图软件|
+|[floatpane.matcha](https://matcha.floatpane.com/)|<a href="bucket/f/floatpane/floatpane.matcha.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款美观、实用的终端邮件客户端|
 |[Flow-Launcher.Flow-Launcher](https://www.flowlauncher.com/)|<a href="bucket/f/Flow-Launcher/Flow-Launcher.Flow-Launcher.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|适用于 Windows 的快速文件搜索和应用程序启动器|
 |[Fluxzy.Fluxzy](https://www.fluxzy.io/)|<a href="bucket/f/Fluxzy/Fluxzy.Fluxzy.json"><img src="https://img.shields.io/badge/active-080"/></a>|用于拦截和修改 HTTP/1.1、H2 以及网页套接字流量的中间人 HTTP 调试代理工具|
 |[Fly-io.flyctl](https://fly.io/)|<a href="bucket/f/Fly-io/Fly-io.flyctl.json"><img src="https://img.shields.io/badge/active-080"/></a>|为 fly.io 服务提供的命令行工具|
@@ -561,6 +562,7 @@
 |[Meituan.TabbitBrowser](https://www.tabbit-ai.com/)|<a href="bucket/m/Meituan/Meituan.TabbitBrowser.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|新一代 AI 原生浏览器，理解你的上下文、帮你组织工作、执行任务、无限可能|
 |[Meituan.TabbitBrowser.CN](https://www.tabbit-ai.com/)|<a href="bucket/m/Meituan/Meituan.TabbitBrowser.CN.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|新一代 AI 原生浏览器，理解你的上下文、帮你组织工作、执行任务、无限可能|
 |[Meld.Meld](https://meldmerge.org/)|<a href="bucket/m/Meld/Meld.Meld.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Admin](https://abyss.abgox.com/faq/require-admin)|可视化差异与合并工具|
+|[Meltytech.Shotcut](https://www.shotcut.org/)|<a href="bucket/m/Meltytech/Meltytech.Shotcut.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款免费、开源、跨平台的视频编辑器|
 |[Meta.Sapling](https://sapling-scm.com/)|<a href="bucket/m/Meta/Meta.Sapling.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个可扩展、用户友好的版本控制系统，兼容 Git|
 |[mg-chao.snow-shot](https://snowshot.top/)|<a href="bucket/m/mg-chao/mg-chao.snow-shot.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|功能强大的截图工具|
 |[michidk.vscli](https://github.com/michidk/vscli)|<a href="bucket/m/michidk/michidk.vscli.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简化 VSCode 项目启动的 CLI/TUI，重点关注开发容器|
@@ -735,6 +737,7 @@
 |[PicGo.PicGo](https://molunerfinn.com/PicGo/)|<a href="bucket/p/PicGo/PicGo.PicGo.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|由 vue-cli-electron-builder 构建的简洁美观的图片上传工具|
 |[PilgrimLyieu.Focust](https://github.com/pilgrimlyieu/Focust)|<a href="bucket/p/PilgrimLyieu/PilgrimLyieu.Focust.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|现代化、跨平台的休息提醒应用|
 |[pingbird.Puro](https://puro.dev/)|<a href="bucket/p/pingbird/pingbird.Puro.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款强大的 Flutter 版本安装与升级工具|
+|[PixiEditor.PixiEditor](https://pixieditor.net/)|<a href="bucket/p/PixiEditor/PixiEditor.PixiEditor.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款满足你所有 2D 创作需求的通用编辑器|
 |[PixPin.PixPin](https://pixpin.cn/)|<a href="bucket/p/PixPin/PixPin.PixPin.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个功能强大使用简单的截图/贴图/录屏工具|
 |[PixPin.PixPin.Beta](https://pixpin.cn/)|<a href="bucket/p/PixPin/PixPin.PixPin.Beta.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个功能强大使用简单的截图/贴图/录屏工具|
 |[Planshit.Tai](https://github.com/Planshit/Tai)|<a href="bucket/p/Planshit/Planshit.Tai.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|在 Windows 上统计软件使用时长和网站浏览时长|
@@ -763,6 +766,7 @@
 |[QMPlay2.QMPlay2](https://github.com/zaps166/QMPlay2)|<a href="bucket/q/QMPlay2/QMPlay2.QMPlay2.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款视频和音频播放器，可以播放大多数格式和编解码器|
 |[qt-creator.qt-creator](https://doc.qt.io/qtcreator/index.html)|<a href="bucket/q/qt-creator/qt-creator.qt-creator.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于 Qt 框架开发的集成开发环境 (IDE)|
 |[Quriz.PowerToysRun-Scoop](https://github.com/Quriz/PowerToysRunScoop)|<a href="bucket/q/Quriz/Quriz.PowerToysRun-Scoop.json"><img src="https://img.shields.io/badge/active-080"/></a>|一个 PowerToys Run 插件，用于从 Scoop 包管理器中搜索、安装、更新和卸载软件包|
+|[Rambox.Rambox](https://rambox.app/)|<a href="bucket/r/Rambox/Rambox.Rambox.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|可将网页应用整合为一体且功能丰富的工具|
 |[ransome1.sleek](https://github.com/ransome1/sleek)|<a href="bucket/r/ransome1/ransome1.sleek.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款基于 todo.txt 语法的开源待办事项管理器|
 |[raskrebs.sonar](https://github.com/raskrebs/sonar)|<a href="bucket/r/raskrebs/raskrebs.sonar.json"><img src="https://img.shields.io/badge/active-080"/></a>|用于查看和管理监听本地主机端口服务的命令行工具|
 |[Rayen.RyTuneX](https://rayenghanmi.github.io/rytunex)|<a href="bucket/r/Rayen/Rayen.RyTuneX.json"><img src="https://img.shields.io/badge/deprecated-c22"/></a><br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一款采用 WinUI 3 框架打造的尖端优化器，旨在提升 Windows 设备的性能|
