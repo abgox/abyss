@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (1010)|Tag|Description|
+|Manifest (1012)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -515,6 +515,8 @@
 |[KeeWeb.KeeWeb](https://github.com/keeweb/keeweb)|<a href="bucket/k/KeeWeb/KeeWeb.KeeWeb.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A browser and desktop password manager compatible with KeePass|
 |[kelleyma49.PSFzf](https://github.com/kelleyma49/PSFzf)|<a href="bucket/k/kelleyma49/kelleyma49.PSFzf.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|A PowerShell wrapper around the fuzzy finder fzf|
 |[Kindness-Kismet.Stelliberty](https://github.com/Kindness-Kismet/Stelliberty)|<a href="bucket/k/Kindness-Kismet/Kindness-Kismet.Stelliberty.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|A modern cross-platform Clash client built with Flutter and Rust|
+|[Kingsoft.WPSOffice](https://www.wps.com/)|<a href="bucket/k/Kingsoft/Kingsoft.WPSOffice.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|A free office suite fully compatible with Microsoft Office|
+|[Kingsoft.WPSOffice.CN](https://www.wps.cn/)|<a href="bucket/k/Kingsoft/Kingsoft.WPSOffice.CN.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|Complete office suite with PDF editor|
 |[kingToolbox.WindTerm](https://github.com/kingToolbox/WindTerm)|<a href="bucket/k/kingToolbox/kingToolbox.WindTerm.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A professional cross-platform SSH/Sftp/Shell/Telnet/Tmux/Serial terminal|
 |[KitLib.Kite](https://kite.kitlib.cn/)|<a href="bucket/k/KitLib/KitLib.Kite.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Kite To-Do is a lightweight and streamlined to-do app for planning by day with no ads. It focuses on privacy and stores data locally|
 |[klsdf.GreenResourcesManager](https://github.com/klsdf/GreenResourcesManager)|<a href="bucket/k/klsdf/klsdf.GreenResourcesManager.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A comprehensive, free local multimedia resource manager|

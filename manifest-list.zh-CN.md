@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1010)|Tag|Description|
+|Manifest (1012)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -514,6 +514,8 @@
 |[KeeWeb.KeeWeb](https://github.com/keeweb/keeweb)|<a href="bucket/k/KeeWeb/KeeWeb.KeeWeb.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个密码管理器用于浏览器和桌面，与 KeePass 兼容|
 |[kelleyma49.PSFzf](https://github.com/kelleyma49/PSFzf)|<a href="bucket/k/kelleyma49/kelleyma49.PSFzf.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个围绕模糊查找工具 fzf 的 PowerShell 包装器|
 |[Kindness-Kismet.Stelliberty](https://github.com/Kindness-Kismet/Stelliberty)|<a href="bucket/k/Kindness-Kismet/Kindness-Kismet.Stelliberty.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|基于 Flutter 和 Rust 构建的现代跨平台 Clash 客户端|
+|[Kingsoft.WPSOffice](https://www.wps.com/)|<a href="bucket/k/Kingsoft/Kingsoft.WPSOffice.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|完全兼容 Microsoft Office 的免费办公套件|
+|[Kingsoft.WPSOffice.CN](https://www.wps.cn/)|<a href="bucket/k/Kingsoft/Kingsoft.WPSOffice.CN.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|一站式办公服务平台|
 |[kingToolbox.WindTerm](https://github.com/kingToolbox/WindTerm)|<a href="bucket/k/kingToolbox/kingToolbox.WindTerm.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|专业的跨平台 SSH/Sftp/Shell/Telnet/Tmux/Serial 终端|
 |[KitLib.Kite](https://kite.kitlib.cn/)|<a href="bucket/k/KitLib/KitLib.Kite.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Kite 待办是一款按天规划的待办应用。轻量精简，无广告，注重隐私，数据离线存储在本地|
 |[klsdf.GreenResourcesManager](https://github.com/klsdf/GreenResourcesManager)|<a href="bucket/k/klsdf/klsdf.GreenResourcesManager.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个管理电脑内资源，并提供游戏化的综合管理器|
