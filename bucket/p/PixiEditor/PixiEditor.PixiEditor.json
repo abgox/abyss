@@ -1,0 +1,65 @@
+{
+    "version": "2.1.0.23",
+    "description": "一款满足你所有 2D 创作需求的通用编辑器 | A Universal Editor for all your 2D needs",
+    "homepage": "https://pixieditor.net/",
+    "license": {
+        "identifier": "LGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/PixiEditor/PixiEditor/releases/download/2.1.0.23/PixiEditor.2.1.0.23.x64-win.zip",
+            "hash": "f473334c95598ecb7c627d54032b884b3ef70bd4e43dc020b1123c3c3ef9474d"
+        }
+    },
+    "extract_dir": "PixiEditor",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\PixiEditor.exe",
+            "PixiEditor"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\PixiEditor",
+        "$env:LocalAppData\\PixiEditor"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/PixiEditor/PixiEditor/releases/download/$version/PixiEditor.$version.x64-win.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
