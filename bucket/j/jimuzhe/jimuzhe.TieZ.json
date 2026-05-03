@@ -1,0 +1,63 @@
+{
+    "version": "0.3.3",
+    "description": "一款跨平台剪贴板管理器，具备历史记录、标签、同步、隐私保护和快速日常工作流功能 | A cross-platform clipboard manager with history, tags, sync, privacy protection, and fast daily workflows",
+    "homepage": "https://tiez.name666.top/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/jimuzhe/tiez-clipboard/releases/download/v0.3.3/TieZ_0.3.3_x64-setup.exe",
+            "hash": "fd804a88de981a44c45ed25d5bbaae3f80c1ff175d72d59998d3d508aa7db25b"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\tiez-app.exe",
+            "TieZ"
+        ]
+    ],
+    "link": "$env:AppData\\com.tiez.app",
+    "cleanup": "$env:LocalAppData\\com.tiez.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/jimuzhe/tiez-clipboard/releases/download/v$version/TieZ_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
