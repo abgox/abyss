@@ -1,0 +1,66 @@
+{
+    "version": "0.37.1",
+    "description": "极致优雅的开源 Markdown AI Agent | An extremely elegant open-source Markdown AI Agent",
+    "homepage": "https://moraya.app/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zouwei/moraya/releases/download/v0.37.1/Moraya_0.37.1_win_x64-setup.exe",
+            "hash": "b63afc9d6c376e95004bef7584851fde551720ec21bcfa4b98cb39e65b24db28"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\moraya.exe",
+            "Moraya"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\com.moraya.app",
+        "$home\\.moraya"
+    ],
+    "cleanup": "$env:LocalAppData\\com.moraya.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zouwei/moraya/releases/download/v$version/Moraya_$version_win_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
