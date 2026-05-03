@@ -1,0 +1,63 @@
+{
+    "version": "0.1.28",
+    "description": "本地化 AI 代码助手，隐私保护，效率提升 | Localized AI code assistant, privacy protection, enhanced efficiency",
+    "homepage": "https://hagicode.com/desktop/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/HagiCode-org/desktop/releases/download/v0.1.28/Hagicode.Desktop.Setup.0.1.28.exe",
+            "hash": "35722e4a4f4406984585f87c2afdf37859a23e12fe243ace416541d818c5270f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Hagicode Desktop.exe",
+            "Hagicode Desktop"
+        ]
+    ],
+    "link": "$env:AppData\\Hagicode Desktop",
+    "cleanup": "$env:LocalAppData\\hagicode-desktop-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Hagicode Desktop.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/HagiCode-org/desktop/releases/download/v$version/Hagicode.Desktop.Setup.$version.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
