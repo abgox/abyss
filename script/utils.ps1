@@ -1254,7 +1254,7 @@ function A-Add-PowerToysRunPlugin {
         $CopyingPath = if (Test-Path -LiteralPath "$dir\$PluginName") { "$dir\$PluginName" } else { $dir }
         A-Ensure-Directory (Split-Path $PluginPath -Parent)
         Write-Host "Copying $CopyingPath => $PluginPath"
-        Copy-Item -LiteralPath $CopyingPath -Destination $PluginPath -Recurse -Force
+        A-Copy-Item $CopyingPath $PluginPath
 
         @{ PluginName = $PluginName } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.PowerToysRunPlugin -Force -Encoding utf8
     }
@@ -2083,11 +2083,16 @@ function A-Copy-Item {
     if ($needCopy) {
         A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
-            Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force
+            # Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force -ErrorAction Stop
+            $result = & robocopy "$Path" "$Destination" /E /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
+            if ($LASTEXITCODE -ge 8) {
+                throw $result
+            }
             Write-Host "Copying $Path => $Destination"
         }
         catch {
-            error $_.Exception.Message
+            Remove-Item $Destination -Recurse -Force -ErrorAction SilentlyContinue
+            error $_
             A-Show-IssueCreationPrompt
             A-Exit
         }
@@ -2215,15 +2220,7 @@ function A-New-LinkBase {
             if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-Link $linkPath)) {
                 A-Ensure-Directory (Split-Path $linkTarget -Parent)
                 Write-Host "Copying $linkPath => $linkTarget"
-                try {
-                    Copy-Item -LiteralPath $linkPath -Destination $linkTarget -Recurse -Force -ErrorAction Stop
-                }
-                catch {
-                    Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-                    error $_.Exception.Message
-                    A-Show-IssueCreationPrompt
-                    A-Exit
-                }
+                A-Copy-Item $linkPath $linkTarget
             }
             else {
                 A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
