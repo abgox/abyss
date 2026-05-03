@@ -1,0 +1,63 @@
+{
+    "version": "0.0.4",
+    "description": "一款优先本地运行的桌面邮件客户端 | A local-first desktop email client",
+    "homepage": "https://pebble.byebug.cn/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/QingJ01/Pebble/releases/download/v0.0.4/Pebble_0.0.4_x64-setup.exe",
+            "hash": "a56efbfeb31eaef87c12f9679bfc2b7e95028a2023184dc0f80ab44b204c2713"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\pebble.exe",
+            "Pebble"
+        ]
+    ],
+    "link": "$env:AppData\\com.qingj01.pebble",
+    "cleanup": "$env:LocalAppData\\com.qingj01.pebble",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/QingJ01/Pebble/releases/download/v$version/Pebble_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
