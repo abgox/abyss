@@ -1,0 +1,70 @@
+{
+    "version": "9.3.1",
+    "description": "开源 office 办公套件包，包含处理文档、电子表格、演示文稿、PDF 文件及 PDF 表单所需的全部工具 | Open-source office suite pack that comprises all the tools you need to work with documents, spreadsheets, presentations, PDFs, and PDF forms",
+    "homepage": "https://www.onlyoffice.com/",
+    "license": {
+        "identifier": "AGPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v9.3.1/DesktopEditors_x64.exe",
+            "hash": "855d16844018f0178825dacf88f33d7ab1d1eada51ad992553b39110672ec427"
+        },
+        "arm64": {
+            "url": "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v9.3.1/DesktopEditors_arm64.exe",
+            "hash": "69ebe9324a4794b5525272d4f086a33d1087c5da4db55e71318c661f625ffc61"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\DesktopEditors.exe",
+            "ONLYOFFICE"
+        ]
+    ],
+    "link": "$env:LocalAppData\\ONLYOFFICE\\DesktopEditors",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\script\\utils.ps1",
+            "A-Get-VersionFromGithubAPI"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v$version/DesktopEditors_x64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/ONLYOFFICE/DesktopEditors/releases/download/v$version/DesktopEditors_arm64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
