@@ -2615,8 +2615,7 @@ function A-New-MatchedString {
 
 
 
-# 以下的扩展功能是基于这个 Scoop 版本的，如果 Scoop 最新版本大于它，需要重新检查并跟进
-$abgox_abyss.ScoopVersion = '0.5.3'
+# 以下的扩展功能是基于 scoop.json 中指定的版本，如果 Scoop 最新版本大于它，需要重新检查并适配，然后更新 scoop.json
 
 #region 扩展 Scoop 部分功能
 
