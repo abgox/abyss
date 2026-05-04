@@ -211,6 +211,15 @@ while ($in_progress -gt 0) {
     $expected_ver = $json.version
     $ver = $Version
 
+    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+        if (!$SkipUpdated) {
+            Write-Host
+            Write-Host "$app`: " -NoNewline
+            Write-Host $json.version -ForegroundColor DarkGreen
+        }
+        continue
+    }
+
     $matchesHashtable = @{}
 
     if (!$ver) {
@@ -228,15 +237,6 @@ while ($in_progress -gt 0) {
                 # Run script despite URL download failure
                 Write-Host "$($err.message)`r`nURL $url is not valid. Falling back to checkver.script ..."
             }
-        }
-
-        if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-            if (!$SkipUpdated) {
-                Write-Host
-                Write-Host "$app`: " -NoNewline
-                Write-Host $json.version -ForegroundColor DarkGreen
-            }
-            continue
         }
 
         $page = $null

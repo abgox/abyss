@@ -1358,9 +1358,6 @@ function A-Get-VersionFromGithub {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
     }
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
-    }
 
     $arch = $json.autoupdate.architecture
     $url = $json.checkver.url, $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
@@ -1490,9 +1487,6 @@ function A-Get-VersionFromPowerShellGallery {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
     }
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return A-New-MatchedString -RegexPattern $json.checkver.regex -TargetValue $json.version
-    }
 
     $module_name = $json.psmodule.name
 
@@ -1520,9 +1514,6 @@ function A-Get-DynamicPageFromUrl {
     if (-not $json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
-    }
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        return $json.version
     }
 
     $edgePath = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
@@ -1590,11 +1581,6 @@ function A-Get-InstallerInfoFromWinget {
         [string]$InstallerType,
         [string]$MaxExclusiveVersion
     )
-
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
-        $out = @("ver:$($json.version);")
-        return $installerInfo, $out
-    }
 
     if (-not (Get-Command 'ConvertFrom-Yaml' -ErrorAction SilentlyContinue)) {
         error 'Please install yaml module: scoop install abyss/cloudbase.powershell-yaml'
@@ -2552,31 +2538,6 @@ function A-Get-GithubToken {
     if ($tokens) {
         return $tokens[$order - 1]
     }
-}
-
-function A-New-MatchedString {
-    param (
-        [string]$RegexPattern,
-        [string]$TargetValue
-    )
-
-    $re = [regex]$RegexPattern
-    $groupNames = $re.GetGroupNames()
-
-    if ($groupNames -contains 'version') {
-        $targetGroupName = 'version'
-    }
-    elseif ($re.GroupNumberFromName(1) -ne -1) {
-        $targetGroupName = '1'
-    }
-    else {
-        return $TargetValue
-    }
-
-    $groupPattern = "\((?:\?<${targetGroupName}>|).*?\)"
-    $result = [regex]::Replace($RegexPattern, $groupPattern, $TargetValue)
-
-    return $result -replace '^\^|\$$', '' -replace '\((?:\?<.*?>|).*?\)', '' -replace '[\(\)]', '' -replace '\\(.)', '$1'
 }
 
 #endregion
