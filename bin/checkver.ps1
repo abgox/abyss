@@ -1,4 +1,388 @@
-if (!$env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) }
-$checkver = "$env:SCOOP_HOME/bin/checkver.ps1"
-$dir = "$PSScriptRoot/../bucket" # checks the parent dir
-& $checkver -Dir $dir @Args
+<#
+.SYNOPSIS
+    Check manifest for a newer version.
+.DESCRIPTION
+    Checks websites for newer versions using an (optional) regular expression defined in the manifest.
+.PARAMETER App
+    Manifest name to search.
+    Placeholders are supported.
+.PARAMETER Dir
+    Where to search for manifest(s).
+.PARAMETER Update
+    Update given manifest
+.PARAMETER ForceUpdate
+    Update given manifest(s) even when there is no new version.
+    Useful for hash updates.
+.PARAMETER SkipUpdated
+    Updated manifests will not be shown.
+.PARAMETER Version
+    Update manifest to specific version.
+.PARAMETER ThrowError
+    Throw error as exception instead of just printing it.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1
+    Check all manifest inside default directory.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 -SkipUpdated
+    Check all manifest inside default directory (list only outdated manifests).
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 -Update
+    Check all manifests and update All outdated manifests.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 APP
+    Check manifest APP.json inside default directory.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 APP -Update
+    Check manifest APP.json and update, if there is newer version.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 APP -ForceUpdate
+    Check manifest APP.json and update, even if there is no new version.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 APP -Update -Version VER
+    Check manifest APP.json and update, using version VER
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 APP DIR
+    Check manifest APP.json inside ./DIR directory.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 -Dir DIR
+    Check all manifests inside ./DIR directory.
+.EXAMPLE
+    PS BUCKETROOT > .\bin\checkver.ps1 APP DIR -Update
+    Check manifest APP.json inside ./DIR directory and update if there is newer version.
+#>
+param(
+    [String] $App = '*',
+    [String] $Dir = "$PSScriptRoot/../bucket",
+    [String] $Segment,
+    [Switch] $Update,
+    [Switch] $ForceUpdate,
+    [Switch] $SkipUpdated,
+    [String] $Version = '',
+    [Switch] $ThrowError
+)
+
+if (-not $env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) }
+
+. "$env:SCOOP_HOME\lib\core.ps1"
+. "$env:SCOOP_HOME\lib\autoupdate.ps1"
+. "$env:SCOOP_HOME\lib\manifest.ps1"
+. "$env:SCOOP_HOME\lib\buckets.ps1"
+. "$env:SCOOP_HOME\lib\json.ps1"
+. "$env:SCOOP_HOME\lib\versions.ps1"
+. "$env:SCOOP_HOME\lib\download.ps1"
+
+if ($App -ne '*' -and (Test-Path $App -PathType Leaf)) {
+    $Dir = Split-Path $App
+    $files = Get-ChildItem $Dir -Filter (Split-Path $App -Leaf)
+}
+elseif ($Dir) {
+    $Dir = Convert-Path $Dir
+    $files = Get-ChildItem $Dir -Filter "$App.json" -Recurse
+}
+else {
+    throw "'-Dir' parameter required if '-App' is not a filepath!"
+}
+
+if ($Segment) {
+    $start, $end = $Segment.Split('-')
+    $files = $files.Where({
+            $letter = $_.BaseName.ToLower()[0]
+            $letter -ge $start -and $letter -le $end
+        })
+}
+
+$GitHubToken = Get-GitHubToken
+
+# don't use $Version with $App = '*'
+if ($App -eq '*' -and $Version -ne '') {
+    throw "Don't use '-Version' with '-App *'!"
+}
+
+# get apps to check
+$Queue = @()
+$json = ''
+$files | ForEach-Object {
+    $file = $_.FullName
+    $json = parse_json $file
+    if ($json.checkver) {
+        $Queue += , @($_.BaseName, $json, $file)
+    }
+}
+
+# clear any existing events
+Get-Event | Remove-Event
+Get-EventSubscriber | Unregister-Event
+
+# start all downloads
+$in_progress = 0
+$Queue | ForEach-Object {
+    $name, $json, $file = $_
+
+    $substitutions = Get-VersionSubstitution $json.version # 'autoupdate.ps1'
+
+    $wc = [System.Net.WebClient]::new()
+    if ($json.checkver.useragent) {
+        $wc.Headers.Add('User-Agent', (substitute $json.checkver.useragent $substitutions))
+    }
+    else {
+        $wc.Headers.Add('User-Agent', (Get-UserAgent))
+    }
+
+    # Not Specified
+    $regex = ''
+    $jsonpath = ''
+    $xpath = ''
+    $replace = ''
+
+    if ($json.checkver.url) {
+        $url = $json.checkver.url
+    }
+    else {
+        # It is meaningless to check the homepage in abyss bucket.
+        # So, we use a stable URL as a placeholder to avoid access errors.
+        $url = 'https://github.com/'
+    }
+
+    $regex = $json.checkver.regex
+
+    $jsonpath = $json.checkver.jsonpath
+
+    if ($json.checkver.xpath) {
+        $xpath = $json.checkver.xpath
+    }
+
+    if ($json.checkver.replace -is [string]) {
+        # If `checkver` is [string], it has a method called `Replace`
+        $replace = $json.checkver.replace
+    }
+
+    $reverse = $json.checkver.reverse -eq 'true'
+
+    $url = substitute $url $substitutions
+
+    $state = [psobject]@{
+        app      = $name
+        file     = $file
+        url      = $url
+        regex    = $regex
+        json     = $json
+        jsonpath = $jsonpath
+        xpath    = $xpath
+        reverse  = $reverse
+        replace  = $replace
+    }
+
+    # get_config PRIVATE_HOSTS | Where-Object { $_ -ne $null -and $url -match $_.match } | ForEach-Object {
+    #     (ConvertFrom-StringData -StringData $_.Headers).GetEnumerator() | ForEach-Object {
+    #         $wc.Headers[$_.Key] = $_.Value
+    #     }
+    # }
+
+    $wc.Headers.Add('Referer', (strip_filename $url))
+    Register-ObjectEvent $wc downloadDataCompleted -ErrorAction Stop | Out-Null
+    $wc.DownloadDataAsync($url, $state)
+    $in_progress++
+}
+
+function next($er) {
+    Write-Host
+    Write-Host "$App`: " -NoNewline
+    Write-Host $er -ForegroundColor DarkRed
+}
+
+# wait for all to complete
+while ($in_progress -gt 0) {
+    $ev = Wait-Event
+    Remove-Event $ev.SourceIdentifier
+    $in_progress--
+
+    $state = $ev.SourceEventArgs.UserState
+    $result = $ev.SourceEventArgs.Result
+    $app = $state.app
+    $file = $state.file
+    $json = $state.json
+    $url = $state.url
+    $regexp = $state.regex
+    $jsonpath = $state.jsonpath
+    $xpath = $state.xpath
+    $script = $json.checkver.script
+    $reverse = $state.reverse
+    $replace = $state.replace
+    $expected_ver = $json.version
+    $ver = $Version
+
+    $matchesHashtable = @{}
+
+    if (!$ver) {
+        if (!$regexp -and $replace) {
+            next "'replace' requires 're' or 'regex'"
+            continue
+        }
+        $err = $ev.SourceEventArgs.Error
+        if ($err) {
+            if (!$script) {
+                next "$($err.message)`r`nURL $url is not valid"
+                continue
+            }
+            else {
+                # Run script despite URL download failure
+                Write-Host "$($err.message)`r`nURL $url is not valid. Falling back to checkver.script ..."
+            }
+        }
+
+        if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+            if (!$SkipUpdated) {
+                Write-Host
+                Write-Host "$app`: " -NoNewline
+                Write-Host $json.version -ForegroundColor DarkGreen
+            }
+            continue
+        }
+
+        $page = $null
+        $source = $url
+
+        if ($url -and !$err) {
+            $ms = New-Object System.IO.MemoryStream
+            $ms.Write($result, 0, $result.Length)
+            $ms.Seek(0, 0) | Out-Null
+            if ($result[0] -eq 0x1F -and $result[1] -eq 0x8B) {
+                $ms = New-Object System.IO.Compression.GZipStream($ms, [System.IO.Compression.CompressionMode]::Decompress)
+            }
+            $page = (New-Object System.IO.StreamReader($ms, (Get-Encoding $wc))).ReadToEnd()
+        }
+
+        if ($script) {
+            $page = Invoke-Command ([scriptblock]::Create($script -join "`r`n"))
+            $source = 'the output of script'
+        }
+
+        if ($null -eq $page) {
+            next "couldn't retrieve content from $source"
+            continue
+        }
+
+        if ($jsonpath) {
+            # Return only a single value if regex is absent
+            $noregex = [String]::IsNullOrEmpty($regexp)
+            # If reverse is ON and regex is ON,
+            # Then reverse would have no effect because regex handles reverse
+            # on its own
+            # So in this case we have to disable reverse
+            $ver = json_path $page $jsonpath $null ($reverse -and $noregex) $noregex
+            if (!$ver) {
+                $ver = json_path_legacy $page $jsonpath
+            }
+            if (!$ver) {
+                next "couldn't find '$jsonpath' in $source"
+                continue
+            }
+        }
+
+        if ($xpath) {
+            $xml = [xml]$page
+            # Find all `significant namespace declarations` from the XML file
+            $nsList = $xml.SelectNodes('//namespace::*[not(. = ../../namespace::*)]')
+            # Then add them into the NamespaceManager
+            $nsmgr = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
+            $nsList | ForEach-Object {
+                if ($_.LocalName -eq 'xmlns') {
+                    $nsmgr.AddNamespace('ns', $_.Value)
+                    $xpath = $xpath -replace '/([^:/]+)((?=/)|(?=$))', '/ns:$1'
+                }
+                else {
+                    $nsmgr.AddNamespace($_.LocalName, $_.Value)
+                }
+            }
+            # Getting version from XML, using XPath
+            $ver = $xml.SelectSingleNode($xpath, $nsmgr).'#text'
+            if (!$ver) {
+                next "couldn't find '$($xpath -replace 'ns:', '')' in $source"
+                continue
+            }
+        }
+
+        if ($jsonpath -and $regexp) {
+            $page = $ver
+            $ver = ''
+        }
+
+        if ($xpath -and $regexp) {
+            $page = $ver
+            $ver = ''
+        }
+
+        if ($regexp) {
+            $re = New-Object System.Text.RegularExpressions.Regex($regexp)
+            if ($reverse) {
+                $match = $re.Matches($page) | Select-Object -Last 1
+            }
+            else {
+                $match = $re.Matches($page) | Select-Object -First 1
+            }
+
+            if ($match -and $match.Success) {
+                $re.GetGroupNames() | ForEach-Object { $matchesHashtable.Add($_, $match.Groups[$_].Value) }
+                $ver = $matchesHashtable['1']
+                if ($replace) {
+                    $ver = $re.Replace($match.Value, $replace)
+                }
+                if (!$ver) {
+                    $ver = $matchesHashtable['version']
+                }
+            }
+            else {
+                next "couldn't match '$regexp' in $source"
+                continue
+            }
+        }
+
+        if (!$ver) {
+            next "couldn't find new version in $source"
+            continue
+        }
+    }
+
+    # Skip actual only if versions are same and there is no -f
+    if (($ver -eq $expected_ver) -and !$ForceUpdate -and $SkipUpdated) { continue }
+
+    Write-Host
+    Write-Host "$app`: " -NoNewline
+
+    # version hasn't changed (step over if forced update)
+    if ($ver -eq $expected_ver -and !$ForceUpdate) {
+        Write-Host $ver -ForegroundColor DarkGreen
+        continue
+    }
+
+    Write-Host $ver -ForegroundColor DarkRed -NoNewline
+    Write-Host " (scoop version is $expected_ver)" -NoNewline
+    $update_available = (Compare-Version -ReferenceVersion $ver -DifferenceVersion $expected_ver) -ne 0
+
+    if ($json.autoupdate -and $update_available) {
+        Write-Host ' autoupdate available' -ForegroundColor Cyan
+    }
+    else {
+        Write-Host ''
+    }
+
+    # forcing an update implies updating, right?
+    if ($ForceUpdate) { $Update = $true }
+
+    if ($Update -and $json.autoupdate) {
+        if ($ForceUpdate) {
+            Write-Host 'Forcing autoupdate!' -ForegroundColor DarkMagenta
+        }
+        try {
+            Invoke-AutoUpdate $app $file $json $ver $matchesHashtable # 'autoupdate.ps1'
+        }
+        catch {
+            if ($ThrowError) {
+                throw $_
+            }
+            else {
+                error $_.Exception.Message
+            }
+        }
+    }
+}
