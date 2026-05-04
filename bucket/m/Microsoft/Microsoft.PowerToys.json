@@ -20,7 +20,7 @@
     "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "Expand-DarkArchive \"$dir\\$fname\" \"$dir\\.tmp\"",
         "Get-ChildItem $dir -Recurse -Filter '*.msi' | Select-Object -First 1 | ForEach-Object { Move-Item $_.FullName \"$dir\\dl.msi\" -Force }",
@@ -30,24 +30,24 @@
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Uninstall-Manually",
         "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". $pwd\\script\\utils.ps1",
+            ". $pwd\\util\\1.ps1",
             "A-Get-VersionFromGithubAPI"
         ],
         "regex": "(.+)"

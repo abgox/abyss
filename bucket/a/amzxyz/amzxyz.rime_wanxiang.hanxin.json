@@ -36,7 +36,7 @@
     "extract_to": "app",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "A-Ensure-Directory \"$env:AppData\\Rime\"",
         "Write-Host \"Copying $dir\\app\\* => $env:AppData\\Rime\" -ForegroundColor Yellow",
@@ -44,23 +44,23 @@
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "(Get-ChildItem \"$dir\\app\" -Recurse -File).FullName.Replace(\"$dir\\app\", \"$env:AppData\\Rime\") | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". $pwd\\script\\utils.ps1",
+            ". $pwd\\util\\1.ps1",
             "A-Get-VersionFromGithubAPI"
         ],
         "regex": "(.+)"

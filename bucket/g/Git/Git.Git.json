@@ -24,18 +24,18 @@
     "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "A-Install-App -Uninstaller 'unins000.exe' -ArgumentList '/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/COMPONENTS=icons,ext,gitlfs,assoc,assoc_sh,consolefont,windowsterminal,scalar'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Uninstall-App -ArgumentList '/SP-','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART'",
@@ -43,12 +43,12 @@
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". $pwd\\script\\utils.ps1",
+            ". $pwd\\util\\1.ps1",
             "$res, $out = A-Get-InstallerInfoFromWinget 'Git.Git' 'exe'",
             "$out"
         ],

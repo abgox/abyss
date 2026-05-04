@@ -33,7 +33,7 @@
     "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "# 安装完成后自动启动一次，以解决首次启动必须使用管理员权限的问题",
         "$null = Start-Job -ScriptBlock {",
@@ -46,23 +46,23 @@
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". $pwd\\script\\utils.ps1",
+            ". $pwd\\util\\1.ps1",
             "A-Get-VersionFromGithubAPI"
         ],
         "regex": "(.+)"

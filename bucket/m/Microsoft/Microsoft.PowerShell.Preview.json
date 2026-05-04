@@ -49,7 +49,7 @@
     "commands": "pwsh-preview",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "if ($PSVersionTable.PSEdition -eq 'Core' -and $PSVersionTable.PSVersion.PreReleaseLabel) {",
         "    if ($PSUICulture -like 'zh*') {",
@@ -64,12 +64,12 @@
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "if ($PSVersionTable.PSEdition -eq 'Core' -and $PSVersionTable.PSVersion.PreReleaseLabel) {",
         "    if ($PSUICulture -like 'zh*') {",
@@ -85,12 +85,12 @@
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". $pwd\\script\\utils.ps1",
+            ". $pwd\\util\\1.ps1",
             "A-Get-PreVersionFromGithubAPI"
         ],
         "regex": "(.+)"

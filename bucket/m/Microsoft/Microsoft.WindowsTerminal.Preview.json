@@ -18,7 +18,7 @@
     "link": "$env:LocalAppData\\Packages\\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\\LocalState",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
         "$processName = (Get-Process | Where-Object { $_.Id -eq $parentId }).ProcessName",
@@ -36,12 +36,12 @@
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "$parentId = (Get-Process | Where-Object { $_.Id -eq $PID }).Parent.Id",
         "$processName = (Get-Process | Where-Object { $_.Id -eq $parentId }).ProcessName",
@@ -60,12 +60,12 @@
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-        ". $bucketsdir\\$bucket\\script\\utils.ps1",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
         "script": [
-            ". $pwd\\script\\utils.ps1",
+            ". $pwd\\util\\1.ps1",
             "$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.WindowsTerminal.Preview' 'msixbundle'",
             "$out"
         ],
