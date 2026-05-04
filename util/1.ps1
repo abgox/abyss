@@ -11,9 +11,9 @@ $abgox_abyss = @{
         InstallInno        = "$dir\abgox-abyss-A-Install-Inno.json"
         InstallBurn        = "$dir\abgox-abyss-A-Install-Burn.json"
         InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
+        Font               = "$dir\abgox-abyss-A-Install-Font.json"
+        PowerToysRunPlugin = "$dir\abgox-abyss-A-Install-PowerToysRunPlugin.json"
         EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
-        Font               = "$dir\abgox-abyss-A-Add-Font.json"
-        PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
         Info               = "$dir\abgox-abyss-Info.json"
     }
 }
@@ -176,8 +176,8 @@ function A-Start-Install {
             A-New-Link
         }
     }
-    if ($manifest.msix -and -not ($manifest.pre_install -match '^\s*A-Add-MsixPackage$')) {
-        A-Add-MsixPackage
+    if ($manifest.msix -and -not ($manifest.pre_install -match '^\s*A-Install-MsixPackage$')) {
+        A-Install-MsixPackage
     }
 }
 
@@ -186,10 +186,10 @@ function A-Complete-Install {
 
     if ($manifest.font) {
         if ($manifest.font -is [string]) {
-            A-Add-Font $manifest.font
+            A-Install-Font $manifest.font
         }
         else {
-            A-Add-Font
+            A-Install-Font
         }
     }
     if ($manifest.location) {
@@ -250,12 +250,12 @@ function A-Start-Uninstall {
     if ($manifest.env_set_shared) {
         A-Set-EnvVarShared -Remove
     }
-    if ($manifest.msix -and -not ($manifest.pre_uninstall -match '^\s*A-Remove-MsixPackage$')) {
-        A-Remove-MsixPackage
+    if ($manifest.msix -and -not ($manifest.pre_uninstall -match '^\s*A-Uninstall-MsixPackage$')) {
+        A-Uninstall-MsixPackage
     }
-    A-Remove-Font
     A-Remove-Path
-    A-Remove-PowerToysRunPlugin
+    A-Uninstall-Font
+    A-Uninstall-PowerToysRunPlugin
 }
 
 function A-Complete-Uninstall {
@@ -674,8 +674,7 @@ function A-Remove-Service {
 
 function A-Install-App {
     param(
-        # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
-        [string]$Uninstaller,
+        [string]$Uninstaller, # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
         [array]$ArgumentList,
         [string]$SleepSec = 3
     )
@@ -1212,7 +1211,7 @@ function A-Uninstall-Manually {
     }
 }
 
-function A-Add-MsixPackage {
+function A-Install-MsixPackage {
     <#
     .SYNOPSIS
         安装 AppX/Msix 包
@@ -1226,14 +1225,14 @@ function A-Add-MsixPackage {
     A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
 }
 
-function A-Remove-MsixPackage {
+function A-Uninstall-MsixPackage {
     param(
         [string]$PackageFamilyName = $manifest.msix
     )
     A-Remove-AppxPackage -PackageFamilyName $PackageFamilyName
 }
 
-function A-Add-PowerToysRunPlugin {
+function A-Install-PowerToysRunPlugin {
     param(
         [string]$PluginName
     )
@@ -1366,7 +1365,7 @@ function A-Get-UninstallEntryByAppName {
     return $null
 }
 
-function A-Get-VersionFromGithubAPI {
+function A-Get-VersionFromGithub {
     param (
         [switch]$Latest,
         [switch]$PreRelease,
@@ -1491,16 +1490,16 @@ function A-Get-VersionFromGithubAPI {
     }
 }
 
-function A-Get-LatestVersionFromGithubAPI {
-    A-Get-VersionFromGithubAPI -Latest
+function A-Get-LatestVersionFromGithub {
+    A-Get-VersionFromGithub -Latest
 }
 
-function A-Get-PreVersionFromGithubAPI {
-    A-Get-VersionFromGithubAPI -PreRelease
+function A-Get-PreVersionFromGithub {
+    A-Get-VersionFromGithub -PreRelease
 }
 
-function A-Get-NewestVersionFromGithubAPI {
-    A-Get-VersionFromGithubAPI -Newest
+function A-Get-NewestVersionFromGithub {
+    A-Get-VersionFromGithub -Newest
 }
 
 function A-Get-VersionFromPowerShellGallery {
@@ -2321,7 +2320,7 @@ function A-Remove-AppxPackage {
     }
 }
 
-function A-Add-Font {
+function A-Install-Font {
     <#
     .SYNOPSIS
         安装字体
@@ -2409,7 +2408,7 @@ function A-Add-Font {
     } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
 }
 
-function A-Remove-Font {
+function A-Uninstall-Font {
     $OutFile = $abgox_abyss.path.Font
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
@@ -2487,7 +2486,7 @@ function A-Remove-Path {
     Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
 }
 
-function A-Remove-PowerToysRunPlugin {
+function A-Uninstall-PowerToysRunPlugin {
     $OutFile = $abgox_abyss.path.PowerToysRunPlugin
     if (-not (Test-Path -LiteralPath $OutFile)) {
         return
@@ -2829,7 +2828,7 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     #endregion
 
     #region 新增: 输出字体名称
-    $fonts = Get-Content "$dir\abgox-abyss-A-Add-Font.json" -Raw -ErrorAction Ignore | ConvertFrom-Json | Select-Object -ExpandProperty FontName
+    $fonts = Get-Content "$dir\abgox-abyss-A-Install-Font.json" -Raw -ErrorAction Ignore | ConvertFrom-Json | Select-Object -ExpandProperty FontName
     if ($fonts) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Fonts'

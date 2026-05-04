@@ -3664,7 +3664,7 @@
                         },
                         "msix": {
                             "title": "Install as appx/msix/msixbundle",
-                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- It is used to install the following types of packages\n  - `msixbundle`\n  - `msix`\n  - `appx`\n- It requires `PackageFamilyName` as its value\n\n### Execute\n\n- Execute the installation logic via `A-Start-Install` in `pre_install`\n- Execute the uninstallation logic via `A-Start-Uninstall` in `pre_uninstall`\n- You can also manually trigger `A-Add-MsixPackage` and `A-Remove-MsixPackage`\n\n### Example\n\n- Install PowerShell\n\n  ```json\n  \"msix\": \"Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```",
+                            "markdownDescription": "- It is a special field of [abyss](https://abyss.abgox.com)\n- It is used to install the following types of packages\n  - `msixbundle`\n  - `msix`\n  - `appx`\n- It requires `PackageFamilyName` as its value\n\n### Execute\n\n- Execute the installation logic via `A-Start-Install` in `pre_install`\n- Execute the uninstallation logic via `A-Start-Uninstall` in `pre_uninstall`\n- You can also manually trigger `A-Install-MsixPackage` and `A-Uninstall-MsixPackage`\n\n### Example\n\n- Install PowerShell\n\n  ```json\n  \"msix\": \"Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```",
                             "$ref": "#/definitions/str"
                         },
                         "bin": {
@@ -3985,7 +3985,7 @@
                                     "examples": [
                                         [
                                             ". $pwd\\util\\1.ps1",
-                                            "A-Get-VersionFromGithubAPI"
+                                            "A-Get-VersionFromGithub"
                                         ]
                                     ],
                                     "minItems": 1,
@@ -4085,19 +4085,19 @@
                                                         "anyOf": [
                                                             {},
                                                             {
-                                                                "const": "A-Get-VersionFromGithubAPI",
+                                                                "const": "A-Get-VersionFromGithub",
                                                                 "markdownDescription": "Get the latest release version from Github\n- It will include `1`, `3` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
-                                                                "const": "A-Get-LatestVersionFromGithubAPI",
+                                                                "const": "A-Get-LatestVersionFromGithub",
                                                                 "markdownDescription": "Get the latest release version from Github\n- It will include `1` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
-                                                                "const": "A-Get-PreVersionFromGithubAPI",
+                                                                "const": "A-Get-PreVersionFromGithub",
                                                                 "markdownDescription": "Get the latest pre-release version from Github\n- It will include `2` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
-                                                                "const": "A-Get-NewestVersionFromGithubAPI",
+                                                                "const": "A-Get-NewestVersionFromGithub",
                                                                 "markdownDescription": "Get the latest release version from Github\n- It will include `1`, `2`, `3` in the **Version Type**\n- It will filter out the `v` or `V` prefix\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### Version Type\n1. The latest stable version: `latest`\n2. The latest pre-release version: `prerelease`\n3. Other versions"
                                                             },
                                                             {
@@ -4350,20 +4350,20 @@
                                                 "markdownDescription": "Execute [link](https://abyss.abgox.com/features/data-persistence/link) manually\n- Under normal circumstances, there is no need to define it manually\n- It will trigger at the defined position instead of automatically triggering it in `A-Start-Install`"
                                             },
                                             {
-                                                "const": "A-Add-MsixPackage",
+                                                "const": "A-Install-MsixPackage",
                                                 "markdownDescription": "Execute `msix` manually\n- Under normal circumstances, there is no need to define it manually\n- It will trigger at the defined position instead of automatically triggering it in `A-Start-Install`"
                                             },
                                             {
-                                                "pattern": "A-Add-MsixPackage",
+                                                "pattern": "A-Install-MsixPackage",
                                                 "markdownDescription": "Execute `msix` manually\n- Under normal circumstances, there is no need to define it manually\n- It will trigger at the defined position instead of automatically triggering it in `A-Start-Install`"
                                             },
                                             {
-                                                "const": "A-Add-PowerToysRunPlugin 'xxx'",
-                                                "markdownDescription": "Add PowerToys Run plugin\n- It will be automatically removed in `pre_uninstall`.\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                "const": "A-Install-PowerToysRunPlugin 'xxx'",
+                                                "markdownDescription": "Add PowerToys Run plugin\n- It will be automatically removed in `pre_uninstall`.\n- e.g. `A-Install-PowerToysRunPlugin 'Scoop'`"
                                             },
                                             {
-                                                "pattern": "A-Add-PowerToysRunPlugin",
-                                                "markdownDescription": "Add PowerToys Run plugin\n- It will be automatically removed in `pre_uninstall`.\n- e.g. `A-Add-PowerToysRunPlugin 'Scoop'`"
+                                                "pattern": "A-Install-PowerToysRunPlugin",
+                                                "markdownDescription": "Add PowerToys Run plugin\n- It will be automatically removed in `pre_uninstall`.\n- e.g. `A-Install-PowerToysRunPlugin 'Scoop'`"
                                             },
                                             {
                                                 "const": "A-Hold-App",
@@ -4531,7 +4531,7 @@
                                                 "markdownDescription": "Remove the data link defined by the `link` field."
                                             },
                                             {
-                                                "const": "A-Remove-MsixPackage",
+                                                "const": "A-Uninstall-MsixPackage",
                                                 "markdownDescription": "Execute `msix` manually\n- Under normal circumstances, there is no need to define it manually\n- It will trigger at the defined position instead of automatically triggering it in `A-Start-Uninstall`"
                                             },
                                             {
@@ -4906,7 +4906,7 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
-                                                        "pattern": "(?<!#.*)A-Add-MsixPackage"
+                                                        "pattern": "(?<!#.*)A-Install-MsixPackage"
                                                     }
                                                 }
                                             }
@@ -5285,7 +5285,7 @@
                                                 "properties": {
                                                     "script": {
                                                         "contains": {
-                                                            "pattern": "(?<!#.*)(A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI|A-Get-InstallerInfoFromWinget)"
+                                                            "pattern": "(?<!#.*)(A-Get-(Latest|Pre|Newest)?VersionFromGithub|A-Get-InstallerInfoFromWinget)"
                                                         }
                                                     }
                                                 }
@@ -5515,7 +5515,7 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Add-PowerToysRunPlugin)"
+                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Install-PowerToysRunPlugin)"
                                                     }
                                                 }
                                             }
@@ -5770,7 +5770,7 @@
                                 "properties": {
                                     "script": {
                                         "contains": {
-                                            "pattern": "(?<!#.*)A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI"
+                                            "pattern": "(?<!#.*)A-Get-(Latest|Pre|Newest)?VersionFromGithub"
                                         }
                                     }
                                 }
@@ -5800,7 +5800,7 @@
                                     "properties": {
                                         "url": {
                                             "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)",
-                                            "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI' is used, it must be a Github URL or REST API, like:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
+                                            "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithub' is used, it must be a Github URL or REST API, like:\nhttps://github.com/abgox/json-schema-plus\nhttps://api.github.com/repos/abgox/json-schema-plus/releases?per_page=5"
                                         }
                                     }
                                 }
@@ -5819,13 +5819,13 @@
                                                             "allOf": [
                                                                 {
                                                                     "pattern": "^https://github\\.com/[^/]+/[^/]+",
-                                                                    "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI' is used, it must be a Github URL. Otherwise, please define 'checkver.url'."
+                                                                    "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithub' is used, it must be a Github URL. Otherwise, please define 'checkver.url'."
                                                                 },
                                                                 {
                                                                     "contains": {
                                                                         "pattern": "^https://github\\.com/[^/]+/[^/]+"
                                                                     },
-                                                                    "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithubAPI' is used, it has at least one Github URL. Otherwise, please define 'checkver.url'."
+                                                                    "errorMessage": "Since 'A-Get-(Latest|Pre|Newest)?VersionFromGithub' is used, it has at least one Github URL. Otherwise, please define 'checkver.url'."
                                                                 }
                                                             ]
                                                         }
