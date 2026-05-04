@@ -185,7 +185,7 @@ foreach ($path in $PathList) {
         }
 
         ## Msix
-        $isMsix = Test-ScriptPattern $json '(?<!#.*)A-Add-MsixPackage'
+        $isMsix = $json.msix -or (Test-ScriptPattern $json '(?<!#.*)A-Add-MsixPackage')
         if ($isMsix) {
             $tag += '[Msix](https://abyss.abgox.com/faq/msix)'
         }

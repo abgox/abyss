@@ -95,6 +95,7 @@ $order = [ordered]@{
     innosetup           = ''
     psmodule            = ''
     font                = '' # abyss
+    msix                = '' # abyss
     bin                 = ''
     commands            = '' # abyss
     shortcuts           = ''

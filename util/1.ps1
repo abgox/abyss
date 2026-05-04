@@ -11,7 +11,6 @@ $abgox_abyss = @{
         InstallInno        = "$dir\abgox-abyss-A-Install-Inno.json"
         InstallBurn        = "$dir\abgox-abyss-A-Install-Burn.json"
         InstallMsi         = "$dir\abgox-abyss-A-Install-Msi.json"
-        MsixPackage        = "$dir\abgox-abyss-A-Add-MsixPackage.json"
         EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
         Font               = "$dir\abgox-abyss-A-Add-Font.json"
         PowerToysRunPlugin = "$dir\abgox-abyss-A-Add-PowerToysRunPlugin.json"
@@ -177,6 +176,9 @@ function A-Start-Install {
             A-New-Link
         }
     }
+    if ($manifest.msix -and -not ($manifest.pre_install -match '^\s*A-Add-MsixPackage$')) {
+        A-Add-MsixPackage
+    }
 }
 
 function A-Complete-Install {
@@ -247,6 +249,9 @@ function A-Start-Uninstall {
     }
     if ($manifest.env_set_shared) {
         A-Set-EnvVarShared -Remove
+    }
+    if ($manifest.msix -and -not ($manifest.pre_uninstall -match '^\s*A-Remove-MsixPackage$')) {
+        A-Remove-MsixPackage
     }
     A-Remove-Font
     A-Remove-Path
@@ -469,7 +474,7 @@ function A-Remove-Link {
         根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
     #>
 
-    # $byMsix = Test-Path -LiteralPath $abgox_abyss.path.MsixPackage
+    # $byMsix = $manifest.msix
     # $byApp = (Test-Path -LiteralPath $abgox_abyss.path.InstallApp) -or (Test-Path -LiteralPath $abgox_abyss.path.InstallInno)
     # $byMsi = Test-Path -LiteralPath $abgox_abyss.path.InstallMsi
 
@@ -541,7 +546,7 @@ function A-Stop-Process {
     }
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非指定绝对路径
-    if (-not $abgox_abyss.uninstallActionLevel.Contains('1') -or ((Test-Path -LiteralPath $abgox_abyss.path.MsixPackage) -and !$ExtraPaths)) {
+    if (-not $abgox_abyss.uninstallActionLevel.Contains('1') -or ($manifest.msix -and !$ExtraPaths)) {
         return
     }
 
@@ -1214,28 +1219,18 @@ function A-Add-MsixPackage {
     #>
     param(
         # 包名，例如：Microsoft.PowerShellPreview_8wekyb3d8bbwe
-        [string]$PackageFamilyName,
-        # 包文件路径，如果是相对路径，会拼接 $dir 作为父目录
-        [string]$FilePath
+        [string]$PackageFamilyName = $manifest.msix
     )
-    if ($PSBoundParameters.ContainsKey('FilePath')) {
-        $path = A-Get-AbsolutePath $FilePath
-    }
-    else {
-        # $fname 由 Scoop 提供，即下载的文件名
-        $path = Join-Path $dir ($fname | Select-Object -First 1)
-    }
-
-    if (!$path) {
-        A-Show-IssueCreationPrompt
-        A-Exit
-    }
-
+    # $fname 由 Scoop 提供，即下载的文件名
+    $path = Join-Path $dir ($fname | Select-Object -First 1)
     A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
 }
 
 function A-Remove-MsixPackage {
-    A-Remove-AppxPackage
+    param(
+        [string]$PackageFamilyName = $manifest.msix
+    )
+    A-Remove-AppxPackage -PackageFamilyName $PackageFamilyName
 }
 
 function A-Add-PowerToysRunPlugin {
@@ -2294,10 +2289,6 @@ function A-Add-AppxPackage {
         A-Show-IssueCreationPrompt
         A-Exit
     }
-
-    @{
-        PackageFamilyName = $PackageFamilyName
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.MsixPackage -Force -Encoding utf8
 }
 
 function A-Remove-AppxPackage {
@@ -2307,14 +2298,13 @@ function A-Remove-AppxPackage {
 
     .DESCRIPTION
         该函数使用 Remove-AppxPackage 命令移除应用程序包 (.appx 或 .msixbundle)
+
+    .PARAMETER PackageFamilyName
+        应用程序包的 PackageFamilyName
     #>
-
-    $OutFile = $abgox_abyss.path.MsixPackage
-    if (-not (Test-Path -LiteralPath $OutFile)) {
-        return
-    }
-
-    $PackageFamilyName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty PackageFamilyName
+    param(
+        [string]$PackageFamilyName
+    )
     $package = Get-AppxPackage | Where-Object { $_.PackageFamilyName -eq $PackageFamilyName } | Select-Object -First 1
     if ($package) {
         if ($package.InstallLocation) {

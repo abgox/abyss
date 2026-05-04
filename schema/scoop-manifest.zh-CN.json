@@ -3183,7 +3183,7 @@
             "markdownDescription": "- abyss bucket 软件包清单的 JSON 格式定义(manifest json schema)\n- 具有 [abyss](https://abyss.abgox.com) bucket 特有的风格和约定",
             "$id": "https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.zh-CN.json",
             "propertyNames": {
-                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|bin|commands|shortcuts|link|persist|cleanup|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
+                "pattern": "^(##|version|description|homepage|license|notes|notes_cn|depends|suggest|architecture|renamed|conflicts|location|extract_dir|extract_to|env_set|env_set_shared|env_add_path|env_add_path_expand|innosetup|psmodule|font|msix|bin|commands|shortcuts|link|persist|cleanup|admin|pre_install|post_install|pre_uninstall|post_uninstall|checkver|autoupdate)$",
                 "errorMessage": "不允许的属性名"
             },
             "allOf": [
@@ -3661,6 +3661,11 @@
                                     ]
                                 }
                             ]
+                        },
+                        "msix": {
+                            "title": "作为 appx/msix/msixbundle 包进行安装",
+                            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊字段\n- 它用来安装以下类型的软件包\n  - `msixbundle`\n  - `msix`\n  - `appx`\n- 它需要 `PackageFamilyName` 作为它的值\n\n### 执行\n\n- 在 `pre_install` 中的 `A-Start-Install` 执行安装逻辑\n- 在 `pre_uninstall` 中的 `A-Start-Uninstall` 执行卸载逻辑\n- 你也可以手动调用 `A-Add-MsixPackage` 和 `A-Remove-MsixPackage`\n\n### 示例\n\n- 安装 PowerShell\n\n  ```json\n  \"msix\": \"Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```",
+                            "$ref": "#/definitions/str"
                         },
                         "bin": {
                             "markdownDescription": "- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n\n### 示例\n\n1. Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 `a.exe`\n\n   ```json\n   \"bin\": \"app\\\\a.exe\"\n   ```\n\n2. 和 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n\n   ```json\n   \"bin\": [\n       \"app\\\\a.exe\",\n       \"app\\\\b.exe\"\n   ]\n   ```\n\n3. 和 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n\n   ```json\n   \"bin\": [\n       [\n           \"app\\\\a.exe\",\n           \"ax\"\n       ],\n       [\n           \"app\\\\b.exe\",\n           \"bx\"\n       ]\n   ]\n   ```\n\n4. 和 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n\n   ```json\n   \"bin\": [\n       [\n           \"app\\\\a.exe\",\n           \"ax\",\n           \"--config $dir/config.json\"\n       ],\n       [\n           \"app\\\\b.exe\",\n           \"bx\",\n           \"--config $dir/config.json\"\n       ]\n   ]\n   ```",
@@ -4345,12 +4350,12 @@
                                                 "markdownDescription": "手动执行 [link](https://abyss.abgox.com/features/data-persistence/link)\n- 通常情况下，不需要手动定义它\n- 它将在定义的位置触发 link 而不是在 `A-Start-Install` 中自动触发"
                                             },
                                             {
-                                                "const": "A-Add-MsixPackage 'PackageFamilyName'",
-                                                "markdownDescription": "安装 AppX/Msix 包\n\n### 示例\n\n- 添加 `Microsoft.PowerShell_8wekyb3d8bbwe`\n\n  ```json\n  \"A-Add-MsixPackage Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```"
+                                                "const": "A-Add-MsixPackage",
+                                                "markdownDescription": "手动执行 `msix`\n- 通常情况下，不需要手动定义它\n- 它将在定义的位置触发而不是在 `A-Start-Install` 中自动触发"
                                             },
                                             {
                                                 "pattern": "A-Add-MsixPackage",
-                                                "markdownDescription": "安装 AppX/Msix 包\n\n### 示例\n\n- 添加 `Microsoft.PowerShell_8wekyb3d8bbwe`\n\n  ```json\n  \"A-Add-MsixPackage Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```"
+                                                "markdownDescription": "手动执行 `msix`\n- 通常情况下，不需要手动定义它\n- 它将在定义的位置触发而不是在 `A-Start-Install` 中自动触发"
                                             },
                                             {
                                                 "const": "A-Add-PowerToysRunPlugin 'xxx'",
@@ -4527,7 +4532,7 @@
                                             },
                                             {
                                                 "const": "A-Remove-MsixPackage",
-                                                "markdownDescription": "卸载 AppX/Msix 包"
+                                                "markdownDescription": "手动执行 `msix`\n- 通常情况下，不需要手动定义它\n- 它将在定义的位置触发而不是在 `A-Start-Uninstall` 中自动触发"
                                             },
                                             {
                                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
@@ -4879,37 +4884,6 @@
                                     },
                                     {
                                         "if": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Add-MsixPackage"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "pre_uninstall": {
-                                                    "allOf": [
-                                                        {
-                                                            "contains": {
-                                                                "pattern": "A-Remove-MsixPackage"
-                                                            },
-                                                            "errorMessage": "pre_install 中使用了 A-Add-MsixPackage，而 pre_uninstall 中缺少 A-Remove-MsixPackage"
-                                                        },
-                                                        {
-                                                            "contains": {
-                                                                "pattern": "^A-Remove-MsixPackage$"
-                                                            },
-                                                            "errorMessage": "A-Remove-MsixPackage 必须单独一行，不能包含额外内容"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "if": {
                                             "required": [
                                                 "font"
                                             ]
@@ -4922,6 +4896,41 @@
                                                             "pattern": "(?<!#.*)A-Stop-Process"
                                                         },
                                                         "errorMessage": "字体清单不需要 A-Stop-Process"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Add-MsixPackage"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "required": [
+                                                "msix"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "required": [
+                                                "msix"
+                                            ]
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "pre_uninstall": {
+                                                    "items": {
+                                                        "not": {
+                                                            "pattern": "(?<!#.*)A-Stop-Process"
+                                                        },
+                                                        "errorMessage": "msix 清单不需要 A-Stop-Process"
                                                     }
                                                 }
                                             }
@@ -5066,27 +5075,6 @@
                                                         "pattern": "(?<!#.*)A-Install-App"
                                                     },
                                                     "errorMessage": "pre_uninstall 中使用了 A-Uninstall-App，而 pre_install 中缺少 A-Install-App"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "if": {
-                                            "properties": {
-                                                "pre_uninstall": {
-                                                    "contains": {
-                                                        "pattern": "^A-Remove-MsixPackage$"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "pre_install": {
-                                                    "contains": {
-                                                        "pattern": "(?<!#.*)A-Add-MsixPackage"
-                                                    },
-                                                    "errorMessage": "pre_uninstall 中使用了 A-Remove-MsixPackage，而 pre_install 中缺少 A-Add-MsixPackage"
                                                 }
                                             }
                                         }
