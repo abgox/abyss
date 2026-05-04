@@ -50,7 +50,7 @@
 >
 > - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop](https://scoop.sh/) bucket.
 > - It aims to provide a Winget-like solution with [data persistence](https://abyss.abgox.com/features/data-persistence).
-> - Its manifests are based on [utils.ps1](./script/utils.ps1), and other buckets should not merge them to avoid conflicts and errors.
+> - Its manifests are based on [util](./util/), and other buckets should not merge them to avoid conflicts and errors.
 
 ## Features
 

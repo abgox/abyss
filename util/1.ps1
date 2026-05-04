@@ -1,4 +1,3 @@
-﻿# Deprecated: It has been replaced by util directory and will be removed in the future.
 #Requires -Version 5.1
 
 Set-StrictMode -Off
@@ -2616,11 +2615,9 @@ function A-New-MatchedString {
 
 
 
-# 以下的扩展功能是基于 scoop.json 中指定的版本，如果 Scoop 最新版本大于它，需要重新检查并适配，然后更新 scoop.json
-
 #region 扩展 Scoop 部分功能
 
-# 它不属于 scoop core，但可能需要跟进 Scoop 最新变动
+# 它不属于 scoop core，但可能也需要跟进 Scoop 最新变动
 function A-Set-EnvVarShared {
     param(
         [switch]$Remove

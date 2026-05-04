@@ -50,7 +50,7 @@
 >
 > - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh/) bucket
 > - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
-> - 它的清单是基于 [utils.ps1](./script/utils.ps1) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
+> - 它的清单是基于 [util](./util/) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ## 特性
 
