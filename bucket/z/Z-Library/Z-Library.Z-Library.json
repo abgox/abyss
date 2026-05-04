@@ -1,5 +1,5 @@
 {
-    "version": "3.0.0",
+    "version": "3.1.0",
     "description": "Z-Library —— 世界上最大的电子书图书馆 | Z-Library - the world's largest e-book library",
     "homepage": "https://go-to-library.sk/",
     "license": {
@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://s3proxy-alp.cdn-zlib.sk/te_public_files/soft/desktop/Z-Library-latest.exe#/dl.7z",
-            "hash": "0aed1fa63600932ff462be943cfecc81dafae9e6718f8313823b474980f63c72"
+            "url": "https://s3proxy-alp.cdn-zlib.sk/swfs_second_public_files/soft/desktop/Z-Library-latest.exe",
+            "hash": "6cd063864ec4ac03dab0d8329ac4c7c6aed1dc54d4eb7401f88cd4c1c42f198c"
         }
     },
     "shortcuts": [
@@ -18,11 +18,12 @@
         ]
     ],
     "link": "$env:AppData\\Z-Library",
+    "cleanup": "$env:LocalAppData\\z-library-updater",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "A-Expand-SetupExe"
+        "A-Install-App -Uninstaller 'app\\Uninstall Z-Library.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +35,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -43,12 +45,16 @@
     ],
     "checkver": {
         "url": "https://go-to-library.sk/#desktop_app_tab",
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-DynamicPageFromUrl"
+        ],
         "regex": "<b>([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://s3proxy-alp.cdn-zlib.sk/te_public_files/soft/desktop/Z-Library-latest.exe#/dl.7z"
+                "url": "https://s3proxy-alp.cdn-zlib.sk/swfs_second_public_files/soft/desktop/Z-Library-latest.exe"
             }
         }
     }

@@ -1259,27 +1259,6 @@ function A-Install-PowerToysRunPlugin {
     }
 }
 
-function A-Expand-SetupExe {
-    $archMap = @{
-        '64bit' = '64'
-        '32bit' = '32'
-        'arm64' = 'arm64'
-    }
-
-    $all7z = Get-ChildItem "$dir\`$PLUGINSDIR" -Filter 'app*.7z'
-    $matched = $all7z | Where-Object { $_.Name -match "app.+$($archMap[$architecture])\.7z" }
-
-    if ($matched.Length) {
-        $7z = $matched[0].FullName
-    }
-    else {
-        $7z = $all7z[0].FullName
-    }
-    Expand-7zipArchive $7z (Join-Path $dir 'app')
-
-    Remove-Item "$dir\app\`$*" -Recurse -Force -ErrorAction SilentlyContinue
-}
-
 function A-Require-Admin {
     <#
     .SYNOPSIS

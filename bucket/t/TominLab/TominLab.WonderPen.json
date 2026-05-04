@@ -7,8 +7,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-x64#/dl.7z",
-            "hash": "13edfbcb6f21f8fe9204cdec084ab46af8a2376ff7ac4161e2e9406fb25da223"
+            "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-x64#/dl.exe",
+            "hash": "053492fdb1cc90a00ff2a6bfca843a9c0af541e8424b9a96feee54ab318cb730"
         }
     },
     "shortcuts": [
@@ -18,11 +18,12 @@
         ]
     ],
     "link": "$env:AppData\\WonderPen",
+    "cleanup": "$env:LocalAppData\\wonderpen-updater",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "A-Expand-SetupExe"
+        "A-Install-App -Uninstaller 'app\\Uninstall WonderPen.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +35,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -48,7 +50,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-x64#/dl.7z"
+                "url": "https://www.tominlab.com/to/get-file/wonderpen?key=win-x64#/dl.exe"
             }
         }
     }

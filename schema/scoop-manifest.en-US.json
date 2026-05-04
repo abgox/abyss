@@ -4282,10 +4282,6 @@
                                                 "markdownDescription": "Create file, and optionally set its content.\n- If content is an array, then it will write multiple lines.\n- For example: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                             },
                                             {
-                                                "const": "A-Expand-SetupExe",
-                                                "markdownDescription": "Expand setup.exe installer(#/dl.7z)\n- It will extract all files to `$dir\\app` directory.\n- Prefer `A-Install-*`.\n- Unless it is more suitable for `A-Expand-SetupExe`."
-                                            },
-                                            {
                                                 "const": "A-Install-Inno",
                                                 "markdownDescription": "Use `innosetup` installer."
                                             },
@@ -4675,14 +4671,14 @@
                     "then": {
                         "allOf": [
                             {
-                                "$comment": "If A-Install-* or A-Expand-SetupExe is used in pre_install, then env_add_path and bin may need to start with app\\\\ or $env: or ${env:",
+                                "$comment": "If A-Install-* is used in pre_install, then env_add_path and bin may need to start with app\\\\ or $env: or ${env:",
                                 "if": {
                                     "properties": {
                                         "pre_install": {
                                             "type": "array",
                                             "contains": {
                                                 "type": "string",
-                                                "pattern": "(?<!#.*)(A-Install-\\w+|A-Expand-SetupExe)"
+                                                "pattern": "(?<!#.*)(A-Install-\\w+)"
                                             }
                                         }
                                     }
@@ -4701,7 +4697,7 @@
                                                 {
                                                     "$ref": "#/definitions/str",
                                                     "pattern": "^app\\\\",
-                                                    "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\"
+                                                    "errorMessage": "Please check the path. Since 'A-Install-*' is used, it may need to start with app\\\\"
                                                 },
                                                 {
                                                     "type": "array",
@@ -4714,14 +4710,14 @@
                                                             {
                                                                 "$ref": "#/definitions/str",
                                                                 "pattern": "^app\\\\",
-                                                                "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\"
+                                                                "errorMessage": "Please check the path. Since 'A-Install-*' is used, it may need to start with app\\\\"
                                                             },
                                                             {
                                                                 "type": "array",
                                                                 "items": [
                                                                     {
                                                                         "pattern": "^app\\\\",
-                                                                        "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\"
+                                                                        "errorMessage": "Please check the path. Since 'A-Install-*' is used, it may need to start with app\\\\"
                                                                     }
                                                                 ]
                                                             }
@@ -4759,7 +4755,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "Please check the path. Since 'A-Install-*' or 'A-Expand-SetupExe' is used, it may need to start with app\\\\ or $env: or ${env:"
+                                                            "errorMessage": "Please check the path. Since 'A-Install-*' is used, it may need to start with app\\\\ or $env: or ${env:"
                                                         }
                                                     }
                                                 ]
@@ -5515,7 +5511,7 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Install-PowerToysRunPlugin)"
+                                                        "pattern": "(?<!#.*)(A-Install-PowerToysRunPlugin)"
                                                     }
                                                 }
                                             }

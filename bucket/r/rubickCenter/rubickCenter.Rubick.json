@@ -7,7 +7,7 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/rubickCenter/rubick/releases/download/v4.3.8/rubick-Setup-4.3.8-x64.exe#dl.7z",
+            "url": "https://github.com/rubickCenter/rubick/releases/download/v4.3.8/rubick-Setup-4.3.8-x64.exe",
             "hash": "9c7e616fe61d897af8f30e940ed3f030d264fc66c4cca81f35bf3f9949f3d851"
         }
     },
@@ -18,11 +18,12 @@
         ]
     ],
     "link": "$env:AppData\\rubick",
+    "cleanup": "$env:LocalAppData\\rubick-updater",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "A-Expand-SetupExe"
+        "A-Install-App -Uninstaller 'app\\Uninstall Rubick.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +35,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,7 +53,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/rubickCenter/rubick/releases/download/v$version/rubick-Setup-$version-x64.exe#dl.7z"
+                "url": "https://github.com/rubickCenter/rubick/releases/download/v$version/rubick-Setup-$version-x64.exe"
             }
         },
         "hash": {

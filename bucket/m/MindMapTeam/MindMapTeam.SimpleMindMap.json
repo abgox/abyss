@@ -7,22 +7,24 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/wanglin2/mind-map/releases/download/0.18.4/Setup.0.18.4.exe#/dl.7z",
+            "url": "https://github.com/wanglin2/mind-map/releases/download/0.18.4/Setup.0.18.4.exe",
             "hash": "348a4224fecb1e02d1f7ecb705db726a2c0a96add35e69ec3dfafdd5527a1cbf"
         }
     },
     "shortcuts": [
         [
             "app\\思绪思维导图.exe",
-            "Simple Mind Map (思绪思维导图)"
+            "思绪思维导图"
         ]
     ],
     "link": "$env:AppData\\thoughts",
+    "cleanup": "$env:LocalAppData\\thoughts-updater",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "A-Expand-SetupExe"
+        "A-Install-App -Uninstaller 'app\\Uninstall 思绪思维导图.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -34,7 +36,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -51,7 +54,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/wanglin2/mind-map/releases/download/$version/Setup.$version.exe#/dl.7z"
+                "url": "https://github.com/wanglin2/mind-map/releases/download/$version/Setup.$version.exe"
             }
         },
         "hash": {

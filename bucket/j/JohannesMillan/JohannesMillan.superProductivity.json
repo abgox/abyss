@@ -7,12 +7,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/johannesjo/super-productivity/releases/download/v18.4.4/superProductivity-x64.exe#/dl.7z",
-            "hash": "07b1ba5d6aa683a172522c080da666a0e92d2982c2c6f5c97c732d5558cc6f71"
+            "url": "https://github.com/johannesjo/super-productivity/releases/download/v18.4.4/Super-Productivity-Setup-x64.exe",
+            "hash": "92df2d199906d4320f2c629d57ff9663044be8aa1a095c94b68be155bff08272"
         },
         "arm64": {
-            "url": "https://github.com/johannesjo/super-productivity/releases/download/v18.4.4/superProductivity-arm64.exe#/dl.7z",
-            "hash": "f87ddcf458aacec6441c9210b51fb01fc2d262a0af8fb7899d9e5cc54ced3e16"
+            "url": "https://github.com/johannesjo/super-productivity/releases/download/v18.4.4/Super-Productivity-Setup-arm64.exe",
+            "hash": "0108bbc866e0839d161fe4b6fc8ddd037fae61a149db0db2536b92a39e05816e"
         }
     },
     "shortcuts": [
@@ -22,11 +22,12 @@
         ]
     ],
     "link": "$env:AppData\\superProductivity",
+    "cleanup": "$env:LocalAppData\\superproductivity-updater",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "A-Expand-SetupExe"
+        "A-Install-App -Uninstaller 'app\\Uninstall Super Productivity.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -38,7 +39,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -55,10 +57,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/johannesjo/super-productivity/releases/download/v$version/superProductivity-x64.exe#/dl.7z"
+                "url": "https://github.com/johannesjo/super-productivity/releases/download/v$version/Super-Productivity-Setup-x64.exe"
             },
             "arm64": {
-                "url": "https://github.com/johannesjo/super-productivity/releases/download/v$version/superProductivity-arm64.exe#/dl.7z"
+                "url": "https://github.com/johannesjo/super-productivity/releases/download/v$version/Super-Productivity-Setup-arm64.exe"
             }
         },
         "hash": {

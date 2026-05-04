@@ -4282,10 +4282,6 @@
                                                 "markdownDescription": "创建文件，可选择设置内容。如果内容是一个数组，将写入多行\n- 例如: `A-New-File \"$persist_dir\\InputTip.ini\" -Content ''`"
                                             },
                                             {
-                                                "const": "A-Expand-SetupExe",
-                                                "markdownDescription": "用来展开 Setup.exe 类型的安装包(#/dl.7z)\n- 它会把所有文件提取到 `$dir\\app` 目录中\n- 优先使用 `A-Install-*`\n- 除非安装场景更适合 `A-Expand-SetupExe`"
-                                            },
-                                            {
                                                 "const": "A-Install-Inno",
                                                 "markdownDescription": "使用 innosetup 安装程序"
                                             },
@@ -4675,14 +4671,14 @@
                     "then": {
                         "allOf": [
                             {
-                                "$comment": "如果在 pre_install 中使用了 A-Install-* 或 A-Expand-SetupExe，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
+                                "$comment": "如果在 pre_install 中使用了 A-Install-*，则 env_add_path 和 bin 等路径可能需要以 app\\\\ 或 $env: 或 ${env: 开头",
                                 "if": {
                                     "properties": {
                                         "pre_install": {
                                             "type": "array",
                                             "contains": {
                                                 "type": "string",
-                                                "pattern": "(?<!#.*)(A-Install-\\w+|A-Expand-SetupExe)"
+                                                "pattern": "(?<!#.*)(A-Install-\\w+)"
                                             }
                                         }
                                     }
@@ -4701,7 +4697,7 @@
                                                 {
                                                     "$ref": "#/definitions/str",
                                                     "pattern": "^app\\\\",
-                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                    "errorMessage": "请检查路径是否正确，由于使用了 A-Install-*，可能需要以 app\\\\ 开头"
                                                 },
                                                 {
                                                     "type": "array",
@@ -4714,14 +4710,14 @@
                                                             {
                                                                 "$ref": "#/definitions/str",
                                                                 "pattern": "^app\\\\",
-                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                                "errorMessage": "请检查路径是否正确，由于使用了 A-Install-*，可能需要以 app\\\\ 开头"
                                                             },
                                                             {
                                                                 "type": "array",
                                                                 "items": [
                                                                     {
                                                                         "pattern": "^app\\\\",
-                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 开头"
+                                                                        "errorMessage": "请检查路径是否正确，由于使用了 A-Install-*，可能需要以 app\\\\ 开头"
                                                                     }
                                                                 ]
                                                             }
@@ -4759,7 +4755,7 @@
                                                         },
                                                         "then": {
                                                             "not": true,
-                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-* 或 A-Expand-SetupExe，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
+                                                            "errorMessage": "请检查路径是否正确，由于使用了 A-Install-*，可能需要以 app\\\\ 或 $env: 或 ${env: 开头"
                                                         }
                                                     }
                                                 ]
@@ -5515,7 +5511,7 @@
                                             "properties": {
                                                 "pre_install": {
                                                     "contains": {
-                                                        "pattern": "(?<!#.*)(A-Expand-SetupExe|A-Install-PowerToysRunPlugin)"
+                                                        "pattern": "(?<!#.*)(A-Install-PowerToysRunPlugin)"
                                                     }
                                                 }
                                             }
