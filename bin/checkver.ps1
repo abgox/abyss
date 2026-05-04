@@ -140,7 +140,7 @@ $Queue | ForEach-Object {
     else {
         # It is meaningless to check the homepage in abyss bucket.
         # So, we use a stable URL as a placeholder to avoid access errors.
-        $url = 'https://github.com/'
+        $url = 'https://1.1.1.1'
     }
 
     $regex = $json.checkver.regex
