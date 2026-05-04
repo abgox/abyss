@@ -36,8 +36,8 @@ $order = [ordered]@{
         identifier = ''
         url        = ''
     }
-    notes               = ''
     notes_cn            = '' # abyss
+    notes               = ''
     depends             = ''
     suggest             = ''
     # url            = ''
