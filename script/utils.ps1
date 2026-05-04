@@ -2083,10 +2083,14 @@ function A-Copy-Item {
     if ($needCopy) {
         A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
-            # Copy-Item -LiteralPath $Path -Destination $Destination -Recurse -Force -ErrorAction Stop
-            $result = & robocopy "$Path" "$Destination" /E /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
-            if ($LASTEXITCODE -ge 8) {
-                throw $result
+            if ($sourceItem.PSIsContainer) {
+                $result = & robocopy "$Path" "$Destination" /E /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
+                if ($LASTEXITCODE -ge 8) {
+                    throw $result
+                }
+            }
+            else {
+                Copy-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
             }
             Write-Host "Copying $Path => $Destination"
         }
