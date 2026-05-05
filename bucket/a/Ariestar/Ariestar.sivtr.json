@@ -1,0 +1,58 @@
+{
+    "version": "0.1.0",
+    "description": "终端输出工作区 - 捕获、浏览、检索、选取并导出终端输出 | A terminal output workspace — capture, browse, search, select, and export terminal output",
+    "homepage": "https://github.com/Ariestar/sivtr",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Ariestar/sivtr/releases/download/v0.1.0/sivtr-v0.1.0-windows-x64.zip",
+            "hash": "8574c11c98bcf02115adf9c57a928f595c1e7e7af629f986cda1354da97eaff7",
+            "extract_dir": "sivtr-v0.1.0-windows-x64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\sivtr.exe",
+    "link": "$env:AppData\\sivtr",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Ariestar/sivtr/releases/download/v$version/sivtr-v$version-windows-x64.zip",
+                "extract_dir": "sivtr-v$version-windows-x64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
