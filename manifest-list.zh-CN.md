@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1026)|Tag|Description|
+|Manifest (1027)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -116,6 +116,7 @@
 |[Appest.Dida](https://www.dida365.com/)|<a href="bucket/a/Appest/Appest.Dida.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|滴答清单，一款轻便的待办事项 (Todo)、日程管理 (GTD) 应用|
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个开源的 Notion 替代品，数据和定制由你掌控|
 |[appmakes.Typora](https://typora.io/)|<a href="bucket/a/appmakes/appmakes.Typora.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个 Markdown 编辑器和阅读器，所见即所得|
+|[Ariestar.sivtr](https://github.com/Ariestar/sivtr)|<a href="bucket/a/Ariestar/Ariestar.sivtr.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|终端输出工作区 - 捕获、浏览、检索、选取并导出终端输出|
 |[arimxyer.models](https://github.com/arimxyer/models)|<a href="bucket/a/arimxyer/arimxyer.models.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个快速的用于浏览 AI 模型、基准测试和编码智能体的终端用户界面（TUI）|
 |[ArminOsaj.AutoDarkMode](https://github.com/AutoDarkMode/Windows-Auto-Night-Mode)|<a href="bucket/a/ArminOsaj/ArminOsaj.AutoDarkMode.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|在指定时间切换 Windows 的深色与浅色主题|
 |[asciinema.agg](https://github.com/asciinema/agg)|<a href="bucket/a/asciinema/asciinema.agg.json"><img src="https://img.shields.io/badge/active-080"/></a>|一款用于从终端会话记录生成动画 GIF 文件的命令行工具|

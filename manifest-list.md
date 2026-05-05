@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (1026)|Tag|Description|
+|Manifest (1027)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -117,6 +117,7 @@
 |[Appest.Dida](https://www.dida365.com/)|<a href="bucket/a/Appest/Appest.Dida.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|Dida is a powerful to-do & task management app|
 |[AppFlowy.AppFlowy](https://www.appflowy.io/)|<a href="bucket/a/AppFlowy/AppFlowy.AppFlowy.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|An open-source alternative to Notion. You are in charge of your data and customizations|
 |[appmakes.Typora](https://typora.io/)|<a href="bucket/a/appmakes/appmakes.Typora.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A Markdown editor and reader|
+|[Ariestar.sivtr](https://github.com/Ariestar/sivtr)|<a href="bucket/a/Ariestar/Ariestar.sivtr.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal output workspace — capture, browse, search, select, and export terminal output|
 |[arimxyer.models](https://github.com/arimxyer/models)|<a href="bucket/a/arimxyer/arimxyer.models.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A fast TUI for browsing AI models, benchmarks, and coding agents|
 |[ArminOsaj.AutoDarkMode](https://github.com/AutoDarkMode/Windows-Auto-Night-Mode)|<a href="bucket/a/ArminOsaj/ArminOsaj.AutoDarkMode.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Switches between the dark and light theme of Windows at scheduled times|
 |[asciinema.agg](https://github.com/asciinema/agg)|<a href="bucket/a/asciinema/asciinema.agg.json"><img src="https://img.shields.io/badge/active-080"/></a>|A command-line tool for generating animated GIF files from terminal session recordings|
