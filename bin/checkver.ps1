@@ -136,6 +136,9 @@ $Queue | ForEach-Object {
 
     if ($json.checkver.url) {
         $url = $json.checkver.url
+        if ($url -like '*api.github.com/*') {
+            $wc.Headers.Add('Authorization', "Bearer $GitHubToken")
+        }
     }
     else {
         # It is meaningless to check the homepage in abyss bucket.

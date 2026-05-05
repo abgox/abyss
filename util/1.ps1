@@ -1344,6 +1344,107 @@ function A-Get-UninstallEntryByAppName {
     return $null
 }
 
+
+function A-Invoke-GithubAPI {
+    param (
+        [string]$Uri,
+        [hashtable]$Headers,
+        [hashtable]$RequestTimeout = $abgox_abyss.requestTimeout
+    )
+    if (-not $Uri) {
+        Write-Error '$Uri is empty.'
+        return
+    }
+
+    if (-not $Headers) {
+        $Headers = @{
+            'User-Agent'           = A-Get-UserAgent
+            'X-GitHub-Api-Version' = '2022-11-28'
+            'Accept'               = 'application/vnd.github.v3+json'
+        }
+    }
+
+    $tokenPool = @()
+    if ($env:GITHUB_ACTIONS) {
+        $env:TOKEN_POOL -split ',' | ForEach-Object { if ($_) { $tokenPool += $_ } }
+        # if ($env:GITHUB_TOKEN) {
+        #     $tokenPool += $env:GITHUB_TOKEN
+        # }
+        if (-not $tokenPool) {
+            Write-Error '$env:TOKEN_POOL is empty or not set.'
+            return
+        }
+    }
+    else {
+        try {
+            $localToken = scoop config gh_token
+            if ($localToken) {
+                $tokenPool += $localToken
+            }
+        }
+        catch {}
+    }
+
+    [int]$currentIndex = [System.Environment]::GetEnvironmentVariable('TOKEN_POOL_ORDER', 'User')
+    if ($null -eq $currentIndex -or $currentIndex -ge $tokenPool.Count) { $currentIndex = 0 }
+
+    $maxGlobalRetries = 5
+    $attemptCount = 0
+
+    while ($attemptCount -lt $maxGlobalRetries) {
+        $token = $tokenPool[$currentIndex]
+        if ($token) {
+            $Headers['Authorization'] = "Bearer $token"
+        }
+        else {
+            $Headers.Remove('Authorization')
+        }
+
+        try {
+            return Invoke-RestMethod -Uri $Uri -Headers $Headers @RequestTimeout -ErrorAction Stop
+        }
+        catch {
+            $response = $_.Exception.Response
+            if ($null -eq $response) {
+                Write-Error $_
+                return
+            }
+            $statusCode = [int]$response.StatusCode
+            $remaining = $response.Headers['x-ratelimit-remaining']
+            $retryAfter = $response.Headers['retry-after']
+
+            if ($statusCode -in 403, 429 -and ($null -ne $remaining -or $null -ne $retryAfter)) {
+                if ($remaining -eq '0') {
+                    if ($env:GITHUB_ACTIONS) {
+                        Write-Warning "Token [$currentIndex] is exhausted. Switching..."
+                        $currentIndex = ($currentIndex + 1) % $tokenPool.Count
+                        [Environment]::SetEnvironmentVariable('TOKEN_POOL_ORDER', $currentIndex, 'User')
+                    }
+                    else {
+                        Write-Warning 'Token (scoop config gh_token) is exhausted.'
+                    }
+                    $attemptCount++
+                    continue
+                }
+
+                $waitSec = if ($retryAfter) { [int]$retryAfter } else { 3 }
+
+                Write-Warning "(Github API) Secondary Rate Limit hit. Max Attempts: $maxGlobalRetries. Current Attempt: $($attemptCount + 1). Waiting ${waitSec}s..."
+                Start-Sleep -Seconds $waitSec
+                if ($env:GITHUB_ACTIONS) {
+                    $currentIndex = ($currentIndex + 1) % $tokenPool.Count
+                    [Environment]::SetEnvironmentVariable('TOKEN_POOL_ORDER', $currentIndex, 'User')
+                }
+                $attemptCount++
+            }
+            else {
+                Write-Error $_
+                return
+            }
+        }
+    }
+}
+
 function A-Get-VersionFromGithub {
     param (
         [switch]$Latest,
@@ -1351,7 +1452,7 @@ function A-Get-VersionFromGithub {
         [switch]$Newest
     )
     if (-not $json) {
-        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        Write-Error '$json is invalid.'
         return
     }
     if (-not $json.checkver.regex) {
@@ -1366,31 +1467,12 @@ function A-Get-VersionFromGithub {
         $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
     }
     if (-not $url) {
-        Write-Host "::error::`$url is invalid." -ForegroundColor Red
+        Write-Error '$url is invalid.'
         return
     }
     if ($url -notlike 'https://github.com/*/*') {
-        Write-Host "::error::'$url' is not a github url." -ForegroundColor Red
+        Write-Error "'$url' is not a github url."
         return
-    }
-
-    $headers = @{
-        'User-Agent'           = A-Get-UserAgent
-        'X-GitHub-Api-Version' = '2022-11-28'
-    }
-
-    if ($env:GITHUB_ACTIONS) {
-        $token = A-Get-GithubToken
-        if (-not $token) {
-            return
-        }
-        $headers['Authorization'] = "Bearer $token"
-    }
-    else {
-        $token = $scoopConfig.gh_token
-        if ($token) {
-            $headers['Authorization'] = "Bearer $token"
-        }
     }
 
     $url = $url -replace '^https://github.com/([^/]+)/([^/]+)(/.*)?', 'https://api.github.com/repos/$1/$2/releases'
@@ -1399,69 +1481,27 @@ function A-Get-VersionFromGithub {
         $url += '/latest'
     }
 
-    try {
-        $requestTimeout = $abgox_abyss.requestTimeout
-        $res = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
-        if ($Latest) {
-            return $res.tag_name -replace '[vV](?=\d+\.)', ''
-        }
-        elseif ($Newest) {
-            $releaseInfo = $res
-        }
-        elseif ($PreRelease) {
-            $releaseInfo = $res | Where-Object { $_.prerelease }
-        }
-        else {
-            $releaseInfo = $res | Where-Object { -not $_.prerelease }
-        }
-
-        foreach ($item in $releaseInfo) {
-            $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
-            if ($v -match $json.checkver.regex) {
-                return $v
-            }
-        }
+    $res = A-Invoke-GithubAPI -Uri $url
+    if (-not $res) {
         return
     }
-    catch {
-        Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
+    if ($Latest) {
+        return $res.tag_name -replace '[vV](?=\d+\.)', ''
+    }
+    elseif ($Newest) {
+        $releaseInfo = $res
+    }
+    elseif ($PreRelease) {
+        $releaseInfo = $res | Where-Object { $_.prerelease }
+    }
+    else {
+        $releaseInfo = $res | Where-Object { -not $_.prerelease }
+    }
 
-        if (-not $env:GITHUB_ACTIONS) {
-            return
-        }
-
-        if ($_.Exception.Message -like '*rate limit*') {
-
-            $token = A-Get-GithubToken -Next
-            if (-not $token) {
-                return
-            }
-            $headers['Authorization'] = "Bearer $token"
-
-            Start-Sleep -Seconds 10
-
-            $requestTimeout = $abgox_abyss.requestTimeout
-            $res = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
-            if ($Latest) {
-                return $res.tag_name -replace '[vV](?=\d+\.)', ''
-            }
-            elseif ($Newest) {
-                $releaseInfo = $res
-            }
-            elseif ($PreRelease) {
-                $releaseInfo = $res | Where-Object { $_.prerelease }
-            }
-            else {
-                $releaseInfo = $res | Where-Object { -not $_.prerelease }
-            }
-
-            foreach ($item in $releaseInfo) {
-                $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
-                if ($v -match $json.checkver.regex) {
-                    return $v
-                }
-            }
-            return
+    foreach ($item in $releaseInfo) {
+        $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
+        if ($v -match $json.checkver.regex) {
+            return $v
         }
     }
 }
@@ -1480,7 +1520,7 @@ function A-Get-NewestVersionFromGithub {
 
 function A-Get-VersionFromPowerShellGallery {
     if (-not $json) {
-        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        Write-Error '$json is invalid.'
         return
     }
     if (-not $json.checkver.regex) {
@@ -1491,7 +1531,7 @@ function A-Get-VersionFromPowerShellGallery {
     $module_name = $json.psmodule.name
 
     if (-not $module_name) {
-        Write-Host "::error::`$json.psmodule.name is invalid." -ForegroundColor Red
+        Write-Error '$json.psmodule.name is invalid.'
         return
     }
 
@@ -1504,7 +1544,7 @@ function A-Get-VersionFromPowerShellGallery {
 
 function A-Get-DynamicPageFromUrl {
     if (-not $json) {
-        Write-Host "::error::`$json is invalid." -ForegroundColor Red
+        Write-Error '$json is invalid.'
         return
     }
     if (-not $json.checkver.url) {
@@ -1595,52 +1635,16 @@ function A-Get-InstallerInfoFromWinget {
         'X-GitHub-Api-Version' = '2022-11-28'
     }
 
-    if ($env:GITHUB_ACTIONS) {
-        $token = A-Get-GithubToken
-        if (-not $token) {
-            return
-        }
-        $headers['Authorization'] = "Bearer $token"
-    }
-    else {
-        $token = $scoopConfig.gh_token
-        if ($token) {
-            $headers['Authorization'] = "Bearer $token"
-        }
-    }
-
     $rootDir = $PackageIdentifier.ToLower()[0]
     $PackagePath = $PackageIdentifier -replace '\.', '/'
 
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
-    try {
-        $requestTimeout = $abgox_abyss.requestTimeout
-        $versions = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
+    $res = A-Invoke-GithubAPI -Uri $url
+    if (-not $res) {
+        return
     }
-    catch {
-        Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
-
-        if (-not $env:GITHUB_ACTIONS) {
-            return
-        }
-
-        if ($_.Exception.Message -like '*rate limit*') {
-            $token = A-Get-GithubToken -Next
-            if (-not $token) {
-                return
-            }
-            $headers['Authorization'] = "Bearer $token"
-
-            Start-Sleep -Seconds 10
-
-            $requestTimeout = $abgox_abyss.requestTimeout
-            $versions = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
-        }
-        else {
-            return
-        }
-    }
+    $versions = $res | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
 
     $latestVersion = ''
 
@@ -1663,34 +1667,10 @@ function A-Get-InstallerInfoFromWinget {
 
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
-    try {
-        $requestTimeout = $abgox_abyss.requestTimeout
-        $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
+    $installerYaml = A-Invoke-GithubAPI -Uri $url -Headers $headers
+    if (-not $installerYaml) {
+        return
     }
-    catch {
-        Write-Host "::warning::Failed to access '$url': $($_.Exception.Message)" -ForegroundColor Yellow
-
-        if (-not $env:GITHUB_ACTIONS) {
-            return
-        }
-
-        if ($_.Exception.Message -like '*rate limit*') {
-            $token = A-Get-GithubToken -Next
-            if (-not $token) {
-                return
-            }
-            $headers['Authorization'] = "Bearer $token"
-
-            Start-Sleep -Seconds 10
-
-            $requestTimeout = $abgox_abyss.requestTimeout
-            $installerYaml = Invoke-RestMethod -Uri $url -Headers $headers @requestTimeout
-        }
-        else {
-            return
-        }
-    }
-
     $installerInfo = ConvertFrom-Yaml $installerYaml
 
     if (!$installerInfo) {
@@ -2515,29 +2495,6 @@ function A-Show-IssueCreationPrompt {
 
 function A-Get-UserAgent {
     return "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
-}
-
-function A-Get-GithubToken {
-    param(
-        [switch]$Next
-    )
-    if ($null -eq $env:TOKEN_POOL -or -not $env:TOKEN_POOL.Trim()) {
-        Write-Host "::error::'TOKEN_POOL' not set." -ForegroundColor Red
-        exit 1
-    }
-    $order = [int]([System.Environment]::GetEnvironmentVariable('TOKEN_ORDER', 'User'))
-    if (-not $order) {
-        $order = 1
-        [Environment]::SetEnvironmentVariable('TOKEN_ORDER', $order, 'User')
-    }
-    if ($Next) {
-        $order++
-        [Environment]::SetEnvironmentVariable('TOKEN_ORDER', $order, 'User')
-    }
-    $tokens = $env:TOKEN_POOL.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-    if ($tokens) {
-        return $tokens[$order - 1]
-    }
 }
 
 #endregion
