@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1027)|Tag|Description|
+|Manifest (1028)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -704,6 +704,7 @@
 |[NetEase.MailMaster](https://dashi.163.com/)|<a href="bucket/n/NetEase/NetEase.MailMaster.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|网易邮箱大师 - 高效强大的全平台邮箱客户端|
 |[neurocyte.flow](https://flow-control.dev/)|<a href="bucket/n/neurocyte/neurocyte.flow.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Flow Control: 一款程序员的文本编辑器|
 |[Nexmoe.VidBee](https://vidbee.org/)|<a href="bucket/n/Nexmoe/Nexmoe.VidBee.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于 YouTube、TikTok 及 1000 多个平台的免费开源视频下载器|
+|[NextTrace.NextTrace.Core](https://www.nxtrace.org/)|<a href="bucket/n/NextTrace/NextTrace.NextTrace.Core.json"><img src="https://img.shields.io/badge/active-080"/></a>|开源的可视化路由追踪命令行工具|
 |[NickeManarin.ScreenToGif](https://www.screentogif.com/)|<a href="bucket/n/NickeManarin/NickeManarin.ScreenToGif.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|屏幕、摄像头和画板录像，并有内置编辑器|
 |[Nikse.SubtitleEdit](http://www.nikse.dk/SubtitleEdit/Help)|<a href="bucket/n/Nikse/Nikse.SubtitleEdit.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|Subtitle Edit 是一款免费开源的视频字幕编辑器|
 |[nini22P.iris](https://github.com/nini22P/iris)|<a href="bucket/n/nini22P/nini22P.iris.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|轻量级视频播放器|

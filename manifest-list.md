@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (1027)|Tag|Description|
+|Manifest (1028)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -705,6 +705,7 @@
 |[NetEase.MailMaster](https://dashi.163.com/)|<a href="bucket/n/NetEase/NetEase.MailMaster.json"><img src="https://img.shields.io/badge/pending-85e"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|Efficient, powerful and cross-platform email client|
 |[neurocyte.flow](https://flow-control.dev/)|<a href="bucket/n/neurocyte/neurocyte.flow.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Flow Control: A programmer's text editor|
 |[Nexmoe.VidBee](https://vidbee.org/)|<a href="bucket/n/Nexmoe/Nexmoe.VidBee.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Free Open Source Video Downloader for YouTube, TikTok, and 1000+ Platforms|
+|[NextTrace.NextTrace.Core](https://www.nxtrace.org/)|<a href="bucket/n/NextTrace/NextTrace.NextTrace.Core.json"><img src="https://img.shields.io/badge/active-080"/></a>|An open source visual route tracking CLI tool|
 |[NickeManarin.ScreenToGif](https://www.screentogif.com/)|<a href="bucket/n/NickeManarin/NickeManarin.ScreenToGif.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Screen, webcam and sketchboard recorder with an integrated editor|
 |[Nikse.SubtitleEdit](http://www.nikse.dk/SubtitleEdit/Help)|<a href="bucket/n/Nikse/Nikse.SubtitleEdit.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|Subtitle Edit is a free and open source editor for video subtitles|
 |[nini22P.iris](https://github.com/nini22P/iris)|<a href="bucket/n/nini22P/nini22P.iris.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A lightweight video player|
