@@ -14,14 +14,14 @@ if (-not $env:SCOOP_HOME) {
             $env:SCOOP_HOME = Convert-Path (scoop prefix scoop)
         }
         catch {
-            Write-Host "::error::`$env:SCOOP_HOME is not set." -ForegroundColor Red
+            Write-Error '$env:SCOOP_HOME is not set.'
             exit 1
         }
     }
 }
 
 if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
-    Write-Host "::error::`$env:SCOOP_HOME\lib\json.ps1 is not found." -ForegroundColor Red
+    Write-Error '$env:SCOOP_HOME\lib\json.ps1 is not found.'
     exit 1
 }
 
@@ -234,7 +234,7 @@ foreach ($m in $manifests) {
         $json = $content | ConvertFrom-Json -AsHashtable -ErrorAction Stop
     }
     catch {
-        Write-Host "::error::Failed to convert JSON: $_" -ForegroundColor Red
+        Write-Error "Failed to convert JSON: $_"
         continue
     }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
