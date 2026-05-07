@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1028)|Tag|Description|
+|Manifest (1029)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -315,7 +315,7 @@
 |[CrossPaste.CrossPaste](https://crosspaste.com/)|<a href="bucket/c/CrossPaste/CrossPaste.CrossPaste.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|跨设备的通用粘贴板|
 |[CrowdStrike.Perseus](https://github.com/CrowdStrike/perseus)|<a href="bucket/c/CrowdStrike/CrowdStrike.Perseus.json"><img src="https://img.shields.io/badge/active-080"/></a>|一个开源工具，旨在解决 Go 语言模块依赖关系复杂度激增的问题|
 |[cURL.cURL](https://curl.se/)|<a href="bucket/c/cURL/cURL.cURL.json"><img src="https://img.shields.io/badge/active-080"/></a>|用于通过 URL 传输数据的命令行工具和库|
-|[CyberTimon.RapidRAW](https://github.com/CyberTimon/RapidRAW)|<a href="bucket/r/CyberTimon/CyberTimon.RapidRAW.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款美观、无损且支持 GPU 加速的 RAW 图像编辑器|
+|[CyberTimon.RapidRAW](https://github.com/CyberTimon/RapidRAW)|<a href="bucket/c/CyberTimon/CyberTimon.RapidRAW.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款美观、无损且支持 GPU 加速的 RAW 图像编辑器|
 |[dahlbyk.posh-git](https://github.com/dahlbyk/posh-git)|<a href="bucket/d/dahlbyk/dahlbyk.posh-git.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[PSModule](https://abyss.abgox.com/faq/powershell-module)|一个将 Git 和 PowerShell 集成的 PowerShell 模块，它通过提供可在 PowerShell 提示符中显示的 Git 状态摘要信息来实现集成|
 |[dail8859.NotepadNext](https://github.com/dail8859/NotepadNext)|<a href="bucket/d/dail8859/dail8859.NotepadNext.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Notepad++ 的跨平台重新实现|
 |[dandavison.delta](https://dandavison.github.io/delta/)|<a href="bucket/d/dandavison/dandavison.delta.json"><img src="https://img.shields.io/badge/active-080"/></a>|一款用于 git、diff、grep 和 blame 输出的语法高亮分页器|
@@ -446,6 +446,7 @@
 |[HexHub.HexHub](https://www.hexhub.cn/)|<a href="bucket/h/HexHub/HexHub.HexHub.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|为程序员和运维人员量身打造的一站式开发运维利器|
 |[Hibbiki.Chromium](https://github.com/Hibbiki/chromium-win64)|<a href="bucket/h/Hibbiki/Hibbiki.Chromium.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|适用于 Windows 64 位的稳定版 Chromium 构建版本|
 |[HiBitSoftware.HiBitUninstaller](https://www.hibitsoft.ir/Uninstaller.html)|<a href="bucket/h/HiBitSoftware/HiBitSoftware.HiBitUninstaller.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|彻底卸载顽固软件、Windows 应用程序和浏览器扩展程序|
+|[Hmbown.DeepSeek-TUI](https://github.com/Hmbown/DeepSeek-TUI)|<a href="bucket/h/Hmbown/Hmbown.DeepSeek-TUI.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|可在终端中运行的 DeepSeek 模型代码智能代理|
 |[hoowhoami.EchoMusic](https://github.com/hoowhoami/EchoMusic)|<a href="bucket/h/hoowhoami/hoowhoami.EchoMusic.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个简约的第三方酷狗音乐概念版|
 |[hoppscotch.Hoppscotch](https://hoppscotch.com/)|<a href="bucket/h/hoppscotch/hoppscotch.Hoppscotch.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款可跨平台运行的桌面应用程序，助力你创建和管理各类 API 请求|
 |[hrpzcf.HashCalculator](https://github.com/hrpzcf/HashCalculator)|<a href="bucket/h/hrpzcf/hrpzcf.HashCalculator.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一个文件哈希值计算工具，批量计算/批量校验/查找重复文件/改变哈希值等|
