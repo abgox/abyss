@@ -1,0 +1,58 @@
+{
+    "version": "0.8.16",
+    "description": "可在终端中运行的 DeepSeek 模型代码智能代理 | Coding agent for DeepSeek models that runs in your terminal",
+    "homepage": "https://github.com/Hmbown/DeepSeek-TUI",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Hmbown/DeepSeek-TUI/releases/download/v0.8.16/deepseek-tui-windows-x64.exe#/deepseek-tui.exe",
+            "hash": "9ae52afdf795f93af46217617e13bf51037463f2bf1b3d2d66ade89f1e8ad7c1"
+        }
+    },
+    "bin": "deepseek-tui.exe",
+    "link": [
+        "$env:AppData\\deepseek",
+        "$home\\.deepseek"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Hmbown/DeepSeek-TUI/releases/download/v$version/deepseek-tui-windows-x64.exe#/deepseek-tui.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
