@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (1029)|Tag|Description|
+|Manifest (1030)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -840,6 +840,7 @@
 |[simonmichael.hledger](https://hledger.org/)|<a href="bucket/s/simonmichael/simonmichael.hledger.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Robust, fast, intuitive plain text accounting tool with CLI, TUI and web interfaces|
 |[sinelaw.fresh](https://sinelaw.github.io/fresh/)|<a href="bucket/s/sinelaw/sinelaw.fresh.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A terminal-based text editor|
 |[Sipeed.PicoClaw](https://picoclaw.io/)|<a href="bucket/s/Sipeed/Sipeed.PicoClaw.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Tiny, Fast, and Deployable anywhere - automate the mundane, unleash your creativity|
+|[skardyy.mcat](https://github.com/Skardyy/mcat)|<a href="bucket/s/skardyy/skardyy.mcat.json"><img src="https://img.shields.io/badge/active-080"/></a>|Terminal image, video, and Markdown viewer|
 |[SkyArc.LANDrop](https://landrop.app/)|<a href="bucket/s/SkyArc/SkyArc.LANDrop.json"><img src="https://img.shields.io/badge/active-080"/></a>|Drop any files to any devices on your LAN|
 |[SlackTechnologies.Slack](https://www.slack.com/)|<a href="bucket/s/SlackTechnologies/SlackTechnologies.Slack.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Msix](https://abyss.abgox.com/faq/msix)|A team communication and collaboration tool|
 |[Smartsheet.Smartsheet](https://www.smartsheet.com/)|<a href="bucket/s/Smartsheet/Smartsheet.Smartsheet.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Dynamically plan, execute, and report on work in Smartsheet—without bouncing between browser tabs|
