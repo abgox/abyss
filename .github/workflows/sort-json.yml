@@ -26,3 +26,18 @@ jobs:
           $manual = "${{ github.event_name }}" -eq "workflow_dispatch"
           .\script\sort-json.ps1 -All:$manual
           .\script\push-change.ps1 -message "(chore): automatically sort json [skip ci]"
+
+  sync-repos:
+    name: Sync Repos
+    needs: push-changes
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: abgox/hub-mirror-action@abgox
+        with:
+          src: github/abgox
+          dst: gitee/abgox
+          dst_key: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+          dst_token: ""
+          force_update: true
+          static_list: ${{ github.event.repository.name }}
