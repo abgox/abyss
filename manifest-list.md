@@ -20,7 +20,7 @@
 
 ---
 
-|Manifest (1030)|Tag|Description|
+|Manifest (1031)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Yet another Web UI for Nginx|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|A desktop application to manage multiple active Node.js versions|
@@ -255,6 +255,7 @@
 |[BrowserOS.CLI](https://browseros.com/)|<a href="bucket/b/BrowserOS/BrowserOS.CLI.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A command-line interface for controlling BrowserOS via MCP|
 |[Bruno.Bruno](https://www.usebruno.com/)|<a href="bucket/b/Bruno/Bruno.Bruno.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia)|
 |[btpf.Alexandria](https://github.com/btpf/Alexandria)|<a href="bucket/b/btpf/btpf.Alexandria.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|A minimalistic cross-platform eBook reader|
+|[Builtbybel.FluentCleaner](https://github.com/builtbybel/FluentCleaner)|<a href="bucket/b/Builtbybel/Builtbybel.FluentCleaner.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|A real WinUI desktop cleaner with terminal control and multi-database support|
 |[BurntSushi.ripgrep.GNU](https://github.com/BurntSushi/ripgrep)|<a href="bucket/b/BurntSushi/BurntSushi.ripgrep.GNU.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|A line-oriented search tool that recursively searches the current directory for a regex pattern|
 |[BurntSushi.ripgrep.MSVC](https://github.com/BurntSushi/ripgrep)|<a href="bucket/b/BurntSushi/BurntSushi.ripgrep.MSVC.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|A line-oriented search tool that recursively searches the current directory for a regex pattern|
 |[ByteDance.CapCut](https://www.capcut.com/)|<a href="bucket/b/ByteDance/ByteDance.CapCut.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|An all-in-one online video editing software which makes creation, upload & share easier, with frame by frame track editor, cloud drive etc|

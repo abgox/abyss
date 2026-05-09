@@ -19,7 +19,7 @@
 
 ---
 
-|Manifest (1030)|Tag|Description|
+|Manifest (1031)|Tag|Description|
 |-|:-:|-|
 |[0xJacky.nginx-ui](https://nginxui.com/)|<a href="bucket/0/0xJacky/0xJacky.nginx-ui.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|另一个适用于 Nginx 的 Web 用户界面|
 |[1111mp.nvm-desktop](https://github.com/1111mp/nvm-desktop)|<a href="bucket/1/1111mp/1111mp.nvm-desktop.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[Admin](https://abyss.abgox.com/faq/require-admin)|一个用于管理多个 Node.js 版本的桌面应用程序|
@@ -254,6 +254,7 @@
 |[BrowserOS.CLI](https://browseros.com/)|<a href="bucket/b/BrowserOS/BrowserOS.CLI.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一个命令行界面，通过 MCP 控制 BrowserOS|
 |[Bruno.Bruno](https://www.usebruno.com/)|<a href="bucket/b/Bruno/Bruno.Bruno.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|用于探索和测试 API 的开源集成开发环境 (Postman/Insomnia 的轻量级替代品)|
 |[btpf.Alexandria](https://github.com/btpf/Alexandria)|<a href="bucket/b/btpf/btpf.Alexandria.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Persist](https://abyss.abgox.com/features/data-persistence#persist)|一款简约的跨平台电子书阅读器|
+|[Builtbybel.FluentCleaner](https://github.com/builtbybel/FluentCleaner)|<a href="bucket/b/Builtbybel/Builtbybel.FluentCleaner.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)|一款支持终端控制与多数据库的原生 WinUI 桌面清理工具|
 |[BurntSushi.ripgrep.GNU](https://github.com/BurntSushi/ripgrep)|<a href="bucket/b/BurntSushi/BurntSushi.ripgrep.GNU.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一种面向行的搜索工具，可递归地在当前目录中搜索正则表达式模式|
 |[BurntSushi.ripgrep.MSVC](https://github.com/BurntSushi/ripgrep)|<a href="bucket/b/BurntSushi/BurntSushi.ripgrep.MSVC.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[AdminOrDevMode](https://abyss.abgox.com/faq/require-admin-or-dev-mode)|一种面向行的搜索工具，可递归地在当前目录中搜索正则表达式模式|
 |[ByteDance.CapCut](https://www.capcut.com/)|<a href="bucket/b/ByteDance/ByteDance.CapCut.json"><img src="https://img.shields.io/badge/active-080"/></a><br/>[Link](https://abyss.abgox.com/features/data-persistence#link)<br/>[UninstallManually](https://abyss.abgox.com/faq/uninstall-manually)|字节跳动的一款多合一在线视频编辑软件(剪映专业版的国际版本)，具有逐帧轨道编辑器和云存储等，让创作、上传和分享更加容易|
