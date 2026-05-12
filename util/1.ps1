@@ -41,18 +41,18 @@ if ($scoopdir -and $scoopConfig.root_path -and $scoopdir -ne $scoopConfig.root_p
     scoop config 'root_path' $scoopdir
 }
 
-# https://abyss.abgox.com/features/extra-features#abgox-abyss-bucket-name
+# https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-bucket-name
 if ($bucket) {
     if ($scoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
         scoop config 'abgox-abyss-bucket-name' $bucket
     }
     if ($bucket -ne 'abyss') {
         error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
-        error 'Refer to: https://abyss.abgox.com/faq/bucket-name'
+        error 'Refer to: https://abyss.abgox.com/docs/bucket-name'
     }
 }
 
-# https://abyss.abgox.com/features/extra-features#abgox-abyss-app-uninstall-action
+# https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-app-uninstall-action
 $_ = $scoopConfig.'abgox-abyss-app-uninstall-action'
 $abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { '123' }
 
@@ -88,15 +88,15 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
-    # https://abyss.abgox.com/features/manifest-status-control
+    # https://abyss.abgox.com/docs/features/manifest-status-control
     if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
         A-Deny-Manifest
     }
-    # https://abyss.abgox.com/faq/require-admin
+    # https://abyss.abgox.com/docs/require-admin
     if ($manifest.admin) {
         A-Require-Admin
     }
-    # https://abyss.abgox.com/faq/deny-if-app-conflict
+    # https://abyss.abgox.com/docs/deny-if-app-conflict
     if ($manifest.conflicts) {
         A-Deny-IfAppConflict $manifest.conflicts
     }
@@ -104,7 +104,7 @@ function A-Start-Install {
         A-Deny-IfAppConflict $manifest.renamed.old
         A-Move-Persistence
     }
-    # https://abyss.abgox.com/features/data-persistence/persist
+    # https://abyss.abgox.com/docs/features/data-persistence/persist
     if ($manifest.persist) {
         foreach ($item in $manifest.persist) {
             if ($item -is [string]) {
@@ -146,7 +146,7 @@ function A-Start-Install {
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
-    # https://abyss.abgox.com/features/data-persistence/link
+    # https://abyss.abgox.com/docs/features/data-persistence/link
     if ($manifest.link) {
         foreach ($item in $manifest.link) {
             $expandPath = $ExecutionContext.InvokeCommand.ExpandString($item)
@@ -204,13 +204,13 @@ function A-Complete-Install {
         $note = if ($PSUICulture -like 'zh*') {
             @(
                 "安装目录: $($manifest.location)",
-                '参考: https://abyss.abgox.com/faq/external-installation-directory'
+                '参考: https://abyss.abgox.com/docs/external-installation-directory'
             )
         }
         else {
             @(
                 "The installation directory: $($manifest.location)",
-                'Refer to: https://abyss.abgox.com/faq/external-installation-directory'
+                'Refer to: https://abyss.abgox.com/docs/external-installation-directory'
             )
         }
         A-Show-Notes $note
@@ -222,7 +222,7 @@ function A-Complete-Install {
 }
 
 function A-Start-Uninstall {
-    # https://abyss.abgox.com/features/manifest-status-control
+    # https://abyss.abgox.com/docs/features/manifest-status-control
     if ($version -in 'pending', 'deprecated') {
         A-Deny-Update
     }
@@ -239,7 +239,7 @@ function A-Start-Uninstall {
         }
         if ($cmd -eq 'update') {
             error "'$app' is renamed to '$new'."
-            error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
+            error 'Refer to: https://abyss.abgox.com/docs/deny-manifest'
             A-Show-Notes
             A-Exit
         }
@@ -416,7 +416,7 @@ function A-New-LinkFile {
         A-New-LinkFile "$home\xxx", "$env:AppData\xxx"
 
     .LINK
-        https://abyss.abgox.com/features/data-persistence/link
+        https://abyss.abgox.com/docs/features/data-persistence/link
     #>
     param (
         [array]$LinkPaths,
@@ -430,7 +430,7 @@ function A-New-LinkFile {
         }
         if (!$abgox_abyss.isDevMode) {
             error "$app requires admin permission or developer mode to create SymbolicLink."
-            error 'Refer to: https://abyss.abgox.com/faq/require-admin-or-dev-mode'
+            error 'Refer to: https://abyss.abgox.com/docs/require-admin-or-dev-mode'
             A-Exit
         }
     }
@@ -454,7 +454,7 @@ function A-New-LinkDirectory {
         A-New-LinkDirectory "$env:AppData\Code", "$home\.vscode"
 
     .LINK
-        https://abyss.abgox.com/features/data-persistence/link
+        https://abyss.abgox.com/docs/features/data-persistence/link
     #>
     param (
         [array]$LinkPaths,
@@ -1205,7 +1205,7 @@ function A-Uninstall-Manually {
             }
             error 'It requires you to uninstall it manually.'
             error $p
-            error 'Refer to: https://abyss.abgox.com/faq/uninstall-manually'
+            error 'Refer to: https://abyss.abgox.com/docs/uninstall-manually'
             A-Exit
         }
     }
@@ -1267,7 +1267,7 @@ function A-Require-Admin {
 
     if (!$abgox_abyss.isAdmin) {
         error 'It requires admin permission. Please try again with admin permission.'
-        error 'Refer to: https://abyss.abgox.com/faq/require-admin'
+        error 'Refer to: https://abyss.abgox.com/docs/require-admin'
         A-Exit
     }
 }
@@ -1279,7 +1279,7 @@ function A-Deny-Update {
     #>
     if ($cmd -eq 'update') {
         error "'$app' does not allow update by Scoop."
-        error 'Refer to: https://abyss.abgox.com/faq/deny-update'
+        error 'Refer to: https://abyss.abgox.com/docs/deny-update'
         A-Show-Notes
         A-Exit
     }
@@ -1881,7 +1881,7 @@ function A-Deny-Manifest {
     }
     if ($msg) {
         error $msg
-        error 'Refer to: https://abyss.abgox.com/faq/deny-manifest'
+        error 'Refer to: https://abyss.abgox.com/docs/deny-manifest'
         A-Show-Notes
         A-Exit
     }
@@ -1898,7 +1898,7 @@ function A-Deny-IfAppConflict {
     $Apps | Where-Object { $_ -ne $app } | ForEach-Object {
         if (Test-Path (appdir $_)) {
             error "'$app' conflicts with '$_'."
-            error 'Refer to: https://abyss.abgox.com/faq/deny-if-app-conflict'
+            error 'Refer to: https://abyss.abgox.com/docs/deny-if-app-conflict'
             A-Exit
         }
     }
@@ -2092,7 +2092,7 @@ function A-New-LinkBase {
     .PARAMETER linkTargets
         链接指向的目标路径数组
         通常忽略它，让它根据 LinkPaths 自动生成
-        生成规则: https://abyss.abgox.com/features/data-persistence/link-rule
+        生成规则: https://abyss.abgox.com/docs/features/data-persistence/link-rule
 
     .PARAMETER ItemType
         链接类型，可选值为 SymbolicLink/Junction
@@ -2101,7 +2101,7 @@ function A-New-LinkBase {
         相关链接路径信息会写入到该文件中
 
     .LINK
-        https://abyss.abgox.com/features/data-persistence/link
+        https://abyss.abgox.com/docs/features/data-persistence/link
     #>
     param (
         [array]$LinkPaths, # 源路径数组（将被替换为链接）
@@ -2593,7 +2593,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
 
     $abgox_abyss = @{}
 
-    # https://abyss.abgox.com/features/extra-features#abgox-abyss-app-shortcuts-action
+    # https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-app-shortcuts-action
     $_ = $scoopConfig.'abgox-abyss-app-shortcuts-action'
     $abgox_abyss.shortcutsActionLevel = if ($_) { $_ }else { '1' }
 

@@ -160,20 +160,20 @@ foreach ($file in $files) {
     if ($c.admin -or $c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin)') {
         $admin = 'Yes'
     }
-    $line += "[$admin](https://abyss.abgox.com/faq/require-admin)"
+    $line += "[$admin](https://abyss.abgox.com/docs/require-admin)"
 
     # Persistence
     $persistence = @()
     if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') {
-        $persistence += '[link](https://abyss.abgox.com/features/data-persistence/#link)'
+        $persistence += '[link](https://abyss.abgox.com/docs/features/data-persistence/#link)'
     }
     if ($c.persist) {
         if ($file.status -eq 'added') {
-            $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist) ⚠️'
+            $persistence += '[persist](https://abyss.abgox.com/docs/features/data-persistence/#persist) ⚠️'
             $labels.'data-persistence-review-needed' = $true
         }
         else {
-            $persistence += '[persist](https://abyss.abgox.com/features/data-persistence/#persist)'
+            $persistence += '[persist](https://abyss.abgox.com/docs/features/data-persistence/#persist)'
         }
     }
     $line += if ($persistence) { $persistence -join ', ' } else { '' }

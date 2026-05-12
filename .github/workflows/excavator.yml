@@ -58,11 +58,6 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch}}
 
-      - name: Generate list
-        shell: pwsh
-        run: |
-          .\script\generate-list.ps1
-
       - name: Commit and push changes
         shell: pwsh
         run: |
@@ -73,7 +68,7 @@ jobs:
           # Update Docs
           git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
           cd abyss-docs
-          .\scripts\update-manifest-list.ps1
+          .\scripts\generate-list.ps1
           .\scripts\push-change.ps1
 
   excavate:

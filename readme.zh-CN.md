@@ -29,8 +29,8 @@
     <a href="https://www.microsoft.com/windows">
         <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
     </a>
-    <a href="manifest-list.zh-CN.md">
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%2Fraw%2Fmain%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
+    <a href="https://abyss.abgox.com/docs/manifest-list">
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
         <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
@@ -49,7 +49,7 @@
 > [!Important]
 >
 > - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh/) bucket
-> - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/features/data-persistence)
+> - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
 > - 它的清单是基于 [util](./util/) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
 
 ## 特性
@@ -58,10 +58,10 @@
 >
 > 区别于标准的 Scoop bucket，[abyss](https://abyss.abgox.com) 包含了一些额外的特性
 
-- [清单状态控制](https://abyss.abgox.com/features/manifest-status-control)
-- [完善的数据持久化](https://abyss.abgox.com/features/data-persistence)
-- [灵活的应用安装方案](https://abyss.abgox.com/features/install-solution)
-- [Scoop 配置控制的其他功能](https://abyss.abgox.com/features/extra-features)
+- [清单状态控制](https://abyss.abgox.com/docs/features/manifest-status-control)
+- [完善的数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
+- [灵活的应用安装方案](https://abyss.abgox.com/docs/features/install-solution)
+- [Scoop 配置控制的其他功能](https://abyss.abgox.com/docs/features/extra-features)
 - 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供多语言支持
 - 标准化的目录结构和应用清单命名
   - 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
@@ -124,11 +124,4 @@
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
 
-## 清单列表
-
-> [!Tip]
->
-> 在 [官网](https://abyss.abgox.com) 上查看: https://abyss.abgox.com/manifest-list
-
-- [简体中文](./manifest-list.zh-CN.md)
-- [English](./manifest-list.md)
+## [清单列表](https://abyss.abgox.com/docs/manifest-list)
