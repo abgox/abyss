@@ -2022,7 +2022,7 @@ function A-Copy-Item {
     if ($needCopy) {
         A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
-            if ($sourceItem.PSIsContainer) {
+            if ($sourceItem.PSIsContainer -and -not $sourceItem.LinkType) {
                 $result = & robocopy "$Path" "$Destination" /E /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
                 if ($LASTEXITCODE -ge 8) {
                     throw $result
