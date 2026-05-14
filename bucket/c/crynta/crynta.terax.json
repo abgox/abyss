@@ -1,0 +1,63 @@
+{
+    "version": "0.6.1",
+    "description": "开源轻量跨平台原生 AI 终端 | Open-source lightweight cross-platform AI-native terminal",
+    "homepage": "https://terax.app/",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/crynta/terax-ai/releases/download/v0.6.1/Terax_0.6.1_x64-setup.exe",
+            "hash": "c0d340c1106d82190bafac2e3fee22e9970f05d33020e7f5c51f2596f072c562"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\terax.exe",
+            "Terax"
+        ]
+    ],
+    "link": "$env:AppData\\app.crynta.terax",
+    "cleanup": "$env:LocalAppData\\app.crynta.terax",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/crynta/terax-ai/releases/download/v$version/Terax_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
