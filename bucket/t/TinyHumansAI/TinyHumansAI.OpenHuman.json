@@ -1,0 +1,63 @@
+{
+    "version": "0.53.40",
+    "description": "你的个人 AI 超级智能。私密、简单且极其强大 | Your Personal AI super intelligence. Private, Simple and extremely powerful",
+    "homepage": "https://tinyhumans.ai/",
+    "license": {
+        "identifier": "GPL-3.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tinyhumansai/openhuman/releases/download/v0.53.40/OpenHuman_0.53.40_x64-setup.exe",
+            "hash": "efe065c5923ecc8e1cacf705a4620a6f2c37cbc8a1e503cae12799631c094909"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\OpenHuman.exe",
+            "OpenHuman"
+        ]
+    ],
+    "link": "$home\\.openhuman",
+    "cleanup": "$env:LocalAppData\\com.openhuman.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tinyhumansai/openhuman/releases/download/v$version/OpenHuman_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
