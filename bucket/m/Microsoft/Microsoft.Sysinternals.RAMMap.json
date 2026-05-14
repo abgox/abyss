@@ -1,0 +1,94 @@
+{
+    "version": "1.63",
+    "description": "一款适用于 Windows Vista 及更高版本系统的高级物理内存占用分析工具 | An advanced physical memory usage analysis utility for Windows Vista and higher",
+    "homepage": "https://learn.microsoft.com/sysinternals/downloads/rammap",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.sysinternals.com/files/RAMMap.zip",
+            "hash": "6536a8107a3fb391e4443f2742366067341a7da50de89f99ca0b2390120dd0cc",
+            "bin": [
+                [
+                    "app\\RAMMap64.exe",
+                    "rammap",
+                    "/accepteula"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\RAMMap64.exe",
+                    "RamMap",
+                    "/accepteula"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://download.sysinternals.com/files/RAMMap.zip",
+            "hash": "6536a8107a3fb391e4443f2742366067341a7da50de89f99ca0b2390120dd0cc",
+            "bin": [
+                [
+                    "app\\RAMMap64a.exe",
+                    "rammap",
+                    "/accepteula"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\RAMMap64a.exe",
+                    "RamMap",
+                    "/accepteula"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Sysinternals.RAMMap' 'zip'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
