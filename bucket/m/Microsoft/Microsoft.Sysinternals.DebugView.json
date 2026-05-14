@@ -1,0 +1,94 @@
+{
+    "version": "5.00",
+    "description": "一款可监控本地系统调试输出，或监控网络中任意可通过 TCP/IP 协议访问的计算机调试输出的工具 | A tool that lets you monitor debug output on your local system, or any computer on the network that you can reach via TCP/IP",
+    "homepage": "https://learn.microsoft.com/sysinternals/downloads/debugview",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.sysinternals.com/files/DebugView.zip",
+            "hash": "175df220c9c35ebb38bc00187fca8e6e09fa4ec61c4af9e4dfadc7bbf2b723fb",
+            "bin": [
+                [
+                    "app\\dbgview64.exe",
+                    "dbgview",
+                    "/accepteula"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\dbgview64.exe",
+                    "DebugView",
+                    "/accepteula"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://download.sysinternals.com/files/DebugView.zip",
+            "hash": "175df220c9c35ebb38bc00187fca8e6e09fa4ec61c4af9e4dfadc7bbf2b723fb",
+            "bin": [
+                [
+                    "app\\Dbgview64a.exe",
+                    "dbgview",
+                    "/accepteula"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\Dbgview64a.exe",
+                    "DebugView",
+                    "/accepteula"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Sysinternals.DebugView' 'zip'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
