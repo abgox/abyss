@@ -1,0 +1,94 @@
+{
+    "version": "4.02",
+    "description": "一款适用于 Windows 系统的高级监控工具，可实时显示文件系统、注册表以及进程和线程的活动情况 | An advanced monitoring tool for Windows that shows real-time file system, Registry and process/thread activity",
+    "homepage": "https://learn.microsoft.com/sysinternals/downloads/procmon",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.sysinternals.com/files/ProcessMonitor.zip",
+            "hash": "39007cc8ea844dd023be9e2c1c03ee1bcca7b417298b277cba712d253f8f167a",
+            "bin": [
+                [
+                    "app\\Procmon64.exe",
+                    "procmon",
+                    "/accepteula"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\Procmon64.exe",
+                    "ProcessMonitor",
+                    "/accepteula"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://download.sysinternals.com/files/ProcessMonitor.zip",
+            "hash": "39007cc8ea844dd023be9e2c1c03ee1bcca7b417298b277cba712d253f8f167a",
+            "bin": [
+                [
+                    "app\\Procmon64a.exe",
+                    "procmon",
+                    "/accepteula"
+                ]
+            ],
+            "shortcuts": [
+                [
+                    "app\\Procmon64a.exe",
+                    "ProcessMonitor",
+                    "/accepteula"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Sysinternals.ProcessMonitor' 'zip'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
