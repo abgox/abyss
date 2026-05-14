@@ -1,0 +1,60 @@
+{
+    "version": "1.0.26",
+    "description": "一款用于查看、管理和清理 Windows 驱动存储库的强大工具 | Powerful tool for viewing, managing, and cleaning up the Windows DriverStore",
+    "homepage": "https://github.com/lostindark/DriverStoreExplorer",
+    "license": {
+        "identifier": "GPL-2.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/lostindark/DriverStoreExplorer/releases/download/v1.0.26/DriverStoreExplorer-v1.0.26.zip",
+            "hash": "89a5ed17bf7c08c869294af2202f5f9b34050f81c2feeaa6cd694970da8e931f"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\Rapr.exe",
+    "shortcuts": [
+        [
+            "app\\Rapr.exe",
+            "DriverStore Explorer"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/lostindark/DriverStoreExplorer/releases/download/v$version/DriverStoreExplorer-v$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
