@@ -1,0 +1,61 @@
+{
+    "version": "0.15.5",
+    "description": "在终端中进行实时网络诊断 | Real-time network diagnostics in your terminal",
+    "homepage": "https://netwatchlabs.com/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/matthart1983/netwatch/releases/download/v0.15.5/netwatch-windows-x86_64.exe.zip",
+            "hash": "b715e2db18f4e4ac4a026bb102057649eb6197d0b0b1d29167ac1f55dc443110",
+            "bin": [
+                [
+                    "app\\netwatch-windows-x86_64.exe",
+                    "netwatch"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "link": "$env:AppData\\netwatch",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/matthart1983/netwatch/releases/download/v$version/netwatch-windows-x86_64.exe.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
