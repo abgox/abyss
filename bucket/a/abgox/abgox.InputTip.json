@@ -1,5 +1,5 @@
 {
-    "version": "3.0.0",
+    "version": "3.1.0",
     "description": "一款轻量的 Windows 输入法状态管理工具，帮助你随时感知和切换输入法状态 | A lightweight Windows IME state management tool to help you perceive and switch IME states at any time",
     "homepage": "https://inputtip.abgox.com/",
     "license": {
@@ -17,8 +17,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/abgox/InputTip/releases/download/v3.0.0/InputTip.exe",
-            "hash": "de0a25e0113a5e9646242bc7f0f8ea48493857bdabba0394aa82b9d7e2640482"
+            "url": "https://github.com/abgox/InputTip/releases/download/v3.1.0/InputTip.exe",
+            "hash": "b2b072ca76c911cdfcb4b8c44db53a9c7115bdb9698293eeee441b43cf78de31"
         }
     },
     "bin": "InputTip.exe",
@@ -38,7 +38,13 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "if (Test-Path \"$persist_dir\\InputTip.ini\") {",
+        "   'InputTip.ini','InputTipIcon','InputTipCursor','InputTipSymbol','plugins' | Foreach-Object {",
+        "       Copy-Item \"$persist_dir\\$_\" \"$dir\\$_\" -Recurse -Force -ErrorAction SilentlyContinue",
+        "       Remove-Item \"$persist_dir\\$_\" -Recurse -Force -ErrorAction SilentlyContinue",
+        "   }",
+        "}"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
