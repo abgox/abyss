@@ -1,29 +1,33 @@
 {
-    "version": "4.2.0",
+    "version": "5.0.0",
     "description": "一个管理、切换多个 hosts 方案的工具，快速切换 hosts | An App for hosts management & switching. Switch hosts quickly",
-    "homepage": "https://switchhosts.vercel.app/",
+    "homepage": "https://switchhosts.app/",
     "license": {
         "identifier": "Apache-2.0"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/oldj/SwitchHosts/releases/download/v4.2.0/SwitchHosts-4.2.0-win.zip",
-            "hash": "4a36b2e6f65dbf35045c28ed19a50d736fe24139967931bcc293108ca3a0d3ac"
+            "url": "https://github.com/oldj/SwitchHosts/releases/download/v5.0.0/SwitchHosts-5.0.0-windows-x64-setup.exe",
+            "hash": "bfb27549789cb4e3ff2b773538d3751d7e6c4b922e324d68c41a77330204aa33"
+        },
+        "arm64": {
+            "url": "https://github.com/oldj/SwitchHosts/releases/download/v5.0.0/SwitchHosts-5.0.0-windows-arm64-setup.exe",
+            "hash": "76eaceb1fab0201a309c1011af37164f97c09d19cfbf7a6e59a5e961a7c42149"
         }
     },
-    "extract_to": "app",
     "shortcuts": [
         [
-            "app\\SwitchHosts.exe",
+            "app\\switchhosts.exe",
             "SwitchHosts"
         ]
     ],
     "link": "$home\\.SwitchHosts",
-    "cleanup": "$env:AppData\\SwitchHosts",
+    "cleanup": "$env:LocalAppData\\net.oldj.switchhosts",
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -35,7 +39,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
@@ -52,7 +57,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/oldj/SwitchHosts/releases/download/v$version/SwitchHosts-$version-win.zip"
+                "url": "https://github.com/oldj/SwitchHosts/releases/download/v$version/SwitchHosts-$version-windows-x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/oldj/SwitchHosts/releases/download/v$version/SwitchHosts-$version-windows-arm64-setup.exe"
             }
         },
         "hash": {
