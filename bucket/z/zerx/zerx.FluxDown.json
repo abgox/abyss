@@ -1,0 +1,75 @@
+{
+    "version": "0.1.48",
+    "description": "一款基于 Rust 开发的下载管理器，支持 HTTP、FTP、BitTorrent 以及 HLS/DASH 流媒体协议 | A Rust-powered download manager with HTTP, FTP, BitTorrent and HLS/DASH streaming support",
+    "homepage": "https://fluxdown.zerx.dev/",
+    "license": {
+        "identifier": "Unknown"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://fluxdown.zerx.dev/api/download/FluxDown-0.1.46-windows-x64-setup.exe?tag=v0.1.48",
+            "hash": "5c831a412e607f6994a8ffa440a753df3ace82a55c6ec44a7c486845b9b28ed0"
+        },
+        "arm64": {
+            "url": "https://fluxdown.zerx.dev/api/download/FluxDown-0.1.46-windows-arm64-setup.exe?tag=v0.1.48",
+            "hash": "adc0e635ed12e0edba0c59da404bc3aa4bb539cce472cfe6c2ee5592cf7ea351"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\flux_down.exe",
+            "FluxDown"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\FluxDown",
+        "$env:LocalAppData\\FluxDown"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "$release = (Invoke-RestMethod 'https://fluxdown.zerx.dev/api/changelog').releases[0]",
+            "$version = $release.tag -replace '^v'",
+            "$dl = $release.assets | Where-Object { $_.name -match 'windows-x64-setup.exe$' } | Select-Object -First 1 | Select-Object -ExpandProperty download_url",
+            "$url = 'https://fluxdown.zerx.dev' + $dl",
+            "\"ver:$version;\"",
+            "\"x64:$url;\"",
+            "\"arm64:$($url.Replace('x64','arm64'));\""
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64"
+            },
+            "arm64": {
+                "url": "$matchArm64"
+            }
+        }
+    }
+}
