@@ -1,0 +1,63 @@
+{
+    "version": "1.1.32",
+    "description": "一款免费、跨平台的开源双栏并排式文件管理器 | Free cross platform open source file manager with two panels side by side",
+    "homepage": "https://doublecmd.sourceforge.io/",
+    "license": {
+        "identifier": "GPL-2.0-only"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/doublecmd/doublecmd/releases/download/v1.1.32/doublecmd-1.1.32.x86_64-win64.exe",
+            "hash": "af88027a55b3db3793085e2c7babd667ea068ab526aba524ac5773ba7fa6f27d"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\doublecmd.exe",
+            "Double Commander"
+        ]
+    ],
+    "link": "$env:AppData\\doublecmd",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/doublecmd/doublecmd/releases/download/v$version/doublecmd-$version.x86_64-win64.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
