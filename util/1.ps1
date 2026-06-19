@@ -44,7 +44,7 @@ else {
     Microsoft.PowerShell.Utility\Write-Host
 }
 
-if ($scoopdir -and $scoopConfig.root_path -and $scoopdir -ne $scoopConfig.root_path) {
+if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) {
     scoop config 'root_path' $scoopdir
 }
 
@@ -270,7 +270,7 @@ function A-Complete-Uninstall {
         $tempPath += A-Resolve-SpecialPath $manifest.location
     }
     foreach ($c in $manifest.cleanup) {
-        $tempPath += (A-Resolve-SpecialPath $c)
+        $tempPath += A-Resolve-SpecialPath $c
     }
     A-Remove-TempData $tempPath
 
