@@ -4,7 +4,7 @@ Set-StrictMode -Off
 
 # 存储 abyss 相关的变量
 $abgox_abyss = @{
-    path = @{
+    path         = @{
         LinkFile           = "$dir\abgox-abyss-A-New-LinkFile.json"
         LinkDirectory      = "$dir\abgox-abyss-A-New-LinkDirectory.json"
         InstallApp         = "$dir\abgox-abyss-A-Install-App.json"
@@ -16,6 +16,13 @@ $abgox_abyss = @{
         EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
         Info               = "$dir\abgox-abyss-Info.json"
     }
+    knownFolders = @(
+        @{ Name = 'Documents'; DefaultPrefix = Join-Path $home 'Documents'; Folder = [Environment]::GetFolderPath('MyDocuments') }
+        @{ Name = 'Desktop'; DefaultPrefix = Join-Path $home 'Desktop'; Folder = [Environment]::GetFolderPath('Desktop') }
+        @{ Name = 'Pictures'; DefaultPrefix = Join-Path $home 'Pictures'; Folder = [Environment]::GetFolderPath('MyPictures') }
+        @{ Name = 'Music'; DefaultPrefix = Join-Path $home 'Music'; Folder = [Environment]::GetFolderPath('MyMusic') }
+        @{ Name = 'Videos'; DefaultPrefix = Join-Path $home 'Videos'; Folder = [Environment]::GetFolderPath('MyVideos') }
+    )
 }
 
 if ($PSEdition -eq 'Desktop') {
@@ -124,8 +131,7 @@ function A-Start-Install {
             if (Test-Path $from) {
                 A-Copy-Item $from $to
             }
-            $standardPath = $target -match 'AppData\\(Roaming|Local)\\.*'
-            if ($standardPath) {
+            if ($target -match 'AppData\\(Roaming|Local)\\.*') {
                 $from = Join-Path $home $target
                 $exists = Test-Path $from -PathType Container
                 $isLink = A-Test-Link $from
@@ -137,7 +143,7 @@ function A-Start-Install {
     }
     if ($manifest.env_set) {
         $manifest.env_set.PSObject.Properties | ForEach-Object {
-            [System.Environment]::SetEnvironmentVariable($_.Name, $ExecutionContext.InvokeCommand.ExpandString($_.Value), [System.EnvironmentVariableTarget]::Process)
+            [System.Environment]::SetEnvironmentVariable($_.Name, (A-Resolve-SpecialPath $_.Value), [System.EnvironmentVariableTarget]::Process)
         }
     }
     if ($manifest.env_set_shared) {
@@ -149,13 +155,13 @@ function A-Start-Install {
     # https://abyss.abgox.com/docs/features/data-persistence/link
     if ($manifest.link) {
         foreach ($item in $manifest.link) {
-            $expandPath = $ExecutionContext.InvokeCommand.ExpandString($item)
+            $expandPath = A-Resolve-SpecialPath $item
             if (Test-Path $expandPath) {
                 if ($expandPath -like "$dir\*") {
                     $to = $expandPath.Replace("$dir\app\", "$persist_dir\").Replace("$dir\", "$persist_dir\")
                 }
                 else {
-                    $to = $expandPath.Replace("$home\", "$persist_dir\")
+                    $to = A-Replace-SpecialFolderPrefix $expandPath $persist_dir
                 }
                 A-Copy-Item $expandPath $to
             }
@@ -164,7 +170,7 @@ function A-Start-Install {
                     $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
                 }
                 else {
-                    $leaf = $expandPath.Replace("$home\", '')
+                    $leaf = A-Replace-SpecialFolderPrefix $expandPath
                 }
                 $extraPath = "$bucketsdir\$bucket\extra\$app\$leaf"
                 if (Test-Path $extraPath) {
@@ -193,7 +199,7 @@ function A-Complete-Install {
         }
     }
     if ($manifest.location) {
-        $location = $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        $location = A-Resolve-SpecialPath $manifest.location
         if (-not (Test-Path $location)) {
             A-Show-IssueCreationPrompt
             A-Exit
@@ -261,10 +267,10 @@ function A-Start-Uninstall {
 function A-Complete-Uninstall {
     $tempPath = @()
     if ($manifest.location) {
-        $tempPath += $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        $tempPath += A-Resolve-SpecialPath $manifest.location
     }
     foreach ($c in $manifest.cleanup) {
-        $tempPath += $ExecutionContext.InvokeCommand.ExpandString($c)
+        $tempPath += (A-Resolve-SpecialPath $c)
     }
     A-Remove-TempData $tempPath
 
@@ -367,7 +373,7 @@ function A-New-Link {
         if (-not $item) {
             continue
         }
-        $expandPath = $ExecutionContext.InvokeCommand.ExpandString($item)
+        $expandPath = A-Resolve-SpecialPath $item
         if (Test-Path $expandPath) {
             if (Test-Path $expandPath -PathType Leaf) {
                 $filePaths += $expandPath
@@ -381,7 +387,7 @@ function A-New-Link {
                 $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
             }
             else {
-                $leaf = $expandPath.Replace("$home\", '')
+                $leaf = A-Replace-SpecialFolderPrefix $expandPath
             }
             $extraPath = "$bucketsdir\$bucket\extra\$app\$leaf"
             if (Test-Path $extraPath -PathType Leaf) {
@@ -551,7 +557,7 @@ function A-Stop-Process {
     }
 
     if ($manifest.location -or $version -eq 'virtual') {
-        $Paths = @($ExecutionContext.InvokeCommand.ExpandString($manifest.location))
+        $Paths = @((A-Resolve-SpecialPath $manifest.location))
     }
     else {
         $Paths = @($dir, ((Split-Path $dir -Parent) + '\current'))
@@ -714,7 +720,7 @@ function A-Install-App {
     }
 
     $Uninstaller = if ($manifest.location) {
-        A-Get-AbsolutePath $Uninstaller $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        A-Get-AbsolutePath $Uninstaller (A-Resolve-SpecialPath $manifest.location)
     }
     else {
         A-Get-AbsolutePath $Uninstaller
@@ -1190,7 +1196,7 @@ function A-Uninstall-Manually {
         [array]$Paths
     )
     if ($manifest.location) {
-        $Paths += $ExecutionContext.InvokeCommand.ExpandString($manifest.location)
+        $Paths += A-Resolve-SpecialPath $manifest.location
     }
 
     foreach ($p in $Paths) {
@@ -1833,7 +1839,7 @@ function A-Show-Notes {
         [string[]]$Content
     )
     if ($Content) {
-        $note = $Content | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) }
+        $note = $Content | ForEach-Object { A-Resolve-SpecialPath $_ }
     }
     else {
         $note = $manifest.notes
@@ -1975,6 +1981,30 @@ function A-Move-Persistence {
             }
         }
     }
+}
+
+function A-Resolve-SpecialPath {
+    param([string]$Path)
+    $result = $ExecutionContext.InvokeCommand.ExpandString($Path)
+    foreach ($entry in $abgox_abyss.knownFolders ) {
+        if ($result.StartsWith($entry.DefaultPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $entry.Folder + $result.Substring($entry.DefaultPrefix.Length)
+        }
+    }
+    return $result
+}
+
+function A-Replace-SpecialFolderPrefix {
+    param(
+        [string]$Path,
+        [string]$Replacement = ''
+    )
+    foreach ($entry in $abgox_abyss.knownFolders ) {
+        if ($Path.StartsWith($entry.Folder, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return Join-Path $Replacement ($entry.Name + $Path.Substring($entry.Folder.Length))
+        }
+    }
+    return Join-Path $Replacement $Path.Replace("$home\", '')
 }
 
 function A-Copy-Item {
@@ -2132,7 +2162,7 @@ function A-New-LinkBase {
                 $linkTarget = $LinkPath.replace("$dir\app\", "$persist_dir\").replace("$dir\", "$persist_dir\")
             }
             else {
-                $linkTarget = $LinkPath.replace($home, $persist_dir)
+                $linkTarget = A-Replace-SpecialFolderPrefix $LinkPath $persist_dir
                 # 如果不在 $home 目录下，则去掉盘符
                 if ($linkTarget -notlike "$persist_dir\*") {
                     $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
@@ -2403,7 +2433,7 @@ function A-Add-Path {
     }
 
     $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
-    $Paths = $Paths | ForEach-Object { $ExecutionContext.InvokeCommand.ExpandString($_) } | Where-Object { $_ -notin $oldPath }
+    $Paths = $Paths | ForEach-Object { A-Resolve-SpecialPath $_ } | Where-Object { $_ -notin $oldPath }
     if (-not $Paths) {
         return
     }
@@ -2527,7 +2557,7 @@ function A-Set-EnvVarShared {
     else {
         $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
             $name = $_.Name
-            $val = $ExecutionContext.InvokeCommand.ExpandString($env_set_shared.$name.value)
+            $val = A-Resolve-SpecialPath $env_set_shared.$name.value
             # $owner = $env_set_shared.$name.owner
             Write-Output "Setting $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m = $([char]0x1b)[35m$val$([char]0x1b)[0m"
             Set-EnvVar -Name $name -Value $val -Global:$global
@@ -2605,7 +2635,7 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
             "$env:AppData\Microsoft\Windows\Start Menu\Programs",
             "$env:LocalAppData\Microsoft\Windows\Start Menu\Programs",
             "$env:ProgramData\Microsoft\Windows\Start Menu\Programs",
-            "$home\Desktop",
+            [Environment]::GetFolderPath('Desktop'),
             "$env:Public\Desktop"
         )
 
