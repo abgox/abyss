@@ -1999,12 +1999,16 @@ function A-Replace-SpecialFolderPrefix {
         [string]$Path,
         [string]$Replacement = ''
     )
-    foreach ($entry in $abgox_abyss.knownFolders ) {
+    foreach ($entry in $abgox_abyss.knownFolders) {
         if ($Path.StartsWith($entry.Folder, [System.StringComparison]::OrdinalIgnoreCase)) {
-            return Join-Path $Replacement ($entry.Name + $Path.Substring($entry.Folder.Length))
+            $relative = $entry.Name + $Path.Substring($entry.Folder.Length)
+            if (-not $Replacement) { return $relative }
+            return Join-Path $Replacement $relative
         }
     }
-    return Join-Path $Replacement $Path.Replace("$home\", '')
+    $relative = $Path.Replace("$home\", '')
+    if (-not $Replacement) { return $relative }
+    return Join-Path $Replacement $relative
 }
 
 function A-Copy-Item {
