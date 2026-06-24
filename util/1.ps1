@@ -44,12 +44,11 @@ else {
     Microsoft.PowerShell.Utility\Write-Host
 }
 
-if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) {
-    scoop config 'root_path' $scoopdir
-}
-
 # https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-bucket-name
 if ($bucket) {
+    if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) {
+        scoop config 'root_path' $scoopdir
+    }
     if ($scoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
         scoop config 'abgox-abyss-bucket-name' $bucket
     }
