@@ -6,13 +6,10 @@ if ([string]::IsNullOrWhiteSpace($RawInput)) {
 
 $CleanInput = $RawInput.Trim().TrimEnd(',')
 
-$IsWrappedInQuotes = $CleanInput -match '^".*"$'
-$ContainsEscapedChars = $CleanInput -match '\\"'
-
-if ($IsWrappedInQuotes -or $ContainsEscapedChars) {
+# JSON string => Markdown
+if ($CleanInput -match '^".*"$') {
     try {
-        $Normalized = if ($CleanInput.StartsWith('"')) { $CleanInput } else { "`"$($CleanInput)`"" }
-        $Result = $Normalized | ConvertFrom-Json
+        $Result = $CleanInput | ConvertFrom-Json
         if ($Result -is [string]) {
             $Result | Set-Clipboard
             Write-Host 'Action: Unescaped JSON string to Markdown.' -ForegroundColor Cyan
@@ -20,11 +17,11 @@ if ($IsWrappedInQuotes -or $ContainsEscapedChars) {
         }
     }
     catch {
-        Write-Error 'Failed to parse JSON string.'
-        return
+        # 解析失败，继续走正向转义
     }
 }
 
+# Markdown => JSON string
 $Result = $RawInput.TrimEnd() -replace "`r`n", "`n" | ConvertTo-Json
-$Result | Set-Clipboard
+$Result + ',' | Set-Clipboard
 Write-Host 'Action: Escaped text to JSON string.' -ForegroundColor Green

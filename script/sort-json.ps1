@@ -40,8 +40,8 @@ $order = [ordered]@{
     notes               = ''
     depends             = ''
     suggest             = ''
-    # url            = ''
-    # hash           = ''
+    url                 = ''
+    hash                = ''
     architecture        = [ordered]@{
         '64bit' = [ordered]@{
             url          = ''
@@ -152,17 +152,13 @@ $order = [ordered]@{
             #     # uninstaller  = ''
             # }
         }
+        url          = ''
         hash         = ''
         extract_dir  = ''
         extract_to   = ''
-        env_set      = ''
         env_add_path = ''
-        innosetup    = ''
-        psmodule     = ''
         bin          = ''
-        commands     = ''
         shortcuts    = ''
-        persist      = ''
     }
 }
 
