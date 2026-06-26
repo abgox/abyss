@@ -184,6 +184,26 @@ function A-Start-Install {
     if ($manifest.msix -and -not ($manifest.pre_install -match '^\s*A-Install-MsixPackage$')) {
         A-Install-MsixPackage
     }
+
+    if ($manifest.extract_to -and -not $manifest.innosetup) {
+        $fileNameList = @($fname)
+        $extract_tos = @($manifest.extract_to)
+        for ($i = 0; $i -lt $fileNameList.Count; $i++) {
+            $file = Join-Path $dir $fileNameList[$i]
+            if (-not (Test-Path $file)) {
+                continue
+            }
+            $ext = [System.IO.Path]::GetExtension($file)
+            if ($ext -in '.exe', '.ps1', '.bat', '.cmd') {
+                $dest_dir = if ($i -lt $extract_tos.Count) { $extract_tos[$i] }else { $extract_tos[-1] }
+                $dest_dir = Join-Path $dir $dest_dir
+                $dest_file = Join-Path $dest_dir $fileNameList[$i]
+                A-Ensure-Directory $dest_dir
+                Write-Host "Moving $file => $dest_file"
+                Move-Item -Path $file -Destination $dest_file -Force
+            }
+        }
+    }
 }
 
 function A-Complete-Install {
@@ -2658,11 +2678,11 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
     }
 
     # XXX: https://github.com/ScoopInstaller/Scoop/issues/6605
-    $filename = $target.FullName
-    if ($filename -match '^\$\{?(env:|home)') {
-        $filename = $filename.Replace("$dir\", '')
-        $target = [System.IO.FileInfo]::new($ExecutionContext.InvokeCommand.ExpandString($filename))
-    }
+    # $filename = $target.FullName
+    # if ($filename -match '^\$\{?(env:|home)') {
+    #     $filename = $filename.Replace("$dir\", '')
+    #     $target = [System.IO.FileInfo]::new($ExecutionContext.InvokeCommand.ExpandString($filename))
+    # }
 
     #endregion
 
