@@ -11,14 +11,20 @@
             "hash": "d3a129deff0e7e1161b293b19130ef174469d1331acb5b0bc0e2513be5b3a51b"
         }
     },
+    "extract_to": "app",
     "bin": [
         [
-            "sampler.exe",
+            "app\\sampler.exe",
             "sampler",
-            "-c \"$dir\\config.yml\""
+            "-c \"$dir\\app\\config.yml\""
         ]
     ],
-    "persist": "config.yml",
+    "persist": [
+        [
+            "app\\config.yml",
+            "config.yml"
+        ]
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",

@@ -21,16 +21,17 @@
             "hash": "cd8b9704dd011eea9f843ec8ffa518cf513a6d2c881d5845dd442c2aaf7df4e8"
         }
     },
-    "bin": "InputTip.exe",
+    "extract_to": "app",
+    "bin": "app\\InputTip.exe",
     "shortcuts": [
         [
-            "InputTip.exe",
+            "app\\InputTip.exe",
             "InputTip"
         ]
     ],
     "persist": [
         [
-            "data",
+            "app\\data",
             "AppData\\Roaming\\com.abgox\\InputTip"
         ]
     ],
@@ -38,13 +39,7 @@
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Install",
-        "if (Test-Path \"$persist_dir\\InputTip.ini\") {",
-        "   'InputTip.ini','InputTipIcon','InputTipCursor','InputTipSymbol','plugins' | Foreach-Object {",
-        "       Copy-Item \"$persist_dir\\$_\" \"$dir\\$_\" -Recurse -Force -ErrorAction SilentlyContinue",
-        "       Remove-Item \"$persist_dir\\$_\" -Recurse -Force -ErrorAction SilentlyContinue",
-        "   }",
-        "}"
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
