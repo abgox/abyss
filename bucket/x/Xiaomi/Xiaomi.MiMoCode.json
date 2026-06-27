@@ -1,0 +1,67 @@
+{
+    "version": "0.1.3",
+    "description": "面向开发者的终端原生 AI 编程助手 | A terminal-native AI coding assistant for developers",
+    "homepage": "https://mimo.xiaomi.com/mimocode",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/XiaomiMiMo/MiMo-Code/releases/download/v0.1.3/mimocode-windows-x64.zip",
+            "hash": "a90495b70ef0ba54da1ca90123a6b11ba6db7daf2260876f4c9545f934c12a2d"
+        },
+        "arm64": {
+            "url": "https://github.com/XiaomiMiMo/MiMo-Code/releases/download/v0.1.3/mimocode-windows-arm64.zip",
+            "hash": "90ade8d5a598b1ade190eab0db2a6bb35b822047c12162c8f5b763a945db9317"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\mimo.exe",
+    "link": [
+        "$home\\.config\\mimocode",
+        "$home\\.cache\\mimocode",
+        "$home\\.local\\share\\mimocode"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/XiaomiMiMo/MiMo-Code/releases/download/v$version/mimocode-windows-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/XiaomiMiMo/MiMo-Code/releases/download/v$version/mimocode-windows-arm64.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
