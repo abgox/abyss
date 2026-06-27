@@ -4166,80 +4166,102 @@
                         }
                     },
                     "else": {
-                        "properties": {
-                            "url": {
+                        "allOf": [
+                            {
                                 "if": {
-                                    "pattern": "\\.(zip|7z|tar|gz|lz)$",
-                                    "contains": {
-                                        "pattern": "\\.(zip|7z|tar|gz|lz)$"
-                                    }
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "font"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "psmodule"
+                                            ]
+                                        }
+                                    ]
                                 },
-                                "then": {
-                                    "not": true,
-                                    "errorMessage": "url 为压缩包(zip|7z|tar|gz|lz)，需要使用 extract_to 属性"
+                                "else": {
+                                    "properties": {
+                                        "url": {
+                                            "if": {
+                                                "pattern": "\\.(zip|7z|tar|gz|lz)$",
+                                                "contains": {
+                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$"
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "url 为压缩包(zip|7z|tar|gz|lz)，需要使用 extract_to 属性"
+                                            }
+                                        },
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "if": {
+                                                                "pattern": "\\.(zip|7z|tar|gz|lz)$",
+                                                                "contains": {
+                                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$"
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "not": true,
+                                                                "errorMessage": "url 为压缩包(zip|7z|tar|gz|lz)，需要使用 extract_to 属性"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             },
-                            "architecture": {
-                                "patternProperties": {
-                                    "": {
-                                        "properties": {
-                                            "url": {
-                                                "if": {
-                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$",
-                                                    "contains": {
-                                                        "pattern": "\\.(zip|7z|tar|gz|lz)$"
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "url 为压缩包(zip|7z|tar|gz|lz)，需要使用 extract_to 属性"
-                                                }
+                            {
+                                "if": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Install-"
                                             }
                                         }
-                                    }
-                                }
-                            }
-                        },
-                        "if": {
-                            "properties": {
-                                "pre_install": {
-                                    "contains": {
-                                        "pattern": "(?<!#.*)A-Install-"
-                                    }
-                                }
-                            }
-                        },
-                        "else": {
-                            "properties": {
-                                "url": {
-                                    "if": {
-                                        "pattern": "\\.(exe|ps1|bat|cmd)$",
-                                        "contains": {
-                                            "pattern": "\\.(exe|ps1|bat|cmd)$"
-                                        }
-                                    },
-                                    "then": {
-                                        "not": true,
-                                        "errorMessage": "url 为单文件(exe|ps1|bat|cmd)，且未使用 A-Install-* 方法，因此不会作为安装程序处理，需要使用 extract_to 属性"
                                     }
                                 },
-                                "architecture": {
-                                    "examples": [
-                                        {}
-                                    ],
-                                    "patternProperties": {
-                                        "": {
-                                            "properties": {
-                                                "url": {
-                                                    "if": {
-                                                        "pattern": "\\.(exe|ps1|bat|cmd)$",
-                                                        "contains": {
-                                                            "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                "else": {
+                                    "properties": {
+                                        "url": {
+                                            "if": {
+                                                "pattern": "\\.(exe|ps1|bat|cmd)$",
+                                                "contains": {
+                                                    "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "url 为单文件(exe|ps1|bat|cmd)，且未使用 A-Install-* 方法，因此不会作为安装程序处理，需要使用 extract_to 属性"
+                                            }
+                                        },
+                                        "architecture": {
+                                            "examples": [
+                                                {}
+                                            ],
+                                            "patternProperties": {
+                                                "": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "if": {
+                                                                "pattern": "\\.(exe|ps1|bat|cmd)$",
+                                                                "contains": {
+                                                                    "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "not": true,
+                                                                "errorMessage": "url 为单文件(exe|ps1|bat|cmd)，且未使用 A-Install-* 方法，因此不会作为安装程序处理，需要使用 extract_to 属性"
+                                                            }
                                                         }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "url 为单文件(exe|ps1|bat|cmd)，且未使用 A-Install-* 方法，因此不会作为安装程序处理，需要使用 extract_to 属性"
                                                     }
                                                 }
                                             }
@@ -4247,7 +4269,7 @@
                                     }
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             ]

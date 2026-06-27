@@ -4166,80 +4166,102 @@
                         }
                     },
                     "else": {
-                        "properties": {
-                            "url": {
+                        "allOf": [
+                            {
                                 "if": {
-                                    "pattern": "\\.(zip|7z|tar|gz|lz)$",
-                                    "contains": {
-                                        "pattern": "\\.(zip|7z|tar|gz|lz)$"
-                                    }
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "font"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "psmodule"
+                                            ]
+                                        }
+                                    ]
                                 },
-                                "then": {
-                                    "not": true,
-                                    "errorMessage": "The url is an archive (zip|7z|tar|gz|lz), and it requires the extract_to property"
+                                "else": {
+                                    "properties": {
+                                        "url": {
+                                            "if": {
+                                                "pattern": "\\.(zip|7z|tar|gz|lz)$",
+                                                "contains": {
+                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$"
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "The url is an archive (zip|7z|tar|gz|lz), and it requires the extract_to property"
+                                            }
+                                        },
+                                        "architecture": {
+                                            "patternProperties": {
+                                                "": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "if": {
+                                                                "pattern": "\\.(zip|7z|tar|gz|lz)$",
+                                                                "contains": {
+                                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$"
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "not": true,
+                                                                "errorMessage": "The url is an archive (zip|7z|tar|gz|lz), and it requires the extract_to property"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             },
-                            "architecture": {
-                                "patternProperties": {
-                                    "": {
-                                        "properties": {
-                                            "url": {
-                                                "if": {
-                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$",
-                                                    "contains": {
-                                                        "pattern": "\\.(zip|7z|tar|gz|lz)$"
-                                                    }
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "The url is an archive (zip|7z|tar|gz|lz), and it requires the extract_to property"
-                                                }
+                            {
+                                "if": {
+                                    "properties": {
+                                        "pre_install": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Install-"
                                             }
                                         }
-                                    }
-                                }
-                            }
-                        },
-                        "if": {
-                            "properties": {
-                                "pre_install": {
-                                    "contains": {
-                                        "pattern": "(?<!#.*)A-Install-"
-                                    }
-                                }
-                            }
-                        },
-                        "else": {
-                            "properties": {
-                                "url": {
-                                    "if": {
-                                        "pattern": "\\.(exe|ps1|bat|cmd)$",
-                                        "contains": {
-                                            "pattern": "\\.(exe|ps1|bat|cmd)$"
-                                        }
-                                    },
-                                    "then": {
-                                        "not": true,
-                                        "errorMessage": "The url is a single file (exe|ps1|bat|cmd) and the A-Install-* method is not used; therefore, it will not be handled as an installer and requires the extract_to property"
                                     }
                                 },
-                                "architecture": {
-                                    "examples": [
-                                        {}
-                                    ],
-                                    "patternProperties": {
-                                        "": {
-                                            "properties": {
-                                                "url": {
-                                                    "if": {
-                                                        "pattern": "\\.(exe|ps1|bat|cmd)$",
-                                                        "contains": {
-                                                            "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                "else": {
+                                    "properties": {
+                                        "url": {
+                                            "if": {
+                                                "pattern": "\\.(exe|ps1|bat|cmd)$",
+                                                "contains": {
+                                                    "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                                }
+                                            },
+                                            "then": {
+                                                "not": true,
+                                                "errorMessage": "The url is a single file (exe|ps1|bat|cmd) and the A-Install-* method is not used; therefore, it will not be handled as an installer and requires the extract_to property"
+                                            }
+                                        },
+                                        "architecture": {
+                                            "examples": [
+                                                {}
+                                            ],
+                                            "patternProperties": {
+                                                "": {
+                                                    "properties": {
+                                                        "url": {
+                                                            "if": {
+                                                                "pattern": "\\.(exe|ps1|bat|cmd)$",
+                                                                "contains": {
+                                                                    "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "not": true,
+                                                                "errorMessage": "The url is a single file (exe|ps1|bat|cmd) and the A-Install-* method is not used; therefore, it will not be handled as an installer and requires the extract_to property"
+                                                            }
                                                         }
-                                                    },
-                                                    "then": {
-                                                        "not": true,
-                                                        "errorMessage": "The url is a single file (exe|ps1|bat|cmd) and the A-Install-* method is not used; therefore, it will not be handled as an installer and requires the extract_to property"
                                                     }
                                                 }
                                             }
@@ -4247,7 +4269,7 @@
                                     }
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             ]
