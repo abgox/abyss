@@ -932,9 +932,8 @@ function A-Uninstall-Inno {
 
     Write-Host "Running the uninstaller: $($Uninstaller.Name)"
 
-    $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
-
     try {
+        $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
         $process | Wait-Process -ErrorAction Stop
     }
     catch {
