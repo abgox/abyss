@@ -1,0 +1,74 @@
+{
+    "version": "1.13.0",
+    "description": "面向终端的 DeepSeek 原生 AI 编码智能体 | A DeepSeek-native AI coding agent for your terminal",
+    "homepage": "https://reasonix.io/",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/esengine/DeepSeek-Reasonix/releases/download/desktop-v1.13.0/Reasonix-windows-amd64-installer.exe",
+            "hash": "abbb406568f950afe388a9822bed59331cac526414a405cd947ccf277e71f74f"
+        },
+        "arm64": {
+            "url": "https://github.com/esengine/DeepSeek-Reasonix/releases/download/desktop-v1.13.0/Reasonix-windows-arm64-installer.exe",
+            "hash": "1cd30c51af12e10cfcad4a94a31bffdd2154a7007855073532e645c386ab0269"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\reasonix-desktop.exe",
+            "Reasonix"
+        ]
+    ],
+    "data_shared": [
+        "ESEngine.ReasonixCLI",
+        "ESEngine.ReasonixDesktop"
+    ],
+    "link": "$env:AppData\\reasonix",
+    "cleanup": "$env:LocalAppData\\reasonix-desktop.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "desktop-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/esengine/DeepSeek-Reasonix/releases/download/desktop-v$version/Reasonix-windows-amd64-installer.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/esengine/DeepSeek-Reasonix/releases/download/desktop-v$version/Reasonix-windows-arm64-installer.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
