@@ -5,16 +5,6 @@
     "license": {
         "identifier": "MIT"
     },
-    "notes_cn": [
-        "Microsoft.PowerShell.Preview 不使用 Link 进行数据持久化。",
-        "因为它和 Microsoft.PowerShell 共用数据。",
-        "参考: https://abyss.abgox.com/docs/shared-data"
-    ],
-    "notes": [
-        "Microsoft.PowerShell.Preview does not use Link for data persistence.",
-        "Because it shares the data with Microsoft.PowerShell.",
-        "Refer to: https://abyss.abgox.com/docs/shared-data"
-    ],
     "suggest": {
         "PowerShell": "abyss/Microsoft.PowerShell"
     },
@@ -48,6 +38,14 @@
     },
     "msix": "Microsoft.PowerShellPreview_8wekyb3d8bbwe",
     "commands": "pwsh-preview",
+    "data_shared": [
+        "Microsoft.PowerShell",
+        "Microsoft.PowerShell.Preview"
+    ],
+    "link": [
+        "$home\\Documents\\PowerShell",
+        "$env:AppData\\Microsoft\\Windows\\PowerShell"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -81,7 +79,8 @@
         "    }",
         "   exit 1",
         "}",
-        "A-Uninstall-MsixPackage"
+        "A-Uninstall-MsixPackage",
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
