@@ -55,6 +55,7 @@ if ($bucket) {
     if ($bucket -ne 'abyss') {
         error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
         error 'Refer to: https://abyss.abgox.com/docs/bucket-name'
+        A-Exit
     }
 }
 
@@ -151,8 +152,12 @@ function A-Start-Install {
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
+    # https://abyss.abgox.com/docs/shared-data
+    if ($manifest.data_shared) {
+        A-Set-DataShared
+    }
     # https://abyss.abgox.com/docs/features/data-persistence/link
-    if ($manifest.link) {
+    if ($manifest.link -and -not $abgox_abyss.skipLink) {
         foreach ($item in $manifest.link) {
             $expandPath = A-Resolve-SpecialPath $item
             if (Test-Path $expandPath) {
@@ -240,6 +245,26 @@ function A-Complete-Install {
         }
         A-Show-Notes $note
     }
+    if ($manifest.data_shared) {
+        $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { Test-Path -LiteralPath "$scoopdir\apps\$_" }
+        if ($remaining) {
+            $note = if ($PSUICulture -like 'zh*') {
+                @(
+                    "$app 不需要使用 Link 进行数据持久化。",
+                    "因为它和 $($remaining -join '|') 共享数据。"
+                    '参考: https://abyss.abgox.com/docs/shared-data'
+                )
+            }
+            else {
+                @(
+                    "$app does not require the use of Link for data persistence.",
+                    "Because it shares the data with $($remaining -join '|').",
+                    'Refer to: https://abyss.abgox.com/docs/shared-data'
+                )
+            }
+            A-Show-Notes $note
+        }
+    }
 
     if ($info.Count) {
         $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
@@ -274,6 +299,10 @@ function A-Start-Uninstall {
     }
     if ($manifest.env_set_shared) {
         A-Set-EnvVarShared -Remove
+    }
+    # https://abyss.abgox.com/docs/shared-data
+    if ($manifest.data_shared) {
+        A-Set-DataShared -Uninstall
     }
     if ($manifest.msix -and -not ($manifest.pre_uninstall -match '^\s*A-Uninstall-MsixPackage$')) {
         A-Uninstall-MsixPackage
@@ -512,6 +541,10 @@ function A-Remove-Link {
     #     # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 2，则需要执行删除操作
     #     return
     # }
+
+    if ($abgox_abyss.skipRemoveLink) {
+        return
+    }
 
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
@@ -2001,6 +2034,74 @@ function A-Move-Persistence {
     }
 }
 
+function A-Set-DataShared {
+    <#
+    .SYNOPSIS
+        处理 data_shared 字段，管理共享数据目录
+
+    .DESCRIPTION
+        只维护一个实际数据目录。安装时不做任何处理；卸载时如果持有数据则迁移给其他应用并更新 symlink
+    #>
+    param(
+        [switch]$Uninstall
+    )
+
+    $data_shared = $manifest.data_shared
+    $parent = Split-Path $persist_dir -Parent
+    $remaining = $data_shared | Where-Object { $_ -ne $app } | Where-Object { Test-Path -LiteralPath "$scoopdir\apps\$_" }
+
+    if ($Uninstall) {
+        if (-not $remaining) {
+            return
+        }
+        if (A-Test-DirectoryNotEmpty $persist_dir) {
+            $target = $remaining | Select-Object -First 1
+            $targetPersist = Join-Path $parent $target
+            Write-Host "Migrating $persist_dir => $targetPersist"
+            try {
+                Rename-Item -LiteralPath $persist_dir -NewName $target -Force -ErrorAction Stop
+            }
+            catch {
+                error $_.Exception.Message
+                A-Show-IssueCreationPrompt
+                A-Exit
+            }
+            foreach ($p in $manifest.link) {
+                $p = A-Resolve-SpecialPath $p
+                if (A-Test-Link $p) {
+                    Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue
+                    Write-Host "Linking $p => $targetPersist"
+                    New-Item -ItemType Junction -Path $p -Target $targetPersist -Force | Out-Null
+                }
+            }
+        }
+        $abgox_abyss.skipRemoveLink = $true
+    }
+    else {
+        if ($remaining) {
+            $abgox_abyss.skipLink = $true
+        }
+        else {
+            foreach ($name in $data_shared) {
+                if ($name -eq $app) { continue }
+                $orphanedPersist = Join-Path $parent $name
+                if (Test-Path -LiteralPath $orphanedPersist) {
+                    Write-Host "Migrating $orphanedPersist => $persist_dir"
+                    try {
+                        Rename-Item -LiteralPath $orphanedPersist -NewName $app -Force -ErrorAction Stop
+                    }
+                    catch {
+                        error $_.Exception.Message
+                        A-Show-IssueCreationPrompt
+                        A-Exit
+                    }
+                    break
+                }
+            }
+        }
+    }
+}
+
 function A-Resolve-SpecialPath {
     param([string]$Path)
     $result = $ExecutionContext.InvokeCommand.ExpandString($Path)
@@ -2162,6 +2263,10 @@ function A-New-LinkBase {
         [string]$ItemType,
         [string]$OutFile
     )
+
+    if ($abgox_abyss.skipLink) {
+        return
+    }
 
     if ($LinkPaths.Where({ -not [System.IO.Path]::IsPathRooted($_) })) {
         A-Show-IssueCreationPrompt

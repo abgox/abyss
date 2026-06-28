@@ -99,6 +99,7 @@ $order = [ordered]@{
     bin                 = ''
     commands            = '' # abyss
     shortcuts           = ''
+    data_shared         = ''
     link                = '' # abyss
     persist             = ''
     cleanup             = '' # abyss

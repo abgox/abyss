@@ -1663,7 +1663,7 @@
         },
         "url_validation": {
             "pattern": "^https?://",
-            "errorMessage": "Invalid http/https URL"
+            "errorMessage": "Invalid value"
         },
         "str_url_validation": {
             "allOf": [
@@ -3517,7 +3517,7 @@
         },
         "conflicts": {
             "title": "Conflicting Manifests",
-            "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- It requires an array containing mutually exclusive manifest names\n- Refuses installation if manifests conflict\n- Reference: https://abyss.abgox.com/docs/deny-if-app-conflict",
+            "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- It requires an array containing the names of manifests that are mutually exclusive\n- Refuses installation if manifests conflict\n- Reference: https://abyss.abgox.com/docs/deny-if-app-conflict\n\n### Example\n\n```json\n\"conflicts\": [\n    \"Microsoft.PowerShell\",\n    \"Microsoft.PowerShell-LTS\"\n]\n```",
             "type": "array",
             "minItems": 2,
             "uniqueItems": true,
@@ -3588,6 +3588,23 @@
         },
         "shortcuts": {
             "$ref": "#/definitions/shortcuts"
+        },
+        "data_shared": {
+            "title": "Data Sharing Manifests",
+            "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- All manifests that share data must define it\n- It requires an array containing the names of manifests that share data\n- Reference: https://abyss.abgox.com/docs/shared-data\n\n### Example\n\n```json\n\"data_shared\": [\n    \"Microsoft.PowerShell\",\n    \"Microsoft.PowerShell.Preview\"\n]\n```",
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "examples": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "items": {
+                "type": "string",
+                "$ref": "#/definitions/str_no_all_space"
+            }
         },
         "link": {
             "$ref": "#/definitions/link"
@@ -3763,7 +3780,7 @@
                                         "not": {
                                             "const": "github"
                                         },
-                                        "errorMessage": "Invalid mode"
+                                        "errorMessage": "Invalid value"
                                     }
                                 }
                             }
@@ -3774,6 +3791,28 @@
         }
     },
     "allOf": [
+        {
+            "if": {
+                "required": [
+                    "link"
+                ]
+            },
+            "else": {
+                "if": {
+                    "required": [
+                        "data_shared"
+                    ]
+                },
+                "then": {
+                    "properties": {
+                        "data_shared": {
+                            "not": true,
+                            "errorMessage": "Invalid property"
+                        }
+                    }
+                }
+            }
+        },
         {
             "allOf": [
                 {
@@ -3836,7 +3875,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Remove-Link"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -3872,7 +3911,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Uninstall-Inno"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -3908,7 +3947,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Uninstall-Burn"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -3947,7 +3986,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Uninstall-MsixPackage"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -3959,7 +3998,7 @@
                                     "properties": {
                                         "pre_install": {
                                             "contains": {
-                                                "pattern": "(?<!#.*)A-Install-Msi"
+                                                "pattern": "(?<!#.*)A-Install-Msi[^x]*$"
                                             }
                                         }
                                     }
@@ -3999,11 +4038,11 @@
                                         "pre_uninstall": {
                                             "items": {
                                                 "if": {
-                                                    "pattern": "(?<!#.*)A-Uninstall-Msi"
+                                                    "pattern": "(?<!#.*)A-Uninstall-Msi[^x]*$"
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Uninstall-Msi"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -4039,7 +4078,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Uninstall-App"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -4065,7 +4104,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "Invalid A-Uninstall-Manually"
+                                                    "errorMessage": "Invalid value"
                                                 }
                                             }
                                         }
@@ -4634,7 +4673,7 @@
                                                             "properties": {
                                                                 "hash": {
                                                                     "not": true,
-                                                                    "errorMessage": "Invalid hash"
+                                                                    "errorMessage": "Invalid value"
                                                                 }
                                                             }
                                                         }

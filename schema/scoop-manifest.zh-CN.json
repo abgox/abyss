@@ -1663,7 +1663,7 @@
         },
         "url_validation": {
             "pattern": "^https?://",
-            "errorMessage": "无效的 http/https URL"
+            "errorMessage": "无效的值"
         },
         "str_url_validation": {
             "allOf": [
@@ -3589,6 +3589,23 @@
         "shortcuts": {
             "$ref": "#/definitions/shortcuts"
         },
+        "data_shared": {
+            "title": "数据共享的清单",
+            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 所有数据共享的清单都需要定义它\n- 它需要一个数组，包含数据共享的清单名称\n- 参考: https://abyss.abgox.com/docs/shared-data\n\n### 示例\n\n```json\n\"data_shared\": [\n    \"Microsoft.PowerShell\",\n    \"Microsoft.PowerShell.Preview\"\n]\n```",
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "examples": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "items": {
+                "type": "string",
+                "$ref": "#/definitions/str_no_all_space"
+            }
+        },
         "link": {
             "$ref": "#/definitions/link"
         },
@@ -3763,7 +3780,7 @@
                                         "not": {
                                             "const": "github"
                                         },
-                                        "errorMessage": "无效的模式"
+                                        "errorMessage": "无效的值"
                                     }
                                 }
                             }
@@ -3774,6 +3791,28 @@
         }
     },
     "allOf": [
+        {
+            "if": {
+                "required": [
+                    "link"
+                ]
+            },
+            "else": {
+                "if": {
+                    "required": [
+                        "data_shared"
+                    ]
+                },
+                "then": {
+                    "properties": {
+                        "data_shared": {
+                            "not": true,
+                            "errorMessage": "无效的属性"
+                        }
+                    }
+                }
+            }
+        },
         {
             "allOf": [
                 {
@@ -3836,7 +3875,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Remove-Link"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -3872,7 +3911,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Uninstall-Inno"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -3908,7 +3947,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Uninstall-Burn"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -3947,7 +3986,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Uninstall-MsixPackage"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -3959,7 +3998,7 @@
                                     "properties": {
                                         "pre_install": {
                                             "contains": {
-                                                "pattern": "(?<!#.*)A-Install-Msi"
+                                                "pattern": "(?<!#.*)A-Install-Msi[^x]*$"
                                             }
                                         }
                                     }
@@ -3999,11 +4038,11 @@
                                         "pre_uninstall": {
                                             "items": {
                                                 "if": {
-                                                    "pattern": "(?<!#.*)A-Uninstall-Msi"
+                                                    "pattern": "(?<!#.*)A-Uninstall-Msi[^x]*$"
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Uninstall-Msi"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -4039,7 +4078,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Uninstall-App"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -4065,7 +4104,7 @@
                                                 },
                                                 "then": {
                                                     "not": true,
-                                                    "errorMessage": "无效的 A-Uninstall-Manually"
+                                                    "errorMessage": "无效的值"
                                                 }
                                             }
                                         }
@@ -4634,7 +4673,7 @@
                                                             "properties": {
                                                                 "hash": {
                                                                     "not": true,
-                                                                    "errorMessage": "无效的 hash"
+                                                                    "errorMessage": "无效的值"
                                                                 }
                                                             }
                                                         }
