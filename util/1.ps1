@@ -1,4 +1,4 @@
-﻿#Requires -Version 5.1
+#Requires -Version 5.1
 
 Set-StrictMode -Off
 
@@ -230,39 +230,19 @@ function A-Complete-Install {
         }
 
         $info.location = $location
-
-        $note = if ($PSUICulture -like 'zh*') {
-            @(
-                "安装目录: $($manifest.location)",
-                '参考: https://abyss.abgox.com/docs/external-installation-directory'
-            )
-        }
-        else {
-            @(
-                "The installation directory: $($manifest.location)",
-                'Refer to: https://abyss.abgox.com/docs/external-installation-directory'
-            )
-        }
-        A-Show-Notes $note
+        A-Show-Notes @(
+            "The installation directory: $($manifest.location)",
+            'Refer to: https://abyss.abgox.com/docs/external-installation-directory'
+        )
     }
     if ($manifest.data_shared) {
-        $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { Test-Path -LiteralPath "$scoopdir\apps\$_" }
-        if ($remaining) {
-            $note = if ($PSUICulture -like 'zh*') {
-                @(
-                    "$app 不需要使用 Link 进行数据持久化。",
-                    "因为它和 $($remaining -join '|') 共享数据。"
-                    '参考: https://abyss.abgox.com/docs/shared-data'
-                )
-            }
-            else {
-                @(
-                    "$app does not require the use of Link for data persistence.",
-                    "Because it shares the data with $($remaining -join '|').",
-                    'Refer to: https://abyss.abgox.com/docs/shared-data'
-                )
-            }
-            A-Show-Notes $note
+        $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { A-Test-DirectoryNotEmpty "$scoopdir\apps\$_" }
+        if ($remaining -and -not (A-Test-DirectoryNotEmpty $persist_dir)) {
+            A-Show-Notes @(
+                "'$app' does not require the data persistence.",
+                "They share data: $($remaining -join '|').",
+                'Refer to: https://abyss.abgox.com/docs/shared-data'
+            )
         }
     }
 
@@ -483,7 +463,7 @@ function A-New-LinkFile {
             A-Require-Admin
         }
         if (!$abgox_abyss.isDevMode) {
-            error "$app requires admin permission or developer mode to create SymbolicLink."
+            error "'$app' requires admin permission or developer mode to create SymbolicLink."
             error 'Refer to: https://abyss.abgox.com/docs/require-admin-or-dev-mode'
             A-Exit
         }
@@ -2046,9 +2026,8 @@ function A-Set-DataShared {
         [switch]$Uninstall
     )
 
-    $data_shared = $manifest.data_shared
     $parent = Split-Path $persist_dir -Parent
-    $remaining = $data_shared | Where-Object { $_ -ne $app } | Where-Object { Test-Path -LiteralPath "$scoopdir\apps\$_" }
+    $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { A-Test-DirectoryNotEmpty "$scoopdir\apps\$_" }
 
     if ($Uninstall) {
         if (-not $remaining) {
@@ -2057,35 +2036,33 @@ function A-Set-DataShared {
         if (A-Test-DirectoryNotEmpty $persist_dir) {
             $target = $remaining | Select-Object -First 1
             $targetPersist = Join-Path $parent $target
-            Write-Host "Migrating $persist_dir => $targetPersist"
-            try {
-                Rename-Item -LiteralPath $persist_dir -NewName $target -Force -ErrorAction Stop
-            }
-            catch {
-                error $_.Exception.Message
-                A-Show-IssueCreationPrompt
-                A-Exit
-            }
-            foreach ($p in $manifest.link) {
-                $p = A-Resolve-SpecialPath $p
-                if (A-Test-Link $p) {
-                    Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue
-                    Write-Host "Linking $p => $targetPersist"
-                    New-Item -ItemType Junction -Path $p -Target $targetPersist -Force | Out-Null
+            if (-not (A-Test-DirectoryNotEmpty $targetPersist)) {
+                Write-Host "Migrating $persist_dir => $targetPersist"
+                try {
+                    Rename-Item -LiteralPath $persist_dir -NewName $target -Force -ErrorAction Stop
+                }
+                catch {
+                    error $_.Exception.Message
+                    A-Show-IssueCreationPrompt
+                    A-Exit
                 }
             }
+            $abgox_abyss.persist_dir = $targetPersist
+            A-New-Link
         }
         $abgox_abyss.skipRemoveLink = $true
     }
     else {
         if ($remaining) {
-            $abgox_abyss.skipLink = $true
+            if (-not (A-Test-DirectoryNotEmpty $persist_dir)) {
+                $abgox_abyss.skipLink = $true
+            }
         }
         else {
-            foreach ($name in $data_shared) {
+            foreach ($name in $manifest.data_shared) {
                 if ($name -eq $app) { continue }
                 $orphanedPersist = Join-Path $parent $name
-                if (Test-Path -LiteralPath $orphanedPersist) {
+                if (A-Test-DirectoryNotEmpty $orphanedPersist) {
                     Write-Host "Migrating $orphanedPersist => $persist_dir"
                     try {
                         Rename-Item -LiteralPath $orphanedPersist -NewName $app -Force -ErrorAction Stop
@@ -2273,6 +2250,8 @@ function A-New-LinkBase {
         A-Exit
     }
 
+    $_persistDir = $abgox_abyss.persist_dir, $persist_dir | Select-Object -First 1
+
     $installData = @{
         LinkPaths   = @()
         LinkTargets = @()
@@ -2281,18 +2260,18 @@ function A-New-LinkBase {
     for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
         $linkPath = $LinkPaths[$i]
         if ($LinkTargets[$i]) {
-            $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $persist_dir
+            $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $_persistDir
         }
         else {
             if ($LinkPath -like "$dir\*") {
                 # 只有无法使用 persist 字段的特殊情况才能使用它，例如: liule.Snipaste
-                $linkTarget = $LinkPath.replace("$dir\app\", "$persist_dir\").replace("$dir\", "$persist_dir\")
+                $linkTarget = $LinkPath.replace("$dir\app\", "$_persistDir\").replace("$dir\", "$_persistDir\")
             }
             else {
-                $linkTarget = A-Replace-SpecialFolderPrefix $LinkPath $persist_dir
+                $linkTarget = A-Replace-SpecialFolderPrefix $LinkPath $_persistDir
                 # 如果不在 $home 目录下，则去掉盘符
-                if ($linkTarget -notlike "$persist_dir\*") {
-                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $persist_dir
+                if ($linkTarget -notlike "$_persistDir\*") {
+                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $_persistDir
                 }
             }
         }
