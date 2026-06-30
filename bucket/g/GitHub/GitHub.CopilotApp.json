@@ -1,0 +1,73 @@
+{
+    "version": "1.0.11",
+    "description": "一款面向智能体驱动开发的桌面应用，将并行工作流、GitHub 集成以及拉取请求全生命周期管理整合至同一平台 | A desktop application for agent-driven development that brings parallel workstreams, GitHub integration, and PR lifecycle management into one place",
+    "homepage": "https://github.com/github/app",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/github/app/releases/download/v1.0.11/GitHub-Copilot-windows-x64-setup.exe",
+            "hash": "bff070e98e9941304997b5780015f7a90a3759ce5c73aee946bd98491d362046"
+        },
+        "arm64": {
+            "url": "https://github.com/github/app/releases/download/v1.0.11/GitHub-Copilot-windows-arm64-setup.exe",
+            "hash": "8b71f34086fc299dd2323b3cd1b983d1bb6d84d8e5f8a932c5cb943d35dbaf6f"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\github.exe",
+            "GitHub Copilot"
+        ]
+    ],
+    "link": "$env:AppData\\com.github.githubapp",
+    "cleanup": [
+        "$env:LocalAppData\\com.github.githubapp",
+        "$env:LocalAppData\\github-copilot-sdk"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/github/app/releases/download/v$version/GitHub-Copilot-windows-x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/github/app/releases/download/v$version/GitHub-Copilot-windows-arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
