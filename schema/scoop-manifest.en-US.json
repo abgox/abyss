@@ -1569,6 +1569,12 @@
                                 "const": "license"
                             },
                             "errorMessage": "Please modify it"
+                        },
+                        {
+                            "not": {
+                                "pattern": "(?i)-only"
+                            },
+                            "errorMessage": "Unless strictly an 'only' version, please use 'later' instead."
                         }
                     ],
                     "anyOf": [
@@ -1599,6 +1605,12 @@
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_url_validation"
+                        },
+                        {
+                            "not": {
+                                "pattern": "^https?://github\\.com/"
+                            },
+                            "errorMessage": "It comes from a GitHub repository, please remove it."
                         }
                     ]
                 }
@@ -3313,10 +3325,10 @@
                 "array",
                 "string"
             ],
-            "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/",
+            "pattern": "^https?://github\\.com/[^/]+/[^/]+/releases/download/",
             "items": {
                 "type": "string",
-                "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/"
+                "pattern": "^https?://github\\.com/[^/]+/[^/]+/releases/download/"
             }
         },
         "url_hash_type_match": {
@@ -4225,9 +4237,9 @@
                                     "properties": {
                                         "url": {
                                             "if": {
-                                                "pattern": "\\.(zip|7z|tar|gz|lz)$",
+                                                "pattern": "(?i)\\.(zip|7z|tar|gz|lz)$",
                                                 "contains": {
-                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$"
+                                                    "pattern": "(?i)\\.(zip|7z|tar|gz|lz)$"
                                                 }
                                             },
                                             "then": {
@@ -4241,9 +4253,9 @@
                                                     "properties": {
                                                         "url": {
                                                             "if": {
-                                                                "pattern": "\\.(zip|7z|tar|gz|lz)$",
+                                                                "pattern": "(?i)\\.(zip|7z|tar|gz|lz)$",
                                                                 "contains": {
-                                                                    "pattern": "\\.(zip|7z|tar|gz|lz)$"
+                                                                    "pattern": "(?i)\\.(zip|7z|tar|gz|lz)$"
                                                                 }
                                                             },
                                                             "then": {
@@ -4272,9 +4284,9 @@
                                     "properties": {
                                         "url": {
                                             "if": {
-                                                "pattern": "\\.(exe|ps1|bat|cmd)$",
+                                                "pattern": "(?i)\\.(exe|ps1|bat|cmd)$",
                                                 "contains": {
-                                                    "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                                    "pattern": "(?i)\\.(exe|ps1|bat|cmd)$"
                                                 }
                                             },
                                             "then": {
@@ -4291,9 +4303,9 @@
                                                     "properties": {
                                                         "url": {
                                                             "if": {
-                                                                "pattern": "\\.(exe|ps1|bat|cmd)$",
+                                                                "pattern": "(?i)\\.(exe|ps1|bat|cmd)$",
                                                                 "contains": {
-                                                                    "pattern": "\\.(exe|ps1|bat|cmd)$"
+                                                                    "pattern": "(?i)\\.(exe|ps1|bat|cmd)$"
                                                                 }
                                                             },
                                                             "then": {
@@ -4415,30 +4427,6 @@
                 "then": {
                     "allOf": [
                         {
-                            "if": {
-                                "anyOf": [
-                                    {
-                                        "required": [
-                                            "font"
-                                        ]
-                                    },
-                                    {
-                                        "required": [
-                                            "psmodule"
-                                        ]
-                                    }
-                                ]
-                            },
-                            "else": {
-                                "properties": {
-                                    "url": {
-                                        "not": true,
-                                        "errorMessage": "Please use architecture instead"
-                                    }
-                                }
-                            }
-                        },
-                        {
                             "$ref": "#/definitions/url_hash_type_match"
                         }
                     ]
@@ -4452,34 +4440,29 @@
                                 }
                             }
                         }
-                    },
-                    "if": {
-                        "anyOf": [
-                            {
-                                "required": [
-                                    "font"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "psmodule"
-                                ]
-                            }
-                        ]
-                    },
-                    "then": {
-                        "properties": {
-                            "architecture": {
-                                "not": true,
-                                "errorMessage": "Please use url instead"
-                            }
-                        }
                     }
                 }
             },
             "else": {
                 "not": true,
-                "errorMessage": "Missing the url or architecture property"
+                "errorMessage": "Missing the architecture or url property"
+            }
+        },
+        {
+            "if": {
+                "required": [
+                    "url"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "url": {
+                        "not": {
+                            "pattern": "(?i)\\.(exe|msi_?|(msix|appx)(bundle)?)$|(x|x86_|amd|arm|aarch)64|(x|i3|i6)86|win(64|32)"
+                        },
+                        "errorMessage": "Please use architecture instead"
+                    }
+                }
             }
         },
         {
@@ -4554,12 +4537,12 @@
                                                         "$ref": "#/definitions/str_or_arr_no_all_space"
                                                     },
                                                     {
-                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+",
+                                                        "pattern": "^https?://github\\.com/[^/]+/[^/]+",
                                                         "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must be a GitHub URL; otherwise, please define checkver.url"
                                                     },
                                                     {
                                                         "contains": {
-                                                            "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                            "pattern": "^https?://github\\.com/[^/]+/[^/]+"
                                                         },
                                                         "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must have at least one GitHub URL; otherwise, please define checkver.url"
                                                     }
@@ -4575,12 +4558,12 @@
                                                                         "$ref": "#/definitions/str_or_arr_no_all_space"
                                                                     },
                                                                     {
-                                                                        "pattern": "^https://github\\.com/[^/]+/[^/]+",
+                                                                        "pattern": "^https?://github\\.com/[^/]+/[^/]+",
                                                                         "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must be a GitHub URL; otherwise, please define checkver.url"
                                                                     },
                                                                     {
                                                                         "contains": {
-                                                                            "pattern": "^https://github\\.com/[^/]+/[^/]+"
+                                                                            "pattern": "^https?://github\\.com/[^/]+/[^/]+"
                                                                         },
                                                                         "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must have at least one GitHub URL; otherwise, please define checkver.url"
                                                                     }
@@ -4659,7 +4642,7 @@
                                                     "if": {
                                                         "properties": {
                                                             "url": {
-                                                                "pattern": "^https://"
+                                                                "pattern": "^https?://"
                                                             }
                                                         }
                                                     },
@@ -4816,20 +4799,6 @@
                                 "url"
                             ]
                         }
-                    },
-                    "if": {
-                        "properties": {
-                            "autoupdate": {
-                                "required": [
-                                    "architecture"
-                                ]
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "architecture"
-                        ]
                     }
                 },
                 "else": {
