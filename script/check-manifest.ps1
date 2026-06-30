@@ -104,7 +104,6 @@ foreach ($file in $files) {
         'description',
         'homepage',
         'license',
-        'architecture',
         'pre_install',
         'post_install',
         'pre_uninstall',
@@ -116,12 +115,15 @@ foreach ($file in $files) {
             break
         }
     }
+    if (-not ($c.url -or $c.architecture)) {
+        $labels.'missing-required-field' = $true
+    }
 
     # Type
     $type = @()
     if ($c.psmodule) { $type += 'psmodule' }
     if ($c.font) { $type += 'font' }
-    $download_url = $c.architecture.'64bit'.url, $c.architecture.arm64.url, $c.url | Select-Object -First 1
+    $download_url = $c.architecture.'64bit'.url, $c.architecture.'32bit'.url, $c.architecture.arm64.url, $c.url | Select-Object -First 1
     if ($download_url) {
         $download_url | ForEach-Object {
             $extension = $_.Split('/')[-1].Split('.')[-1]
@@ -153,18 +155,18 @@ foreach ($file in $files) {
     }
 
     # Location
-    $line += if ($c.location) { '`' + $c.location + '`' } else { 'Scoop' }
+    $line += if ($c.location) { "[$($c.location)](https://abyss.abgox.com/docs/external-installation-directory)" } else { '' }
 
     # Admin
     $admin = 'No'
-    if ($c.admin -or $c.pre_install, $c.pre_uninstall -match '(?<!#.*)(A-Require-Admin)') {
+    if ($c.admin -or $c.pre_install, $c.pre_uninstall -match '(?<!#.*)A-Require-Admin') {
         $admin = 'Yes'
     }
     $line += "[$admin](https://abyss.abgox.com/docs/require-admin)"
 
     # Persistence
     $persistence = @()
-    if ($c.link -or $c.pre_install -match '(?<!#.*)(A-New-LinkFile|A-New-LinkDirectory)') {
+    if ($c.link -or $c.pre_install -match '(?<!#.*)A-New-Link(File|Directory)') {
         $persistence += '[link](https://abyss.abgox.com/docs/features/data-persistence/#link)'
     }
     if ($c.persist) {
@@ -206,7 +208,7 @@ $guide = @'
 - **Manifest**: The manifest name.
 - **Type**: The manifest type.
 - **Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
-- **Location**: The installation location of the app.
+- **Location**: The external installation location of the app.
 - **Admin**: Whether the app requires admin permission to install or uninstall.
 - **Persistence**: The persistence method used for app data.
 - **Extra**: Whether extra files or directories exist for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
