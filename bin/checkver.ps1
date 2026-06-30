@@ -214,7 +214,7 @@ while ($in_progress -gt 0) {
     $expected_ver = $json.version
     $ver = $Version
 
-    if ($json.version -in 'pending', 'renamed', 'deprecated', 'virtual') {
+    if ($json.version -in 'nightly', 'pending', 'renamed', 'deprecated', 'virtual') {
         if (!$SkipUpdated) {
             Write-Host
             Write-Host "$app`: " -NoNewline
