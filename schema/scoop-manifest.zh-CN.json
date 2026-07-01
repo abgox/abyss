@@ -52,13 +52,13 @@
                     "not": {
                         "pattern": "^\\s[^\\s]"
                     },
-                    "errorMessage": "请删除开头的空格"
+                    "errorMessage": "请移除开头的空格"
                 },
                 {
                     "not": {
                         "pattern": "[^\\s]\\s$"
                     },
-                    "errorMessage": "请删除末尾的空格"
+                    "errorMessage": "请移除末尾的空格"
                 }
             ]
         },
@@ -1689,7 +1689,7 @@
         },
         "url": {
             "title": "下载地址",
-            "markdownDescription": "- 指定要下载的文件的 URL\n- 如果有多个 URL，可以使用数组 (压缩包类型应该靠前)\n\n  ```json\n  \"url\": [\n      \"https://example.com/file1.zip\",\n      \"https://example.com/file2.exe\"\n  ]\n  ```\n\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/program.exe`\n\n  ```json\n  \"url\": \"https://example.org/program.1.2.3.exe#/program.exe\"\n  ```",
+            "markdownDescription": "- 指定要下载的文件 URL\n- 可使用数组以下载多个文件，但 [abyss](https://abyss.abgox.com) 要求压缩包必须提前\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1.zip\",\n        \"https://example.com/file2.exe\"\n    ]\n  ```\n\n- 可以在 URL 末尾添加 `#/xxx.exe` 以便于在 `bin`、`shortcuts` 中使用\n\n  ```json\n    \"url\": \"https://example.org/xxx.1.2.3.exe#/xxx.exe\",\n    \"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\",\n    \"bin\": \"app\\\\xxx.exe\",\n    \"shortcuts\": [\n        [\n            \"app\\\\xxx.exe\",\n            \"xxx\"\n        ]\n    ]\n  ```",
             "type": [
                 "string",
                 "array"
@@ -1720,7 +1720,7 @@
         },
         "url_autoupdate": {
             "title": "下载地址",
-            "markdownDescription": "- 指定要下载的文件的 URL\n- 如果有多个 URL，可以使用数组 (压缩包类型应该靠前)\n\n  ```json\n  \"url\": [\n      \"https://example.com/file1.zip\",\n      \"https://example.com/file2.exe\"\n  ]\n  ```\n\n- 如果需要更改下载 URL 的文件名，可以在 URL 结尾加上 `#/program.exe`\n\n  ```json\n  \"url\": \"https://example.org/program.1.2.3.exe#/program.exe\"\n  ```",
+            "markdownDescription": "- 指定要下载的文件 URL，通常需要 `$version` 等进行版本匹配\n- 可使用数组以下载多个文件，但 [abyss](https://abyss.abgox.com) 要求压缩包必须提前\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1-$version.zip\",\n        \"https://example.com/file2-$version.exe\"\n    ]\n  ```\n\n- 可以在 URL 末尾添加 `#/xxx.exe`，以便于在 `bin`、`shortcuts` 中使用\n\n  ```json\n    \"url\": \"https://example.org/xxx-$version.exe#/xxx.exe\"\n  ```\n\n### 版本匹配\n\n- 以版本号 `3.7.1.2-rc.1` 为例\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`\n\n- 除了以上内置的[版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)，`checkver.regex` 中每个捕获组也会生成对应的变量\n  - `$match1`、`$match2`、...\n  - 具名捕获组则生成 `$matchName1`、`$matchName2`、...\n  - 如果使用了它们，则无法使用 `scoop install app@1.2.3` 安装指定版本",
             "examples": [
                 "https://github.com/abgox/abyss/releases/download/empty/empty"
             ],
@@ -2137,7 +2137,7 @@
         },
         "env_add_path_expand": {
             "title": "环境变量 PATH (包含变量)",
-            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 指定要添加到 [环境变量 PATH](https://learn.microsoft.com/zh-cn/windows-server/administration/windows-commands/path) 中的路径\n- 默认添加到 **用户级**，如果安装时使用了 `--global`/`-g` 参数，则添加到 **系统级**\n\n### 与 env_add_path 的区别\n\n- 它可以使用变量，包含 `env_set` 定义的环境变量\n  - `$app`: 清单名称\n  - `$dir`：软件安装目录\n  - `$persist_dir`：软件持久化数据目录\n  - `$home`：用户主目录\n  - `$env:AppData`：Windows 环境变量\n  - ...\n- 它遵循所有权机制: 添加的变量只会被添加者删除",
+            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 指定要添加到 [环境变量 PATH](https://learn.microsoft.com/zh-cn/windows-server/administration/windows-commands/path) 中的路径\n- 默认添加到 **用户级**，如果安装时使用了 `--global`/`-g` 参数，则添加到 **系统级**\n\n### 与 env_add_path 的区别\n\n- 它可以使用变量，包含 `env_set` 定义的环境变量\n  - `$app`: 清单名称\n  - `$dir`：软件安装目录\n  - `$persist_dir`：软件持久化数据目录\n  - `$home`：用户主目录\n  - `$env:AppData`：Windows 环境变量\n  - ...\n- 它遵循所有权机制: 添加的变量只会被添加者移除",
             "examples": [
                 "$env:AppData\\xxx",
                 "$env:LocalAppData\\xxx",
@@ -2634,14 +2634,14 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Start-Install"
                 ]
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
@@ -2657,8 +2657,8 @@
                         "anyOf": [
                             {},
                             {
-                                "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                                "markdownDescription": "设置 `$bucket` 变量\n- 如果 `$bucket` 为空，则使用 `abgox-abyss-bucket-name` 配置项"
+                                "const": "if (!$bucket) { $bucket = 'abyss' }",
+                                "markdownDescription": "设置 `$bucket` 变量"
                             },
                             {
                                 "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -2798,15 +2798,15 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Complete-Install"
                 ]
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                    "markdownDescription": "设置 `$bucket` 变量\n- 如果 `$bucket` 为空，则使用 `abgox-abyss-bucket-name` 配置项"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }",
+                    "markdownDescription": "设置 `$bucket` 变量"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -2865,7 +2865,7 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Start-Uninstall",
                     "A-Stop-Process"
@@ -2873,7 +2873,7 @@
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
@@ -2888,8 +2888,8 @@
                         "anyOf": [
                             {},
                             {
-                                "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                                "markdownDescription": "设置 `$bucket` 变量\n- 如果 `$bucket` 为空，则使用 `abgox-abyss-bucket-name` 配置项"
+                                "const": "if (!$bucket) { $bucket = 'abyss' }",
+                                "markdownDescription": "设置 `$bucket` 变量"
                             },
                             {
                                 "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -3019,15 +3019,15 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Complete-Uninstall"
                 ]
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                    "markdownDescription": "设置 `$bucket` 变量\n- 如果 `$bucket` 为空，则使用 `abgox-abyss-bucket-name` 配置项"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }",
+                    "markdownDescription": "设置 `$bucket` 变量"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -3357,6 +3357,7 @@
             }
         }
     },
+    "additionalProperties": false,
     "properties": {
         "##": {
             "title": "注释",
@@ -3456,7 +3457,7 @@
             "title": "软件主页/仓库",
             "markdownDescription": "- 指定软件的主页或项目仓库地址\n- 如果同时存在，请在选择前评估可用性和稳定性",
             "examples": [
-                "https://example.com/"
+                "https://example.com"
             ],
             "allOf": [
                 {
@@ -3470,9 +3471,9 @@
                 },
                 {
                     "not": {
-                        "pattern": "^https?://[^/]+$"
+                        "pattern": "/$"
                     },
-                    "errorMessage": "如果是官网根域名，请以 '/' 结尾"
+                    "errorMessage": "请移除末尾的 /"
                 }
             ]
         },
@@ -3647,7 +3648,7 @@
         },
         "autoupdate": {
             "title": "自动更新",
-            "markdownDescription": "- 它会通过 [Github Actions](https://github.com/ScoopInstaller/GithubActions) 去自动更新清单\n - Scoop 允许使用 `scoop install AppName@1.2.3` 安装特定版本\n - 但前提是，清单文件中 `autoupdate` 的所有 `url` 只能包含以下 [版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`",
+            "markdownDescription": "- 它用于配置清单的自动更新规则，需要搭配 `checkver`\n- 远程仓库会通过 [Github Actions](https://github.com/abgox/ScoopInstaller-GithubActions) 定期运行 `checkver`\n- 更新时会替换清单中对应的字段\n  - `url`\n  - `extract_dir`\n  - `bin`\n  - `shortcuts`\n  - ...",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
@@ -4125,8 +4126,22 @@
                             },
                             {
                                 "if": {
-                                    "required": [
-                                        "msix"
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "msix"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "font"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "psmodule"
+                                            ]
+                                        }
                                     ]
                                 },
                                 "then": {
@@ -4136,45 +4151,32 @@
                                                 "not": {
                                                     "pattern": "(?<!#.*)A-Stop-Process"
                                                 },
-                                                "errorMessage": "msix 清单不需要 A-Stop-Process"
+                                                "errorMessage": "它不需要 A-Stop-Process"
                                             }
                                         }
                                     }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "font"
-                                    ]
                                 },
-                                "then": {
+                                "else": {
                                     "properties": {
                                         "pre_uninstall": {
-                                            "items": {
-                                                "not": {
+                                            "if": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-Uninstall-Manually"
+                                                }
+                                            },
+                                            "then": {
+                                                "items": {
+                                                    "not": {
+                                                        "pattern": "(?<!#.*)A-Stop-Process"
+                                                    },
+                                                    "errorMessage": "它不需要 A-Stop-Process"
+                                                }
+                                            },
+                                            "else": {
+                                                "contains": {
                                                     "pattern": "(?<!#.*)A-Stop-Process"
                                                 },
-                                                "errorMessage": "字体清单不需要 A-Stop-Process"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "psmodule"
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_uninstall": {
-                                            "items": {
-                                                "not": {
-                                                    "pattern": "(?<!#.*)A-Stop-Process"
-                                                },
-                                                "errorMessage": "PowerShell 模块清单不需要 A-Stop-Process"
+                                                "errorMessage": "缺少 A-Stop-Process"
                                             }
                                         }
                                     }

@@ -15,7 +15,7 @@
     "hash": "491d05ceb4a058b11f51ec4fe2cf83c092bfa042526f74ccc56977a209a2bd72",
     "admin": true,
     "pre_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "A-Ensure-Directory \"$env:AppData\\Rime\"",
@@ -23,19 +23,19 @@
         "Copy-Item \"$dir\\wanxiang-lts-zh-hans.gram\" $env:AppData\\Rime -Force"
     ],
     "post_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1 | Stop-Process -Force -ErrorAction SilentlyContinue",
         "Remove-Item \"$env:AppData\\Rime\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],

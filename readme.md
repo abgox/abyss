@@ -27,7 +27,7 @@
 
 <p align="center">
     <a href="https://www.microsoft.com/windows">
-        <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
+        <img src="https://img.shields.io/badge/Target-Windows%2010+-blue" alt="target" />
     </a>
     <a href="https://abyss.abgox.com/docs/manifest-list">
         <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
@@ -40,7 +40,10 @@
 ---
 
 <p align="center">
-  <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
+  <strong>Just like abyss — limitless, mysterious, and filled with treasures.</strong>
+</p>
+<p align="center">
+  <strong>Just like abyss — always building your stable source.</strong>
 </p>
 <p align="center">
   <strong>Star ⭐️ or <a href="https://abgox.com/donate">Donate 💰</a> if you like it!</strong>
@@ -48,30 +51,26 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop](https://scoop.sh/) bucket.
-> - It aims to provide a Winget-like solution with [data persistence](https://abyss.abgox.com/docs/features/data-persistence).
-> - Its manifests are based on [util](./util/), and other buckets should not merge them to avoid conflicts and errors.
+> - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop](https://scoop.sh) bucket.
+> - It aims to provide a [Winget](https://github.com/microsoft/winget-pkgs)-like solution with [data persistence](https://abyss.abgox.com/docs/features/data-persistence).
+> - Its [manifests](https://abyss.abgox.com/docs/manifest-list) are built on [util](./util/) and [use a unique bucket name](https://abyss.abgox.com/docs/bucket-name), making them unusable for other buckets.
 
 ## Features
 
 > [!Tip]
 >
-> Unlike the standard Scoop bucket, [abyss](https://abyss.abgox.com) includes some extra features.
+> Unlike standard buckets, [abyss](https://abyss.abgox.com) includes extra features.
 
 - [Manifest Status Control](https://abyss.abgox.com/docs/features/manifest-status-control)
 - [Enhanced Data Persistence](https://abyss.abgox.com/docs/features/data-persistence)
 - [Flexible App Installation Solution](https://abyss.abgox.com/docs/features/install-solution)
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/docs/features/extra-features)
 - Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
-- Standardized directory structure and manifest naming.
+- Standardized directory structure and manifest name.
   - Inspired by: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
-  - Format: **Publisher.PackageIdentifier**
+  - Name Format: **Publisher.PackageIdentifier**
 
 ## Demo
-
-> [!Tip]
->
-> If it cannot be displayed here, [you can check it on the official website](https://abyss.abgox.com).
 
 ![Demo](https://abyss.abgox.com/demo.gif)
 
@@ -82,7 +81,7 @@
 > - It is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors) if you cannot access Github.
 > - It allows you to install and use Scoop normally without accessing Github.
 
-- [Scoop](https://scoop.sh/)
+- [Scoop](https://scoop.sh)
 - [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ## If you are currently using Scoop
@@ -103,7 +102,7 @@
     scoop install abyss/abgox.PSCompletions
     ```
 
-    ```shell
+    ```powershell
     Import-Module PSCompletions
     ```
 
@@ -125,3 +124,7 @@
 - Gitee: https://gitee.com/abgox/scoop-tools
 
 ## [Manifest List](https://abyss.abgox.com/docs/manifest-list)
+
+## License
+
+[MIT](./license) © [abgox](https://www.abgox.com)

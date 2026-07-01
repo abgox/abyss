@@ -1689,7 +1689,7 @@
         },
         "url": {
             "title": "Download URL",
-            "markdownDescription": "- Specifies the URL of the file to download\n- If there are multiple URLs, an array can be used (archives should come first)\n\n  ```json\n  \"url\": [\n      \"https://example.com/file1.zip\",\n      \"https://example.com/file2.exe\"\n  ]\n  ```\n\n- If you need to change the filename of the downloaded URL, you can append `#/program.exe` to the end of the URL\n\n  ```json\n  \"url\": \"https://example.org/program.1.2.3.exe#/program.exe\"\n  ```",
+            "markdownDescription": "- Specifies the URL(s) of the file(s) to download\n- An array can be used to download multiple files, but [abyss](https://abyss.abgox.com) requires archive files to come first\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1.zip\",\n        \"https://example.com/file2.exe\"\n    ]\n  ```\n\n- You can append `#/xxx.exe` to the end of the URL for easier use in `bin` and `shortcuts`\n\n  ```json\n    \"url\": \"https://example.org/xxx.1.2.3.exe#/xxx.exe\",\n    \"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\",\n    \"bin\": \"app\\\\xxx.exe\",\n    \"shortcuts\": [\n        [\n            \"app\\\\xxx.exe\",\n            \"xxx\"\n        ]\n    ]\n  ```",
             "type": [
                 "string",
                 "array"
@@ -1720,7 +1720,7 @@
         },
         "url_autoupdate": {
             "title": "Download URL",
-            "markdownDescription": "- Specifies the URL of the file to download\n- If there are multiple URLs, an array can be used (archives should come first)\n\n  ```json\n  \"url\": [\n      \"https://example.com/file1.zip\",\n      \"https://example.com/file2.exe\"\n  ]\n  ```\n\n- If you need to change the filename of the downloaded URL, you can append `#/program.exe` to the end of the URL\n\n  ```json\n  \"url\": \"https://example.org/program.1.2.3.exe#/program.exe\"\n  ```",
+            "markdownDescription": "- Specifies the URL(s) of the file(s) to download, usually requiring `$version` and similar variables for version matching\n- An array can be used to download multiple files, but [abyss](https://abyss.abgox.com) requires archive files to come first\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1-$version.zip\",\n        \"https://example.com/file2-$version.exe\"\n    ]\n  ```\n\n- You can append `#/xxx.exe` to the end of the URL for easier use in `bin` and `shortcuts`\n\n  ```json\n    \"url\": \"https://example.org/xxx-$version.exe#/xxx.exe\"\n  ```\n\n### Version matching\n\n- Using the version `3.7.1.2-rc.1` as an example\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`\n\n- In addition to the built-in [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables) above, each capturing group in `checkver.regex` also generates a corresponding variable\n  - `$match1`, `$match2`, ...\n  - Named capturing groups generate `$matchName1`, `$matchName2`, ...\n  - If these are used, installing a specific version via `scoop install app@1.2.3` will not be possible",
             "examples": [
                 "https://github.com/abgox/abyss/releases/download/empty/empty"
             ],
@@ -2634,14 +2634,14 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Start-Install"
                 ]
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
@@ -2657,8 +2657,8 @@
                         "anyOf": [
                             {},
                             {
-                                "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                                "markdownDescription": "Set the `$bucket` variable\n- If `$bucket` is empty, the `abgox-abyss-bucket-name` configuration item is used"
+                                "const": "if (!$bucket) { $bucket = 'abyss' }",
+                                "markdownDescription": "Set the `$bucket` variable"
                             },
                             {
                                 "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -2798,15 +2798,15 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Complete-Install"
                 ]
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                    "markdownDescription": "Set the `$bucket` variable\n- If `$bucket` is empty, the `abgox-abyss-bucket-name` configuration item is used"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }",
+                    "markdownDescription": "Set the `$bucket` variable"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -2865,7 +2865,7 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Start-Uninstall",
                     "A-Stop-Process"
@@ -2873,7 +2873,7 @@
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
@@ -2888,8 +2888,8 @@
                         "anyOf": [
                             {},
                             {
-                                "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                                "markdownDescription": "Set the `$bucket` variable\n- If `$bucket` is empty, the `abgox-abyss-bucket-name` configuration item is used"
+                                "const": "if (!$bucket) { $bucket = 'abyss' }",
+                                "markdownDescription": "Set the `$bucket` variable"
                             },
                             {
                                 "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -3019,15 +3019,15 @@
             "minItems": 3,
             "examples": [
                 [
-                    "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+                    "if (!$bucket) { $bucket = 'abyss' }",
                     ". $bucketsdir\\$bucket\\util\\1.ps1",
                     "A-Complete-Uninstall"
                 ]
             ],
             "items": [
                 {
-                    "const": "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
-                    "markdownDescription": "Set the `$bucket` variable\n- If `$bucket` is empty, the `abgox-abyss-bucket-name` configuration item is used"
+                    "const": "if (!$bucket) { $bucket = 'abyss' }",
+                    "markdownDescription": "Set the `$bucket` variable"
                 },
                 {
                     "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -3357,6 +3357,7 @@
             }
         }
     },
+    "additionalProperties": false,
     "properties": {
         "##": {
             "title": "Comments",
@@ -3456,7 +3457,7 @@
             "title": "Homepage/Repository",
             "markdownDescription": "- Specifies the homepage or project repository address of the software\n- If both exist, please evaluate availability and stability before making a choice",
             "examples": [
-                "https://example.com/"
+                "https://example.com"
             ],
             "allOf": [
                 {
@@ -3470,9 +3471,9 @@
                 },
                 {
                     "not": {
-                        "pattern": "^https?://[^/]+$"
+                        "pattern": "/$"
                     },
-                    "errorMessage": "If it is the root domain of an official website, please end it with '/'"
+                    "errorMessage": "Please remove leading /"
                 }
             ]
         },
@@ -3647,7 +3648,7 @@
         },
         "autoupdate": {
             "title": "Auto Update",
-            "markdownDescription": "- Automatically updates manifests via [GitHub Actions](https://github.com/ScoopInstaller/GithubActions)\n- Scoop allows using `scoop install AppName@1.2.3` to install specific versions\n- However, this is only possible if all `url` items in the manifest's `autoupdate` property contain only the following [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables):\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`",
+            "markdownDescription": "- It is used to configure the manifest's auto-update rules, and requires `checkver` to be configured alongside it\n- The remote repository runs `checkver` on a schedule via [GitHub Actions](https://github.com/abgox/ScoopInstaller-GithubActions)\n- When an update runs, it replaces the corresponding fields in the manifest\n  - `url`\n  - `extract_dir`\n  - `bin`\n  - `shortcuts`\n  - ...",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
@@ -4125,8 +4126,22 @@
                             },
                             {
                                 "if": {
-                                    "required": [
-                                        "msix"
+                                    "anyOf": [
+                                        {
+                                            "required": [
+                                                "msix"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "font"
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "psmodule"
+                                            ]
+                                        }
                                     ]
                                 },
                                 "then": {
@@ -4136,45 +4151,32 @@
                                                 "not": {
                                                     "pattern": "(?<!#.*)A-Stop-Process"
                                                 },
-                                                "errorMessage": "msix manifests do not require A-Stop-Process"
+                                                "errorMessage": "It doesn't require A-Stop-Process"
                                             }
                                         }
                                     }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "font"
-                                    ]
                                 },
-                                "then": {
+                                "else": {
                                     "properties": {
                                         "pre_uninstall": {
-                                            "items": {
-                                                "not": {
+                                            "if": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-Uninstall-Manually"
+                                                }
+                                            },
+                                            "then": {
+                                                "items": {
+                                                    "not": {
+                                                        "pattern": "(?<!#.*)A-Stop-Process"
+                                                    },
+                                                    "errorMessage": "It doesn't require A-Stop-Process"
+                                                }
+                                            },
+                                            "else": {
+                                                "contains": {
                                                     "pattern": "(?<!#.*)A-Stop-Process"
                                                 },
-                                                "errorMessage": "Font manifests do not require A-Stop-Process"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "if": {
-                                    "required": [
-                                        "psmodule"
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "pre_uninstall": {
-                                            "items": {
-                                                "not": {
-                                                    "pattern": "(?<!#.*)A-Stop-Process"
-                                                },
-                                                "errorMessage": "PowerShell module manifests do not require A-Stop-Process"
+                                                "errorMessage": "Missing A-Stop-Process"
                                             }
                                         }
                                     }

@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 Set-StrictMode -Off
 
@@ -44,13 +44,9 @@ else {
     Microsoft.PowerShell.Utility\Write-Host
 }
 
-# https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-bucket-name
 if ($bucket) {
     if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) {
         scoop config 'root_path' $scoopdir
-    }
-    if ($scoopConfig.'abgox-abyss-bucket-name' -ne $bucket) {
-        scoop config 'abgox-abyss-bucket-name' $bucket
     }
     if ($bucket -ne 'abyss') {
         error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
@@ -2624,9 +2620,9 @@ function A-Get-AbsolutePath {
 }
 
 function A-Show-IssueCreationPrompt {
-    # Write-Host "Please contact the bucket maintainer!" -ForegroundColor Red -NoNewline
-    Write-Host 'Something went wrong here.' -ForegroundColor Red -NoNewline
-    Write-Host "`nPlease try again or create a new issue by using the following link and paste your console output:`nhttps://github.com/abgox/abyss/issues/new?template=bug-report.yml" -ForegroundColor Red
+    # Write-Host "Please contact the bucket maintainer!" -ForegroundColor DarkRed -NoNewline
+    Write-Host 'Something went wrong here.' -ForegroundColor DarkRed -NoNewline
+    Write-Host "`nPlease try again or create a new issue by using the following link and paste your console output:`nhttps://github.com/abgox/abyss/issues/new?template=bug-report.yml" -ForegroundColor DarkRed
 }
 
 function A-Get-UserAgent {

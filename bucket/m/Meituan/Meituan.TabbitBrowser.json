@@ -1,7 +1,7 @@
 {
     "version": "0.25.8.0",
     "description": "新一代 AI 原生浏览器，理解你的上下文、帮你组织工作、执行任务、无限可能 | AI-native browser, Understand your Context, Organize your Work, Automate Tasks, Expand Possibility",
-    "homepage": "https://www.tabbit-ai.com/",
+    "homepage": "https://www.tabbit-ai.com",
     "license": {
         "identifier": "Proprietary"
     },
@@ -18,18 +18,18 @@
     "location": "$env:LocalAppData\\Tabbit Browser",
     "link": "$env:LocalAppData\\Tabbit Browser\\User Data",
     "pre_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "A-Install-App -ArgumentList '--silent', '--install'"
     ],
     "post_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "$Uninstaller = Get-ChildItem \"$env:LocalAppData\\Tabbit Browser\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
@@ -37,7 +37,7 @@
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],

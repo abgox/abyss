@@ -1,7 +1,7 @@
 {
     "version": "26.4.0.5512",
     "description": "适用于 Windows 的增强型终端，配备 X11 服务器、多标签 SSH 客户端、网络工具等诸多功能 | Enhanced terminal for Windows with X11 server, tabbed SSH client, network tools and much more",
-    "homepage": "https://mobaxterm.mobatek.net/",
+    "homepage": "https://mobaxterm.mobatek.net",
     "license": {
         "identifier": "Unknown",
         "url": "https://mobaxterm.mobatek.net/license.html"
@@ -16,7 +16,7 @@
     "link": "$env:AppData\\MobaXterm",
     "admin": true,
     "pre_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "$msi = Get-ChildItem $dir '*.msi' -Recurse | Select-Object -First 1",
@@ -24,12 +24,12 @@
         "A-Install-Msi"
     ],
     "post_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -37,7 +37,7 @@
         "A-Uninstall-Msi"
     ],
     "post_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],

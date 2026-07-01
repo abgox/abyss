@@ -1,7 +1,7 @@
 {
     "version": "1.21.0",
     "description": "一个可使用 ChatGPT、Claude 和其他 LLM 的桌面客户端 | A desktop client for ChatGPT, Claude and other LLMs",
-    "homepage": "https://chatboxai.app/",
+    "homepage": "https://chatboxai.app",
     "license": {
         "identifier": "GPL-3.0-or-later"
     },
@@ -24,18 +24,18 @@
     "link": "$env:AppData\\xyz.chatboxapp.app",
     "cleanup": "$env:LocalAppData\\xyz.chatboxapp.app-updater",
     "pre_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "A-Install-App -Uninstaller 'app\\Uninstall Chatbox.exe' -ArgumentList '/CurrentUser','/S',\"/D=$dir\\app\""
     ],
     "post_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
@@ -43,7 +43,7 @@
         "A-Uninstall-App"
     ],
     "post_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],

@@ -15,18 +15,18 @@
     "link": "$env:LocalAppData\\Perplexity\\Comet\\User Data",
     "admin": true,
     "pre_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
         "A-Install-App -ArgumentList '--system-level','--do-not-launch-chrome'"
     ],
     "post_install": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "$Uninstaller = Get-ChildItem \"$env:ProgramFiles\\Perplexity\\Comet\\Application\" setup.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1",
@@ -34,7 +34,7 @@
         "A-Remove-Link"
     ],
     "post_uninstall": [
-        "if (!$bucket) { $bucket = (scoop config).'abgox-abyss-bucket-name' }",
+        "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Complete-Uninstall"
     ],

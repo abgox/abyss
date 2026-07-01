@@ -27,7 +27,7 @@
 
 <p align="center">
     <a href="https://www.microsoft.com/windows">
-        <img src="https://img.shields.io/badge/Target-Windows%2010-blue" alt="target" />
+        <img src="https://img.shields.io/badge/Target-Windows%2010+-blue" alt="target" />
     </a>
     <a href="https://abyss.abgox.com/docs/manifest-list">
         <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
@@ -40,7 +40,10 @@
 ---
 
 <p align="center">
-  <strong>Just like the abyss — limitless, mysterious, and filled with treasures.</strong>
+  <strong>Just like abyss — limitless, mysterious, and filled with treasures.</strong>
+</p>
+<p align="center">
+  <strong>Just like abyss — always building your stable source.</strong>
 </p>
 <p align="center">
   <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
@@ -48,30 +51,26 @@
 
 > [!Important]
 >
-> - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh/) bucket
-> - 它旨在成为类似 Winget 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
-> - 它的清单是基于 [util](./util/) 编写的，其他 bucket 不应该合并它们，以避免冲突和错误
+> - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh) bucket
+> - 它旨在成为类似 [Winget](https://github.com/microsoft/winget-pkgs) 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
+> - 它的[清单](https://abyss.abgox.com/docs/manifest-list)基于 [util](./util/) 构建且[使用唯一的 bucket 名称](https://abyss.abgox.com/docs/bucket-name)，其他 bucket 无法使用
 
 ## 特性
 
 > [!Tip]
 >
-> 区别于标准的 Scoop bucket，[abyss](https://abyss.abgox.com) 包含了一些额外的特性
+> 与标准的 bucket 不同，[abyss](https://abyss.abgox.com) 包含了额外的特性
 
 - [清单状态控制](https://abyss.abgox.com/docs/features/manifest-status-control)
 - [完善的数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
 - [灵活的应用安装方案](https://abyss.abgox.com/docs/features/install-solution)
 - [Scoop 配置控制的其他功能](https://abyss.abgox.com/docs/features/extra-features)
 - 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供多语言支持
-- 标准化的目录结构和应用清单命名
-  - 参考了 [winget-pkgs](https://github.com/microsoft/winget-pkgs)
+- 标准化的目录结构和应用清单名称
+  - 参考: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
   - 格式: **Publisher.PackageIdentifier**
 
 ## 演示
-
-> [!Tip]
->
-> 如果这里无法显示，[可以在官网上查看](https://abyss.abgox.com)
 
 ![Demo](https://abyss.abgox.com/demo.zh-CN.gif)
 
@@ -82,7 +81,7 @@
 > - 如果你无法访问 Github ，建议使用 [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors)
 > - 它可以让你正常安装并使用 Scoop，无需访问 Github
 
-- [Scoop](https://scoop.sh/)
+- [Scoop](https://scoop.sh)
 - [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ## 如果正在使用 Scoop
@@ -103,7 +102,7 @@
    scoop install abyss/abgox.PSCompletions
    ```
 
-   ```shell
+   ```powershell
    Import-Module PSCompletions
    ```
 
@@ -125,3 +124,7 @@
 - Gitee: https://gitee.com/abgox/scoop-tools
 
 ## [清单列表](https://abyss.abgox.com/docs/manifest-list)
+
+## License
+
+[MIT](./license) © [abgox](https://www.abgox.com)
