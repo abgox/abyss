@@ -1,0 +1,68 @@
+{
+    "version": "3.16.4",
+    "description": "适用于 Claude Code、Codex、OpenCode、OpenClaw 以及 Gemini CLI 的全方位管理工具 | The All-in-One Manager for Claude Code, Codex, OpenCode, OpenClaw & Gemini CLI",
+    "homepage": "https://ccswitch.io",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/farion1231/cc-switch/releases/download/v3.16.4/CC-Switch-v3.16.4-Windows-Portable.zip",
+            "hash": "23fd21dcdfaf69a257217ac1c2fb025e537dc851ab49aa42e95e32f207a9ed57"
+        },
+        "arm64": {
+            "url": "https://github.com/farion1231/cc-switch/releases/download/v3.16.4/CC-Switch-v3.16.4-Windows-arm64-Portable.zip",
+            "hash": "551105551929285690e6c03d13141f863a24abf2dca32a29c11abc215b7522e9"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\cc-switch.exe",
+            "CC-Switch"
+        ]
+    ],
+    "link": "$home\\.cc-switch",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/farion1231/cc-switch/releases/download/v$version/CC-Switch-v$version-Windows-Portable.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/farion1231/cc-switch/releases/download/v$version/CC-Switch-v$version-Windows-arm64-Portable.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
