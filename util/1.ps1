@@ -46,7 +46,10 @@ else {
 
 if ($bucket) {
     if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) {
-        scoop config 'root_path' $scoopdir
+        scoop config root_path $scoopdir
+    }
+    if ($global -and $globaldir -and $globaldir -ne $scoopConfig.global_path) {
+        scoop config global_path $globaldir
     }
     if ($bucket -ne 'abyss') {
         error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
@@ -256,7 +259,13 @@ function A-Start-Uninstall {
         $new = $manifest.renamed.new
         if (-not $new) {
             try {
-                $new = Get-Content "$bucketsdir\$bucket\bucket\$($app[0])\$($app.Split('.', 2)[0])\$app.json" -Raw -Encoding utf8 -ErrorAction Stop | ConvertFrom-Json | Select-Object -ExpandProperty renamed | Select-Object -ExpandProperty new
+                $jsonFile = if ($app.Contains('.')) {
+                    "$bucketsdir\$bucket\bucket\$($app[0])\$($app.Split('.', 2)[0])\$app.json"
+                }
+                else {
+                    "$bucketsdir\$bucket\bucket\#\$app.json"
+                }
+                $new = Get-Content $jsonFile -Raw -Encoding utf8 -ErrorAction Stop | ConvertFrom-Json | Select-Object -ExpandProperty renamed | Select-Object -ExpandProperty new
             }
             catch {
                 error $_.Exception.Message
