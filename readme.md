@@ -29,8 +29,8 @@
     <a href="https://www.microsoft.com/windows">
         <img src="https://img.shields.io/badge/Target-Windows%2010+-blue" alt="target" />
     </a>
-    <a href="https://abyss.abgox.com/docs/manifest-list">
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
+    <a href="https://abyss.abgox.com/manifests">
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifests.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
         <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
@@ -52,8 +52,7 @@
 > [!Important]
 >
 > - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop](https://scoop.sh) bucket.
-> - It aims to provide a [Winget](https://github.com/microsoft/winget-pkgs)-like solution with [data persistence](https://abyss.abgox.com/docs/features/data-persistence).
-> - Its [manifests](https://abyss.abgox.com/docs/manifest-list) are built on [util](./util/) and [use a unique bucket name](https://abyss.abgox.com/docs/bucket-name), making them unusable for other buckets.
+> - Its [manifests](https://abyss.abgox.com/manifests) are written with [util](./util/) and [a unique bucket name](https://abyss.abgox.com/docs/bucket-name), making them unusable for other buckets.
 
 ## Features
 
@@ -62,7 +61,7 @@
 > Unlike standard buckets, [abyss](https://abyss.abgox.com) includes extra features.
 
 - [Manifest Status Control](https://abyss.abgox.com/docs/features/manifest-status-control)
-- [Enhanced Data Persistence](https://abyss.abgox.com/docs/features/data-persistence)
+- [Comprehensive Data Persistence](https://abyss.abgox.com/docs/features/data-persistence)
 - [Flexible App Installation Solution](https://abyss.abgox.com/docs/features/install-solution)
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/docs/features/extra-features)
 - Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
@@ -123,7 +122,7 @@
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
 
-## [Manifest List](https://abyss.abgox.com/docs/manifest-list)
+## [Manifests](https://abyss.abgox.com/manifests)
 
 ## License
 

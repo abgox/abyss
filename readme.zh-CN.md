@@ -29,8 +29,8 @@
     <a href="https://www.microsoft.com/windows">
         <img src="https://img.shields.io/badge/Target-Windows%2010+-blue" alt="target" />
     </a>
-    <a href="https://abyss.abgox.com/docs/manifest-list">
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifest-list.json&query=%24.count&label=Manifests" alt="manifests" />
+    <a href="https://abyss.abgox.com/manifests">
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifests.json&query=%24.count&label=Manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
         <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
@@ -52,8 +52,7 @@
 > [!Important]
 >
 > - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh) bucket
-> - 它旨在成为类似 [Winget](https://github.com/microsoft/winget-pkgs) 的 Scoop 方案 + [数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
-> - 它的[清单](https://abyss.abgox.com/docs/manifest-list)基于 [util](./util/) 构建且[使用唯一的 bucket 名称](https://abyss.abgox.com/docs/bucket-name)，其他 bucket 无法使用
+> - 它的 [清单](https://abyss.abgox.com/manifests) 使用 [util](./util/) 和 [唯一的 bucket 名称](https://abyss.abgox.com/docs/bucket-name) 进行编写，其他 bucket 无法使用
 
 ## 特性
 
@@ -123,7 +122,7 @@
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
 
-## [清单列表](https://abyss.abgox.com/docs/manifest-list)
+## [清单](https://abyss.abgox.com/manifests)
 
 ## License
 
