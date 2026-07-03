@@ -1,0 +1,65 @@
+{
+    "version": "1.9.6",
+    "description": "一款 Scoop 的桌面图形化界面 | A desktop GUI for Scoop",
+    "homepage": "https://amarbego.github.io/Rscoop",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AmarBego/Rscoop/releases/download/v1.9.6/rscoop.exe",
+            "hash": "8331be56aba3c7a6f9129e6bbe01eec67e895e20edbafe687776340a9f8a48f6"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\rscoop.exe",
+            "Rscoop"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\com.rscoop.app",
+        "$env:LocalAppData\\com.rscoop.app"
+    ],
+    "cleanup": "$env:LocalAppData\\rscoop",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AmarBego/Rscoop/releases/download/v$version/rscoop.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
