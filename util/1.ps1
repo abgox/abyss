@@ -51,11 +51,6 @@ if ($bucket) {
     if ($global -and $globaldir -and $globaldir -ne $scoopConfig.global_path) {
         scoop config global_path $globaldir
     }
-    if ($bucket -ne 'abyss') {
-        error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
-        error 'Refer to: https://abyss.abgox.com/docs/bucket-name'
-        A-Exit
-    }
 }
 
 # https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-app-uninstall-action
@@ -94,6 +89,8 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
+    A-Test-BucketName
+
     # https://abyss.abgox.com/docs/features/manifest-status-control
     if ($manifest.version -in 'pending', 'renamed', 'deprecated') {
         A-Deny-Manifest
@@ -1869,6 +1866,14 @@ function A-Compare-Version {
 }
 
 #region 以下的函数不应该在外部调用
+
+function A-Test-BucketName {
+    if ($bucket -ne 'abyss') {
+        error "You should use 'abyss' as the bucket name, but the current name is '$bucket'."
+        error 'Refer to: https://abyss.abgox.com/docs/bucket-name'
+        A-Exit
+    }
+}
 
 function A-Show-Notes {
     param(
