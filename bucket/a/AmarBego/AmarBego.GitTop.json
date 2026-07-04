@@ -1,0 +1,70 @@
+{
+    "version": "0.5.3",
+    "description": "一款用于接收 GitHub 通知的轻量级桌面客户端 | A lightweight desktop client for GitHub notifications",
+    "homepage": "https://amarbego.github.io/GitTop",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AmarBego/GitTop/releases/download/v0.5.3/gittop-0.5.3-windows-x86_64-setup.exe",
+            "hash": "db41021df88258abc7b3ab6de7f38ffb060a95b4caad4bab6945963b11a6a684"
+        },
+        "arm64": {
+            "url": "https://github.com/AmarBego/GitTop/releases/download/v0.5.3/gittop-0.5.3-windows-aarch64-setup.exe",
+            "hash": "0933fa79f3d6d28458f0acb396bc0e87717d9e7ca60056190e3fbc04b7ecd6a5"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\gittop.exe",
+            "GitTop"
+        ]
+    ],
+    "link": "$env:AppData\\GitTop",
+    "cleanup": "$env:LocalAppData\\GitTop",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AmarBego/GitTop/releases/download/v$version/gittop-$version-windows-x86_64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/AmarBego/GitTop/releases/download/v$version/gittop-$version-windows-aarch64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
