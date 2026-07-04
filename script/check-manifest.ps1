@@ -88,6 +88,10 @@ foreach ($file in $files) {
     $id = $part[1]
     $letter = $publisher.ToLower()[0]
 
+    if ($null -eq $id -or $publisher -eq $id) {
+        $labels.'manifest-name-review-needed' = $true
+    }
+
     $c = Invoke-RestMethod -Uri $file.raw_url -Headers $headers
 
     $line = @()
