@@ -138,7 +138,28 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: abgox/hub-mirror-action@abgox
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 1
+
+      - name: Compare Hash
+        id: compare
+        run: |
+          INITIAL_HASH="${{ github.sha }}"
+          CURRENT_HASH=$(git rev-parse HEAD)
+          echo "Initial: $INITIAL_HASH"
+          echo "Current: $CURRENT_HASH"
+          if [ "$CURRENT_HASH" = "$INITIAL_HASH" ]; then
+            echo "sync=false" >> $GITHUB_OUTPUT
+          else
+            echo "sync=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Sync Repos
+        if: steps.compare.outputs.sync == 'true'
+        uses: abgox/hub-mirror-action@abgox
         with:
           src: github/abgox
           dst: gitee/abgox

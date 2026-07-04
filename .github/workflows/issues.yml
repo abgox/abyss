@@ -25,9 +25,28 @@ jobs:
     name: Sync Repos
     needs: issue-handler
     runs-on: ubuntu-latest
-    if: "${{ contains(github.event.issue.title, ': hash check failed') }}"
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 1
+
+      - name: Compare Hash
+        id: compare
+        run: |
+          INITIAL_HASH="${{ github.sha }}"
+          CURRENT_HASH=$(git rev-parse HEAD)
+          echo "Initial: $INITIAL_HASH"
+          echo "Current: $CURRENT_HASH"
+          if [ "$CURRENT_HASH" = "$INITIAL_HASH" ]; then
+            echo "sync=false" >> $GITHUB_OUTPUT
+          else
+            echo "sync=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Sync Repos
+        if: steps.compare.outputs.sync == 'true'
         uses: abgox/hub-mirror-action@abgox
         continue-on-error: true
         with:
