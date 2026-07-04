@@ -1,0 +1,63 @@
+{
+    "version": "1.0.1",
+    "description": "支持点击穿透模式的轻量级开源屏幕标注工具 | Lightweight open-source screen annotation tool with click-through mode",
+    "homepage": "https://ifer47.github.io/markeron",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ifer47/markeron/releases/download/v1.0.1/MarkerOn_1.0.1_x64-setup.exe",
+            "hash": "97a0399520dba75a7bb1f06cf93d12d1fba2fd9bdaf3e3214799ef382179700e"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\MarkerOn.exe",
+            "MarkerOn"
+        ]
+    ],
+    "link": "$env:AppData\\com.markeron.app",
+    "cleanup": "$env:LocalAppData\\com.markeron.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ifer47/markeron/releases/download/v$version/MarkerOn_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
