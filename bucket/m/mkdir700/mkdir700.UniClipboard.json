@@ -1,0 +1,69 @@
+{
+    "version": "0.17.1",
+    "description": "隐私优先的、点对点加密传输的跨设备剪贴板同步工具 | Privacy-first, encrypted peer-to-peer, cross-device clipboard synchronization tool",
+    "homepage": "https://uniclipboard.app",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/UniClipboard/UniClipboard/releases/download/v0.17.1/UniClipboard_0.17.1_x64-setup.exe",
+            "hash": "1df0cfb34a16d88066765d7781857b04699c5c879aba6ea53503d3e2f89afaf7"
+        },
+        "arm64": {
+            "url": "https://github.com/UniClipboard/UniClipboard/releases/download/v0.17.1/UniClipboard_0.17.1_arm64-setup.exe",
+            "hash": "f9740d779e9cd77f3b13bac4fbcbf9f66a32729fa7d13982264f433db26ea2dc"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\UniClipboard.exe",
+            "UniClipboard"
+        ]
+    ],
+    "link": "$env:LocalAppData\\app.uniclipboard.desktop",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/UniClipboard/UniClipboard/releases/download/v$version/UniClipboard_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/UniClipboard/UniClipboard/releases/download/v$version/UniClipboard_$version_arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
