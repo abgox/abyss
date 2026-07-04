@@ -1,4 +1,4 @@
-name: Sort JSON
+name: CI
 
 on:
   workflow_dispatch:
@@ -10,8 +10,8 @@ permissions:
   contents: write
 
 jobs:
-  push-changes:
-    name: Sort JSON and Push Changes
+  sort-json:
+    name: Sort JSON and Push
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.event.repository.default_branch}}
           fetch-depth: 50
 
-      - name: Sort JSON and Push Changes
+      - name: Sort JSON and Push
         shell: pwsh
         run: |
           $manual = "${{ github.event_name }}" -eq "workflow_dispatch"
@@ -29,7 +29,7 @@ jobs:
 
   sync-repos:
     name: Sync Repos
-    needs: push-changes
+    needs: sort-json
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -41,3 +41,20 @@ jobs:
           dst_token: ""
           force_update: true
           static_list: ${{ github.event.repository.name }}
+
+  update-docs:
+    name: Update Docs
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch}}
+
+      - name: Update Docs
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
+          cd abyss-docs
+          .\scripts\generate-list.ps1
+          .\scripts\push-change.ps1

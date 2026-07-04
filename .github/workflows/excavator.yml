@@ -2,7 +2,7 @@ name: Excavator
 on:
   workflow_dispatch:
   schedule:
-    - cron: "16 */2 * * *"
+    - cron: "16 */1 * * *"
 
 jobs:
   check-scoop-version:
@@ -40,31 +40,14 @@ jobs:
                   repo: context.repo.repo,
                   state: 'open'
                 });
-                console.log('Issue #8 已重新打开');
+                console.log('Issue #8 has been reopened');
               } else {
-                console.log('Issue #8 已是打开状态');
+                console.log('Issue #8 has been opened');
               }
             } catch (error) {
-              console.error('重新打开 Issue 失败:', error);
+              console.error('Failed to reopen the issue: ', error);
               throw error;
             }
-
-  update-content:
-    name: Update Content
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.repository.default_branch}}
-
-      - name: Update Docs
-        shell: pwsh
-        run: |
-          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
-          cd abyss-docs
-          .\scripts\generate-list.ps1
-          .\scripts\push-change.ps1
 
   excavate:
     name: Excavate
