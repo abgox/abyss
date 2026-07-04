@@ -1,4 +1,4 @@
-<h1 align="center">✨<a href="https://abyss.abgox.com/">abyss</a>✨</h1>
+<h1 align="center">✨<a href="https://abyss.abgox.com">abyss</a>✨</h1>
 
 <p align="center">
     <a href="readme.zh-CN.md">简体中文</a> |
@@ -13,12 +13,6 @@
     </a>
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
-    </a>
-    <a href="https://github.com/abgox/abyss">
-        <img src="https://img.shields.io/github/languages/code-size/abgox/abyss" alt="code size" />
-    </a>
-    <a href="https://github.com/abgox/abyss">
-        <img src="https://img.shields.io/github/repo-size/abgox/abyss" alt="repo size" />
     </a>
     <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/created-at/abgox/abyss" alt="created" />
@@ -61,13 +55,17 @@
 > Unlike standard buckets, [abyss](https://abyss.abgox.com) includes extra features.
 
 - [Manifest Status Control](https://abyss.abgox.com/docs/features/manifest-status-control)
-- [Comprehensive Data Persistence](https://abyss.abgox.com/docs/features/data-persistence)
+- [Better Data Persistence](https://abyss.abgox.com/docs/features/data-persistence)
 - [Flexible App Installation Solution](https://abyss.abgox.com/docs/features/install-solution)
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/docs/features/extra-features)
 - Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
 - Standardized directory structure and manifest name.
   - Inspired by: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
   - Name Format: **Publisher.PackageIdentifier**
+
+## Manifests
+
+View, search, and filter manifests: https://abyss.abgox.com/manifests
 
 ## Demo
 
@@ -121,8 +119,6 @@
 
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
-
-## [Manifests](https://abyss.abgox.com/manifests)
 
 ## License
 

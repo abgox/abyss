@@ -1,4 +1,4 @@
-<h1 align="center">✨<a href="https://abyss.abgox.com/">abyss</a>✨</h1>
+<h1 align="center">✨<a href="https://abyss.abgox.com">abyss</a>✨</h1>
 
 <p align="center">
     <a href="readme.md">English</a> |
@@ -13,12 +13,6 @@
     </a>
     <a href="https://github.com/abgox/abyss/blob/main/license">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
-    </a>
-    <a href="https://github.com/abgox/abyss">
-        <img src="https://img.shields.io/github/languages/code-size/abgox/abyss" alt="code size" />
-    </a>
-    <a href="https://github.com/abgox/abyss">
-        <img src="https://img.shields.io/github/repo-size/abgox/abyss" alt="repo size" />
     </a>
     <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/created-at/abgox/abyss" alt="created" />
@@ -61,13 +55,17 @@
 > 与标准的 bucket 不同，[abyss](https://abyss.abgox.com) 包含了额外的特性
 
 - [清单状态控制](https://abyss.abgox.com/docs/features/manifest-status-control)
-- [完善的数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
+- [优秀的数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
 - [灵活的应用安装方案](https://abyss.abgox.com/docs/features/install-solution)
 - [Scoop 配置控制的其他功能](https://abyss.abgox.com/docs/features/extra-features)
 - 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供多语言支持
 - 标准化的目录结构和应用清单名称
   - 参考: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
   - 格式: **Publisher.PackageIdentifier**
+
+## 清单
+
+查看、搜索、筛选清单: https://abyss.abgox.com/manifests
 
 ## 演示
 
@@ -121,8 +119,6 @@
 
 - Github: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
-
-## [清单](https://abyss.abgox.com/manifests)
 
 ## License
 
