@@ -1,0 +1,66 @@
+{
+    "version": "0.6.10",
+    "description": "可将纯 Markdown 文本转化为精致幻灯片的 Markdown 演示编辑器，支持实时预览、多种版式、主题设置以及 PPTX 格式导出 | Markdown presentation editor that turns plain Markdown into polished slides with live preview, multiple layouts, theming, and PPTX export",
+    "homepage": "https://kova.md",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/KovaMD/Kova/releases/download/v0.6.10/Kova_0.6.10_x64-setup.exe",
+            "hash": "dce997cfefa3aac7f7f1e2e3348370e7a0ff935ed45f74cc5fea67de6b1d8448"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Kova.exe",
+            "Kova"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\kova",
+        "$env:AppData\\md.kova.app"
+    ],
+    "cleanup": "$env:LocalAppData\\md.kova.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/KovaMD/Kova/releases/download/v$version/Kova_$version_x64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
