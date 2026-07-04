@@ -1,0 +1,69 @@
+{
+    "version": "4.0.0",
+    "description": "用于浏览和编辑 SQLite 数据库文件的桌面应用程序 | Desktop application for browsing and editing SQLite database files",
+    "homepage": "https://letos.org",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pawelsalawa/letos/releases/download/4.0.0/Letos-4.0.0-windows-x64-setup.exe",
+            "hash": "0984b245810a758ef0863a45e9f6c5416e2640dd3ed42f8696eda63bbdeb38c5"
+        },
+        "arm64": {
+            "url": "https://github.com/pawelsalawa/letos/releases/download/4.0.0/Letos-4.0.0-windows-arm64-setup.exe",
+            "hash": "23da7e9c3d23a7df7e91bd528282fcaec762d9d9e442b4bffe304d2fc33ef20b"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\letos.exe",
+            "Letos"
+        ]
+    ],
+    "link": "$env:AppData\\letos.org\\Letos",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/pawelsalawa/letos/releases/download/$version/Letos-$version-windows-x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/pawelsalawa/letos/releases/download/$version/Letos-$version-windows-arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
