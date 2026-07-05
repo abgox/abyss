@@ -5,50 +5,6 @@ on:
     - cron: "16 */1 * * *"
 
 jobs:
-  check-scoop-version:
-    name: Check Scoop Version
-    runs-on: windows-latest
-    outputs:
-      ScoopNewVersion: ${{ steps.scoop-new-version.outputs.ScoopNewVersion }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Check Scoop Version
-        id: scoop-new-version
-        shell: pwsh
-        run: |
-          .\script\check-scoop-version.ps1
-
-      - name: Reopen Issue
-        if: steps.scoop-new-version.outputs.ScoopNewVersion != ''
-        uses: actions/github-script@v9
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            try {
-              const issue = await github.rest.issues.get({
-                issue_number: 8,
-                owner: context.repo.owner,
-                repo: context.repo.repo
-              });
-
-              if (issue.data.state === 'closed') {
-                await github.rest.issues.update({
-                  issue_number: 8,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  state: 'open'
-                });
-                console.log('Issue #8 has been reopened');
-              } else {
-                console.log('Issue #8 has been opened');
-              }
-            } catch (error) {
-              console.error('Failed to reopen the issue: ', error);
-              throw error;
-            }
-
   excavate:
     name: Excavate
     runs-on: windows-latest
