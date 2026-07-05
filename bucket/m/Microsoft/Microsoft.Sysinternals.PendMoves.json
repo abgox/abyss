@@ -1,0 +1,80 @@
+{
+    "version": "1.3",
+    "description": "列出下次开机将执行的文件重命名与删除命令清单 | Enumerate the list of file rename and delete commands that will be executed the next boot",
+    "homepage": "https://learn.microsoft.com/sysinternals/downloads/pendmoves",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.sysinternals.com/files/pendmoves.zip",
+            "hash": "377c0a8efbf39a78add4a9fe421ae140400b1a0a1e7f7f447793c690001410a3",
+            "bin": [
+                [
+                    "app\\pendmoves64.exe",
+                    "pendmoves",
+                    "/accepteula"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://download.sysinternals.com/files/pendmoves.zip",
+            "hash": "377c0a8efbf39a78add4a9fe421ae140400b1a0a1e7f7f447793c690001410a3",
+            "bin": [
+                [
+                    "app\\pendmoves64a.exe",
+                    "pendmoves",
+                    "/accepteula"
+                ]
+            ]
+        }
+    },
+    "extract_to": "app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Sysinternals.PendMoves' 'zip'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.x64_machine.InstallerSha256"
+                }
+            },
+            "arm64": {
+                "url": "$matchArm64",
+                "hash": {
+                    "url": "temp-autoupdate.json",
+                    "jsonpath": "$.arm64_machine.InstallerSha256"
+                }
+            }
+        }
+    }
+}
