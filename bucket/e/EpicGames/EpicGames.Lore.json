@@ -1,0 +1,56 @@
+{
+    "version": "0.8.4",
+    "description": "开源的新一代版本控制系统 | Next-generation, open source version control system",
+    "homepage": "https://lore.org",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/EpicGames/lore/releases/download/v0.8.4/lore-v0.8.4-x86_64-pc-windows-msvc.zip",
+            "hash": "79746c66a9863611ff547ab4d744297e4d96351d1bb9c1555493681bff372181"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\lore.exe",
+    "link": "$env:LocalAppData\\Epic Games\\lore",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/EpicGames/lore/releases/download/v$version/lore-v$version-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
