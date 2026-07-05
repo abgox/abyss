@@ -1,0 +1,56 @@
+{
+    "version": "3.0.6",
+    "description": "Rime 万象拼音工具箱，更新、管理万象拼音输入方案 | Rime Wanxiang Pinyin Toolkit, for updating and managing the Wanxiang Pinyin input schema",
+    "homepage": "https://amzxyz.github.io/rime-wanxiang",
+    "license": {
+        "identifier": "CC-BY-4.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/amzxyz/RIME-LMDG/releases/download/tool/wanxiang-tools.exe",
+            "hash": "dbe1a8f2f22c5a44bbd02df26339113d88fb58099c013eb82fa3e236a23ab8ad"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\wanxiang-tools.exe",
+            "Rime 万象拼音工具箱"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://github.com/amzxyz/RIME-LMDG/releases/tag/tool",
+        "regex": "v([\\d.]{3,})"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/amzxyz/RIME-LMDG/releases/download/tool/wanxiang-tools.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
