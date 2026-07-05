@@ -43,19 +43,19 @@
   <strong>Star ⭐️ or <a href="https://abgox.com/donate">Donate 💰</a> if you like it!</strong>
 </p>
 
-> [!Important]
+> [!IMPORTANT]
 >
-> - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop](https://scoop.sh) bucket.
+> - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop bucket](https://scoop.sh/#/apps?q=%22https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%22).
 > - Its [manifests](https://abyss.abgox.com/manifests) are written with [util](./util/) and [a unique bucket name](https://abyss.abgox.com/docs/bucket-name), making them unusable for other buckets.
 
 ## Features
 
-> [!Tip]
+> [!TIP]
 >
 > Unlike standard buckets, [abyss](https://abyss.abgox.com) includes extra features.
 
-- [Manifest Status Control](https://abyss.abgox.com/docs/features/manifest-status-control)
 - [Better Data Persistence](https://abyss.abgox.com/docs/features/data-persistence)
+- [Explicit Manifest Status Control](https://abyss.abgox.com/docs/features/manifest-status-control)
 - [Flexible App Installation Solution](https://abyss.abgox.com/docs/features/install-solution)
 - [Extra Features via Scoop Configuration](https://abyss.abgox.com/docs/features/extra-features)
 - Multilingual support powered by [scoop-i18n](https://scoop-i18n.abgox.com).
@@ -65,7 +65,7 @@
 
 ## Manifests
 
-View, search, and filter manifests: https://abyss.abgox.com/manifests
+**View, search, and filter manifests**: https://abyss.abgox.com/manifests
 
 ## Demo
 
@@ -73,7 +73,7 @@ View, search, and filter manifests: https://abyss.abgox.com/manifests
 
 ## If you have never used Scoop
 
-> [!Tip]
+> [!TIP]
 >
 > - It is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors) if you cannot access Github.
 > - It allows you to install and use Scoop normally without accessing Github.
@@ -83,35 +83,35 @@ View, search, and filter manifests: https://abyss.abgox.com/manifests
 
 ## If you are currently using Scoop
 
-1.  Add the [abyss](https://abyss.abgox.com) bucket from [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
+1. Add the [abyss](https://abyss.abgox.com) bucket from [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
 
-    ```shell
-    scoop bucket add abyss https://github.com/abgox/abyss
-    ```
+   ```shell
+   scoop bucket add abyss https://github.com/abgox/abyss
+   ```
 
-    ```shell
-    scoop bucket add abyss https://gitee.com/abgox/abyss
-    ```
+   ```shell
+   scoop bucket add abyss https://gitee.com/abgox/abyss
+   ```
 
-2.  Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com) in [PowerShell](https://www.microsoft.com/powershell).
+2. Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com) in [PowerShell](https://www.microsoft.com/powershell).
 
-    ```shell
-    scoop install abyss/abgox.PSCompletions
-    ```
+   ```shell
+   scoop install abyss/abgox.PSCompletions
+   ```
 
-    ```powershell
-    Import-Module PSCompletions
-    ```
+   ```powershell
+   Import-Module PSCompletions
+   ```
 
-    ```shell
-    psc add scoop
-    ```
+   ```shell
+   psc add scoop
+   ```
 
-3.  Install [scoop-i18n](https://scoop-i18n.abgox.com) to provide multilingual support.
+3. Install [scoop-i18n](https://scoop-i18n.abgox.com) to provide multilingual support.
 
-    ```shell
-    scoop install abyss/abgox.scoop-i18n
-    ```
+   ```shell
+   scoop install abyss/abgox.scoop-i18n
+   ```
 
 ## If you cannot access Github resources
 

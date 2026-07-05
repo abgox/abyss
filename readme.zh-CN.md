@@ -43,21 +43,21 @@
   <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
 </p>
 
-> [!Important]
+> [!IMPORTANT]
 >
-> - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop](https://scoop.sh) bucket
+> - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop bucket](https://scoop.sh/#/apps?q=%22https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%22)
 > - 它的 [清单](https://abyss.abgox.com/manifests) 使用 [util](./util/) 和 [唯一的 bucket 名称](https://abyss.abgox.com/docs/bucket-name) 进行编写，其他 bucket 无法使用
 
 ## 特性
 
-> [!Tip]
+> [!TIP]
 >
 > 与标准的 bucket 不同，[abyss](https://abyss.abgox.com) 包含了额外的特性
 
-- [清单状态控制](https://abyss.abgox.com/docs/features/manifest-status-control)
 - [优秀的数据持久化](https://abyss.abgox.com/docs/features/data-persistence)
+- [显式的清单状态控制](https://abyss.abgox.com/docs/features/manifest-status-control)
 - [灵活的应用安装方案](https://abyss.abgox.com/docs/features/install-solution)
-- [Scoop 配置控制的其他功能](https://abyss.abgox.com/docs/features/extra-features)
+- [基于 Scoop 配置的其他功能](https://abyss.abgox.com/docs/features/extra-features)
 - 由 [scoop-i18n](https://scoop-i18n.abgox.com) 提供多语言支持
 - 标准化的目录结构和应用清单名称
   - 参考: [winget-pkgs](https://github.com/microsoft/winget-pkgs)
@@ -65,7 +65,7 @@
 
 ## 清单
 
-查看、搜索、筛选清单: https://abyss.abgox.com/manifests
+**查看、搜索、筛选清单**: https://abyss.abgox.com/manifests
 
 ## 演示
 
@@ -73,7 +73,7 @@
 
 ## 如果没有用过 Scoop
 
-> [!Tip]
+> [!TIP]
 >
 > - 如果你无法访问 Github ，建议使用 [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors)
 > - 它可以让你正常安装并使用 Scoop，无需访问 Github
