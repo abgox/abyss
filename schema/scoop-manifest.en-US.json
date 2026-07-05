@@ -1823,21 +1823,8 @@
                 }
             }
         },
-        "empty_url_hash": {
+        "empty_hash": {
             "properties": {
-                "url": {
-                    "if": {
-                        "type": "string"
-                    },
-                    "then": {
-                        "const": "https://github.com/abgox/abyss/releases/download/empty/empty"
-                    },
-                    "else": {
-                        "items": {
-                            "const": "https://github.com/abgox/abyss/releases/download/empty/empty"
-                        }
-                    }
-                },
                 "hash": {
                     "if": {
                         "type": "string"
@@ -1852,6 +1839,30 @@
                     }
                 }
             }
+        },
+        "empty_url_hash": {
+            "allOf": [
+                {
+                    "properties": {
+                        "url": {
+                            "if": {
+                                "type": "string"
+                            },
+                            "then": {
+                                "const": "https://github.com/abgox/abyss/releases/download/empty/empty"
+                            },
+                            "else": {
+                                "items": {
+                                    "const": "https://github.com/abgox/abyss/releases/download/empty/empty"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/definitions/empty_hash"
+                }
+            ]
         },
         "architecture_example": {
             "examples": [
@@ -4141,6 +4152,31 @@
                                             "required": [
                                                 "psmodule"
                                             ]
+                                        },
+                                        {
+                                            "not": {
+                                                "anyOf": [
+                                                    {
+                                                        "properties": {
+                                                            "pre_install": {
+                                                                "contains": {
+                                                                    "pattern": "(?<!#.*)A-Install-.+"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "required": [
+                                                            "bin"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "required": [
+                                                            "shortcuts"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
                                         }
                                     ]
                                 },
@@ -4358,7 +4394,7 @@
                     "if": {
                         "properties": {
                             "version": {
-                                "pattern": "^renamed$"
+                                "const": "renamed"
                             }
                         }
                     },
@@ -4366,6 +4402,31 @@
                         "required": [
                             "renamed"
                         ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "version": {
+                                "const": "nightly"
+                            }
+                        }
+                    },
+                    "then": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/empty_hash"
+                            }
+                        ],
+                        "properties": {
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
+                                        "$ref": "#/definitions/empty_hash"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             ]
