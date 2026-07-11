@@ -3256,6 +3256,7 @@
                     "type": "string",
                     "examples": [
                         "(.+)",
+                        "([\\d.]+)",
                         "^([\\d.]+)$",
                         "^(?<version>[\\d.]+)$"
                     ],
@@ -4174,6 +4175,28 @@
                                                         "required": [
                                                             "shortcuts"
                                                         ]
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "architecture": {
+                                                                "patternProperties": {
+                                                                    "": {
+                                                                        "anyOf": [
+                                                                            {
+                                                                                "required": [
+                                                                                    "bin"
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "required": [
+                                                                                    "shortcuts"
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 ]
                                             }
@@ -4425,6 +4448,14 @@
                                         "$ref": "#/definitions/empty_hash"
                                     }
                                 }
+                            },
+                            "checkver": {
+                                "not": true,
+                                "errorMessage": "无效的属性"
+                            },
+                            "autoupdate": {
+                                "not": true,
+                                "errorMessage": "无效的属性"
                             }
                         }
                     }
