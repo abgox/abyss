@@ -1,5 +1,5 @@
 {
-    "version": "1.2.290",
+    "version": "2.0.0-beta4",
     "description": "基于 Flutter 和 Rust 构建的现代跨平台 Clash 客户端 | A modern cross-platform Clash client built with Flutter and Rust",
     "homepage": "https://github.com/Kindness-Kismet/Stelliberty",
     "license": {
@@ -7,23 +7,32 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.290/Stelliberty-v1.2.290-windows-x64-setup.exe",
-            "hash": "e0bd9f70ccafcb9dcabf1aec2af1df06db2c9e050a2e5daf8bcea9907237eb2f"
+            "url": "https://github.com/Kindness-Kismet/stelliberty/releases/download/v2.0.0-beta4/stelliberty-v2.0.0-beta4-win-x64.zip",
+            "hash": "c66edb750eba13c9e23382014023da742a707c496d2e12ef00919e3893f8f60c"
+        },
+        "arm64": {
+            "url": "https://github.com/Kindness-Kismet/stelliberty/releases/download/v2.0.0-beta4/stelliberty-v2.0.0-beta4-win-arm64.zip",
+            "hash": "b42de6539d76b0415cf1e9e5621f75f38914b2b9ddd201d618d615f038682df9"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
             "app\\stelliberty.exe",
             "Stelliberty"
         ]
     ],
-    "link": "$env:AppData\\stelliberty",
+    "persist": [
+        [
+            "app\\data\\settings.json",
+            "AppData\\Roaming\\stelliberty\\settings.json"
+        ]
+    ],
     "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Install",
-        "A-Install-Inno"
+        "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -34,8 +43,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-Manually 'app'",
-        "A-Remove-Link"
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -52,7 +60,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/Kindness-Kismet/Stelliberty/releases/download/v$version/Stelliberty-v$version-windows-x64-setup.exe"
+                "url": "https://github.com/Kindness-Kismet/stelliberty/releases/download/v$version/stelliberty-v$version-win-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/Kindness-Kismet/stelliberty/releases/download/v$version/stelliberty-v$version-win-arm64.zip"
             }
         },
         "hash": {
