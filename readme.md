@@ -21,10 +21,10 @@
 
 <p align="center">
     <a href="https://www.microsoft.com/windows">
-        <img src="https://img.shields.io/badge/Target-Windows%2010+-blue" alt="target" />
+        <img src="https://img.shields.io/badge/platform-Windows%2010+-blue" alt="platform" />
     </a>
     <a href="https://abyss.abgox.com/manifests">
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifests.json&query=%24.count&label=Manifests" alt="manifests" />
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifests.json&query=%24.count&label=manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
         <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
