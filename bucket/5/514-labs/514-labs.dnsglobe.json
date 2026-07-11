@@ -1,0 +1,56 @@
+{
+    "version": "0.3.1",
+    "description": "一款可在终端中使用的全球 DNS 解析传播检测工具 | A global DNS propagation checker for your terminal",
+    "homepage": "https://github.com/514-labs/dnsglobe",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/514-labs/dnsglobe/releases/download/v0.3.1/dnsglobe-x86_64-pc-windows-msvc.zip",
+            "hash": "7da93af2c60174dcf8ca67a914c6003376cd26f463dde2b147c521cbd06adf97"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\dnsglobe.exe",
+    "link": "$home\\.config\\dnsglobe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/514-labs/dnsglobe/releases/download/v$version/dnsglobe-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
