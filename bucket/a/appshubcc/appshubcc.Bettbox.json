@@ -1,0 +1,69 @@
+{
+    "version": "1.18.5",
+    "description": "一款使用 Mihomo(Clash Meta) 内核、基于 FlClash 早期版本进行重构的多平台网络调试及分流客户端 | A multi-platform network debugging and traffic splitting client based on an early version of FlClash, refactored and powered by the Mihomo (Clash Meta) core",
+    "homepage": "https://github.com/appshubcc/Bettbox",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/appshubcc/Bettbox/releases/download/v1.18.5/Bettbox-1.18.5-windows-amd64-setup.exe",
+            "hash": "b4d3938473ab3947ff7b2c1e87b644ce22f29d1f381c19f65daad652a54d7c16"
+        },
+        "arm64": {
+            "url": "https://github.com/appshubcc/Bettbox/releases/download/v1.18.5/Bettbox-1.18.5-windows-arm64-setup.exe",
+            "hash": "6ce6099d6f873d74b248d5f56501220168fd7dab8d42d160c148978843992946"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Bettbox.exe",
+            "Bettbox"
+        ]
+    ],
+    "link": "$env:AppData\\com.appshub\\Bettbox",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Uninstall-Manually 'app'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/appshubcc/Bettbox/releases/download/v$version/Bettbox-$version-windows-amd64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/appshubcc/Bettbox/releases/download/v$version/Bettbox-$version-windows-arm64-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
