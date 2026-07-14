@@ -1,0 +1,61 @@
+{
+    "version": "6.8.2",
+    "description": "一款可依据 Git 提交历史生成语义化版本号的工具 | A tool that generates a Semantic Version number based on your Git history",
+    "homepage": "https://gitversion.net",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/GitTools/GitVersion/releases/download/6.8.2/gitversion-win-x64-6.8.2.zip",
+            "hash": "73219908a616847bd4049680dff389fc3623d4fbe8585e92198a5572da63f796"
+        },
+        "arm64": {
+            "url": "https://github.com/GitTools/GitVersion/releases/download/6.8.2/gitversion-win-arm64-6.8.2.zip",
+            "hash": "13d95502e3888055df077ed4383ed2e010ec659a3a0f0b3db726e9d7a8fa6724"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\gitversion.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/GitTools/GitVersion/releases/download/$version/gitversion-win-x64-$version.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/GitTools/GitVersion/releases/download/$version/gitversion-win-arm64-$version.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
