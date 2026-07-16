@@ -1687,6 +1687,19 @@
                 }
             ]
         },
+        "version_variable_validation": {
+            "if": {
+                "pattern": "(?i)\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[a-z][a-z0-9]*)"
+            },
+            "then": {
+                "pattern": "\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[A-Z][A-Za-z0-9]*)",
+                "errorMessage": "Detected what looks like a version variable, but the casing is incorrect. See the correct form on the right side of each example:\n$MajorVersion > $majorVersion\n$matchsha > $matchSha"
+            },
+            "else": {
+                "not": true,
+                "errorMessage": "No valid version variable detected. See examples:\n$version\n$majorVersion\n$matchHead\n$match1"
+            }
+        },
         "url": {
             "title": "Download URL",
             "markdownDescription": "- Specifies the URL(s) of the file(s) to download\n- An array can be used to download multiple files, but [abyss](https://abyss.abgox.com) requires archive files to come first\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1.zip\",\n        \"https://example.com/file2.exe\"\n    ]\n  ```\n\n- You can append `#/xxx.exe` to the end of the URL for easier use in `bin` and `shortcuts`\n\n  ```json\n    \"url\": \"https://example.org/xxx.1.2.3.exe#/xxx.exe\",\n    \"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\",\n    \"bin\": \"app\\\\xxx.exe\",\n    \"shortcuts\": [\n        [\n            \"app\\\\xxx.exe\",\n            \"xxx\"\n        ]\n    ]\n  ```",
@@ -1733,8 +1746,7 @@
                         "$ref": "#/definitions/str"
                     },
                     {
-                        "pattern": "\\$.+",
-                        "errorMessage": "It does not use dynamic version variables like $version, please check if it is correct"
+                        "$ref": "#/definitions/version_variable_validation"
                     }
                 ]
             },
@@ -1743,8 +1755,7 @@
                     "$ref": "#/definitions/str_or_arr_no_all_space"
                 },
                 {
-                    "pattern": "\\$.+",
-                    "errorMessage": "It does not use dynamic version variables like $version, please check if it is correct"
+                    "$ref": "#/definitions/version_variable_validation"
                 },
                 {
                     "$ref": "#/definitions/use_string_if_single"
@@ -3233,6 +3244,10 @@
                                                 "markdownDescription": "Get the latest release version from GitHub\n- Includes version types `1`, `2`, and `3`\n- Filters out `v` or `V` prefixes (e.g., `v1.2.3` => `1.2.3`)\n### Version Types\n1. Latest stable version: `latest`\n2. Latest prerelease version: `prerelease`\n3. Other versions"
                                             },
                                             {
+                                                "const": "A-Get-VersionFromInstaller",
+                                                "markdownDescription": "Extract the version number from the installer\n\n- Read order: `FileVersion` > `ProductVersion`\n- Uses a tiered Range-download strategy, starting from a small range and trying progressively\n- If all tiered attempts fail, falls back to downloading the full installer\n\n### Notes\n\n- Only consider using this when no more reliable way (e.g. a checkver endpoint, GitHub Releases, etc.) is available to obtain the version number\n- The installer URL must be a fixed address, not a template containing a version placeholder (e.g. `$version`)"
+                                            },
+                                            {
                                                 "const": "A-Get-VersionFromPowerShellGallery",
                                                 "markdownDescription": "Get the version from [PowerShell Gallery](https://www.powershellgallery.com/)"
                                             },
@@ -4576,6 +4591,40 @@
             },
             "then": {
                 "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "checkver": {
+                                    "required": [
+                                        "script"
+                                    ],
+                                    "properties": {
+                                        "script": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Get-VersionFrom(Installer|PowerShellGallery)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "checkver": {
+                                    "required": [
+                                        "regex"
+                                    ],
+                                    "properties": {
+                                        "regex": {
+                                            "examples": [
+                                                "(.+)"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     {
                         "if": {
                             "properties": {

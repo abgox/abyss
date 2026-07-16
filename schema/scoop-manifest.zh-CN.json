@@ -1687,6 +1687,19 @@
                 }
             ]
         },
+        "version_variable_validation": {
+            "if": {
+                "pattern": "(?i)\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[a-z][a-z0-9]*)"
+            },
+            "then": {
+                "pattern": "\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[A-Z][A-Za-z0-9]*)",
+                "errorMessage": "检测到疑似版本变量，但大小写格式错误，请参考示例中右侧的正确写法\n$MajorVersion > $majorVersion\n$matchsha > $matchSha"
+            },
+            "else": {
+                "not": true,
+                "errorMessage": "未检测到有效的版本变量，请参考示例\n$version\n$majorVersion\n$matchHead\n$match1"
+            }
+        },
         "url": {
             "title": "下载地址",
             "markdownDescription": "- 指定要下载的文件 URL\n- 可使用数组以下载多个文件，但 [abyss](https://abyss.abgox.com) 要求压缩包必须提前\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1.zip\",\n        \"https://example.com/file2.exe\"\n    ]\n  ```\n\n- 可以在 URL 末尾添加 `#/xxx.exe` 以便于在 `bin`、`shortcuts` 中使用\n\n  ```json\n    \"url\": \"https://example.org/xxx.1.2.3.exe#/xxx.exe\",\n    \"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\",\n    \"bin\": \"app\\\\xxx.exe\",\n    \"shortcuts\": [\n        [\n            \"app\\\\xxx.exe\",\n            \"xxx\"\n        ]\n    ]\n  ```",
@@ -1733,8 +1746,7 @@
                         "$ref": "#/definitions/str"
                     },
                     {
-                        "pattern": "\\$.+",
-                        "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确"
+                        "$ref": "#/definitions/version_variable_validation"
                     }
                 ]
             },
@@ -1743,8 +1755,7 @@
                     "$ref": "#/definitions/str_or_arr_no_all_space"
                 },
                 {
-                    "pattern": "\\$.+",
-                    "errorMessage": "它没有使用 $version 这样的动态版本变量，请检查是否正确"
+                    "$ref": "#/definitions/version_variable_validation"
                 },
                 {
                     "$ref": "#/definitions/use_string_if_single"
@@ -3233,6 +3244,10 @@
                                                 "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `2`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
                                             },
                                             {
+                                                "const": "A-Get-VersionFromInstaller",
+                                                "markdownDescription": "从安装程序中提取版本号\n\n- 读取顺序: `FileVersion` > `ProductVersion`\n- 采用分级 Range 下载策略，从小范围逐步尝试\n- 若所有分级尝试均失败，最终会下载完整的安装程序兜底\n\n### 注意事项\n\n- 仅在没有其他更可靠的方式（如 checkver 接口、GitHub Releases 等）获取版本号时才考虑使用\n- 安装程序地址必须是固定地址，不能是包含版本占位符的模板，如 `$version`"
+                                            },
+                                            {
                                                 "const": "A-Get-VersionFromPowerShellGallery",
                                                 "markdownDescription": "从 [PowerShell Gallery](https://www.powershellgallery.com/) 获取版本"
                                             },
@@ -4576,6 +4591,40 @@
             },
             "then": {
                 "allOf": [
+                    {
+                        "if": {
+                            "properties": {
+                                "checkver": {
+                                    "required": [
+                                        "script"
+                                    ],
+                                    "properties": {
+                                        "script": {
+                                            "contains": {
+                                                "pattern": "(?<!#.*)A-Get-VersionFrom(Installer|PowerShellGallery)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "checkver": {
+                                    "required": [
+                                        "regex"
+                                    ],
+                                    "properties": {
+                                        "regex": {
+                                            "examples": [
+                                                "(.+)"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     {
                         "if": {
                             "properties": {

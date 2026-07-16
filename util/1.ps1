@@ -1581,6 +1581,87 @@ function A-Get-VersionFromPowerShellGallery {
     Select-Object -First 1
 }
 
+function A-Get-VersionFromInstaller {
+    if (-not $json) {
+        Write-Error '$json is invalid.'
+        return
+    }
+    $arch = $json.autoupdate.architecture
+    $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
+    if (-not $url) {
+        Write-Error "${app}: No installer url found."
+        return
+    }
+    $versionPattern = '^\d+(\.\d+){1,}'
+
+    $totalSize = A-Get-RemoteFileSize $url
+    $sizeTiers = @(512KB, 2MB, 5MB, 20MB, $null)
+    if ($totalSize) {
+        $effectiveTiers = New-Object System.Collections.Generic.List[object]
+        foreach ($size in $sizeTiers) {
+            if ($null -eq $size) {
+                $effectiveTiers.Add($size)
+                break
+            }
+            $effectiveTiers.Add($size)
+            if ([int64]$size -ge $totalSize) {
+                break
+            }
+        }
+        $sizeTiers = $effectiveTiers
+    }
+    $tempFile = Join-Path $env:TEMP "$([guid]::NewGuid().ToString()).exe"
+    $rawVersion = $null
+    try {
+        foreach ($size in $sizeTiers) {
+            try {
+                if ($null -eq $size) {
+                    Invoke-WebRequest -Uri $url -OutFile $tempFile -UseBasicParsing
+                }
+                else {
+                    $rangeEnd = [int64]$size - 1
+                    $headers = @{ 'Range' = "bytes=0-$rangeEnd" }
+                    $requestTimeout = $abgox_abyss.requestTimeout
+                    Invoke-WebRequest -Uri $url -Headers $headers -OutFile $tempFile -UseBasicParsing @requestTimeout
+                }
+                $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($tempFile)
+                $candidate = if ($vi.FileVersion) { $vi.FileVersion.Trim() } else { $vi.ProductVersion.Trim() }
+                if ($candidate -match $versionPattern) {
+                    $rawVersion = $candidate
+                    break
+                }
+            }
+            catch {
+                continue
+            }
+        }
+    }
+    finally {
+        if (Test-Path $tempFile) {
+            Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+        }
+    }
+    if (-not $rawVersion) {
+        Write-Error "${app}: Could not extract a valid version from installer."
+        return
+    }
+    if ($json.checkver.regex) {
+        if ($rawVersion -match $json.checkver.regex) {
+            if ($Matches[1]) {
+                return $Matches[1]
+            }
+            else {
+                return $rawVersion
+            }
+        }
+        else {
+            Write-Error "${app}: Version '$rawVersion' does not match regex '$($json.checkver.regex)'."
+            return
+        }
+    }
+    return $rawVersion
+}
+
 function A-Get-DynamicPageFromUrl {
     if (-not $json) {
         Write-Error '$json is invalid.'
@@ -1615,24 +1696,6 @@ function A-Get-DynamicPageFromUrl {
         Write-Error "Edge execution failed: $($_.Exception.Message)"
         return
     }
-}
-
-function A-Resolve-DownloadUrl {
-    <#
-    .SYNOPSIS
-        从指定的 URL 中解析跳转后的真实下载地址
-    #>
-    param(
-        [string]$Url
-    )
-
-    if (!$PSBoundParameters.ContainsKey('Url')) {
-        return $null
-    }
-
-    $res = [System.Net.HttpWebRequest]::Create($Url).GetResponse()
-    $res.ResponseUri.AbsoluteUri
-    $res.Close()
 }
 
 function A-Get-InstallerInfoFromWinget {
@@ -2641,6 +2704,55 @@ function A-Show-IssueCreationPrompt {
 
 function A-Get-UserAgent {
     return "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
+}
+
+function A-Resolve-DownloadUrl {
+    <#
+    .SYNOPSIS
+        从指定的 URL 中解析跳转后的真实下载地址
+    #>
+    param(
+        [string]$Url
+    )
+
+    if (!$PSBoundParameters.ContainsKey('Url')) {
+        return $null
+    }
+
+    $res = [System.Net.HttpWebRequest]::Create($Url).GetResponse()
+    $res.ResponseUri.AbsoluteUri
+    $res.Close()
+}
+
+function A-Get-RemoteFileSize {
+    param(
+        [string]$Url
+    )
+
+    $Url = A-Resolve-DownloadUrl $Url
+    $requestTimeout = $abgox_abyss.requestTimeout
+    try {
+        $headers = @{ 'Range' = 'bytes=0-0' }
+        $resp = Invoke-WebRequest -Uri $Url -Headers $headers -UseBasicParsing @requestTimeout
+        $contentRange = $resp.Headers['Content-Range']
+        if ($contentRange -and $contentRange -match '/(\d+)$') {
+            return [int64]$Matches[1]
+        }
+        if ($resp.Headers['Content-Length']) {
+            return [int64]$resp.Headers['Content-Length']
+        }
+    }
+    catch {}
+
+    try {
+        $head = Invoke-WebRequest -Uri $Url -Method Head -UseBasicParsing @requestTimeout
+        if ($head.Headers['Content-Length']) {
+            return [int64]$head.Headers['Content-Length']
+        }
+    }
+    catch {}
+
+    return $null
 }
 
 #endregion
