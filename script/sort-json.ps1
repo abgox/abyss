@@ -217,8 +217,9 @@ else {
             $current += $_
         }
     }
-    $changedManifests = git ls-files --modified --others --exclude-standard -- 'bucket/'
-    $manifests = $manifests + $changedManifests |
+    $trackedChanges = git diff --name-only HEAD -- 'bucket/'
+    $untrackedChanges = git ls-files --others --exclude-standard -- 'bucket/'
+    $manifests = @($manifests) + @($trackedChanges) + @($untrackedChanges) |
     Where-Object { $_ -match '\.json$' -and (Test-Path $_) } |
     Sort-Object -Unique
 }
