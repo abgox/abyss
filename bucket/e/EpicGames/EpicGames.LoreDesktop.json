@@ -1,0 +1,61 @@
+{
+    "version": "0.8.500",
+    "description": "开源的新一代版本控制系统 | Next-generation, open source version control system",
+    "homepage": "https://lore.org",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://releases.lore.org/desktop/updates/stable/lore-desktop-v0.8.500-win-x86_64.exe",
+            "hash": "3b6d83ccfbbdb285eda9443f9087d0757384cff2642deae003a76080c0152cab"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\lore-desktop.exe",
+            "Lore Desktop"
+        ]
+    ],
+    "link": "$env:AppData\\lore-desktop",
+    "cleanup": "$env:LocalAppData\\lore-desktop-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall lore-desktop.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "$res, $out = A-Get-InstallerInfoFromWinget 'EpicGames.LoreDesktop' 'exe'",
+            "$out"
+        ],
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://releases.lore.org/desktop/updates/stable/lore-desktop-v$version-win-x86_64.exe"
+            }
+        }
+    }
+}
