@@ -1,0 +1,64 @@
+{
+    "version": "3.2.0",
+    "description": "适用于 Windows 的高性能本地文件检索与效率启动工具 | High-performance local file search and productivity launcher for Windows",
+    "homepage": "https://swiftlist.github.io",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/SwiftList/SwiftList/releases/download/v3.2.0/SwiftList-Setup.exe",
+            "hash": "2972ab65fb163e3ebdfa7490421b1672eff82dcf42ade7937b9ea748283c54b7"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\SwiftList.App.exe",
+            "SwiftList"
+        ]
+    ],
+    "link": "$env:LocalAppData\\SwiftList",
+    "cleanup": "$env:ProgramData\\SwiftList",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/SwiftList/SwiftList/releases/download/v$version/SwiftList-Setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
