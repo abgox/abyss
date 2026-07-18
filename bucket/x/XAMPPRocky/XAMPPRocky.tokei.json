@@ -1,0 +1,54 @@
+{
+    "version": "13.0.0-alpha.0",
+    "description": "一款用于展示代码相关统计数据的工具 | A tool that displays statistics about your code",
+    "homepage": "https://github.com/XAMPPRocky/tokei",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/XAMPPRocky/tokei/releases/download/v13.0.0-alpha.0/tokei-x86_64-pc-windows-msvc.exe#/tokei.exe",
+            "hash": "0ca5d37dad82dd8fd365e6853dfd278f964be52e56bed9c2b160bccf8220d492"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\tokei.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/XAMPPRocky/tokei/releases/download/v$version/tokei-x86_64-pc-windows-msvc.exe#/tokei.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
