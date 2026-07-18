@@ -45,7 +45,7 @@
 
 > [!IMPORTANT]
 >
-> - [abyss](https://abyss.abgox.com) 是一个精心设计、自成体系的 [Scoop bucket](https://scoop.sh/#/apps?q=%22https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%22)
+> - [abyss 是一个精心设计、自成体系的 Scoop bucket](https://abyss.abgox.com/docs/why-abyss)
 > - 它的 [清单](https://abyss.abgox.com/manifests) 使用 [util](./util/) 和 [唯一的 bucket 名称](https://abyss.abgox.com/docs/bucket-name) 进行编写，其他 bucket 无法使用
 
 ## 特性

@@ -45,7 +45,7 @@
 
 > [!IMPORTANT]
 >
-> - [abyss](https://abyss.abgox.com) is an engineered and opinionated [Scoop bucket](https://scoop.sh/#/apps?q=%22https%3A%2F%2Fgithub.com%2Fabgox%2Fabyss%22).
+> - [abyss is an engineered and opinionated Scoop bucket.](https://abyss.abgox.com/docs/why-abyss)
 > - Its [manifests](https://abyss.abgox.com/manifests) are written with [util](./util/) and [a unique bucket name](https://abyss.abgox.com/docs/bucket-name), making them unusable for other buckets.
 
 ## Features
