@@ -1,0 +1,67 @@
+{
+    "version": "0.9.9.6",
+    "description": "面向本地办公场景的 Windows 剪贴板增强工具 | A Windows clipboard enhancement tool for local office scenarios",
+    "homepage": "https://github.com/qiu7824/zsclip",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/qiu7824/zsclip/releases/download/0.9.9.6/zsclip-v0.9.9.6-setup.exe",
+            "hash": "9f8847c71006fc4928be36079e73d99e5ca8fc89164a7eb6f2a79ebf866336e7"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\剪贴板.exe",
+            "ZSClip"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\data",
+            "AppData\\Local\\ZSClip\\data"
+        ]
+    ],
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/qiu7824/zsclip/releases/download/$version/zsclip-v$version-setup.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
