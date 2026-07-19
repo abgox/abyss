@@ -1,0 +1,43 @@
+{
+    "version": "2.2.1.5",
+    "description": "该模块包含用于管理 Windows 更新客户端的 cmdlet | This module contain cmdlets to manage Windows Update Client",
+    "homepage": "https://github.com/mgajda83/PSWindowsUpdate",
+    "license": {
+        "identifier": "MIT"
+    },
+    "url": "https://cdn.powershellgallery.com/packages/pswindowsupdate.2.2.1.5.nupkg",
+    "hash": "174e05b1c194377f8d9ae0b004c93304c662ea9b5fc4dafa19426049d2d5cf50",
+    "psmodule": {
+        "name": "PSWindowsUpdate"
+    },
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-VersionFromPowerShellGallery"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "url": "https://cdn.powershellgallery.com/packages/pswindowsupdate.$version.nupkg"
+    }
+}
