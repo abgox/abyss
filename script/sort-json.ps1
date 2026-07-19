@@ -204,7 +204,7 @@ if ($All) {
 }
 else {
     $guid = [guid]::NewGuid()
-    $manifests = git log --since="1 day ago" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
+    $manifests = git -c core.safecrlf=false log --since="1 day ago" --name-only --pretty=format:"$guid%n" -- 'bucket/' |
     ForEach-Object {
         if ($_ -eq '') { return }
         if ($_ -eq $guid) {
@@ -216,9 +216,13 @@ else {
         else {
             $current += $_
         }
+    } -End {
+        if ($current) {
+            $current
+        }
     }
-    $trackedChanges = git diff --name-only HEAD -- 'bucket/'
-    $untrackedChanges = git ls-files --others --exclude-standard -- 'bucket/'
+    $trackedChanges = git -c core.safecrlf=false diff --name-only HEAD -- 'bucket/'
+    $untrackedChanges = git -c core.safecrlf=false ls-files --others --exclude-standard -- 'bucket/'
     $manifests = @($manifests) + @($trackedChanges) + @($untrackedChanges) |
     Where-Object { $_ -match '\.json$' -and (Test-Path $_) } |
     Sort-Object -Unique
