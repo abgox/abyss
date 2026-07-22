@@ -2106,7 +2106,7 @@ function A-Set-DataShared {
         if (-not $remaining) {
             return
         }
-        if (A-Test-DirectoryNotEmpty $persist_dir) {
+        if ($cmd -ne 'update' -and (A-Test-DirectoryNotEmpty $persist_dir)) {
             $target = $remaining | Select-Object -First 1
             $targetPersist = Join-Path $parent $target
             if (-not (A-Test-DirectoryNotEmpty $targetPersist)) {
