@@ -1,0 +1,64 @@
+{
+    "version": "1.33",
+    "description": "五笔码表助手 - 一个管理 Rime 五笔词库的工具 | A tool for managing Rime Wubi lexicon",
+    "homepage": "https://github.com/KyleBing/wubi-dict-editor",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/KyleBing/wubi-dict-editor/releases/download/v1.33/wubi-dict-editor-v1.33-win32-x64.zip",
+            "hash": "7a044943cd3ace288f593e5f2ef60a35aa4082f4b3056b20416493f6b6d11766",
+            "extract_dir": "五笔码表助手-v1.33-win32-x64"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\WubiDictEditor.exe",
+            "五笔码表助手"
+        ]
+    ],
+    "link": "$home\\wubi-dict-editor",
+    "cleanup": "$env:AppData\\wubi-dict-editor",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/KyleBing/wubi-dict-editor/releases/download/v$version/wubi-dict-editor-v$version-win32-x64.zip",
+                "extract_dir": "五笔码表助手-v$version-win32-x64"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
