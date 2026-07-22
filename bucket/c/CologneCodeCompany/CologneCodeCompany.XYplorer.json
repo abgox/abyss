@@ -20,16 +20,14 @@
             "XYplorer"
         ]
     ],
-    "persist": [
-        [
-            "app\\Data",
-            "AppData\\Roaming\\XYplorer64"
-        ]
-    ],
+    "link": "$env:AppData\\XYplorer64",
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "$fname = Join-Path 'app' (Get-ChildItem $dir\\app -File -Filter XYplorer64*.exe | Select-Object -First 1).Name",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -40,7 +38,9 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
