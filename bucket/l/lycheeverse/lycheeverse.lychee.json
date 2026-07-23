@@ -1,0 +1,55 @@
+{
+    "version": "0.24.2",
+    "description": "一个用 Rust 编写的快速、异步、基于流的链接检查器 | A fast, async, stream-based link checker written in Rust",
+    "homepage": "https://lychee.cli.rs",
+    "license": {
+        "identifier": "Apache-2.0|MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/lycheeverse/lychee/releases/download/lychee-v0.24.2/lychee-x86_64-pc-windows-msvc.zip",
+            "hash": "32975d1493ee1a975d6bb41e4fb56fe419cb442ded628bb772ba2e614acfacad",
+            "extract_dir": "lychee-x86_64-pc-windows-msvc"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\lychee.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "lychee-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/lycheeverse/lychee/releases/download/lychee-v$version/lychee-x86_64-pc-windows-msvc.zip"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
