@@ -1,0 +1,66 @@
+{
+    "version": "0.0.34",
+    "description": "专为低成本模型优化的代码智能体 | A coding agent optimized for low-cost models",
+    "homepage": "http://openinterpreter.com",
+    "license": {
+        "identifier": "Apache-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v0.0.34/open-interpreter-package-x86_64-pc-windows-msvc.tar.gz",
+            "hash": "c87adf4f85ef6a2eb36135ce8f583257a590a6e7e460de5ab9832cdde3187e4e"
+        },
+        "arm64": {
+            "url": "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v0.0.34/open-interpreter-package-aarch64-pc-windows-msvc.tar.gz",
+            "hash": "9e9f3a016cbfb627552291ea6e2900bc3b94859add976295edb62a452236abc1"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\bin\\i.exe",
+        "app\\bin\\interpreter.exe"
+    ],
+    "link": "$home\\.openinterpreter",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "rust-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v$version/open-interpreter-package-x86_64-pc-windows-msvc.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/openinterpreter/openinterpreter/releases/download/rust-v$version/open-interpreter-package-aarch64-pc-windows-msvc.tar.gz"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
