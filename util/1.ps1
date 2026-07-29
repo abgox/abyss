@@ -1,10 +1,7 @@
 ﻿#Requires -Version 5.1
 
-Set-StrictMode -Off
-
-# 存储 abyss 相关的变量
 $abgox_abyss = @{
-    path         = @{
+    path           = @{
         LinkFile           = "$dir\abgox-abyss-A-New-LinkFile.json"
         LinkDirectory      = "$dir\abgox-abyss-A-New-LinkDirectory.json"
         InstallApp         = "$dir\abgox-abyss-A-Install-App.json"
@@ -16,65 +13,34 @@ $abgox_abyss = @{
         EnvPath            = "$dir\abgox-abyss-A-Add-Path.json"
         Info               = "$dir\abgox-abyss-Info.json"
     }
-    knownFolders = @(
+    knownFolders   = @(
         @{ Name = 'Documents'; DefaultPrefix = Join-Path $home 'Documents'; Folder = [Environment]::GetFolderPath('MyDocuments') }
         @{ Name = 'Desktop'; DefaultPrefix = Join-Path $home 'Desktop'; Folder = [Environment]::GetFolderPath('Desktop') }
         @{ Name = 'Pictures'; DefaultPrefix = Join-Path $home 'Pictures'; Folder = [Environment]::GetFolderPath('MyPictures') }
         @{ Name = 'Music'; DefaultPrefix = Join-Path $home 'Music'; Folder = [Environment]::GetFolderPath('MyMusic') }
         @{ Name = 'Videos'; DefaultPrefix = Join-Path $home 'Videos'; Folder = [Environment]::GetFolderPath('MyVideos') }
     )
+    requestTimeout = if ($PSEdition -eq 'Desktop') { @{ TimeoutSec = 60 } } else { @{ ConnectionTimeoutSeconds = 30; OperationTimeoutSeconds = 60 } }
 }
 
-if ($PSEdition -eq 'Desktop') {
-    $abgox_abyss.requestTimeout = @{
-        TimeoutSec = 60
-    }
-}
-else {
-    $abgox_abyss.requestTimeout = @{
-        ConnectionTimeoutSeconds = 30
-        OperationTimeoutSeconds  = 60
-    }
-}
-
-if ($env:GITHUB_ACTIONS) {
-    $VerbosePreference = 'SilentlyContinue'
-}
-else {
-    Microsoft.PowerShell.Utility\Write-Host
-}
-
+if ($env:GITHUB_ACTIONS) { $VerbosePreference = 'SilentlyContinue' } else { Microsoft.PowerShell.Utility\Write-Host }
 if ($bucket) {
-    if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) {
-        scoop config root_path $scoopdir
-    }
-    if ($global -and $globaldir -and $globaldir -ne $scoopConfig.global_path) {
-        scoop config global_path $globaldir
-    }
+    if ($scoopdir -and $scoopdir -ne $scoopConfig.root_path) { scoop config root_path $scoopdir }
+    if ($global -and $globaldir -and $globaldir -ne $scoopConfig.global_path) { scoop config global_path $globaldir }
 }
 
 # https://abyss.abgox.com/docs/features/extra-features#abgox-abyss-app-uninstall-action
 $_ = $scoopConfig.'abgox-abyss-app-uninstall-action'
-$abgox_abyss.uninstallActionLevel = if ($_) { $_ }else { '123' }
+$abgox_abyss.uninstallActionLevel = if ($_ -match '[123]+') { $_ } else { '123' }
 
 function A-Test-Admin {
-    <#
-    .SYNOPSIS
-        检查当前用户是否具有管理员权限
-    #>
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $admin = [Security.Principal.WindowsBuiltInRole]::Administrator
     [Security.Principal.WindowsPrincipal]::new($identity).IsInRole($admin)
 }
 
 function A-Test-DeveloperMode {
-    <#
-    .SYNOPSIS
-        检查开发者模式是否启用
-
-    .LINK
-        https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging
-    #>
+    # 检查开发者模式是否启用 https://learn.microsoft.com/windows/apps/get-started/developer-mode-features-and-debugging
     $path = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock'
     try {
         $value = Get-ItemProperty -LiteralPath $path -Name 'AllowDevelopmentWithoutDevLicense' -ErrorAction Stop
@@ -89,6 +55,7 @@ $abgox_abyss.isAdmin = A-Test-Admin
 $abgox_abyss.isDevMode = A-Test-DeveloperMode
 
 function A-Start-Install {
+    # https://abyss.abgox.com/docs/bucket-name
     A-Test-BucketName
 
     # https://abyss.abgox.com/docs/features/manifest-status-control
@@ -131,7 +98,7 @@ function A-Start-Install {
                 $from = Join-Path $home $target
                 $exists = Test-Path $from -PathType Container
                 $isLink = A-Test-Link $from
-                if ($exists -and -not $isLink) {
+                if ($exists -and !$isLink) {
                     A-Copy-Item $from $to
                 }
             }
@@ -153,7 +120,7 @@ function A-Start-Install {
         A-Set-DataShared
     }
     # https://abyss.abgox.com/docs/features/data-persistence/link
-    if ($manifest.link -and -not $abgox_abyss.skipLink) {
+    if ($manifest.link -and !$abgox_abyss.skipLink) {
         foreach ($item in $manifest.link) {
             $expandPath = A-Resolve-SpecialPath $item
             if (Test-Path $expandPath) {
@@ -178,20 +145,19 @@ function A-Start-Install {
                 }
             }
         }
-        if (-not ($manifest.pre_install -match '^\s*A-New-Link$')) {
+        if (!($manifest.pre_install -match '^\s*A-New-Link$')) {
             A-New-Link
         }
     }
-    if ($manifest.msix -and -not ($manifest.pre_install -match '^\s*A-Install-MsixPackage$')) {
+    if ($manifest.msix -and !($manifest.pre_install -match '^\s*A-Install-MsixPackage$')) {
         A-Install-MsixPackage
     }
-
-    if ($manifest.extract_to -and -not $manifest.innosetup) {
+    if ($manifest.extract_to -and !$manifest.innosetup) {
         $fileNameList = @($fname)
         $extract_tos = @($manifest.extract_to)
         for ($i = 0; $i -lt $fileNameList.Count; $i++) {
             $file = Join-Path $dir $fileNameList[$i]
-            if (-not (Test-Path $file)) {
+            if (!(Test-Path $file)) {
                 continue
             }
             $ext = [System.IO.Path]::GetExtension($file)
@@ -209,7 +175,6 @@ function A-Start-Install {
 
 function A-Complete-Install {
     $info = @{}
-
     if ($manifest.font) {
         if ($manifest.font -is [string]) {
             A-Install-Font $manifest.font
@@ -220,11 +185,10 @@ function A-Complete-Install {
     }
     if ($manifest.location) {
         $location = A-Resolve-SpecialPath $manifest.location
-        if (-not (Test-Path $location)) {
+        if (!(Test-Path $location)) {
             A-Show-IssueCreationPrompt
             A-Exit
         }
-
         $info.location = $location
         A-Show-Notes @(
             "The installation directory: $($manifest.location)",
@@ -233,7 +197,7 @@ function A-Complete-Install {
     }
     if ($manifest.data_shared) {
         $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { A-Test-DirectoryNotEmpty "$scoopdir\apps\$_" }
-        if ($remaining -and -not (A-Test-DirectoryNotEmpty $persist_dir)) {
+        if ($remaining -and !(A-Test-DirectoryNotEmpty $persist_dir)) {
             A-Show-Notes @(
                 "'$app' does not require the data persistence.",
                 "They share data: $($remaining -join '|').",
@@ -241,7 +205,6 @@ function A-Complete-Install {
             )
         }
     }
-
     if ($info.Count) {
         $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
     }
@@ -254,7 +217,7 @@ function A-Start-Uninstall {
     }
     if ($version -eq 'renamed') {
         $new = $manifest.renamed.new
-        if (-not $new) {
+        if (!$new) {
             try {
                 $jsonFile = if ($app.Contains('.')) {
                     "$bucketsdir\$bucket\bucket\$($app[0])\$($app.Split('.', 2)[0])\$app.json"
@@ -286,7 +249,7 @@ function A-Start-Uninstall {
     if ($manifest.data_shared) {
         A-Set-DataShared -Uninstall
     }
-    if ($manifest.msix -and -not ($manifest.pre_uninstall -match '^\s*A-Uninstall-MsixPackage$')) {
+    if ($manifest.msix -and !($manifest.pre_uninstall -match '^\s*A-Uninstall-MsixPackage$')) {
         A-Uninstall-MsixPackage
     }
     A-Remove-Path
@@ -316,19 +279,11 @@ function A-Complete-Uninstall {
 }
 
 function A-Ensure-Directory {
-    <#
-    .SYNOPSIS
-        确保指定目录路径存在
-
-    .PARAMETER Path
-        目录路径，默认使用 $persist_dir
-    #>
     param (
         [string]$Path = $persist_dir
     )
-    if (-not (Test-Path -LiteralPath $Path)) {
-        New-Item -ItemType Directory -Path $Path -Force | Out-Null
-    }
+    if ([System.IO.Directory]::Exists($Path)) { return }
+    New-Item -ItemType Directory -Path $Path -Force | Out-Null
 }
 
 function A-New-File {
@@ -365,27 +320,22 @@ function A-New-File {
         [string]$Encoding = 'utf8'
     )
 
-    if (Test-Path -LiteralPath $Path) {
-        $item = Get-Item -LiteralPath $Path
-        # 如果是一个目录，就删除它
-        if ($item.PSIsContainer) {
-            try {
-                A-Remove-ToRecycleBin $Path -ErrorAction Stop
-            }
-            catch {
-                error $_.Exception.Message
-                A-Show-IssueCreationPrompt
-                A-Exit
-            }
+    if ([System.IO.File]::Exists($Path)) {
+        return
+    }
+    elseif ([System.IO.Directory]::Exists($Path)) {
+        try {
+            A-Remove-ToRecycleBin $Path -ErrorAction Stop
         }
-        else {
-            return
+        catch {
+            error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
         }
     }
-
-    $parentDir = Split-Path $Path -Parent
-    A-Ensure-Directory $parentDir
-
+    else {
+        A-Ensure-Directory (Split-Path $Path -Parent)
+    }
     if ($PSBoundParameters.ContainsKey('Content')) {
         # 当明确传递了 Content 参数时（包括空字符串或 $null）
         Set-Content -Path $Path -Value $Content -Encoding $Encoding -Force
@@ -400,7 +350,7 @@ function A-New-Link {
     $filePaths = @()
     $dirPaths = @()
     foreach ($item in $manifest.link) {
-        if (-not $item) {
+        if (!$item) {
             continue
         }
         $expandPath = A-Resolve-SpecialPath $item
@@ -507,31 +457,14 @@ function A-Remove-Link {
 
     .DESCRIPTION
         该函数用于删除在应用安装过程中创建的 SymbolicLink 和 Junction
-        根据全局变量 $cmd 和 $abgox_abyss.uninstallActionLevel 的值决定是否执行删除操作。
     #>
-
-    # $byMsix = $manifest.msix
-    # $byApp = (Test-Path -LiteralPath $abgox_abyss.path.InstallApp) -or (Test-Path -LiteralPath $abgox_abyss.path.InstallInno)
-    # $byMsi = Test-Path -LiteralPath $abgox_abyss.path.InstallMsi
-
-    # if (-not ($byMsix -or $byApp -or $byMsi)) {
-    #     # 它们在卸载时可能会删除所有数据文件，因此必须先删除链接目录以保留数据
-    #     return
-    # }
-
-    # if (-not ($abgox_abyss.uninstallActionLevel.Contains('2') -or $purge)) {
-    #     # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 2，则需要执行删除操作
-    #     return
-    # }
 
     if ($abgox_abyss.skipRemoveLink) {
         return
     }
-
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (Test-Path -LiteralPath $_) {
             $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
-
             foreach ($p in $LinkPaths) {
                 if (A-Test-Link $p) {
                     try {
@@ -539,7 +472,7 @@ function A-Remove-Link {
                         Remove-Item $p -Force -Recurse -ErrorAction Stop
 
                         $parent = Split-Path $p -Parent
-                        if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                        if (!(A-Test-DirectoryNotEmpty $parent)) {
                             Write-Host "Removing $parent"
                             Remove-Item $parent -Force -Recurse -ErrorAction Stop
                         }
@@ -586,7 +519,7 @@ function A-Stop-Process {
     }
 
     # Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非指定绝对路径
-    if (-not $abgox_abyss.uninstallActionLevel.Contains('1') -or ($manifest.msix -and !$ExtraPaths)) {
+    if (!$abgox_abyss.uninstallActionLevel.Contains('1') -or ($manifest.msix -and !$ExtraPaths)) {
         return
     }
 
@@ -652,7 +585,7 @@ function A-Stop-Process {
         }
     }
 
-    Start-Sleep -Milliseconds 500
+    Start-Sleep -Milliseconds 50
 
     # 再次检查是否存在未终止的相关进程
     # 这里参考了 Scoop 的官方检查逻辑，以确保一致性
@@ -673,7 +606,7 @@ function A-Stop-Service {
     )
 
     $service = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
-    if (-not $service) {
+    if (!$service) {
         return
     }
 
@@ -698,7 +631,7 @@ function A-Remove-Service {
 
     process {
         $service = $_
-        if (-not $service) { return }
+        if (!$service) { return }
 
         try {
             Write-Host "Removing the service: $($service.Name)"
@@ -716,11 +649,9 @@ function A-Install-App {
     param(
         [string]$Uninstaller, # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
         [array]$ArgumentList,
+        [string]$Installer = (Join-Path $dir ($fname | Select-Object -First 1)),
         [string]$SleepSec = 3
     )
-
-    # $fname 由 Scoop 提供，即下载的文件名
-    $Installer = Join-Path $dir ($fname | Select-Object -First 1)
 
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
@@ -730,10 +661,10 @@ function A-Install-App {
 
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $ArgumentList = @('/S')
-        if (-not $manifest.admin) {
+        if (!$manifest.admin) {
             $ArgumentList += '/CurrentUser'
         }
-        if (-not $manifest.location) {
+        if (!$manifest.location) {
             $ArgumentList += "/D=$dir\app"
         }
     }
@@ -857,11 +788,9 @@ function A-Uninstall-App {
 function A-Install-Inno {
     param(
         [string]$Uninstaller,
-        [array]$ArgumentList
+        [array]$ArgumentList,
+        [string]$Installer = (Join-Path $dir ($fname | Select-Object -First 1))
     )
-
-    # $fname 由 Scoop 提供，即下载的文件名
-    $Installer = Join-Path $dir ($fname | Select-Object -First 1)
 
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
@@ -938,7 +867,7 @@ function A-Uninstall-Inno {
         )
     )
 
-    $Uninstaller = Get-ChildItem $dir unins000.exe -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $Uninstaller = Get-ChildItem $dir unins000.exe -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 
     if (!$Uninstaller) {
         warn "'unins000.exe' not found."
@@ -961,11 +890,9 @@ function A-Uninstall-Inno {
 
 function A-Install-Burn {
     param(
-        [array]$ArgumentList
+        [array]$ArgumentList,
+        [string]$Installer = (Join-Path $dir ($fname | Select-Object -First 1))
     )
-
-    # $fname 由 Scoop 提供，即下载的文件名
-    $Installer = Join-Path $dir ($fname | Select-Object -First 1)
 
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
@@ -996,12 +923,12 @@ function A-Install-Burn {
 
     $log = Get-Content $logPath -ErrorAction SilentlyContinue
     $guid = $log | Select-String 'WixBundleProviderKey = ([0-9A-Fa-f\-]{36})' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
-    if (-not $guid) {
+    if (!$guid) {
         $guid = $log | Select-String 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\{([0-9A-Fa-f\-]{36})\}' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
     }
     $Uninstaller = Get-ChildItem "C:\ProgramData\Package Cache\{$guid}" -File -Filter *.exe -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
 
-    if (-not $Uninstaller) {
+    if (!$Uninstaller) {
         $Uninstaller = $Installer
     }
 
@@ -1041,7 +968,7 @@ function A-Uninstall-Burn {
     $Uninstaller = $InstallerInfo.Uninstaller
     $UninstallerName = Split-Path $Uninstaller -Leaf
 
-    if (-not $Uninstaller) {
+    if (!$Uninstaller) {
         warn "'$UninstallerName' not found."
         return
     }
@@ -1063,16 +990,13 @@ function A-Uninstall-Burn {
 
 function A-Install-Msi {
     param(
-        [array]$ArgumentList
+        [array]$ArgumentList,
+        [string]$Installer
     )
 
-    $Installer = if ([Environment]::Is64BitOperatingSystem) {
-        'C:\Windows\SysWOW64\msiexec.exe'
+    if (!$Installer) {
+        $Installer = 'C:\Windows\SysWOW64\msiexec.exe', 'C:\Windows\System32\msiexec.exe' | Where-Object { [System.IO.File]::Exists($_) } | Select-Object -First 1
     }
-    else {
-        'C:\Windows\System32\msiexec.exe'
-    }
-
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
         A-Show-IssueCreationPrompt
@@ -1235,7 +1159,7 @@ function A-Uninstall-Manually {
     foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
         if (Test-Path -LiteralPath $p) {
-            if (-not (Get-ChildItem -LiteralPath $p -File -Recurse | Select-Object -First 1)) {
+            if (!(Get-ChildItem -LiteralPath $p -File -Recurse | Select-Object -First 1)) {
                 try {
                     Remove-Item $p -Force -Recurse -ErrorAction Stop
                     continue
@@ -1257,11 +1181,10 @@ function A-Install-MsixPackage {
     #>
     param(
         # 包名，例如：Microsoft.PowerShellPreview_8wekyb3d8bbwe
-        [string]$PackageFamilyName = $manifest.msix
+        [string]$PackageFamilyName = $manifest.msix,
+        [string]$Installer = (Join-Path $dir ($fname | Select-Object -First 1))
     )
-    # $fname 由 Scoop 提供，即下载的文件名
-    $path = Join-Path $dir ($fname | Select-Object -First 1)
-    A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $path
+    A-Add-AppxPackage -PackageFamilyName $PackageFamilyName -Path $Installer
 }
 
 function A-Uninstall-MsixPackage {
@@ -1390,26 +1313,24 @@ function A-Invoke-GithubAPI {
         [hashtable]$Headers,
         [hashtable]$RequestTimeout = $abgox_abyss.requestTimeout
     )
-    if (-not $Uri) {
+    if (!$Uri) {
         Write-Error '$Uri is empty.'
         return
     }
-
-    if (-not $Headers) {
+    if (!$Headers) {
         $Headers = @{
             'User-Agent'           = A-Get-UserAgent
             'X-GitHub-Api-Version' = '2022-11-28'
             'Accept'               = 'application/vnd.github.v3+json'
         }
     }
-
     $tokenPool = @()
     if ($env:GITHUB_ACTIONS) {
         $env:TOKEN_POOL -split ',' | ForEach-Object { if ($_) { $tokenPool += $_ } }
         # if ($env:GITHUB_TOKEN) {
         #     $tokenPool += $env:GITHUB_TOKEN
         # }
-        if (-not $tokenPool) {
+        if (!$tokenPool) {
             Write-Error '$env:TOKEN_POOL is empty or not set.'
             return
         }
@@ -1487,14 +1408,14 @@ function A-Invoke-GithubAPI {
 function A-Get-VersionFromGithub {
     param (
         [switch]$Latest,
-        [switch]$PreRelease,
+        [switch]$Preview,
         [switch]$Newest
     )
-    if (-not $json) {
+    if (!$json) {
         Write-Error '$json is invalid.'
         return
     }
-    if (-not $json.checkver.regex) {
+    if (!$json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
     }
@@ -1505,7 +1426,7 @@ function A-Get-VersionFromGithub {
     if ($url -is [array]) {
         $url = $url | Where-Object { $_ -like 'https://github.com/*/*' } | Select-Object -First 1
     }
-    if (-not $url) {
+    if (!$url) {
         Write-Error '$url is invalid.'
         return
     }
@@ -1521,7 +1442,7 @@ function A-Get-VersionFromGithub {
     }
 
     $res = A-Invoke-GithubAPI -Uri $url
-    if (-not $res) {
+    if (!$res) {
         return
     }
     if ($Latest) {
@@ -1530,11 +1451,11 @@ function A-Get-VersionFromGithub {
     elseif ($Newest) {
         $releaseInfo = $res
     }
-    elseif ($PreRelease) {
-        $releaseInfo = $res | Where-Object { $_.prerelease }
+    elseif ($Preview) {
+        $releaseInfo = $res.Where({ $_.prerelease })
     }
     else {
-        $releaseInfo = $res | Where-Object { -not $_.prerelease }
+        $releaseInfo = $res.Where({ !$_.prerelease })
     }
 
     foreach ($item in $releaseInfo) {
@@ -1550,7 +1471,7 @@ function A-Get-LatestVersionFromGithub {
 }
 
 function A-Get-PreVersionFromGithub {
-    A-Get-VersionFromGithub -PreRelease
+    A-Get-VersionFromGithub -Preview
 }
 
 function A-Get-NewestVersionFromGithub {
@@ -1558,22 +1479,19 @@ function A-Get-NewestVersionFromGithub {
 }
 
 function A-Get-VersionFromPowerShellGallery {
-    if (-not $json) {
+    if (!$json) {
         Write-Error '$json is invalid.'
         return
     }
-    if (-not $json.checkver.regex) {
+    if (!$json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
     }
-
     $module_name = $json.psmodule.name
-
-    if (-not $module_name) {
+    if (!$module_name) {
         Write-Error '$json.psmodule.name is invalid.'
         return
     }
-
     $requestTimeout = $abgox_abyss.requestTimeout
     Invoke-RestMethod "https://www.powershellgallery.com/packages/$($module_name.ToLower())" @requestTimeout |
     Select-String -Pattern '<h2>([\d.]+)</h2>' |
@@ -1582,13 +1500,13 @@ function A-Get-VersionFromPowerShellGallery {
 }
 
 function A-Get-VersionFromInstaller {
-    if (-not $json) {
+    if (!$json) {
         Write-Error '$json is invalid.'
         return
     }
     $arch = $json.autoupdate.architecture
     $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
-    if (-not $url) {
+    if (!$url) {
         Write-Error "${app}: No installer url found."
         return
     }
@@ -1641,7 +1559,7 @@ function A-Get-VersionFromInstaller {
             Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
         }
     }
-    if (-not $rawVersion) {
+    if (!$rawVersion) {
         Write-Error "${app}: Could not extract a valid version from installer."
         return
     }
@@ -1663,24 +1581,22 @@ function A-Get-VersionFromInstaller {
 }
 
 function A-Get-DynamicPageFromUrl {
-    if (-not $json) {
+    if (!$json) {
         Write-Error '$json is invalid.'
         return
     }
-    if (-not $json.checkver.url) {
+    if (!$json.checkver.url) {
         Write-Error "${app}: Requires 'checkver.url'."
         return
     }
-    if (-not $json.checkver.regex) {
+    if (!$json.checkver.regex) {
         Write-Error "${app}: Requires 'checkver.regex'."
         return
     }
-
     $edgePath = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
-    if (-not (Test-Path $edgePath)) {
+    if (!(Test-Path $edgePath)) {
         $edgePath = 'msedge.exe'
     }
-
     try {
         $args = @('--headless=new', '--disable-gpu', '--dump-dom', '--no-sandbox', '--virtual-time-budget=10000', $json.checkver.url)
 
@@ -1724,7 +1640,7 @@ function A-Get-InstallerInfoFromWinget {
         [string]$MaxExclusiveVersion
     )
 
-    if (-not (Get-Command 'ConvertFrom-Yaml' -ErrorAction SilentlyContinue)) {
+    if (!(Get-Command 'ConvertFrom-Yaml' -ErrorAction SilentlyContinue)) {
         error 'Please install yaml module: scoop install abyss/cloudbase.powershell-yaml'
         return
     }
@@ -1743,7 +1659,7 @@ function A-Get-InstallerInfoFromWinget {
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath"
 
     $res = A-Invoke-GithubAPI -Uri $url
-    if (-not $res) {
+    if (!$res) {
         return
     }
     $versions = $res | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } }
@@ -1764,13 +1680,12 @@ function A-Get-InstallerInfoFromWinget {
         }
     }
 
-
     $headers.Add('Accept', 'application/vnd.github.v3.raw')
 
     $url = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$rootDir/$PackagePath/$latestVersion/$PackageIdentifier.installer.yaml"
 
     $installerYaml = A-Invoke-GithubAPI -Uri $url -Headers $headers
-    if (-not $installerYaml) {
+    if (!$installerYaml) {
         return
     }
     $installerInfo = ConvertFrom-Yaml $installerYaml
@@ -1955,18 +1870,22 @@ function A-Show-Notes {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Notes'
         Microsoft.PowerShell.Utility\Write-Output '-----'
-        Write-Output (substitute $note @{
-                '$dir'                     = $dir
-                '$original_dir'            = $original_dir
-                '$persist_dir'             = $persist_dir
-                '$app'                     = $app
-                '$version'                 = $manifest.version
-                '$env:ProgramFiles'        = $env:ProgramFiles
-                '${env:ProgramFiles(x86)}' = ${env:ProgramFiles(x86)}
-                '$env:ProgramData'         = $env:ProgramData
-                '$env:AppData'             = $env:AppData
-                '$env:LocalAppData'        = $env:LocalAppData
-            })
+        substitute $note @{
+            '$cmd'                     = $cmd
+            '$bucket'                  = $bucket, 'abyss' | Select-Object -First 1
+            '$app'                     = $app
+            '$version'                 = $manifest.version
+            '$architecture'            = $architecture
+            '$dir'                     = $dir
+            '$original_dir'            = $original_dir
+            '$scoopdir'                = $scoopdir
+            '$persist_dir'             = $persist_dir
+            '$env:ProgramFiles'        = $env:ProgramFiles
+            '${env:ProgramFiles(x86)}' = ${env:ProgramFiles(x86)}
+            '$env:ProgramData'         = $env:ProgramData
+            '$env:AppData'             = $env:AppData
+            '$env:LocalAppData'        = $env:LocalAppData
+        } | ForEach-Object { Write-Output $_ }
         Microsoft.PowerShell.Utility\Write-Output '-----'
     }
 }
@@ -2038,7 +1957,7 @@ function A-Remove-TempData {
     if ($cmd -eq 'update') {
         return
     }
-    if (-not ($abgox_abyss.uninstallActionLevel.Contains('3') -or $purge)) {
+    if (!($abgox_abyss.uninstallActionLevel.Contains('3') -or $purge)) {
         # 如果使用了 -p 或 --purge 参数，或者 uninstallActionLevel 包含 3，则需要执行删除操作
         return
     }
@@ -2049,7 +1968,7 @@ function A-Remove-TempData {
                 Remove-Item $p -Force -Recurse -ErrorAction Stop
 
                 $parent = Split-Path $p -Parent
-                if (-not (A-Test-DirectoryNotEmpty $parent)) {
+                if (!(A-Test-DirectoryNotEmpty $parent)) {
                     Write-Host "Removing $parent"
                     Remove-Item $parent -Force -Recurse -ErrorAction Stop
                 }
@@ -2063,7 +1982,7 @@ function A-Remove-TempData {
 
 function A-Move-Persistence {
     $old = $manifest.renamed.old
-    if (-not $old) {
+    if (!$old) {
         return
     }
     $parent = Split-Path $persist_dir -Parent
@@ -2103,13 +2022,13 @@ function A-Set-DataShared {
     $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { A-Test-DirectoryNotEmpty "$scoopdir\apps\$_" }
 
     if ($Uninstall) {
-        if (-not $remaining) {
+        if (!$remaining) {
             return
         }
         if ($cmd -ne 'update' -and (A-Test-DirectoryNotEmpty $persist_dir)) {
             $target = $remaining | Select-Object -First 1
             $targetPersist = Join-Path $parent $target
-            if (-not (A-Test-DirectoryNotEmpty $targetPersist)) {
+            if (!(A-Test-DirectoryNotEmpty $targetPersist)) {
                 Write-Host "Migrating $persist_dir => $targetPersist"
                 try {
                     Rename-Item -LiteralPath $persist_dir -NewName $target -Force -ErrorAction Stop
@@ -2127,7 +2046,7 @@ function A-Set-DataShared {
     }
     else {
         if ($remaining) {
-            if (-not (A-Test-DirectoryNotEmpty $persist_dir)) {
+            if (!(A-Test-DirectoryNotEmpty $persist_dir)) {
                 $abgox_abyss.skipLink = $true
             }
         }
@@ -2171,12 +2090,12 @@ function A-Replace-SpecialFolderPrefix {
     foreach ($entry in $abgox_abyss.knownFolders) {
         if ($Path.StartsWith($entry.Folder, [System.StringComparison]::OrdinalIgnoreCase)) {
             $relative = $entry.Name + $Path.Substring($entry.Folder.Length)
-            if (-not $Replacement) { return $relative }
+            if (!$Replacement) { return $relative }
             return Join-Path $Replacement $relative
         }
     }
-    $relative = $Path.Replace("$home\", '')
-    if (-not $Replacement) { return $relative }
+    $relative = $Path.Replace("$home\", '') -replace '^[a-zA-Z]:', ''
+    if (!$Replacement) { return $relative }
     return Join-Path $Replacement $relative
 }
 
@@ -2201,7 +2120,7 @@ function A-Copy-Item {
         [string]$Destination
     )
 
-    if (-not (Test-Path -LiteralPath $Path)) {
+    if (!(Test-Path -LiteralPath $Path)) {
         error "Source path does not exist: $Path"
         A-Show-IssueCreationPrompt
         A-Exit
@@ -2218,14 +2137,14 @@ function A-Copy-Item {
         $targetItem = Get-Item -LiteralPath $Destination
 
         if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
-            $needCopy = $targetItem.PSIsContainer -and -not (A-Test-DirectoryNotEmpty $Destination)
+            $needCopy = $targetItem.PSIsContainer -and !(A-Test-DirectoryNotEmpty $Destination)
         }
     }
 
     if ($needCopy) {
         A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
-            if ($sourceItem.PSIsContainer -and -not $sourceItem.LinkType) {
+            if ($sourceItem.PSIsContainer -and !$sourceItem.LinkType) {
                 $result = & robocopy "$Path" "$Destination" /E /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
                 if ($LASTEXITCODE -ge 8) {
                     throw $result
@@ -2250,7 +2169,7 @@ function A-Remove-ToRecycleBin {
         [Parameter(Mandatory)]
         [string]$Path
     )
-    if (-not (Test-Path -LiteralPath $Path)) {
+    if (!(Test-Path -LiteralPath $Path)) {
         return
     }
     $shell = New-Object -ComObject Shell.Application
@@ -2261,7 +2180,7 @@ function A-Test-DirectoryNotEmpty {
     param(
         [string]$Path
     )
-    if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
+    if (!(Test-Path -LiteralPath $Path -PathType Container)) {
         return $false
     }
     return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
@@ -2564,7 +2483,7 @@ function A-Install-Font {
 
 function A-Uninstall-Font {
     $OutFile = $abgox_abyss.path.Font
-    if (-not (Test-Path -LiteralPath $OutFile)) {
+    if (!(Test-Path -LiteralPath $OutFile)) {
         return
     }
 
@@ -2613,7 +2532,7 @@ function A-Add-Path {
 
     $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
     $Paths = $Paths | ForEach-Object { A-Resolve-SpecialPath $_ } | Where-Object { $_ -notin $oldPath }
-    if (-not $Paths) {
+    if (!$Paths) {
         return
     }
 
@@ -2624,14 +2543,14 @@ function A-Add-Path {
 
 function A-Remove-Path {
     $OutFile = $abgox_abyss.path.EnvPath
-    if (-not (Test-Path -LiteralPath $OutFile)) {
+    if (!(Test-Path -LiteralPath $OutFile)) {
         return
     }
 
     $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
 
     $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
-    if (-not $Path) {
+    if (!$Path) {
         return
     }
 
@@ -2642,7 +2561,7 @@ function A-Remove-Path {
 
 function A-Uninstall-PowerToysRunPlugin {
     $OutFile = $abgox_abyss.path.PowerToysRunPlugin
-    if (-not (Test-Path -LiteralPath $OutFile)) {
+    if (!(Test-Path -LiteralPath $OutFile)) {
         return
     }
 
@@ -2679,7 +2598,7 @@ function A-Get-AbsolutePath {
         [string]$Parent = $dir
     )
 
-    if (-not $Path) {
+    if (!$Path) {
         return ''
     }
 
@@ -2954,7 +2873,7 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     if ($manifest.psmodule) {
         Remove-Item "$dir\_rels", "$dir\package", "$dir\*Content*.xml" -Recurse -ErrorAction SilentlyContinue
         $psd1 = Import-PowerShellDataFile -LiteralPath "$scoopdir\modules\$($manifest.psmodule.name)\$($manifest.psmodule.name).psd1" -ErrorAction SilentlyContinue
-        $cmds += @($psd1.CmdletsToExport) + @($psd1.FunctionsToExport) + @($psd1.AliasesToExport) | Where-Object { $_ -ne '*' }
+        $cmds += @($psd1.CmdletsToExport) + @($psd1.FunctionsToExport) + @($psd1.AliasesToExport) | Where-Object { $_ -notin '*', $null }
     }
     $bin = $manifest.bin, $manifest.architecture.$architecture.bin | Select-Object -First 1
     if ($bin -is [string]) {
