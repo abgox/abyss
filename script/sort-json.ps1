@@ -27,6 +27,15 @@ if (-not (Test-Path "$env:SCOOP_HOME\lib\json.ps1")) {
 
 . $env:SCOOP_HOME\lib\json.ps1
 
+$order_arch = [ordered]@{
+    url          = ''
+    hash         = ''
+    extract_dir  = ''
+    extract_to   = ''
+    env_add_path = ''
+    bin          = ''
+    shortcuts    = ''
+}
 $order = [ordered]@{
     '##'                = ''
     version             = ''
@@ -43,45 +52,9 @@ $order = [ordered]@{
     url                 = ''
     hash                = ''
     architecture        = [ordered]@{
-        '64bit' = [ordered]@{
-            url          = ''
-            hash         = ''
-            extract_dir  = ''
-            extract_to   = ''
-            env_add_path = ''
-            bin          = ''
-            shortcuts    = ''
-            # pre_install  = ''
-            # installer    = ''
-            # post_install = ''
-            # uninstaller  = ''
-        }
-        'arm64' = [ordered]@{
-            url          = ''
-            hash         = ''
-            extract_dir  = ''
-            extract_to   = ''
-            env_add_path = ''
-            bin          = ''
-            shortcuts    = ''
-            # pre_install  = ''
-            # installer    = ''
-            # post_install = ''
-            # uninstaller  = ''
-        }
-        # '32bit' = [ordered]@{
-        #     url          = ''
-        #     hash         = ''
-        #     extract_dir  = ''
-        #     extract_to   = ''
-        #     env_add_path = ''
-        #     bin          = ''
-        #     shortcuts    = ''
-        #     # pre_install  = ''
-        #     # installer    = ''
-        #     # post_install = ''
-        #     # uninstaller  = ''
-        # }
+        '64bit' = $order_arch
+        'arm64' = $order_arch
+        # '32bit' = $order_arch
     }
     renamed             = '' # abyss
     conflicts           = '' # abyss
@@ -110,48 +83,22 @@ $order = [ordered]@{
     pre_uninstall       = ''
     # uninstaller    = ''
     post_uninstall      = ''
-    checkver            = ''
+    checkver            = [ordered]@{
+        max       = '' # abyss
+        url       = ''
+        jsonpath  = ''
+        xpath     = ''
+        script    = ''
+        reverse   = ''
+        useragent = ''
+        regex     = ''
+        replace   = ''
+    }
     autoupdate          = [ordered]@{
         architecture = [ordered]@{
-            '64bit' = [ordered]@{
-                url          = ''
-                hash         = ''
-                extract_dir  = ''
-                extract_to   = ''
-                env_add_path = ''
-                bin          = ''
-                shortcuts    = ''
-                # pre_install  = ''
-                # installer    = ''
-                # post_install = ''
-                # uninstaller  = ''
-            }
-            'arm64' = [ordered]@{
-                url          = ''
-                hash         = ''
-                extract_dir  = ''
-                extract_to   = ''
-                env_add_path = ''
-                bin          = ''
-                shortcuts    = ''
-                # pre_install  = ''
-                # installer    = ''
-                # post_install = ''
-                # uninstaller  = ''
-            }
-            # '32bit' = [ordered]@{
-            #     url          = ''
-            #     hash         = ''
-            #     extract_dir  = ''
-            #     extract_to   = ''
-            #     env_add_path = ''
-            #     bin          = ''
-            #     shortcuts    = ''
-            #     # pre_install  = ''
-            #     # installer    = ''
-            #     # post_install = ''
-            #     # uninstaller  = ''
-            # }
+            '64bit' = $order_arch
+            'arm64' = $order_arch
+            # '32bit' = $order_arch
         }
         url          = ''
         hash         = ''

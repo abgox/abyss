@@ -1457,7 +1457,6 @@ function A-Get-VersionFromGithub {
     else {
         $releaseInfo = $res.Where({ !$_.prerelease })
     }
-
     foreach ($item in $releaseInfo) {
         $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
         if ($v -match $json.checkver.regex) {
@@ -1630,14 +1629,10 @@ function A-Get-InstallerInfoFromWinget {
     .PARAMETER InstallerType
         要获取的安装包的类型(后缀名)，如 zip/exe/msi/...
         可以指定为空，表示任意类型。
-    .PARAMETER MaxExclusiveVersion
-        限制安装包的最新版本，不包含该版本。
-        如: 25.0.0 表示获取到的最新版本不能高于 25.0.0
     #>
     param(
         [string]$PackageIdentifier,
-        [string]$InstallerType,
-        [string]$MaxExclusiveVersion
+        [string]$InstallerType
     )
 
     if (!(Get-Command 'ConvertFrom-Yaml' -ErrorAction SilentlyContinue)) {
@@ -1667,13 +1662,6 @@ function A-Get-InstallerInfoFromWinget {
     $latestVersion = ''
 
     foreach ($v in $versions) {
-        if ($MaxExclusiveVersion) {
-            # 如果大于或等于最高版本限制，则跳过
-            $isExclusive = A-Compare-Version $v $MaxExclusiveVersion
-            if ($isExclusive -ge 0) {
-                continue
-            }
-        }
         $compare = A-Compare-Version $v $latestVersion
         if ($compare -gt 0) {
             $latestVersion = $v

@@ -19,6 +19,10 @@
     Update manifest to specific version.
 .PARAMETER ThrowError
     Throw error as exception instead of just printing it.
+.PARAMETER MaxConcurrency
+    Maximum number of concurrent downloads.
+.PARAMETER TimeoutSec
+    Per-request timeout, in seconds.
 .EXAMPLE
     PS BUCKETROOT > .\bin\checkver.ps1
     Check all manifest inside default directory.
@@ -58,7 +62,9 @@ param(
     [Switch] $ForceUpdate,
     [Switch] $SkipUpdated,
     [String] $Version = '',
-    [Switch] $ThrowError
+    [Switch] $ThrowError,
+    [int] $MaxConcurrency = 100,
+    [int] $TimeoutSec = 30
 )
 
 if (-not $env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) }
@@ -73,11 +79,11 @@ if (-not $env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) 
 
 if ($App -ne '*' -and (Test-Path $App -PathType Leaf)) {
     $Dir = Split-Path $App
-    $files = Get-ChildItem $Dir -Filter (Split-Path $App -Leaf)
+    $files = Get-ChildItem $Dir -File -Filter (Split-Path $App -Leaf)
 }
 elseif ($Dir) {
     $Dir = Convert-Path $Dir
-    $files = Get-ChildItem $Dir -Filter "$App.json" -Recurse
+    $files = Get-ChildItem $Dir -File -Filter "$App.json" -Recurse
 }
 else {
     throw "'-Dir' parameter required if '-App' is not a filepath!"
@@ -93,19 +99,25 @@ if ($Segment) {
 
 $GitHubToken = Get-GitHubToken
 
-# don't use $Version with $App = '*'
 if ($App -eq '*' -and $Version -ne '') {
     throw "Don't use '-Version' with '-App *'!"
+}
+
+function next($appName, $er) {
+    Write-Host
+    Write-Host "${appName}: " -NoNewline
+    Write-Host $er -ForegroundColor DarkRed
 }
 
 # get apps to check
 $Queue = @()
 $json = ''
-$files | ForEach-Object {
-    $file = $_.FullName
+
+foreach ($f in $files) {
+    $file = $f.FullName
     $json = parse_json $file
     if ($json.checkver) {
-        $Queue += , @($_.BaseName, $json, $file)
+        $Queue += , @($f.BaseName, $json, $file)
     }
 }
 
@@ -113,94 +125,12 @@ $files | ForEach-Object {
 Get-Event | Remove-Event
 Get-EventSubscriber | Unregister-Event
 
-# start all downloads
+$queueIndex = 0
 $in_progress = 0
-$Queue | ForEach-Object {
-    $name, $json, $file = $_
+# key: subscription identifier (string) -> @{ wc; state; subscription; startTime }
+$activeRequests = @{}
 
-    $substitutions = Get-VersionSubstitution $json.version # 'autoupdate.ps1'
-
-    $wc = [System.Net.WebClient]::new()
-    if ($json.checkver.useragent) {
-        $wc.Headers.Add('User-Agent', (substitute $json.checkver.useragent $substitutions))
-    }
-    else {
-        $wc.Headers.Add('User-Agent', (Get-UserAgent))
-    }
-
-    # Not Specified
-    $regex = ''
-    $jsonpath = ''
-    $xpath = ''
-    $replace = ''
-
-    if ($json.checkver.url) {
-        $url = $json.checkver.url
-        if ($url -like '*api.github.com/*') {
-            $wc.Headers.Add('Authorization', "Bearer $GitHubToken")
-        }
-    }
-    else {
-        # It is meaningless to check the homepage in abyss bucket.
-        # So, we use a stable URL as a placeholder to avoid access errors.
-        $url = 'https://1.1.1.1'
-    }
-
-    $regex = $json.checkver.regex
-
-    $jsonpath = $json.checkver.jsonpath
-
-    if ($json.checkver.xpath) {
-        $xpath = $json.checkver.xpath
-    }
-
-    if ($json.checkver.replace -is [string]) {
-        # If `checkver` is [string], it has a method called `Replace`
-        $replace = $json.checkver.replace
-    }
-
-    $reverse = $json.checkver.reverse -eq 'true'
-
-    $url = substitute $url $substitutions
-
-    $state = [psobject]@{
-        app      = $name
-        file     = $file
-        url      = $url
-        regex    = $regex
-        json     = $json
-        jsonpath = $jsonpath
-        xpath    = $xpath
-        reverse  = $reverse
-        replace  = $replace
-    }
-
-    # get_config PRIVATE_HOSTS | Where-Object { $_ -ne $null -and $url -match $_.match } | ForEach-Object {
-    #     (ConvertFrom-StringData -StringData $_.Headers).GetEnumerator() | ForEach-Object {
-    #         $wc.Headers[$_.Key] = $_.Value
-    #     }
-    # }
-
-    $wc.Headers.Add('Referer', (strip_filename $url))
-    Register-ObjectEvent $wc downloadDataCompleted -ErrorAction Stop | Out-Null
-    $wc.DownloadDataAsync($url, $state)
-    $in_progress++
-}
-
-function next($er) {
-    Write-Host
-    Write-Host "$App`: " -NoNewline
-    Write-Host $er -ForegroundColor DarkRed
-}
-
-# wait for all to complete
-while ($in_progress -gt 0) {
-    $ev = Wait-Event
-    Remove-Event $ev.SourceIdentifier
-    $in_progress--
-
-    $state = $ev.SourceEventArgs.UserState
-    $result = $ev.SourceEventArgs.Result
+function Invoke-ManifestResult($state, $result, $err, $cancelled) {
     $app = $state.app
     $file = $state.file
     $json = $state.json
@@ -208,85 +138,98 @@ while ($in_progress -gt 0) {
     $regexp = $state.regex
     $jsonpath = $state.jsonpath
     $xpath = $state.xpath
-    $script = $json.checkver.script
+    $script_code = $json.checkver.script
     $reverse = $state.reverse
     $replace = $state.replace
     $expected_ver = $json.version
     $ver = $Version
 
     if ($json.version -in 'nightly', 'pending', 'renamed', 'deprecated', 'virtual') {
-        if (!$SkipUpdated) {
+        if (!$script:SkipUpdated) {
             Write-Host
-            Write-Host "$app`: " -NoNewline
+            Write-Host "${app}: " -NoNewline
             Write-Host $json.version -ForegroundColor DarkGreen
         }
-        continue
+        return
     }
 
     $matchesHashtable = @{}
 
     if (!$ver) {
         if (!$regexp -and $replace) {
-            next "'replace' requires 're' or 'regex'"
-            continue
+            next $app "'replace' requires 're' or 'regex'"
+            return
         }
-        $err = $ev.SourceEventArgs.Error
-        if ($err) {
-            if (!$script) {
-                next "$($err.message)`r`nURL $url is not valid"
-                continue
+
+        if ($cancelled) {
+            if (!$script_code) {
+                next $app "timed out after ${TimeoutSec}s`r`nURL $url is not valid"
+                return
             }
             else {
-                # Run script despite URL download failure
-                Write-Host "$($err.message)`r`nURL $url is not valid. Falling back to checkver.script ..."
+                Write-Host "${app}: Request timed out after ${TimeoutSec}s. Falling back to checkver.script ..." -ForegroundColor DarkYellow
+            }
+        }
+
+        if ($err) {
+            if (!$script_code) {
+                next $app "$($err.message)`r`nURL $url is not valid"
+                return
+            }
+            else {
+                Write-Host "$($err.message)`r`nURL $url is not valid. Falling back to checkver.script ..." -ForegroundColor DarkYellow
             }
         }
 
         $page = $null
         $source = $url
 
-        if ($url -and !$err) {
-            $ms = New-Object System.IO.MemoryStream
-            $ms.Write($result, 0, $result.Length)
-            $ms.Seek(0, 0) | Out-Null
-            if ($result[0] -eq 0x1F -and $result[1] -eq 0x8B) {
-                $ms = New-Object System.IO.Compression.GZipStream($ms, [System.IO.Compression.CompressionMode]::Decompress)
+        if ($url -and !$err -and !$cancelled) {
+            $ms = [System.IO.MemoryStream]::new($result)
+            $ms.Position = 0
+            try {
+                $encoding = if ($state.encoding) { $state.encoding } else { [System.Text.Encoding]::UTF8 }
+                if ($result.Length -ge 2 -and $result[0] -eq 0x1F -and $result[1] -eq 0x8B) {
+                    $gz = [System.IO.Compression.GZipStream]::new($ms, [System.IO.Compression.CompressionMode]::Decompress)
+                    $sr = [System.IO.StreamReader]::new($gz, $encoding)
+                    $page = $sr.ReadToEnd()
+                    $sr.Dispose()
+                    $gz.Dispose()
+                }
+                else {
+                    $sr = [System.IO.StreamReader]::new($ms, $encoding)
+                    $page = $sr.ReadToEnd()
+                    $sr.Dispose()
+                }
             }
-            $page = (New-Object System.IO.StreamReader($ms, (Get-Encoding $wc))).ReadToEnd()
+            finally {
+                $ms.Dispose()
+            }
         }
 
-        if ($script) {
-            $page = Invoke-Command ([scriptblock]::Create($script -join "`r`n"))
+        if ($script_code) {
+            $page = Invoke-Command ([scriptblock]::Create($script_code -join "`r`n"))
             $source = 'the output of script'
         }
 
         if ($null -eq $page) {
-            next "couldn't retrieve content from $source"
-            continue
+            next $app "couldn't retrieve content from $source"
+            return
         }
 
         if ($jsonpath) {
-            # Return only a single value if regex is absent
             $noregex = [String]::IsNullOrEmpty($regexp)
-            # If reverse is ON and regex is ON,
-            # Then reverse would have no effect because regex handles reverse
-            # on its own
-            # So in this case we have to disable reverse
             $ver = json_path $page $jsonpath $null ($reverse -and $noregex) $noregex
+            if (!$ver) { $ver = json_path_legacy $page $jsonpath }
             if (!$ver) {
-                $ver = json_path_legacy $page $jsonpath
-            }
-            if (!$ver) {
-                next "couldn't find '$jsonpath' in $source"
-                continue
+                next $app "couldn't find '$jsonpath' in $source"
+                return
             }
         }
 
         if ($xpath) {
             $xml = [xml]$page
-            # Find all `significant namespace declarations` from the XML file
             $nsList = $xml.SelectNodes('//namespace::*[not(. = ../../namespace::*)]')
-            # Then add them into the NamespaceManager
             $nsmgr = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
             $nsList | ForEach-Object {
                 if ($_.LocalName -eq 'xmlns') {
@@ -297,65 +240,50 @@ while ($in_progress -gt 0) {
                     $nsmgr.AddNamespace($_.LocalName, $_.Value)
                 }
             }
-            # Getting version from XML, using XPath
             $ver = $xml.SelectSingleNode($xpath, $nsmgr).'#text'
             if (!$ver) {
-                next "couldn't find '$($xpath -replace 'ns:', '')' in $source"
-                continue
+                next $app "couldn't find '$($xpath -replace 'ns:', '')' in $source"
+                return
             }
         }
 
-        if ($jsonpath -and $regexp) {
-            $page = $ver
-            $ver = ''
-        }
-
-        if ($xpath -and $regexp) {
-            $page = $ver
-            $ver = ''
-        }
+        if ($jsonpath -and $regexp) { $page = $ver; $ver = '' }
+        if ($xpath -and $regexp) { $page = $ver; $ver = '' }
 
         if ($regexp) {
             $re = New-Object System.Text.RegularExpressions.Regex($regexp)
-            if ($reverse) {
-                $match = $re.Matches($page) | Select-Object -Last 1
-            }
-            else {
-                $match = $re.Matches($page) | Select-Object -First 1
-            }
+            $match = if ($reverse) { $re.Matches($page) | Select-Object -Last 1 } else { $re.Matches($page) | Select-Object -First 1 }
 
             if ($match -and $match.Success) {
-                $re.GetGroupNames() | ForEach-Object { $matchesHashtable.Add($_, $match.Groups[$_].Value) }
+                $re.GetGroupNames() | ForEach-Object { $matchesHashtable[$_] = $match.Groups[$_].Value }
                 $ver = $matchesHashtable['1']
-                if ($replace) {
-                    $ver = $re.Replace($match.Value, $replace)
-                }
-                if (!$ver) {
-                    $ver = $matchesHashtable['version']
-                }
+                if ($replace) { $ver = $re.Replace($match.Value, $replace) }
+                if (!$ver) { $ver = $matchesHashtable['version'] }
             }
             else {
-                next "couldn't match '$regexp' in $source"
-                continue
+                next $app "couldn't match '$regexp' in $source"
+                return
             }
         }
 
         if (!$ver) {
-            next "couldn't find new version in $source"
-            continue
+            next $app "couldn't find new version in $source"
+            return
         }
     }
 
-    # Skip actual only if versions are same and there is no -f
-    if (($ver -eq $expected_ver) -and !$ForceUpdate -and $SkipUpdated) { continue }
+    if ($json.checkver.max -and (Compare-Version -ReferenceVersion $ver -DifferenceVersion $json.checkver.max) -eq -1) {
+        $ver = $expected_ver
+    }
+
+    if (($ver -eq $expected_ver) -and !$script:ForceUpdate -and $script:SkipUpdated) { return }
 
     Write-Host
-    Write-Host "$app`: " -NoNewline
+    Write-Host "${app}: " -NoNewline
 
-    # version hasn't changed (step over if forced update)
-    if ($ver -eq $expected_ver -and !$ForceUpdate) {
+    if ($ver -eq $expected_ver -and !$script:ForceUpdate) {
         Write-Host $ver -ForegroundColor DarkGreen
-        continue
+        return
     }
 
     Write-Host $ver -ForegroundColor DarkRed -NoNewline
@@ -369,23 +297,154 @@ while ($in_progress -gt 0) {
         Write-Host ''
     }
 
-    # forcing an update implies updating, right?
-    if ($ForceUpdate) { $Update = $true }
-
-    if ($Update -and $json.autoupdate) {
-        if ($ForceUpdate) {
+    $shouldUpdate = $script:Update -or $script:ForceUpdate
+    if ($shouldUpdate -and $json.autoupdate) {
+        if ($script:ForceUpdate) {
             Write-Host 'Forcing autoupdate!' -ForegroundColor DarkMagenta
         }
         try {
-            Invoke-AutoUpdate $app $file $json $ver $matchesHashtable # 'autoupdate.ps1'
+            Invoke-AutoUpdate $app $file $json $ver $matchesHashtable
         }
         catch {
-            if ($ThrowError) {
-                throw $_
+            if ($script:ThrowError) { throw $_ } else { error $_.Exception.Message }
+        }
+    }
+}
+
+function Start-NextDownload {
+    while ($script:queueIndex -lt $script:Queue.Count) {
+        $name, $json, $file = $script:Queue[$script:queueIndex]
+        $script:queueIndex++
+
+        if (-not $json.checkver.url) {
+            $state = [psobject]@{
+                app      = $name
+                file     = $file
+                url      = $null
+                regex    = $json.checkver.regex
+                json     = $json
+                jsonpath = $json.checkver.jsonpath
+                xpath    = $json.checkver.xpath
+                reverse  = ($json.checkver.reverse -eq 'true')
+                replace  = if ($json.checkver.replace -is [string]) { $json.checkver.replace } else { '' }
+                encoding = $null
             }
-            else {
-                error $_.Exception.Message
+
+            Invoke-ManifestResult -state $state -result $null -err $null -cancelled $false
+            continue
+        }
+
+        $substitutions = Get-VersionSubstitution $json.version
+        $wc = [System.Net.WebClient]::new()
+        if ($json.checkver.useragent) {
+            $wc.Headers.Add('User-Agent', (substitute $json.checkver.useragent $substitutions))
+        }
+        else {
+            $wc.Headers.Add('User-Agent', (Get-UserAgent))
+        }
+
+        $url = substitute $json.checkver.url $substitutions
+        if ($url -like '*api.github.com/*') {
+            $wc.Headers.Add('Authorization', "Bearer $script:GitHubToken")
+        }
+
+        $state = [psobject]@{
+            app      = $name
+            file     = $file
+            url      = $url
+            regex    = $json.checkver.regex
+            json     = $json
+            jsonpath = $json.checkver.jsonpath
+            xpath    = $json.checkver.xpath
+            reverse  = ($json.checkver.reverse -eq 'true')
+            replace  = if ($json.checkver.replace -is [string]) { $json.checkver.replace } else { '' }
+            encoding = $null
+        }
+
+        # get_config PRIVATE_HOSTS | Where-Object { $_ -ne $null -and $url -match $_.match } | ForEach-Object {
+        #     (ConvertFrom-StringData -StringData $_.Headers).GetEnumerator() | ForEach-Object {
+        #         $wc.Headers[$_.Key] = $_.Value
+        #     }
+        # }
+
+        $wc.Headers.Add('Referer', (strip_filename $url))
+        $sourceId = [guid]::NewGuid().ToString()
+        Register-ObjectEvent -InputObject $wc -EventName downloadDataCompleted -SourceIdentifier $sourceId -ErrorAction Stop | Out-Null
+
+        $script:activeRequests[$sourceId] = [psobject]@{
+            wc           = $wc
+            state        = $state
+            subscription = $sourceId
+            startTime    = Get-Date
+            cancelling   = $false
+        }
+
+        $wc.DownloadDataAsync($url, $state)
+        $script:in_progress++
+        break
+    }
+}
+
+function Complete-Download([string] $subscriptionName) {
+    if ($script:activeRequests.ContainsKey($subscriptionName)) {
+        $entry = $script:activeRequests[$subscriptionName]
+        Unregister-Event -SourceIdentifier $subscriptionName -ErrorAction SilentlyContinue
+        Remove-Event -SourceIdentifier $subscriptionName -ErrorAction SilentlyContinue
+        if ($entry.wc) {
+            $entry.wc.Dispose()
+        }
+        $script:activeRequests.Remove($subscriptionName)
+    }
+    $script:in_progress--
+}
+
+for ($i = 0; $i -lt $MaxConcurrency -and $i -lt $Queue.Count; $i++) {
+    Start-NextDownload
+}
+
+while ($in_progress -gt 0) {
+    $ev = Wait-Event -Timeout 1
+    if (-not $ev) {
+        $now = Get-Date
+        foreach ($key in @($activeRequests.Keys)) {
+            $entry = $activeRequests[$key]
+            if (($now - $entry.startTime).TotalSeconds -ge $TimeoutSec) {
+                if (-not $entry.cancelling) {
+                    $entry.cancelling = $true
+                    $entry.wc.CancelAsync()
+                }
             }
         }
+        continue
+    }
+
+    Remove-Event $ev.SourceIdentifier
+
+    $entry = $activeRequests[$ev.SourceIdentifier]
+    if (-not $entry) { continue }
+
+    $state = $entry.state
+    $reqWc = $entry.wc
+
+    $cancelled = $ev.SourceEventArgs.Cancelled
+    $err = $ev.SourceEventArgs.Error
+    $result = $null
+
+    if ($reqWc -and !$err -and !$cancelled) {
+        $result = $ev.SourceEventArgs.Result
+        try {
+            $state.encoding = Get-Encoding $reqWc
+        }
+        catch {
+            $state.encoding = [System.Text.Encoding]::UTF8
+        }
+    }
+
+    try {
+        Invoke-ManifestResult -state $state -result $result -err $err -cancelled $cancelled
+    }
+    finally {
+        Complete-Download $ev.SourceIdentifier
+        Start-NextDownload
     }
 }
