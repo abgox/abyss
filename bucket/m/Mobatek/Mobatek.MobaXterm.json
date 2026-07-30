@@ -19,9 +19,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "$msi = Get-ChildItem $dir '*.msi' -Recurse | Select-Object -First 1",
-        "$fname = Join-Path 'app' $msi.Name",
-        "A-Install-Msi"
+        "A-Install-Msi -MsiPath (Get-ChildItem $dir *.msi -Recurse | Select-Object -First 1).FullName"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",

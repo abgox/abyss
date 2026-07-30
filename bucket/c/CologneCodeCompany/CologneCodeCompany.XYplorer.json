@@ -26,8 +26,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Install",
-        "$fname = Join-Path 'app' (Get-ChildItem $dir\\app -File -Filter XYplorer64*.exe | Select-Object -First 1).Name",
-        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+        "A-Install-App -Uninstaller 'app\\uninstall.exe' -Installer (Get-ChildItem $dir -Filter XYplorer64*.exe -Recurse | Select-Object -First 1).FullName"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
