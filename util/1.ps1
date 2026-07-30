@@ -991,11 +991,15 @@ function A-Uninstall-Burn {
 function A-Install-Msi {
     param(
         [array]$ArgumentList,
-        [string]$Installer
+        [string]$Installer,
+        [string]$MsiPath
     )
 
     if (!$Installer) {
         $Installer = 'C:\Windows\SysWOW64\msiexec.exe', 'C:\Windows\System32\msiexec.exe' | Where-Object { [System.IO.File]::Exists($_) } | Select-Object -First 1
+    }
+    if (!$MsiPath) {
+        $MsiPath = Join-Path $dir ($fname | Select-Object -First 1)
     }
     if (!(Test-Path -LiteralPath $Installer)) {
         error "'$Installer' not found."
@@ -1006,10 +1010,9 @@ function A-Install-Msi {
     $logPath = "$env:TEMP\scoop_$($app)_$($version)_install_msi.log"
 
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-        $msiFile = Join-Path $dir ($fname | Select-Object -First 1)
         $ArgumentList = @(
             '/i',
-            "`"$msiFile`"",
+            "`"$MsiPath`"",
             # '/passive',
             '/quiet',
             '/norestart',
@@ -1034,8 +1037,8 @@ function A-Install-Msi {
     }
 
     try {
-        if ($msiFile) {
-            Remove-Item $msiFile -Force -ErrorAction Stop
+        if ($MsiPath) {
+            Remove-Item $MsiPath -Force -ErrorAction Stop
         }
     }
     catch {
