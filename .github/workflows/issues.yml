@@ -45,7 +45,7 @@ jobs:
             echo "sync=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Sync Repos
+      - name: Sync Repos (gitee)
         if: steps.compare.outputs.sync == 'true'
         uses: abgox/hub-mirror-action@abgox
         continue-on-error: true
@@ -54,5 +54,17 @@ jobs:
           dst: gitee/abgox
           dst_key: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
           dst_token: ""
+          force_update: true
+          static_list: ${{ github.event.repository.name }}
+
+      - name: Sync Repos (gitcode)
+        if: steps.compare.outputs.sync == 'true'
+        uses: abgox/hub-mirror-action@abgox
+        continue-on-error: true
+        with:
+          src: github/abgox
+          dst: gitcode/abgox
+          dst_key: ${{ secrets.GITCODE_SSH_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITCODE_TOKEN }}
           force_update: true
           static_list: ${{ github.event.repository.name }}

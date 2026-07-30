@@ -42,6 +42,15 @@ jobs:
           force_update: true
           static_list: ${{ github.event.repository.name }}
 
+      - uses: abgox/hub-mirror-action@abgox
+        with:
+          src: github/abgox
+          dst: gitcode/abgox
+          dst_key: ${{ secrets.GITCODE_SSH_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITCODE_TOKEN }}
+          force_update: true
+          static_list: ${{ github.event.repository.name }}
+
   update-docs:
     name: Update Docs
     runs-on: windows-latest
