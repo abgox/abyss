@@ -84,6 +84,7 @@ $order = [ordered]@{
     # uninstaller    = ''
     post_uninstall      = ''
     checkver            = [ordered]@{
+        format    = '' # abyss
         max       = '' # abyss
         url       = ''
         jsonpath  = ''

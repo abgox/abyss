@@ -3129,6 +3129,24 @@
                 }
             ],
             "properties": {
+                "format": {
+                    "markdownDescription": "Version number format alignment\n\n- Defines the baseline segment count for the main version number (using dot-separated `0` placeholders, e.g., `0.0` or `0.0.0.0`)\n- **Padding**: `0.0.0.0` will automatically complete `1.2` to `1.2.0.0`; `1.2.3.4` remains unchanged\n- **Trimming trailing zeros**: `0.0` will trim `1.2.0` to `1.2`; `1.2.3` (non-zero trailing segment) remains unchanged",
+                    "type": "string",
+                    "examples": [
+                        "0.0",
+                        "0.0.0",
+                        "0.0.0.0"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        },
+                        {
+                            "pattern": "^0(\\.0)+$",
+                            "errorMessage": "Format must be dot-separated zeros, e.g. 0.0 or 0.0.0.0"
+                        }
+                    ]
+                },
                 "max": {
                     "markdownDescription": "Maximum Version\n\n- It is used to limit the maximum version when checking for new versions.\n- If the version number exceeds the limit, return the current version.",
                     "type": "string",

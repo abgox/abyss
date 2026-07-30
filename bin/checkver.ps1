@@ -272,6 +272,32 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
         }
     }
 
+    if ($json.checkver.format) {
+        $targetSegments = ($json.checkver.format -split '\.').Count
+        $verBase = $ver
+        $verSuffix = ''
+        if ($ver -match '^([\d\.]+)(.*)$') {
+            $verBase = $Matches[1].TrimEnd('.')
+            $verSuffix = $Matches[2]
+        }
+        $segments = $verBase -split '\.'
+        $currentSegments = $segments.Count
+
+        if ($currentSegments -lt $targetSegments) {
+            $missing = $targetSegments - $currentSegments
+            $verBase += '.0' * $missing
+            $ver = "$verBase$verSuffix"
+        }
+        elseif ($currentSegments -gt $targetSegments) {
+            $extraSegments = $segments | Select-Object -Skip $targetSegments
+            $allExtraAreZero = ($extraSegments | Where-Object { $_ -ne '0' }).Count -eq 0
+            if ($allExtraAreZero) {
+                $verBase = ($segments | Select-Object -First $targetSegments) -join '.'
+                $ver = "$verBase$verSuffix"
+            }
+        }
+    }
+
     if ($json.checkver.max -and (Compare-Version -ReferenceVersion $ver -DifferenceVersion $json.checkver.max) -eq -1) {
         $ver = $expected_ver
     }
