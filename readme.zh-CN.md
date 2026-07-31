@@ -2,9 +2,9 @@
 
 <p align="center">
     <a href="readme.md">English</a> |
-    <a href="readme.zh-CN.md">简体中文</a> |
     <a href="https://github.com/abgox/abyss">Github</a> |
-    <a href="https://gitee.com/abgox/abyss">Gitee</a>
+    <a href="https://gitee.com/abgox/abyss">Gitee</a> |
+    <a href="https://gitcode.com/abgox/abyss">Gitcode</a>
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@
   <strong>Just like abyss — always building your stable source.</strong>
 </p>
 <p align="center">
-  <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://abgox.com/donate">赞赏 💰</a></strong>
+  <strong>喜欢这个项目？请给它 Star ⭐️ 或 <a href="https://me.abgox.com/donate">赞赏 💰</a></strong>
 </p>
 
 > [!IMPORTANT]
@@ -122,4 +122,4 @@
 
 ## License
 
-[MIT](./license) © [abgox](https://www.abgox.com)
+[MIT](./license) © [abgox](https://me.abgox.com)
