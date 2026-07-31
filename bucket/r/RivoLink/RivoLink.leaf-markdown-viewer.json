@@ -1,0 +1,56 @@
+{
+    "version": "1.26.2",
+    "description": "一款拥有类图形界面使用体验的终端 Markdown 预览工具 | A terminal-based Markdown previewer with a GUI-like experience",
+    "homepage": "https://leaf.rivolink.mg",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/RivoLink/leaf/releases/download/1.26.2/leaf-windows-x86_64.exe#/leaf.exe",
+            "hash": "57ba484cd8c1d7c013adfbe75d918659cd4bf96994c3ff1ebf7a7e01b2c46af7"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\leaf.exe",
+    "link": "$env:AppData\\leaf",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            ". $pwd\\util\\1.ps1",
+            "A-Get-LatestVersionFromGithub"
+        ],
+        "regex": "(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/RivoLink/leaf/releases/download/$version/leaf-windows-x86_64.exe#/leaf.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
