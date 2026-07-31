@@ -10,6 +10,23 @@ permissions:
   contents: write
 
 jobs:
+  update-docs:
+    name: Update Docs
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Update Docs
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
+          cd abyss-docs
+          .\scripts\generate-list.ps1
+          .\scripts\push-change.ps1
+
   sort-json:
     name: Sort JSON and Push
     runs-on: windows-latest
@@ -17,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.repository.default_branch}}
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 50
 
       - name: Sort JSON and Push
@@ -27,11 +44,10 @@ jobs:
           .\script\sort-json.ps1 -All:$manual
           .\script\push-change.ps1 -message "(chore): automatically sort json [skip ci]"
 
-  sync-repos:
-    name: Sync Repos
+  sync-gitee:
+    name: Sync to Gitee
     needs: sort-json
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: abgox/hub-mirror-action@abgox
         with:
@@ -42,28 +58,16 @@ jobs:
           force_update: true
           static_list: ${{ github.event.repository.name }}
 
+  sync-gitcode:
+    name: Sync to GitCode
+    needs: sort-json
+    runs-on: ubuntu-latest
+    steps:
       - uses: abgox/hub-mirror-action@abgox
         with:
           src: github/abgox
           dst: gitcode/abgox
           dst_key: ${{ secrets.GITCODE_SSH_PRIVATE_KEY }}
-          dst_token: ${{ secrets.GITCODE_TOKEN }}
+          dst_token: ""
           force_update: true
           static_list: ${{ github.event.repository.name }}
-
-  update-docs:
-    name: Update Docs
-    runs-on: windows-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.repository.default_branch}}
-
-      - name: Update Docs
-        shell: pwsh
-        run: |
-          git clone --depth 1 https://${{ secrets.PAT_TOKEN }}@github.com/abgox/abyss-docs.git
-          cd abyss-docs
-          .\scripts\generate-list.ps1
-          .\scripts\push-change.ps1
