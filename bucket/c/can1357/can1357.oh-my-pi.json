@@ -1,0 +1,54 @@
+{
+    "version": "17.2.4",
+    "description": "内置集成开发环境的代码智能代理 | A coding agent with the IDE wired in",
+    "homepage": "https://omp.sh",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/can1357/oh-my-pi/releases/download/v17.2.4/omp-windows-x64.exe#/omp.exe",
+            "hash": "1ae3b28c96a5653af1ef7dd444d570c755501c5526c34d2e81809511f5b6e045"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\omp.exe",
+    "link": "$home\\.omp",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/can1357/oh-my-pi/releases/download/v$version/omp-windows-x64.exe#/omp.exe"
+            }
+        },
+        "hash": {
+            "mode": "github"
+        }
+    }
+}
