@@ -1,7 +1,7 @@
 <h1 align="center">✨<a href="https://abyss.abgox.com">abyss</a>✨</h1>
 
 <p align="center">
-    <a href="readme.zh-CN.md">简体中文</a> |
+    <a href="README.zh-CN.md">简体中文</a> |
     <a href="https://github.com/abgox/abyss">GitHub</a> |
     <a href="https://gitee.com/abgox/abyss">Gitee</a> |
     <a href="https://gitcode.com/abgox/abyss">GitCode</a>
@@ -11,7 +11,7 @@
     <a href="https://github.com/abgox/abyss">
         <img src="https://img.shields.io/github/stars/abgox/abyss" alt="github stars" />
     </a>
-    <a href="https://github.com/abgox/abyss/blob/main/license">
+    <a href="https://github.com/abgox/abyss/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/abgox/abyss" alt="license" />
     </a>
     <a href="https://github.com/abgox/abyss">
@@ -122,4 +122,4 @@
 
 ## License
 
-[MIT](./license) © [abgox](https://me.abgox.com)
+[MIT](./LICENSE) © [abgox](https://me.abgox.com)
