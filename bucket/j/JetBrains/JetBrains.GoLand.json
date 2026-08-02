@@ -63,26 +63,24 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\util\\1.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget 'JetBrains.GoLand' 'exe'",
-            "$out"
-        ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "winget": {
+            "id": "JetBrains.GoLand",
+            "ext": "exe"
+        }
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://download.jetbrains.com/go/goland-$version.exe",
                 "hash": {
-                    "url": "temp-autoupdate.json",
+                    "url": "_.json",
                     "jsonpath": "$.x64_user.InstallerSha256"
                 }
             },
             "arm64": {
                 "url": "https://download.jetbrains.com/go/goland-$version-aarch64.exe",
                 "hash": {
-                    "url": "temp-autoupdate.json",
+                    "url": "_.json",
                     "jsonpath": "$.arm64_user.InstallerSha256"
                 }
             }

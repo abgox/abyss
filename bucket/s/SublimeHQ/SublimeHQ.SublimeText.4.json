@@ -50,19 +50,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\util\\1.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget 'SublimeHQ.SublimeText.4' 'exe'",
-            "$out"
-        ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "winget": {
+            "id": "SublimeHQ.SublimeText.4",
+            "ext": "exe"
+        }
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "temp-autoupdate.json",
+                    "url": "_.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 }
             }

@@ -1,5 +1,5 @@
 {
-    "version": "3.14.1.8722",
+    "version": "3.14.1",
     "description": "可用于打造您的 Windows 安装体验的最强大工具集 | The most powerful set of tools available to create your Windows installation experience",
     "homepage": "https://www.firegiant.com/wixtoolset",
     "license": {
@@ -35,19 +35,20 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\util\\1.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget 'WiXToolset.WiXToolset' 'exe'",
-            "$out",
-            "\"x86:$($res.x86_machine.InstallerUrl -replace '\\.exe$', '-binaries.zip');\""
-        ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "github": {
+            "channel": "latest"
+        },
+        "regex": "wix(\\d)(\\d+)(\\d)",
+        "replace": "${1}.${2}.${3}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX86"
+                "url": "https://github.com/wixtoolset/wix3/releases/download/wix$majorVersion$minorVersion$patchVersionrtm/wix$majorVersion$minorVersion-binaries.zip"
             }
+        },
+        "hash": {
+            "mode": "github"
         }
     }
 }

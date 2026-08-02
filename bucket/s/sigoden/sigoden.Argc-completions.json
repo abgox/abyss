@@ -6,32 +6,12 @@
         "identifier": "MIT"
     },
     "notes_cn": [
-        "你需要进行以下配置:",
-        " ",
-        "- 对于 PowerShell，将以下内容添加到 $Profile 即可:",
-        " ",
-        "    # 如果你不希望全部加载，可以直接指定: $argc_scripts = @(\"cargo\",\"git\")",
-        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
-        "    argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression",
-        "  ",
-        "- 如果你同时使用 PSCompletions:",
-        " ",
-        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
-        "    $PSCompletions.argc_completions($argc_scripts)"
+        "在 PowerShell 中，它可以作为 PSCompletions 的第三方补全库",
+        "参考: https://pscompletions.abgox.com/docs/tools/argc-completions"
     ],
     "notes": [
-        "You need to configure the following:",
-        " ",
-        "- For PowerShell, add the following to your $Profile:",
-        " ",
-        "    # If you don't want to load everything, you can directly specify: $argc_scripts = @(\"cargo\",\"git\")",
-        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
-        "    argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression",
-        "  ",
-        "- If you're also using PSCompletions:",
-        " ",
-        "    $argc_scripts = $env:ARGC_COMPLETIONS_PATH -split ';' | Get-ChildItem -File | ForEach-Object { $_.BaseName }",
-        "    $PSCompletions.argc_completions($argc_scripts)"
+        "In PowerShell, it can serve as a third-party completion library for PSCompletions.",
+        "Refer to: https://pscompletions.abgox.com/docs/tools/argc-completions"
     ],
     "depends": [
         "abyss/MikeFarah.yq",
@@ -68,9 +48,9 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/sigoden/argc-completions/commits?per_page=1",
-        "regex": "sha\":\\s*?\"(?<sha>[^\"]+).*?\"date\":\\s*?\"(\\d+)-(\\d+)-(\\d+)T(\\d+):(\\d+):(\\d+)",
-        "replace": "${1}.${2}.${3}.${4}${5}${6}"
+        "commit": {
+            "format": "date"
+        }
     },
     "autoupdate": {
         "url": "https://github.com/sigoden/argc-completions/archive/refs/heads/main.zip"

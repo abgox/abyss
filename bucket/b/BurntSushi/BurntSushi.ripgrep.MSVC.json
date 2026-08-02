@@ -41,19 +41,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\util\\1.ps1",
-            "$res, $out = A-Get-InstallerInfoFromWinget 'BurntSushi.ripgrep.MSVC' 'zip'",
-            "$out"
-        ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "winget": {
+            "id": "BurntSushi.ripgrep.MSVC",
+            "ext": "zip"
+        }
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "$matchX64",
                 "hash": {
-                    "url": "temp-autoupdate.json",
+                    "url": "_.json",
                     "jsonpath": "$.x64_machine.InstallerSha256"
                 },
                 "extract_dir": "ripgrep-$version-x86_64-pc-windows-msvc"

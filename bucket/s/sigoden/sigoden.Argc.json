@@ -34,7 +34,8 @@
     "pre_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Uninstall"
+        "A-Start-Uninstall",
+        "A-Stop-Process"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -42,11 +43,9 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            ". $pwd\\util\\1.ps1",
-            "A-Get-LatestVersionFromGithub"
-        ],
-        "regex": "(.+)"
+        "github": {
+            "channel": "latest"
+        }
     },
     "autoupdate": {
         "architecture": {

@@ -51,7 +51,6 @@
     ],
     "checkver": {
         "script": [
-            ". $pwd\\util\\1.ps1",
             "$release = (Invoke-RestMethod 'https://fluxdown.zerx.dev/api/changelog').releases[0]",
             "$version = $release.tag -replace '^v'",
             "$dl = $release.assets | Where-Object { $_.name -match 'windows-x64-setup.exe$' } | Select-Object -First 1 | Select-Object -ExpandProperty download_url",
@@ -60,7 +59,7 @@
             "\"x64:$url;\"",
             "\"arm64:$($url.Replace('x64','arm64'));\""
         ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?"
+        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))"
     },
     "autoupdate": {
         "architecture": {
