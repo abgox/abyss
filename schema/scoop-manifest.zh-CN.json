@@ -1700,6 +1700,26 @@
                 "errorMessage": "未检测到有效的版本变量，请参考示例\n$version\n$majorVersion\n$matchHead\n$match1"
             }
         },
+        "fixed_url_validation": {
+            "markdownDescription": "固定地址校验（不含版本变量）",
+            "if": {
+                "type": "string"
+            },
+            "then": {
+                "not": {
+                    "pattern": "(?i)\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[a-z][a-z0-9]*)"
+                },
+                "errorMessage": "安装包地址必须是固定 URL，不能包含版本变量（如 $version）"
+            },
+            "else": {
+                "items": {
+                    "not": {
+                        "pattern": "(?i)\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[a-z][a-z0-9]*)"
+                    },
+                    "errorMessage": "安装包地址必须是固定 URL，不能包含版本变量（如 $version）"
+                }
+            }
+        },
         "url": {
             "title": "下载地址",
             "markdownDescription": "- 指定要下载的文件 URL\n- 可使用数组以下载多个文件，但 [abyss](https://abyss.abgox.com) 要求压缩包必须提前\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1.zip\",\n        \"https://example.com/file2.exe\"\n    ]\n  ```\n\n- 可以在 URL 末尾添加 `#/xxx.exe` 以便于在 `bin`、`shortcuts` 中使用\n\n  ```json\n    \"url\": \"https://example.org/xxx.1.2.3.exe#/xxx.exe\",\n    \"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\",\n    \"bin\": \"app\\\\xxx.exe\",\n    \"shortcuts\": [\n        [\n            \"app\\\\xxx.exe\",\n            \"xxx\"\n        ]\n    ]\n  ```",
@@ -1733,7 +1753,7 @@
         },
         "url_autoupdate": {
             "title": "下载地址",
-            "markdownDescription": "- 指定要下载的文件 URL，通常需要 `$version` 等进行版本匹配\n- 可使用数组以下载多个文件，但 [abyss](https://abyss.abgox.com) 要求压缩包必须提前\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1-$version.zip\",\n        \"https://example.com/file2-$version.exe\"\n    ]\n  ```\n\n- 可以在 URL 末尾添加 `#/xxx.exe`，以便于在 `bin`、`shortcuts` 中使用\n\n  ```json\n    \"url\": \"https://example.org/xxx-$version.exe#/xxx.exe\"\n  ```\n\n### 版本匹配\n\n- 以版本号 `3.7.1.2-rc.1` 为例\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`\n\n- 除了以上内置的[版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)，`checkver.regex` 中每个捕获组也会生成对应的变量\n  - `$match1`、`$match2`、...\n  - 具名捕获组则生成 `$matchName1`、`$matchName2`、...\n  - 如果使用了它们，则无法使用 `scoop install app@1.2.3` 安装指定版本",
+            "markdownDescription": "- 指定要下载的文件 URL，通常需要 `$version` 等进行版本匹配\n- 可使用数组以下载多个文件，但 [abyss](https://abyss.abgox.com) 要求压缩包必须提前\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1-$version.zip\",\n        \"https://example.com/file2-$version.exe\"\n    ]\n  ```\n\n- 可以在 URL 末尾添加 `#/xxx.exe`，以便于在 `bin`、`shortcuts` 中使用\n\n  ```json\n    \"url\": \"https://example.org/xxx-$version.exe#/xxx.exe\"\n  ```\n\n### 版本匹配\n\n- 以版本号 `3.7.1.2-rc.1` 为例\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`\n\n- 除了以上内置的[版本变量](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables)，`checkver.regex` 中每个捕获组也会生成对应的变量\n  - `$match1`、`$match2`、...\n  - 具名捕获组则生成 `$matchName1`、`$matchName2`、...\n  - 如果使用了它们，则无法使用 `scoop install app@1.2.3` 安装指定版本\n- 使用 `winget` 来源时，额外提供 `$matchX64` / `$matchX86` / `$matchArm64`（对应架构的安装包 URL）",
             "examples": [
                 "https://github.com/abgox/abyss/releases/download/empty/empty"
             ],
@@ -1744,18 +1764,12 @@
                 "allOf": [
                     {
                         "$ref": "#/definitions/str"
-                    },
-                    {
-                        "$ref": "#/definitions/version_variable_validation"
                     }
                 ]
             },
             "allOf": [
                 {
                     "$ref": "#/definitions/str_or_arr_no_all_space"
-                },
-                {
-                    "$ref": "#/definitions/version_variable_validation"
                 },
                 {
                     "$ref": "#/definitions/use_string_if_single"
@@ -1805,7 +1819,7 @@
             ],
             "properties": {
                 "mode": {
-                    "markdownDescription": "获取 hash 的模式\n\n- `github`: 获取 Github 自动生成的 hash，详情查看 [Github blog](https://github.blog/changelog/2025-06-03-releases-now-expose-digests-for-release-assets/)\n- `json`: 通过 JSONPath 从 JSON 文件中提取\n- `xpath`: 通过 XML 文件提取",
+                    "markdownDescription": "获取 hash 的模式\n\n- `github`: 获取 GitHub 自动生成的 hash，详情查看 [GitHub blog](https://github.blog/changelog/2025-06-03-releases-now-expose-digests-for-release-assets/)\n- `json`: 通过 JSONPath 从 JSON 文件中提取\n- `xpath`: 通过 XML 文件提取",
                     "enum": [
                         "github",
                         "json",
@@ -3115,36 +3129,216 @@
         },
         "checkver": {
             "title": "版本检查配置",
-            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的更新版本\n- 字符串：在主页上查找版本的 RegEx\n- 对象：更丰富的配置\n- 参考: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate",
+            "markdownDescription": "- 应用维护者和开发者可以使用 bin/checkver 工具来检查应用的版本更新\n- 通过来源字段指定版本获取方式，通过修饰字段控制版本提取与格式\n- 来源字段（选择一个）：\n  - 预设字段：`github` / `commit` / `winget` / `psgallery` / `from_installer` / `url`\n  - 自由来源：`script`\n- 修饰字段（可组合）：`regex` / `jsonpath` / `xpath` / `replace` / `reverse` / `max` / `dynamic` / `redirect`",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
             "examples": [
                 {
-                    "script": [
-                        ". $pwd\\util\\1.ps1",
-                        "A-Get-VersionFromGithub"
-                    ],
-                    "regex": "(.+)"
+                    "github": {
+                        "channel": "latest"
+                    }
                 }
             ],
             "properties": {
-                "format": {
-                    "markdownDescription": "版本号格式对齐\n\n- 定义主版本号的基准段数（用以点分隔的 `0` 占位，如 `0.0` 或 `0.0.0.0`）\n- **不足时补零**：`0.0.0.0` 会将 `1.2` 自动补全为 `1.2.0.0`；若为 `1.2.3.4` 则保持不变\n- **多余尾零裁剪**：`0.0` 会将 `1.2.0` 裁剪为 `1.2`；若为 `1.2.3`（末尾非零）则保持不变",
-                    "type": "string",
-                    "examples": [
-                        "0.0",
-                        "0.0.0",
-                        "0.0.0.0"
+                "github": {
+                    "type": "object",
+                    "markdownDescription": "从 GitHub Release 获取版本",
+                    "additionalProperties": false,
+                    "required": [
+                        "channel"
                     ],
-                    "allOf": [
+                    "examples": [
                         {
-                            "$ref": "#/definitions/str_no_all_space"
-                        },
-                        {
-                            "pattern": "^0(\\.0)+$",
-                            "errorMessage": "格式必须为以点分隔的 0 组合，例如 0.0 或 0.0.0.0"
+                            "channel": "latest"
                         }
+                    ],
+                    "properties": {
+                        "channel": {
+                            "type": "string",
+                            "markdownDescription": "指定从 GitHub 获取版本的策略",
+                            "enum": [
+                                "latest",
+                                "stable",
+                                "preview",
+                                "newest"
+                            ],
+                            "markdownEnumDescriptions": [
+                                "**最新正式版** (直接获取 GitHub 标记为 `latest` 的 Release)",
+                                "**最新稳定版** (按时间倒序获取第一个标记为 `prerelease: false` 的 Release)",
+                                "**最新预览版** (按时间倒序获取第一个标记为 `prerelease: true` 的 Release)",
+                                "**绝对最新版** (按时间倒序获取第一个 Release)"
+                            ]
+                        },
+                        "repo": {
+                            "type": "string",
+                            "markdownDescription": "指定 GitHub 仓库\n\n- 格式：`owner/repo`\n- 省略时自动从 `autoupdate` 和 `homepage` 中提取",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                },
+                                {
+                                    "pattern": "^[^/]+/[^/]+$"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "commit": {
+                    "type": "object",
+                    "markdownDescription": "基于 GitHub 最新提交 (date/sha) 进行版本检查",
+                    "additionalProperties": false,
+                    "required": [
+                        "format"
+                    ],
+                    "examples": [
+                        {
+                            "format": "date"
+                        }
+                    ],
+                    "properties": {
+                        "format": {
+                            "type": "string",
+                            "markdownDescription": "版本号格式",
+                            "enum": [
+                                "date",
+                                "date-sha"
+                            ],
+                            "markdownEnumDescriptions": [
+                                "`YYYY.MM.DD.HHMMSS`",
+                                "`YYYY.MM.DD.HHMMSS-sha`"
+                            ]
+                        },
+                        "path": {
+                            "type": "string",
+                            "markdownDescription": "仅追踪指定文件或目录的提交\n\n- 省略时追踪仓库的所有提交\n- 适用于从大仓库分发单文件/单目录的场景",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "branch": {
+                            "type": "string",
+                            "markdownDescription": "需要追踪的 Git 分支名称\n\n- 省略时使用仓库默认分支",
+                            "examples": [
+                                "main",
+                                "develop"
+                            ],
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "repo": {
+                            "type": "string",
+                            "markdownDescription": "指定 Git 仓库\n\n- 格式：`owner/repo`\n- 省略时自动从 `autoupdate` 和 `homepage` 中提取",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                },
+                                {
+                                    "pattern": "^[^/]+/[^/]+$"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "winget": {
+                    "type": "object",
+                    "markdownDescription": "从 [WinGet](https://github.com/microsoft/winget-pkgs) (Windows Package Manager) 中获取版本与元数据\n\n使用后，`autoupdate` 中的写法：\n- `url` 使用 `$matchX64` / `$matchX86` / `$matchArm64` 变量\n- `hash` 通过 `_.json` 提取，如 `{ \"url\": \"_.json\", \"jsonpath\": \"$.x64_user.InstallerSha256\" }`",
+                    "additionalProperties": false,
+                    "required": [
+                        "id"
+                    ],
+                    "examples": [
+                        {
+                            "id": "",
+                            "ext": "exe"
+                        }
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "markdownDescription": "WinGet 的包标识符 `PackageIdentifier`，例如 `Microsoft.PowerShell`",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                },
+                                {
+                                    "pattern": "^[^.]+(\\.[^.]+)+$",
+                                    "errorMessage": "格式必须为以点分隔的标识符，例如 `Microsoft.PowerShell`"
+                                }
+                            ]
+                        },
+                        "ext": {
+                            "type": "string",
+                            "markdownDescription": "指定筛选安装包的文件扩展名\n\n- 用于在 WinGet 清单多个安装包中匹配特定后缀\n- 省略时匹配所有类型",
+                            "enum": [
+                                "exe",
+                                "msi",
+                                "msix",
+                                "msixbundle",
+                                "appx",
+                                "zip",
+                                "7z"
+                            ]
+                        }
+                    }
+                },
+                "psgallery": {
+                    "type": "object",
+                    "markdownDescription": "从 [PowerShell Gallery](https://www.powershellgallery.com) 获取版本",
+                    "additionalProperties": false,
+                    "required": [
+                        "channel"
+                    ],
+                    "examples": [
+                        {
+                            "channel": "stable"
+                        }
+                    ],
+                    "properties": {
+                        "channel": {
+                            "type": "string",
+                            "markdownDescription": "指定从 PowerShell Gallery 获取版本的策略",
+                            "enum": [
+                                "stable",
+                                "preview",
+                                "newest"
+                            ],
+                            "markdownEnumDescriptions": [
+                                "**最新稳定版** (忽略 `-preview`/`-beta` 等后缀的预发布版本，仅获取最新稳定版)",
+                                "**最新预览版** (仅获取 `-preview`/`-beta`/`-rc` 等后缀的预发布版本)",
+                                "**绝对最新版** (忽略版本类型，直接获取最新发布的版本，包含预览版)"
+                            ]
+                        }
+                    }
+                },
+                "from_installer": {
+                    "type": "boolean",
+                    "markdownDescription": "从安装包中提取版本号\n\n- 自动分级下载安装包片段，读取 `FileVersion` > `ProductVersion`\n- 安装包来自于 `autoupdate` 中的 url，必须是固定地址（不含 `$version` 等占位符）\n- 仅在没有其他更可靠的版本来源（如 GitHub Releases、WinGet 等）时才使用",
+                    "enum": [
+                        true
+                    ]
+                },
+                "url": {
+                    "markdownDescription": "版本所在页面\n\n- 获取页面内容后，通过 `regex` 匹配版本\n- `regex` 省略时默认为 `(.+)`，即把整个内容作为版本",
+                    "$ref": "#/definitions/str_url_validation"
+                },
+                "dynamic": {
+                    "type": "boolean",
+                    "markdownDescription": "页面需要动态渲染\n\n- 配合 `url` 使用：获取页面时执行 JavaScript 后再匹配版本\n- 使用本字段时必须同时定义 `url`",
+                    "enum": [
+                        true
+                    ]
+                },
+                "redirect": {
+                    "type": "boolean",
+                    "markdownDescription": "URL 会重定向\n\n- 配合 `url` 使用：先解析 URL 的重定向，拿到最终地址后再匹配版本\n- 使用本字段时必须同时定义 `url`",
+                    "enum": [
+                        true
                     ]
                 },
                 "max": {
@@ -3160,160 +3354,31 @@
                         }
                     ]
                 },
-                "url": {
-                    "markdownDescription": "版本所在页面",
-                    "$ref": "#/definitions/str_url_validation"
-                },
                 "script": {
-                    "markdownDescription": "可包含 PowerShell 命令的字符串或字符串数组，用于跟踪多个链接",
-                    "type": "array",
-                    "minItems": 1,
-                    "examples": [
-                        [
-                            ". $pwd\\util\\1.ps1",
-                            "A-Get-VersionFromGithub"
-                        ]
-                    ],
-                    "items": {
-                        "type": "string",
-                        "allOf": [
-                            {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在注释中出现"
-                            }
-                        ]
-                    },
+                    "markdownDescription": "执行 PowerShell 命令以获取版本信息\n\n- 最终输出作为匹配内容，由 `regex` 捕获版本\n- `regex` 省略时默认为 `(.+)`，即整个输出作为版本",
                     "allOf": [
                         {
-                            "items": [
-                                {
-                                    "const": ". $pwd\\util\\1.ps1"
-                                }
-                            ],
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "contains": {
-                                            "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
-                                        }
-                                    },
-                                    "then": {
-                                        "items": [
-                                            {},
-                                            {
-                                                "pattern": "\\$res, \\$out = A-Get-InstallerInfoFromWinget",
-                                                "errorMessage": "格式错误，例如: \"$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'\""
-                                            },
-                                            {
-                                                "const": "$out",
-                                                "markdownDescription": "默认的安装信息\n- 它提供了版本号、URL 等信息，可以被 `regex`属性匹配\n- 你也可以通过自定义去覆盖它们\n- 例如，你可以在后面追加以下内容:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
-                                            }
-                                        ],
-                                        "allOf": [
-                                            {
-                                                "items": {
-                                                    "anyOf": [
-                                                        {},
-                                                        {
-                                                            "pattern": "\\$res, \\$out = A-Get-InstallerInfoFromWinget",
-                                                            "markdownDescription": "获取 Winget 中指定应用的安装信息\n\n- 需要两个参数\n  - `PackageIdentifier`: 应用在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中的 `PackageIdentifier`\n  - `InstallerType`: 指定安装包类型后缀，以在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中提取 url 后缀匹配的安装包，空字符表示任意\n- `$res`: 从 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中解析的安装包信息\n- `$out`: 默认的安装信息，为 `regex` 属性提供默认的版本信息匹配内容，可以搭配 `$res` 进行自定义覆盖\n\n### 示例\n\n- 获取 Microsoft Edge 的安装包信息，提取 url 后缀为 `.msi` 的安装包信息\n\n  ```json\n  \"$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'\"\n  ```"
-                                                        },
-                                                        {
-                                                            "const": "\"ver:$($res.PackageVersion);\"",
-                                                            "markdownDescription": "输出应用的版本号"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.x64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.x64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($res.x86_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x86 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($res.x86_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 x86 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($res.arm64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($res.arm64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 arm64 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.neutral_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 neutral 安装程序 URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.neutral_user.InstallerUrl);\"",
-                                                            "markdownDescription": "输出应用的 neutral 安装程序 URL"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
+                            "$ref": "#/definitions/str_or_arr"
+                        },
+                        {
+                            "items": {
+                                "type": "string",
+                                "allOf": [
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "包含不允许的中文字符\n（）‘’“”，：？！—\n它们只允许在注释中出现"
                                     }
-                                },
-                                {
-                                    "items": {
-                                        "anyOf": [
-                                            {},
-                                            {
-                                                "const": ". $pwd\\util\\1.ps1",
-                                                "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的\n- 它使用版本号进行命名\n  - v1 版本: `1.ps1`\n  - v2 版本: `2.ps1`\n- 这里永远使用最新版本，旧版本仅用于兼容"
-                                            },
-                                            {
-                                                "const": "A-Get-VersionFromGithub",
-                                                "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
-                                            },
-                                            {
-                                                "const": "A-Get-LatestVersionFromGithub",
-                                                "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
-                                            },
-                                            {
-                                                "const": "A-Get-PreVersionFromGithub",
-                                                "markdownDescription": "从 Github 获取最新的预发布版本\n- 它会包含版本类型中的 `2`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
-                                            },
-                                            {
-                                                "const": "A-Get-NewestVersionFromGithub",
-                                                "markdownDescription": "从 Github 获取最新的发布版本\n- 它会包含版本类型中的 `1`, `2`, `3`\n- 它会过滤 `v` 或 `V` 前缀\n  - `v1.2.3` => `1.2.3`\n  - `app-v1.2.3` => `app-1.2.3`\n### 版本类型\n1. 最新的稳定版本: `latest`\n2. 最新的预发布版本: `prerelease`\n3. 其他版本"
-                                            },
-                                            {
-                                                "const": "A-Get-VersionFromInstaller",
-                                                "markdownDescription": "从安装程序中提取版本号\n\n- 读取顺序: `FileVersion` > `ProductVersion`\n- 采用分级 Range 下载策略，从小范围逐步尝试\n- 若所有分级尝试均失败，最终会下载完整的安装程序兜底\n\n### 注意事项\n\n- 仅在没有其他更可靠的方式（如 checkver 接口、GitHub Releases 等）获取版本号时才考虑使用\n- 安装程序地址必须是固定地址，不能是包含版本占位符的模板，如 `$version`"
-                                            },
-                                            {
-                                                "const": "A-Get-VersionFromPowerShellGallery",
-                                                "markdownDescription": "从 [PowerShell Gallery](https://www.powershellgallery.com/) 获取版本"
-                                            },
-                                            {
-                                                "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                "markdownDescription": "获取 Winget 中指定应用的安装信息\n\n- 需要两个参数\n  - `PackageIdentifier`: 应用在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中的 `PackageIdentifier`\n  - `InstallerType`: 指定安装包类型后缀，以在 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中提取 url 后缀匹配的安装包，空字符表示任意\n- `$res`: 从 [winget-pkgs](https://github.com/microsoft/winget-pkgs) 中解析的安装包信息\n- `$out`: 默认的安装信息，为 `regex` 属性提供默认的版本信息匹配内容，可以搭配 `$res` 进行自定义覆盖\n\n### 示例\n\n- 获取 Microsoft Edge 的安装包信息，提取 url 后缀为 `.msi` 的安装包信息\n\n  ```json\n  \"$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'\"\n  ```"
-                                            },
-                                            {
-                                                "const": "A-Get-DynamicPageFromUrl",
-                                                "markdownDescription": "获取动态加载的网页内容\n\n- 它会执行最多 10 秒的 JavaScript 以获取最终 DOM"
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
+                                ]
+                            }
                         }
                     ]
                 },
                 "regex": {
-                    "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 限制版本号格式为数字和点号\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- 可以使用命名捕获组将版本号存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- 严格匹配首尾\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
+                    "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n- 省略时默认为 `(.+)`，即匹配全部内容（配合 `url`/`script` 来源时，将整个内容作为版本）\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 限制版本号格式为数字和点号\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- 可以使用命名捕获组将版本号存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- 严格匹配首尾\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
                     "type": "string",
                     "examples": [
-                        "(.+)",
                         "([\\d.]+)",
                         "^([\\d.]+)$",
                         "^(?<version>[\\d.]+)$"
@@ -3321,16 +3386,20 @@
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_no_all_space"
+                        },
+                        {
+                            "pattern": "(?<!\\\\)\\(",
+                            "errorMessage": "必须包含至少一个捕获组，例如 `([\\d.]+)` 或 `(?<version>[\\d.]+)`"
                         }
                     ]
                 },
                 "jsonpath": {
-                    "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n\n### 示例\n\n- 提取 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的属性中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 属性的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
+                    "markdownDescription": "使用 JSONPath 表达式从 JSON 端点检索版本，可以使用点标注或括号标注\n\n- 使用本字段时必须同时定义 `url`\n- 可与 `regex` 组合：先通过 `jsonpath` 提取，再通过 `regex` 精炼\n\n### 示例\n\n- 提取 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的属性中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 属性的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
                     "type": "string",
                     "$ref": "#/definitions/str_no_all_space"
                 },
                 "xpath": {
-                    "markdownDescription": "查找版本的 XPath 表达式",
+                    "markdownDescription": "使用 XPath 表达式从 XML 页面检索版本\n\n- 使用本字段时必须同时定义 `url`\n- 可与 `regex` 组合：先通过 `xpath` 提取，再通过 `regex` 精炼\n- 提取的是元素的文本内容，不支持属性值",
                     "type": "string",
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3339,56 +3408,222 @@
                     "$ref": "#/definitions/bool"
                 },
                 "replace": {
-                    "markdownDescription": "用计算值替换匹配值\n\n### 示例\n\n- 以 `${1}.${2}.${3}.${4}${5}${6}` 为例\n  - `${1}` 表示第一个匹配组\n  - `${2}` 表示第二个匹配组\n  - ...",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space",
-                    "anyOf": [
-                        {},
-                        {
-                            "enum": [
-                                "${1}.${2}.${3}.${4}${5}${6}"
-                            ]
-                        }
-                    ]
-                },
-                "useragent": {
-                    "markdownDescription": "用于获取网页内容的 User-Agent",
+                    "markdownDescription": "用计算值替换匹配值，通过捕获组组装版本号\n\n- `${1}`、`${2}`：数字捕获组\n- `${name}`：命名捕获组",
                     "type": "string",
                     "$ref": "#/definitions/str_no_all_space"
                 }
             },
-            "if": {
-                "required": [
-                    "script"
-                ]
-            },
-            "then": {
-                "if": {
-                    "properties": {
-                        "script": {
-                            "contains": {
-                                "pattern": "(?<!#.*)A-Get-DynamicPageFromUrl"
+            "allOf": [
+                {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "github"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "script"
+                                ]
                             }
-                        }
+                        ]
+                    },
+                    "else": {
+                        "not": true,
+                        "errorMessage": "请添加 github/commit/winget/psgallery/from_installer/url/script 其中一个"
                     }
                 },
-                "then": {
-                    "required": [
-                        "url"
-                    ]
-                }
-            },
-            "else": {
-                "if": {
-                    "required": [
-                        "url"
-                    ]
+                {
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "github",
+                                    "commit"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "winget"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "winget"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "from_installer",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "from_installer",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "url",
+                                    "script"
+                                ]
+                            }
+                        ]
+                    },
+                    "errorMessage": "github/commit/winget/psgallery/from_installer/url/script 只能使用其中一个"
                 },
-                "else": {
-                    "not": true,
-                    "errorMessage": "如果不使用 script，则必须指定 url 属性"
+                {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "redirect"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "dynamic"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "jsonpath"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "xpath"
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "required": [
+                            "url"
+                        ]
+                    }
                 }
-            }
+            ]
         },
         "github_release_url": {
             "type": [
@@ -3718,7 +3953,7 @@
         },
         "autoupdate": {
             "title": "自动更新",
-            "markdownDescription": "- 它用于配置清单的自动更新规则，需要搭配 `checkver`\n- 远程仓库会通过 [Github Actions](https://github.com/abgox/ScoopInstaller-GithubActions) 定期运行 `checkver`\n- 更新时会替换清单中对应的字段\n  - `url`\n  - `extract_dir`\n  - `bin`\n  - `shortcuts`\n  - ...",
+            "markdownDescription": "- 它用于配置清单的自动更新规则，需要搭配 `checkver`\n- 远程仓库会通过 [GitHub Actions](https://github.com/abgox/ScoopInstaller-GitHubActions) 定期运行 `checkver`\n- 更新时会替换清单中对应的字段\n  - `url`\n  - `extract_dir`\n  - `bin`\n  - `shortcuts`\n  - ...",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
@@ -4199,81 +4434,71 @@
                                     "anyOf": [
                                         {
                                             "required": [
-                                                "msix"
+                                                "bin"
                                             ]
                                         },
                                         {
                                             "required": [
-                                                "font"
+                                                "shortcuts"
                                             ]
                                         },
                                         {
                                             "required": [
-                                                "psmodule"
+                                                "env_add_path"
                                             ]
                                         },
                                         {
-                                            "not": {
-                                                "anyOf": [
-                                                    {
-                                                        "properties": {
-                                                            "pre_install": {
-                                                                "contains": {
-                                                                    "pattern": "(?<!#.*)A-Install-.+"
-                                                                }
+                                            "allOf": [
+                                                {
+                                                    "not": {
+                                                        "anyOf": [
+                                                            {
+                                                                "required": [
+                                                                    "msix"
+                                                                ]
                                                             }
-                                                        }
-                                                    },
-                                                    {
-                                                        "required": [
-                                                            "bin"
                                                         ]
-                                                    },
-                                                    {
-                                                        "required": [
-                                                            "shortcuts"
-                                                        ]
-                                                    },
-                                                    {
-                                                        "properties": {
-                                                            "architecture": {
-                                                                "patternProperties": {
-                                                                    "": {
-                                                                        "anyOf": [
-                                                                            {
-                                                                                "required": [
-                                                                                    "bin"
-                                                                                ]
-                                                                            },
-                                                                            {
-                                                                                "required": [
-                                                                                    "shortcuts"
-                                                                                ]
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
+                                                    }
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "pre_install": {
+                                                            "contains": {
+                                                                "pattern": "(?<!#.*)A-Install-.+"
                                                             }
                                                         }
                                                     }
-                                                ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "architecture"
+                                            ],
+                                            "properties": {
+                                                "architecture": {
+                                                    "patternProperties": {
+                                                        "": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "required": [
+                                                                        "bin"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "required": [
+                                                                        "shortcuts"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     ]
                                 },
                                 "then": {
-                                    "properties": {
-                                        "pre_uninstall": {
-                                            "items": {
-                                                "not": {
-                                                    "pattern": "(?<!#.*)A-Stop-Process"
-                                                },
-                                                "errorMessage": "它不需要 A-Stop-Process"
-                                            }
-                                        }
-                                    }
-                                },
-                                "else": {
                                     "properties": {
                                         "pre_uninstall": {
                                             "if": {
@@ -4294,6 +4519,18 @@
                                                     "pattern": "(?<!#.*)A-Stop-Process"
                                                 },
                                                 "errorMessage": "缺少 A-Stop-Process"
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "pre_uninstall": {
+                                            "items": {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-Stop-Process"
+                                                },
+                                                "errorMessage": "它不需要 A-Stop-Process"
                                             }
                                         }
                                     }
@@ -4630,263 +4867,93 @@
             "if": {
                 "required": [
                     "checkver"
-                ]
+                ],
+                "properties": {
+                    "checkver": {
+                        "required": [
+                            "winget"
+                        ]
+                    }
+                }
             },
             "then": {
-                "allOf": [
-                    {
-                        "if": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "script"
-                                    ],
-                                    "properties": {
-                                        "script": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Get-VersionFrom(Installer|PowerShellGallery)"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "regex"
-                                    ],
-                                    "properties": {
-                                        "regex": {
-                                            "examples": [
-                                                "(.+)"
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "script"
-                                    ],
-                                    "properties": {
-                                        "script": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Get-(Latest|Pre|Newest)?VersionFromGithub"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "regex"
-                                    ]
-                                }
-                            },
-                            "if": {
-                                "properties": {
-                                    "checkver": {
-                                        "required": [
-                                            "url"
-                                        ]
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "checkver": {
+                "properties": {
+                    "autoupdate": {
+                        "properties": {
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
                                         "properties": {
                                             "url": {
-                                                "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)"
+                                                "examples": [
+                                                    "$matchX64",
+                                                    "$matchX64#/dl.7z",
+                                                    "$matchX64#/dl.exe",
+                                                    "$matchX64#/dl.msi_",
+                                                    "$matchArm64",
+                                                    "$matchArm64#/dl.7z",
+                                                    "$matchArm64#/dl.exe",
+                                                    "$matchArm64#/dl.msi_",
+                                                    "$matchX86",
+                                                    "$matchX86#/dl.7z",
+                                                    "$matchX86#/dl.exe",
+                                                    "$matchX86#/dl.msi_"
+                                                ]
                                             }
-                                        }
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "url": {
-                                                "allOf": [
-                                                    {
-                                                        "$ref": "#/definitions/str_or_arr_no_all_space"
-                                                    },
-                                                    {
-                                                        "pattern": "^https?://github\\.com/[^/]+/[^/]+",
-                                                        "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithub，它必须是一个 Github URL，否则请定义 checkver.url"
-                                                    },
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "^https?://github\\.com/[^/]+/[^/]+"
-                                                        },
-                                                        "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithub，它至少有一个 Github URL，否则请定义 checkver.url"
-                                                    }
+                                        },
+                                        "if": {
+                                            "properties": {
+                                                "url": {
+                                                    "pattern": "^https?://"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "if": {
+                                                "required": [
+                                                    "hash"
                                                 ]
                                             },
-                                            "architecture": {
-                                                "patternProperties": {
-                                                    "": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "allOf": [
-                                                                    {
-                                                                        "$ref": "#/definitions/str_or_arr_no_all_space"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^https?://github\\.com/[^/]+/[^/]+",
-                                                                        "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithub，它必须是一个 Github URL，否则请定义 checkver.url"
-                                                                    },
-                                                                    {
-                                                                        "contains": {
-                                                                            "pattern": "^https?://github\\.com/[^/]+/[^/]+"
-                                                                        },
-                                                                        "errorMessage": "由于 script 使用了 A-Get-(Latest|Pre|Newest)?VersionFromGithub，它至少有一个 Github URL，否则请定义 checkver.url"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
+                                            "then": {
+                                                "properties": {
+                                                    "hash": {
+                                                        "not": true,
+                                                        "errorMessage": "无效的值"
                                                     }
                                                 }
                                             }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "script"
-                                    ],
-                                    "properties": {
-                                        "script": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "properties": {
-                                        "regex": {
-                                            "const": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-                                            "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，regex 只能是 \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?\""
                                         },
-                                        "script": {
-                                            "minItems": 3,
-                                            "items": [
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "$out"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                },
-                                "autoupdate": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "": {
+                                        "else": {
+                                            "required": [
+                                                "hash"
+                                            ],
+                                            "properties": {
+                                                "hash": {
+                                                    "required": [
+                                                        "url",
+                                                        "jsonpath"
+                                                    ],
+                                                    "examples": [
+                                                        {
+                                                            "url": "_.json",
+                                                            "jsonpath": ""
+                                                        }
+                                                    ],
                                                     "properties": {
                                                         "url": {
-                                                            "examples": [
-                                                                "$matchX64",
-                                                                "$matchX64#/dl.7z",
-                                                                "$matchX64#/dl.exe",
-                                                                "$matchX64#/dl.msi_",
-                                                                "$matchArm64",
-                                                                "$matchArm64#/dl.7z",
-                                                                "$matchArm64#/dl.exe",
-                                                                "$matchArm64#/dl.msi_",
-                                                                "$matchX86",
-                                                                "$matchX86#/dl.7z",
-                                                                "$matchX86#/dl.exe",
-                                                                "$matchX86#/dl.msi_"
-                                                            ]
-                                                        }
-                                                    },
-                                                    "if": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "pattern": "^https?://"
-                                                            }
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "if": {
-                                                            "required": [
-                                                                "hash"
-                                                            ]
+                                                            "const": "_.json"
                                                         },
-                                                        "then": {
-                                                            "properties": {
-                                                                "hash": {
-                                                                    "not": true,
-                                                                    "errorMessage": "无效的值"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    "else": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "url": {
-                                                                "markdownDescription": "- 对于由 `A-Get-InstallerInfoFromWinget` 提供的安装包 URL\n- 它通常使用类似 `$matchX64` 的变量\n- 可通过属性补全查看一些示例"
-                                                            },
-                                                            "hash": {
-                                                                "required": [
-                                                                    "url",
-                                                                    "jsonpath"
-                                                                ],
-                                                                "examples": [
-                                                                    {
-                                                                        "url": "temp-autoupdate.json",
-                                                                        "jsonpath": ""
-                                                                    }
-                                                                ],
-                                                                "properties": {
-                                                                    "url": {
-                                                                        "markdownDescription": "安装信息所在的临时文件\n- `A-Get-InstallerInfoFromWinget` 会将信息临时写入项目根目录下的 `temp-autoupdate.json`\n- 因此，它只能是 `temp-autoupdate.json`",
-                                                                        "const": "temp-autoupdate.json",
-                                                                        "errorMessage": "由于使用了 A-Get-InstallerInfoFromWinget，hash.url 只能是 \"temp-autoupdate.json\""
-                                                                    },
-                                                                    "jsonpath": {
-                                                                        "markdownDescription": "指定 hash\n- 根据 `temp-autoupdate.json` 选择正确的属性",
-                                                                        "enum": [
-                                                                            "$.x64_machine.InstallerSha256",
-                                                                            "$.arm64_machine.InstallerSha256",
-                                                                            "$.x86_machine.InstallerSha256",
-                                                                            "$.x64_user.InstallerSha256",
-                                                                            "$.arm64_user.InstallerSha256",
-                                                                            "$.x86_user.InstallerSha256",
-                                                                            "$.neutral_machine.InstallerSha256",
-                                                                            "$.neutral_user.InstallerSha256"
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            }
+                                                        "jsonpath": {
+                                                            "enum": [
+                                                                "$.x64_machine.InstallerSha256",
+                                                                "$.arm64_machine.InstallerSha256",
+                                                                "$.x86_machine.InstallerSha256",
+                                                                "$.x64_user.InstallerSha256",
+                                                                "$.arm64_user.InstallerSha256",
+                                                                "$.x86_user.InstallerSha256",
+                                                                "$.neutral_machine.InstallerSha256",
+                                                                "$.neutral_user.InstallerSha256"
+                                                            ]
                                                         }
                                                     }
                                                 }
@@ -4897,7 +4964,7 @@
                             }
                         }
                     }
-                ]
+                }
             }
         },
         {
@@ -5240,6 +5307,89 @@
                                 ]
                             }
                         ]
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "checkver": {
+                        "required": [
+                            "from_installer"
+                        ]
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "autoupdate": {
+                        "properties": {
+                            "url": {
+                                "$ref": "#/definitions/fixed_url_validation"
+                            },
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
+                                        "properties": {
+                                            "url": {
+                                                "$ref": "#/definitions/fixed_url_validation"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "else": {
+                "properties": {
+                    "autoupdate": {
+                        "properties": {
+                            "url": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/version_variable_validation"
+                                    },
+                                    {
+                                        "if": {
+                                            "type": "array"
+                                        },
+                                        "then": {
+                                            "items": {
+                                                "$ref": "#/definitions/version_variable_validation"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
+                                        "properties": {
+                                            "url": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/definitions/version_variable_validation"
+                                                    },
+                                                    {
+                                                        "if": {
+                                                            "type": "array"
+                                                        },
+                                                        "then": {
+                                                            "items": {
+                                                                "$ref": "#/definitions/version_variable_validation"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

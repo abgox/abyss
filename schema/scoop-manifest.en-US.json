@@ -1700,6 +1700,26 @@
                 "errorMessage": "No valid version variable detected. See examples:\n$version\n$majorVersion\n$matchHead\n$match1"
             }
         },
+        "fixed_url_validation": {
+            "markdownDescription": "Fixed URL validation (without version variables)",
+            "if": {
+                "type": "string"
+            },
+            "then": {
+                "not": {
+                    "pattern": "(?i)\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[a-z][a-z0-9]*)"
+                },
+                "errorMessage": "The installer URL must be a fixed URL and cannot contain version variables (e.g. $version)"
+            },
+            "else": {
+                "items": {
+                    "not": {
+                        "pattern": "(?i)\\$(version|majorVersion|minorVersion|patchVersion|buildVersion|preReleaseVersion|dotVersion|dashVersion|underscoreVersion|cleanVersion|matchHead|matchTail|match\\d+|match[a-z][a-z0-9]*)"
+                    },
+                    "errorMessage": "The installer URL must be a fixed URL and cannot contain version variables (e.g. $version)"
+                }
+            }
+        },
         "url": {
             "title": "Download URL",
             "markdownDescription": "- Specifies the URL(s) of the file(s) to download\n- An array can be used to download multiple files, but [abyss](https://abyss.abgox.com) requires archive files to come first\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1.zip\",\n        \"https://example.com/file2.exe\"\n    ]\n  ```\n\n- You can append `#/xxx.exe` to the end of the URL for easier use in `bin` and `shortcuts`\n\n  ```json\n    \"url\": \"https://example.org/xxx.1.2.3.exe#/xxx.exe\",\n    \"hash\": \"36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068\",\n    \"bin\": \"app\\\\xxx.exe\",\n    \"shortcuts\": [\n        [\n            \"app\\\\xxx.exe\",\n            \"xxx\"\n        ]\n    ]\n  ```",
@@ -1733,7 +1753,7 @@
         },
         "url_autoupdate": {
             "title": "Download URL",
-            "markdownDescription": "- Specifies the URL(s) of the file(s) to download, usually requiring `$version` and similar variables for version matching\n- An array can be used to download multiple files, but [abyss](https://abyss.abgox.com) requires archive files to come first\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1-$version.zip\",\n        \"https://example.com/file2-$version.exe\"\n    ]\n  ```\n\n- You can append `#/xxx.exe` to the end of the URL for easier use in `bin` and `shortcuts`\n\n  ```json\n    \"url\": \"https://example.org/xxx-$version.exe#/xxx.exe\"\n  ```\n\n### Version matching\n\n- Using the version `3.7.1.2-rc.1` as an example\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`\n\n- In addition to the built-in [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables) above, each capturing group in `checkver.regex` also generates a corresponding variable\n  - `$match1`, `$match2`, ...\n  - Named capturing groups generate `$matchName1`, `$matchName2`, ...\n  - If these are used, installing a specific version via `scoop install app@1.2.3` will not be possible",
+            "markdownDescription": "- Specifies the URL(s) of the file(s) to download, usually requiring `$version` and similar variables for version matching\n- An array can be used to download multiple files, but [abyss](https://abyss.abgox.com) requires archive files to come first\n\n  ```json\n    \"url\": [\n        \"https://example.com/file1-$version.zip\",\n        \"https://example.com/file2-$version.exe\"\n    ]\n  ```\n\n- You can append `#/xxx.exe` to the end of the URL for easier use in `bin` and `shortcuts`\n\n  ```json\n    \"url\": \"https://example.org/xxx-$version.exe#/xxx.exe\"\n  ```\n\n### Version matching\n\n- Using the version `3.7.1.2-rc.1` as an example\n  - `$version`: `3.7.1.2-rc.1`\n    - `$majorVersion`: `3`\n    - `$minorVersion`: `7`\n    - `$patchVersion`: `1`\n    - `$buildVersion`: `2`\n    - `$preReleaseVersion`: `rc.1`\n  - `$dotVersion`: `3.7.1.2.rc.1`\n  - `$dashVersion`: `3-7-1-2-rc-1`\n  - `$underscoreVersion`: `3_7_1_2_rc_1`\n  - `$cleanVersion`: `3712rc1`\n  - `$matchHead`: `3.7.1`\n  - `$matchTail`: `.2-rc.1`\n\n- In addition to the built-in [version variables](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate#version-variables) above, each capturing group in `checkver.regex` also generates a corresponding variable\n  - `$match1`, `$match2`, ...\n  - Named capturing groups generate `$matchName1`, `$matchName2`, ...\n  - If these are used, installing a specific version via `scoop install app@1.2.3` will not be possible\n- When using the `winget` source, `$matchX64` / `$matchX86` / `$matchArm64` are additionally provided (installer URLs for the corresponding architecture)",
             "examples": [
                 "https://github.com/abgox/abyss/releases/download/empty/empty"
             ],
@@ -1744,18 +1764,12 @@
                 "allOf": [
                     {
                         "$ref": "#/definitions/str"
-                    },
-                    {
-                        "$ref": "#/definitions/version_variable_validation"
                     }
                 ]
             },
             "allOf": [
                 {
                     "$ref": "#/definitions/str_or_arr_no_all_space"
-                },
-                {
-                    "$ref": "#/definitions/version_variable_validation"
                 },
                 {
                     "$ref": "#/definitions/use_string_if_single"
@@ -3115,40 +3129,220 @@
         },
         "checkver": {
             "title": "Version Check Configuration",
-            "markdownDescription": "- App maintainers and developers can use the bin/checkver tool to check for updated versions of the app\n- String: RegEx to find the version on the homepage\n- Object: Richer configuration properties\n- Reference: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate",
+            "markdownDescription": "- App maintainers and developers can use the bin/checkver tool to check for updated versions of the app\n- Source fields specify how the version is fetched, modifier fields control version extraction and formatting\n- Source fields (choose one):\n  - Preset fields: `github` / `commit` / `winget` / `psgallery` / `from_installer` / `url`\n  - Free source: `script`\n- Modifier fields (combinable): `regex` / `jsonpath` / `xpath` / `replace` / `reverse` / `max` / `dynamic` / `redirect`",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
             "examples": [
                 {
-                    "script": [
-                        ". $pwd\\util\\1.ps1",
-                        "A-Get-VersionFromGithub"
-                    ],
-                    "regex": "(.+)"
+                    "github": {
+                        "channel": "latest"
+                    }
                 }
             ],
             "properties": {
-                "format": {
-                    "markdownDescription": "Version number format alignment\n\n- Defines the baseline segment count for the main version number (using dot-separated `0` placeholders, e.g., `0.0` or `0.0.0.0`)\n- **Padding**: `0.0.0.0` will automatically complete `1.2` to `1.2.0.0`; `1.2.3.4` remains unchanged\n- **Trimming trailing zeros**: `0.0` will trim `1.2.0` to `1.2`; `1.2.3` (non-zero trailing segment) remains unchanged",
-                    "type": "string",
-                    "examples": [
-                        "0.0",
-                        "0.0.0",
-                        "0.0.0.0"
+                "github": {
+                    "type": "object",
+                    "markdownDescription": "Get the version from GitHub Releases",
+                    "additionalProperties": false,
+                    "required": [
+                        "channel"
                     ],
-                    "allOf": [
+                    "examples": [
                         {
-                            "$ref": "#/definitions/str_no_all_space"
-                        },
-                        {
-                            "pattern": "^0(\\.0)+$",
-                            "errorMessage": "Format must be dot-separated zeros, e.g. 0.0 or 0.0.0.0"
+                            "channel": "latest"
                         }
+                    ],
+                    "properties": {
+                        "channel": {
+                            "type": "string",
+                            "markdownDescription": "Specify the strategy for getting the version from GitHub",
+                            "enum": [
+                                "latest",
+                                "stable",
+                                "preview",
+                                "newest"
+                            ],
+                            "markdownEnumDescriptions": [
+                                "**Latest release** (Get the Release marked as `latest` by GitHub)",
+                                "**Latest stable** (Get the first Release with `prerelease: false` in reverse chronological order)",
+                                "**Latest preview** (Get the first Release marked `prerelease: true` in reverse chronological order)",
+                                "**Newest** (Get the first Release in reverse chronological order, including prereleases)"
+                            ]
+                        },
+                        "repo": {
+                            "type": "string",
+                            "markdownDescription": "Specify the GitHub repository\n\n- Format: `owner/repo`\n- If omitted, it is automatically extracted from `autoupdate` and `homepage`",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                },
+                                {
+                                    "pattern": "^[^/]+/[^/]+$"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "commit": {
+                    "type": "object",
+                    "markdownDescription": "Check the version based on the latest commit (date/sha) of the GitHub repository",
+                    "additionalProperties": false,
+                    "required": [
+                        "format"
+                    ],
+                    "examples": [
+                        {
+                            "format": "date"
+                        }
+                    ],
+                    "properties": {
+                        "format": {
+                            "type": "string",
+                            "markdownDescription": "Version number format",
+                            "enum": [
+                                "date",
+                                "date-sha"
+                            ],
+                            "markdownEnumDescriptions": [
+                                "`YYYY.MM.DD.HHMMSS`",
+                                "`YYYY.MM.DD.HHMMSS-sha`"
+                            ]
+                        },
+                        "path": {
+                            "type": "string",
+                            "markdownDescription": "Only track commits of the specified file or directory\n\n- If omitted, tracks all commits of the repository\n- Suitable for distributing a single file/directory from a large repository",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "branch": {
+                            "type": "string",
+                            "markdownDescription": "Git branch name to track\n\n- If omitted, uses the repository default branch",
+                            "examples": [
+                                "main",
+                                "develop"
+                            ],
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "repo": {
+                            "type": "string",
+                            "markdownDescription": "Specify the Git repository\n\n- Format: `owner/repo`\n- If omitted, it is automatically extracted from `autoupdate` and `homepage`",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                },
+                                {
+                                    "pattern": "^[^/]+/[^/]+$"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "winget": {
+                    "type": "object",
+                    "markdownDescription": "Get the version and metadata from [WinGet](https://github.com/microsoft/winget-pkgs) (Windows Package Manager)\n\nWhen using this field, in `autoupdate`:\n- `url` uses the `$matchX64` / `$matchX86` / `$matchArm64` variables\n- `hash` is extracted from `_.json`, e.g. `{ \"url\": \"_.json\", \"jsonpath\": \"$.x64_user.InstallerSha256\" }`",
+                    "additionalProperties": false,
+                    "required": [
+                        "id"
+                    ],
+                    "examples": [
+                        {
+                            "id": "",
+                            "ext": "exe"
+                        }
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "markdownDescription": "WinGet package identifier `PackageIdentifier`, e.g. `Microsoft.PowerShell`",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                },
+                                {
+                                    "pattern": "^[^.]+(\\.[^.]+)+$",
+                                    "errorMessage": "Format must be a dot-separated identifier, e.g. `Microsoft.PowerShell`"
+                                }
+                            ]
+                        },
+                        "ext": {
+                            "type": "string",
+                            "markdownDescription": "Specify the file extension to filter installers\n\n- Used to match a specific suffix among multiple installers in the WinGet manifest\n- If omitted, matches all types",
+                            "enum": [
+                                "exe",
+                                "msi",
+                                "msix",
+                                "msixbundle",
+                                "appx",
+                                "zip",
+                                "7z"
+                            ]
+                        }
+                    }
+                },
+                "psgallery": {
+                    "type": "object",
+                    "markdownDescription": "Get the version from [PowerShell Gallery](https://www.powershellgallery.com)",
+                    "additionalProperties": false,
+                    "required": [
+                        "channel"
+                    ],
+                    "examples": [
+                        {
+                            "channel": "stable"
+                        }
+                    ],
+                    "properties": {
+                        "channel": {
+                            "type": "string",
+                            "markdownDescription": "Specify the strategy for getting the version from PowerShell Gallery",
+                            "enum": [
+                                "stable",
+                                "preview",
+                                "newest"
+                            ],
+                            "markdownEnumDescriptions": [
+                                "**Latest stable** (Ignore prerelease versions with `-preview`/`-beta` suffixes, get the latest stable version only)",
+                                "**Latest preview** (Get only prerelease versions with `-preview`/`-beta`/`-rc` suffixes)",
+                                "**Newest** (Ignore version types, get the latest published version directly, including previews)"
+                            ]
+                        }
+                    }
+                },
+                "from_installer": {
+                    "type": "boolean",
+                    "markdownDescription": "Extract the version from the installer\n\n- Automatically downloads installer fragments in tiers and reads `FileVersion` > `ProductVersion`\n- The installer comes from the url in `autoupdate` and must be a fixed URL (without placeholders like `$version`)\n- Use it only when there is no more reliable version source (such as GitHub Releases, WinGet, etc.)",
+                    "enum": [
+                        true
+                    ]
+                },
+                "url": {
+                    "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to `(.+)`, i.e. the entire content is used as the version",
+                    "$ref": "#/definitions/str_url_validation"
+                },
+                "dynamic": {
+                    "type": "boolean",
+                    "markdownDescription": "The page requires dynamic rendering\n\n- Used with `url`: executes JavaScript before matching the version\n- `url` must be defined when using this field",
+                    "enum": [
+                        true
+                    ]
+                },
+                "redirect": {
+                    "type": "boolean",
+                    "markdownDescription": "The URL redirects\n\n- Used with `url`: resolves the redirect first to get the final URL, then matches the version\n- `url` must be defined when using this field",
+                    "enum": [
+                        true
                     ]
                 },
                 "max": {
-                    "markdownDescription": "Maximum Version\n\n- It is used to limit the maximum version when checking for new versions.\n- If the version number exceeds the limit, return the current version.",
+                    "markdownDescription": "Maximum version\n\n- Used to limit the maximum version when checking for new versions\n- If the version number exceeds the limit, returns the current version",
                     "type": "string",
                     "allOf": [
                         {
@@ -3156,164 +3350,35 @@
                         },
                         {
                             "pattern": "\\d",
-                            "errorMessage": "Require at least one number"
+                            "errorMessage": "Require at least one digit"
                         }
                     ]
                 },
-                "url": {
-                    "markdownDescription": "The page where the version is located",
-                    "$ref": "#/definitions/str_url_validation"
-                },
                 "script": {
-                    "markdownDescription": "A string or string array that can contain PowerShell commands used to track multiple links",
-                    "type": "array",
-                    "minItems": 1,
-                    "examples": [
-                        [
-                            ". $pwd\\util\\1.ps1",
-                            "A-Get-VersionFromGithub"
-                        ]
-                    ],
-                    "items": {
-                        "type": "string",
-                        "allOf": [
-                            {
-                                "not": {
-                                    "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
-                                },
-                                "errorMessage": "Contains disallowed Chinese characters:\n（）‘’“”，：？！—\nThey are only allowed within comments"
-                            }
-                        ]
-                    },
+                    "markdownDescription": "Execute PowerShell commands to get version information\n\n- The final output is used as matching content, and the version is captured by `regex`\n- If `regex` is omitted, it defaults to `(.+)`, i.e. the entire output is used as the version",
                     "allOf": [
                         {
-                            "items": [
-                                {
-                                    "const": ". $pwd\\util\\1.ps1"
-                                }
-                            ],
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "contains": {
-                                            "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
-                                        }
-                                    },
-                                    "then": {
-                                        "items": [
-                                            {},
-                                            {
-                                                "pattern": "\\$res, \\$out = A-Get-InstallerInfoFromWinget",
-                                                "errorMessage": "Format error, e.g., \"$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'\""
-                                            },
-                                            {
-                                                "const": "$out",
-                                                "markdownDescription": "Default installation info\n- It provides information such as version number and URL, which can be matched by the `regex` property\n- You can also override them via customization\n- E.g., you can append the following content at the end:\n```json\n\"\\\"x64:$($res.x64_machine.InstallerUrl -replace '\\\\.exe$', '.zip');\\\"\"\n```"
-                                            }
-                                        ],
-                                        "allOf": [
-                                            {
-                                                "items": {
-                                                    "anyOf": [
-                                                        {},
-                                                        {
-                                                            "pattern": "\\$res, \\$out = A-Get-InstallerInfoFromWinget",
-                                                            "markdownDescription": "Get installation info for the specified app in Winget\n\n- Requires two arguments:\n  - `PackageIdentifier`: The `PackageIdentifier` of the app in [winget-pkgs](https://github.com/microsoft/winget-pkgs)\n  - `InstallerType`: Specifies the installer type suffix to extract the matching installer package from [winget-pkgs](https://github.com/microsoft/winget-pkgs); empty string indicates any type\n- `$res`: Installer information parsed from [winget-pkgs](https://github.com/microsoft/winget-pkgs)\n- `$out`: Default installation info, providing default version matching content for the `regex` property; can be used with `$res` for custom overrides\n\n### Example\n\n- Retrieve installation info for Microsoft Edge, extracting info for packages with `.msi` URL suffix:\n\n  ```json\n  \"$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'\"\n  ```"
-                                                        },
-                                                        {
-                                                            "const": "\"ver:$($res.PackageVersion);\"",
-                                                            "markdownDescription": "Output the app version number"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.x64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app x64 installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.x64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app x64 installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($res.x86_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app x86 installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x86:$($res.x86_user.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app x86 installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($res.arm64_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app arm64 installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"arm64:$($res.arm64_user.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app arm64 installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.neutral_machine.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app neutral installer URL"
-                                                        },
-                                                        {
-                                                            "const": "\"x64:$($res.neutral_user.InstallerUrl);\"",
-                                                            "markdownDescription": "Output the app neutral installer URL"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
+                            "$ref": "#/definitions/str_or_arr"
+                        },
+                        {
+                            "items": {
+                                "type": "string",
+                                "allOf": [
+                                    {
+                                        "not": {
+                                            "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
+                                        },
+                                        "errorMessage": "Contains disallowed Chinese characters\n（）‘’“”，：？！—\nThey are only allowed in comments"
                                     }
-                                },
-                                {
-                                    "items": {
-                                        "anyOf": [
-                                            {},
-                                            {
-                                                "const": ". $pwd\\util\\1.ps1",
-                                                "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it\n- It is named using the version number\n  - v1 version: `1.ps1`\n  - v2 version: `2.ps1`\n- The latest version is always used here; old versions are only for compatibility"
-                                            },
-                                            {
-                                                "const": "A-Get-VersionFromGithub",
-                                                "markdownDescription": "Get the latest release version from GitHub\n- Includes version types `1` and `3`\n- Filters out `v` or `V` prefixes (e.g., `v1.2.3` => `1.2.3`)\n### Version Types\n1. Latest stable version: `latest`\n2. Latest prerelease version: `prerelease`\n3. Other versions"
-                                            },
-                                            {
-                                                "const": "A-Get-LatestVersionFromGithub",
-                                                "markdownDescription": "Get the latest release version from GitHub\n- Includes version types `1`\n- Filters out `v` or `V` prefixes (e.g., `v1.2.3` => `1.2.3`)\n### Version Types\n1. Latest stable version: `latest`\n2. Latest prerelease version: `prerelease`\n3. Other versions"
-                                            },
-                                            {
-                                                "const": "A-Get-PreVersionFromGithub",
-                                                "markdownDescription": "Get the latest prerelease version from GitHub\n- Includes version type `2`\n- Filters out `v` or `V` prefixes (e.g., `v1.2.3` => `1.2.3`)\n### Version Types\n1. Latest stable version: `latest`\n2. Latest prerelease version: `prerelease`\n3. Other versions"
-                                            },
-                                            {
-                                                "const": "A-Get-NewestVersionFromGithub",
-                                                "markdownDescription": "Get the latest release version from GitHub\n- Includes version types `1`, `2`, and `3`\n- Filters out `v` or `V` prefixes (e.g., `v1.2.3` => `1.2.3`)\n### Version Types\n1. Latest stable version: `latest`\n2. Latest prerelease version: `prerelease`\n3. Other versions"
-                                            },
-                                            {
-                                                "const": "A-Get-VersionFromInstaller",
-                                                "markdownDescription": "Extract the version number from the installer\n\n- Read order: `FileVersion` > `ProductVersion`\n- Uses a tiered Range-download strategy, starting from a small range and trying progressively\n- If all tiered attempts fail, falls back to downloading the full installer\n\n### Notes\n\n- Only consider using this when no more reliable way (e.g. a checkver endpoint, GitHub Releases, etc.) is available to obtain the version number\n- The installer URL must be a fixed address, not a template containing a version placeholder (e.g. `$version`)"
-                                            },
-                                            {
-                                                "const": "A-Get-VersionFromPowerShellGallery",
-                                                "markdownDescription": "Get the version from [PowerShell Gallery](https://www.powershellgallery.com/)"
-                                            },
-                                            {
-                                                "const": "$res, $out = A-Get-InstallerInfoFromWinget 'Publisher.PackageIdentifier' 'exe'",
-                                                "markdownDescription": "Get installation info for the specified app in Winget\n\n- Requires two arguments:\n  - `PackageIdentifier`: The `PackageIdentifier` of the app in [winget-pkgs](https://github.com/microsoft/winget-pkgs)\n  - `InstallerType`: Specifies the installer type suffix to extract the matching installer package from [winget-pkgs](https://github.com/microsoft/winget-pkgs); empty string indicates any type\n- `$res`: Installer information parsed from [winget-pkgs](https://github.com/microsoft/winget-pkgs)\n- `$out`: Default installation info, providing default version matching content for the `regex` property; can be used with `$res` for custom overrides\n\n### Example\n\n- Retrieve installation info for Microsoft Edge, extracting info for packages with `.msi` URL suffix:\n\n  ```json\n  \"$res, $out = A-Get-InstallerInfoFromWinget 'Microsoft.Edge' 'msi'\"\n  ```"
-                                            },
-                                            {
-                                                "const": "A-Get-DynamicPageFromUrl",
-                                                "markdownDescription": "Get dynamically loaded web page content\n- Executes JavaScript for up to 10 seconds to retrieve the final DOM"
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
+                                ]
+                            }
                         }
                     ]
                 },
                 "regex": {
-                    "markdownDescription": "RegEx (Regular Expression) to find the version\n\n### Example\n\n- By default, stores the contents of the first capture group into `$version`\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- Restricts the version format to digits and dots\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- Can use named capture groups to store the version number into `$version`\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- Strictly matches the start and end\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
+                    "markdownDescription": "RegEx (regular expression) to find the version\n\n- If omitted, defaults to `(.+)`, i.e. matches everything (with `url`/`script` sources, the entire content is used as the version)\n\n### Examples\n\n- By default, the content of the first capture group is stored in `$version`\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- Restrict the version format to digits and dots\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- Use a named capture group to store the version in `$version`\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- Strictly match start and end\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
                     "type": "string",
                     "examples": [
-                        "(.+)",
                         "([\\d.]+)",
                         "^([\\d.]+)$",
                         "^(?<version>[\\d.]+)$"
@@ -3321,16 +3386,20 @@
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_no_all_space"
+                        },
+                        {
+                            "pattern": "(?<!\\\\)\\(",
+                            "errorMessage": "Must contain at least one capture group, e.g. `([\\d.]+)` or `(?<version>[\\d.]+)`"
                         }
                     ]
                 },
                 "jsonpath": {
-                    "markdownDescription": "Get the version using a JSON endpoint with a JSONPath expression, using either dot notation or bracket notation.\n\n### Example\n\n- Extract the value of the `version` property\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```",
+                    "markdownDescription": "Retrieve the version from a JSON endpoint using a JSONPath expression, supports dot notation or bracket notation\n\n- `url` must be defined when using this field\n- Can be combined with `regex`: extract with `jsonpath` first, then refine with `regex`\n\n### Examples\n\n- Extract the value of the `version` property\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- Extract the value of `productVersion` or `version`\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- Extract `updated_at` from the asset whose `name` is `xxx`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- Extract the values of `productVersion` and `version` as an array, e.g. `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
                     "type": "string",
                     "$ref": "#/definitions/str_no_all_space"
                 },
                 "xpath": {
-                    "markdownDescription": "XPath expression to find the version",
+                    "markdownDescription": "Retrieve the version from an XML page using an XPath expression\n\n- `url` must be defined when using this field\n- Can be combined with `regex`: extract with `xpath` first, then refine with `regex`\n- Extracts the text content of the element; attribute values are not supported",
                     "type": "string",
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3339,56 +3408,222 @@
                     "$ref": "#/definitions/bool"
                 },
                 "replace": {
-                    "markdownDescription": "Replace the matched value with a calculated value\n\n### Example\n\n- `${1}.${2}.${3}.${4}${5}${6}`\n  - `${1}` indicate first match group\n  - `${2}` indicate second match group\n  - ...",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space",
-                    "anyOf": [
-                        {},
-                        {
-                            "enum": [
-                                "${1}.${2}.${3}.${4}${5}${6}"
-                            ]
-                        }
-                    ]
-                },
-                "useragent": {
-                    "markdownDescription": "User-Agent used to retrieve web content",
+                    "markdownDescription": "Replace the matched value with a computed value to assemble the version number\n\n- `${1}`、`${2}`: numeric capture groups\n- `${name}`: named capture group",
                     "type": "string",
                     "$ref": "#/definitions/str_no_all_space"
                 }
             },
-            "if": {
-                "required": [
-                    "script"
-                ]
-            },
-            "then": {
-                "if": {
-                    "properties": {
-                        "script": {
-                            "contains": {
-                                "pattern": "(?<!#.*)A-Get-DynamicPageFromUrl"
+            "allOf": [
+                {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "github"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "script"
+                                ]
                             }
-                        }
+                        ]
+                    },
+                    "else": {
+                        "not": true,
+                        "errorMessage": "Please add one of github/commit/winget/psgallery/from_installer/url/script"
                     }
                 },
-                "then": {
-                    "required": [
-                        "url"
-                    ]
-                }
-            },
-            "else": {
-                "if": {
-                    "required": [
-                        "url"
-                    ]
+                {
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "github",
+                                    "commit"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "winget"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "winget"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "psgallery"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery",
+                                    "from_installer"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "from_installer",
+                                    "url"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "github",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "commit",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "winget",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "psgallery",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "from_installer",
+                                    "script"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "url",
+                                    "script"
+                                ]
+                            }
+                        ]
+                    },
+                    "errorMessage": "Only one of github/commit/winget/psgallery/from_installer/url/script can be used"
                 },
-                "else": {
-                    "not": true,
-                    "errorMessage": "If script is not used, the url property must be specified"
+                {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "redirect"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "dynamic"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "jsonpath"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "xpath"
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "required": [
+                            "url"
+                        ]
+                    }
                 }
-            }
+            ]
         },
         "github_release_url": {
             "type": [
@@ -3718,7 +3953,7 @@
         },
         "autoupdate": {
             "title": "Auto Update",
-            "markdownDescription": "- It is used to configure the manifest's auto-update rules, and requires `checkver` to be configured alongside it\n- The remote repository runs `checkver` on a schedule via [GitHub Actions](https://github.com/abgox/ScoopInstaller-GithubActions)\n- When an update runs, it replaces the corresponding fields in the manifest\n  - `url`\n  - `extract_dir`\n  - `bin`\n  - `shortcuts`\n  - ...",
+            "markdownDescription": "- It is used to configure the manifest's auto-update rules, and requires `checkver` to be configured alongside it\n- The remote repository runs `checkver` on a schedule via [GitHub Actions](https://github.com/abgox/ScoopInstaller-GitHubActions)\n- When an update runs, it replaces the corresponding fields in the manifest\n  - `url`\n  - `extract_dir`\n  - `bin`\n  - `shortcuts`\n  - ...",
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
@@ -4199,81 +4434,71 @@
                                     "anyOf": [
                                         {
                                             "required": [
-                                                "msix"
+                                                "bin"
                                             ]
                                         },
                                         {
                                             "required": [
-                                                "font"
+                                                "shortcuts"
                                             ]
                                         },
                                         {
                                             "required": [
-                                                "psmodule"
+                                                "env_add_path"
                                             ]
                                         },
                                         {
-                                            "not": {
-                                                "anyOf": [
-                                                    {
-                                                        "properties": {
-                                                            "pre_install": {
-                                                                "contains": {
-                                                                    "pattern": "(?<!#.*)A-Install-.+"
-                                                                }
+                                            "allOf": [
+                                                {
+                                                    "not": {
+                                                        "anyOf": [
+                                                            {
+                                                                "required": [
+                                                                    "msix"
+                                                                ]
                                                             }
-                                                        }
-                                                    },
-                                                    {
-                                                        "required": [
-                                                            "bin"
                                                         ]
-                                                    },
-                                                    {
-                                                        "required": [
-                                                            "shortcuts"
-                                                        ]
-                                                    },
-                                                    {
-                                                        "properties": {
-                                                            "architecture": {
-                                                                "patternProperties": {
-                                                                    "": {
-                                                                        "anyOf": [
-                                                                            {
-                                                                                "required": [
-                                                                                    "bin"
-                                                                                ]
-                                                                            },
-                                                                            {
-                                                                                "required": [
-                                                                                    "shortcuts"
-                                                                                ]
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
+                                                    }
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "pre_install": {
+                                                            "contains": {
+                                                                "pattern": "(?<!#.*)A-Install-.+"
                                                             }
                                                         }
                                                     }
-                                                ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "required": [
+                                                "architecture"
+                                            ],
+                                            "properties": {
+                                                "architecture": {
+                                                    "patternProperties": {
+                                                        "": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "required": [
+                                                                        "bin"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "required": [
+                                                                        "shortcuts"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     ]
                                 },
                                 "then": {
-                                    "properties": {
-                                        "pre_uninstall": {
-                                            "items": {
-                                                "not": {
-                                                    "pattern": "(?<!#.*)A-Stop-Process"
-                                                },
-                                                "errorMessage": "It doesn't require A-Stop-Process"
-                                            }
-                                        }
-                                    }
-                                },
-                                "else": {
                                     "properties": {
                                         "pre_uninstall": {
                                             "if": {
@@ -4294,6 +4519,18 @@
                                                     "pattern": "(?<!#.*)A-Stop-Process"
                                                 },
                                                 "errorMessage": "Missing A-Stop-Process"
+                                            }
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "pre_uninstall": {
+                                            "items": {
+                                                "not": {
+                                                    "pattern": "(?<!#.*)A-Stop-Process"
+                                                },
+                                                "errorMessage": "It doesn't require A-Stop-Process"
                                             }
                                         }
                                     }
@@ -4630,263 +4867,93 @@
             "if": {
                 "required": [
                     "checkver"
-                ]
+                ],
+                "properties": {
+                    "checkver": {
+                        "required": [
+                            "winget"
+                        ]
+                    }
+                }
             },
             "then": {
-                "allOf": [
-                    {
-                        "if": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "script"
-                                    ],
-                                    "properties": {
-                                        "script": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Get-VersionFrom(Installer|PowerShellGallery)"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "regex"
-                                    ],
-                                    "properties": {
-                                        "regex": {
-                                            "examples": [
-                                                "(.+)"
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "script"
-                                    ],
-                                    "properties": {
-                                        "script": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Get-(Latest|Pre|Newest)?VersionFromGithub"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "regex"
-                                    ]
-                                }
-                            },
-                            "if": {
-                                "properties": {
-                                    "checkver": {
-                                        "required": [
-                                            "url"
-                                        ]
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "checkver": {
+                "properties": {
+                    "autoupdate": {
+                        "properties": {
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
                                         "properties": {
                                             "url": {
-                                                "pattern": "(^https://github\\.com/[^/]+/[^/]+$)|(^https://api.github\\.com/repos/[^/]+/[^/]+)"
+                                                "examples": [
+                                                    "$matchX64",
+                                                    "$matchX64#/dl.7z",
+                                                    "$matchX64#/dl.exe",
+                                                    "$matchX64#/dl.msi_",
+                                                    "$matchArm64",
+                                                    "$matchArm64#/dl.7z",
+                                                    "$matchArm64#/dl.exe",
+                                                    "$matchArm64#/dl.msi_",
+                                                    "$matchX86",
+                                                    "$matchX86#/dl.7z",
+                                                    "$matchX86#/dl.exe",
+                                                    "$matchX86#/dl.msi_"
+                                                ]
                                             }
-                                        }
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "autoupdate": {
-                                        "properties": {
-                                            "url": {
-                                                "allOf": [
-                                                    {
-                                                        "$ref": "#/definitions/str_or_arr_no_all_space"
-                                                    },
-                                                    {
-                                                        "pattern": "^https?://github\\.com/[^/]+/[^/]+",
-                                                        "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must be a GitHub URL; otherwise, please define checkver.url"
-                                                    },
-                                                    {
-                                                        "contains": {
-                                                            "pattern": "^https?://github\\.com/[^/]+/[^/]+"
-                                                        },
-                                                        "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must have at least one GitHub URL; otherwise, please define checkver.url"
-                                                    }
+                                        },
+                                        "if": {
+                                            "properties": {
+                                                "url": {
+                                                    "pattern": "^https?://"
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "if": {
+                                                "required": [
+                                                    "hash"
                                                 ]
                                             },
-                                            "architecture": {
-                                                "patternProperties": {
-                                                    "": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "allOf": [
-                                                                    {
-                                                                        "$ref": "#/definitions/str_or_arr_no_all_space"
-                                                                    },
-                                                                    {
-                                                                        "pattern": "^https?://github\\.com/[^/]+/[^/]+",
-                                                                        "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must be a GitHub URL; otherwise, please define checkver.url"
-                                                                    },
-                                                                    {
-                                                                        "contains": {
-                                                                            "pattern": "^https?://github\\.com/[^/]+/[^/]+"
-                                                                        },
-                                                                        "errorMessage": "Since script uses A-Get-(Latest|Pre|Newest)?VersionFromGithub, it must have at least one GitHub URL; otherwise, please define checkver.url"
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
+                                            "then": {
+                                                "properties": {
+                                                    "hash": {
+                                                        "not": true,
+                                                        "errorMessage": "Invalid value"
                                                     }
                                                 }
                                             }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "if": {
-                            "properties": {
-                                "checkver": {
-                                    "required": [
-                                        "script"
-                                    ],
-                                    "properties": {
-                                        "script": {
-                                            "contains": {
-                                                "pattern": "(?<!#.*)A-Get-InstallerInfoFromWinget"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "checkver": {
-                                    "properties": {
-                                        "regex": {
-                                            "const": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?",
-                                            "errorMessage": "Since script uses A-Get-InstallerInfoFromWinget, regex can only be \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))?(?:.*x86:(?<x86>[^;]+))?(?:.*arm64:(?<arm64>[^;]+))?\""
                                         },
-                                        "script": {
-                                            "minItems": 3,
-                                            "items": [
-                                                {},
-                                                {},
-                                                {
-                                                    "const": "$out"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                },
-                                "autoupdate": {
-                                    "properties": {
-                                        "architecture": {
-                                            "patternProperties": {
-                                                "": {
+                                        "else": {
+                                            "required": [
+                                                "hash"
+                                            ],
+                                            "properties": {
+                                                "hash": {
+                                                    "required": [
+                                                        "url",
+                                                        "jsonpath"
+                                                    ],
+                                                    "examples": [
+                                                        {
+                                                            "url": "_.json",
+                                                            "jsonpath": ""
+                                                        }
+                                                    ],
                                                     "properties": {
                                                         "url": {
-                                                            "examples": [
-                                                                "$matchX64",
-                                                                "$matchX64#/dl.7z",
-                                                                "$matchX64#/dl.exe",
-                                                                "$matchX64#/dl.msi_",
-                                                                "$matchArm64",
-                                                                "$matchArm64#/dl.7z",
-                                                                "$matchArm64#/dl.exe",
-                                                                "$matchArm64#/dl.msi_",
-                                                                "$matchX86",
-                                                                "$matchX86#/dl.7z",
-                                                                "$matchX86#/dl.exe",
-                                                                "$matchX86#/dl.msi_"
-                                                            ]
-                                                        }
-                                                    },
-                                                    "if": {
-                                                        "properties": {
-                                                            "url": {
-                                                                "pattern": "^https?://"
-                                                            }
-                                                        }
-                                                    },
-                                                    "then": {
-                                                        "if": {
-                                                            "required": [
-                                                                "hash"
-                                                            ]
+                                                            "const": "_.json"
                                                         },
-                                                        "then": {
-                                                            "properties": {
-                                                                "hash": {
-                                                                    "not": true,
-                                                                    "errorMessage": "Invalid value"
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    "else": {
-                                                        "required": [
-                                                            "hash"
-                                                        ],
-                                                        "properties": {
-                                                            "url": {
-                                                                "markdownDescription": "- For installer package URLs provided by `A-Get-InstallerInfoFromWinget`\n- It typically uses variables similar to `$matchX64`\n- You can view some examples through property completion"
-                                                            },
-                                                            "hash": {
-                                                                "required": [
-                                                                    "url",
-                                                                    "jsonpath"
-                                                                ],
-                                                                "examples": [
-                                                                    {
-                                                                        "url": "temp-autoupdate.json",
-                                                                        "jsonpath": ""
-                                                                    }
-                                                                ],
-                                                                "properties": {
-                                                                    "url": {
-                                                                        "markdownDescription": "The temporary file where the installation information is located\n- `A-Get-InstallerInfoFromWinget` temporarily writes information to `temp-autoupdate.json` under the project root directory\n- Therefore, it can only be `temp-autoupdate.json`",
-                                                                        "const": "temp-autoupdate.json",
-                                                                        "errorMessage": "Since script uses A-Get-InstallerInfoFromWinget, hash.url can only be \"temp-autoupdate.json\""
-                                                                    },
-                                                                    "jsonpath": {
-                                                                        "markdownDescription": "Specify the hash\n- Select the correct property according to `temp-autoupdate.json`",
-                                                                        "enum": [
-                                                                            "$.x64_machine.InstallerSha256",
-                                                                            "$.arm64_machine.InstallerSha256",
-                                                                            "$.x86_machine.InstallerSha256",
-                                                                            "$.x64_user.InstallerSha256",
-                                                                            "$.arm64_user.InstallerSha256",
-                                                                            "$.x86_user.InstallerSha256",
-                                                                            "$.neutral_machine.InstallerSha256",
-                                                                            "$.neutral_user.InstallerSha256"
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            }
+                                                        "jsonpath": {
+                                                            "enum": [
+                                                                "$.x64_machine.InstallerSha256",
+                                                                "$.arm64_machine.InstallerSha256",
+                                                                "$.x86_machine.InstallerSha256",
+                                                                "$.x64_user.InstallerSha256",
+                                                                "$.arm64_user.InstallerSha256",
+                                                                "$.x86_user.InstallerSha256",
+                                                                "$.neutral_machine.InstallerSha256",
+                                                                "$.neutral_user.InstallerSha256"
+                                                            ]
                                                         }
                                                     }
                                                 }
@@ -4897,7 +4964,7 @@
                             }
                         }
                     }
-                ]
+                }
             }
         },
         {
@@ -5240,6 +5307,89 @@
                                 ]
                             }
                         ]
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "checkver": {
+                        "required": [
+                            "from_installer"
+                        ]
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "autoupdate": {
+                        "properties": {
+                            "url": {
+                                "$ref": "#/definitions/fixed_url_validation"
+                            },
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
+                                        "properties": {
+                                            "url": {
+                                                "$ref": "#/definitions/fixed_url_validation"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "else": {
+                "properties": {
+                    "autoupdate": {
+                        "properties": {
+                            "url": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/version_variable_validation"
+                                    },
+                                    {
+                                        "if": {
+                                            "type": "array"
+                                        },
+                                        "then": {
+                                            "items": {
+                                                "$ref": "#/definitions/version_variable_validation"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "architecture": {
+                                "patternProperties": {
+                                    "": {
+                                        "properties": {
+                                            "url": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/definitions/version_variable_validation"
+                                                    },
+                                                    {
+                                                        "if": {
+                                                            "type": "array"
+                                                        },
+                                                        "then": {
+                                                            "items": {
+                                                                "$ref": "#/definitions/version_variable_validation"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

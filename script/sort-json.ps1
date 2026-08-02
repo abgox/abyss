@@ -83,17 +83,35 @@ $order = [ordered]@{
     pre_uninstall       = ''
     # uninstaller    = ''
     post_uninstall      = ''
-    checkver            = [ordered]@{
-        format    = '' # abyss
-        max       = '' # abyss
-        url       = ''
-        jsonpath  = ''
-        xpath     = ''
-        script    = ''
-        reverse   = ''
-        useragent = ''
-        regex     = ''
-        replace   = ''
+    checkver            = [ordered]@{ # abyss
+        github         = [ordered]@{
+            channel = ''
+            repo    = ''
+        }
+        commit         = [ordered]@{
+            format = ''
+            path   = ''
+            branch = ''
+            repo   = ''
+        }
+        winget         = [ordered]@{
+            id  = ''
+            ext = ''
+        }
+        psgallery      = [ordered]@{
+            channel = ''
+        }
+        from_installer = ''
+        url            = ''
+        dynamic        = ''
+        redirect       = ''
+        max            = ''
+        script         = ''
+        regex          = ''
+        jsonpath       = ''
+        xpath          = ''
+        reverse        = ''
+        replace        = ''
     }
     autoupdate          = [ordered]@{
         architecture = [ordered]@{
