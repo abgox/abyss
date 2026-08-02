@@ -1812,20 +1812,7 @@
             "type": "object",
             "minProperties": 1,
             "additionalProperties": false,
-            "examples": [
-                {
-                    "mode": "github"
-                }
-            ],
             "properties": {
-                "mode": {
-                    "markdownDescription": "Hash Mode\n\n- `github`: Get the automatically generated hash from GitHub; for details, see [GitHub Changelog](https://github.blog/changelog/2025-06-03-releases-now-expose-digests-for-release-assets/)\n- `json`: Extract the hash from a JSON file using a JSONPath expression\n- `xpath`: Extract the hash from an XML file",
-                    "enum": [
-                        "github",
-                        "json",
-                        "xpath"
-                    ]
-                },
                 "url": {
                     "markdownDescription": "URL template used to download RDF/JSON files or extract hashes",
                     "type": "string",
@@ -3625,17 +3612,6 @@
                 }
             ]
         },
-        "github_release_url": {
-            "type": [
-                "array",
-                "string"
-            ],
-            "pattern": "^https?://github\\.com/[^/]+/[^/]+/releases/download/",
-            "items": {
-                "type": "string",
-                "pattern": "^https?://github\\.com/[^/]+/[^/]+/releases/download/"
-            }
-        },
         "url_hash_type_match": {
             "if": {
                 "properties": {
@@ -4033,77 +4009,6 @@
                         ]
                     },
                     "errorMessage": "The url and architecture properties are not allowed to coexist"
-                },
-                {
-                    "if": {
-                        "oneOf": [
-                            {
-                                "required": [
-                                    "url"
-                                ],
-                                "properties": {
-                                    "url": {
-                                        "$ref": "#/definitions/github_release_url"
-                                    }
-                                }
-                            },
-                            {
-                                "required": [
-                                    "architecture"
-                                ],
-                                "properties": {
-                                    "architecture": {
-                                        "minProperties": 1,
-                                        "patternProperties": {
-                                            "": {
-                                                "properties": {
-                                                    "url": {
-                                                        "$ref": "#/definitions/github_release_url"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "hash"
-                        ],
-                        "properties": {
-                            "hash": {
-                                "required": [
-                                    "mode"
-                                ],
-                                "examples": [
-                                    {
-                                        "mode": "github"
-                                    }
-                                ],
-                                "properties": {
-                                    "mode": {
-                                        "const": "github"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "else": {
-                        "properties": {
-                            "hash": {
-                                "properties": {
-                                    "mode": {
-                                        "not": {
-                                            "const": "github"
-                                        },
-                                        "errorMessage": "Invalid value"
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             ]
         }
