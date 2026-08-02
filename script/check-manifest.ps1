@@ -4,7 +4,7 @@ if (-not $env:GITHUB_ACTIONS) {
     throw 'It is a script for workflow'
 }
 
-function Add-GithubLabel {
+function Add-GitHubLabel {
     param(
         [ValidateNotNullOrEmpty()]
         [String[]]$Label
@@ -13,7 +13,7 @@ function Add-GithubLabel {
     Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/issues/$pr/labels" -Headers $headers -Method Post -Body (@{ labels = $Label } | ConvertTo-Json) -ContentType 'application/json'
 }
 
-function Remove-GithubLabel {
+function Remove-GitHubLabel {
     param(
         [ValidateNotNullOrEmpty()]
         [string[]]$Label
@@ -140,7 +140,7 @@ foreach ($file in $files) {
         $labels.'missing-required-field' = $true
     }
 
-    # Winget
+    # WinGet
     $path = "$letter/$($m.Replace('.', '/'))"
     $api = "https://api.github.com/repos/microsoft/winget-pkgs/contents/manifests/$path"
     $url = "https://github.com/microsoft/winget-pkgs/blob/master/manifests/$path"
@@ -211,7 +211,7 @@ $guide = @'
 - **Status**: The status of the manifest in the PR.
 - **Manifest**: The manifest name.
 - **Type**: The manifest type.
-- **Winget**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
+- **WinGet**: Whether the app already exists in the [winget-pkgs](https://github.com/microsoft/winget-pkgs) repository.
 - **Location**: The external installation location of the app.
 - **Admin**: Whether the app requires admin permission to install or uninstall.
 - **Persistence**: The persistence method used for app data.
@@ -226,7 +226,7 @@ if ($has_manifest) {
         $marker,
         $guide,
         '',
-        '| Status | Manifest | Type | Winget | Location | Admin | Persistence | Extra |',
+        '| Status | Manifest | Type | WinGet | Location | Admin | Persistence | Extra |',
         '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 
@@ -268,5 +268,5 @@ $rm_labels = @()
 
 $labels.Keys | ForEach-Object { if ($labels.$_) { $add_labels += $_ } else { $rm_labels += $_ } }
 
-if ($add_labels) { Add-GithubLabel $add_labels }
-if ($rm_labels) { Remove-GithubLabel $rm_labels }
+if ($add_labels) { Add-GitHubLabel $add_labels }
+if ($rm_labels) { Remove-GitHubLabel $rm_labels }

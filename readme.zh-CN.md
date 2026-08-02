@@ -2,9 +2,9 @@
 
 <p align="center">
     <a href="readme.md">English</a> |
-    <a href="https://github.com/abgox/abyss">Github</a> |
+    <a href="https://github.com/abgox/abyss">GitHub</a> |
     <a href="https://gitee.com/abgox/abyss">Gitee</a> |
-    <a href="https://gitcode.com/abgox/abyss">Gitcode</a>
+    <a href="https://gitcode.com/abgox/abyss">GitCode</a>
 </p>
 
 <p align="center">
@@ -75,15 +75,15 @@
 
 > [!TIP]
 >
-> - 如果你无法访问 Github ，建议使用 [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors)
-> - 它可以让你正常安装并使用 Scoop，无需访问 Github
+> - 如果你无法访问 GitHub ，建议使用 [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors)
+> - 它可以让你正常安装并使用 Scoop，无需访问 GitHub
 
 - [Scoop](https://scoop.sh)
-- [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
+- [Scoop - GitHub Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ## 如果正在使用 Scoop
 
-1. 添加 [abyss](https://abyss.abgox.com) bucket ([Github](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss))
+1. 添加 [abyss](https://abyss.abgox.com) bucket ([GitHub](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss))
 
    ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
@@ -113,11 +113,11 @@
    scoop install abyss/abgox.scoop-i18n
    ```
 
-## 如果无法访问 Github 资源
+## 如果无法访问 GitHub 资源
 
 [scoop-tools](https://scoop-tools.abgox.com) 允许你临时使用替换之后的代理 url 来下载安装包
 
-- Github: https://github.com/abgox/scoop-tools
+- GitHub: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
 
 ## License

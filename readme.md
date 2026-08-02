@@ -2,9 +2,9 @@
 
 <p align="center">
     <a href="readme.zh-CN.md">简体中文</a> |
-    <a href="https://github.com/abgox/abyss">Github</a> |
+    <a href="https://github.com/abgox/abyss">GitHub</a> |
     <a href="https://gitee.com/abgox/abyss">Gitee</a> |
-    <a href="https://gitcode.com/abgox/abyss">Gitcode</a>
+    <a href="https://gitcode.com/abgox/abyss">GitCode</a>
 </p>
 
 <p align="center">
@@ -75,15 +75,15 @@
 
 > [!TIP]
 >
-> - It is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors) if you cannot access Github.
-> - It allows you to install and use Scoop normally without accessing Github.
+> - It is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors) if you cannot access GitHub.
+> - It allows you to install and use Scoop normally without accessing GitHub.
 
 - [Scoop](https://scoop.sh)
-- [Scoop - Github Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
+- [Scoop - GitHub Wiki](https://github.com/ScoopInstaller/Scoop/wiki)
 
 ## If you are currently using Scoop
 
-1. Add the [abyss](https://abyss.abgox.com) bucket from [Github](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
+1. Add the [abyss](https://abyss.abgox.com) bucket from [GitHub](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
 
    ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
@@ -113,11 +113,11 @@
    scoop install abyss/abgox.scoop-i18n
    ```
 
-## If you cannot access Github resources
+## If you cannot access GitHub resources
 
 [scoop-tools](https://scoop-tools.abgox.com) allows you to temporarily use the replaced proxy URL to download app packages.
 
-- Github: https://github.com/abgox/scoop-tools
+- GitHub: https://github.com/abgox/scoop-tools
 - Gitee: https://gitee.com/abgox/scoop-tools
 
 ## License
