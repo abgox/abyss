@@ -51,8 +51,7 @@ if ($App -eq '*' -and $Version -ne '') {
 
 function next($appName, $er) {
     Write-Host
-    Write-Host "${appName}: " -NoNewline
-    Write-Host $er -ForegroundColor DarkRed
+    Write-Host "${appName}: $($PSStyle.Foreground.Red)$er"
 }
 
 $Queue = @()
@@ -77,7 +76,7 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
     $json = $state.json
     $url = $state.url
     $checkver = $json.checkver
-    $regexp = $state.regex, '(.+)' | Select-Object -First 1
+    $regexp = A-Get-VersionRegex -SpecifiedRegex $state.regex
     $jsonpath = $state.jsonpath
     $xpath = $state.xpath
     $script = $checkver.script
@@ -96,25 +95,25 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
     }
 
     $matchesHashtable = @{}
+    $versionResolved = $false
 
     if (!$ver) {
         if ($cancelled) {
-            if (!$script) {
+            if ($script) {
+                Write-Warning "${app}: Request timed out after ${TimeoutSec}s. Falling back to checkver.script ..."
+            }
+            else {
                 next $app "timed out after ${TimeoutSec}s`r`nURL $url is not valid"
                 return
             }
-            else {
-                Write-Host "${app}: Request timed out after ${TimeoutSec}s. Falling back to checkver.script ..." -ForegroundColor DarkYellow
-            }
         }
-
         if ($err) {
-            if (!$script) {
+            if ($script) {
+                Write-Warning "$($err.message)`r`nURL $url is not valid. Falling back to checkver.script ..."
+            }
+            else {
                 next $app "$($err.message)`r`nURL $url is not valid"
                 return
-            }
-            else {
-                Write-Host "$($err.message)`r`nURL $url is not valid. Falling back to checkver.script ..." -ForegroundColor DarkYellow
             }
         }
 
@@ -190,61 +189,36 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
                 $source = "redirect $($checkver.url)"
             }
             if ($candidateVersions -and $candidateVersions.Count -gt 0) {
-                if ($checkver.max) {
-                    $maxStr = $checkver.max
-                    $filteredVersions = $candidateVersions | Where-Object {
-                        try { [semver]$_ -le [semver]$maxStr }
-                        catch {
-                            try {
-                                $cleanV = $_ -replace '-.*$', ''
-                                $cleanM = $maxStr -replace '-.*$', ''
-                                [version]$cleanV -le [version]$cleanM
-                            }
-                            catch { $false }
-                        }
-                    }
-                    if (!$filteredVersions -or $filteredVersions.Count -eq 0) {
-                        $ver = $expected_ver
-                    }
-                    else {
-                        $candidateVersions = $filteredVersions
-                    }
-                }
-                if (!$ver) {
-                    $ver = $candidateVersions | Select-Object -First 1
-                    if ($ver -and $checkver.regex) {
-                        $re = New-Object System.Text.RegularExpressions.Regex($regexp)
-                        $m = $re.Match("$ver")
-                        if ($m.Success) {
-                            $re.GetGroupNames() | ForEach-Object { $matchesHashtable[$_] = $m.Groups[$_].Value }
-                            if ($replace) {
-                                $ver = $re.Replace($m.Value, $replace)
-                            }
-                            elseif ($m.Groups['version'].Success) {
-                                $ver = $m.Groups['version'].Value
-                            }
-                            elseif ($m.Groups.Count -gt 1) {
-                                $ver = $m.Groups[1].Value
-                            }
-                            else {
-                                next $app "regex '$regexp' does not contain a capture group"
-                                return
-                            }
-                        }
-                    }
+                $resolved = A-Resolve-CandidateVersion -CandidateVersions $candidateVersions -Checkver $checkver -Replace $replace -Reverse $reverse -ExpectedVer $expected_ver -MatchesHashtable ([ref]$matchesHashtable) -Version ([ref]$ver)
+                if ($resolved -and $ver) {
+                    $versionResolved = $true
                 }
             }
-            if (!$ver -and $page) {
+            if (!$ver -and $page -and !$versionResolved) {
                 if ($jsonpath) {
                     $noregex = !$checkver.regex
-                    $ver = json_path $page $jsonpath $null ($reverse -and $noregex) $noregex
+                    $single = $noregex -and -not $checkver.max
+                    $ver = json_path $page $jsonpath $null ($reverse -and $noregex) $single
                     if (!$ver) { $ver = json_path_legacy $page $jsonpath }
                     if (!$ver) {
                         next $app "couldn't find '$jsonpath' in $source"
                         return
                     }
+                    if ($checkver.max -and $ver -is [string] -and $ver -match '^\s*\[.*\]\s*$') {
+                        try {
+                            $array = $ver | ConvertFrom-Json
+                            if ($array -is [array] -and $array.Count -gt 0) {
+                                $arrayVersions = $array | ForEach-Object { $_.ToString() }
+                                $resolved = A-Resolve-CandidateVersion -CandidateVersions $arrayVersions -Checkver $checkver -Replace $replace -Reverse $reverse -ExpectedVer $expected_ver -MatchesHashtable ([ref]$matchesHashtable) -Version ([ref]$ver)
+                                if ($resolved -and $ver) {
+                                    $versionResolved = $true
+                                }
+                            }
+                        }
+                        catch {}
+                    }
                 }
-                if ($xpath) {
+                if ($xpath -and !$versionResolved) {
                     $xml = [xml]$page
                     $nsList = $xml.SelectNodes('//namespace::*[not(. = ../../namespace::*)]')
                     $nsmgr = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
@@ -263,96 +237,38 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
                         return
                     }
                 }
-                if ($ver -and $checkver.max -and -not $checkver.regex) {
-                    $maxStr = $checkver.max
-                    $isLessOrEqual = try { [semver]$ver -le [semver]$maxStr } catch {
-                        try {
-                            $cleanV = $ver -replace '-.*$', ''
-                            $cleanM = $maxStr -replace '-.*$', ''
-                            [version]$cleanV -le [version]$cleanM
-                        }
-                        catch { $false }
-                    }
-                    if (-not $isLessOrEqual) {
+                if ($ver -and $checkver.max -and -not $checkver.regex -and !$versionResolved) {
+                    $filtered = A-Select-VersionLessOrEqual -Versions @($ver) -MaxVersion $checkver.max
+                    if (-not $filtered -or $filtered.Count -eq 0) {
                         $ver = $expected_ver
+                        Write-Warning " (no version <= max '$($checkver.max)', keeping $expected_ver)"
                     }
+                    else {
+                        $ver = A-Convert-VersionWithRegex -Version $ver -Regex $regexp -MatchesHashtable ([ref]$matchesHashtable)
+                    }
+                    $versionResolved = $true
                 }
-                if (($jsonpath -or $xpath) -and $checkver.regex) {
+                if ($ver -and -not $checkver.regex -and !$versionResolved) {
+                    $ver = A-Convert-VersionWithRegex -Version $ver -Regex $regexp -MatchesHashtable ([ref]$matchesHashtable)
+                    $versionResolved = $true
+                }
+                if (($jsonpath -or $xpath) -and $checkver.regex -and !$versionResolved) {
                     $page = $ver
                     $ver = ''
                 }
-                if (!$ver -and $regexp) {
-                    $re = New-Object System.Text.RegularExpressions.Regex($regexp)
-                    $allMatches = $re.Matches($page)
-                    if ($allMatches -and $allMatches.Count -gt 0) {
-                        if ($checkver.max) {
-                            $maxStr = $checkver.max
-                            $validMatches = [System.Collections.Generic.List[psobject]]::new()
-                            foreach ($m in $allMatches) {
-                                $candidateVer = $null
-                                if ($replace) {
-                                    $candidateVer = $re.Replace($m.Value, $replace)
-                                }
-                                else {
-                                    $candidateVer = if ($m.Groups['version'].Success) { $m.Groups['version'].Value }
-                                    elseif ($m.Groups.Count -gt 1) { $m.Groups[1].Value }
-                                    else {
-                                        next $app "regex '$regexp' does not contain a capture group"
-                                        return
-                                    }
-                                }
-                                if ($candidateVer) {
-                                    $isLessOrEqual = try { [semver]$candidateVer -le [semver]$maxStr } catch {
-                                        try {
-                                            $cleanV = $candidateVer -replace '-.*$', ''
-                                            $cleanM = $maxStr -replace '-.*$', ''
-                                            [version]$cleanV -le [version]$cleanM
-                                        }
-                                        catch { $false }
-                                    }
-                                    if ($isLessOrEqual) {
-                                        $validMatches.Add(@{ Match = $m; Version = $candidateVer })
-                                    }
-                                }
-                            }
-                            if ($validMatches.Count -gt 0) {
-                                $targetMatch = if ($reverse) { $validMatches[-1] } else { $validMatches[0] }
-                                $targetMatch.Match.Groups | ForEach-Object { $matchesHashtable[$_.Name] = $_.Value }
-                                $ver = $targetMatch.Version
-                            }
-                            else {
-                                $ver = $expected_ver
-                            }
-                        }
-                        else {
-                            $match = if ($reverse) { $allMatches[$allMatches.Count - 1] } else { $allMatches[0] }
-                            if ($match -and $match.Success) {
-                                $re.GetGroupNames() | ForEach-Object { $matchesHashtable[$_] = $match.Groups[$_].Value }
-                                if ($replace) {
-                                    $ver = $re.Replace($match.Value, $replace)
-                                }
-                                elseif ($match.Groups['version'].Success) {
-                                    $ver = $match.Groups['version'].Value
-                                }
-                                elseif ($match.Groups.Count -gt 1) {
-                                    $ver = $match.Groups[1].Value
-                                }
-                                else {
-                                    next $app "regex '$regexp' does not contain a capture group"
-                                    return
-                                }
-                            }
-                        }
-                    }
-                    else {
+                if (!$ver -and $regexp -and !$versionResolved) {
+                    $ver = A-Get-RegexMatchesWithMax -Page $page -Regex $regexp -Replace $replace -MaxVersion $checkver.max -Reverse $reverse -MatchesHashtable ([ref]$matchesHashtable)
+                    if (-not $ver) {
                         if ($checkver.max) {
                             $ver = $expected_ver
+                            Write-Warning " (no version <= max '$($checkver.max)', keeping $expected_ver)"
                         }
                         else {
                             next $app "couldn't match '$regexp' in $source"
                             return
                         }
                     }
+                    $versionResolved = $true
                 }
             }
 
@@ -362,7 +278,6 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
             }
         }
     }
-
     if (($ver -eq $expected_ver) -and !$script:ForceUpdate -and $script:SkipUpdated) { return }
 
     Write-Host
@@ -390,97 +305,13 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
             Write-Host 'Forcing autoupdate!' -ForegroundColor DarkMagenta
         }
         try {
-            $ver = Resolve-UrlVersion $json $ver $matchesHashtable
+            $ver = A-Resolve-UrlVersion $json $ver $matchesHashtable
             Invoke-AutoUpdate $app $file $json $ver $matchesHashtable
         }
         catch {
             if ($script:ThrowError) { throw $_ } else { error $_.Exception.Message }
         }
     }
-}
-
-function Get-VersionVariants {
-    param([string]$Version)
-    if ([string]::IsNullOrEmpty($Version)) { return @() }
-    $variants = [System.Collections.Generic.List[string]]::new()
-    $variants.Add($Version)
-    $base = $Version
-    $suffix = ''
-    if ($Version -match '^([\d\.]+)(.*)$') {
-        $base = $Matches[1].TrimEnd('.')
-        $suffix = $Matches[2]
-    }
-    $segments = @($base -split '\.')
-    foreach ($t in 3, 4) {
-        if ($segments.Count -lt $t) {
-            $variants.Add(((($segments + @('0') * ($t - $segments.Count))) -join '.') + $suffix)
-        }
-    }
-    if ($segments.Count -gt 2 -and $segments[-1] -eq '0') {
-        for ($n = $segments.Count - 1; $n -ge 2; $n--) {
-            if ($segments[$n] -eq '0') {
-                $variants.Add(($segments[0..($n - 1)] -join '.') + $suffix)
-            }
-            else { break }
-        }
-    }
-    $oneIdx = @()
-    for ($i = 1; $i -lt $segments.Count; $i++) {
-        if ($segments[$i] -match '^\d$') { $oneIdx += $i }
-    }
-    if ($oneIdx.Count -gt 0) {
-        $total = [Math]::Pow(2, $oneIdx.Count)
-        for ($mask = 1; $mask -lt $total; $mask++) {
-            $copy = @($segments)
-            for ($b = 0; $b -lt $oneIdx.Count; $b++) {
-                if (($mask -band [Math]::Pow(2, $b)) -ne 0) { $copy[$oneIdx[$b]] = '0' + $copy[$oneIdx[$b]] }
-            }
-            $variants.Add(($copy -join '.') + $suffix)
-        }
-    }
-    return @($variants | Select-Object -Unique)
-}
-
-function Test-UrlAvailable {
-    param([string]$Url)
-    if ([string]::IsNullOrEmpty($Url)) { return $false }
-    try {
-        $req = [System.Net.HttpWebRequest]::Create($Url)
-        $req.Method = 'HEAD'
-        $req.Timeout = 15000
-        $req.UserAgent = (Get-UserAgent)
-        $res = $req.GetResponse()
-        $code = [int]$res.StatusCode
-        $res.Close()
-        return ($code -ge 200 -and $code -lt 400)
-    }
-    catch { return $false }
-}
-
-function Resolve-UrlVersion {
-    param($Json, [string]$Version, $MatchesHashtable)
-    $au = $Json.autoupdate
-    if (-not $au) { return $Version }
-    $arch = $au.architecture
-    $template = $au.url
-    if ($arch.'64bit'.url) { $template = $arch.'64bit'.url }
-    elseif ($arch.arm64.url) { $template = $arch.arm64.url }
-    elseif ($arch.'32bit'.url) { $template = $arch.'32bit'.url }
-    if ([string]::IsNullOrEmpty($template)) { return $Version }
-    foreach ($v in (Get-VersionVariants -Version $Version)) {
-        try {
-            $substitutions = Get-VersionSubstitution $v $MatchesHashtable
-            $url = substitute $template $substitutions
-            if (Test-UrlAvailable $url) {
-                if ($v -ne $Version) {
-                    Write-Host " (version adjusted to $v)" -ForegroundColor DarkGray
-                }
-                return $v
-            }
-        }
-        catch { }
-    }
-    return $Version
 }
 
 function Start-NextDownload {
@@ -560,8 +391,8 @@ function Start-NextDownload {
 function Complete-Download([string] $subscriptionName) {
     if ($script:activeRequests.ContainsKey($subscriptionName)) {
         $entry = $script:activeRequests[$subscriptionName]
-        Unregister-Event -SourceIdentifier $subscriptionName -ErrorAction SilentlyContinue
-        Remove-Event -SourceIdentifier $subscriptionName -ErrorAction SilentlyContinue
+        Unregister-Event -SourceIdentifier $subscriptionName -ErrorAction Ignore
+        Remove-Event -SourceIdentifier $subscriptionName -ErrorAction Ignore
         if ($entry.wc) {
             $entry.wc.Dispose()
         }
@@ -585,6 +416,15 @@ while ($in_progress -gt 0) {
                     $entry.cancelling = $true
                     $entry.wc.CancelAsync()
                 }
+                elseif (($now - $entry.startTime).TotalSeconds -ge ($TimeoutSec + 30)) {
+                    Write-Warning "'$($entry.state.app)': download did not complete after cancellation, forcing cleanup"
+                    Unregister-Event -SourceIdentifier $key -ErrorAction SilentlyContinue
+                    Remove-Event -SourceIdentifier $key -ErrorAction SilentlyContinue
+                    try { $entry.wc.Dispose() } catch {}
+                    $activeRequests.Remove($key)
+                    if ($script:in_progress -gt 0) { $script:in_progress-- }
+                    Start-NextDownload
+                }
             }
         }
         continue
@@ -594,7 +434,7 @@ while ($in_progress -gt 0) {
 
     $entry = $activeRequests[$ev.SourceIdentifier]
     if (-not $entry) {
-        $script:in_progress--
+        if ($script:in_progress -gt 0) { $script:in_progress-- }
         Start-NextDownload
         continue
     }

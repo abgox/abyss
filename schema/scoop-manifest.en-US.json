@@ -1824,9 +1824,17 @@
                     "$ref": "#/definitions/str_no_all_space"
                 },
                 "jsonpath": {
-                    "markdownDescription": "Get the version using a JSON endpoint with a JSONPath expression, using either dot notation or bracket notation.\n\n### Example\n\n- Extract the value of the `version` property\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- Extract the value of the `productVersion` or `version` property\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- Extract `updated_at` from the property in `assets` where `name` is `xxx`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- Extract the values of `productVersion` and `version` properties into an array, e.g., `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
+                    "markdownDescription": "Extract version using a JSONPath expression from JSON data\n\n- **Required dependency**: `url` must also be specified when using this field\n- **Refinement with regex**: When paired with `regex`, values/lists will be extracted via `jsonpath` first, then matched by `regex`\n\n### Example\n\n- **Root property**: Extract the `version` property from the root object\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **First array element**: Extract the `version` property from the first element of the root array\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **Recursive scan**: Recursively search for all `version` properties across all levels (returns a list)\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **Conditional filter (LTS)**: Extract `version` from objects where `lts` is not `false`\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **Multi-property lookup**: Extract values of `productVersion` or `version` properties at any depth\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **Array element filter**: Match objects in the `assets` array where `name` is `xxx`, and extract their `updated_at` property\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
                     "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "$ref": "#/definitions/str_no_all_space",
+                    "examples": [
+                        "$.version",
+                        "$[0].version",
+                        "$..version",
+                        "$..[?(@.lts != false)].version",
+                        "$..['productVersion','version']",
+                        "$.assets[?(@.name == 'xxx')].updated_at"
+                    ]
                 },
                 "xpath": {
                     "markdownDescription": "XPath expression to extract the hash value",
@@ -2225,7 +2233,7 @@
             "examples": [
                 true
             ],
-            "anyOf": [
+            "allOf": [
                 {
                     "enum": [
                         true,
@@ -3311,7 +3319,7 @@
                     ]
                 },
                 "url": {
-                    "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to `(.+)`, i.e. the entire content is used as the version",
+                    "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to: `[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
                     "$ref": "#/definitions/str_url_validation"
                 },
                 "dynamic": {
@@ -3329,7 +3337,7 @@
                     ]
                 },
                 "max": {
-                    "markdownDescription": "Maximum version\n\n- Used to limit the maximum version when checking for new versions\n- If the version number exceeds the limit, returns the current version",
+                    "markdownDescription": "Limit the maximum version allowed to be extracted\n\n- **Behavior**: It fetches a **candidate version list** and matches the **first version `<=` max** in reverse chronological/semantic order.\n- **Segment precision**: The number of segments in `max` determines the comparison granularity.\n  - `max: \"25\"` allows any `25.x.x` version\n  - `max: \"25.6\"` allows `25.6.x`\n  - `max: \"25.6.8\"` compares exactly\n- **Fallback**: For example, if the `latest` release on GitHub exceeds `max`, it will automatically search downwards and fall back to an eligible `stable` version.\n- **Tip**: When used with custom `url` endpoints, you may need to adjust your expression to retrieve a **list of versions**:\n  - `jsonpath`: Use `$..version` instead of `$[0].version`",
                     "type": "string",
                     "allOf": [
                         {
@@ -3342,7 +3350,7 @@
                     ]
                 },
                 "script": {
-                    "markdownDescription": "Execute PowerShell commands to get version information\n\n- The final output is used as matching content, and the version is captured by `regex`\n- If `regex` is omitted, it defaults to `(.+)`, i.e. the entire output is used as the version",
+                    "markdownDescription": "Execute PowerShell commands to get version information\n\n- The final output is used as matching content, and the version is captured by `regex`\n- If `regex` is omitted, it defaults to: `[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_or_arr"
@@ -3363,12 +3371,16 @@
                     ]
                 },
                 "regex": {
-                    "markdownDescription": "RegEx (regular expression) to find the version\n\n- If omitted, defaults to `(.+)`, i.e. matches everything (with `url`/`script` sources, the entire content is used as the version)\n\n### Examples\n\n- By default, the content of the first capture group is stored in `$version`\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- Restrict the version format to digits and dots\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- Use a named capture group to store the version in `$version`\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- Strictly match start and end\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
+                    "markdownDescription": "RegEx (regular expression) to find the version\n\n- If omitted, it defaults to: `(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`\n- Define an explicit `regex` when the version appears in a specific context (URL, HTML, structured response) or multiple values need to be captured\n\n### Example\n\n- By default, the content of the first capture group is stored in `$version`\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- Extract the version from a URL with a prefix context\n\n  ```json\n  \"regex\": \"app-(.+)\"\n  ```\n\n- Use named capture groups: `$version` is the main version, other groups (e.g. `$url`) are available in `autoupdate` via `$matchUrl`\n\n  ```json\n  \"regex\": \"(?<url>.*?-(?<version>[\\\\d.]+)-.*\\\\.*)\"\n  ```\n\n- Capture multiple values from a structured response: `$version`, `$matchX64`, `$matchArm64`\n\n  ```json\n  \"regex\": \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))\"\n  ```",
                     "type": "string",
                     "examples": [
-                        "([\\d.]+)",
+                        "app-(.+)",
                         "^([\\d.]+)$",
-                        "^(?<version>[\\d.]+)$"
+                        "v(\\d+\\.[^\\s]+)",
+                        "Version:</b>\\s?([\\d.]+)",
+                        "(?<url>.*?-(?<version>[\\d.]+)-.*\\.*)",
+                        "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))",
+                        "(?=.*?\"productVersion\":\"(?<version>[^;]+)-insider)(?=.*?\"version\":\"(?<hash>[0-9a-f]{6})[0-9a-f]+).*"
                     ],
                     "allOf": [
                         {
@@ -3376,14 +3388,22 @@
                         },
                         {
                             "pattern": "(?<!\\\\)\\(",
-                            "errorMessage": "Must contain at least one capture group, e.g. `([\\d.]+)` or `(?<version>[\\d.]+)`"
+                            "errorMessage": "Must contain at least one capture group"
                         }
                     ]
                 },
                 "jsonpath": {
-                    "markdownDescription": "Retrieve the version from a JSON endpoint using a JSONPath expression, supports dot notation or bracket notation\n\n- `url` must be defined when using this field\n- Can be combined with `regex`: extract with `jsonpath` first, then refine with `regex`\n\n### Examples\n\n- Extract the value of the `version` property\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- Extract the value of `productVersion` or `version`\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- Extract `updated_at` from the asset whose `name` is `xxx`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- Extract the values of `productVersion` and `version` as an array, e.g. `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
+                    "markdownDescription": "Extract version using a JSONPath expression from JSON data\n\n- **Required dependency**: `url` must also be specified when using this field\n- **Refinement with regex**: When paired with `regex`, values/lists will be extracted via `jsonpath` first, then matched by `regex`\n\n### Example\n\n- **Root property**: Extract the `version` property from the root object\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **First array element**: Extract the `version` property from the first element of the root array\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **Recursive scan**: Recursively search for all `version` properties across all levels (returns a list)\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **Conditional filter (LTS)**: Extract `version` from objects where `lts` is not `false`\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **Multi-property lookup**: Extract values of `productVersion` or `version` properties at any depth\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **Array element filter**: Match objects in the `assets` array where `name` is `xxx`, and extract their `updated_at` property\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
                     "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "$ref": "#/definitions/str_no_all_space",
+                    "examples": [
+                        "$.version",
+                        "$[0].version",
+                        "$..version",
+                        "$..[?(@.lts != false)].version",
+                        "$..['productVersion','version']",
+                        "$.assets[?(@.name == 'xxx')].updated_at"
+                    ]
                 },
                 "xpath": {
                     "markdownDescription": "Retrieve the version from an XML page using an XPath expression\n\n- `url` must be defined when using this field\n- Can be combined with `regex`: extract with `xpath` first, then refine with `regex`\n- Extracts the text content of the element; attribute values are not supported",
@@ -3401,6 +3421,22 @@
                 }
             },
             "allOf": [
+                {
+                    "dependencies": {
+                        "dynamic": [
+                            "url"
+                        ],
+                        "redirect": [
+                            "url"
+                        ],
+                        "jsonpath": [
+                            "url"
+                        ],
+                        "xpath": [
+                            "url"
+                        ]
+                    }
+                },
                 {
                     "if": {
                         "anyOf": [
@@ -3443,7 +3479,19 @@
                     },
                     "else": {
                         "not": true,
-                        "errorMessage": "Please add one of github/commit/winget/psgallery/from_installer/url/script"
+                        "errorMessage": "Please add a version source: github/commit/winget/psgallery/from_installer/url/script"
+                    }
+                },
+                {
+                    "dependencies": {
+                        "jsonpath": {
+                            "not": {
+                                "required": [
+                                    "xpath"
+                                ]
+                            },
+                            "errorMessage": "Conflict properties: jsonpath/xpath"
+                        }
                     }
                 },
                 {
@@ -3578,37 +3626,6 @@
                         ]
                     },
                     "errorMessage": "Only one of github/commit/winget/psgallery/from_installer/url/script can be used"
-                },
-                {
-                    "if": {
-                        "anyOf": [
-                            {
-                                "required": [
-                                    "redirect"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "dynamic"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "jsonpath"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "xpath"
-                                ]
-                            }
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "url"
-                        ]
-                    }
                 }
             ]
         },
@@ -4008,29 +4025,26 @@
                             "architecture"
                         ]
                     },
-                    "errorMessage": "The url and architecture properties are not allowed to coexist"
+                    "errorMessage": "Conflict properties: url/architecture"
                 }
             ]
         }
     },
     "allOf": [
         {
-            "if": {
-                "required": [
-                    "link"
-                ]
-            },
-            "else": {
-                "if": {
-                    "required": [
-                        "data_shared"
-                    ]
-                },
-                "then": {
-                    "properties": {
-                        "data_shared": {
-                            "not": true,
-                            "errorMessage": "Invalid property"
+            "dependencies": {
+                "data_shared": {
+                    "if": {
+                        "required": [
+                            "link"
+                        ]
+                    },
+                    "else": {
+                        "properties": {
+                            "data_shared": {
+                                "not": true,
+                                "errorMessage": "Invalid property"
+                            }
                         }
                     }
                 }
@@ -4766,7 +4780,7 @@
                     "architecture"
                 ]
             },
-            "errorMessage": "The url and architecture properties are not allowed to coexist"
+            "errorMessage": "Conflict properties: url/architecture"
         },
         {
             "if": {

@@ -2,6 +2,244 @@
 
 $RequestTimeout = @{ ConnectionTimeoutSeconds = 30; OperationTimeoutSeconds = 60 }
 
+function A-Get-UserAgent {
+    "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
+}
+function A-Get-VersionRegex {
+    param(
+        [string]$SpecifiedRegex
+    )
+    if (-not [string]::IsNullOrWhiteSpace($SpecifiedRegex)) {
+        return $SpecifiedRegex
+    }
+    return '(?:[vV]\.?)?([\w.+\-]+\d[\w.+\-]*)'
+}
+function A-Clear-Version {
+    param([string]$v)
+    if ([string]::IsNullOrEmpty($v)) { return $v }
+    return $v -replace '[vV](?=\d+\.)', ''
+}
+function A-ConvertTo-VersionKey {
+    param([string]$Version)
+    if ([string]::IsNullOrEmpty($Version)) { return $null }
+    $clean = A-Clear-Version -v $Version
+    $m = [regex]::Match($clean, '^(\d+(?:[.\-+_]\d+)*)(.*)$')
+    if (-not $m.Success) { return $null }
+    $nums = $m.Groups[1].Value -split '[.\-+_]'
+    $suffix = $m.Groups[2].Value
+    $sb = [System.Text.StringBuilder]::new()
+    for ($i = 0; $i -lt 4; $i++) {
+        $num = 0
+        if ($i -lt $nums.Count) {
+            [void][int]::TryParse($nums[$i], [ref]$num)
+        }
+        [void]$sb.Append($num.ToString().PadLeft(10, '0'))
+    }
+    if ($suffix) {
+        [void]$sb.Append('~')
+        [void]$sb.Append($suffix)
+    }
+    else {
+        [void]$sb.Append([char]0xFFFF)
+    }
+    return $sb.ToString()
+}
+function A-Test-VersionLessOrEqual {
+    param(
+        [string]$Version,
+        [string]$MaxVersion
+    )
+    if ([string]::IsNullOrEmpty($MaxVersion)) { return $true }
+    $cleanVer = A-Clear-Version -v $Version
+    $cleanMax = A-Clear-Version -v $MaxVersion
+    $maxSegments = ($cleanMax -split '\.').Count
+    $compareVer = $cleanVer
+    $verSegments = @($cleanVer -split '\.')
+    if ($verSegments.Count -gt $maxSegments) {
+        $compareVer = ($verSegments[0..($maxSegments - 1)] -join '.')
+    }
+    try {
+        return [semver]$compareVer -le [semver]$cleanMax
+    }
+    catch {
+        try {
+            $cleanV = $compareVer -replace '-.*$', ''
+            $cleanM = $cleanMax -replace '-.*$', ''
+            if (($cleanV -split '\.').Count -lt 2) { $cleanV += '.0' }
+            if (($cleanM -split '\.').Count -lt 2) { $cleanM += '.0' }
+            return [version]$cleanV -le [version]$cleanM
+        }
+        catch { return $false }
+    }
+}
+function A-Select-VersionLessOrEqual {
+    param(
+        [string[]]$Versions,
+        [string]$MaxVersion
+    )
+    if ([string]::IsNullOrEmpty($MaxVersion)) { return $Versions }
+    return @($Versions | Where-Object { A-Test-VersionLessOrEqual -Version $_ -MaxVersion $MaxVersion })
+}
+function A-Select-VersionFromList {
+    param(
+        [string[]]$Versions,
+        [bool]$Reverse
+    )
+    if (-not $Versions -or $Versions.Count -eq 0) { return $null }
+    $mapped = @($Versions | ForEach-Object {
+            [pscustomobject]@{ Original = $_; Key = (A-ConvertTo-VersionKey -Version $_) }
+        })
+    $sorted = @($mapped | Where-Object { $null -ne $_.Key } | Sort-Object Key -Descending | ForEach-Object { $_.Original })
+    $unparseable = @($mapped | Where-Object { $null -eq $_.Key } | ForEach-Object { $_.Original })
+    $result = @($sorted) + $unparseable
+    if ($result.Count -eq 0) { return $null }
+    if ($Reverse) {
+        return $result[-1]
+    }
+    return $result[0]
+}
+function A-Get-VersionVariants {
+    param([string]$Version)
+    if ([string]::IsNullOrEmpty($Version)) { return @() }
+    $variants = [System.Collections.Generic.List[string]]::new()
+    $variants.Add($Version)
+    $base = $Version
+    $suffix = ''
+    if ($Version -match '^([\d\.]+)(.*)$') {
+        $base = $Matches[1].TrimEnd('.')
+        $suffix = $Matches[2]
+    }
+    $segments = @($base -split '\.')
+    foreach ($t in 3, 4) {
+        if ($segments.Count -lt $t) {
+            $variants.Add(((($segments + @('0') * ($t - $segments.Count))) -join '.') + $suffix)
+        }
+    }
+    if ($segments.Count -gt 2 -and $segments[-1] -eq '0') {
+        for ($n = $segments.Count - 1; $n -ge 2; $n--) {
+            if ($segments[$n] -eq '0') {
+                $variants.Add(($segments[0..($n - 1)] -join '.') + $suffix)
+            }
+            else { break }
+        }
+    }
+    $oneIdx = @()
+    for ($i = 1; $i -lt $segments.Count; $i++) {
+        if ($segments[$i] -match '^\d$') { $oneIdx += $i }
+    }
+    if ($oneIdx.Count -gt 0) {
+        $total = [Math]::Pow(2, $oneIdx.Count)
+        for ($mask = 1; $mask -lt $total; $mask++) {
+            $copy = @($segments)
+            for ($b = 0; $b -lt $oneIdx.Count; $b++) {
+                if (($mask -band [Math]::Pow(2, $b)) -ne 0) { $copy[$oneIdx[$b]] = '0' + $copy[$oneIdx[$b]] }
+            }
+            $variants.Add(($copy -join '.') + $suffix)
+        }
+    }
+    return @($variants | Select-Object -Unique)
+}
+function A-Convert-VersionWithRegex {
+    param(
+        [string]$Version,
+        [string]$Regex,
+        [string]$Replace,
+        [ref]$MatchesHashtable
+    )
+    if ([string]::IsNullOrEmpty($Regex) -or -not $Version) { return $Version }
+    $re = New-Object System.Text.RegularExpressions.Regex($Regex)
+    $m = $re.Match($Version)
+    if (-not $m.Success) { return $null }
+    if ($MatchesHashtable) {
+        $re.GetGroupNames() | ForEach-Object { $MatchesHashtable.Value[$_] = $m.Groups[$_].Value }
+    }
+    $result = if ($Replace) {
+        $re.Replace($m.Value, $Replace)
+    }
+    elseif ($m.Groups['version'].Success) {
+        $m.Groups['version'].Value
+    }
+    elseif ($m.Groups.Count -gt 1) {
+        $m.Groups[1].Value
+    }
+    else {
+        $Version
+    }
+    return A-Clear-Version -v $result
+}
+
+function A-Test-UrlAvailable {
+    param([string]$Url)
+    if ([string]::IsNullOrEmpty($Url)) { return $false }
+    try {
+        $req = [System.Net.HttpWebRequest]::Create($Url)
+        $req.Method = 'HEAD'
+        $req.Timeout = 15000
+        $req.UserAgent = A-Get-UserAgent
+        $req.AllowAutoRedirect = $true
+        $res = $req.GetResponse()
+        $code = [int]$res.StatusCode
+        $res.Close()
+        return ($code -ge 200 -and $code -lt 400)
+    }
+    catch {
+        try {
+            $req = [System.Net.HttpWebRequest]::Create($Url)
+            $req.Method = 'GET'
+            $req.Timeout = 15000
+            $req.UserAgent = A-Get-UserAgent
+            $req.AllowAutoRedirect = $true
+            $req.AddRange(0, 0)
+            $res = $req.GetResponse()
+            $code = [int]$res.StatusCode
+            $res.Close()
+            return ($code -ge 200 -and $code -lt 400)
+        }
+        catch { return $false }
+    }
+}
+function A-Resolve-DownloadUrl {
+    param(
+        [string]$Url
+    )
+    if (!$PSBoundParameters.ContainsKey('Url')) {
+        return
+    }
+    try {
+        $res = [System.Net.HttpWebRequest]::Create($Url).GetResponse()
+        $res.ResponseUri.AbsoluteUri
+        $res.Close()
+    }
+    catch {
+        Write-Error "Failed to resolve download URL '$Url': $($_.Exception.Message)"
+    }
+}
+function A-Get-RemoteFileSize {
+    param(
+        [string]$Url
+    )
+    $Url = A-Resolve-DownloadUrl $Url
+    try {
+        $headers = @{ 'Range' = 'bytes=0-0' }
+        $resp = Invoke-WebRequest -Uri $Url -Headers $headers -UseBasicParsing @RequestTimeout
+        $contentRange = $resp.Headers['Content-Range']
+        if ($contentRange -and $contentRange -match '/(\d+)$') {
+            return [int64]$Matches[1]
+        }
+        if ($resp.Headers['Content-Length']) {
+            return [int64]$resp.Headers['Content-Length']
+        }
+    }
+    catch {}
+    try {
+        $head = Invoke-WebRequest -Uri $Url -Method Head -UseBasicParsing @RequestTimeout
+        if ($head.Headers['Content-Length']) {
+            return [int64]$head.Headers['Content-Length']
+        }
+    }
+    catch {}
+}
+
 function A-Invoke-GitHubAPI {
     param (
         [string]$Uri,
@@ -58,46 +296,56 @@ function A-Invoke-GitHubAPI {
                 return
             }
             $statusCode = [int]$response.StatusCode
-            $remaining = $response.Headers['x-ratelimit-remaining']
-            $retryAfter = $response.Headers['retry-after']
+            if ($statusCode -in 403, 429) {
+                $remaining = $response.Headers['x-ratelimit-remaining']
+                $retryAfter = $response.Headers['retry-after']
 
-            if ($statusCode -in 403, 429 -and ($null -ne $remaining -or $null -ne $retryAfter)) {
-                if ($remaining -eq '0') {
+                if ($null -ne $remaining -and $remaining -eq '0') {
                     if ($env:GITHUB_ACTIONS) {
-                        Write-Warning "Token [$currentIndex] is exhausted. Switching..."
+                        Write-Warning "Token [$currentIndex] exhausted. Switching..."
                         $currentIndex = ($currentIndex + 1) % $tokenPool.Count
                         [Environment]::SetEnvironmentVariable('TOKEN_POOL_ORDER', $currentIndex, 'User')
                     }
                     else {
-                        Write-Warning 'Token (scoop config gh_token) is exhausted'
+                        Write-Warning 'Token (scoop config gh_token) exhausted'
                     }
                     $attemptCount++
                     continue
                 }
 
-                $waitSec = if ($retryAfter) { [int]$retryAfter } else { 3 }
-
-                Write-Warning "(GitHub API) Secondary Rate Limit hit. Max Attempts: $maxGlobalRetries. Current Attempt: $($attemptCount + 1). Waiting ${waitSec}s..."
-                Start-Sleep -Seconds $waitSec
-                if ($env:GITHUB_ACTIONS) {
-                    $currentIndex = ($currentIndex + 1) % $tokenPool.Count
-                    [Environment]::SetEnvironmentVariable('TOKEN_POOL_ORDER', $currentIndex, 'User')
+                $waitSec = if ($retryAfter) {
+                    $retryAfterInt = 0
+                    if ([int]::TryParse($retryAfter, [ref]$retryAfterInt)) {
+                        [Math]::Min($retryAfterInt, 300)
+                    }
+                    else {
+                        60
+                    }
                 }
+                else {
+                    [Math]::Min(30 * [Math]::Pow(2, $attemptCount), 300)
+                }
+                Write-Warning "Rate limit hit (Secondary/IP-based). Attempt $($attemptCount + 1)/$maxGlobalRetries. Waiting ${waitSec}s..."
+                Start-Sleep -Seconds $waitSec
                 $attemptCount++
+                continue
             }
-            else {
-                Write-Error $_
-                return
+            Write-Error "GitHub API returned HTTP $statusCode for $Uri"
+            if ($_.Exception.Message) {
+                Write-Error $_.Exception.Message
             }
+            return
         }
     }
+    Write-Error "Max retries ($maxGlobalRetries) exceeded for $Uri"
+    return $null
 }
 function A-Get-VersionFromGitHub {
     param (
         [string]$Channel = 'latest'
     )
     $checkver = $json.checkver
-    $regex = $checkver.regex, '(.+)' | Select-Object -First 1
+    $regex = A-Get-VersionRegex -SpecifiedRegex $checkver.regex
     $repo = A-Get-GitRepo
     if (!$repo) { return }
     $baseApiUrl = "https://api.github.com/repos/$repo/releases"
@@ -105,15 +353,32 @@ function A-Get-VersionFromGitHub {
     if ($Channel -eq 'latest' -and !$checkver.max) {
         $res = A-Invoke-GitHubAPI -Uri "$baseApiUrl/latest"
         if (!$res) { return }
-        $v = $res.tag_name -replace '[vV](?=\d+\.)', ''
+        $v = A-Clear-Version -v $res.tag_name
         if ($v -match $regex) {
             return $v
         }
         return
     }
-    if ($checkver.max) { $baseApiUrl += '?per_page=100' }
-    $res = A-Invoke-GitHubAPI -Uri $baseApiUrl
-    if (!$res) { return }
+    if ($checkver.max) {
+        $all = [System.Collections.Generic.List[psobject]]::new()
+        $page = 1
+        while ($page -le 10) {
+            $res = A-Invoke-GitHubAPI -Uri "$baseApiUrl?per_page=100&page=$page"
+            if (!$res -or $res.Count -eq 0) { break }
+            $all.AddRange($res)
+            $oldestV = A-Clear-Version -v $res[-1].tag_name
+            if ($oldestV -match $regex -and (A-Test-VersionLessOrEqual -Version $oldestV -MaxVersion $checkver.max)) {
+                break
+            }
+            $page++
+        }
+        if ($all.Count -eq 0) { return }
+        $res = $all
+    }
+    else {
+        $res = A-Invoke-GitHubAPI -Uri $baseApiUrl
+        if (!$res) { return }
+    }
 
     switch ($Channel) {
         'newest' { $releaseInfo = $res }
@@ -123,7 +388,7 @@ function A-Get-VersionFromGitHub {
     }
     $versions = [System.Collections.Generic.List[string]]::new()
     foreach ($item in $releaseInfo) {
-        $v = $item.tag_name -replace '[vV](?=\d+\.)', ''
+        $v = A-Clear-Version -v $item.tag_name
         if ($v -match $regex) {
             $versions.Add($v)
         }
@@ -187,139 +452,7 @@ function A-Get-VersionFromCommit {
     }
     return (&$parseCommit $res[0])
 }
-function A-Get-VersionFromPowerShellGallery {
-    $moduleName = $json.psmodule.name
-    if (!$moduleName) {
-        Write-Error '$json.psmodule.name is invalid'
-        return
-    }
-    $channel = $json.checkver.psgallery.channel
-    $params = @{
-        Name        = $moduleName
-        Repository  = 'PSGallery'
-        Version     = '*'
-        ErrorAction = 'SilentlyContinue'
-    }
-    if ($channel -in 'newest', 'preview') {
-        $params['Prerelease'] = $true
-    }
-    $res = Find-PSResource @params
-    if (!$res) { return }
-    $sorted = $res | Sort-Object { $_.Version } -Descending
-    if ($channel -eq 'preview') {
-        return @($sorted | Where-Object { $_.IsPrerelease } | ForEach-Object {
-                if ($_.Prerelease) { "$($_.Version)-$($_.Prerelease)" } else { $_.Version.ToString() }
-            })
-    }
-    return @($sorted | ForEach-Object {
-            if ($_.Prerelease) { "$($_.Version)-$($_.Prerelease)" } else { $_.Version.ToString() }
-        })
-}
-function A-Get-VersionFromInstaller {
-    $arch = $json.autoupdate.architecture
-    $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
-    if (!$url) {
-        Write-Error "${app}: No installer url found"
-        return
-    }
-    $versionPattern = '^\d+(\.\d+){1,}'
 
-    $totalSize = A-Get-RemoteFileSize $url
-    $sizeTiers = @(512KB, 2MB, 5MB, 20MB, $null)
-    if ($totalSize) {
-        $effectiveTiers = New-Object System.Collections.Generic.List[object]
-        foreach ($size in $sizeTiers) {
-            if ($null -eq $size) {
-                $effectiveTiers.Add($size)
-                break
-            }
-            $effectiveTiers.Add($size)
-            if ([int64]$size -ge $totalSize) {
-                break
-            }
-        }
-        $sizeTiers = $effectiveTiers
-    }
-    $tempFile = Join-Path $env:TEMP "$([guid]::NewGuid().ToString()).exe"
-    $rawVersion = $null
-    try {
-        foreach ($size in $sizeTiers) {
-            try {
-                if ($null -eq $size) {
-                    Invoke-WebRequest -Uri $url -OutFile $tempFile -UseBasicParsing
-                }
-                else {
-                    $rangeEnd = [int64]$size - 1
-                    $headers = @{ 'Range' = "bytes=0-$rangeEnd" }
-                    Invoke-WebRequest -Uri $url -Headers $headers -OutFile $tempFile -UseBasicParsing @RequestTimeout
-                }
-                $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($tempFile)
-                $candidate = if ($vi.FileVersion) { $vi.FileVersion.Trim() } else { $vi.ProductVersion.Trim() }
-                if ($candidate -match $versionPattern) {
-                    $rawVersion = $candidate
-                    break
-                }
-            }
-            catch {
-                continue
-            }
-        }
-    }
-    finally {
-        if (Test-Path $tempFile) {
-            Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
-        }
-    }
-    if (!$rawVersion) {
-        Write-Error "${app}: Could not extract a valid version from installer"
-        return
-    }
-    if ($json.checkver.regex) {
-        if ($rawVersion -match $json.checkver.regex) {
-            if ($json.checkver.replace) {
-                $re = New-Object System.Text.RegularExpressions.Regex($json.checkver.regex)
-                return $re.Replace($Matches[0], $json.checkver.replace)
-            }
-            elseif ($Matches[1]) {
-                return $Matches[1]
-            }
-            else {
-                Write-Error "${app}: regex '$($json.checkver.regex)' does not contain a capture group"
-                return
-            }
-        }
-        else {
-            Write-Error "${app}: Version '$rawVersion' does not match regex '$($json.checkver.regex)'"
-            return
-        }
-    }
-    return $rawVersion
-}
-function A-Get-DynamicPageFromUrl {
-    if (!$json.checkver.url) {
-        Write-Error "${app}: Requires 'checkver.url'"
-        return
-    }
-    $edgePath = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
-    if (!(Test-Path $edgePath)) {
-        $edgePath = 'msedge.exe'
-    }
-    try {
-        $args = @('--headless=new', '--disable-gpu', '--dump-dom', '--no-sandbox', '--virtual-time-budget=10000', $json.checkver.url)
-
-        $html = & $edgePath $args 2>$null | Out-String
-
-        if ([string]::IsNullOrWhiteSpace($html)) {
-            Write-Error "Failed to retrieve content from $($json.checkver.url)"
-            return
-        }
-        $html
-    }
-    catch {
-        Write-Error "Edge execution failed: $($_.Exception.Message)"
-        return
-    }
-}
 function A-Get-InstallerInfoFromWinGet {
     param(
         [string]$PackageIdentifier = $checkver.winget.id,
@@ -357,18 +490,7 @@ function A-Get-InstallerInfoFromWinGet {
 
     $versions = $res | ForEach-Object { if ($_.Name -notmatch '^\.') { $_.Name } } | Where-Object { $_ -match '^\d' }
     if ($checkver.max) {
-        $maxStr = $checkver.max
-        $filteredVersions = $versions | Where-Object {
-            try { [semver]$_ -le [semver]$maxStr }
-            catch {
-                try {
-                    $cleanV = $_ -replace '-.*$', ''
-                    $cleanM = $maxStr -replace '-.*$', ''
-                    [version]$cleanV -le [version]$cleanM
-                }
-                catch { $false }
-            }
-        }
+        $filteredVersions = A-Select-VersionLessOrEqual -Versions $versions -MaxVersion $checkver.max
         if (!$filteredVersions -or $filteredVersions.Count -eq 0) {
             $latestVersion = $json.version
         }
@@ -490,47 +612,259 @@ function A-Get-InstallerInfoFromWinGet {
     }
     return $out -join ''
 }
-function A-Get-UserAgent {
-    "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
-}
-function A-Resolve-DownloadUrl {
-    param(
-        [string]$Url
-    )
-    if (!$PSBoundParameters.ContainsKey('Url')) {
+function A-Get-VersionFromPowerShellGallery {
+    $moduleName = $json.psmodule.name
+    if (!$moduleName) {
+        Write-Error '$json.psmodule.name is invalid'
         return
     }
+    $channel = $json.checkver.psgallery.channel
+    $params = @{
+        Name        = $moduleName
+        Repository  = 'PSGallery'
+        Version     = '*'
+        ErrorAction = 'SilentlyContinue'
+    }
+    if ($channel -in 'newest', 'preview') {
+        $params['Prerelease'] = $true
+    }
+    $res = Find-PSResource @params
+    if (!$res) { return }
+    $sorted = @($res | ForEach-Object {
+            [pscustomobject]@{
+                VersionStr = if ($_.Prerelease) { "$($_.Version)-$($_.Prerelease)" } else { $_.Version.ToString() }
+                IsPreview  = [bool]$_.IsPrerelease
+                Key        = (A-ConvertTo-VersionKey -Version $_.Version.ToString())
+            }
+        } | Where-Object { $_.Key } | Sort-Object Key -Descending)
+    if ($channel -eq 'preview') {
+        return @($sorted | Where-Object { $_.IsPreview } | ForEach-Object { $_.VersionStr })
+    }
+    return @($sorted | ForEach-Object { $_.VersionStr })
+}
+function A-Get-VersionFromInstaller {
+    $arch = $json.autoupdate.architecture
+    $url = $arch.'64bit'.url, $arch.arm64.url, $arch.'32bit'.url, $json.autoupdate.url | Select-Object -First 1
+    if (!$url) {
+        Write-Error "${app}: No installer url found"
+        return
+    }
+    $versionPattern = '^\d+(\.\d+){1,}'
+
+    $totalSize = A-Get-RemoteFileSize $url
+    $sizeTiers = @(512KB, 2MB, 5MB, 20MB, $null)
+    if ($totalSize) {
+        $effectiveTiers = New-Object System.Collections.Generic.List[object]
+        foreach ($size in $sizeTiers) {
+            if ($null -eq $size) {
+                $effectiveTiers.Add($size)
+                break
+            }
+            $effectiveTiers.Add($size)
+            if ([int64]$size -ge $totalSize) {
+                break
+            }
+        }
+        $sizeTiers = $effectiveTiers
+    }
+    $tempFile = Join-Path $env:TEMP "$([guid]::NewGuid().ToString()).exe"
+    $rawVersion = $null
     try {
-        $res = [System.Net.HttpWebRequest]::Create($Url).GetResponse()
-        $res.ResponseUri.AbsoluteUri
-        $res.Close()
+        foreach ($size in $sizeTiers) {
+            try {
+                if ($null -eq $size) {
+                    Invoke-WebRequest -Uri $url -OutFile $tempFile -UseBasicParsing
+                }
+                else {
+                    $rangeEnd = [int64]$size - 1
+                    $headers = @{ 'Range' = "bytes=0-$rangeEnd" }
+                    Invoke-WebRequest -Uri $url -Headers $headers -OutFile $tempFile -UseBasicParsing @RequestTimeout
+                }
+                $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($tempFile)
+                $candidate = if ($vi.FileVersion) { $vi.FileVersion.Trim() } else { $vi.ProductVersion.Trim() }
+                if ($candidate -match $versionPattern) {
+                    $rawVersion = $candidate
+                    break
+                }
+            }
+            catch {
+                continue
+            }
+        }
+    }
+    finally {
+        if (Test-Path $tempFile) {
+            Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
+        }
+    }
+    if (!$rawVersion) {
+        Write-Error "${app}: Could not extract a valid version from installer"
+        return
+    }
+    if ($json.checkver.regex) {
+        if ($rawVersion -match $json.checkver.regex) {
+            if ($json.checkver.replace) {
+                $re = New-Object System.Text.RegularExpressions.Regex($json.checkver.regex)
+                return $re.Replace($Matches[0], $json.checkver.replace)
+            }
+            elseif ($Matches[1]) {
+                return $Matches[1]
+            }
+            else {
+                Write-Error "${app}: regex '$($json.checkver.regex)' does not contain a capture group"
+                return
+            }
+        }
+        else {
+            Write-Error "${app}: Version '$rawVersion' does not match regex '$($json.checkver.regex)'"
+            return
+        }
+    }
+    return $rawVersion
+}
+function A-Get-DynamicPageFromUrl {
+    if (!$json.checkver.url) {
+        Write-Error "${app}: Requires 'checkver.url'"
+        return
+    }
+    $edgePath = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
+    if (!(Test-Path $edgePath)) {
+        $edgePath = 'msedge.exe'
+    }
+    try {
+        $args = @('--headless=new', '--disable-gpu', '--dump-dom', '--no-sandbox', '--virtual-time-budget=10000', $json.checkver.url)
+
+        $html = & $edgePath $args 2>$null | Out-String
+
+        if ([string]::IsNullOrWhiteSpace($html)) {
+            Write-Error "Failed to retrieve content from $($json.checkver.url)"
+            return
+        }
+        $html
     }
     catch {
-        Write-Error "Failed to resolve download URL '$Url': $($_.Exception.Message)"
+        Write-Error "Edge execution failed: $($_.Exception.Message)"
+        return
     }
 }
-function A-Get-RemoteFileSize {
+
+function A-Get-RegexMatchesWithMax {
     param(
-        [string]$Url
+        [string]$Page,
+        [string]$Regex,
+        [string]$Replace,
+        [string]$MaxVersion,
+        [bool]$Reverse,
+        [ref]$MatchesHashtable
     )
-    $Url = A-Resolve-DownloadUrl $Url
-    try {
-        $headers = @{ 'Range' = 'bytes=0-0' }
-        $resp = Invoke-WebRequest -Uri $Url -Headers $headers -UseBasicParsing @RequestTimeout
-        $contentRange = $resp.Headers['Content-Range']
-        if ($contentRange -and $contentRange -match '/(\d+)$') {
-            return [int64]$Matches[1]
+    $re = New-Object System.Text.RegularExpressions.Regex($Regex)
+    $allMatches = $re.Matches($Page)
+    if (-not $allMatches -or $allMatches.Count -eq 0) { return $null }
+    if ($MaxVersion) {
+        $validMatches = [System.Collections.Generic.List[psobject]]::new()
+        foreach ($m in $allMatches) {
+            $candidateVer = $null
+            if ($Replace) {
+                $candidateVer = $re.Replace($m.Value, $Replace)
+            }
+            else {
+                $candidateVer = if ($m.Groups['version'].Success) { $m.Groups['version'].Value }
+                elseif ($m.Groups.Count -gt 1) { $m.Groups[1].Value }
+                else { continue }
+            }
+            if ($candidateVer) {
+                $isLessOrEqual = A-Test-VersionLessOrEqual -Version $candidateVer -MaxVersion $MaxVersion
+                if ($isLessOrEqual) {
+                    $validMatches.Add(@{ Match = $m; Version = $candidateVer })
+                }
+            }
         }
-        if ($resp.Headers['Content-Length']) {
-            return [int64]$resp.Headers['Content-Length']
+        if ($validMatches.Count -eq 0) { return $null }
+        $targetMatch = if ($Reverse) { $validMatches[-1] } else { $validMatches[0] }
+        $targetMatch.Match.Groups | ForEach-Object { $MatchesHashtable.Value[$_.Name] = $_.Value }
+        return A-Clear-Version -v $targetMatch.Version
+    }
+    else {
+        $match = if ($Reverse) { $allMatches[$allMatches.Count - 1] } else { $allMatches[0] }
+        if (-not $match -or -not $match.Success) { return $null }
+        $re.GetGroupNames() | ForEach-Object { $MatchesHashtable.Value[$_] = $match.Groups[$_].Value }
+        $result = if ($Replace) {
+            $re.Replace($match.Value, $Replace)
+        }
+        elseif ($match.Groups['version'].Success) {
+            $match.Groups['version'].Value
+        }
+        elseif ($match.Groups.Count -gt 1) {
+            $match.Groups[1].Value
+        }
+
+        return A-Clear-Version -v $result
+    }
+}
+function A-Resolve-CandidateVersion {
+    param(
+        [string[]]$CandidateVersions,
+        $Checkver,
+        [string]$Replace,
+        [bool]$Reverse,
+        [string]$ExpectedVer,
+        [ref]$MatchesHashtable,
+        [ref]$Version
+    )
+    if (-not $CandidateVersions -or $CandidateVersions.Count -eq 0) { return $false }
+    $effectiveRegex = A-Get-VersionRegex -SpecifiedRegex $Checkver.regex
+    $extracted = [System.Collections.Generic.List[psobject]]::new()
+    foreach ($c in $CandidateVersions) {
+        $e = A-Convert-VersionWithRegex -Version $c -Regex $effectiveRegex -Replace $Replace -MatchesHashtable ([ref](@{}))
+        if ($e) {
+            $extracted.Add([pscustomobject]@{ Version = $e; Source = $c })
         }
     }
-    catch {}
-    try {
-        $head = Invoke-WebRequest -Uri $Url -Method Head -UseBasicParsing @RequestTimeout
-        if ($head.Headers['Content-Length']) {
-            return [int64]$head.Headers['Content-Length']
+    if ($extracted.Count -eq 0) {
+        $Version.Value = $null
+        return $false
+    }
+    $versions = @($extracted | ForEach-Object { $_.Version })
+    if ($Checkver.max) {
+        $versions = A-Select-VersionLessOrEqual -Versions $versions -MaxVersion $Checkver.max
+        if (-not $versions -or $versions.Count -eq 0) {
+            Write-Warning " (no version <= max '$($Checkver.max)', keeping $ExpectedVer)"
+            $Version.Value = $ExpectedVer
+            return $true
         }
     }
-    catch {}
+    $ver = A-Select-VersionFromList -Versions $versions -Reverse $Reverse
+    if ($ver -and $MatchesHashtable) {
+        $selected = $extracted | Where-Object { $_.Version -eq $ver } | Select-Object -First 1
+        if ($selected) {
+            A-Convert-VersionWithRegex -Version $selected.Source -Regex $effectiveRegex -Replace $Replace -MatchesHashtable $MatchesHashtable | Out-Null
+        }
+    }
+    $Version.Value = $ver
+    return $true
+}
+function A-Resolve-UrlVersion {
+    param($Json, [string]$Version, $MatchesHashtable)
+    $au = $Json.autoupdate
+    if (-not $au) { return $Version }
+    $arch = $au.architecture
+    $template = $au.url
+    if ($arch.'64bit'.url) { $template = $arch.'64bit'.url }
+    elseif ($arch.arm64.url) { $template = $arch.arm64.url }
+    elseif ($arch.'32bit'.url) { $template = $arch.'32bit'.url }
+    if ([string]::IsNullOrEmpty($template)) { return $Version }
+    foreach ($v in (A-Get-VersionVariants -Version $Version)) {
+        try {
+            $substitutions = Get-VersionSubstitution $v $MatchesHashtable
+            $url = substitute $template $substitutions
+            if (A-Test-UrlAvailable $url) {
+                if ($v -ne $Version) {
+                    Write-Host " (version adjusted to $v)" -ForegroundColor DarkGray
+                }
+                return $v
+            }
+        }
+        catch { }
+    }
+    return $Version
 }

@@ -1824,9 +1824,17 @@
                     "$ref": "#/definitions/str_no_all_space"
                 },
                 "jsonpath": {
-                    "markdownDescription": "使用带有 JSONPath 表达式的 JSON 端点检索版本，可以使用点标注或括号标注。\n\n### 示例\n\n- 提取 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的属性中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 属性的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
+                    "markdownDescription": "使用 JSONPath 表达式从 JSON 数据中提取版本号\n\n- **必填依赖**：使用本字段时必须同时定义 `url`\n- **正则捕获**：配合 `regex` 使用时，将先通过 `jsonpath` 提取文本/列表，再使用 `regex` 捕获版本号\n\n### 示例\n\n- **根级属性**：提取根对象中的 `version` 属性\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **数组首项**：提取根数组中第一个元素的 `version` 属性\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **递归全检索**：递归查找 JSON 中所有层级下的 `version` 属性（返回列表）\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **条件过滤（LTS）**：提取 `lts` 属性不为 `false` 的对象的 `version` 属性\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **多属性检索**：提取任意层级下的 `productVersion` 或 `version` 属性值\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **数组字段过滤**：匹配 `assets` 数组中 `name` 为 `xxx` 的对象，并提取其 `updated_at` 属性\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
                     "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "$ref": "#/definitions/str_no_all_space",
+                    "examples": [
+                        "$.version",
+                        "$[0].version",
+                        "$..version",
+                        "$..[?(@.lts != false)].version",
+                        "$..['productVersion','version']",
+                        "$.assets[?(@.name == 'xxx')].updated_at"
+                    ]
                 },
                 "xpath": {
                     "markdownDescription": "XPath 表达式来提取 hash 值",
@@ -2225,7 +2233,7 @@
             "examples": [
                 true
             ],
-            "anyOf": [
+            "allOf": [
                 {
                     "enum": [
                         true,
@@ -3311,7 +3319,7 @@
                     ]
                 },
                 "url": {
-                    "markdownDescription": "版本所在页面\n\n- 获取页面内容后，通过 `regex` 匹配版本\n- `regex` 省略时默认为 `(.+)`，即把整个内容作为版本",
+                    "markdownDescription": "版本所在页面\n\n- 获取页面内容后，通过 `regex` 匹配版本\n- `regex` 省略时默认为：`[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
                     "$ref": "#/definitions/str_url_validation"
                 },
                 "dynamic": {
@@ -3329,7 +3337,7 @@
                     ]
                 },
                 "max": {
-                    "markdownDescription": "最大版本\n\n- 它用于在检查新版本时限制最大版本\n- 如果版本号大于限制，则返回当前版本",
+                    "markdownDescription": "限制允许提取的最大版本号\n\n- **逻辑变化**：它将获取 **候选版本列表**，并按时间/语义从新到旧匹配 **首个 `<=` max** 的版本\n- **段数精度**：`max` 的段数决定比较粒度\n  - `max: \"25\"` 允许任意 `25.x.x` 版本\n  - `max: \"25.6\"` 允许 `25.6.x`\n  - `max: \"25.6.8\"` 则精确比较\n- **回退机制**：如果 `github` 的 `latest` 版本大于 `max` ，它会自动向下检索并回退到符合条件的 `stable` 版本\n- **提示**：如果使用 `url` 提取自定义页面/API，可能需要改写表达式以获取 **版本列表**\n  - `jsonpath`: 使用 `$..version` 而非 `$[0].version`",
                     "type": "string",
                     "allOf": [
                         {
@@ -3342,7 +3350,7 @@
                     ]
                 },
                 "script": {
-                    "markdownDescription": "执行 PowerShell 命令以获取版本信息\n\n- 最终输出作为匹配内容，由 `regex` 捕获版本\n- `regex` 省略时默认为 `(.+)`，即整个输出作为版本",
+                    "markdownDescription": "执行 PowerShell 命令以获取版本信息\n\n- 最终输出作为匹配内容，由 `regex` 捕获版本\n- `regex` 省略时默认为：`[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_or_arr"
@@ -3363,12 +3371,16 @@
                     ]
                 },
                 "regex": {
-                    "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n- 省略时默认为 `(.+)`，即匹配全部内容（配合 `url`/`script` 来源时，将整个内容作为版本）\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 限制版本号格式为数字和点号\n\n  ```json\n  \"regex\": \"([\\\\d.]+)\"\n  ```\n\n- 可以使用命名捕获组将版本号存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(?<version>[\\\\d.]+)\"\n  ```\n\n- 严格匹配首尾\n\n  ```json\n  \"regex\": \"^(?<version>[\\\\d.]+)$\"\n  ```",
+                    "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n- 省略时默认为：`(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式\n- 当版本出现在特定上下文（URL、HTML、结构化响应）中，或需要捕获多个值时，请显式定义 `regex`\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 从带前缀上下文的 URL 中提取版本\n\n  ```json\n  \"regex\": \"app-(.+)\"\n  ```\n\n- 使用命名捕获组：`$version` 作为主版本号，其他组（如 `$url`）可在 `autoupdate` 中通过 `$matchUrl` 使用\n\n  ```json\n  \"regex\": \"(?<url>.*?-(?<version>[\\\\d.]+)-.*\\\\.*)\"\n  ```\n\n- 从结构化响应中捕获多个值：`$version`，`$matchX64`，`$matchArm64`\n\n  ```json\n  \"regex\": \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))\"\n  ```",
                     "type": "string",
                     "examples": [
-                        "([\\d.]+)",
+                        "app-(.+)",
                         "^([\\d.]+)$",
-                        "^(?<version>[\\d.]+)$"
+                        "v(\\d+\\.[^\\s]+)",
+                        "Version:</b>\\s?([\\d.]+)",
+                        "(?<url>.*?-(?<version>[\\d.]+)-.*\\.*)",
+                        "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))",
+                        "(?=.*?\"productVersion\":\"(?<version>[^;]+)-insider)(?=.*?\"version\":\"(?<hash>[0-9a-f]{6})[0-9a-f]+).*"
                     ],
                     "allOf": [
                         {
@@ -3376,14 +3388,22 @@
                         },
                         {
                             "pattern": "(?<!\\\\)\\(",
-                            "errorMessage": "必须包含至少一个捕获组，例如 `([\\d.]+)` 或 `(?<version>[\\d.]+)`"
+                            "errorMessage": "必须包含至少一个捕获组"
                         }
                     ]
                 },
                 "jsonpath": {
-                    "markdownDescription": "使用 JSONPath 表达式从 JSON 端点检索版本，可以使用点标注或括号标注\n\n- 使用本字段时必须同时定义 `url`\n- 可与 `regex` 组合：先通过 `jsonpath` 提取，再通过 `regex` 精炼\n\n### 示例\n\n- 提取 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n\n- 提取 `productVersion` 或 `version` 属性的值\n\n  ```json\n  \"jsonpath\": \"$...[?(@.productVersion || @.version)]\"\n  ```\n\n- 提取 `assets` 中 `name` 为 `xxx` 的属性中的 `updated_at`\n\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```\n\n- 提取 `productVersion` 和 `version` 属性的值，并形成一个数组，如 `\"[\"1.2.3\",\"1.2.3-rc\"]\"`\n\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```",
+                    "markdownDescription": "使用 JSONPath 表达式从 JSON 数据中提取版本号\n\n- **必填依赖**：使用本字段时必须同时定义 `url`\n- **正则捕获**：配合 `regex` 使用时，将先通过 `jsonpath` 提取文本/列表，再使用 `regex` 捕获版本号\n\n### 示例\n\n- **根级属性**：提取根对象中的 `version` 属性\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **数组首项**：提取根数组中第一个元素的 `version` 属性\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **递归全检索**：递归查找 JSON 中所有层级下的 `version` 属性（返回列表）\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **条件过滤（LTS）**：提取 `lts` 属性不为 `false` 的对象的 `version` 属性\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **多属性检索**：提取任意层级下的 `productVersion` 或 `version` 属性值\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **数组字段过滤**：匹配 `assets` 数组中 `name` 为 `xxx` 的对象，并提取其 `updated_at` 属性\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
                     "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "$ref": "#/definitions/str_no_all_space",
+                    "examples": [
+                        "$.version",
+                        "$[0].version",
+                        "$..version",
+                        "$..[?(@.lts != false)].version",
+                        "$..['productVersion','version']",
+                        "$.assets[?(@.name == 'xxx')].updated_at"
+                    ]
                 },
                 "xpath": {
                     "markdownDescription": "使用 XPath 表达式从 XML 页面检索版本\n\n- 使用本字段时必须同时定义 `url`\n- 可与 `regex` 组合：先通过 `xpath` 提取，再通过 `regex` 精炼\n- 提取的是元素的文本内容，不支持属性值",
@@ -3401,6 +3421,22 @@
                 }
             },
             "allOf": [
+                {
+                    "dependencies": {
+                        "dynamic": [
+                            "url"
+                        ],
+                        "redirect": [
+                            "url"
+                        ],
+                        "jsonpath": [
+                            "url"
+                        ],
+                        "xpath": [
+                            "url"
+                        ]
+                    }
+                },
                 {
                     "if": {
                         "anyOf": [
@@ -3443,7 +3479,19 @@
                     },
                     "else": {
                         "not": true,
-                        "errorMessage": "请添加 github/commit/winget/psgallery/from_installer/url/script 其中一个"
+                        "errorMessage": "请添加一个版本来源：github/commit/winget/psgallery/from_installer/url/script"
+                    }
+                },
+                {
+                    "dependencies": {
+                        "jsonpath": {
+                            "not": {
+                                "required": [
+                                    "xpath"
+                                ]
+                            },
+                            "errorMessage": "jsonpath/xpath 只能使用其中一个"
+                        }
                     }
                 },
                 {
@@ -3578,37 +3626,6 @@
                         ]
                     },
                     "errorMessage": "github/commit/winget/psgallery/from_installer/url/script 只能使用其中一个"
-                },
-                {
-                    "if": {
-                        "anyOf": [
-                            {
-                                "required": [
-                                    "redirect"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "dynamic"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "jsonpath"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "xpath"
-                                ]
-                            }
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "url"
-                        ]
-                    }
                 }
             ]
         },
@@ -4008,29 +4025,26 @@
                             "architecture"
                         ]
                     },
-                    "errorMessage": "url 和 architecture 属性不允许同时存在"
+                    "errorMessage": "属性冲突: url/architecture"
                 }
             ]
         }
     },
     "allOf": [
         {
-            "if": {
-                "required": [
-                    "link"
-                ]
-            },
-            "else": {
-                "if": {
-                    "required": [
-                        "data_shared"
-                    ]
-                },
-                "then": {
-                    "properties": {
-                        "data_shared": {
-                            "not": true,
-                            "errorMessage": "无效的属性"
+            "dependencies": {
+                "data_shared": {
+                    "if": {
+                        "required": [
+                            "link"
+                        ]
+                    },
+                    "else": {
+                        "properties": {
+                            "data_shared": {
+                                "not": true,
+                                "errorMessage": "无效的属性"
+                            }
                         }
                     }
                 }
@@ -4766,7 +4780,7 @@
                     "architecture"
                 ]
             },
-            "errorMessage": "url 和 architecture 属性不允许同时存在"
+            "errorMessage": "属性冲突: url/architecture"
         },
         {
             "if": {

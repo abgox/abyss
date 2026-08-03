@@ -102,16 +102,16 @@ $order = [ordered]@{
             channel = ''
         }
         from_installer = ''
-        url            = ''
-        dynamic        = ''
-        redirect       = ''
-        max            = ''
         script         = ''
-        regex          = ''
+        url            = ''
         jsonpath       = ''
         xpath          = ''
+        dynamic        = ''
+        redirect       = ''
         reverse        = ''
+        regex          = ''
         replace        = ''
+        max            = ''
     }
     autoupdate          = [ordered]@{
         architecture = [ordered]@{
