@@ -88,11 +88,8 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            "$res = Invoke-RestMethod 'https://update.code.visualstudio.com/api/update/win32-x64-archive/insider/latest'",
-            "\"$($res.productVersion)-$($res.hash)\""
-        ],
-        "regex": "(?<version>.+)-insider-(?<hash>[0-9a-f]{6})[0-9a-f]*",
+        "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/insider/latest",
+        "regex": "(?=.*?\"productVersion\":\"(?<version>[^;]+)-insider)(?=.*?\"version\":\"(?<hash>[0-9a-f]{6})[0-9a-f]+).*",
         "replace": "${version}-${hash}"
     },
     "autoupdate": {

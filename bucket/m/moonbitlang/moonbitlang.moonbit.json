@@ -57,14 +57,10 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            "$versionList = @()",
-            "Invoke-RestMethod 'https://cli.moonbitlang.com/version.json' | Select-Object -ExpandProperty items | ForEach-Object {",
-            "    if ($_.version -match '[\\d.]+') { $versionList += $Matches[0] }",
-            "}",
-            "$versionList -join '-'"
-        ],
-        "regex": "(.+)"
+        "url": "https://cli.moonbitlang.com/version.json",
+        "jsonpath": "$..version",
+        "regex": "([\\d.]+).+?,.+?([\\d.]+).+?,.+?([\\d.]+)",
+        "replace": "${1}-${2}-${3}"
     },
     "autoupdate": {
         "architecture": {

@@ -44,11 +44,8 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            "$json = (Invoke-WebRequest -Uri 'https://api.hexhub.cn/client/plugin/master-latest-version-list' -Headers @{ Referer = 'https://www.hexhub.cn/' }).Content | ConvertFrom-Json",
-            "$json.data.'windows-amd64-default'.versionName"
-        ],
-        "regex": "(.+)"
+        "url": "https://api.hexhub.cn/client/plugin/master-latest-version-list",
+        "jsonpath": "$.data.windows-amd64-default.versionName"
     },
     "autoupdate": {
         "architecture": {
