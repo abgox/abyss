@@ -3181,7 +3181,7 @@
                 },
                 "commit": {
                     "type": "object",
-                    "markdownDescription": "基于 GitHub 最新提交 (date/sha) 进行版本检查",
+                    "markdownDescription": "基于 GitHub 最新提交 (date/sha) 进行版本检查\n\n- 使用 `format` 指定的格式作为 `$version`\n- 使用 sha 生成一个捕获组 `$matchSha`",
                     "additionalProperties": false,
                     "required": [
                         "format"
@@ -3205,11 +3205,17 @@
                             ]
                         },
                         "path": {
-                            "type": "string",
-                            "markdownDescription": "仅追踪指定文件或目录的提交\n\n- 省略时追踪仓库的所有提交\n- 适用于从大仓库分发单文件/单目录的场景",
+                            "markdownDescription": "追踪指定文件或目录的提交\n\n- **不指定**：追踪仓库的所有提交\n- **字符串**：仅追踪单个路径的提交\n- **数组**：同时追踪多个路径，**任一**路径有新提交即可触发版本更新",
+                            "examples": [
+                                "src/main.ps1",
+                                [
+                                    "src/main.ps1",
+                                    "src/lib.ps1"
+                                ]
+                            ],
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/str_no_all_space"
+                                    "$ref": "#/definitions/str_or_arr_no_all_space"
                                 }
                             ]
                         },
@@ -3319,7 +3325,7 @@
                     ]
                 },
                 "url": {
-                    "markdownDescription": "版本所在页面\n\n- 获取页面内容后，通过 `regex` 匹配版本\n- `regex` 省略时默认为：`[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
+                    "markdownDescription": "版本所在页面\n\n- 获取页面内容后，通过 `regex` 匹配版本\n- `regex` 省略时默认为：`(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
                     "$ref": "#/definitions/str_url_validation"
                 },
                 "dynamic": {
@@ -3350,7 +3356,7 @@
                     ]
                 },
                 "script": {
-                    "markdownDescription": "执行 PowerShell 命令以获取版本信息\n\n- 最终输出作为匹配内容，由 `regex` 捕获版本\n- `regex` 省略时默认为：`[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
+                    "markdownDescription": "执行 PowerShell 命令以获取版本信息\n\n- 最终输出作为匹配内容，由 `regex` 捕获版本\n- `regex` 省略时默认为：`(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_or_arr"

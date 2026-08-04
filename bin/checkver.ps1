@@ -1,3 +1,5 @@
+#Requires -Version 7.0
+
 param(
     [String] $App = '*',
     [String] $Dir = "$PSScriptRoot/../bucket",
@@ -144,7 +146,13 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
         }
 
         if ($script) {
-            $page = Invoke-Command ([scriptblock]::Create($script -join "`r`n"))
+            try {
+                $page = Invoke-Command ([scriptblock]::Create($script -join "`r`n"))
+            }
+            catch {
+                next $app "checkver.script failed: $($_.Exception.Message)"
+                return
+            }
             $source = 'the output of script'
             if ($null -eq $page) {
                 next $app "couldn't retrieve content from $source"
@@ -178,7 +186,7 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
             elseif ($checkver.from_installer) {
                 $vCandidate = A-Get-VersionFromInstaller
                 if ($vCandidate) { $candidateVersions = @($vCandidate) }
-                $source = 'from_installer'
+                $source = 'installer'
             }
             elseif ($checkver.dynamic) {
                 $page = A-Get-DynamicPageFromUrl
@@ -241,7 +249,7 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
                     $filtered = A-Select-VersionLessOrEqual -Versions @($ver) -MaxVersion $checkver.max
                     if (-not $filtered -or $filtered.Count -eq 0) {
                         $ver = $expected_ver
-                        Write-Warning " (no version <= max '$($checkver.max)', keeping $expected_ver)"
+                        Write-Warning "No version <= max '$($checkver.max)', keeping $expected_ver"
                     }
                     else {
                         $ver = A-Convert-VersionWithRegex -Version $ver -Regex $regexp -MatchesHashtable ([ref]$matchesHashtable)
@@ -261,7 +269,7 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
                     if (-not $ver) {
                         if ($checkver.max) {
                             $ver = $expected_ver
-                            Write-Warning " (no version <= max '$($checkver.max)', keeping $expected_ver)"
+                            Write-Warning "No version <= max '$($checkver.max)', keeping $expected_ver"
                         }
                         else {
                             next $app "couldn't match '$regexp' in $source"
@@ -299,6 +307,12 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
         Write-Host ''
     }
 
+    $commitMsg = $null
+    if ($script:App -ne '*') {
+        $isNew = (git status --short -- $file) -match '^\s*A'
+        $commitMsg = if ($isNew) { "${app}: add version $ver" } else { "${app}: update to version $ver" }
+    }
+
     $shouldUpdate = $script:Update -or $script:ForceUpdate
     if ($shouldUpdate -and $json.autoupdate) {
         if ($script:ForceUpdate) {
@@ -307,6 +321,9 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
         try {
             $ver = A-Resolve-UrlVersion $json $ver $matchesHashtable
             Invoke-AutoUpdate $app $file $json $ver $matchesHashtable
+            if ($commitMsg) {
+                Write-Host $commitMsg -ForegroundColor Yellow
+            }
         }
         catch {
             if ($script:ThrowError) { throw $_ } else { error $_.Exception.Message }

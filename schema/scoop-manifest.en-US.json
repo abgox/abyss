@@ -3181,7 +3181,7 @@
                 },
                 "commit": {
                     "type": "object",
-                    "markdownDescription": "Check the version based on the latest commit (date/sha) of the GitHub repository",
+                    "markdownDescription": "Check the version based on the latest commit (date/sha) of the GitHub repository\n\n- Use the format specified by `format` as `$version`\n- Use sha to generate a capturing group `$matchSha`",
                     "additionalProperties": false,
                     "required": [
                         "format"
@@ -3205,11 +3205,17 @@
                             ]
                         },
                         "path": {
-                            "type": "string",
-                            "markdownDescription": "Only track commits of the specified file or directory\n\n- If omitted, tracks all commits of the repository\n- Suitable for distributing a single file/directory from a large repository",
+                            "markdownDescription": "Track commits of the specified file or directory\n\n- **Omit**: tracks all commits of the repository\n- **String**: tracks commits of that single path\n- **Array**: tracks multiple paths; a version update is triggered when **any** path gets a new commit",
+                            "examples": [
+                                "src/main.ps1",
+                                [
+                                    "src/main.ps1",
+                                    "src/lib.ps1"
+                                ]
+                            ],
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/str_no_all_space"
+                                    "$ref": "#/definitions/str_or_arr_no_all_space"
                                 }
                             ]
                         },
@@ -3319,7 +3325,7 @@
                     ]
                 },
                 "url": {
-                    "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to: `[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
+                    "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to: `(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
                     "$ref": "#/definitions/str_url_validation"
                 },
                 "dynamic": {
@@ -3350,7 +3356,7 @@
                     ]
                 },
                 "script": {
-                    "markdownDescription": "Execute PowerShell commands to get version information\n\n- The final output is used as matching content, and the version is captured by `regex`\n- If `regex` is omitted, it defaults to: `[vV]?(\\d+(?:[-.]\\d+)*(?:[-.][a-zA-Z0-9.]+)?)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
+                    "markdownDescription": "Execute PowerShell commands to get version information\n\n- The final output is used as matching content, and the version is captured by `regex`\n- If `regex` is omitted, it defaults to: `(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
                     "allOf": [
                         {
                             "$ref": "#/definitions/str_or_arr"

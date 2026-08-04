@@ -2,6 +2,10 @@
 
 $RequestTimeout = @{ ConnectionTimeoutSeconds = 30; OperationTimeoutSeconds = 60 }
 
+$script:githubApiCache = [System.Collections.Concurrent.ConcurrentDictionary[string, object]]::new()
+$script:githubHttpClient = $null
+$script:githubHttpClientLock = [object]::new()
+
 function A-Get-UserAgent {
     "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if(${env:ProgramFiles(Arm)}){'ARM64; '}elseif($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -in 'AMD64','ARM64'){'WOW64; '})$PSEdition)"
 }
@@ -240,6 +244,28 @@ function A-Get-RemoteFileSize {
     catch {}
 }
 
+function A-Get-GitHubHttpClient {
+    if ($null -eq $script:githubHttpClient) {
+        $acquired = $false
+        try {
+            [System.Threading.Monitor]::Enter($script:githubHttpClientLock, [ref]$acquired)
+            if ($null -eq $script:githubHttpClient) {
+                $handler = [System.Net.Http.HttpClientHandler]::new()
+                $handler.AutomaticDecompression = [System.Net.DecompressionMethods]::GZip -bor [System.Net.DecompressionMethods]::Deflate
+                $client = [System.Net.Http.HttpClient]::new($handler)
+                $client.Timeout = [TimeSpan]::FromSeconds(60)
+                [void]$client.DefaultRequestHeaders.TryAddWithoutValidation('User-Agent', (A-Get-UserAgent))
+                [void]$client.DefaultRequestHeaders.TryAddWithoutValidation('X-GitHub-Api-Version', '2022-11-28')
+                $script:githubHttpClient = $client
+            }
+        }
+        finally {
+            if ($acquired) { [System.Threading.Monitor]::Exit($script:githubHttpClientLock) }
+        }
+    }
+    return $script:githubHttpClient
+}
+
 function A-Invoke-GitHubAPI {
     param (
         [string]$Uri,
@@ -249,12 +275,8 @@ function A-Invoke-GitHubAPI {
         Write-Error '$Uri is invalid'
         return
     }
-    if (!$Headers) {
-        $Headers = @{
-            'User-Agent'           = A-Get-UserAgent
-            'X-GitHub-Api-Version' = '2022-11-28'
-            'Accept'               = 'application/vnd.github.v3+json'
-        }
+    if ($script:githubApiCache.ContainsKey($Uri)) {
+        return $script:githubApiCache[$Uri]
     }
     $tokenPool = @()
     if ($env:GITHUB_ACTIONS) {
@@ -272,6 +294,8 @@ function A-Invoke-GitHubAPI {
         catch {}
     }
 
+    $client = A-Get-GitHubHttpClient
+
     [int]$currentIndex = [System.Environment]::GetEnvironmentVariable('TOKEN_POOL_ORDER', 'User')
     if ($null -eq $currentIndex -or $currentIndex -ge $tokenPool.Count) { $currentIndex = 0 }
 
@@ -280,26 +304,29 @@ function A-Invoke-GitHubAPI {
 
     while ($attemptCount -lt $maxGlobalRetries) {
         $token = $tokenPool[$currentIndex]
+        $request = [System.Net.Http.HttpRequestMessage]::new('GET', $Uri)
         if ($token) {
-            $Headers['Authorization'] = "Bearer $token"
+            $request.Headers.Authorization = [System.Net.Http.Headers.AuthenticationHeaderValue]::new('Bearer', $token)
+        }
+        if ($Headers) {
+            foreach ($h in $Headers.GetEnumerator()) {
+                try { [void]$request.Headers.TryAddWithoutValidation($h.Key, [string]$h.Value) } catch {}
+            }
         }
         else {
-            $Headers.Remove('Authorization')
+            [void]$request.Headers.TryAddWithoutValidation('Accept', 'application/vnd.github.v3+json')
         }
         try {
-            return Invoke-RestMethod -Uri $Uri -Headers $Headers @RequestTimeout -ErrorAction Stop
-        }
-        catch {
-            $response = $_.Exception.Response
-            if (!$response) {
-                Write-Error $_
-                return
-            }
+            $response = $client.SendAsync($request).GetAwaiter().GetResult()
             $statusCode = [int]$response.StatusCode
             if ($statusCode -in 403, 429) {
-                $remaining = $response.Headers['x-ratelimit-remaining']
-                $retryAfter = $response.Headers['retry-after']
-
+                $remaining = $null
+                $retryAfter = $null
+                [void]$response.Headers.TryGetValues('x-ratelimit-remaining', [ref]$remaining)
+                [void]$response.Headers.TryGetValues('retry-after', [ref]$retryAfter)
+                $remaining = @($remaining)[0]
+                $retryAfter = @($retryAfter)[0]
+                $response.Dispose()
                 if ($null -ne $remaining -and $remaining -eq '0') {
                     if ($env:GITHUB_ACTIONS) {
                         Write-Warning "Token [$currentIndex] exhausted. Switching..."
@@ -312,7 +339,6 @@ function A-Invoke-GitHubAPI {
                     $attemptCount++
                     continue
                 }
-
                 $waitSec = if ($retryAfter) {
                     $retryAfterInt = 0
                     if ([int]::TryParse($retryAfter, [ref]$retryAfterInt)) {
@@ -330,7 +356,35 @@ function A-Invoke-GitHubAPI {
                 $attemptCount++
                 continue
             }
-            Write-Error "GitHub API returned HTTP $statusCode for $Uri"
+            if (!$response.IsSuccessStatusCode) {
+                Write-Error "GitHub API returned HTTP $statusCode for $Uri"
+                $response.Dispose()
+                return
+            }
+            $content = $response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+            $response.Dispose()
+
+            $isRaw = $false
+            if ($Headers) {
+                foreach ($h in $Headers.GetEnumerator()) {
+                    if ($h.Key -eq 'Accept' -and ([string]$h.Value) -match 'raw') {
+                        $isRaw = $true
+                        break
+                    }
+                }
+            }
+            $result = if ($isRaw) { $content } else { $content | ConvertFrom-Json }
+            $script:githubApiCache.TryAdd($Uri, $result) | Out-Null
+            return $result
+        }
+        catch {
+            $request.Dispose()
+            $response = $_.Exception.Response
+            if (!$response) {
+                Write-Error $_
+                return
+            }
+            Write-Error "GitHub API returned HTTP $([int]$response.StatusCode) for $Uri"
             if ($_.Exception.Message) {
                 Write-Error $_.Exception.Message
             }
@@ -363,9 +417,9 @@ function A-Get-VersionFromGitHub {
         $all = [System.Collections.Generic.List[psobject]]::new()
         $page = 1
         while ($page -le 10) {
-            $res = A-Invoke-GitHubAPI -Uri "$baseApiUrl?per_page=100&page=$page"
+            $res = A-Invoke-GitHubAPI -Uri "$($baseApiUrl)?per_page=100&page=$page"
             if (!$res -or $res.Count -eq 0) { break }
-            $all.AddRange($res)
+            $all.AddRange([psobject[]]$res)
             $oldestV = A-Clear-Version -v $res[-1].tag_name
             if ($oldestV -match $regex -and (A-Test-VersionLessOrEqual -Version $oldestV -MaxVersion $checkver.max)) {
                 break
@@ -420,11 +474,21 @@ function A-Get-VersionFromCommit {
     $repo = A-Get-GitRepo
     if (!$repo) { return }
     $perPage = if ($checkver.max) { 100 } else { 1 }
-    $baseApiUrl = "https://api.github.com/repos/$repo/commits?per_page=$perPage"
-    if ($Branch) { $baseApiUrl += "&sha=$Branch" }
-    if ($checkver.commit.path) { $baseApiUrl += "&path=$([uri]::EscapeDataString($checkver.commit.path))" }
-    $res = A-Invoke-GitHubAPI -Uri $baseApiUrl
-    if (!$res -or $res.Count -eq 0) {
+    $paths = @($checkver.commit.path)
+    if ($paths.Count -eq 0) { $paths = @($null) }
+
+    $allRes = [System.Collections.Generic.List[psobject]]::new()
+    foreach ($path in $paths) {
+        $baseApiUrl = "https://api.github.com/repos/$repo/commits?per_page=$perPage"
+        if ($Branch) { $baseApiUrl += "&sha=$Branch" }
+        if ($path) { $baseApiUrl += "&path=$([uri]::EscapeDataString($path))" }
+        $res = A-Invoke-GitHubAPI -Uri $baseApiUrl
+        if ($res -and $res.Count -gt 0) {
+            $allRes.AddRange([psobject[]]$res)
+        }
+    }
+
+    if ($allRes.Count -eq 0) {
         if ($Branch) {
             Write-Error "No commits found for branch '$Branch'"
         }
@@ -447,10 +511,11 @@ function A-Get-VersionFromCommit {
         return $formattedDate
     }
     if ($checkver.max) {
-        $versions = foreach ($item in $res) { &$parseCommit $item }
+        $versions = foreach ($item in $allRes) { &$parseCommit $item }
         return $versions
     }
-    return (&$parseCommit $res[0])
+    $newest = $allRes | Sort-Object -Property @{ Expression = { [System.DateTimeOffset]::Parse($_.commit.committer.date, [System.Globalization.CultureInfo]::InvariantCulture) } } -Descending | Select-Object -First 1
+    return (&$parseCommit $newest)
 }
 
 function A-Get-InstallerInfoFromWinGet {
@@ -763,15 +828,7 @@ function A-Get-RegexMatchesWithMax {
     if ($MaxVersion) {
         $validMatches = [System.Collections.Generic.List[psobject]]::new()
         foreach ($m in $allMatches) {
-            $candidateVer = $null
-            if ($Replace) {
-                $candidateVer = $re.Replace($m.Value, $Replace)
-            }
-            else {
-                $candidateVer = if ($m.Groups['version'].Success) { $m.Groups['version'].Value }
-                elseif ($m.Groups.Count -gt 1) { $m.Groups[1].Value }
-                else { continue }
-            }
+            $candidateVer = A-Convert-VersionWithRegex -Version $m.Value -Regex $Regex -Replace $Replace -MatchesHashtable ([ref](@{}))
             if ($candidateVer) {
                 $isLessOrEqual = A-Test-VersionLessOrEqual -Version $candidateVer -MaxVersion $MaxVersion
                 if ($isLessOrEqual) {
@@ -782,23 +839,12 @@ function A-Get-RegexMatchesWithMax {
         if ($validMatches.Count -eq 0) { return $null }
         $targetMatch = if ($Reverse) { $validMatches[-1] } else { $validMatches[0] }
         $targetMatch.Match.Groups | ForEach-Object { $MatchesHashtable.Value[$_.Name] = $_.Value }
-        return A-Clear-Version -v $targetMatch.Version
+        return $targetMatch.Version
     }
     else {
         $match = if ($Reverse) { $allMatches[$allMatches.Count - 1] } else { $allMatches[0] }
         if (-not $match -or -not $match.Success) { return $null }
-        $re.GetGroupNames() | ForEach-Object { $MatchesHashtable.Value[$_] = $match.Groups[$_].Value }
-        $result = if ($Replace) {
-            $re.Replace($match.Value, $Replace)
-        }
-        elseif ($match.Groups['version'].Success) {
-            $match.Groups['version'].Value
-        }
-        elseif ($match.Groups.Count -gt 1) {
-            $match.Groups[1].Value
-        }
-
-        return A-Clear-Version -v $result
+        return A-Convert-VersionWithRegex -Version $match.Value -Regex $Regex -Replace $Replace -MatchesHashtable $MatchesHashtable
     }
 }
 function A-Resolve-CandidateVersion {
@@ -828,7 +874,7 @@ function A-Resolve-CandidateVersion {
     if ($Checkver.max) {
         $versions = A-Select-VersionLessOrEqual -Versions $versions -MaxVersion $Checkver.max
         if (-not $versions -or $versions.Count -eq 0) {
-            Write-Warning " (no version <= max '$($Checkver.max)', keeping $ExpectedVer)"
+            Write-Warning "No version <= max '$($Checkver.max)', keeping $ExpectedVer"
             $Version.Value = $ExpectedVer
             return $true
         }
