@@ -3,8 +3,16 @@
     "description": "一款基于 Rust 开发的下载管理器，支持 HTTP、FTP、BitTorrent 以及 HLS/DASH 流媒体协议 | A Rust-powered download manager with HTTP, FTP, BitTorrent and HLS/DASH streaming support",
     "homepage": "https://fluxdown.zerx.dev",
     "license": {
-        "identifier": "Unknown"
+        "identifier": "AGPL-3.0-or-later"
     },
+    "notes_cn": [
+        "安装或更新后会自动启动",
+        "此次启动部分功能存在限制，请退出并重启"
+    ],
+    "notes": [
+        "It will launch automatically after installation or update.",
+        "Some functions are restricted in this launch. Please exit and restart."
+    ],
     "architecture": {
         "64bit": {
             "url": "https://fluxdown.zerx.dev/api/download/FluxDown-0.3.1-windows-x64-setup.exe?tag=v0.3.1",
@@ -50,24 +58,17 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            "$release = (Invoke-RestMethod 'https://fluxdown.zerx.dev/api/changelog').releases[0]",
-            "$version = $release.tag -replace '^v'",
-            "$dl = $release.assets | Where-Object { $_.name -match 'windows-x64-setup.exe$' } | Select-Object -First 1 | Select-Object -ExpandProperty download_url",
-            "$url = 'https://fluxdown.zerx.dev' + $dl",
-            "\"ver:$version;\"",
-            "\"x64:$url;\"",
-            "\"arm64:$($url.Replace('x64','arm64'));\""
-        ],
-        "regex": "(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))"
+        "github": {
+            "channel": "latest"
+        }
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "$matchX64"
+                "url": "https://github.com/zerx-lab/FluxDown/releases/download/v$version/FluxDown-$version-windows-x64-setup.exe"
             },
             "arm64": {
-                "url": "$matchArm64"
+                "url": "https://github.com/zerx-lab/FluxDown/releases/download/v$version/FluxDown-$version-windows-arm64-setup.exe"
             }
         }
     }
