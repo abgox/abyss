@@ -69,12 +69,12 @@ Write-Host '::group::Manifests'
 
 foreach ($file in $files) {
     if ($file.filename -notmatch '^bucket.*/(.+)\.json$') {
-        if ($files.filename -like 'extra/*') {
-            if ($files.status -eq 'removed') {
-                $pr_extra_files_removed += $files.filename
+        if ($file.filename -like 'extra/*') {
+            if ($file.status -eq 'removed') {
+                $pr_extra_files_removed += $file.filename
             }
             else {
-                $pr_extra_files += $files.filename
+                $pr_extra_files += $file.filename
             }
         }
         continue

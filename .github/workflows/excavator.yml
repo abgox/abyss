@@ -4,11 +4,20 @@ on:
   schedule:
     - cron: "23 */1 * * *"
 
+permissions:
+  contents: write
+
+concurrency:
+  group: excavator
+  cancel-in-progress: false
+
 jobs:
   excavate:
     name: Excavate
     runs-on: windows-latest
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         segment:
           - "0-1"
