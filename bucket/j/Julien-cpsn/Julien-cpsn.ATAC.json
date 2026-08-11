@@ -1,0 +1,58 @@
+{
+    "version": "0.23.0",
+    "description": "可在终端中使用的简易 API 调试客户端（类 Postman 工具） | A simple API client (postman like) in your terminal",
+    "homepage": "https://github.com/Julien-cpsn/ATAC",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Julien-cpsn/ATAC/releases/download/v0.23.0/atac-v0.23.0-x86_64-pc-windows-msvc.zip",
+            "hash": "6217f79ccf047be3538e4a06eba16127c54ce21d25949706c03fb064dfdd7606"
+        },
+        "arm64": {
+            "url": "https://github.com/Julien-cpsn/ATAC/releases/download/v0.23.0/atac-v0.23.0-aarch64-pc-windows-msvc.zip",
+            "hash": "056f29ba31442d4de183aaa8fd2cb38c60db879c8539c6ec9ecec48a52f5ea41"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\atac.exe",
+    "link": "$env:AppData\\Julien-cpsn\\ATAC",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Julien-cpsn/ATAC/releases/download/v$version/atac-v$version-x86_64-pc-windows-msvc.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/Julien-cpsn/ATAC/releases/download/v$version/atac-v$version-aarch64-pc-windows-msvc.zip"
+            }
+        }
+    }
+}
