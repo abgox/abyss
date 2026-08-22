@@ -449,6 +449,23 @@ function A-New-LinkDirectory {
     A-New-LinkBase -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile $abgox_abyss.path.LinkDirectory
 }
 
+function A-Repair-Link {
+    <#
+    .SYNOPSIS
+        检测并修复被破坏的链接: SymbolicLink、Junction
+
+    .DESCRIPTION
+        应用的安装程序(如 Inno Setup)可能在安装过程中删除或覆盖已创建的链接，
+        导致应用更新后数据持久化失效。
+        该函数会重新检测 manifest.link 中定义的所有路径，并修复失效的链接。
+        它应该在安装函数(A-Install-*)执行完成之后调用。
+    #>
+
+    if ($manifest.link -and !$abgox_abyss.skipLink) {
+        A-New-Link
+    }
+}
+
 function A-Remove-Link {
     <#
     .SYNOPSIS
@@ -712,6 +729,8 @@ function A-Install-App {
     catch {
         error $_.Exception.Message
     }
+
+    A-Repair-Link
 }
 
 function A-Uninstall-App {
@@ -854,6 +873,8 @@ function A-Install-Inno {
     catch {
         error $_.Exception.Message
     }
+
+    A-Repair-Link
 }
 
 function A-Uninstall-Inno {
@@ -942,6 +963,8 @@ function A-Install-Burn {
         A-Show-IssueCreationPrompt
         A-Exit
     }
+
+    A-Repair-Link
 }
 
 function A-Uninstall-Burn {
@@ -1055,6 +1078,8 @@ function A-Install-Msi {
         Manufacturer   = $log | Select-String 'Manufacturer = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
         ArgumentList   = $ArgumentList
     } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
+
+    A-Repair-Link
 }
 
 function A-Uninstall-Msi {
@@ -1737,9 +1762,26 @@ function A-New-LinkBase {
         $installData.LinkPaths += $linkPath
         $installData.LinkTargets += $linkTarget
 
-        A-Ensure-Directory (Split-Path $linkPath -Parent)
-
         $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
+
+        # 如果链接已存在且指向正确的目标位置，则无需重复创建(避免每次安装/更新时都删除并重建链接)
+        # 注意: 需要同时确认目标位置仍然存在，以处理链接目标丢失(悬空链接)的情况
+        $linkItem = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
+        if ($linkItem -and $linkItem.LinkType -and (Test-Path -LiteralPath $linkTarget -PathType $type)) {
+            try {
+                $linkItemTarget = @($linkItem.Target)[0]
+                if ($linkItemTarget) {
+                    $existingTarget = [System.IO.Path]::GetFullPath([string]$linkItemTarget).TrimEnd('\')
+                    $expectedTarget = [System.IO.Path]::GetFullPath($linkTarget).TrimEnd('\')
+                    if ($existingTarget -ieq $expectedTarget) {
+                        continue
+                    }
+                }
+            }
+            catch {}
+        }
+
+        A-Ensure-Directory (Split-Path $linkPath -Parent)
         if (Test-Path -LiteralPath $linkTarget -PathType $type) {
             if (Test-Path -LiteralPath $linkPath) {
                 try {
@@ -1757,7 +1799,6 @@ function A-New-LinkBase {
             Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
             if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-Link $linkPath)) {
                 A-Ensure-Directory (Split-Path $linkTarget -Parent)
-                Write-Host "Copying $linkPath => $linkTarget"
                 A-Copy-Item $linkPath $linkTarget
             }
             else {
