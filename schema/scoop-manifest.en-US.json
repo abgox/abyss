@@ -4262,7 +4262,7 @@
                                                 },
                                                 "architecture": {
                                                     "patternProperties": {
-                                                        "": {
+                                                        ".*": {
                                                             "properties": {
                                                                 "url": {
                                                                     "pattern": "#/dl.msi_$",
@@ -4403,7 +4403,7 @@
                                             "properties": {
                                                 "architecture": {
                                                     "patternProperties": {
-                                                        "": {
+                                                        ".*": {
                                                             "anyOf": [
                                                                 {
                                                                     "required": [
@@ -4424,26 +4424,37 @@
                                     ]
                                 },
                                 "then": {
-                                    "properties": {
-                                        "pre_uninstall": {
-                                            "if": {
+                                    "if": {
+                                        "properties": {
+                                            "pre_install": {
                                                 "contains": {
-                                                    "pattern": "(?<!#.*)A-Uninstall-Manually"
+                                                    "pattern": "(?<!#.*)A-Install-PowerToysRunPlugin"
                                                 }
-                                            },
-                                            "then": {
-                                                "items": {
-                                                    "not": {
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "pre_uninstall": {
+                                                "if": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Uninstall-(Manually|Msi)"
+                                                    }
+                                                },
+                                                "then": {
+                                                    "items": {
+                                                        "not": {
+                                                            "pattern": "(?<!#.*)A-Stop-Process"
+                                                        },
+                                                        "errorMessage": "It doesn't require A-Stop-Process"
+                                                    }
+                                                },
+                                                "else": {
+                                                    "contains": {
                                                         "pattern": "(?<!#.*)A-Stop-Process"
                                                     },
-                                                    "errorMessage": "It doesn't require A-Stop-Process"
+                                                    "errorMessage": "Missing A-Stop-Process"
                                                 }
-                                            },
-                                            "else": {
-                                                "contains": {
-                                                    "pattern": "(?<!#.*)A-Stop-Process"
-                                                },
-                                                "errorMessage": "Missing A-Stop-Process"
                                             }
                                         }
                                     }
@@ -4511,6 +4522,15 @@
                                             "required": [
                                                 "psmodule"
                                             ]
+                                        },
+                                        {
+                                            "properties": {
+                                                "pre_install": {
+                                                    "contains": {
+                                                        "pattern": "(?<!#.*)A-Install-PowerToysRunPlugin"
+                                                    }
+                                                }
+                                            }
                                         }
                                     ]
                                 },
@@ -4530,7 +4550,7 @@
                                         },
                                         "architecture": {
                                             "patternProperties": {
-                                                "": {
+                                                ".*": {
                                                     "properties": {
                                                         "url": {
                                                             "if": {
@@ -4580,7 +4600,7 @@
                                                 {}
                                             ],
                                             "patternProperties": {
-                                                "": {
+                                                ".*": {
                                                     "properties": {
                                                         "url": {
                                                             "if": {
@@ -4625,7 +4645,7 @@
                         "properties": {
                             "architecture": {
                                 "patternProperties": {
-                                    "": {
+                                    ".*": {
                                         "$ref": "#/definitions/empty_url_hash"
                                     }
                                 }
@@ -4664,7 +4684,7 @@
                         "properties": {
                             "architecture": {
                                 "patternProperties": {
-                                    "": {
+                                    ".*": {
                                         "$ref": "#/definitions/empty_hash"
                                     }
                                 }
@@ -4749,7 +4769,7 @@
                     "properties": {
                         "architecture": {
                             "patternProperties": {
-                                "": {
+                                ".*": {
                                     "$ref": "#/definitions/url_hash_type_match"
                                 }
                             }
@@ -4807,7 +4827,7 @@
                         "properties": {
                             "architecture": {
                                 "patternProperties": {
-                                    "": {
+                                    ".*": {
                                         "properties": {
                                             "url": {
                                                 "examples": [
@@ -4830,21 +4850,6 @@
                                             "properties": {
                                                 "url": {
                                                     "pattern": "^https?://"
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "if": {
-                                                "required": [
-                                                    "hash"
-                                                ]
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "hash": {
-                                                        "not": true,
-                                                        "errorMessage": "Invalid value"
-                                                    }
                                                 }
                                             }
                                         },
@@ -5108,7 +5113,7 @@
                                                     "properties": {
                                                         "architecture": {
                                                             "patternProperties": {
-                                                                "": {
+                                                                ".*": {
                                                                     "required": [
                                                                         "bin"
                                                                     ]
@@ -5123,7 +5128,7 @@
                                             "properties": {
                                                 "architecture": {
                                                     "patternProperties": {
-                                                        "": {
+                                                        ".*": {
                                                             "required": [
                                                                 "bin"
                                                             ]
@@ -5140,7 +5145,7 @@
                                                     "properties": {
                                                         "architecture": {
                                                             "patternProperties": {
-                                                                "": {
+                                                                ".*": {
                                                                     "required": [
                                                                         "shortcuts"
                                                                     ]
@@ -5155,7 +5160,7 @@
                                             "properties": {
                                                 "architecture": {
                                                     "patternProperties": {
-                                                        "": {
+                                                        ".*": {
                                                             "required": [
                                                                 "shortcuts"
                                                             ]
@@ -5172,7 +5177,7 @@
                                                     "properties": {
                                                         "architecture": {
                                                             "patternProperties": {
-                                                                "": {
+                                                                ".*": {
                                                                     "required": [
                                                                         "extract_dir"
                                                                     ]
@@ -5187,7 +5192,7 @@
                                             "properties": {
                                                 "architecture": {
                                                     "patternProperties": {
-                                                        "": {
+                                                        ".*": {
                                                             "required": [
                                                                 "extract_dir"
                                                             ]
@@ -5204,7 +5209,7 @@
                                                     "properties": {
                                                         "architecture": {
                                                             "patternProperties": {
-                                                                "": {
+                                                                ".*": {
                                                                     "required": [
                                                                         "env_add_path"
                                                                     ]
@@ -5219,7 +5224,7 @@
                                             "properties": {
                                                 "architecture": {
                                                     "patternProperties": {
-                                                        "": {
+                                                        ".*": {
                                                             "required": [
                                                                 "env_add_path"
                                                             ]
@@ -5255,7 +5260,7 @@
                             },
                             "architecture": {
                                 "patternProperties": {
-                                    "": {
+                                    ".*": {
                                         "properties": {
                                             "url": {
                                                 "$ref": "#/definitions/fixed_url_validation"
@@ -5291,7 +5296,7 @@
                             },
                             "architecture": {
                                 "patternProperties": {
-                                    "": {
+                                    ".*": {
                                         "properties": {
                                             "url": {
                                                 "allOf": [

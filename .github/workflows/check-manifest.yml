@@ -57,7 +57,7 @@ jobs:
               core.setOutput("comment_id", res.data.id)
             }
 
-      - name: Checkout base (trusted scripts)
+      - name: Checkout base
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.base.sha }}
@@ -77,6 +77,8 @@ jobs:
         run: |
           Remove-Item -Path pr/script -Recurse -Force
           Copy-Item -Path base/script -Destination pr -Recurse -Force
+          Remove-Item -Path pr/schema -Recurse -Force
+          Copy-Item -Path base/schema -Destination pr -Recurse -Force
 
       - name: Check Manifest
         shell: pwsh

@@ -54,12 +54,16 @@ while ($true) {
 
 $results = @()
 $labels = @{
-    'missing-required-field'         = $false
     'manifest-name-review-needed'    = $false
     'data-persistence-review-needed' = $false
     'json-sorting-needed'            = $false
+    'schema-validation-needed'       = $false
 }
 $has_manifest = $false
+
+$schema_file = "$PSScriptRoot\..\schema\scoop-manifest.en-US.json"
+$schema = [Json.Schema.JsonSchema]::FromFile($schema_file)
+$schema_options = [Json.Schema.EvaluationOptions]::new()
 
 $extra_dir = "$PSScriptRoot\..\extra"
 $pr_extra_files = @()
@@ -94,6 +98,24 @@ foreach ($file in $files) {
 
     $c = Invoke-RestMethod -Uri $file.raw_url -Headers $headers
 
+    # Schema Validation
+    $line_schema = ''
+    try {
+        $raw_manifest = (Invoke-WebRequest -Uri $file.raw_url -Headers $headers).Content
+        $manifest_node = [System.Text.Json.Nodes.JsonNode]::Parse($raw_manifest)
+        if ($schema.Evaluate($manifest_node, $schema_options).IsValid) {
+            $line_schema = '✅'
+        }
+        else {
+            $line_schema = '❌'
+            $labels.'schema-validation-needed' = $true
+        }
+    }
+    catch {
+        $line_schema = '❌'
+        $labels.'schema-validation-needed' = $true
+    }
+
     $line = @()
 
     # Status
@@ -101,27 +123,6 @@ foreach ($file in $files) {
 
     # Manifest
     $line += if ($c.homepage) { "[$m]($($c.homepage))" } else { $m }
-
-    # Required Fields
-    $fields = @(
-        'version',
-        'description',
-        'homepage',
-        'license',
-        'pre_install',
-        'post_install',
-        'pre_uninstall',
-        'post_uninstall'
-    )
-    foreach ($field in $fields) {
-        if (-not $c.$field) {
-            $labels.'missing-required-field' = $true
-            break
-        }
-    }
-    if (-not ($c.url -or $c.architecture)) {
-        $labels.'missing-required-field' = $true
-    }
 
     # Type
     $type = @()
@@ -136,8 +137,7 @@ foreach ($file in $files) {
         $line += $type -join ', '
     }
     else {
-        $line += '⚠️'
-        $labels.'missing-required-field' = $true
+        $line += '📝'
     }
 
     # WinGet
@@ -150,7 +150,7 @@ foreach ($file in $files) {
     }
     catch {
         if ($file.status -eq 'added') {
-            $line += "[No]($url) ⚠️"
+            $line += "[No]($url) 📝"
             $labels.'manifest-name-review-needed' = $true
         }
         else {
@@ -195,6 +195,9 @@ foreach ($file in $files) {
         'No'
     }
 
+    # Schema
+    $line += $line_schema
+
     $results += '|' + ($line -join '|') + '|'
 }
 
@@ -216,6 +219,7 @@ $guide = @'
 - **Admin**: Whether the app requires admin permission to install or uninstall.
 - **Persistence**: The persistence method used for app data.
 - **Extra**: Whether extra files or directories exist for persistence in the [extra](https://github.com/abgox/abyss/tree/main/extra) directory.
+- **Schema**: Whether the manifest complies with the [JSON Schema](https://github.com/abgox/abyss/blob/main/schema/scoop-manifest.en-US.json).
 
 </details>
 
@@ -226,8 +230,8 @@ if ($has_manifest) {
         $marker,
         $guide,
         '',
-        '| Status | Manifest | Type | WinGet | Location | Admin | Persistence | Extra |',
-        '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
+        '| Status | Manifest | Type | WinGet | Location | Admin | Persistence | Extra | Schema |',
+        '| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |'
     ) + $results
 
     .\script\sort-json.ps1
