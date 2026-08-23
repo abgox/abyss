@@ -297,7 +297,7 @@ function A-New-File {
         文件内容。如果指定了此参数，则写入文件内容，否则创建空文件
 
     .PARAMETER Encoding
-        文件编码，默认为 utf8
+        文件编码，默认为 utf8 (统一为不带 BOM，与 PowerShell 7 的行为一致)
         此参数仅在指定了 -Content 参数时有效
 
     .EXAMPLE
@@ -335,9 +335,27 @@ function A-New-File {
     else {
         A-Ensure-Directory (Split-Path $Path -Parent)
     }
+    # 兼容不同 PowerShell 版本的编码差异:
+    # utf8 在 Windows PowerShell 5.1 中会写入 BOM，而 PowerShell 7 不会，这里统一为不带 BOM
+    $useUtf8NoBom = $PSEdition -eq 'Desktop' -and $Encoding -in 'utf8', 'utf8NoBom'
+    $encodingName = $Encoding
+
     if ($PSBoundParameters.ContainsKey('Content')) {
         # 当明确传递了 Content 参数时（包括空字符串或 $null）
-        Set-Content -Path $Path -Value $Content -Encoding $Encoding -Force
+        if ($useUtf8NoBom) {
+            # Windows PowerShell 5.1 没有 utf8NoBom 编码名称，使用 .NET API 写入不带 BOM 的 UTF-8
+            $text = if ($null -eq $Content) { '' } else { (@($Content) -join "`r`n") + "`r`n" }
+            [System.IO.File]::WriteAllText($Path, $text, [System.Text.UTF8Encoding]::new($false))
+            return
+        }
+        elseif ($PSEdition -eq 'Desktop') {
+            # Windows PowerShell 5.1 不支持部分编码名称，映射为等效的编码名称
+            switch ($encodingName) {
+                'utf8Bom' { $encodingName = 'utf8' }
+                'ansi' { $encodingName = 'Default' }
+            }
+        }
+        Set-Content -Path $Path -Value $Content -Encoding $encodingName -Force
     }
     else {
         # 当没有传递 Content 参数时
@@ -562,7 +580,10 @@ function A-Stop-Process {
     $Paths = $Paths | Sort-Object -Unique
 
     foreach ($app_dir in $Paths) {
-        $matched = (Get-Process).Where({ $_.Path -like "$app_dir\*" })
+        if (!$app_dir) { continue }
+        # 转义路径中的通配符字符(如 '['、']')，避免进程匹配失效
+        $pattern = [System.Management.Automation.WildcardPattern]::Escape($app_dir) + '\*'
+        $matched = (Get-Process).Where({ $_.Path -like $pattern })
         foreach ($p in $matched) {
             try {
                 if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
@@ -607,7 +628,9 @@ function A-Stop-Process {
     # 这里参考了 Scoop 的官方检查逻辑，以确保一致性
     # https://github.com/ScoopInstaller/Scoop/blob/ebd8c036fa0d2e1dc93bca44c10eeee36c0d233e/lib/install.ps1#L534
     foreach ($app_dir in $Paths) {
-        $running_processes = (Get-Process).Where({ $_.Path -like "$app_dir\*" }) | Out-String
+        if (!$app_dir) { continue }
+        $pattern = [System.Management.Automation.WildcardPattern]::Escape($app_dir) + '\*'
+        $running_processes = (Get-Process).Where({ $_.Path -like $pattern }) | Out-String
         if ($running_processes) {
             error "The following instances of `"$app`" are still running. Close them and try again."
             Write-Host $running_processes
@@ -1122,7 +1145,8 @@ function A-Uninstall-Msi {
     $ProductCode = $null
     $registryPaths = @(
         'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
-        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
+        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
+        'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
     )
     :outerLoop foreach ($path in $registryPaths) {
         $uninstallKeys = Get-ChildItem $path -ErrorAction SilentlyContinue
@@ -1316,7 +1340,8 @@ function A-Get-UninstallEntryByAppName {
     # 搜索注册表位置
     $registryPaths = @(
         'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
-        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
+        'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
+        'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
     )
 
     foreach ($path in $registryPaths) {
@@ -1761,6 +1786,7 @@ function A-New-LinkBase {
         }
         $installData.LinkPaths += $linkPath
         $installData.LinkTargets += $linkTarget
+        $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 
         $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
 
@@ -1819,7 +1845,6 @@ function A-New-LinkBase {
         New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
         Write-Host "Persisting (Link) $linkPath => $linkTarget"
     }
-    $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
 }
 
 function A-Add-AppxPackage {
