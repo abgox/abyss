@@ -9,6 +9,7 @@ param(
     [Switch] $SkipUpdated,
     [String] $Version = '',
     [Switch] $ThrowError,
+    [Switch] $Commit,
     [int] $MaxConcurrency = 100,
     [int] $TimeoutSec = 30
 )
@@ -309,8 +310,12 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
 
     $commitMsg = $null
     if ($script:App -ne '*') {
-        $isNew = (git status --short -- $file) -match '^\s*A'
-        $commitMsg = if ($isNew) { "${app}: add version $ver" } else { "${app}: update to version $ver" }
+        $commitMsg = if ($expected_ver -eq '0.0.0' -or (git status --short -- $file) -match '^\s*(A|\?\?)') {
+            "${app}: add version $ver"
+        }
+        else {
+            "${app}: update to version $ver"
+        }
     }
 
     $shouldUpdate = $script:Update -or $script:ForceUpdate
@@ -323,6 +328,10 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
             Invoke-AutoUpdate $app $file $json $ver $matchesHashtable
             if ($commitMsg) {
                 Write-Host $commitMsg -ForegroundColor Yellow
+                if ($script:Commit) {
+                    git -c core.safecrlf=false add -- $file
+                    git -c core.safecrlf=false commit -m $commitMsg -- $file
+                }
             }
         }
         catch {
