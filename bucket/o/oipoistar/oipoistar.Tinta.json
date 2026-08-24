@@ -1,0 +1,51 @@
+{
+    "version": "3.2.0",
+    "description": "适用于 Windows 的轻量快速 Markdown 与 Mermaid 查看器 | Fast, lightweight markdown and Mermaid viewer for Windows",
+    "homepage": "https://tinta.cc",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/oipoistar/tinta/releases/download/v3.2.0/tinta.exe",
+            "hash": "25d33941493e84d5ec2b001b67580672d16cec545149376a793701d5295f903a"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\tinta.exe",
+    "link": "$env:AppData\\Tinta",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/oipoistar/tinta/releases/download/v$version/tinta.exe"
+            }
+        }
+    }
+}
