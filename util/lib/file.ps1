@@ -14,7 +14,10 @@ function A-Test-Path {
     param (
         [string]$Path
     )
-    [System.IO.Path]::Exists($Path)
+    if ($PSEdition -eq 'Core') {
+        return [System.IO.Path]::Exists($Path)
+    }
+    Test-Path -LiteralPath $Path
 }
 
 function A-Ensure-Directory {
@@ -29,7 +32,7 @@ function A-Test-DirectoryNotEmpty {
     param(
         [string]$Path
     )
-    if (!A-Test-Directory $Path) {
+    if (!(A-Test-Directory $Path)) {
         return $false
     }
     return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
