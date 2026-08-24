@@ -1,5 +1,5 @@
 {
-    "version": "9.6.1.807",
+    "version": "10.0.4.819",
     "description": "一个轻量级的、多功能的图像查看器 | A lightweight, versatile image viewer",
     "homepage": "https://imageglass.org",
     "license": {
@@ -7,34 +7,16 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/d2phap/ImageGlass/releases/download/9.6.1.807/ImageGlass_9.6.1.807_x64.zip",
-            "hash": "b0b62dade6238c719c13cfb55a05b4cfaddecff9e4c20af09f923eac2b3344af",
-            "extract_dir": "ImageGlass_x64"
+            "url": "https://github.com/d2phap/ImageGlass/releases/download/10.0.4.819/ImageGlass_10.0.4.819_win-x64.msix",
+            "hash": "a1ac01c9fef08c7b420e0c7586309039a4853270811af4b283788ab98eae1f72"
         },
         "arm64": {
-            "url": "https://github.com/d2phap/ImageGlass/releases/download/9.6.1.807/ImageGlass_9.6.1.807_arm64.zip",
-            "hash": "9d8c1aecd79f15e4f11634bf7f9e5889b805d2e8c8fcd949803e6603788bc520",
-            "extract_dir": "ImageGlass_arm64"
+            "url": "https://github.com/d2phap/ImageGlass/releases/download/10.0.4.819/ImageGlass_10.0.4.819_win-arm64.msix",
+            "hash": "c8c8c5db35643d73d471616d2facbcc25ee63f11ab36151169b69fb54403a013"
         }
     },
-    "extract_to": "app",
-    "bin": "app\\ImageGlass.exe",
-    "shortcuts": [
-        [
-            "app\\ImageGlass.exe",
-            "ImageGlass"
-        ]
-    ],
-    "persist": [
-        [
-            "app\\Themes",
-            "AppData\\Local\\ImageGlass\\Themes"
-        ],
-        [
-            "app\\igconfig.json",
-            "AppData\\Local\\ImageGlass\\igconfig.json"
-        ]
-    ],
+    "msix": "DuongDieuPhap.ImageGlass_dhvarhd5k2r8t",
+    "link": "$env:LocalAppData\\Packages\\DuongDieuPhap.ImageGlass_dhvarhd5k2r8t\\LocalCache\\Local\\ImageGlass",
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
@@ -49,7 +31,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -64,10 +46,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/d2phap/ImageGlass/releases/download/$version/ImageGlass_$version_x64.zip"
+                "url": "https://github.com/d2phap/ImageGlass/releases/download/$version/ImageGlass_$version_win-x64.msix"
             },
             "arm64": {
-                "url": "https://github.com/d2phap/ImageGlass/releases/download/$version/ImageGlass_$version_arm64.zip"
+                "url": "https://github.com/d2phap/ImageGlass/releases/download/$version/ImageGlass_$version_win-arm64.msix"
             }
         }
     }
