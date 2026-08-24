@@ -1,5 +1,5 @@
 {
-    "version": "0.17.1",
+    "version": "0.19.1",
     "description": "一个简单优雅的 MarkDown 编辑器 | A simple and elegant markdown editor",
     "homepage": "https://www.marktext.cc",
     "license": {
@@ -7,11 +7,14 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/marktext/marktext/releases/download/v0.17.1/marktext-x64-win.zip",
-            "hash": "2e5ffe0e6e77b8400f60dc0b38bf2615e558b2defaeda5f3ba4b2dc57ee2af15"
+            "url": "https://github.com/marktext/marktext/releases/download/v0.19.1/marktext-win-x64-0.19.1-setup.exe",
+            "hash": "0de6c0aa854728f3e5c21d74b4138f0a515d70cd80921eb3aed6b8e975838a2f"
+        },
+        "arm64": {
+            "url": "https://github.com/marktext/marktext/releases/download/v0.19.1/marktext-win-arm64-0.19.1-setup.exe",
+            "hash": "f3df6115baab13478ce605db76bf4f676fdd305416f0048aa69acb1bc8e5700a"
         }
     },
-    "extract_to": "app",
     "bin": "app\\MarkText.exe",
     "shortcuts": [
         [
@@ -20,10 +23,12 @@
         ]
     ],
     "link": "$env:AppData\\MarkText",
+    "cleanup": "$env:LocalAppData\\marktext-updater",
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\1.ps1",
-        "A-Start-Install"
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall MarkText.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -35,7 +40,8 @@
         ". $bucketsdir\\$bucket\\util\\1.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -50,7 +56,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/marktext/marktext/releases/download/v$version/marktext-x64-win.zip"
+                "url": "https://github.com/marktext/marktext/releases/download/v$version/marktext-win-x64-$version-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/marktext/marktext/releases/download/v$version/marktext-win-arm64-$version-setup.exe"
             }
         }
     }
