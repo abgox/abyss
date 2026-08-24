@@ -1,0 +1,52 @@
+{
+    "version": "1.22.1",
+    "description": "一款运行在终端中的代码编辑器 | A code editor that lives in your terminal",
+    "homepage": "https://druk.sh",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/letstri/druk/releases/download/v1.22.1/druk-windows-x64.zip",
+            "hash": "b5455f43f1d0402862d325b62d65eba0461f5e427bc9cbc9ccb6da05fddc6537"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\druk.exe",
+    "link": "$home\\.config\\druk",
+    "cleanup": "$home\\.cache\\druk",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/letstri/druk/releases/download/v$version/druk-windows-x64.zip"
+            }
+        }
+    }
+}
