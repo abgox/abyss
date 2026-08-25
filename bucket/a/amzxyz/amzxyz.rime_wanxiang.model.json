@@ -9,14 +9,14 @@
     "notes": "Please redeploy in Rime Weasel.",
     "suggest": {
         "rime": "abyss/Rime.Weasel",
-        "input-schemes": "abyss/amzxyz.rime_wanxiang"
+        "input-schemes": "abyss/amzxyz.rime_wanxiang.base"
     },
     "url": "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram",
     "hash": "01ffe37f22607bf8a5cd5d82a3349f6df97744369464aee4577585112d85469d",
     "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
         "A-Ensure-Directory \"$env:AppData\\Rime\"",
         "Write-Host \"Copying $dir\\wanxiang-lts-zh-hans.gram => $env:AppData\\Rime\" -ForegroundColor Yellow",
@@ -24,19 +24,19 @@
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "Get-Process | Where-Object { $_.Name -eq 'WeaselServer' } | Select-Object -First 1 | Stop-Process -Force -ErrorAction SilentlyContinue",
         "Remove-Item \"$env:AppData\\Rime\\wanxiang-lts-zh-hans.gram\" -Force -ErrorAction SilentlyContinue"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
