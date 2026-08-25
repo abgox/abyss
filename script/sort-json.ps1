@@ -87,6 +87,8 @@ $order = [ordered]@{
         github         = [ordered]@{
             channel = ''
             repo    = ''
+            tag     = ''
+            raw     = ''
         }
         commit         = [ordered]@{
             format = ''
@@ -206,9 +208,8 @@ foreach ($m in $manifests) {
         continue
     }
     $sortedJson = Sort-JsonByOrder -JsonObject $json -Order $order
-    $old = $json | ConvertToPrettyJson
     $new = $sortedJson | ConvertToPrettyJson
-    if ($new -eq $old) {
+    if ($new -eq $content.Trim()) {
         continue
     }
     Write-Host "Processing: $m"

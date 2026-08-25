@@ -167,8 +167,15 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
         if (!$ver) {
             $candidateVersions = @()
             if ($checkver.github) {
-                $candidateVersions = A-Get-VersionFromGitHub -Channel $checkver.github.channel
-                $source = 'github'
+                $channel = $checkver.github.channel, 'latest' | Select-Object -First 1
+                if ($checkver.github.raw) {
+                    $page = A-Get-GitHubReleasePage -Channel $channel
+                    $source = if ($checkver.github.tag) { "github release '$($checkver.github.tag)'" } else { "github releases ($channel)" }
+                }
+                else {
+                    $candidateVersions = A-Get-VersionFromGitHub -Channel $channel
+                    $source = 'github'
+                }
             }
             elseif ($checkver.commit) {
                 $vCandidate = A-Get-VersionFromCommit

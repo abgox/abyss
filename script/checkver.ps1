@@ -269,14 +269,16 @@ function A-Get-GitHubHttpClient {
 function A-Invoke-GitHubAPI {
     param (
         [string]$Uri,
-        [hashtable]$Headers
+        [hashtable]$Headers,
+        [switch]$Raw
     )
     if (!$Uri) {
         Write-Error '$Uri is invalid'
         return
     }
-    if ($script:githubApiCache.ContainsKey($Uri)) {
-        return $script:githubApiCache[$Uri]
+    $cacheKey = if ($Raw) { "$Uri#raw" } else { $Uri }
+    if ($script:githubApiCache.ContainsKey($cacheKey)) {
+        return $script:githubApiCache[$cacheKey]
     }
     $tokenPool = @()
     if ($env:GITHUB_ACTIONS) {
@@ -288,11 +290,13 @@ function A-Invoke-GitHubAPI {
     }
     else {
         try {
-            $localToken = scoop config gh_token
+            $localToken = scoop config | Select-Object -ExpandProperty gh_token -ErrorAction Ignore
             if ($localToken) { $tokenPool += $localToken }
         }
         catch {}
     }
+
+    $env:SCOOP_GH_TOKEN, $env:GITHUB_TOKEN, $env:GH_TOKEN | Where-Object { $_ } | ForEach-Object { $tokenPool += $_ }
 
     $client = A-Get-GitHubHttpClient
 
@@ -373,8 +377,8 @@ function A-Invoke-GitHubAPI {
                     }
                 }
             }
-            $result = if ($isRaw) { $content } else { $content | ConvertFrom-Json }
-            $script:githubApiCache.TryAdd($Uri, $result) | Out-Null
+            $result = if ($isRaw -or $Raw) { $content } else { $content | ConvertFrom-Json }
+            $script:githubApiCache.TryAdd($cacheKey, $result) | Out-Null
             return $result
         }
         catch {
@@ -516,6 +520,41 @@ function A-Get-VersionFromCommit {
     }
     $newest = $allRes | Sort-Object -Property @{ Expression = { [System.DateTimeOffset]::Parse($_.commit.committer.date, [System.Globalization.CultureInfo]::InvariantCulture) } } -Descending | Select-Object -First 1
     return (&$parseCommit $newest)
+}
+
+function A-Get-GitHubReleasePage {
+    <#
+    .SYNOPSIS
+        获取 GitHub Release 的原始 API 响应文本
+
+    .DESCRIPTION
+        用于 checkver.github 的 raw 模式:
+        不再返回版本号候选, 而是把 API 响应原文作为 $page 交给通用的 jsonpath/regex 提取管线。
+        - 指定 tag: /repos/{repo}/releases/tags/{tag}
+        - latest:   /repos/{repo}/releases/latest
+        - 其他 channel (newest/stable/preview): /repos/{repo}/releases 列表(单页)
+
+    .NOTES
+        必须透传原始响应文本而非 ConvertTo-Json 往返,
+        否则既有清单中针对 GitHub 原始响应格式编写的 regex 将全部失效。
+    #>
+    param (
+        [string]$Channel = 'latest'
+    )
+    $checkver = $json.checkver
+    $repo = A-Get-GitRepo
+    if (!$repo) {
+        Write-Error "${app}: Unable to determine GitHub repository"
+        return
+    }
+    if ($checkver.github.tag) {
+        return A-Invoke-GitHubAPI -Uri "https://api.github.com/repos/$repo/releases/tags/$($checkver.github.tag)" -Raw
+    }
+    if (!$Channel) { $Channel = 'latest' }
+    if ($Channel -eq 'latest') {
+        return A-Invoke-GitHubAPI -Uri "https://api.github.com/repos/$repo/releases/latest" -Raw
+    }
+    return A-Invoke-GitHubAPI -Uri "https://api.github.com/repos/$repo/releases?per_page=100" -Raw
 }
 
 function A-Get-InstallerInfoFromWinGet {

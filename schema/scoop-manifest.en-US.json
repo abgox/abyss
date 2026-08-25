@@ -3138,11 +3138,8 @@
             "properties": {
                 "github": {
                     "type": "object",
-                    "markdownDescription": "Get the version from GitHub Releases",
+                    "markdownDescription": "Get the version from GitHub Releases\n\n- By default, returns version candidates extracted from `tag_name`\n- With `raw: true`, returns the raw API response text for extraction via `jsonpath`/`regex`",
                     "additionalProperties": false,
-                    "required": [
-                        "channel"
-                    ],
                     "examples": [
                         {
                             "channel": "latest"
@@ -3165,6 +3162,22 @@
                                 "**Newest** (Get the first Release in reverse chronological order, including prereleases)"
                             ]
                         },
+                        "tag": {
+                            "type": "string",
+                            "markdownDescription": "Specify a fixed release tag to fetch (endpoint `/releases/tags/{tag}`)\n\n- Requires `raw: true`\n- Used to extract asset metadata of a pinned release via `jsonpath`/`regex`",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "raw": {
+                            "type": "boolean",
+                            "markdownDescription": "Return the raw GitHub API response text instead of version candidates\n\n- The raw text is passed as the page to the shared `jsonpath`/`regex` extraction pipeline\n- Regexes are matched against GitHub's original response format (no re-serialization)",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "repo": {
                             "type": "string",
                             "markdownDescription": "Specify the GitHub repository\n\n- Format: `owner/repo`\n- If omitted, it is automatically extracted from `autoupdate` and `homepage`",
@@ -3177,6 +3190,38 @@
                                 }
                             ]
                         }
+                    },
+                    "dependencies": {
+                        "tag": [
+                            "raw"
+                        ]
+                    },
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "channel"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "tag"
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "not": {
+                            "required": [
+                                "channel",
+                                "tag"
+                            ]
+                        },
+                        "errorMessage": "Only one of 'channel' or 'tag' is allowed"
+                    },
+                    "else": {
+                        "not": true,
+                        "errorMessage": "Missing 'channel' or 'tag' property"
                     }
                 },
                 "commit": {
@@ -3326,7 +3371,17 @@
                 },
                 "url": {
                     "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to: `(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
-                    "$ref": "#/definitions/str_url_validation"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/str_url_validation"
+                        },
+                        {
+                            "not": {
+                                "pattern": "https?://api.github.com"
+                            },
+                            "errorMessage": "Please use github instead"
+                        }
+                    ]
                 },
                 "dynamic": {
                     "type": "boolean",
@@ -3433,9 +3488,6 @@
                             "url"
                         ],
                         "redirect": [
-                            "url"
-                        ],
-                        "jsonpath": [
                             "url"
                         ],
                         "xpath": [
@@ -4031,7 +4083,7 @@
                             "architecture"
                         ]
                     },
-                    "errorMessage": "Conflict properties: url/architecture"
+                    "errorMessage": "Only one of 'url' or 'architecture' is allowed"
                 }
             ]
         }
@@ -4806,7 +4858,7 @@
                     "architecture"
                 ]
             },
-            "errorMessage": "Conflict properties: url/architecture"
+            "errorMessage": "Only one of 'url' or 'architecture' is allowed"
         },
         {
             "if": {
