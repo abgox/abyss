@@ -2666,7 +2666,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Start-Install"
                 ]
             ],
@@ -2675,7 +2675,7 @@
                     "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1"
                 },
                 {
                     "const": "A-Start-Install"
@@ -2692,8 +2692,8 @@
                                 "markdownDescription": "设置 `$bucket` 变量"
                             },
                             {
-                                "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                                "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的\n- 它使用版本号进行命名\n  - v1 版本: `1.ps1`\n  - v2 版本: `2.ps1`\n- 这里永远使用最新版本，旧版本仅用于兼容"
+                                "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                                "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
                             },
                             {
                                 "const": "A-Start-Install",
@@ -2842,7 +2842,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Complete-Install"
                 ]
             ],
@@ -2852,8 +2852,8 @@
                     "markdownDescription": "设置 `$bucket` 变量"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                    "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的\n- 它使用版本号进行命名\n  - v1 版本: `1.ps1`\n  - v2 版本: `2.ps1`\n- 这里永远使用最新版本，旧版本仅用于兼容"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                    "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
                 }
             ],
             "allOf": [
@@ -2909,7 +2909,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Start-Uninstall",
                     "A-Stop-Process"
                 ]
@@ -2919,7 +2919,7 @@
                     "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1"
                 },
                 {
                     "const": "A-Start-Uninstall"
@@ -2935,8 +2935,8 @@
                                 "markdownDescription": "设置 `$bucket` 变量"
                             },
                             {
-                                "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                                "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的\n- 它使用版本号进行命名\n  - v1 版本: `1.ps1`\n  - v2 版本: `2.ps1`\n- 这里永远使用最新版本，旧版本仅用于兼容"
+                                "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                                "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
                             },
                             {
                                 "const": "A-Start-Uninstall",
@@ -3063,7 +3063,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Complete-Uninstall"
                 ]
             ],
@@ -3073,8 +3073,8 @@
                     "markdownDescription": "设置 `$bucket` 变量"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                    "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的\n- 它使用版本号进行命名\n  - v1 版本: `1.ps1`\n  - v2 版本: `2.ps1`\n- 这里永远使用最新版本，旧版本仅用于兼容"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                    "markdownDescription": "引入 `util` 脚本\n\n- [abyss](https://abyss.abgox.com) 中的特性都是基于它实现的"
                 }
             ],
             "allOf": [
@@ -3138,11 +3138,8 @@
             "properties": {
                 "github": {
                     "type": "object",
-                    "markdownDescription": "从 GitHub Release 获取版本",
+                    "markdownDescription": "从 GitHub Release 获取版本\n\n- 默认返回从 `tag_name` 提取的版本号候选\n- 开启 `raw: true` 后, 返回 API 响应原文, 交由 `jsonpath`/`regex` 提取",
                     "additionalProperties": false,
-                    "required": [
-                        "channel"
-                    ],
                     "examples": [
                         {
                             "channel": "latest"
@@ -3165,6 +3162,22 @@
                                 "**绝对最新版** (按时间倒序获取第一个 Release)"
                             ]
                         },
+                        "tag": {
+                            "type": "string",
+                            "markdownDescription": "指定要获取的固定 Release tag (端点 `/releases/tags/{tag}`)\n\n- 需要搭配 `raw: true`\n- 用于通过 `jsonpath`/`regex` 提取固定 Release 的资产信息",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "raw": {
+                            "type": "boolean",
+                            "markdownDescription": "返回 GitHub API 响应原文而非版本号候选\n\n- 原文作为页面交给共享的 `jsonpath`/`regex` 提取管线\n- regex 匹配的是 GitHub 原始响应格式 (不做重新序列化)",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "repo": {
                             "type": "string",
                             "markdownDescription": "指定 GitHub 仓库\n\n- 格式：`owner/repo`\n- 省略时自动从 `autoupdate` 和 `homepage` 中提取",
@@ -3177,6 +3190,38 @@
                                 }
                             ]
                         }
+                    },
+                    "dependencies": {
+                        "tag": [
+                            "raw"
+                        ]
+                    },
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "channel"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "tag"
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "not": {
+                            "required": [
+                                "channel",
+                                "tag"
+                            ]
+                        },
+                        "errorMessage": "仅允许 channel 或 tag 属性"
+                    },
+                    "else": {
+                        "not": true,
+                        "errorMessage": "缺少 channel 或 tag 属性"
                     }
                 },
                 "commit": {
@@ -3326,7 +3371,17 @@
                 },
                 "url": {
                     "markdownDescription": "版本所在页面\n\n- 获取页面内容后，通过 `regex` 匹配版本\n- `regex` 省略时默认为：`(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式",
-                    "$ref": "#/definitions/str_url_validation"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/str_url_validation"
+                        },
+                        {
+                            "not": {
+                                "pattern": "https?://api.github.com"
+                            },
+                            "errorMessage": "请改用 github"
+                        }
+                    ]
                 },
                 "dynamic": {
                     "type": "boolean",
@@ -3433,9 +3488,6 @@
                             "url"
                         ],
                         "redirect": [
-                            "url"
-                        ],
-                        "jsonpath": [
                             "url"
                         ],
                         "xpath": [
@@ -4031,7 +4083,7 @@
                             "architecture"
                         ]
                     },
-                    "errorMessage": "属性冲突: url/architecture"
+                    "errorMessage": "仅允许 url 或 architecture"
                 }
             ]
         }
@@ -4806,7 +4858,7 @@
                     "architecture"
                 ]
             },
-            "errorMessage": "属性冲突: url/architecture"
+            "errorMessage": "仅允许 url 或 architecture"
         },
         {
             "if": {

@@ -41,28 +41,31 @@
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/carapace-sh/nightly/releases/latest",
+        "github": {
+            "channel": "latest",
+            "raw": true
+        },
         "regex": "/download/([^/]+)/carapace-bin_(?<ver>[\\d.]+)-SNAPSHOT-(?<hash>[a-f0-9]+)_windows_amd64.zip"
     },
     "autoupdate": {

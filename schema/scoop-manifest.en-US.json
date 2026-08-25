@@ -2666,7 +2666,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Start-Install"
                 ]
             ],
@@ -2675,7 +2675,7 @@
                     "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1"
                 },
                 {
                     "const": "A-Start-Install"
@@ -2692,8 +2692,8 @@
                                 "markdownDescription": "Set the `$bucket` variable"
                             },
                             {
-                                "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                                "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it\n- It is named using the version number\n  - v1 version: `1.ps1`\n  - v2 version: `2.ps1`\n- The latest version is always used here; old versions are only for compatibility"
+                                "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                                "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it"
                             },
                             {
                                 "const": "A-Start-Install",
@@ -2842,7 +2842,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Complete-Install"
                 ]
             ],
@@ -2852,8 +2852,8 @@
                     "markdownDescription": "Set the `$bucket` variable"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                    "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it\n- It is named using the version number\n  - v1 version: `1.ps1`\n  - v2 version: `2.ps1`\n- The latest version is always used here; old versions are only for compatibility"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                    "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it"
                 }
             ],
             "allOf": [
@@ -2909,7 +2909,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Start-Uninstall",
                     "A-Stop-Process"
                 ]
@@ -2919,7 +2919,7 @@
                     "const": "if (!$bucket) { $bucket = 'abyss' }"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1"
                 },
                 {
                     "const": "A-Start-Uninstall"
@@ -2935,8 +2935,8 @@
                                 "markdownDescription": "Set the `$bucket` variable"
                             },
                             {
-                                "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                                "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it\n- It is named using the version number\n  - v1 version: `1.ps1`\n  - v2 version: `2.ps1`\n- The latest version is always used here; old versions are only for compatibility"
+                                "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                                "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it"
                             },
                             {
                                 "const": "A-Start-Uninstall",
@@ -3063,7 +3063,7 @@
             "examples": [
                 [
                     "if (!$bucket) { $bucket = 'abyss' }",
-                    ". $bucketsdir\\$bucket\\util\\1.ps1",
+                    ". $bucketsdir\\$bucket\\util\\_.ps1",
                     "A-Complete-Uninstall"
                 ]
             ],
@@ -3073,8 +3073,8 @@
                     "markdownDescription": "Set the `$bucket` variable"
                 },
                 {
-                    "const": ". $bucketsdir\\$bucket\\util\\1.ps1",
-                    "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it\n- It is named using the version number\n  - v1 version: `1.ps1`\n  - v2 version: `2.ps1`\n- The latest version is always used here; old versions are only for compatibility"
+                    "const": ". $bucketsdir\\$bucket\\util\\_.ps1",
+                    "markdownDescription": "Import the `util` script\n\n- Features in [abyss](https://abyss.abgox.com) are built on top of it"
                 }
             ],
             "allOf": [
@@ -3138,11 +3138,8 @@
             "properties": {
                 "github": {
                     "type": "object",
-                    "markdownDescription": "Get the version from GitHub Releases",
+                    "markdownDescription": "Get the version from GitHub Releases\n\n- By default, returns version candidates extracted from `tag_name`\n- With `raw: true`, returns the raw API response text for extraction via `jsonpath`/`regex`",
                     "additionalProperties": false,
-                    "required": [
-                        "channel"
-                    ],
                     "examples": [
                         {
                             "channel": "latest"
@@ -3165,6 +3162,22 @@
                                 "**Newest** (Get the first Release in reverse chronological order, including prereleases)"
                             ]
                         },
+                        "tag": {
+                            "type": "string",
+                            "markdownDescription": "Specify a fixed release tag to fetch (endpoint `/releases/tags/{tag}`)\n\n- Requires `raw: true`\n- Used to extract asset metadata of a pinned release via `jsonpath`/`regex`",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/str_no_all_space"
+                                }
+                            ]
+                        },
+                        "raw": {
+                            "type": "boolean",
+                            "markdownDescription": "Return the raw GitHub API response text instead of version candidates\n\n- The raw text is passed as the page to the shared `jsonpath`/`regex` extraction pipeline\n- Regexes are matched against GitHub's original response format (no re-serialization)",
+                            "enum": [
+                                true
+                            ]
+                        },
                         "repo": {
                             "type": "string",
                             "markdownDescription": "Specify the GitHub repository\n\n- Format: `owner/repo`\n- If omitted, it is automatically extracted from `autoupdate` and `homepage`",
@@ -3177,6 +3190,38 @@
                                 }
                             ]
                         }
+                    },
+                    "dependencies": {
+                        "tag": [
+                            "raw"
+                        ]
+                    },
+                    "if": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "channel"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "tag"
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "not": {
+                            "required": [
+                                "channel",
+                                "tag"
+                            ]
+                        },
+                        "errorMessage": "Only one of 'channel' or 'tag' is allowed"
+                    },
+                    "else": {
+                        "not": true,
+                        "errorMessage": "Missing 'channel' or 'tag' property"
                     }
                 },
                 "commit": {
@@ -3326,7 +3371,17 @@
                 },
                 "url": {
                     "markdownDescription": "The page where the version is located\n\n- After fetching the page content, match the version with `regex`\n- If `regex` is omitted, it defaults to: `(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`",
-                    "$ref": "#/definitions/str_url_validation"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/str_url_validation"
+                        },
+                        {
+                            "not": {
+                                "pattern": "https?://api.github.com"
+                            },
+                            "errorMessage": "Please use github instead"
+                        }
+                    ]
                 },
                 "dynamic": {
                     "type": "boolean",
@@ -3433,9 +3488,6 @@
                             "url"
                         ],
                         "redirect": [
-                            "url"
-                        ],
-                        "jsonpath": [
                             "url"
                         ],
                         "xpath": [
@@ -4031,7 +4083,7 @@
                             "architecture"
                         ]
                     },
-                    "errorMessage": "Conflict properties: url/architecture"
+                    "errorMessage": "Only one of 'url' or 'architecture' is allowed"
                 }
             ]
         }
@@ -4806,7 +4858,7 @@
                     "architecture"
                 ]
             },
-            "errorMessage": "Conflict properties: url/architecture"
+            "errorMessage": "Only one of 'url' or 'architecture' is allowed"
         },
         {
             "if": {

@@ -17,6 +17,9 @@
         A-Deny-IfAppConflict $manifest.renamed.old
         A-Move-Persistence
     }
+
+    "{`"version`":$($abgox_abyss.version)}" | Out-File "$dir\abgox-abyss.json" -Force
+
     # https://abyss.abgox.com/docs/features/data-persistence/persist
     if ($manifest.persist) {
         foreach ($item in $manifest.persist) {

@@ -22,27 +22,30 @@
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
-        ". $bucketsdir\\$bucket\\util\\1.ps1",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/e2eSoft/products/releases",
+        "github": {
+            "channel": "latest",
+            "raw": true
+        },
         "regex": "browser_download_url.+?iVCam_x64_v([\\d.]+).exe"
     },
     "autoupdate": {
