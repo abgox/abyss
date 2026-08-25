@@ -1,6 +1,6 @@
 {
-    "version": "0.17.4",
-    "description": "小狼毫输入法 - 一个模块化、可扩展且可定制的输入法引擎 | A modular, extensible, and customizable input method engine",
+    "version": "0.17.4.50",
+    "description": "小狼毫输入法（nightly） - 一个模块化、可扩展且可定制的输入法引擎 | A modular, extensible, and customizable input method engine (nightly)",
     "homepage": "https://rime.im",
     "license": {
         "identifier": "GPL-3.0-or-later"
@@ -26,12 +26,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/rime/weasel/releases/download/0.17.4/weasel-0.17.4.0-installer.exe",
-            "hash": "cf509534a8f5f8af9c98ed7cbb8f135439f145a8cbe7e50ede42bb5b5ab45c29"
+            "url": "https://github.com/rime/weasel/releases/download/latest/weasel-0.17.4.50.d73f629-installer.exe",
+            "hash": "002c948da2ca54be5d9305a2fdde5624f879df7fed44c5105ec3af8859e86e30"
         },
         "arm64": {
-            "url": "https://github.com/rime/weasel/releases/download/0.17.4/weasel-0.17.4.0-installer.exe",
-            "hash": "cf509534a8f5f8af9c98ed7cbb8f135439f145a8cbe7e50ede42bb5b5ab45c29"
+            "url": "https://github.com/rime/weasel/releases/download/latest/weasel-0.17.4.50.d73f629-installer.exe",
+            "hash": "002c948da2ca54be5d9305a2fdde5624f879df7fed44c5105ec3af8859e86e30"
         }
     },
     "conflicts": [
@@ -45,7 +45,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller \"weasel-$version\\uninstall.exe\""
+        "A-Install-App -Uninstaller \"weasel-$($version -replace '\\.\\d+$','')\\uninstall.exe\""
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -57,8 +57,8 @@
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Uninstall-App",
-        "A-Remove-Link"
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -67,16 +67,18 @@
     ],
     "checkver": {
         "github": {
-            "channel": "latest"
-        }
+            "tag": "latest",
+            "raw": true
+        },
+        "regex": "weasel-(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)\\.(?<hash>[0-9a-f]+)-installer\\.exe"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/rime/weasel/releases/download/$version/weasel-$version.0-installer.exe"
+                "url": "https://github.com/rime/weasel/releases/download/latest/weasel-$version.$matchHash-installer.exe"
             },
             "arm64": {
-                "url": "https://github.com/rime/weasel/releases/download/$version/weasel-$version.0-installer.exe"
+                "url": "https://github.com/rime/weasel/releases/download/latest/weasel-$version.$matchHash-installer.exe"
             }
         }
     }
