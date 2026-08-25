@@ -1,76 +1,85 @@
 {
-  "version": "0.17.4.50",
-  "description": "小狼毫输入法（nightly） - 一个模块化、可扩展且可定制的输入法引擎 | A modular, extensible, and customizable input method engine (nightly)",
-  "homepage": "https://rime.im",
-  "license": {
-    "identifier": "GPL-3.0-or-later"
-  },
-  "notes_cn": [
-    "你可以直接安装一种输入方案以快速上手。",
-    "  - 万象拼音输入方案: abyss/amzxyz.rime_wanxiang",
-    "  - 雾凇拼音输入方案: abyss/iDvel.rime-ice",
-    "你可以安装万象语法模型: abyss/amzxyz.rime_wanxiang.model"
-  ],
-  "notes": [
-    "You can install an input scheme to get started quickly.",
-    "  - Wanxiang Pinyin: abyss/amzxyz.rime_wanxiang",
-    "  - Ice Pinyin: abyss/iDvel.rime-ice",
-    "You can install the Wanxiang syntax model: abyss/amzxyz.rime_wanxiang.model"
-  ],
-  "suggest": {
-    "input-schemes": ["abyss/amzxyz.rime_wanxiang", "abyss/iDvel.rime-ice"],
-    "model": "abyss/amzxyz.rime_wanxiang.model"
-  },
-  "architecture": {
-    "64bit": {
-      "url": "https://github.com/rime/weasel/releases/download/latest/weasel-0.17.4.50.d73f629-installer.exe",
-      "hash": "002c948da2ca54be5d9305a2fdde5624f879df7fed44c5105ec3af8859e86e30"
+    "version": "0.17.4.50",
+    "description": "小狼毫输入法（nightly） - 一个模块化、可扩展且可定制的输入法引擎 | A modular, extensible, and customizable input method engine (nightly)",
+    "homepage": "https://rime.im",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
     },
-    "arm64": {
-      "url": "https://github.com/rime/weasel/releases/download/latest/weasel-0.17.4.50.d73f629-installer.exe",
-      "hash": "002c948da2ca54be5d9305a2fdde5624f879df7fed44c5105ec3af8859e86e30"
-    }
-  },
-  "conflicts": ["Rime.Weasel", "Rime.Weasel.nightly"],
-  "location": "$env:ProgramFiles\\Rime",
-  "link": "$env:AppData\\Rime",
-  "admin": true,
-  "pre_install": [
-    "if (!$bucket) { $bucket = 'abyss' }",
-    ". $bucketsdir\\$bucket\\util\\1.ps1",
-    "A-Start-Install",
-    "A-Install-App -Uninstaller \"weasel-$($version -replace '\\.\\d+$','')\\uninstall.exe\""
-  ],
-  "post_install": [
-    "if (!$bucket) { $bucket = 'abyss' }",
-    ". $bucketsdir\\$bucket\\util\\1.ps1",
-    "A-Complete-Install"
-  ],
-  "pre_uninstall": [
-    "if (!$bucket) { $bucket = 'abyss' }",
-    ". $bucketsdir\\$bucket\\util\\1.ps1",
-    "A-Start-Uninstall",
-    "A-Stop-Process",
-    "A-Remove-Link",
-    "A-Uninstall-App"
-  ],
-  "post_uninstall": [
-    "if (!$bucket) { $bucket = 'abyss' }",
-    ". $bucketsdir\\$bucket\\util\\1.ps1",
-    "A-Complete-Uninstall"
-  ],
-  "checkver": {
-    "url": "https://api.github.com/repos/rime/weasel/releases/latest",
-    "regex": "weasel-(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)\\.(?<hash>[0-9a-f]+)-installer\\.exe"
-  },
-  "autoupdate": {
+    "notes_cn": [
+        "你可以直接安装一种输入方案以快速上手。",
+        "  - 万象拼音输入方案: abyss/amzxyz.rime_wanxiang",
+        "  - 雾凇拼音输入方案: abyss/iDvel.rime-ice",
+        "你可以安装万象语法模型: abyss/amzxyz.rime_wanxiang.model"
+    ],
+    "notes": [
+        "You can install an input scheme to get started quickly.",
+        "  - Wanxiang Pinyin: abyss/amzxyz.rime_wanxiang",
+        "  - Ice Pinyin: abyss/iDvel.rime-ice",
+        "You can install the Wanxiang syntax model: abyss/amzxyz.rime_wanxiang.model"
+    ],
+    "suggest": {
+        "input-schemes": [
+            "abyss/amzxyz.rime_wanxiang.base",
+            "abyss/iDvel.rime-ice"
+        ],
+        "model": "abyss/amzxyz.rime_wanxiang.model"
+    },
     "architecture": {
-      "64bit": {
-        "url": "https://github.com/rime/weasel/releases/download/latest/weasel-$version.$matchHash-installer.exe"
-      },
-      "arm64": {
-        "url": "https://github.com/rime/weasel/releases/download/latest/weasel-$version.$matchHash-installer.exe"
-      }
+        "64bit": {
+            "url": "https://github.com/rime/weasel/releases/download/latest/weasel-0.17.4.50.d73f629-installer.exe",
+            "hash": "002c948da2ca54be5d9305a2fdde5624f879df7fed44c5105ec3af8859e86e30"
+        },
+        "arm64": {
+            "url": "https://github.com/rime/weasel/releases/download/latest/weasel-0.17.4.50.d73f629-installer.exe",
+            "hash": "002c948da2ca54be5d9305a2fdde5624f879df7fed44c5105ec3af8859e86e30"
+        }
+    },
+    "conflicts": [
+        "Rime.Weasel",
+        "Rime.Weasel.nightly"
+    ],
+    "location": "$env:ProgramFiles\\Rime",
+    "link": "$env:AppData\\Rime",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller \"weasel-$($version -replace '\\.\\d+$','')\\uninstall.exe\""
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "tag": "latest",
+            "raw": true
+        },
+        "regex": "weasel-(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)\\.(?<hash>[0-9a-f]+)-installer\\.exe"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/rime/weasel/releases/download/latest/weasel-$version.$matchHash-installer.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/rime/weasel/releases/download/latest/weasel-$version.$matchHash-installer.exe"
+            }
+        }
     }
-  }
 }
