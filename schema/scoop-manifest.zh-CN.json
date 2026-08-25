@@ -119,8 +119,14 @@
                 []
             ],
             "items": {
-                "type": "string",
-                "$ref": "#/definitions/str_no_all_space"
+                "allOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/str_no_all_space"
+                    }
+                ]
             },
             "allOf": [
                 {
@@ -1619,12 +1625,20 @@
         "notes_cn": {
             "title": "提示信息 (中文)",
             "markdownDescription": "- 指定安装软件之后的 **中文** 提示信息\n- 它会在每次软件安装成功之后显示\n\n### [abyss](https://abyss.abgox.com)\n\n- 当 `version` 为 [abyss](https://abyss.abgox.com) 定义的以下特殊值时，它也会作为相关的说明提示\n  - `pending`\n  - `renamed`\n  - `deprecated`\n\n- 可以使用变量，它会在显示时自动替换\n\n    |可用的变量|说明|\n    |:-:|-|\n    |`$app`|应用程序名称(应用清单名称)|\n    |`$architecture`|CPU 架构, 如: `64bit` `32bit` `arm64`|\n    |`$cmd`|当前正在运行的子命令, 如: `uninstall` `update` `install`|\n    |`$fname`|下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)|\n    |`$scoopConfig`|Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}|\n    |`$global`|如果安装时使用了 `-g` 或 `--global`，则为 `$true`|\n    |`$manifest`|反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}|\n    |`$version`|正在安装的版本，如 1.2.3|\n    |`$dir`|应用程序安装目录(current 目录)|\n    |`$persist_dir`|数据持久化目录|\n    |`$bucketsdir`|Scoop buckets 目录，如 D:\\scoop\\buckets|\n    |`$bucket`|当前安装应用所属于的 bucket 名称|\n    |`$cachedir`|Scoop cache 目录|\n    |`$configFile`|Scoop 配置的路径|\n    |`$globaldir`|全局安装目录|\n    |`$original_dir`|应用程序安装目录(实际版本号目录)|\n    |`$scoopdir`|Scoop 所在目录|",
-            "$ref": "#/definitions/str_or_arr"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr"
+                }
+            ]
         },
         "notes": {
             "title": "提示信息 (英文)",
             "markdownDescription": "- 指定安装软件之后的 **英文** 提示信息\n- 它会在每次软件安装成功之后显示\n\n### [abyss](https://abyss.abgox.com)\n\n- 当 `version` 为 [abyss](https://abyss.abgox.com) 定义的以下特殊值时，它也会作为相关的说明提示\n  - `pending`\n  - `renamed`\n  - `deprecated`\n\n- 可以使用变量，它会在显示时自动替换\n\n    |可用的变量|说明|\n    |:-:|-|\n    |`$app`|应用程序名称(应用清单名称)|\n    |`$architecture`|CPU 架构, 如: `64bit` `32bit` `arm64`|\n    |`$cmd`|当前正在运行的子命令, 如: `uninstall` `update` `install`|\n    |`$fname`|下载的文件名(可能是多个文件，需要当做数组处理，除非你确定 url 不是数组)|\n    |`$scoopConfig`|Scoop 配置(PowerShell 对象)，如 {SCOOP_BRANCH, SCOOP_REPO}|\n    |`$global`|如果安装时使用了 `-g` 或 `--global`，则为 `$true`|\n    |`$manifest`|反序列化清单(PowerShell 对象)，如 @{version=1.2.3; description=xxx;...}|\n    |`$version`|正在安装的版本，如 1.2.3|\n    |`$dir`|应用程序安装目录(current 目录)|\n    |`$persist_dir`|数据持久化目录|\n    |`$bucketsdir`|Scoop buckets 目录，如 D:\\scoop\\buckets|\n    |`$bucket`|当前安装应用所属于的 bucket 名称|\n    |`$cachedir`|Scoop cache 目录|\n    |`$configFile`|Scoop 配置的路径|\n    |`$globaldir`|全局安装目录|\n    |`$original_dir`|应用程序安装目录(实际版本号目录)|\n    |`$scoopdir`|Scoop 所在目录|",
-            "$ref": "#/definitions/str_or_arr"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr"
+                }
+            ]
         },
         "depends": {
             "title": "依赖项",
@@ -1815,18 +1829,36 @@
             "properties": {
                 "url": {
                     "markdownDescription": "用于下载 RDF/JSON 文件或提取 hash 的 URL 模板",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "regex": {
                     "markdownDescription": "RegEx 表达式来提取 hash",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "jsonpath": {
                     "markdownDescription": "使用 JSONPath 表达式从 JSON 数据中提取版本号\n\n- **必填依赖**：使用本字段时必须同时定义 `url`\n- **正则捕获**：配合 `regex` 使用时，将先通过 `jsonpath` 提取文本/列表，再使用 `regex` 捕获版本号\n\n### 示例\n\n- **根级属性**：提取根对象中的 `version` 属性\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **数组首项**：提取根数组中第一个元素的 `version` 属性\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **递归全检索**：递归查找 JSON 中所有层级下的 `version` 属性（返回列表）\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **条件过滤（LTS）**：提取 `lts` 属性不为 `false` 的对象的 `version` 属性\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **多属性检索**：提取任意层级下的 `productVersion` 或 `version` 属性值\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **数组字段过滤**：匹配 `assets` 数组中 `name` 为 `xxx` 的对象，并提取其 `updated_at` 属性\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space",
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ],
                     "examples": [
                         "$.version",
                         "$[0].version",
@@ -1838,8 +1870,14 @@
                 },
                 "xpath": {
                     "markdownDescription": "XPath 表达式来提取 hash 值",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 }
             }
         },
@@ -1980,7 +2018,11 @@
                 "64bit": {
                     "title": "64位",
                     "markdownDescription": "- 指定 64 位架构下的安装配置\n- URL 中常见的架构标识：`x64`、`x86_64`、`amd64`、`win64`",
-                    "$ref": "#/definitions/architecture_property"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/architecture_property"
+                        }
+                    ]
                 },
                 "32bit": {
                     "title": "32位",
@@ -1998,14 +2040,22 @@
                 "arm64": {
                     "title": "ARM 64位",
                     "markdownDescription": "- 指定 ARM 64 位架构下的安装配置\n- URL 中常见的架构标识：`arm64`、`aarch64`",
-                    "$ref": "#/definitions/architecture_property"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/architecture_property"
+                        }
+                    ]
                 }
             }
         },
         "extract_dir": {
             "title": "提取指定目录",
             "markdownDescription": "- 指定要提取压缩包中的哪些内容\n- Scoop 默认会提取压缩包中的所有内容\n  - 压缩包类型: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- 如果存在 `extract_dir` 属性，Scoop 将只提取它定义的指定目录",
-            "$ref": "#/definitions/str_or_arr_no_all_space"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                }
+            ]
         },
         "extract_to": {
             "title": "提取内容到指定目录",
@@ -2051,12 +2101,14 @@
                     "patternProperties": {
                         "^.+$": {
                             "title": "环境变量的键 (Key)",
-                            "type": "string",
                             "examples": [
                                 "$dir\\xxx",
                                 "$persist_dir\\xxx"
                             ],
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 }
@@ -2101,8 +2153,14 @@
                                 "value": {
                                     "title": "环境变量的值 (Value)",
                                     "markdownDescription": "- 它等同于 `env_set` 设置的值\n- 一些可用的变量:\n  - `$app`: 清单名称\n  - `$dir`：软件安装目录\n  - `$persist_dir`：软件持久化数据目录\n  - `$home`：用户主目录\n  - `$env:AppData`：Windows 环境变量\n  - ...",
-                                    "type": "string",
-                                    "$ref": "#/definitions/str_no_all_space"
+                                    "allOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/definitions/str_no_all_space"
+                                        }
+                                    ]
                                 },
                                 "owner": {
                                     "title": "环境变量的持有者 (Owner)",
@@ -2112,8 +2170,14 @@
                                     "uniqueItems": true,
                                     "items": {
                                         "title": "清单名称",
-                                        "type": "string",
-                                        "$ref": "#/definitions/str_no_all_space"
+                                        "allOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "$ref": "#/definitions/str_no_all_space"
+                                            }
+                                        ]
                                     }
                                 }
                             }
@@ -2150,8 +2214,10 @@
                 },
                 {
                     "items": {
-                        "type": "string",
                         "allOf": [
+                            {
+                                "type": "string"
+                            },
                             {
                                 "$ref": "#/definitions/str_no_all_space"
                             },
@@ -2222,8 +2288,14 @@
                 "name": {
                     "title": "模块名称",
                     "markdownDescription": "- 指定 PowerShell 模块的名称\n- 必须与以下文件名保持一致（不含扩展名）：\n  - 模块脚本文件：`<name>.psm1`\n  - 模块清单文件：`<name>.psd1`\n- 参考 [PowerShell 模块文档](https://learn.microsoft.com/powershell/scripting/developer/module/how-to-write-a-powershell-module-manifest)\n\n### 示例\n\n- 以 [PSCompletions](https://pscompletions.abgox.com) 为例\n  - 模块脚本文件：`PSCompletions.psm1`\n  - 模块清单文件：`PSCompletions.psd1`\n\n- 因此，它的模块名称就是 `PSCompletions`",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 }
             }
         },
@@ -2247,8 +2319,14 @@
         "msix": {
             "title": "appx/msix/msixbundle",
             "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 它用来安装以下类型的软件包\n  - `msixbundle`\n  - `msix`\n  - `appx`\n- 它需要 `PackageFamilyName` 作为它的值\n\n### 执行\n\n- 在 `pre_install` 中的 `A-Start-Install` 执行安装逻辑\n- 在 `pre_uninstall` 中的 `A-Start-Uninstall` 执行卸载逻辑\n- 你也可以手动调用 `A-Install-MsixPackage` 和 `A-Uninstall-MsixPackage`\n\n### 示例\n\n- 安装 PowerShell\n\n  ```json\n  \"msix\": \"Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```",
-            "type": "string",
-            "$ref": "#/definitions/str_no_all_space"
+            "allOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "$ref": "#/definitions/str_no_all_space"
+                }
+            ]
         },
         "bin": {
             "markdownDescription": "程序（可执行文件或脚本）字符串或字符串数组\n\n- 一个字符串或字符串数组，代表可在用户的 PATH 中使用的程序（可执行文件或脚本）\n- 如果它是图形用户界面（GUI）应用程序，且不接受任何命令行参数，则无需将其添加到 `bin` 中\n\n### 示例\n\n1. Scoop 会创建一个名为 `a` 的 shim，后续可以直接使用 `a` 命令去运行 `a.exe`\n\n   ```json\n   \"bin\": \"a.exe\"\n   ```\n\n2. 和 1 的效果差不多，只是 Scoop 会创建两个 shim，分别是 `a` 和 `b`\n\n   ```json\n   \"bin\": [\"a.exe\", \"b.exe\"]\n   ```\n\n3. 和 2 的效果差不多，只是创建的两个 shim 的名称变成了 `ax` 和 `bx`\n\n```json\n    \"bin\": [\n        [\n            \"a.exe\",\n            \"ax\"\n        ],\n        [\n            \"b.exe\",\n            \"bx\"\n        ]\n    ]\n```\n\n4. 和 3 的效果差不多，只是当运行它们时，会携带上 `--config $dir/config.json` 参数\n\n```json\n\"bin\": [\n    [\n        \"a.exe\",\n        \"ax\",\n        \"--config $dir/config.json\"\n    ],\n    [\n        \"b.exe\",\n        \"bx\",\n        \"--config $dir/config.json\"\n    ]\n]\n```",
@@ -2273,8 +2351,14 @@
                     "app\\xxx.exe"
                 ],
                 "items": {
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "allOf": [
                     {
@@ -2365,7 +2449,11 @@
         "commands": {
             "title": "命令",
             "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 当 `bin` 属性无法准确定义时，就应该使用它\n- 当软件安装完成后，会显示它定义的所有命令",
-            "$ref": "#/definitions/str_or_arr_no_all_space"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                }
+            ]
         },
         "shortcuts": {
             "title": "快捷方式",
@@ -2392,8 +2480,14 @@
                     ]
                 ],
                 "items": {
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "allOf": [
                     {
@@ -2466,7 +2560,6 @@
             ],
             "oneOf": [
                 {
-                    "type": "string",
                     "examples": [
                         "$home\\xxx",
                         "$home\\.config\\xxx",
@@ -2476,6 +2569,9 @@
                         "$env:ProgramData\\xxx"
                     ],
                     "allOf": [
+                        {
+                            "type": "string"
+                        },
                         {
                             "$ref": "#/definitions/str_no_all_space"
                         },
@@ -2492,7 +2588,6 @@
                 {
                     "type": "array",
                     "items": {
-                        "type": "string",
                         "examples": [
                             "$home\\xxx",
                             "$home\\.config\\xxx",
@@ -2502,6 +2597,9 @@
                             "$env:ProgramData\\xxx"
                         ],
                         "allOf": [
+                            {
+                                "type": "string"
+                            },
                             {
                                 "$ref": "#/definitions/str_no_all_space"
                             },
@@ -2541,8 +2639,14 @@
                 "minItems": 1,
                 "maxItems": 2,
                 "items": {
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "allOf": [
                     {
@@ -2581,7 +2685,7 @@
         },
         "cleanup": {
             "title": "清理临时数据",
-            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 指定需要清理的临时数据\n- 仅在卸载应用时清理，更新时忽略\n- 如果有多个，请使用数组\n\n### 示例\n\n- [Tauri](https://tauri.app) 通常会使用 `$env:LocalAppData\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\com.xxx.app\"\n  ```\n\n- [Electron](https://electronjs.org) 通常会使用 `$env:LocalAppData\\xxx-updater` 存储更新程序\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```",
+            "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 指定需要清理的临时数据\n- 如果有多个，请使用数组\n- 仅在卸载应用时清理，更新时忽略\n  - `abgox-abyss-app-uninstall-action` 配置: 包含 `3` 时执行\n  - 卸载时使用 `--purge` 执行\n\n### 示例\n\n- [Tauri](https://tauri.app) 通常会使用 `$env:LocalAppData\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\com.xxx.app\"\n  ```\n\n- [Electron](https://electronjs.org) 通常会使用 `$env:LocalAppData\\xxx-updater` 存储更新程序\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```",
             "type": [
                 "string",
                 "array"
@@ -2593,7 +2697,6 @@
             ],
             "oneOf": [
                 {
-                    "type": "string",
                     "examples": [
                         "$home\\xxx",
                         "$home\\.config\\xxx",
@@ -2603,6 +2706,9 @@
                         "$env:ProgramData\\xxx"
                     ],
                     "allOf": [
+                        {
+                            "type": "string"
+                        },
                         {
                             "$ref": "#/definitions/str_no_all_space"
                         },
@@ -2619,7 +2725,6 @@
                 {
                     "type": "array",
                     "items": {
-                        "type": "string",
                         "examples": [
                             "$home\\xxx",
                             "$home\\.config\\xxx",
@@ -2629,6 +2734,9 @@
                             "$env:ProgramData\\xxx"
                         ],
                         "allOf": [
+                            {
+                                "type": "string"
+                            },
                             {
                                 "$ref": "#/definitions/str_no_all_space"
                             },
@@ -2968,7 +3076,7 @@
                             },
                             {
                                 "const": "A-Remove-Link",
-                                "markdownDescription": "移除 `link` 属性定义的数据链接"
+                                "markdownDescription": "移除 `link` 属性定义的数据链接\n\n- 卸载器的递归删除可能会顺着链接进入真实数据目录，导致持久化数据被一并删除\n- 因此一般放在 `A-Stop-Process` 之后、`A-Uninstall-*` 之前：先停止占用进程，再断开链接，最后运行卸载器\n- 仅当确认 `A-Uninstall-*` 不会删除数据目录时，才可以放在 `A-Uninstall-*` 之后"
                             },
                             {
                                 "const": "A-Uninstall-MsixPackage",
@@ -2976,11 +3084,11 @@
                             },
                             {
                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                "markdownDescription": "清理临时数据\n- 仅在卸载应用时清理，更新时忽略\n- 如果有多个，请使用数组\n\n### 示例\n\n- [Tauri](https://tauri.app) 通常会使用 `$env:LocalAppData\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) 通常会使用 `$env:LocalAppData\\xxx-updater` 存储更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                "markdownDescription": "指定需要清理的临时数据\n- 如果有多个，请使用数组\n- 仅在卸载应用时清理，更新时忽略\n  - `abgox-abyss-app-uninstall-action` 配置: 包含 `3` 时执行\n  - 卸载时使用 `--purge` 执行\n\n### 示例\n\n- [Tauri](https://tauri.app) 通常会使用 `$env:LocalAppData\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) 通常会使用 `$env:LocalAppData\\xxx-updater` 存储更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                             },
                             {
                                 "pattern": "A-Remove-TempData",
-                                "markdownDescription": "清理临时数据\n- 仅在卸载应用时清理，更新时忽略\n- 如果有多个，请使用数组\n\n### 示例\n\n- [Tauri](https://tauri.app) 通常会使用 `$env:LocalAppData\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) 通常会使用 `$env:LocalAppData\\xxx-updater` 存储更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
+                                "markdownDescription": "指定需要清理的临时数据\n- 如果有多个，请使用数组\n- 仅在卸载应用时清理，更新时忽略\n  - `abgox-abyss-app-uninstall-action` 配置: 包含 `3` 时执行\n  - 卸载时使用 `--purge` 执行\n\n### 示例\n\n- [Tauri](https://tauri.app) 通常会使用 `$env:LocalAppData\\com.xxx.app` 存储 `EBWebView` 和 `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) 通常会使用 `$env:LocalAppData\\xxx-updater` 存储更新程序\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\", \\\"$env:LocalAppData\\\\xxx-updater\\\"\"\n  ```"
                             },
                             {
                                 "const": "A-Deny-Update",
@@ -3163,9 +3271,11 @@
                             ]
                         },
                         "tag": {
-                            "type": "string",
                             "markdownDescription": "指定要获取的固定 Release tag (端点 `/releases/tags/{tag}`)\n\n- 需要搭配 `raw: true`\n- 用于通过 `jsonpath`/`regex` 提取固定 Release 的资产信息",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 }
@@ -3179,9 +3289,11 @@
                             ]
                         },
                         "repo": {
-                            "type": "string",
                             "markdownDescription": "指定 GitHub 仓库\n\n- 格式：`owner/repo`\n- 省略时自动从 `autoupdate` 和 `homepage` 中提取",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 },
@@ -3239,7 +3351,7 @@
                     "properties": {
                         "format": {
                             "type": "string",
-                            "markdownDescription": "版本号格式",
+                            "markdownDescription": "版本号格式\n\n- `date`: 提交时间, 如 `2026.08.24.063012`\n- `date-sha`: 提交时间与短 sha, 如 `2026.08.24.063012-abc1234`, 同时生成捕获组 `$matchSha`",
                             "enum": [
                                 "date",
                                 "date-sha"
@@ -3265,7 +3377,6 @@
                             ]
                         },
                         "branch": {
-                            "type": "string",
                             "markdownDescription": "需要追踪的 Git 分支名称\n\n- 省略时使用仓库默认分支",
                             "examples": [
                                 "main",
@@ -3273,14 +3384,19 @@
                             ],
                             "allOf": [
                                 {
+                                    "type": "string"
+                                },
+                                {
                                     "$ref": "#/definitions/str_no_all_space"
                                 }
                             ]
                         },
                         "repo": {
-                            "type": "string",
                             "markdownDescription": "指定 Git 仓库\n\n- 格式：`owner/repo`\n- 省略时自动从 `autoupdate` 和 `homepage` 中提取",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 },
@@ -3306,9 +3422,11 @@
                     ],
                     "properties": {
                         "id": {
-                            "type": "string",
                             "markdownDescription": "WinGet 的包标识符 `PackageIdentifier`，例如 `Microsoft.PowerShell`",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 },
@@ -3399,8 +3517,10 @@
                 },
                 "max": {
                     "markdownDescription": "限制允许提取的最大版本号\n\n- **逻辑变化**：它将获取 **候选版本列表**，并按时间/语义从新到旧匹配 **首个 `<=` max** 的版本\n- **段数精度**：`max` 的段数决定比较粒度\n  - `max: \"25\"` 允许任意 `25.x.x` 版本\n  - `max: \"25.6\"` 允许 `25.6.x`\n  - `max: \"25.6.8\"` 则精确比较\n- **回退机制**：如果 `github` 的 `latest` 版本大于 `max` ，它会自动向下检索并回退到符合条件的 `stable` 版本\n- **提示**：如果使用 `url` 提取自定义页面/API，可能需要改写表达式以获取 **版本列表**\n  - `jsonpath`: 使用 `$..version` 而非 `$[0].version`",
-                    "type": "string",
                     "allOf": [
+                        {
+                            "type": "string"
+                        },
                         {
                             "$ref": "#/definitions/str_no_all_space"
                         },
@@ -3433,7 +3553,6 @@
                 },
                 "regex": {
                     "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n- 省略时默认为：`(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式\n- 当版本出现在特定上下文（URL、HTML、结构化响应）中，或需要捕获多个值时，请显式定义 `regex`\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 从带前缀上下文的 URL 中提取版本\n\n  ```json\n  \"regex\": \"app-(.+)\"\n  ```\n\n- 使用命名捕获组：`$version` 作为主版本号，其他组（如 `$url`）可在 `autoupdate` 中通过 `$matchUrl` 使用\n\n  ```json\n  \"regex\": \"(?<url>.*?-(?<version>[\\\\d.]+)-.*\\\\.*)\"\n  ```\n\n- 从结构化响应中捕获多个值：`$version`，`$matchX64`，`$matchArm64`\n\n  ```json\n  \"regex\": \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))\"\n  ```",
-                    "type": "string",
                     "examples": [
                         "app-(.+)",
                         "^([\\d.]+)$",
@@ -3445,6 +3564,9 @@
                     ],
                     "allOf": [
                         {
+                            "type": "string"
+                        },
+                        {
                             "$ref": "#/definitions/str_no_all_space"
                         },
                         {
@@ -3454,9 +3576,15 @@
                     ]
                 },
                 "jsonpath": {
-                    "markdownDescription": "使用 JSONPath 表达式从 JSON 数据中提取版本号\n\n- **必填依赖**：使用本字段时必须同时定义 `url`\n- **正则捕获**：配合 `regex` 使用时，将先通过 `jsonpath` 提取文本/列表，再使用 `regex` 捕获版本号\n\n### 示例\n\n- **根级属性**：提取根对象中的 `version` 属性\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **数组首项**：提取根数组中第一个元素的 `version` 属性\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **递归全检索**：递归查找 JSON 中所有层级下的 `version` 属性（返回列表）\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **条件过滤（LTS）**：提取 `lts` 属性不为 `false` 的对象的 `version` 属性\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **多属性检索**：提取任意层级下的 `productVersion` 或 `version` 属性值\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **数组字段过滤**：匹配 `assets` 数组中 `name` 为 `xxx` 的对象，并提取其 `updated_at` 属性\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space",
+                    "markdownDescription": "使用 JSONPath 表达式从 JSON 数据中提取版本号\n\n- **数据来源**：使用 `url` 时，从页面提取 JSON 数据；使用 `github`（`raw: true`）时，从 API 响应文本中提取\n- **正则捕获**：配合 `regex` 使用时，将先通过 `jsonpath` 提取文本/列表，再使用 `regex` 捕获版本号\n\n### 示例\n\n- **根级属性**：提取根对象中的 `version` 属性\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **数组首项**：提取根数组中第一个元素的 `version` 属性\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **递归全检索**：递归查找 JSON 中所有层级下的 `version` 属性（返回列表）\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **条件过滤（LTS）**：提取 `lts` 属性不为 `false` 的对象的 `version` 属性\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **多属性检索**：提取任意层级下的 `productVersion` 或 `version` 属性值\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **数组字段过滤**：匹配 `assets` 数组中 `name` 为 `xxx` 的对象，并提取其 `updated_at` 属性\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ],
                     "examples": [
                         "$.version",
                         "$[0].version",
@@ -3468,17 +3596,33 @@
                 },
                 "xpath": {
                     "markdownDescription": "使用 XPath 表达式从 XML 页面检索版本\n\n- 使用本字段时必须同时定义 `url`\n- 可与 `regex` 组合：先通过 `xpath` 提取，再通过 `regex` 精炼\n- 提取的是元素的文本内容，不支持属性值",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "reverse": {
                     "markdownDescription": "如果设置为 true, 则匹配最后一次出现(默认为匹配第一次出现)",
-                    "$ref": "#/definitions/bool"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/bool"
+                        }
+                    ]
                 },
                 "replace": {
                     "markdownDescription": "用计算值替换匹配值，通过捕获组组装版本号\n\n- `${1}`、`${2}`：数字捕获组\n- `${name}`：命名捕获组",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 }
             },
             "allOf": [
@@ -3718,12 +3862,15 @@
         "##": {
             "title": "注释",
             "markdownDescription": "- 指定清单的注释，供清单维护者查看\n- Scoop 会忽略它",
-            "$ref": "#/definitions/str_or_arr_no_all_space"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                }
+            ]
         },
         "version": {
             "title": "版本号",
             "markdownDescription": "- 指定软件的版本号\n- 通常使用 [语义化版本](https://semver.org)，如 `1.2.3`\n- `nightly` 表示每夜构建版本，具有以下特殊行为：\n  - `scoop update` 时 **不会** 自动检测新版本\n    - 需要使用 `--force`/`-f` 强制更新\n    - 或者使用 `scoop config update_nightly true`\n  - 跳过文件哈希校验\n\n### [abyss](https://abyss.abgox.com)\n\n- 它允许几个特殊值\n  - `pending`：待处理\n  - `renamed`：已重命名\n  - `deprecated`：已弃用\n  - `virtual`：虚拟包\n- 参考 [清单状态控制](https://abyss.abgox.com/docs/features/manifest-status-control)",
-            "type": "string",
             "examples": [
                 "0.0.0",
                 "nightly",
@@ -3733,6 +3880,9 @@
                 "virtual"
             ],
             "allOf": [
+                {
+                    "type": "string"
+                },
                 {
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3747,11 +3897,13 @@
         "description": {
             "title": "软件描述",
             "markdownDescription": "- 指定软件的简短描述\n- 描述尽量保持简单、清晰、客观",
-            "type": "string",
             "examples": [
                 "描述 | Description"
             ],
             "allOf": [
+                {
+                    "type": "string"
+                },
                 {
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3874,13 +4026,23 @@
             ],
             "properties": {
                 "new": {
-                    "type": "string",
                     "markdownDescription": "新的清单名称",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "old": {
                     "markdownDescription": "旧的清单名称",
-                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/str_or_arr_no_all_space"
+                        }
+                    ]
                 }
             }
         },
@@ -3897,14 +4059,19 @@
                 ]
             ],
             "items": {
-                "type": "string",
-                "$ref": "#/definitions/str_no_all_space"
+                "allOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/str_no_all_space"
+                    }
+                ]
             }
         },
         "location": {
             "title": "应用的外部安装位置",
             "markdownDescription": "- 它是 [abyss](https://abyss.abgox.com) 的特殊属性\n- 如果应用通过安装程序会安装到标准软件目录，而不是 scoop 目录，则需要使用它进行指定\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- 如果版本号为 `virtual`，则它表示应用假定的安装位置\n- 参考: https://abyss.abgox.com/docs/external-installation-directory",
-            "type": "string",
             "examples": [
                 "$env:ProgramFiles\\xxx",
                 "${env:ProgramFiles(x86)}\\xxx",
@@ -3913,6 +4080,9 @@
                 "$env:LocalAppData\\xxx"
             ],
             "allOf": [
+                {
+                    "type": "string"
+                },
                 {
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3971,8 +4141,14 @@
                 ]
             ],
             "items": {
-                "type": "string",
-                "$ref": "#/definitions/str_no_all_space"
+                "allOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/str_no_all_space"
+                    }
+                ]
             }
         },
         "link": {
@@ -4034,7 +4210,11 @@
                         "64bit": {
                             "title": "64位",
                             "markdownDescription": "- 指定 64 位架构下的安装配置\n- URL 中常见的架构标识：`x64`、`x86_64`、`amd64`、`win64`",
-                            "$ref": "#/definitions/architecture_property_autoupdate"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/architecture_property_autoupdate"
+                                }
+                            ]
                         },
                         "32bit": {
                             "title": "32位",
@@ -4052,7 +4232,11 @@
                         "arm64": {
                             "title": "ARM 64位",
                             "markdownDescription": "- 指定 ARM 64 位架构下的安装配置\n- URL 中常见的架构标识：`arm64`、`aarch64`",
-                            "$ref": "#/definitions/architecture_property_autoupdate"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/architecture_property_autoupdate"
+                                }
+                            ]
                         }
                     }
                 },

@@ -119,8 +119,14 @@
                 []
             ],
             "items": {
-                "type": "string",
-                "$ref": "#/definitions/str_no_all_space"
+                "allOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/str_no_all_space"
+                    }
+                ]
             },
             "allOf": [
                 {
@@ -1619,12 +1625,20 @@
         "notes_cn": {
             "title": "Notes (Chinese)",
             "markdownDescription": "- Specifies the **Chinese** notes/messages to display after installation\n- It will be displayed every time the software is successfully installed\n\n### [abyss](https://abyss.abgox.com)\n\n- When `version` is set to the following special values defined by [abyss](https://abyss.abgox.com), it will also serve as a relevant descriptive note:\n  - `pending`\n  - `renamed`\n  - `deprecated`\n\n- Variables can be used, which will be automatically replaced when displayed:\n\n    |Available Variables|Description|\n    |:-:|-|\n    |`$app`|Application name (manifest name)|\n    |`$architecture`|CPU architecture, e.g., `64bit`, `32bit`, `arm64`|\n    |`$cmd`|Currently running subcommand, e.g., `uninstall`, `update`, `install`|\n    |`$fname`|Downloaded filename (could be multiple files, needs to be handled as an array unless you are sure the URL is not an array)|\n    |`$scoopConfig`|Scoop configuration (PowerShell object), e.g., {SCOOP_BRANCH, SCOOP_REPO}|\n    |`$global`|`$true` if installed with `-g` or `--global`|\n    |`$manifest`|Deserialized manifest (PowerShell object), e.g., @{version=1.2.3; description=xxx;...}|\n    |`$version`|The version being installed, e.g., 1.2.3|\n    |`$dir`|Application installation directory (`current` directory)|\n    |`$persist_dir`|Data persistence directory|\n    |`$bucketsdir`|Scoop buckets directory, e.g., D:\\scoop\\buckets|\n    |`$bucket`|The name of the bucket the currently installed application belongs to|\n    |`$cachedir`|Scoop cache directory|\n    |`$configFile`|Path to the Scoop configuration file|\n    |`$globaldir`|Global installation directory|\n    |`$original_dir`|Application installation directory (actual version-numbered directory)|\n    |`$scoopdir`|The directory where Scoop is located|",
-            "$ref": "#/definitions/str_or_arr"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr"
+                }
+            ]
         },
         "notes": {
             "title": "Notes (English)",
             "markdownDescription": "- Specifies the **English** notes/messages to display after installation\n- It will be displayed every time the software is successfully installed\n\n### [abyss](https://abyss.abgox.com)\n\n- When `version` is set to the following special values defined by [abyss](https://abyss.abgox.com), it will also serve as a relevant descriptive note:\n  - `pending`\n  - `renamed`\n  - `deprecated`\n\n- Variables can be used, which will be automatically replaced when displayed:\n\n    |Available Variables|Description|\n    |:-:|-|\n    |`$app`|Application name (manifest name)|\n    |`$architecture`|CPU architecture, e.g., `64bit`, `32bit`, `arm64`|\n    |`$cmd`|Currently running subcommand, e.g., `uninstall`, `update`, `install`|\n    |`$fname`|Downloaded filename (could be multiple files, needs to be handled as an array unless you are sure the URL is not an array)|\n    |`$scoopConfig`|Scoop configuration (PowerShell object), e.g., {SCOOP_BRANCH, SCOOP_REPO}|\n    |`$global`|`$true` if installed with `-g` or `--global`|\n    |`$manifest`|Deserialized manifest (PowerShell object), e.g., @{version=1.2.3; description=xxx;...}|\n    |`$version`|The version being installed, e.g., 1.2.3|\n    |`$dir`|Application installation directory (`current` directory)|\n    |`$persist_dir`|Data persistence directory|\n    |`$bucketsdir`|Scoop buckets directory, e.g., D:\\scoop\\buckets|\n    |`$bucket`|The name of the bucket the currently installed application belongs to|\n    |`$cachedir`|Scoop cache directory|\n    |`$configFile`|Path to the Scoop configuration file|\n    |`$globaldir`|Global installation directory|\n    |`$original_dir`|Application installation directory (actual version-numbered directory)|\n    |`$scoopdir`|The directory where Scoop is located|",
-            "$ref": "#/definitions/str_or_arr"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr"
+                }
+            ]
         },
         "depends": {
             "title": "Dependencies",
@@ -1815,18 +1829,36 @@
             "properties": {
                 "url": {
                     "markdownDescription": "URL template used to download RDF/JSON files or extract hashes",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "regex": {
                     "markdownDescription": "RegEx expression to extract the hash",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "jsonpath": {
                     "markdownDescription": "Extract version using a JSONPath expression from JSON data\n\n- **Required dependency**: `url` must also be specified when using this field\n- **Refinement with regex**: When paired with `regex`, values/lists will be extracted via `jsonpath` first, then matched by `regex`\n\n### Example\n\n- **Root property**: Extract the `version` property from the root object\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **First array element**: Extract the `version` property from the first element of the root array\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **Recursive scan**: Recursively search for all `version` properties across all levels (returns a list)\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **Conditional filter (LTS)**: Extract `version` from objects where `lts` is not `false`\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **Multi-property lookup**: Extract values of `productVersion` or `version` properties at any depth\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **Array element filter**: Match objects in the `assets` array where `name` is `xxx`, and extract their `updated_at` property\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space",
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ],
                     "examples": [
                         "$.version",
                         "$[0].version",
@@ -1838,8 +1870,14 @@
                 },
                 "xpath": {
                     "markdownDescription": "XPath expression to extract the hash value",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 }
             }
         },
@@ -1980,7 +2018,11 @@
                 "64bit": {
                     "title": "64-bit",
                     "markdownDescription": "- Specifies the installation configuration for 64-bit architecture\n- Common architecture identifiers in URLs: `x64`, `x86_64`, `amd64`, `win64`",
-                    "$ref": "#/definitions/architecture_property"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/architecture_property"
+                        }
+                    ]
                 },
                 "32bit": {
                     "title": "32-bit",
@@ -1998,14 +2040,22 @@
                 "arm64": {
                     "title": "ARM 64-bit",
                     "markdownDescription": "- Specifies the installation configuration for ARM 64-bit architecture\n- Common architecture identifiers in URLs: `arm64`, `aarch64`",
-                    "$ref": "#/definitions/architecture_property"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/architecture_property"
+                        }
+                    ]
                 }
             }
         },
         "extract_dir": {
             "title": "Extract Specified Directory",
             "markdownDescription": "- Specifies which contents inside the archive to extract\n- By default, Scoop extracts all contents from the archive\n  - Archive types: `.zip`/`.7z`/`.tar`/`.gz`/`.lzma`/`.lzh`\n- If the `extract_dir` property is present, Scoop will only extract the specified directory defined by it",
-            "$ref": "#/definitions/str_or_arr_no_all_space"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                }
+            ]
         },
         "extract_to": {
             "title": "Extract to Specified Directory",
@@ -2051,12 +2101,14 @@
                     "patternProperties": {
                         "^.+$": {
                             "title": "Environment Variable Key",
-                            "type": "string",
                             "examples": [
                                 "$dir\\xxx",
                                 "$persist_dir\\xxx"
                             ],
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 }
@@ -2101,8 +2153,14 @@
                                 "value": {
                                     "title": "Environment Variable Value",
                                     "markdownDescription": "- Equivalent to the value set by `env_set`\n- Some available variables:\n  - `$app`: Manifest name\n  - `$dir`: Software installation directory\n  - `$persist_dir`: Data persistence directory\n  - `$home`: User home directory\n  - `$env:AppData`: Windows environment variable\n  - ...",
-                                    "type": "string",
-                                    "$ref": "#/definitions/str_no_all_space"
+                                    "allOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/definitions/str_no_all_space"
+                                        }
+                                    ]
                                 },
                                 "owner": {
                                     "title": "Environment Variable Owner",
@@ -2112,8 +2170,14 @@
                                     "uniqueItems": true,
                                     "items": {
                                         "title": "Manifest Name",
-                                        "type": "string",
-                                        "$ref": "#/definitions/str_no_all_space"
+                                        "allOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "$ref": "#/definitions/str_no_all_space"
+                                            }
+                                        ]
                                     }
                                 }
                             }
@@ -2150,8 +2214,10 @@
                 },
                 {
                     "items": {
-                        "type": "string",
                         "allOf": [
+                            {
+                                "type": "string"
+                            },
                             {
                                 "$ref": "#/definitions/str_no_all_space"
                             },
@@ -2222,8 +2288,14 @@
                 "name": {
                     "title": "Module Name",
                     "markdownDescription": "- Specifies the name of the PowerShell module\n- Must match the following filenames exactly (excluding extension):\n  - Module script file: `<name>.psm1`\n  - Module manifest file: `<name>.psd1`\n- Reference [PowerShell Module Documentation](https://learn.microsoft.com/powershell/scripting/developer/module/how-to-write-a-powershell-module-manifest)\n\n### Example\n\n- Taking [PSCompletions](https://pscompletions.abgox.com) as an example\n  - Module script file: `PSCompletions.psm1`\n  - Module manifest file: `PSCompletions.psd1`\n\n- Therefore, its module name is `PSCompletions`",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 }
             }
         },
@@ -2247,8 +2319,14 @@
         "msix": {
             "title": "appx/msix/msixbundle",
             "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- It is used to install the following types of packages:\n  - `msixbundle`\n  - `msix`\n  - `appx`\n- It requires `PackageFamilyName` as its value\n\n### Execution\n\n- Executes installation logic via `A-Start-Install` in `pre_install`\n- Executes uninstallation logic via `A-Start-Uninstall` in `pre_uninstall`\n- You can also manually invoke `A-Install-MsixPackage` and `A-Uninstall-MsixPackage`\n\n### Example\n\n- Install PowerShell\n\n  ```json\n  \"msix\": \"Microsoft.PowerShell_8wekyb3d8bbwe\"\n  ```",
-            "type": "string",
-            "$ref": "#/definitions/str_no_all_space"
+            "allOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "$ref": "#/definitions/str_no_all_space"
+                }
+            ]
         },
         "bin": {
             "markdownDescription": "Program (executable file or script) string or array of strings\n\n- A string or string array representing programs (executables or scripts) that should be made available in the user's PATH\n- If it is a Graphical User Interface (GUI) application and does not accept any command-line arguments, there is no need to add it to `bin`\n\n### Example\n\n1. Scoop will create a shim named `a`, allowing the `a` command to be run directly to execute `a.exe`\n\n   ```json\n   \"bin\": \"a.exe\"\n   ```\n\n2. Similar to example 1, but Scoop will create two shims: `a` and `b`\n\n   ```json\n   \"bin\": [\"a.exe\", \"b.exe\"]\n   ```\n\n3. Similar to example 2, but the names of the two created shims will be changed to `ax` and `bx`\n\n```json\n    \"bin\": [\n        [\n            \"a.exe\",\n            \"ax\"\n        ],\n        [\n            \"b.exe\",\n            \"bx\"\n        ]\n    ]\n```\n\n4. Similar to example 3, but when running them, they will carry the `--config $dir/config.json` arguments\n\n```json\n\"bin\": [\n    [\n        \"a.exe\",\n        \"ax\",\n        \"--config $dir/config.json\"\n    ],\n    [\n        \"b.exe\",\n        \"bx\",\n        \"--config $dir/config.json\"\n    ]\n]\n```",
@@ -2273,8 +2351,14 @@
                     "app\\xxx.exe"
                 ],
                 "items": {
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "allOf": [
                     {
@@ -2365,7 +2449,11 @@
         "commands": {
             "title": "Commands",
             "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- It should be used when the `bin` property cannot be accurately defined\n- Displays all defined commands after the software installation completes",
-            "$ref": "#/definitions/str_or_arr_no_all_space"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                }
+            ]
         },
         "shortcuts": {
             "title": "Shortcuts",
@@ -2392,8 +2480,14 @@
                     ]
                 ],
                 "items": {
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "allOf": [
                     {
@@ -2466,7 +2560,6 @@
             ],
             "oneOf": [
                 {
-                    "type": "string",
                     "examples": [
                         "$home\\xxx",
                         "$home\\.config\\xxx",
@@ -2476,6 +2569,9 @@
                         "$env:ProgramData\\xxx"
                     ],
                     "allOf": [
+                        {
+                            "type": "string"
+                        },
                         {
                             "$ref": "#/definitions/str_no_all_space"
                         },
@@ -2492,7 +2588,6 @@
                 {
                     "type": "array",
                     "items": {
-                        "type": "string",
                         "examples": [
                             "$home\\xxx",
                             "$home\\.config\\xxx",
@@ -2502,6 +2597,9 @@
                             "$env:ProgramData\\xxx"
                         ],
                         "allOf": [
+                            {
+                                "type": "string"
+                            },
                             {
                                 "$ref": "#/definitions/str_no_all_space"
                             },
@@ -2541,8 +2639,14 @@
                 "minItems": 1,
                 "maxItems": 2,
                 "items": {
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "allOf": [
                     {
@@ -2581,7 +2685,7 @@
         },
         "cleanup": {
             "title": "Clean Up Temporary Data",
-            "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- Specifies temporary data that needs to be cleaned up\n- Only cleaned up when uninstalling the app; ignored during updates\n- If there are multiple items, use an array\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\com.xxx.app\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```",
+            "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- Specifies temporary data that needs to be cleaned up\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\com.xxx.app\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```",
             "type": [
                 "string",
                 "array"
@@ -2593,7 +2697,6 @@
             ],
             "oneOf": [
                 {
-                    "type": "string",
                     "examples": [
                         "$home\\xxx",
                         "$home\\.config\\xxx",
@@ -2603,6 +2706,9 @@
                         "$env:ProgramData\\xxx"
                     ],
                     "allOf": [
+                        {
+                            "type": "string"
+                        },
                         {
                             "$ref": "#/definitions/str_no_all_space"
                         },
@@ -2619,7 +2725,6 @@
                 {
                     "type": "array",
                     "items": {
-                        "type": "string",
                         "examples": [
                             "$home\\xxx",
                             "$home\\.config\\xxx",
@@ -2629,6 +2734,9 @@
                             "$env:ProgramData\\xxx"
                         ],
                         "allOf": [
+                            {
+                                "type": "string"
+                            },
                             {
                                 "$ref": "#/definitions/str_no_all_space"
                             },
@@ -2968,7 +3076,7 @@
                             },
                             {
                                 "const": "A-Remove-Link",
-                                "markdownDescription": "Remove data links defined by the `link` property"
+                                "markdownDescription": "Remove data links defined by the `link` property\n\n- An uninstaller's recursive deletion may follow the links into the real data directory, destroying the persisted data\n- Therefore it usually goes after `A-Stop-Process` and before `A-Uninstall-*`: stop processes first, then remove the links, and run the uninstaller last\n- It may go after `A-Uninstall-*` only if the uninstaller is confirmed not to delete data directories"
                             },
                             {
                                 "const": "A-Uninstall-MsixPackage",
@@ -2976,11 +3084,11 @@
                             },
                             {
                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                "markdownDescription": "Clean up temporary data\n- Only cleaned up when uninstalling the app; ignored during updates\n- If there are multiple items, use an array\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```"
+                                "markdownDescription": "Specifies temporary data that needs to be cleaned up\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```"
                             },
                             {
                                 "pattern": "A-Remove-TempData",
-                                "markdownDescription": "Clean up temporary data\n- Only cleaned up when uninstalling the app; ignored during updates\n- If there are multiple items, use an array\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```"
+                                "markdownDescription": "Specifies temporary data that needs to be cleaned up\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```"
                             },
                             {
                                 "const": "A-Deny-Update",
@@ -3163,9 +3271,11 @@
                             ]
                         },
                         "tag": {
-                            "type": "string",
                             "markdownDescription": "Specify a fixed release tag to fetch (endpoint `/releases/tags/{tag}`)\n\n- Requires `raw: true`\n- Used to extract asset metadata of a pinned release via `jsonpath`/`regex`",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 }
@@ -3179,9 +3289,11 @@
                             ]
                         },
                         "repo": {
-                            "type": "string",
                             "markdownDescription": "Specify the GitHub repository\n\n- Format: `owner/repo`\n- If omitted, it is automatically extracted from `autoupdate` and `homepage`",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 },
@@ -3239,7 +3351,7 @@
                     "properties": {
                         "format": {
                             "type": "string",
-                            "markdownDescription": "Version number format",
+                            "markdownDescription": "Version number format\n\n- `date`: commit time, e.g. `2026.08.24.063012`\n- `date-sha`: commit time with short sha, e.g. `2026.08.24.063012-abc1234`; also generates the capture group `$matchSha`",
                             "enum": [
                                 "date",
                                 "date-sha"
@@ -3265,7 +3377,6 @@
                             ]
                         },
                         "branch": {
-                            "type": "string",
                             "markdownDescription": "Git branch name to track\n\n- If omitted, uses the repository default branch",
                             "examples": [
                                 "main",
@@ -3273,14 +3384,19 @@
                             ],
                             "allOf": [
                                 {
+                                    "type": "string"
+                                },
+                                {
                                     "$ref": "#/definitions/str_no_all_space"
                                 }
                             ]
                         },
                         "repo": {
-                            "type": "string",
                             "markdownDescription": "Specify the Git repository\n\n- Format: `owner/repo`\n- If omitted, it is automatically extracted from `autoupdate` and `homepage`",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 },
@@ -3306,9 +3422,11 @@
                     ],
                     "properties": {
                         "id": {
-                            "type": "string",
                             "markdownDescription": "WinGet package identifier `PackageIdentifier`, e.g. `Microsoft.PowerShell`",
                             "allOf": [
+                                {
+                                    "type": "string"
+                                },
                                 {
                                     "$ref": "#/definitions/str_no_all_space"
                                 },
@@ -3399,8 +3517,10 @@
                 },
                 "max": {
                     "markdownDescription": "Limit the maximum version allowed to be extracted\n\n- **Behavior**: It fetches a **candidate version list** and matches the **first version `<=` max** in reverse chronological/semantic order.\n- **Segment precision**: The number of segments in `max` determines the comparison granularity.\n  - `max: \"25\"` allows any `25.x.x` version\n  - `max: \"25.6\"` allows `25.6.x`\n  - `max: \"25.6.8\"` compares exactly\n- **Fallback**: For example, if the `latest` release on GitHub exceeds `max`, it will automatically search downwards and fall back to an eligible `stable` version.\n- **Tip**: When used with custom `url` endpoints, you may need to adjust your expression to retrieve a **list of versions**:\n  - `jsonpath`: Use `$..version` instead of `$[0].version`",
-                    "type": "string",
                     "allOf": [
+                        {
+                            "type": "string"
+                        },
                         {
                             "$ref": "#/definitions/str_no_all_space"
                         },
@@ -3433,7 +3553,6 @@
                 },
                 "regex": {
                     "markdownDescription": "RegEx (regular expression) to find the version\n\n- If omitted, it defaults to: `(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- It captures common formats like `1.2.3`, `1.2.3-beta.1`, `2026-01-01`, `2026-01-01-abc123`\n- Define an explicit `regex` when the version appears in a specific context (URL, HTML, structured response) or multiple values need to be captured\n\n### Example\n\n- By default, the content of the first capture group is stored in `$version`\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- Extract the version from a URL with a prefix context\n\n  ```json\n  \"regex\": \"app-(.+)\"\n  ```\n\n- Use named capture groups: `$version` is the main version, other groups (e.g. `$url`) are available in `autoupdate` via `$matchUrl`\n\n  ```json\n  \"regex\": \"(?<url>.*?-(?<version>[\\\\d.]+)-.*\\\\.*)\"\n  ```\n\n- Capture multiple values from a structured response: `$version`, `$matchX64`, `$matchArm64`\n\n  ```json\n  \"regex\": \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))\"\n  ```",
-                    "type": "string",
                     "examples": [
                         "app-(.+)",
                         "^([\\d.]+)$",
@@ -3445,6 +3564,9 @@
                     ],
                     "allOf": [
                         {
+                            "type": "string"
+                        },
+                        {
                             "$ref": "#/definitions/str_no_all_space"
                         },
                         {
@@ -3454,9 +3576,15 @@
                     ]
                 },
                 "jsonpath": {
-                    "markdownDescription": "Extract version using a JSONPath expression from JSON data\n\n- **Required dependency**: `url` must also be specified when using this field\n- **Refinement with regex**: When paired with `regex`, values/lists will be extracted via `jsonpath` first, then matched by `regex`\n\n### Example\n\n- **Root property**: Extract the `version` property from the root object\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **First array element**: Extract the `version` property from the first element of the root array\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **Recursive scan**: Recursively search for all `version` properties across all levels (returns a list)\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **Conditional filter (LTS)**: Extract `version` from objects where `lts` is not `false`\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **Multi-property lookup**: Extract values of `productVersion` or `version` properties at any depth\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **Array element filter**: Match objects in the `assets` array where `name` is `xxx`, and extract their `updated_at` property\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space",
+                    "markdownDescription": "Extract version using a JSONPath expression from JSON data\n\n- **Data sources**: with `url`, extracts JSON data from the page; with `github` (`raw: true`), extracts from the API response text\n- **Refinement with regex**: When paired with `regex`, values/lists will be extracted via `jsonpath` first, then matched by `regex`\n\n### Example\n\n- **Root property**: Extract the `version` property from the root object\n  ```json\n  \"jsonpath\": \"$.version\"\n  ```\n- **First array element**: Extract the `version` property from the first element of the root array\n  ```json\n  \"jsonpath\": \"$[0].version\"\n  ```\n- **Recursive scan**: Recursively search for all `version` properties across all levels (returns a list)\n  ```json\n  \"jsonpath\": \"$..version\"\n  ```\n- **Conditional filter (LTS)**: Extract `version` from objects where `lts` is not `false`\n  ```json\n  \"jsonpath\": \"$..[?(@.lts != false)].version\"\n  ```\n- **Multi-property lookup**: Extract values of `productVersion` or `version` properties at any depth\n  ```json\n  \"jsonpath\": \"$..['productVersion','version']\"\n  ```\n- **Array element filter**: Match objects in the `assets` array where `name` is `xxx`, and extract their `updated_at` property\n  ```json\n  \"jsonpath\": \"$.assets[?(@.name == 'xxx')].updated_at\"\n  ```",
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ],
                     "examples": [
                         "$.version",
                         "$[0].version",
@@ -3468,17 +3596,33 @@
                 },
                 "xpath": {
                     "markdownDescription": "Retrieve the version from an XML page using an XPath expression\n\n- `url` must be defined when using this field\n- Can be combined with `regex`: extract with `xpath` first, then refine with `regex`\n- Extracts the text content of the element; attribute values are not supported",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "reverse": {
                     "markdownDescription": "If set to true, matches the last occurrence (defaults to matching the first occurrence)",
-                    "$ref": "#/definitions/bool"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/bool"
+                        }
+                    ]
                 },
                 "replace": {
                     "markdownDescription": "Replace the matched value with a computed value to assemble the version number\n\n- `${1}`、`${2}`: numeric capture groups\n- `${name}`: named capture group",
-                    "type": "string",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 }
             },
             "allOf": [
@@ -3718,12 +3862,15 @@
         "##": {
             "title": "Comments",
             "markdownDescription": "- Specifies comments for the manifest, intended for manifest maintainers\n- Scoop will ignore it",
-            "$ref": "#/definitions/str_or_arr_no_all_space"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                }
+            ]
         },
         "version": {
             "title": "Version",
             "markdownDescription": "- Specifies the version of the software\n- Typically follows [Semantic Versioning](https://semver.org), e.g. `1.2.3`\n- `nightly` denotes a nightly build and has the following special behaviors:\n  - **Not** automatically checked for new versions during `scoop update`\n    - Use `--force`/`-f` to force an update\n    - Or set `scoop config update_nightly true`\n  - Skips file hash verification\n\n### [abyss](https://abyss.abgox.com)\n\n- It allows several special values:\n  - `pending`: Pending\n  - `renamed`: Renamed\n  - `deprecated`: Deprecated\n  - `virtual`: Virtual Package\n- See [Manifest Status Control](https://abyss.abgox.com/docs/features/manifest-status-control)",
-            "type": "string",
             "examples": [
                 "0.0.0",
                 "nightly",
@@ -3733,6 +3880,9 @@
                 "virtual"
             ],
             "allOf": [
+                {
+                    "type": "string"
+                },
                 {
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3747,11 +3897,13 @@
         "description": {
             "title": "Description",
             "markdownDescription": "- Specifies a short description of the software\n- Descriptions should be kept simple, clear, and objective",
-            "type": "string",
             "examples": [
                 "描述 | Description"
             ],
             "allOf": [
+                {
+                    "type": "string"
+                },
                 {
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3874,13 +4026,23 @@
             ],
             "properties": {
                 "new": {
-                    "type": "string",
                     "markdownDescription": "New manifest name",
-                    "$ref": "#/definitions/str_no_all_space"
+                    "allOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "$ref": "#/definitions/str_no_all_space"
+                        }
+                    ]
                 },
                 "old": {
                     "markdownDescription": "Old manifest name",
-                    "$ref": "#/definitions/str_or_arr_no_all_space"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/str_or_arr_no_all_space"
+                        }
+                    ]
                 }
             }
         },
@@ -3897,14 +4059,19 @@
                 ]
             ],
             "items": {
-                "type": "string",
-                "$ref": "#/definitions/str_no_all_space"
+                "allOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/str_no_all_space"
+                    }
+                ]
             }
         },
         "location": {
             "title": "External Installation Location",
             "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- Used to specify the target location if the app installer deploys to standard software directories instead of the scoop directory\n  - `$env:ProgramFiles\\xxx`\n  - `${env:ProgramFiles(x86)}\\xxx`\n  - `$env:ProgramData\\xxx`\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n- If the version number is `virtual`, it represents the assumed installation location of the app\n- Reference: https://abyss.abgox.com/docs/external-installation-directory",
-            "type": "string",
             "examples": [
                 "$env:ProgramFiles\\xxx",
                 "${env:ProgramFiles(x86)}\\xxx",
@@ -3913,6 +4080,9 @@
                 "$env:LocalAppData\\xxx"
             ],
             "allOf": [
+                {
+                    "type": "string"
+                },
                 {
                     "$ref": "#/definitions/str_no_all_space"
                 },
@@ -3971,8 +4141,14 @@
                 ]
             ],
             "items": {
-                "type": "string",
-                "$ref": "#/definitions/str_no_all_space"
+                "allOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/definitions/str_no_all_space"
+                    }
+                ]
             }
         },
         "link": {
@@ -4034,7 +4210,11 @@
                         "64bit": {
                             "title": "64-bit",
                             "markdownDescription": "- Specifies the installation configuration for 64-bit architecture\n- Common architecture identifiers in URLs: `x64`, `x86_64`, `amd64`, `win64`",
-                            "$ref": "#/definitions/architecture_property_autoupdate"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/architecture_property_autoupdate"
+                                }
+                            ]
                         },
                         "32bit": {
                             "title": "32-bit",
@@ -4052,7 +4232,11 @@
                         "arm64": {
                             "title": "ARM 64-bit",
                             "markdownDescription": "- Specifies the installation configuration for ARM 64-bit architecture\n- Common architecture identifiers in URLs: `arm64`, `aarch64`",
-                            "$ref": "#/definitions/architecture_property_autoupdate"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/architecture_property_autoupdate"
+                                }
+                            ]
                         }
                     }
                 },
