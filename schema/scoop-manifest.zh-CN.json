@@ -2923,19 +2923,19 @@
                                 "not": {
                                     "pattern": "(?<!#.*)A-New-File"
                                 },
-                                "errorMessage": "请使用 extra 目录去提供文件"
+                                "errorMessage": "请改用 extra 目录提供文件"
                             },
                             {
                                 "not": {
                                     "pattern": "(?<!#.*)A-Copy-Item"
                                 },
-                                "errorMessage": "请使用 extra 目录去提供文件"
+                                "errorMessage": "请改用 extra 目录提供文件"
                             },
                             {
                                 "not": {
                                     "pattern": "(?<!#.*)A-New-Link(File|Directory)"
                                 },
-                                "errorMessage": "请使用 link 属性进行定义"
+                                "errorMessage": "请改用 link"
                             }
                         ]
                     }
@@ -3555,6 +3555,7 @@
                     "markdownDescription": "查找版本的 RegEx (正则表达式)\n\n- 省略时默认为：`(?:[vV]\\.?)?([\\w.+\\-]+\\d[\\w.+\\-]*)`\n- 可捕获 `1.2.3`、`1.2.3-beta.1`、`2026-01-01`、`2026-01-01-abc123` 等常见格式\n- 当版本出现在特定上下文（URL、HTML、结构化响应）中，或需要捕获多个值时，请显式定义 `regex`\n\n### 示例\n\n- 默认将第一个捕获组的内容存储到 `$version` 中\n\n  ```json\n  \"regex\": \"(.+)\"\n  ```\n\n- 从带前缀上下文的 URL 中提取版本\n\n  ```json\n  \"regex\": \"app-(.+)\"\n  ```\n\n- 使用命名捕获组：`$version` 作为主版本号，其他组（如 `$url`）可在 `autoupdate` 中通过 `$matchUrl` 使用\n\n  ```json\n  \"regex\": \"(?<url>.*?-(?<version>[\\\\d.]+)-.*\\\\.*)\"\n  ```\n\n- 从结构化响应中捕获多个值：`$version`，`$matchX64`，`$matchArm64`\n\n  ```json\n  \"regex\": \"(?:.*ver:(?<version>[^;]+))(?:.*x64:(?<x64>[^;]+))(?:.*arm64:(?<arm64>[^;]+))\"\n  ```",
                     "examples": [
                         "app-(.+)",
+                        "([\\d.]{5,})",
                         "^([\\d.]+)$",
                         "v(\\d+\\.[^\\s]+)",
                         "Version:</b>\\s?([\\d.]+)",
@@ -4346,15 +4347,26 @@
                                     }
                                 },
                                 "else": {
-                                    "properties": {
-                                        "pre_uninstall": {
-                                            "items": {
-                                                "if": {
-                                                    "pattern": "(?<!#.*)A-Remove-Link"
-                                                },
-                                                "then": {
-                                                    "not": true,
-                                                    "errorMessage": "无效的值"
+                                    "if": {
+                                        "properties": {
+                                            "pre_install": {
+                                                "contains": {
+                                                    "pattern": "(?<!#.*)A-New-Link(File|Directory)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "else": {
+                                        "properties": {
+                                            "pre_uninstall": {
+                                                "items": {
+                                                    "if": {
+                                                        "pattern": "(?<!#.*)A-Remove-Link"
+                                                    },
+                                                    "then": {
+                                                        "not": true,
+                                                        "errorMessage": "无效的值"
+                                                    }
                                                 }
                                             }
                                         }
@@ -5481,25 +5493,68 @@
             "if": {
                 "properties": {
                     "checkver": {
-                        "required": [
-                            "from_installer"
-                        ]
+                        "properties": {
+                            "github": {
+                                "required": [
+                                    "tag"
+                                ]
+                            }
+                        }
                     }
                 }
             },
-            "then": {
-                "properties": {
-                    "autoupdate": {
-                        "properties": {
-                            "url": {
-                                "$ref": "#/definitions/fixed_url_validation"
-                            },
-                            "architecture": {
-                                "patternProperties": {
-                                    ".*": {
-                                        "properties": {
-                                            "url": {
-                                                "$ref": "#/definitions/fixed_url_validation"
+            "else": {
+                "if": {
+                    "properties": {
+                        "checkver": {
+                            "required": [
+                                "from_installer"
+                            ]
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "autoupdate": {
+                            "properties": {
+                                "url": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/version_variable_validation"
+                                        },
+                                        {
+                                            "if": {
+                                                "type": "array"
+                                            },
+                                            "then": {
+                                                "items": {
+                                                    "$ref": "#/definitions/version_variable_validation"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "architecture": {
+                                    "patternProperties": {
+                                        ".*": {
+                                            "properties": {
+                                                "url": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/definitions/version_variable_validation"
+                                                        },
+                                                        {
+                                                            "if": {
+                                                                "type": "array"
+                                                            },
+                                                            "then": {
+                                                                "items": {
+                                                                    "$ref": "#/definitions/version_variable_validation"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
                                             }
                                         }
                                     }
@@ -5507,49 +5562,49 @@
                             }
                         }
                     }
-                }
-            },
-            "else": {
-                "properties": {
-                    "autoupdate": {
-                        "properties": {
-                            "url": {
-                                "allOf": [
-                                    {
-                                        "$ref": "#/definitions/version_variable_validation"
-                                    },
-                                    {
-                                        "if": {
-                                            "type": "array"
+                },
+                "else": {
+                    "properties": {
+                        "autoupdate": {
+                            "properties": {
+                                "url": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/definitions/version_variable_validation"
                                         },
-                                        "then": {
-                                            "items": {
-                                                "$ref": "#/definitions/version_variable_validation"
+                                        {
+                                            "if": {
+                                                "type": "array"
+                                            },
+                                            "then": {
+                                                "items": {
+                                                    "$ref": "#/definitions/version_variable_validation"
+                                                }
                                             }
                                         }
-                                    }
-                                ]
-                            },
-                            "architecture": {
-                                "patternProperties": {
-                                    ".*": {
-                                        "properties": {
-                                            "url": {
-                                                "allOf": [
-                                                    {
-                                                        "$ref": "#/definitions/version_variable_validation"
-                                                    },
-                                                    {
-                                                        "if": {
-                                                            "type": "array"
+                                    ]
+                                },
+                                "architecture": {
+                                    "patternProperties": {
+                                        ".*": {
+                                            "properties": {
+                                                "url": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/definitions/version_variable_validation"
                                                         },
-                                                        "then": {
-                                                            "items": {
-                                                                "$ref": "#/definitions/version_variable_validation"
+                                                        {
+                                                            "if": {
+                                                                "type": "array"
+                                                            },
+                                                            "then": {
+                                                                "items": {
+                                                                    "$ref": "#/definitions/version_variable_validation"
+                                                                }
                                                             }
                                                         }
-                                                    }
-                                                ]
+                                                    ]
+                                                }
                                             }
                                         }
                                     }
