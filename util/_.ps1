@@ -1,7 +1,6 @@
-﻿if ([System.IO.File]::Exists("$dir\abgox-abyss.json")) {
-    $_ = (Get-Content "$dir\abgox-abyss.json" -ErrorAction Ignore | ConvertFrom-Json).version, 1 | Select-Object -First 1
+$abgox_abyss_version = 1
+if ([System.IO.File]::Exists("$dir\abgox-abyss.json")) {
+    $_ = ([System.IO.File]::ReadAllText("$dir\abgox-abyss.json") | ConvertFrom-Json).version
+    if ($_) { $abgox_abyss_version = $_ }
 }
-else {
-    $_ = 1 # Current latest version
-}
-. $PSScriptRoot\$_.ps1
+. $PSScriptRoot\$abgox_abyss_version.ps1
