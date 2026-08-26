@@ -57,7 +57,7 @@ $labels = @{
     'manifest-name-review-needed'    = $false
     'data-persistence-review-needed' = $false
     'json-sorting-needed'            = $false
-    'schema-validation-needed'       = $false
+    'schema-validation-failed'       = $false
 }
 $has_manifest = $false
 
@@ -108,12 +108,12 @@ foreach ($file in $files) {
         }
         else {
             $line_schema = '❌'
-            $labels.'schema-validation-needed' = $true
+            $labels.'schema-validation-failed' = $true
         }
     }
     catch {
         $line_schema = '❌'
-        $labels.'schema-validation-needed' = $true
+        $labels.'schema-validation-failed' = $true
     }
 
     $line = @()
@@ -137,7 +137,7 @@ foreach ($file in $files) {
         $line += $type -join ', '
     }
     else {
-        $line += '📝'
+        $line += ''
     }
 
     # WinGet
@@ -150,7 +150,8 @@ foreach ($file in $files) {
     }
     catch {
         if ($file.status -eq 'added') {
-            $line += "[No]($url) 📝"
+            $line[1] += '📝'
+            $line += "[No]($url)"
             $labels.'manifest-name-review-needed' = $true
         }
         else {
@@ -175,7 +176,7 @@ foreach ($file in $files) {
     }
     if ($c.persist) {
         if ($file.status -eq 'added') {
-            $persistence += '[persist](https://abyss.abgox.com/docs/features/data-persistence/#persist) ⚠️'
+            $persistence += '[persist](https://abyss.abgox.com/docs/features/data-persistence/#persist) 📝'
             $labels.'data-persistence-review-needed' = $true
         }
         else {
