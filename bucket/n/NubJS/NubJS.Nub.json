@@ -1,0 +1,63 @@
+{
+    "version": "0.7.5",
+    "description": "功能全面的 JavaScript 工具包，旨在增强 Node.js 的功能，而不是试图取代它 | The all-in-one JavaScript toolkit that augments Node.js instead of trying to replace it",
+    "homepage": "https://nubjs.com",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/nubjs/nub/releases/download/v0.7.5/nub-win32-x64.zip",
+            "hash": "061956457776121ec8a4de43da47a85eebb9e3c26111ff39fc5c55865836de43"
+        },
+        "arm64": {
+            "url": "https://github.com/nubjs/nub/releases/download/v0.7.5/nub-win32-arm64.zip",
+            "hash": "e46b42266ab42c6a57b43b2472d970de4dd337ed633305f857905c7e1b1e69a3"
+        }
+    },
+    "extract_to": "app",
+    "bin": [
+        "app\\bin\\nub.exe",
+        "app\\bin\\nubx.exe"
+    ],
+    "link": "$home\\.nub",
+    "cleanup": "$home\\.cache\\nub",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "if (!(Test-Path $dir\\app\\bin\\nubx.exe)) { Copy-Item $dir\\app\\bin\\nub.exe $dir\\app\\bin\\nubx.exe }"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/nubjs/nub/releases/download/v$version/nub-win32-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/nubjs/nub/releases/download/v$version/nub-win32-arm64.zip"
+            }
+        }
+    }
+}
