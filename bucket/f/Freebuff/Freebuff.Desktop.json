@@ -1,0 +1,58 @@
+{
+    "version": "0.0.79",
+    "description": "桌面端免费代码智能体 | The free coding agent on your desktop",
+    "homepage": "https://freebuff.com/desktop",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://freebuff.com/api/desktop/download/windows#/dl.exe",
+            "hash": "2ea26561977a4e3a29d5ed827431d1d0e29c42bcb58dada569226ad5c96af965"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Freebuff.exe",
+            "Freebuff"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\Freebuff",
+        "$home\\.config\\freebuff-desktop"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Freebuff.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "from_installer": true
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://freebuff.com/api/desktop/download/windows#/dl.exe"
+            }
+        }
+    }
+}
