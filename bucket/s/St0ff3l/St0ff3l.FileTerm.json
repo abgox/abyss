@@ -1,0 +1,58 @@
+{
+    "version": "2.2.7",
+    "description": "面向 SSH、SFTP 和 FTP 的现代桌面远程工作台 | A modern desktop remote workspace for SSH, SFTP, and FTP",
+    "homepage": "https://github.com/St0ff3l/fileterm",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/St0ff3l/fileterm/releases/download/v2.2.7/FileTerm-2.2.7-windows-x64-setup.exe",
+            "hash": "6f818014726b939370c9d6e864fc291cf31ad4a473eef2e0c284d23120b72cc8"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\FileTerm.exe",
+            "FileTerm"
+        ]
+    ],
+    "link": "$env:AppData\\com.fileterm.desktop",
+    "cleanup": "$env:LocalAppData\\com.fileterm.desktop",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/St0ff3l/fileterm/releases/download/v$version/FileTerm-$version-windows-x64-setup.exe"
+            }
+        }
+    }
+}
