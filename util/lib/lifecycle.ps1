@@ -18,7 +18,7 @@
         A-Move-Persistence
     }
 
-    "{`"version`":$($abgox_abyss.version)}" | Out-File "$dir\abgox-abyss.json" -Force
+    "{`"version`":$abgox_abyss_version}" | Out-File "$dir\abgox-abyss.json" -Force
 
     # https://abyss.abgox.com/docs/features/data-persistence/persist
     if ($manifest.persist) {
@@ -61,38 +61,12 @@
     if ($manifest.env_add_path_expand) {
         A-Add-Path $manifest.env_add_path_expand
     }
-    # https://abyss.abgox.com/docs/shared-data
-    if ($manifest.data_shared) {
-        A-Set-DataShared
-    }
     # https://abyss.abgox.com/docs/features/data-persistence/link
     if ($manifest.link -and !$abgox_abyss.skipLink) {
-        foreach ($item in $manifest.link) {
-            $expandPath = A-Resolve-SpecialPath $item
-            if (A-Test-Path $expandPath) {
-                if ($expandPath -like "$dir\*") {
-                    $to = $expandPath.Replace("$dir\app\", "$persist_dir\").Replace("$dir\", "$persist_dir\")
-                }
-                else {
-                    $to = A-Replace-SpecialFolderPrefix $expandPath $persist_dir
-                }
-                A-Copy-Item $expandPath $to
-            }
-            else {
-                if ($expandPath -like "$dir\*") {
-                    $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
-                }
-                else {
-                    $leaf = A-Replace-SpecialFolderPrefix $expandPath
-                }
-                $extraPath = "$bucketsdir\$bucket\extra\$app\$leaf"
-                if (A-Test-Path $extraPath) {
-                    A-Copy-Item $extraPath "$persist_dir\$leaf"
-                }
-            }
-        }
+        $resolved = A-Resolve-LinkTargets $manifest.link
         if (!($manifest.pre_install -match '^\s*A-New-Link$')) {
-            A-New-Link
+            if ($resolved.FilePaths) { A-New-LinkFile -LinkPaths $resolved.FilePaths -LinkTargets $resolved.FileTargets }
+            if ($resolved.DirPaths) { A-New-LinkDirectory -LinkPaths $resolved.DirPaths -LinkTargets $resolved.DirTargets }
         }
     }
     if ($manifest.msix -and !($manifest.pre_install -match '^\s*A-Install-MsixPackage$')) {
@@ -113,7 +87,7 @@
                 $dest_file = [System.IO.Path]::Combine($dest_dir, $fileNameList[$i])
                 A-Ensure-Directory $dest_dir
                 Write-Host "Moving $file => $dest_file"
-                Move-Item -Path $file -Destination $dest_file -Force
+                Move-Item -LiteralPath $file -Destination $dest_file -Force -ErrorAction Stop
             }
         }
     }
@@ -141,18 +115,8 @@ function A-Complete-Install {
             'Refer to: https://abyss.abgox.com/docs/external-installation-directory'
         )
     }
-    if ($manifest.data_shared) {
-        $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { A-Test-DirectoryNotEmpty "$scoopdir\apps\$_" }
-        if ($remaining -and !(A-Test-DirectoryNotEmpty $persist_dir)) {
-            A-Show-Notes @(
-                "'$app' does not require the data persistence.",
-                "They share data: $($remaining -join '|').",
-                'Refer to: https://abyss.abgox.com/docs/shared-data'
-            )
-        }
-    }
     if ($info.Count) {
-        $info | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Info -Force -Encoding utf8
+        $info | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.Info -Force -Encoding utf8
     }
 }
 
@@ -171,7 +135,7 @@ function A-Start-Uninstall {
                 else {
                     "$bucketsdir\$bucket\bucket\#\$app.json"
                 }
-                $new = Get-Content $jsonFile -Raw -Encoding utf8 -ErrorAction Stop | ConvertFrom-Json | Select-Object -ExpandProperty renamed | Select-Object -ExpandProperty new
+                $new = Get-Content -LiteralPath $jsonFile -Raw -Encoding utf8 -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop | Select-Object -ExpandProperty renamed | Select-Object -ExpandProperty new
             }
             catch {
                 error $_.Exception.Message
@@ -191,10 +155,6 @@ function A-Start-Uninstall {
     if ($manifest.env_set_shared) {
         A-Set-EnvVarShared -Remove
     }
-    # https://abyss.abgox.com/docs/shared-data
-    if ($manifest.data_shared) {
-        A-Set-DataShared -Uninstall
-    }
     if ($manifest.msix -and !($manifest.pre_uninstall -match '^\s*A-Uninstall-MsixPackage$')) {
         A-Uninstall-MsixPackage
     }
@@ -212,13 +172,4 @@ function A-Complete-Uninstall {
         $tempPath += A-Resolve-SpecialPath $c
     }
     A-Remove-TempData $tempPath
-    # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
-    $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
-        if (A-Test-Path $_) {
-            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
-            foreach ($p in $LinkPaths) {
-                A-Remove-ToRecycleBin $p
-            }
-        }
-    }
 }

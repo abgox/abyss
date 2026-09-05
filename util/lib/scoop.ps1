@@ -74,14 +74,14 @@ function script:startmenu_shortcut([System.IO.FileInfo] $target, $shortcutName, 
 
         if ($PSVersionTable.PSVersion.Major -ge 7) {
             $abgox_abyss.found = $abgox_abyss.locations | ForEach-Object -Parallel {
-                $result = Get-ChildItem $_ -Filter "$using:shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                $result = Get-ChildItem -LiteralPath $_ -Filter "$using:shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
                 if ($result) { $result.FullName }
             } | Select-Object -First 1
             if ($abgox_abyss.found) { return }
         }
         else {
             foreach ($_ in $abgox_abyss.locations) {
-                $abgox_abyss.found = Get-ChildItem $_ -Filter "$shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
+                $abgox_abyss.found = Get-ChildItem -LiteralPath $_ -Filter "$shortcutName.lnk" -Recurse -Depth 5 -ErrorAction SilentlyContinue | Select-Object -First 1
                 if ($abgox_abyss.found) { return }
             }
         }
@@ -188,7 +188,7 @@ function script:show_notes($manifest, $dir, $original_dir, $persist_dir) {
     #endregion
 
     #region 新增: 输出字体名称
-    $fonts = Get-Content "$dir\abgox-abyss-A-Install-Font.json" -Raw -ErrorAction Ignore | ConvertFrom-Json | Select-Object -ExpandProperty FontName
+    $fonts = Get-Content -LiteralPath "$dir\abgox-abyss-A-Install-Font.json" -Raw -ErrorAction Ignore | ConvertFrom-Json -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FontName
     if ($fonts) {
         Microsoft.PowerShell.Utility\Write-Host
         Write-Output 'Fonts'

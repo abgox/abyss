@@ -64,7 +64,7 @@ function A-Get-UninstallEntryByAppName {
     )
     foreach ($path in $registryPaths) {
         # 获取所有卸载项
-        $uninstallItems = Get-ChildItem $path -ErrorAction SilentlyContinue | Get-ItemProperty
+        $uninstallItems = Get-ChildItem -LiteralPath $path -ErrorAction SilentlyContinue | Get-ItemProperty -ErrorAction SilentlyContinue
         foreach ($item in $uninstallItems) {
             if ($null -ne $item.DisplayName -and $item.DisplayName -match $AppNamePattern) {
                 return $item
@@ -99,13 +99,13 @@ function A-Wait-ForUnlock {
     if (!(A-Test-Path $Path)) { return }
     $elapsed = 0
     while ($elapsed -lt $TimeoutMs) {
-        $locked = (Get-Process).Where({ $_.Path -and $_.Path -like "$Path\*" })
+        $locked = (Get-Process).Where({ $_.Path -and $_.Path.StartsWith($Path + '\', [System.StringComparison]::OrdinalIgnoreCase) })
         if (-not $locked) {
             try {
                 $testFile = [System.IO.Path]::Combine($Path, '.abyss-lock-test')
                 $stream = [System.IO.File]::Create($testFile, 1, [System.IO.FileOptions]::DeleteOnClose)
                 $stream.Dispose()
-                Remove-Item $testFile -Force -ErrorAction SilentlyContinue
+                Remove-Item -LiteralPath $testFile -Force -ErrorAction SilentlyContinue
                 break
             }
             catch {}
@@ -142,13 +142,13 @@ function A-Install-App {
         Installer    = $Installer
         ArgumentList = $ArgumentList
         Uninstaller  = $Uninstaller
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallApp -Force -Encoding utf8
+    } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.InstallApp -Force -Encoding utf8
 
     A-Wait-Uninstaller -Path $Uninstaller
 
     try {
         if ($Installer -and (A-Test-File $Installer)) {
-            Remove-Item $Installer -Force -ErrorAction Stop
+            Remove-Item -LiteralPath $Installer -Force -ErrorAction Stop
         }
     }
     catch {
@@ -166,7 +166,7 @@ function A-Uninstall-App {
     $InstallerInfoPath = $abgox_abyss.path.InstallApp
     if (A-Test-File $InstallerInfoPath) {
         try {
-            $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+            $InstallerInfo = Get-Content -LiteralPath $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
         }
         catch {
             error $_.Exception.Message
@@ -187,7 +187,7 @@ function A-Uninstall-App {
         return
     }
     if (!(A-Test-File $Uninstaller)) {
-        $_Uninstaller = Get-ChildItem $dir $UninstallerFileName -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+        $_Uninstaller = Get-ChildItem -LiteralPath $dir -Filter $UninstallerFileName -Recurse -File -Force -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
         if ($null -eq $_Uninstaller) {
             return
         }
@@ -242,24 +242,24 @@ function A-Install-Inno {
         $Uninstaller = A-Get-AbsolutePath $Uninstaller
     }
     else {
-        $Uninstaller = Get-ChildItem $installDir -Filter unins*.exe -Recurse -File -ErrorAction SilentlyContinue |
+        $Uninstaller = Get-ChildItem -LiteralPath $installDir -Filter unins*.exe -Recurse -File -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     }
     @{
         Installer    = $Installer
         ArgumentList = $ArgumentList
         Uninstaller  = $Uninstaller
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallInno -Force -Encoding utf8
+    } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.InstallInno -Force -Encoding utf8
     A-Wait-Uninstaller -Path $Uninstaller
     try {
         if ($Installer -and (A-Test-File $Installer)) {
-            Remove-Item $Installer -Force -ErrorAction Stop
+            Remove-Item -LiteralPath $Installer -Force -ErrorAction Stop
         }
     }
     catch {
         error $_.Exception.Message
     }
-    Remove-Item $logPath -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
 
     A-Repair-Link
 }
@@ -273,7 +273,7 @@ function A-Uninstall-Inno {
             '/Force'
         )
     )
-    $Uninstaller = Get-ChildItem $dir unins000.exe -Recurse -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+    $Uninstaller = Get-ChildItem -LiteralPath $dir -Filter unins000.exe -Recurse -File -Force -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     if (!$Uninstaller) {
         warn "'unins000.exe' not found."
         return
@@ -306,12 +306,12 @@ function A-Install-Burn {
 
     A-Invoke-InstallerProcess -FilePath $Installer -ArgumentList $ArgumentList -TimeoutSec $TimeoutSec
 
-    $log = Get-Content $logPath -ErrorAction SilentlyContinue
+    $log = Get-Content -LiteralPath $logPath -ErrorAction SilentlyContinue
     $guid = $log | Select-String 'WixBundleProviderKey = ([0-9A-Fa-f\-]{36})' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
     if (!$guid) {
         $guid = $log | Select-String 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\{([0-9A-Fa-f\-]{36})\}' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
     }
-    $Uninstaller = Get-ChildItem "$env:ProgramData\Package Cache\{$guid}" -File -Filter *.exe -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+    $Uninstaller = Get-ChildItem -LiteralPath "$env:ProgramData\Package Cache\{$guid}" -File -Filter *.exe -Force -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
     if (!$Uninstaller) {
         $Uninstaller = $Installer
     }
@@ -319,11 +319,11 @@ function A-Install-Burn {
         Installer    = $Installer
         ArgumentList = $ArgumentList
         Uninstaller  = $Uninstaller
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallBurn -Force -Encoding utf8
+    } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.InstallBurn -Force -Encoding utf8
 
     A-Wait-Uninstaller -Path $Uninstaller
 
-    Remove-Item $logPath -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
 
     A-Repair-Link
 }
@@ -335,7 +335,7 @@ function A-Uninstall-Burn {
     $InstallerInfoPath = $abgox_abyss.path.InstallBurn
     if (A-Test-File $InstallerInfoPath) {
         try {
-            $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+            $InstallerInfo = Get-Content -LiteralPath $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
         }
         catch {
             error $_.Exception.Message
@@ -397,14 +397,14 @@ function A-Install-Msi {
 
     try {
         if ($MsiPath -and (A-Test-File $MsiPath)) {
-            Remove-Item $MsiPath -Force -ErrorAction Stop
+            Remove-Item -LiteralPath $MsiPath -Force -ErrorAction Stop
         }
     }
     catch {
         error $_.Exception.Message
     }
 
-    $log = Get-Content $logPath -ErrorAction SilentlyContinue
+    $log = Get-Content -LiteralPath $logPath -ErrorAction SilentlyContinue
     @{
         Installer      = $Installer
         Uninstaller    = $Installer
@@ -413,9 +413,9 @@ function A-Install-Msi {
         ProductVersion = ($log | Select-String 'ProductVersion = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1)
         Manufacturer   = ($log | Select-String 'Manufacturer = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1)
         ArgumentList   = $ArgumentList
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
+    } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
 
-    Remove-Item $logPath -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $logPath -Force -ErrorAction SilentlyContinue
 
     A-Repair-Link
 }
@@ -429,7 +429,7 @@ function A-Uninstall-Msi {
     $InstallerInfoPath = $abgox_abyss.path.InstallMsi
     if (A-Test-File $InstallerInfoPath) {
         try {
-            $InstallerInfo = Get-Content $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+            $InstallerInfo = Get-Content -LiteralPath $InstallerInfoPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
         }
         catch {
             error $_.Exception.Message
@@ -457,9 +457,10 @@ function A-Uninstall-Msi {
         'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall'
     )
     :outerLoop foreach ($path in $registryPaths) {
-        $uninstallKeys = Get-ChildItem $path -ErrorAction SilentlyContinue
+        $uninstallKeys = Get-ChildItem -LiteralPath $path -ErrorAction SilentlyContinue
         foreach ($key in $uninstallKeys) {
-            $item = Get-ItemProperty $key.PSPath
+            $item = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+            if (!$item) { continue }
             if ($item.ProductCode -eq $InstallerInfo.ProductCode) {
                 $ProductCode = $item.ProductCode
                 break outerLoop
@@ -509,9 +510,9 @@ function A-Uninstall-Manually {
     foreach ($p in $Paths) {
         $p = A-Get-AbsolutePath $p
         if (A-Test-Path $p) {
-            if (!(A-Test-DirectoryNotEmpty)) {
+            if (!(A-Test-DirectoryNotEmpty $p)) {
                 try {
-                    Remove-Item $p -Force -Recurse -ErrorAction Stop
+                    Remove-Item -LiteralPath $p -Force -Recurse -ErrorAction Stop
                     continue
                 }
                 catch {}
@@ -643,7 +644,7 @@ function A-Install-Font {
         '.ttc' = 'TrueType'
     }
     if (!$FontType) {
-        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -File
+        $fontFile = Get-ChildItem -LiteralPath $dir -Recurse -File -Force -ErrorAction SilentlyContinue
         foreach ($file in $fontFile) {
             if ($file.Extension -in $ExtMap.Keys) {
                 $FontType = $file.Extension.TrimStart('.')
@@ -652,7 +653,7 @@ function A-Install-Font {
         }
     }
     $filter = "*.$FontType"
-    $currentBuildNumber = [int] (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuildNumber
+    $currentBuildNumber = [int] (Get-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue).CurrentBuildNumber
     $windows10Version1809BuildNumber = 17763
     $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
     if (!$isPerUserFontInstallationSupported -and !$global) {
@@ -679,7 +680,7 @@ function A-Install-Font {
     $registryRoot = if ($global) { 'HKLM' } else { 'HKCU' }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
     $fonts = [System.Drawing.Text.PrivateFontCollection]::new()
-    $allFonts = Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse
+    $allFonts = Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse -File -Force -ErrorAction SilentlyContinue
     if (!$allFonts) {
         error "No font file found in '$dir' with extension '$filter'"
         A-Show-IssueCreationPrompt
@@ -688,7 +689,7 @@ function A-Install-Font {
     $allFonts | ForEach-Object {
         $value = if ($global) { $_.Name } else { "$fontInstallDir\$($_.Name)" }
         try {
-            New-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force -ErrorAction Stop | Out-Null
+            New-ItemProperty -LiteralPath $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Value $value -Force -ErrorAction Stop | Out-Null
             Copy-Item -LiteralPath $_.FullName -Destination $fontInstallDir -Force -ErrorAction Stop
             $fonts.AddFontFile($_.FullName)
         }
@@ -700,13 +701,14 @@ function A-Install-Font {
     @{
         FontType = $FontType
         FontName = $fonts.Families | Select-Object -ExpandProperty Name
-    } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.Font -Force -Encoding utf8
+    } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.Font -Force -Encoding utf8
+    $fonts.Dispose()
 }
 
 function A-Uninstall-Font {
     $OutFile = $abgox_abyss.path.Font
     if (!(A-Test-File $OutFile)) { return }
-    $FontType = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty FontType
+    try { $FontType = Get-Content -LiteralPath $OutFile -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop | Select-Object -ExpandProperty FontType } catch { return }
     $filter = "*.$FontType"
     $ExtMap = @{
         '.ttf' = 'TrueType'
@@ -714,10 +716,10 @@ function A-Uninstall-Font {
         '.ttc' = 'TrueType'
     }
     $fontInstallDir = if ($global) { "$env:windir\Fonts" } else { "$env:LocalAppData\Microsoft\Windows\Fonts" }
-    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
-        Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name | ForEach-Object {
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
+        Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
             try {
-                Rename-Item $_.FullName $_.FullName -ErrorVariable LockError -ErrorAction Stop
+                Rename-Item -LiteralPath $_.FullName -NewName $_.Name -ErrorVariable LockError -ErrorAction Stop
             }
             catch {
                 error "Cannot uninstall '$app' font.`nIt is currently being used by another application.`nPlease close all applications that are using it (e.g. vscode) and try again."
@@ -727,14 +729,14 @@ function A-Uninstall-Font {
     }
     $registryRoot = if ($global) { 'HKLM' } else { 'HKCU' }
     $registryKey = "${registryRoot}:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse | ForEach-Object {
-        Remove-ItemProperty -Path $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
-        Remove-Item "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
+    Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
+        Remove-ItemProperty -LiteralPath $registryKey -Name $_.Name.Replace($_.Extension, " ($($ExtMap[$_.Extension]))") -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath "$fontInstallDir\$($_.Name)" -Force -ErrorAction SilentlyContinue
     }
     if ($cmd -eq 'uninstall') {
         warn "The '$app' Font family has been uninstalled successfully, but there may be system cache that needs to be restarted to fully remove."
     }
-    Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $OutFile -Force -ErrorAction SilentlyContinue
 }
 
 function A-Install-PowerToysRunPlugin {
@@ -753,7 +755,7 @@ function A-Install-PowerToysRunPlugin {
         Write-Host "Copying $CopyingPath => $PluginPath"
         A-Copy-Item $CopyingPath $PluginPath
 
-        @{ PluginName = $PluginName } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.PowerToysRunPlugin -Force -Encoding utf8
+        @{ PluginName = $PluginName } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.PowerToysRunPlugin -Force -Encoding utf8
     }
     catch {
         error $_.Exception.Message
@@ -767,12 +769,12 @@ function A-Uninstall-PowerToysRunPlugin {
     if (!(A-Test-File $OutFile)) { return }
     $PluginsDir = "$env:LocalAppData\Microsoft\PowerToys\PowerToys Run\Plugins"
     try {
-        $PluginName = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty PluginName
+        $PluginName = Get-Content -LiteralPath $OutFile -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop | Select-Object -ExpandProperty PluginName
         $PluginPath = "$PluginsDir\$PluginName"
         if (A-Test-Path $PluginPath) {
             Write-Host "Removing $PluginPath"
-            Remove-Item -Path $PluginPath -Recurse -Force -ErrorAction Stop
-            Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $PluginPath -Recurse -Force -ErrorAction Stop
+            Remove-Item -LiteralPath $OutFile -Force -ErrorAction SilentlyContinue
         }
     }
     catch {

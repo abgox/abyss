@@ -14,11 +14,11 @@
         Info               = "$dir\abgox-abyss-Info.json"
     }
     knownFolders = @(
-        @{ Name = 'Documents'; DefaultPrefix = Join-Path $home 'Documents'; Folder = [Environment]::GetFolderPath('MyDocuments') }
-        @{ Name = 'Desktop'; DefaultPrefix = Join-Path $home 'Desktop'; Folder = [Environment]::GetFolderPath('Desktop') }
-        @{ Name = 'Pictures'; DefaultPrefix = Join-Path $home 'Pictures'; Folder = [Environment]::GetFolderPath('MyPictures') }
-        @{ Name = 'Music'; DefaultPrefix = Join-Path $home 'Music'; Folder = [Environment]::GetFolderPath('MyMusic') }
-        @{ Name = 'Videos'; DefaultPrefix = Join-Path $home 'Videos'; Folder = [Environment]::GetFolderPath('MyVideos') }
+        @{ Name = 'Documents'; DefaultPrefix = [System.IO.Path]::Combine($home, 'Documents'); Folder = [Environment]::GetFolderPath('MyDocuments') }
+        @{ Name = 'Desktop'; DefaultPrefix = [System.IO.Path]::Combine($home, 'Desktop'); Folder = [Environment]::GetFolderPath('Desktop') }
+        @{ Name = 'Pictures'; DefaultPrefix = [System.IO.Path]::Combine($home, 'Pictures'); Folder = [Environment]::GetFolderPath('MyPictures') }
+        @{ Name = 'Music'; DefaultPrefix = [System.IO.Path]::Combine($home, 'Music'); Folder = [Environment]::GetFolderPath('MyMusic') }
+        @{ Name = 'Videos'; DefaultPrefix = [System.IO.Path]::Combine($home, 'Videos'); Folder = [Environment]::GetFolderPath('MyVideos') }
     )
 }
 

@@ -2103,7 +2103,8 @@
                             "title": "Environment Variable Key",
                             "examples": [
                                 "$dir\\xxx",
-                                "$persist_dir\\xxx"
+                                "$persist_dir\\xxx",
+                                "$scoopdir\\persist\\abgox.abyss\\xxx"
                             ],
                             "allOf": [
                                 {
@@ -2153,6 +2154,11 @@
                                 "value": {
                                     "title": "Environment Variable Value",
                                     "markdownDescription": "- Equivalent to the value set by `env_set`\n- Some available variables:\n  - `$app`: Manifest name\n  - `$dir`: Software installation directory\n  - `$persist_dir`: Data persistence directory\n  - `$home`: User home directory\n  - `$env:AppData`: Windows environment variable\n  - ...",
+                                    "examples": [
+                                        "$dir\\xxx",
+                                        "$persist_dir\\xxx",
+                                        "$scoopdir\\persist\\abgox.abyss\\xxx"
+                                    ],
                                     "allOf": [
                                         {
                                             "type": "string"
@@ -2548,7 +2554,7 @@
             }
         },
         "link": {
-            "markdownDescription": "Data Persistence [link](https://abyss.abgox.com/docs/features/data-persistence/link)\n\n- It is a special property of [abyss](https://abyss.abgox.com)\n- Used to persist data stored in standard data directories (such as `$env:AppData`, `$home`, etc.)\n- It maps paths to the corresponding directory structure in `$persist_dir` according to [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- Executed automatically in `A-Start-Install`, can also be manually invoked using `A-New-Link`\n- Since Scoop defaults to creating empty directories only, to persist files you need to prepare default data in the `extra` directory in advance\n\n### Example\n\n- Taking [VSCode](https://code.visualstudio.com) as an example, its manifest is `Microsoft.VisualStudioCode`\n\n  ```json\n    \"link\": [\n        \"$env:AppData\\\\Code\",\n        \"$home\\\\.vscode\"\n    ]\n  ```\n\n- Link Targets:\n  - `$env:AppData\\Code` => `$persist_dir\\AppData\\Roaming\\Code`\n  - `$home\\.vscode` => `$persist_dir\\.vscode`\n\n- Before linking, [abyss](https://abyss.abgox.com) prepares data in `$persist_dir` in the following order:\n  1. If data exists in the original path, migrate it directly to `$persist_dir`\n  2. If default data exists in the `extra\\Microsoft.VisualStudioCode` directory, copy it to `$persist_dir`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\AppData\\Roaming\\Code` => `$persist_dir\\AppData\\Roaming\\Code`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\.vscode` => `$persist_dir\\.vscode`\n  3. If no data is found, an empty directory is created directly (default Scoop behavior)",
+            "markdownDescription": "Data Persistence [link](https://abyss.abgox.com/docs/features/data-persistence/link)\n\n- It is a special property of [abyss](https://abyss.abgox.com)\n- Used to persist data stored in standard data directories (such as `$env:AppData`, `$home`, etc.)\n- It maps paths to the corresponding directory structure in `$scoopdir\\persist\\abgox.abyss` according to [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- Executed automatically in `A-Start-Install`, can also be manually invoked using `A-New-Link`\n- Since Scoop defaults to creating empty directories only, to persist files you need to prepare default data in the `extra` directory in advance\n\n### Example\n\n- Taking [VSCode](https://code.visualstudio.com) as an example, its manifest is `Microsoft.VisualStudioCode`\n\n  ```json\n    \"link\": [\n        \"$env:AppData\\\\Code\",\n        \"$home\\\\.vscode\"\n    ]\n  ```\n\n- Link Targets:\n  - `$env:AppData\\Code` => `$scoopdir\\persist\\abgox.abyss\\AppData\\Roaming\\Code`\n  - `$home\\.vscode` => `$scoopdir\\persist\\abgox.abyss\\.vscode`\n\n- Before linking, [abyss](https://abyss.abgox.com) prepares data in `$scoopdir\\persist\\abgox.abyss` in the following order:\n  1. If data exists in the original path, migrate it directly to `$scoopdir\\persist\\abgox.abyss`\n  2. If default data exists in the `extra\\Microsoft.VisualStudioCode` directory, copy it to `$scoopdir\\persist\\abgox.abyss`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\AppData\\Roaming\\Code` => `$scoopdir\\persist\\abgox.abyss\\AppData\\Roaming\\Code`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\.vscode` => `$scoopdir\\persist\\abgox.abyss\\.vscode`\n  3. If no data is found, an empty directory is created directly (default Scoop behavior)",
             "type": [
                 "string",
                 "array"
@@ -2622,7 +2628,7 @@
             ]
         },
         "persist": {
-            "markdownDescription": "Data Persistence [persist](https://abyss.abgox.com/docs/features/data-persistence/persist)\n\n- Specifies directories or files that need to be persisted, preventing data loss after software updates or reinstallation\n- Scoop points the paths inside `$dir` to the corresponding paths in `$persist_dir` by creating links\n- Since Scoop defaults to creating empty directories only, to persist files you need to prepare default data in the `extra` directory in advance\n\n### Example\n\n- Taking [PSCompletions](https://pscompletions.abgox.com) as an example, its manifest is `abgox.PSCompletions`\n- You need to prepare the file `extra\\abgox.PSCompletions\\data.json` to prevent Scoop from creating a directory by default\n\n  ```json\n  \"persist\": [\n      [\"completions\",\"completions\"],\n      [\"data.json\",\"data.json\"]\n  ]\n  ```\n\n- Link Targets:\n  - `$dir\\completions` => `$persist_dir\\completions`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- Before linking, [abyss](https://abyss.abgox.com) prepares data in `$persist_dir` in the following order:\n  1. If data exists in `$dir`, migrate it directly to `$persist_dir`\n  2. If default data exists in the `extra\\abgox.PSCompletions` directory, copy it to `$persist_dir`\n     - `$bucketsdir\\$bucket\\extra\\abgox.PSCompletions\\completions` => `$persist_dir\\completions`\n     - `$bucketsdir\\$bucket\\extra\\abgox.PSCompletions\\data.json` => `$persist_dir\\data.json`\n  3. If no data is found, an empty directory is created directly (default Scoop behavior)\n\n### Limitations\n\n- If default data is stored under standard data directories, you must switch to [link](https://abyss.abgox.com/docs/features/data-persistence#link) instead\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n  - `$home\\xxx`\n  - ...\n- Even if the software provides environment variables to customize data storage locations, [abyss](https://abyss.abgox.com) does not allow it to impact the stability of the directory structure under `$persist_dir`\n- For portable software, you can continue using `persist`, but its definition is restricted\n  - Assuming the default data directory is `$env:AppData\\xxx`\n  - According to [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule), the target directory is `$persist_dir\\AppData\\Roaming\\xxx`\n  - Therefore, it can only use the following definition, where `AppData\\Roaming\\xxx` remains immutable\n\n  ```json\n  \"persist\": [\n    [\"<source>\",\"AppData\\\\Roaming\\\\xxx\"]\n  ]\n  ```",
+            "markdownDescription": "Data Persistence [persist](https://abyss.abgox.com/docs/features/data-persistence/persist)\n\n- Specifies directories or files that need to be persisted, preventing data loss after software updates or reinstallation\n- Scoop points the paths inside `$dir` to the corresponding paths in `$persist_dir` by creating links\n- Since Scoop defaults to creating empty directories only, to persist files you need to prepare default data in the `extra` directory in advance\n\n### Example\n\n- Taking [PSCompletions](https://pscompletions.abgox.com) as an example, its manifest is `abgox.PSCompletions`\n- You need to prepare the file `extra\\abgox.PSCompletions\\data.json` to prevent Scoop from creating a directory by default\n\n  ```json\n  \"persist\": [\n      [\"completions\",\"completions\"],\n      [\"data.json\",\"data.json\"]\n  ]\n  ```\n\n- Link Targets:\n  - `$dir\\completions` => `$persist_dir\\completions`\n  - `$dir\\data.json` => `$persist_dir\\data.json`\n- Before linking, [abyss](https://abyss.abgox.com) prepares data in `$persist_dir` in the following order:\n  1. If data exists in `$dir`, migrate it directly to `$persist_dir`\n  2. If default data exists in the `extra\\abgox.PSCompletions` directory, copy it to `$persist_dir`\n     - `$bucketsdir\\$bucket\\extra\\abgox.PSCompletions\\completions` => `$persist_dir\\completions`\n     - `$bucketsdir\\$bucket\\extra\\abgox.PSCompletions\\data.json` => `$persist_dir\\data.json`\n  3. If no data is found, an empty directory is created directly (default Scoop behavior)\n\n### Limitations\n\n- If default data is stored under standard data directories, you must switch to [link](https://abyss.abgox.com/docs/features/data-persistence#link) instead\n  - `$env:AppData\\xxx`\n  - `$env:LocalAppData\\xxx`\n  - `$home\\xxx`\n  - ...\n- Even if the software provides environment variables to customize data storage locations, [abyss](https://abyss.abgox.com) does not allow it to impact the stability of the directory structure under `$persist_dir`\n- For portable software, you can continue using `persist`, but its definition is restricted\n  - Assuming the default data directory is `$env:AppData\\xxx`\n  - According to [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule), the target directory is `AppData\\Roaming\\xxx`\n  - Therefore, it can only use the following definition, where `AppData\\Roaming\\xxx` remains immutable\n\n  ```json\n  \"persist\": [\n    [\"<source>\",\"AppData\\\\Roaming\\\\xxx\"]\n  ]\n  ```",
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
@@ -2869,19 +2875,19 @@
                             },
                             {
                                 "const": "A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"",
-                                "markdownDescription": "Link data files using SymbolicLink\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- Automatically creates the file if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
+                                "markdownDescription": "Link data files using SymbolicLink\n\n- Note: It is only for compatibility in special cases. Generally, use the `link` instead\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- Automatically creates the file if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
                             },
                             {
                                 "pattern": "A-New-LinkFile",
-                                "markdownDescription": "Link data files using SymbolicLink\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- Automatically creates the file if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
+                                "markdownDescription": "Link data files using SymbolicLink\n\n- Note: It is only for compatibility in special cases. Generally, use the `link` instead\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkFile \"$home\\xxx\", \"$env:AppData\\xxx\"`\n- Automatically creates the file if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
                             },
                             {
                                 "const": "A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"",
-                                "markdownDescription": "Link data directories using Junction\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- Automatically creates the directory if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
+                                "markdownDescription": "Link data directories using Junction\n\n- Note: It is only for compatibility in special cases. Generally, use the `link` instead\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- Automatically creates the directory if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
                             },
                             {
                                 "pattern": "A-New-LinkDirectory",
-                                "markdownDescription": "Link data directories using Junction\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- Automatically creates the directory if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
+                                "markdownDescription": "Link data directories using Junction\n\n- Note: It is only for compatibility in special cases. Generally, use the `link` instead\n- Generates the corresponding directory structure in `$persist_dir` based on [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- It should use standard data directories, except for a few special cases:\n  - `$home`\n  - `$env:AppData`\n  - `$env:LocalAppData`\n  - `$env:ProgramData`\n- E.g., `A-New-LinkDirectory \"$env:AppData\\xxx\", \"$home\\xxx\"`\n- Automatically creates the directory if it doesn't exist\n- If the data is stored inside the app installation directory, the `persist` property should be used instead"
                             },
                             {
                                 "const": "A-New-Link",
@@ -2918,24 +2924,6 @@
                                     "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                 },
                                 "errorMessage": "Contains disallowed Chinese characters:\n（）‘’“”，：？！—\nThey are only allowed within comments"
-                            },
-                            {
-                                "not": {
-                                    "pattern": "(?<!#.*)A-New-File"
-                                },
-                                "errorMessage": "Please use the extra directory to provide files"
-                            },
-                            {
-                                "not": {
-                                    "pattern": "(?<!#.*)A-Copy-Item"
-                                },
-                                "errorMessage": "Please use the extra directory to provide files"
-                            },
-                            {
-                                "not": {
-                                    "pattern": "(?<!#.*)A-New-Link(File|Directory)"
-                                },
-                                "errorMessage": "Please use the link property for definition"
                             }
                         ]
                     }
@@ -3084,11 +3072,11 @@
                             },
                             {
                                 "const": "A-Remove-TempData \"$env:LocalAppData\\xxx\"",
-                                "markdownDescription": "Specifies temporary data that needs to be cleaned up\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```"
+                                "markdownDescription": "Specifies temporary data that needs to be cleaned up\n\n- Note: It is only for compatibility in special cases. Generally, use the `cleanup` instead\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```"
                             },
                             {
                                 "pattern": "A-Remove-TempData",
-                                "markdownDescription": "Specifies temporary data that needs to be cleaned up\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```"
+                                "markdownDescription": "Specifies temporary data that needs to be cleaned up\n\n- Note: It is only for compatibility in special cases. Generally, use the `cleanup` instead\n- If there are multiple items, use an array\n- Only cleaned up when uninstalling the app; ignored during updates\n  - `abgox-abyss-app-uninstall-action` config: runs when the level contains `3`\n  - Uninstall app with `--purge`\n\n### Example\n\n- [Tauri](https://tauri.app) typically uses `$env:LocalAppData\\com.xxx.app` to store `EBWebView` and `logs`\n\n  ```json\n  \"A-Remove-TempData \\\"$env:LocalAppData\\\\xxx\\\"\"\n  ```\n\n- [Electron](https://electronjs.org) typically uses `$env:LocalAppData\\xxx-updater` to store the updater\n\n  ```json\n  \"cleanup\": \"$env:LocalAppData\\\\xxx-updater\"\n  ```"
                             },
                             {
                                 "const": "A-Deny-Update",
@@ -3133,12 +3121,6 @@
                                     "pattern": "(?<!#.*)[（）‘’“”，：？！—]+"
                                 },
                                 "errorMessage": "Contains disallowed Chinese characters:\n（）‘’“”，：？！—\nThey are only allowed within comments"
-                            },
-                            {
-                                "not": {
-                                    "pattern": "(?<!#.*)A-Remove-TempData"
-                                },
-                                "errorMessage": "Please use the cleanup property for definition"
                             }
                         ]
                     }
@@ -4129,29 +4111,6 @@
         "shortcuts": {
             "$ref": "#/definitions/shortcuts"
         },
-        "data_shared": {
-            "title": "Data Sharing Manifests",
-            "markdownDescription": "- It is a special property of [abyss](https://abyss.abgox.com)\n- All manifests that share data must define it\n- It requires an array containing the names of manifests that share data\n- Reference: https://abyss.abgox.com/docs/shared-data\n\n### Example\n\n```json\n\"data_shared\": [\n    \"Microsoft.PowerShell\",\n    \"Microsoft.PowerShell.Preview\"\n]\n```",
-            "type": "array",
-            "minItems": 2,
-            "uniqueItems": true,
-            "examples": [
-                [
-                    "",
-                    ""
-                ]
-            ],
-            "items": {
-                "allOf": [
-                    {
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/definitions/str_no_all_space"
-                    }
-                ]
-            }
-        },
         "link": {
             "$ref": "#/definitions/link"
         },
@@ -4274,25 +4233,6 @@
         }
     },
     "allOf": [
-        {
-            "dependencies": {
-                "data_shared": {
-                    "if": {
-                        "required": [
-                            "link"
-                        ]
-                    },
-                    "else": {
-                        "properties": {
-                            "data_shared": {
-                                "not": true,
-                                "errorMessage": "Invalid property"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         {
             "allOf": [
                 {

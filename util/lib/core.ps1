@@ -129,7 +129,7 @@ function A-Resolve-SpecialPath {
     param([string]$Path)
     $result = $ExecutionContext.InvokeCommand.ExpandString($Path)
     foreach ($entry in $abgox_abyss.knownFolders ) {
-        if ($result.StartsWith($entry.DefaultPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        if ($result.StartsWith($entry.DefaultPrefix + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
             return $entry.Folder + $result.Substring($entry.DefaultPrefix.Length)
         }
     }
@@ -142,13 +142,15 @@ function A-Replace-SpecialFolderPrefix {
         [string]$Replacement = ''
     )
     foreach ($entry in $abgox_abyss.knownFolders) {
-        if ($Path.StartsWith($entry.Folder, [System.StringComparison]::OrdinalIgnoreCase)) {
+        if ($Path.StartsWith($entry.Folder + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
             $relative = $entry.Name + $Path.Substring($entry.Folder.Length)
+            $relative = $relative.TrimStart('\', '/')
             if (!$Replacement) { return $relative }
             return [System.IO.Path]::Combine($Replacement, $relative)
         }
     }
     $relative = $Path.Replace("$home\", '') -replace '^[a-zA-Z]:', ''
+    $relative = $relative.TrimStart('\', '/')
     if (!$Replacement) { return $relative }
     return [System.IO.Path]::Combine($Replacement, $relative)
 }

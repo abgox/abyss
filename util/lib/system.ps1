@@ -58,10 +58,10 @@ function A-Stop-Process {
     # 由于字段可能包含可展开的变量，应该使用安装时展开的值，以避免安装和卸载期间环境变量变化导致的不一致性
     if (A-Test-File $abgox_abyss.path.EnvPath) {
         $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
-        $Paths += Get-Content $abgox_abyss.path.EnvPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
+        $Paths += Get-Content -LiteralPath $abgox_abyss.path.EnvPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
     }
     if (A-Test-File $abgox_abyss.path.Info) {
-        $info = Get-Content $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+        $info = Get-Content -LiteralPath $abgox_abyss.path.Info -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
         if ($info.location) {
             $Paths += $info.location
         }
@@ -69,9 +69,7 @@ function A-Stop-Process {
     $Paths = $Paths | Sort-Object -Unique
     foreach ($app_dir in $Paths) {
         if (!$app_dir) { continue }
-        # 转义路径中的通配符字符(如 '['、']')，避免进程匹配失效
-        $pattern = [System.Management.Automation.WildcardPattern]::Escape($app_dir) + '\*'
-        $matched = (Get-Process).Where({ $_.Path -like $pattern })
+        $matched = (Get-Process).Where({ $_.Path -and $_.Path.StartsWith($app_dir + '\', [System.StringComparison]::OrdinalIgnoreCase) })
         foreach ($p in $matched) {
             try {
                 if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
@@ -116,8 +114,7 @@ function A-Stop-Process {
     # https://github.com/ScoopInstaller/Scoop/blob/ebd8c036fa0d2e1dc93bca44c10eeee36c0d233e/lib/install.ps1#L534
     foreach ($app_dir in $Paths) {
         if (!$app_dir) { continue }
-        $pattern = [System.Management.Automation.WildcardPattern]::Escape($app_dir) + '\*'
-        $running_processes = (Get-Process).Where({ $_.Path -like $pattern }) | Out-String
+        $running_processes = (Get-Process).Where({ $_.Path -and $_.Path.StartsWith($app_dir + '\', [System.StringComparison]::OrdinalIgnoreCase) }) | Out-String
         if ($running_processes) {
             error "The following instances of `"$app`" are still running. Close them and try again."
             Write-Host $running_processes
@@ -154,7 +151,13 @@ function A-Remove-Service {
         if (!$service) { return }
         try {
             Write-Host "Removing the service: $($service.Name)"
-            $service | Remove-Service -ErrorAction Stop
+            if (Get-Command Remove-Service -ErrorAction SilentlyContinue) {
+                $service | Remove-Service -ErrorAction Stop
+            }
+            else {
+                $null = & sc.exe delete $service.Name 2>&1
+                if ($LASTEXITCODE -ne 0) { throw "sc.exe delete failed with code $LASTEXITCODE" }
+            }
         }
         catch {
             error $_.Exception.Message
@@ -175,18 +178,18 @@ function A-Add-Path {
     $Paths = $Paths | ForEach-Object { A-Resolve-SpecialPath $_ } | Where-Object { $_ -notin $oldPath }
     if (!$Paths) { return }
     Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
-    @{ Paths = $Paths } | ConvertTo-Json | Out-File -FilePath $abgox_abyss.path.EnvPath -Force -Encoding utf8
+    @{ Paths = $Paths } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.EnvPath -Force -Encoding utf8
 }
 
 function A-Remove-Path {
     $OutFile = $abgox_abyss.path.EnvPath
     if (!(A-Test-File $OutFile)) { return }
     $general_path = "$home\.local\bin", "$env:AppData\local\bin", "$env:LocalAppData\bin", "$env:LocalAppData\Microsoft\WindowsApps"
-    $Path = Get-Content $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
+    $Path = Get-Content -LiteralPath $OutFile -Raw | ConvertFrom-Json | Select-Object -ExpandProperty Paths | Where-Object { $_ -notin $general_path }
     if (!$Path) { return }
     Remove-Path -Path $Path -Global:$global
     Remove-Path -Path $Path -TargetEnvVar $scoopPathEnvVar -Global:$global
-    Remove-Item $OutFile -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $OutFile -Force -ErrorAction SilentlyContinue
 }
 
 # 它不属于 scoop core，但可能也需要跟进 Scoop 最新变动
@@ -199,11 +202,11 @@ function A-Set-EnvVarShared {
         $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
             $name = $_.Name
             $owner = $env_set_shared.$name.owner
-            $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object { Test-Path "$scoopdir\apps\$_\current\manifest.json" }
+            $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object { A-Test-File "$scoopdir\apps\$_\current\manifest.json" }
             if ($has_other_owner) { return }
             Write-Output "Removing $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m"
             Set-EnvVar -Name $name -Value $null -Global:$global
-            if (Test-Path env:\$name) { Remove-Item env:\$name }
+            if (Test-Path -LiteralPath env:\$name) { Remove-Item -LiteralPath env:\$name }
         }
     }
     else {
@@ -213,7 +216,7 @@ function A-Set-EnvVarShared {
             # $owner = $env_set_shared.$name.owner
             Write-Output "Setting $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m = $([char]0x1b)[35m$val$([char]0x1b)[0m"
             Set-EnvVar -Name $name -Value $val -Global:$global
-            Set-Content env:\$name $val
+            Set-Content -LiteralPath env:\$name -Value $val
         }
     }
 }

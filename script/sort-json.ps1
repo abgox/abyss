@@ -72,7 +72,6 @@ $order = [ordered]@{
     bin                 = ''
     commands            = '' # abyss
     shortcuts           = ''
-    data_shared         = '' # abyss
     link                = '' # abyss
     persist             = ''
     cleanup             = '' # abyss

@@ -24,6 +24,7 @@ function A-Ensure-Directory {
     param (
         [string]$Path = $persist_dir
     )
+    if (!$Path) { return }
     if (A-Test-Directory $Path) { return }
     New-Item -ItemType Directory -Path $Path -Force | Out-Null
 }
@@ -36,6 +37,21 @@ function A-Test-DirectoryNotEmpty {
         return $false
     }
     return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
+}
+
+function A-Remove-EmptyDirectory {
+    param(
+        [string]$Path,
+        [string]$StopAt
+    )
+    $pp = [System.IO.Path]::GetDirectoryName($Path)
+    $last = $null
+    while ($pp -and $pp.StartsWith($StopAt, [System.StringComparison]::OrdinalIgnoreCase) -and $pp.Length -gt $StopAt.Length) {
+        if (A-Test-DirectoryNotEmpty $pp) { break }
+        try { Remove-Item -LiteralPath $pp -Force -ErrorAction Stop; $last = $pp } catch { break }
+        $pp = [System.IO.Path]::GetDirectoryName($pp)
+    }
+    if ($last) { Write-Host "Removing $last" }
 }
 
 function A-Test-Link {
@@ -103,7 +119,7 @@ function A-Copy-Item {
             Write-Host "Copying $Path => $Destination"
         }
         catch {
-            Remove-Item $Destination -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $Destination -Recurse -Force -ErrorAction SilentlyContinue
             error $_
             A-Show-IssueCreationPrompt
             A-Exit
@@ -121,130 +137,6 @@ function A-Remove-ToRecycleBin {
     }
     $shell = New-Object -ComObject Shell.Application
     $shell.Namespace(0).ParseName($Path).InvokeVerb('delete')
-}
-
-function A-New-LinkBase {
-    <#
-    .SYNOPSIS
-        创建链接: SymbolicLink 或 Junction
-
-    .DESCRIPTION
-        该函数用于将现有文件替换为指向目标文件的链接。
-        如果源文件存在且不是链接，会先将其内容复制到目标文件，然后删除源文件并创建链接。
-
-    .PARAMETER linkPaths
-        要创建链接的路径数组
-
-    .PARAMETER linkTargets
-        链接指向的目标路径数组
-        通常忽略它，让它根据 LinkPaths 自动生成
-        生成规则: https://abyss.abgox.com/docs/features/data-persistence/link-rule
-
-    .PARAMETER ItemType
-        链接类型，可选值为 SymbolicLink/Junction
-
-    .PARAMETER OutFile
-        相关链接路径信息会写入到该文件中
-
-    .LINK
-        https://abyss.abgox.com/docs/features/data-persistence/link
-    #>
-    param (
-        [array]$LinkPaths, # 源路径数组（将被替换为链接）
-        [array]$LinkTargets, # 目标路径数组（链接指向的位置）
-        [ValidateSet('SymbolicLink', 'Junction')]
-        [string]$ItemType,
-        [string]$OutFile
-    )
-    if ($abgox_abyss.skipLink) {
-        return
-    }
-    if ($LinkPaths.Where({ -not [System.IO.Path]::IsPathRooted($_) })) {
-        A-Show-IssueCreationPrompt
-        A-Exit
-    }
-    $installData = @{
-        LinkPaths   = @()
-        LinkTargets = @()
-    }
-    $_persistDir = $abgox_abyss.persist_dir, $persist_dir | Select-Object -First 1
-    for ($i = 0; $i -lt $LinkPaths.Count; $i++) {
-        $linkPath = $LinkPaths[$i]
-        if ($LinkTargets[$i]) {
-            $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $_persistDir
-        }
-        else {
-            if ($LinkPath -like "$dir\*") {
-                # 只有无法使用 persist 字段的特殊情况才能使用它，例如: liule.Snipaste
-                $linkTarget = $LinkPath.replace("$dir\app\", "$_persistDir\").replace("$dir\", "$_persistDir\")
-            }
-            else {
-                $linkTarget = A-Replace-SpecialFolderPrefix $LinkPath $_persistDir
-                # 如果不在 $home 目录下，则去掉盘符
-                if ($linkTarget -notlike "$_persistDir\*") {
-                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $_persistDir
-                }
-            }
-        }
-        $installData.LinkPaths += $linkPath
-        $installData.LinkTargets += $linkTarget
-        $installData | ConvertTo-Json | Out-File -FilePath $OutFile -Force -Encoding utf8
-
-        $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
-
-        # 如果链接已存在且指向正确的目标位置，则无需重复创建(避免每次安装/更新时都删除并重建链接)
-        # 注意: 需要同时确认目标位置仍然存在，以处理链接目标丢失(悬空链接)的情况
-        $linkItem = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
-        if ($linkItem -and $linkItem.LinkType -and (Test-Path -LiteralPath $linkTarget -PathType $type)) {
-            try {
-                $linkItemTarget = @($linkItem.Target)[0]
-                if ($linkItemTarget) {
-                    $existingTarget = [System.IO.Path]::GetFullPath([string]$linkItemTarget).TrimEnd('\')
-                    $expectedTarget = [System.IO.Path]::GetFullPath($linkTarget).TrimEnd('\')
-                    if ($existingTarget -ieq $expectedTarget) {
-                        continue
-                    }
-                }
-            }
-            catch {}
-        }
-        A-Ensure-Directory (Split-Path $linkPath -Parent)
-        if (Test-Path -LiteralPath $linkTarget -PathType $type) {
-            if (A-Test-Path $linkPath) {
-                try {
-                    Write-Host "Removing $linkPath"
-                    A-Remove-ToRecycleBin $linkPath -ErrorAction Stop
-                }
-                catch {
-                    error $_.Exception.Message
-                    A-Show-IssueCreationPrompt
-                    A-Exit
-                }
-            }
-        }
-        else {
-            Remove-Item $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-            if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-Link $linkPath)) {
-                A-Ensure-Directory (Split-Path $linkTarget -Parent)
-                A-Copy-Item $linkPath $linkTarget
-            }
-            else {
-                A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
-                if ($type -eq 'Leaf') {
-                    New-Item -ItemType File -Path $linkTarget -Force | Out-Null
-                }
-            }
-        }
-        if ($type -eq 'Leaf') {
-            A-Ensure-Directory (Split-Path $linkTarget -Parent)
-        }
-        else {
-            A-Ensure-Directory $linkTarget
-        }
-        A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
-        New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
-        Write-Host "Persisting (Link) $linkPath => $linkTarget"
-    }
 }
 
 function A-New-File {
@@ -315,7 +207,7 @@ function A-New-File {
                 'ansi' { $encodingName = 'Default' }
             }
         }
-        Set-Content -Path $Path -Value $Content -Encoding $encodingName -Force
+        Set-Content -LiteralPath $Path -Value $Content -Encoding $encodingName -Force
     }
     else {
         # 当没有传递 Content 参数时
@@ -323,44 +215,224 @@ function A-New-File {
     }
 }
 
-function A-New-Link {
+function A-Get-SharedPersistRoot {
+    $parent = [System.IO.Path]::GetDirectoryName($persist_dir)
+    if (!$parent) { $parent = $persist_dir }
+    [System.IO.Path]::Combine($parent, 'abgox.abyss')
+}
+
+function A-Resolve-LinkTargets {
+    <#
+    .SYNOPSIS
+        解析 link 条目：迁移、私有/共享、文件/目录分类
+    #>
+    param(
+        [array]$LinkItems
+    )
     $filePaths = @()
+    $fileTargets = @()
     $dirPaths = @()
-    foreach ($item in $manifest.link) {
-        if (!$item) {
-            continue
-        }
+    $dirTargets = @()
+    $sharedRoot = A-Get-SharedPersistRoot
+    foreach ($item in $LinkItems) {
+        if (!$item) { continue }
         $expandPath = A-Resolve-SpecialPath $item
+        $isDirLink = $expandPath -like "$dir\*"
+        if ($isDirLink) {
+            $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
+            $privatePath = [System.IO.Path]::Combine($persist_dir, $leaf)
+            $sharedPath = $null
+            $target = $expandPath.Replace("$dir\app\", "$persist_dir\").Replace("$dir\", "$persist_dir\")
+        }
+        else {
+            $rel = A-Replace-SpecialFolderPrefix $expandPath
+            $privatePath = [System.IO.Path]::Combine($persist_dir, $rel)
+            $sharedPath = [System.IO.Path]::Combine($sharedRoot, $rel)
+            if ((A-Test-Path $privatePath) -and !(A-Test-Path $sharedPath)) {
+                try {
+                    A-Ensure-Directory ([System.IO.Path]::GetDirectoryName($sharedPath))
+                    Write-Host "Migrating $privatePath => $sharedPath"
+                    Move-Item -LiteralPath $privatePath -Destination $sharedPath -Force -ErrorAction Stop
+                    A-Remove-EmptyDirectory $privatePath ([System.IO.Path]::GetDirectoryName($persist_dir))
+                }
+                catch { error $_.Exception.Message }
+            }
+            $target = A-Replace-SpecialFolderPrefix $expandPath $sharedRoot
+            if ($target -notlike "$sharedRoot\*") { $target = $target -replace '^[a-zA-Z]:', $sharedRoot }
+        }
         if (A-Test-Path $expandPath) {
+            A-Copy-Item $expandPath $target
             if (A-Test-File $expandPath) {
                 $filePaths += $expandPath
+                $fileTargets += $target
             }
             else {
                 $dirPaths += $expandPath
+                $dirTargets += $target
             }
         }
         else {
-            if ($expandPath -like "$dir\*") {
+            if ($isDirLink) {
                 $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
             }
             else {
                 $leaf = A-Replace-SpecialFolderPrefix $expandPath
             }
             $extraPath = "$bucketsdir\$bucket\extra\$app\$leaf"
+            if (A-Test-Path $extraPath) {
+                $destLeaf = if ($isDirLink) { "$persist_dir\$leaf" } else { [System.IO.Path]::Combine($sharedRoot, $leaf) }
+                A-Copy-Item $extraPath $destLeaf
+            }
             if (A-Test-File $extraPath) {
                 $filePaths += $expandPath
+                $fileTargets += $target
             }
             else {
                 $dirPaths += $expandPath
+                $dirTargets += $target
             }
         }
     }
-    if ($filePaths) {
-        A-New-LinkFile -LinkPaths $filePaths
+    return @{
+        FilePaths   = $filePaths
+        FileTargets = $fileTargets
+        DirPaths    = $dirPaths
+        DirTargets  = $dirTargets
     }
-    if ($dirPaths) {
-        A-New-LinkDirectory -LinkPaths $dirPaths
+}
+
+function A-New-LinkBase {
+    <#
+    .SYNOPSIS
+        创建链接: SymbolicLink 或 Junction
+
+    .DESCRIPTION
+        该函数用于将现有文件替换为指向目标文件的链接。
+        如果源文件存在且不是链接，会先将其内容复制到目标文件，然后删除源文件并创建链接。
+
+    .PARAMETER linkPaths
+        要创建链接的路径数组
+
+    .PARAMETER linkTargets
+        链接指向的目标路径数组
+        通常忽略它，让它根据 LinkPaths 自动生成
+        生成规则: https://abyss.abgox.com/docs/features/data-persistence/link-rule
+
+    .PARAMETER ItemType
+        链接类型，可选值为 SymbolicLink/Junction
+
+    .PARAMETER OutFile
+        相关链接路径信息会写入到该文件中
+
+    .LINK
+        https://abyss.abgox.com/docs/features/data-persistence/link
+    #>
+    param (
+        [array]$LinkPaths, # 源路径数组（将被替换为链接）
+        [array]$LinkTargets, # 目标路径数组（链接指向的位置）
+        [ValidateSet('SymbolicLink', 'Junction')]
+        [string]$ItemType,
+        [string]$OutFile
+    )
+    if ($abgox_abyss.skipLink) {
+        return
     }
+    if ($LinkPaths.Where({ -not [System.IO.Path]::IsPathRooted($_) })) {
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+    $installData = @{
+        LinkPaths   = @()
+        LinkTargets = @()
+    }
+    $_persistDir = $abgox_abyss.persist_dir, $persist_dir | Select-Object -First 1
+    $sharedRoot = A-Get-SharedPersistRoot
+    # 建链按深度浅→深：父链接先就位，子路径行为确定
+    $order = @()
+    if ($LinkPaths.Count -gt 0) { $order = 0..($LinkPaths.Count - 1) | Sort-Object { A-Get-LinkDepth $LinkPaths[$_] } }
+    foreach ($i in $order) {
+        $linkPath = $LinkPaths[$i]
+        if ($LinkTargets[$i]) {
+            $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $_persistDir
+        }
+        else {
+            if ($LinkPath -like "$dir\*") {
+                # 只有无法使用 persist 字段的特殊情况才能使用它，例如: liule.Snipaste
+                $linkTarget = $LinkPath.replace("$dir\app\", "$_persistDir\").replace("$dir\", "$_persistDir\")
+            }
+            else {
+                $linkTarget = A-Replace-SpecialFolderPrefix $LinkPath $sharedRoot
+                # 如果不在 $home 目录下，则去掉盘符
+                if ($linkTarget -notlike "$sharedRoot\*") {
+                    $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $sharedRoot
+                }
+            }
+        }
+        $installData.LinkPaths += $linkPath
+        $installData.LinkTargets += $linkTarget
+        $installData | ConvertTo-Json | Out-File -LiteralPath $OutFile -Force -Encoding utf8
+
+        $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
+
+        # 如果链接已存在且指向正确的目标位置，则无需重复创建(避免每次安装/更新时都删除并重建链接)
+        # 注意: 需要同时确认目标位置仍然存在，以处理链接目标丢失(悬空链接)的情况
+        $linkItem = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
+        if ($linkItem -and $linkItem.LinkType -and (Test-Path -LiteralPath $linkTarget -PathType $type)) {
+            try {
+                $linkItemTarget = @($linkItem.Target)[0]
+                if ($linkItemTarget) {
+                    $existingTarget = [System.IO.Path]::GetFullPath([string]$linkItemTarget).TrimEnd('\')
+                    $expectedTarget = [System.IO.Path]::GetFullPath($linkTarget).TrimEnd('\')
+                    if ($existingTarget -ieq $expectedTarget) {
+                        continue
+                    }
+                }
+            }
+            catch {}
+        }
+        A-Ensure-Directory (Split-Path $linkPath -Parent)
+        if (Test-Path -LiteralPath $linkTarget -PathType $type) {
+            if (A-Test-Path $linkPath) {
+                try {
+                    Write-Host "Removing $linkPath"
+                    A-Remove-ToRecycleBin $linkPath -ErrorAction Stop
+                }
+                catch {
+                    error $_.Exception.Message
+                    A-Show-IssueCreationPrompt
+                    A-Exit
+                }
+            }
+        }
+        else {
+            Remove-Item -LiteralPath $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
+            if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-Link $linkPath)) {
+                A-Ensure-Directory (Split-Path $linkTarget -Parent)
+                A-Copy-Item $linkPath $linkTarget
+            }
+            else {
+                A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
+                if ($type -eq 'Leaf') {
+                    New-Item -ItemType File -Path $linkTarget -Force | Out-Null
+                }
+            }
+        }
+        if ($type -eq 'Leaf') {
+            A-Ensure-Directory (Split-Path $linkTarget -Parent)
+        }
+        else {
+            A-Ensure-Directory $linkTarget
+        }
+        A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
+        New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+        Write-Host "Persisting (Link) $linkPath => $linkTarget"
+    }
+}
+
+function A-New-Link {
+    $resolved = A-Resolve-LinkTargets $manifest.link
+    if ($resolved.FilePaths) { A-New-LinkFile -LinkPaths $resolved.FilePaths -LinkTargets $resolved.FileTargets }
+    if ($resolved.DirPaths) { A-New-LinkDirectory -LinkPaths $resolved.DirPaths -LinkTargets $resolved.DirTargets }
 }
 
 function A-New-LinkFile {
@@ -421,6 +493,9 @@ function A-New-LinkDirectory {
         [array]$LinkPaths,
         [array]$LinkTargets = @()
     )
+    if (!$manifest.link) {
+        $null = A-Resolve-LinkTargets $LinkPaths
+    }
     A-New-LinkBase -LinkPaths $LinkPaths -LinkTargets $LinkTargets -ItemType Junction -OutFile $abgox_abyss.path.LinkDirectory
 }
 
@@ -449,19 +524,42 @@ function A-Remove-Link {
     if ($abgox_abyss.skipRemoveLink) {
         return
     }
+    # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
+    $linksInUse = $null
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (A-Test-Path $_) {
-            $LinkPaths = Get-Content $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json | Select-Object -ExpandProperty LinkPaths
-            foreach ($p in $LinkPaths) {
+            $data = Get-Content -LiteralPath $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json -ErrorAction SilentlyContinue
+            if (!$data) { return }
+            $LinkPaths = $data.LinkPaths
+            $LinkTargets = $data.LinkTargets
+            # 删链按深度深→浅：子链接先断，避免父断开后子路径无法解析
+            $order = @()
+            if ($LinkPaths.Count -gt 0) { $order = 0..($LinkPaths.Count - 1) | Sort-Object { A-Get-LinkDepth $LinkPaths[$_] } -Descending }
+            foreach ($i in $order) {
+                $p = $LinkPaths[$i]
+                $overlap = $false
+                if ($p -notlike "$dir\*") {
+                    if ($null -eq $linksInUse) { $linksInUse = A-Get-LinksInUse }
+                    if ($linksInUse -and $linksInUse.Contains($p)) { continue } # 他家正用：链和数据都留
+                    $overlap = A-Test-LinkOverlap $p $linksInUse
+                }
+                $t = if ($LinkTargets -and $i -lt $LinkTargets.Count) { $LinkTargets[$i] } else { $null }
                 if (A-Test-Link $p) {
                     try {
                         Write-Host "Unlinking $p"
-                        Remove-Item $p -Force -Recurse -ErrorAction Stop
-                        $parent = Split-Path $p -Parent
-                        if (!(A-Test-DirectoryNotEmpty $parent)) {
-                            Write-Host "Removing $parent"
-                            Remove-Item $parent -Force -Recurse -ErrorAction Stop
-                        }
+                        Remove-Item -LiteralPath $p -Force -Recurse -ErrorAction Stop
+                        A-Remove-EmptyDirectory $p ([System.IO.Path]::GetPathRoot($p))
+                    }
+                    catch {
+                        error $_.Exception.Message
+                    }
+                }
+                # 嵌套占用只断自己的链，目标数据可能属于他家，不删
+                if ($purge -and !$overlap -and $t -and (A-Test-Path $t)) {
+                    try {
+                        Write-Host "Removing $t"
+                        Remove-Item -LiteralPath $t -Force -Recurse -ErrorAction Stop
+                        A-Remove-EmptyDirectory $t ([System.IO.Path]::GetPathRoot($t))
                     }
                     catch {
                         error $_.Exception.Message
@@ -470,6 +568,83 @@ function A-Remove-Link {
             }
         }
     }
+}
+
+function A-Get-LinksInUse {
+    <#
+    .SYNOPSIS
+        一次性收集其他应用占用的共享链接（绝对路径快照比对）
+    #>
+    $inUse = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $roots = @($scoopdir)
+    if ($globaldir -and $globaldir -ne $scoopdir) { $roots += $globaldir }
+    $snapNames = @(
+        (Split-Path $abgox_abyss.path.LinkFile -Leaf),
+        (Split-Path $abgox_abyss.path.LinkDirectory -Leaf)
+    )
+    foreach ($root in $roots) {
+        if (!$root) { continue }
+        $appsRoot = [System.IO.Path]::Combine($root, 'apps')
+        if (![System.IO.Directory]::Exists($appsRoot)) { continue }
+        try { $appDirs = [System.IO.Directory]::GetDirectories($appsRoot) } catch { continue }
+        foreach ($appDir in $appDirs) {
+            if ([System.String]::Equals([System.IO.Path]::GetFileName($appDir), $app, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
+            $currentDir = [System.IO.Path]::Combine($appDir, 'current')
+            foreach ($snap in $snapNames) {
+                $snapFile = [System.IO.Path]::Combine($currentDir, $snap)
+                if (![System.IO.File]::Exists($snapFile)) { continue }
+                try { $json = [System.IO.File]::ReadAllText($snapFile) } catch { continue }
+                try { $data = $json | ConvertFrom-Json -ErrorAction Stop } catch { continue }
+                foreach ($p in @($data.LinkPaths)) {
+                    if ($p) { $null = $inUse.Add($p) }
+                }
+            }
+        }
+    }
+    Write-Output -InputObject $inUse -NoEnumerate
+}
+
+function A-Test-LinkInUse {
+    param([string]$LinkPath)
+    $inUse = A-Get-LinksInUse
+    if ($null -eq $inUse) { return $false }
+    return $inUse.Contains($LinkPath)
+}
+
+function A-Test-LinkOverlap {
+    <#
+    .SYNOPSIS
+        判断某路径是否与占用集合中的任一条存在嵌套（相等除外）
+
+    .DESCRIPTION
+        精确相等由 HashSet.Contains 判定；这里只判父子包含（双向），
+        用于父目录被一家链接、子目录被另一家链接的场景。
+        比较带分隔符边界，避免 `Foo` 误命中 `FooBar`。
+    #>
+    param(
+        [string]$LinkPath,
+        [System.Collections.Generic.HashSet[string]]$InUse
+    )
+    if (!$LinkPath -or $null -eq $InUse -or $InUse.Count -eq 0) { return $false }
+    $mine = $LinkPath.TrimEnd('\', '/')
+    foreach ($other in $InUse) {
+        if (!$other) { continue }
+        $o = $other.TrimEnd('\', '/')
+        if ($o.Length -eq $mine.Length) { continue } # 相等走精确判定，这里跳过
+        if ($mine.Length -gt $o.Length) {
+            if ($mine.StartsWith($o + '\', [System.StringComparison]::OrdinalIgnoreCase)) { return $true }
+        }
+        else {
+            if ($o.StartsWith($mine + '\', [System.StringComparison]::OrdinalIgnoreCase)) { return $true }
+        }
+    }
+    return $false
+}
+
+function A-Get-LinkDepth {
+    param([string]$Path)
+    if (!$Path) { return 0 }
+    return @($Path.TrimEnd('\', '/') -split '[\\/]').Count
 }
 
 function A-Move-Persistence {
@@ -493,69 +668,6 @@ function A-Move-Persistence {
                 error $_.Exception.Message
                 A-Show-IssueCreationPrompt
                 A-Exit
-            }
-        }
-    }
-}
-
-function A-Set-DataShared {
-    <#
-    .SYNOPSIS
-        处理 data_shared 字段，管理共享数据目录
-
-    .DESCRIPTION
-        只维护一个实际数据目录。安装时不做任何处理；卸载时如果持有数据则迁移给其他应用并更新 symlink
-    #>
-    param(
-        [switch]$Uninstall
-    )
-    $parent = Split-Path $persist_dir -Parent
-    $remaining = $manifest.data_shared | Where-Object { $_ -ne $app } | Where-Object { A-Test-DirectoryNotEmpty "$scoopdir\apps\$_" }
-    if ($Uninstall) {
-        if (!$remaining) {
-            return
-        }
-        if ($cmd -ne 'update' -and (A-Test-DirectoryNotEmpty $persist_dir)) {
-            $target = $remaining | Select-Object -First 1
-            $targetPersist = Join-Path $parent $target
-            if (!(A-Test-DirectoryNotEmpty $targetPersist)) {
-                Write-Host "Migrating $persist_dir => $targetPersist"
-                try {
-                    Rename-Item -LiteralPath $persist_dir -NewName $target -Force -ErrorAction Stop
-                }
-                catch {
-                    error $_.Exception.Message
-                    A-Show-IssueCreationPrompt
-                    A-Exit
-                }
-            }
-            $abgox_abyss.persist_dir = $targetPersist
-            A-New-Link
-        }
-        $abgox_abyss.skipRemoveLink = $true
-    }
-    else {
-        if ($remaining) {
-            if (!(A-Test-DirectoryNotEmpty $persist_dir)) {
-                $abgox_abyss.skipLink = $true
-            }
-        }
-        else {
-            foreach ($name in $manifest.data_shared) {
-                if ($name -eq $app) { continue }
-                $orphanedPersist = Join-Path $parent $name
-                if (A-Test-DirectoryNotEmpty $orphanedPersist) {
-                    Write-Host "Migrating $orphanedPersist => $persist_dir"
-                    try {
-                        Rename-Item -LiteralPath $orphanedPersist -NewName $app -Force -ErrorAction Stop
-                    }
-                    catch {
-                        error $_.Exception.Message
-                        A-Show-IssueCreationPrompt
-                        A-Exit
-                    }
-                    break
-                }
             }
         }
     }
@@ -592,11 +704,11 @@ function A-Remove-TempData {
         if (A-Test-Path $p) {
             try {
                 Write-Host "Removing $p"
-                Remove-Item $p -Force -Recurse -ErrorAction Stop
+                Remove-Item -LiteralPath $p -Force -Recurse -ErrorAction Stop
                 $parent = Split-Path $p -Parent
                 if (!(A-Test-DirectoryNotEmpty $parent)) {
                     Write-Host "Removing $parent"
-                    Remove-Item $parent -Force -Recurse -ErrorAction Stop
+                    Remove-Item -LiteralPath $parent -Force -Recurse -ErrorAction Stop
                 }
             }
             catch {
