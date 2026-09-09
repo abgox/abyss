@@ -1,0 +1,49 @@
+{
+    "version": "5.7.0",
+    "description": "一款用 Rust 语言编写的命令行快速模糊查找工具 | A fast fuzzy finder for the command line written in Rust",
+    "homepage": "https://github.com/skim-rs/skim",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/skim-rs/skim/releases/download/v5.7.0/skim-x86_64-pc-windows-msvc.zip",
+            "hash": "0452cd0733b939df1f34b278a3e8d783bd2012341d39d6ad61e31d9dfdbd542c"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\sk.exe",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/skim-rs/skim/releases/download/v$version/skim-x86_64-pc-windows-msvc.zip"
+            }
+        }
+    }
+}
