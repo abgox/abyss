@@ -1,0 +1,58 @@
+{
+    "version": "3.8.0",
+    "description": "妙幕 - 一站式开源桌面工具，视频转字幕、字幕翻译、AI 配音与声音克隆、字幕烧录 | An all-in-one open-source desktop app, generate, translate, dub, and burn subtitles",
+    "homepage": "https://smartsub.linxiaodong.com",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/buxuku/SmartSub/releases/download/v3.8.0/SmartSub_Windows_3.8.0_x64.exe",
+            "hash": "301ebfbc3bdca48704e314c672554155549256f7e5031be8f59731061a876987"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\SmartSub.exe",
+            "SmartSub"
+        ]
+    ],
+    "link": "$env:AppData\\smartsub",
+    "cleanup": "$env:LocalAppData\\smartsub-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall SmartSub.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/buxuku/SmartSub/releases/download/v$version/SmartSub_Windows_$version_x64.exe"
+            }
+        }
+    }
+}
