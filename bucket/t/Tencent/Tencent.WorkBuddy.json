@@ -1,0 +1,67 @@
+{
+    "version": "5.5.4.38151288",
+    "description": "AI 原生的桌面智能体工作台，以自然语言驱动办公自动化 | An AI-native desktop agent workspace that drives office automation through natural language",
+    "homepage": "https://www.codebuddy.cn/work",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.codebuddy.cn/workbuddy/saas/win32-x64-user/WorkBuddy-win32-x64-user-5.5.4.38151288-1ca4889a.exe",
+            "hash": "61b047556032204c895ddf88b33b285dfc91fe0d57df94d14155df69587df9ce"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\WorkBuddy.exe",
+            "WorkBuddy"
+        ]
+    ],
+    "link": [
+        "$home\\.workbuddy",
+        "$home\\.codebuddy",
+        "$home\\WorkBuddy",
+        "$env:AppData\\WorkBuddy"
+    ],
+    "cleanup": "$env:LocalAppData\\WorkBuddy",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall WorkBuddy.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "url": "https://www.codebuddy.cn/v2/update?platform=workbuddy-win32-x64-user",
+        "jsonpath": "$.url",
+        "regex": "(?<url>.*?-(?<version>[\\d.]+)-.*\\.*)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchUrl",
+                "hash": {
+                    "url": "https://www.codebuddy.cn/v2/update?platform=workbuddy-win32-x64-user",
+                    "jsonpath": "$.sha256hash"
+                }
+            }
+        }
+    }
+}
