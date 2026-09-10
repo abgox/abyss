@@ -8,80 +8,21 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://t1.daumcdn.net/potplayer/PotPlayer/Version/260819/PotPlayerSetup64.exe#/dl.7z",
-            "hash": "4b9833adf53b78c2149fe13dd67f2504bf39ee30b45c03f09e5f2c25e43f9cfe",
-            "shortcuts": [
-                [
-                    "app\\PotPlayer64.exe",
-                    "PotPlayer"
-                ],
-                [
-                    "app\\PotPlayerMini64.exe",
-                    "PotPlayer Mini"
-                ]
-            ]
+            "url": "https://t1.daumcdn.net/potplayer/PotPlayer/Version/260819/PotPlayerSetup64.exe",
+            "hash": "4b9833adf53b78c2149fe13dd67f2504bf39ee30b45c03f09e5f2c25e43f9cfe"
         }
     },
-    "extract_to": "app",
-    "persist": [
-        [
-            "app\\Capture",
-            "Capture"
-        ],
-        [
-            "app\\Engine",
-            "Engine"
-        ],
-        [
-            "app\\Extension",
-            "Extension"
-        ],
-        [
-            "app\\Logos",
-            "Logos"
-        ],
-        [
-            "app\\Menus",
-            "Menus"
-        ],
-        [
-            "app\\Model",
-            "Model"
-        ],
-        [
-            "app\\Module",
-            "Module"
-        ],
-        [
-            "app\\Playlist",
-            "Playlist"
-        ],
-        [
-            "app\\PxShader",
-            "PxShader"
-        ],
-        [
-            "app\\Skins",
-            "Skins"
-        ],
-        [
-            "app\\UrlList",
-            "UrlList"
-        ],
-        [
-            "app\\PotPlayer64.ini",
-            "PotPlayer64.ini"
-        ],
-        [
-            "app\\PotPlayerMini64.ini",
-            "PotPlayerMini64.ini"
-        ]
+    "location": "$env:ProgramFiles\\DAUM\\PotPlayer",
+    "link": [
+        "$env:AppData\\PotPlayer64",
+        "$env:AppData\\PotPlayerMini64"
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "Remove-Item -Path \"$dir\\app\\`$*\" -Recurse -Force -ErrorAction SilentlyContinue"
+        "A-Install-App -Uninstaller 'uninstall.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -92,7 +33,9 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
-        "A-Stop-Process"
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -106,7 +49,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://t1.daumcdn.net/potplayer/PotPlayer/Version/$version/PotPlayerSetup64.exe#/dl.7z"
+                "url": "https://t1.daumcdn.net/potplayer/PotPlayer/Version/$version/PotPlayerSetup64.exe"
             }
         }
     }
