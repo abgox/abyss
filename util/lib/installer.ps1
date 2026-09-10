@@ -6,12 +6,30 @@
 }
 
 function A-Invoke-InstallerProcess {
+    <#
+    .SYNOPSIS
+        以静默方式运行安装器，等待其退出并校验退出码。
+
+    .DESCRIPTION
+        使用 System.Diagnostics.Process 直接启动进程，避免 Start-Process -PassThru
+        在 -WindowStyle Hidden / -NoNewWindow 下 ExitCode 不可靠的问题。
+        安装器允许的退出码为 0、1641（重启已启动）、3010（需要重启）。
+
+    .PARAMETER FilePath
+        安装器可执行文件路径。
+
+    .PARAMETER ArgumentList
+        参数数组。每个元素应当是"最终要传给程序的样子"，引号由调用方负责。
+        例如需要引号的路径应写成 '"D:\My App"' 而非 'D:\My App'。
+
+    .PARAMETER TimeoutSec
+        超时秒数，默认 600。
+    #>
     param(
         [Parameter(Mandatory)]
         [string]$FilePath,
         [array]$ArgumentList,
-        [int]$TimeoutSec = 600,
-        [switch]$Hidden
+        [int]$TimeoutSec = 600
     )
     if (!(A-Test-File $FilePath)) {
         error "'$FilePath' not found."
@@ -19,27 +37,28 @@ function A-Invoke-InstallerProcess {
         A-Exit
     }
 
-    Write-Host "Running the installer: $(Split-Path $FilePath -Leaf)"
+    Write-Host "Running the installer: $(Split-Path $FilePath -Leaf) $ArgumentList"
 
-    $startParams = @{
-        FilePath     = $FilePath
-        ArgumentList = $ArgumentList
-        PassThru     = $true
-    }
-    if ($Hidden) { $startParams.WindowStyle = 'Hidden' }
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = $FilePath
+    $psi.Arguments = if ($ArgumentList) { $ArgumentList -join ' ' } else { '' }
+    $psi.WorkingDirectory = Split-Path $FilePath -Parent
+    $psi.UseShellExecute = $false
 
     $process = $null
     try {
-        $process = Start-Process @startParams
+        $process = [System.Diagnostics.Process]::Start($psi)
+
         if (!$process.WaitForExit($TimeoutSec * 1000)) {
             error "Installer timed out after $TimeoutSec seconds: $FilePath"
-            $process | Stop-Process -Force -ErrorAction SilentlyContinue
+            try { $process.Kill() } catch { }
             A-Show-IssueCreationPrompt
             A-Exit
         }
+        $exitCode = $process.ExitCode
         $allowedCodes = @(0, 1641, 3010)
-        if ($process.ExitCode -notin $allowedCodes) {
-            error "Installer exited with code $($process.ExitCode): $FilePath"
+        if ($exitCode -notin $allowedCodes) {
+            error "Installer exited with code $exitCode : $FilePath"
             A-Show-IssueCreationPrompt
             A-Exit
         }
@@ -47,8 +66,75 @@ function A-Invoke-InstallerProcess {
     catch {
         error $_.Exception.Message
         A-Show-IssueCreationPrompt
-        if ($process) { $process | Stop-Process -Force -ErrorAction SilentlyContinue }
+        if ($process -and !$process.HasExited) {
+            try { $process.Kill() } catch { }
+        }
         A-Exit
+    }
+    finally {
+        if ($process) { $process.Dispose() }
+    }
+}
+
+function A-Invoke-UninstallerProcess {
+    <#
+    .SYNOPSIS
+        以静默方式运行卸载器，等待其退出并校验退出码。
+
+    .DESCRIPTION
+        与 A-Invoke-InstallerProcess 类似，但允许的退出码不同：
+        0    - 成功
+        1605 - 产品未安装（视为已卸载，正常）
+        1641 - 重启已启动
+        3010 - 需要重启
+        此外，卸载器找不到文件时只警告不退出，避免影响批量卸载。
+    #>
+    param(
+        [Parameter(Mandatory)]
+        [string]$FilePath,
+        [array]$ArgumentList,
+        [int]$TimeoutSec = 600
+    )
+    if (!(A-Test-File $FilePath)) {
+        warn "'$FilePath' not found."
+        return
+    }
+
+    Write-Host "Running the uninstaller: $(Split-Path $FilePath -Leaf) $ArgumentList"
+
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = $FilePath
+    $psi.Arguments = if ($ArgumentList) { $ArgumentList -join ' ' } else { '' }
+    $psi.WorkingDirectory = Split-Path $FilePath -Parent
+    $psi.UseShellExecute = $false
+
+    $process = $null
+    try {
+        $process = [System.Diagnostics.Process]::Start($psi)
+        if (!$process.WaitForExit($TimeoutSec * 1000)) {
+            error "Uninstaller timed out after $TimeoutSec seconds: $FilePath"
+            try { $process.Kill() } catch { }
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+        $exitCode = $process.ExitCode
+        $allowedCodes = @(0, 1605, 1641, 3010)
+        if ($exitCode -notin $allowedCodes) {
+            error "Uninstaller exited with code $exitCode : $FilePath"
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        if ($process -and !$process.HasExited) {
+            try { $process.Kill() } catch { }
+        }
+        A-Exit
+    }
+    finally {
+        if ($process) { $process.Dispose() }
     }
 }
 
@@ -99,7 +185,11 @@ function A-Wait-ForUnlock {
     if (!(A-Test-Path $Path)) { return }
     $elapsed = 0
     while ($elapsed -lt $TimeoutMs) {
-        $locked = (Get-Process).Where({ $_.Path -and $_.Path.StartsWith($Path + '\', [System.StringComparison]::OrdinalIgnoreCase) })
+        $locked = (Get-Process).Where({
+                $procPath = $null
+                try { $procPath = $_.Path } catch { $procPath = $null }
+                $procPath -and $procPath.StartsWith($Path + '\', [System.StringComparison]::OrdinalIgnoreCase)
+            })
         if (-not $locked) {
             try {
                 $testFile = [System.IO.Path]::Combine($Path, '.abyss-lock-test')
@@ -131,10 +221,13 @@ function A-Install-App {
         if (!$manifest.admin) {
             $ArgumentList += '/CurrentUser'
         }
-        $ArgumentList += "/D=$installDir"
+        if (!$manifest.location) {
+            # NSIS 的 /D= 规则：必须放在所有参数最后，路径不能加引号（即使有空格）
+            $ArgumentList += "/D=$installDir"
+        }
     }
 
-    A-Invoke-InstallerProcess -FilePath $Installer -ArgumentList $ArgumentList -TimeoutSec $TimeoutSec -Hidden
+    A-Invoke-InstallerProcess -FilePath $Installer -ArgumentList $ArgumentList -TimeoutSec $TimeoutSec
 
     $Uninstaller = if ($manifest.location) { A-Get-AbsolutePath $Uninstaller $installDir } else { A-Get-AbsolutePath $Uninstaller }
 
@@ -180,12 +273,10 @@ function A-Uninstall-App {
         $Uninstaller = $InstallerInfo.Uninstaller
     }
     $Uninstaller = A-Get-AbsolutePath $Uninstaller
-    if ($Uninstaller) {
-        $UninstallerFileName = Split-Path $Uninstaller -Leaf
-    }
-    else {
+    if (!$Uninstaller) {
         return
     }
+    $UninstallerFileName = Split-Path $Uninstaller -Leaf
     if (!(A-Test-File $Uninstaller)) {
         $_Uninstaller = Get-ChildItem -LiteralPath $dir -Filter $UninstallerFileName -Recurse -File -Force -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
         if ($null -eq $_Uninstaller) {
@@ -197,23 +288,7 @@ function A-Uninstall-App {
         }
         $Uninstaller = $_Uninstaller
     }
-    Write-Host "Running the uninstaller: $UninstallerFileName"
-    $paramList = @{
-        FilePath     = $Uninstaller
-        ArgumentList = $ArgumentList
-        WindowStyle  = 'Hidden'
-        PassThru     = $true
-    }
-    $process = Start-Process @paramList
-    try {
-        $process | Wait-Process -ErrorAction Stop
-    }
-    catch {
-        error $_.Exception.Message
-        A-Show-IssueCreationPrompt
-        $process | Stop-Process -Force -ErrorAction SilentlyContinue
-        A-Exit
-    }
+    A-Invoke-UninstallerProcess -FilePath $Uninstaller -ArgumentList $ArgumentList
     A-Wait-ForUnlock -Path $dir
 }
 
@@ -233,7 +308,7 @@ function A-Install-Inno {
             '/SuppressMsgBoxes',
             '/NoRestart',
             '/SP-',
-            "/Log=$logPath",
+            "/Log=`"$logPath`"",
             "/Dir=`"$installDir`""
         )
     }
@@ -278,19 +353,7 @@ function A-Uninstall-Inno {
         warn "'unins000.exe' not found."
         return
     }
-
-    Write-Host "Running the uninstaller: $(Split-Path $Uninstaller -Leaf)"
-
-    try {
-        $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
-        $process | Wait-Process -ErrorAction Stop
-    }
-    catch {
-        error $_.Exception.Message
-        A-Show-IssueCreationPrompt
-        $process | Stop-Process -Force -ErrorAction SilentlyContinue
-        A-Exit
-    }
+    A-Invoke-UninstallerProcess -FilePath $Uninstaller -ArgumentList $ArgumentList
 }
 
 function A-Install-Burn {
@@ -301,7 +364,7 @@ function A-Install-Burn {
     )
     $logPath = "$env:TEMP\scoop_$($app)_$($version)_install_burn.log"
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
-        $ArgumentList = @('/quiet', '/norestart', '/log', $logPath)
+        $ArgumentList = @('/quiet', '/norestart', '/log', "`"$logPath`"")
     }
 
     A-Invoke-InstallerProcess -FilePath $Installer -ArgumentList $ArgumentList -TimeoutSec $TimeoutSec
@@ -311,7 +374,13 @@ function A-Install-Burn {
     if (!$guid) {
         $guid = $log | Select-String 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\{([0-9A-Fa-f\-]{36})\}' | ForEach-Object { $_.Matches.Groups[1].Value } | Select-Object -First 1
     }
-    $Uninstaller = Get-ChildItem -LiteralPath "$env:ProgramData\Package Cache\{$guid}" -File -Filter *.exe -Force -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+    $Uninstaller = $null
+    if ($guid) {
+        $Uninstaller = Get-ChildItem -LiteralPath "$env:ProgramData\Package Cache\{$guid}" -File -Filter *.exe -Force -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+    }
+    else {
+        warn "Cannot extract GUID from Burn log: $logPath"
+    }
     if (!$Uninstaller) {
         $Uninstaller = $Installer
     }
@@ -346,24 +415,11 @@ function A-Uninstall-Burn {
         return
     }
     $Uninstaller = $InstallerInfo.Uninstaller
-    $UninstallerName = Split-Path $Uninstaller -Leaf
-    if (!$Uninstaller) {
-        warn "'$UninstallerName' not found."
-        return
+    if (A-Test-File $Uninstaller) {
+        A-Invoke-UninstallerProcess -FilePath $Uninstaller -ArgumentList $ArgumentList
     }
-
-    Write-Host "Running the uninstaller: $UninstallerName"
-
-    $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
-
-    try {
-        $process | Wait-Process -ErrorAction Stop
-    }
-    catch {
-        error $_.Exception.Message
-        A-Show-IssueCreationPrompt
-        $process | Stop-Process -Force -ErrorAction SilentlyContinue
-        A-Exit
+    else {
+        warn "'$Uninstaller' not found."
     }
 }
 
@@ -388,30 +444,57 @@ function A-Install-Msi {
             # '/passive',
             '/quiet',
             '/norestart',
-            '/lvx*',
-            $logPath
+            "/lvx*`"$logPath`""
         )
     }
 
     A-Invoke-InstallerProcess -FilePath $Installer -ArgumentList $ArgumentList -TimeoutSec $TimeoutSec
 
-    try {
-        if ($MsiPath -and (A-Test-File $MsiPath)) {
-            Remove-Item -LiteralPath $MsiPath -Force -ErrorAction Stop
+    if ($MsiPath -and (A-Test-File $MsiPath)) {
+        $deleted = $false
+        for ($i = 0; $i -lt 5; $i++) {
+            try {
+                Remove-Item -LiteralPath $MsiPath -Force -ErrorAction Stop
+                $deleted = $true
+                break
+            }
+            catch {
+                Start-Sleep -Milliseconds 500
+            }
         }
-    }
-    catch {
-        error $_.Exception.Message
+        if (!$deleted) {
+            warn "Cannot delete '$MsiPath'. It may be locked by msiexec."
+        }
     }
 
     $log = Get-Content -LiteralPath $logPath -ErrorAction SilentlyContinue
+    $productCode = $log | Select-String 'ProductCode = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1
+    $productName = $log | Select-String 'ProductName = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1
+    $productVersion = $log | Select-String 'ProductVersion = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1
+    $manufacturer = $log | Select-String 'Manufacturer = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1
+
+    if (!$productCode) {
+        warn 'Cannot parse ProductCode from MSI log (possibly localized). Fallback to registry query.'
+        $entry = A-Get-UninstallEntryByAppName -AppNamePattern ([regex]::Escape($app))
+        if ($entry) {
+            $productCode = $entry.PSChildName
+            if (!$productName) { $productName = $entry.DisplayName }
+            if (!$productVersion) { $productVersion = $entry.DisplayVersion }
+            if (!$manufacturer) { $manufacturer = $entry.Publisher }
+        }
+    }
+
+    if (!$productCode) {
+        warn "Cannot determine ProductCode for '$app'. Uninstall may fail."
+    }
+
     @{
         Installer      = $Installer
         Uninstaller    = $Installer
-        ProductCode    = ($log | Select-String 'ProductCode = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1)
-        ProductName    = ($log | Select-String 'ProductName = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1)
-        ProductVersion = ($log | Select-String 'ProductVersion = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1)
-        Manufacturer   = ($log | Select-String 'Manufacturer = (.+)' | ForEach-Object { $_.Matches.Groups[1].Value.Trim() } | Select-Object -First 1)
+        ProductCode    = $productCode
+        ProductName    = $productName
+        ProductVersion = $productVersion
+        Manufacturer   = $manufacturer
         ArgumentList   = $ArgumentList
     } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.InstallMsi -Force -Encoding utf8
 
@@ -440,16 +523,18 @@ function A-Uninstall-Msi {
         return
     }
     $Uninstaller = $InstallerInfo.Uninstaller
-    if ($Uninstaller) {
-        $UninstallerFileName = Split-Path $Uninstaller -Leaf
-    }
-    else {
+    if (!$Uninstaller) {
         return
     }
+    $UninstallerFileName = Split-Path $Uninstaller -Leaf
     if (!(A-Test-File $Uninstaller)) {
         warn "'$Uninstaller' not found."
         return
     }
+
+    $recordedProductCode = $InstallerInfo.ProductCode
+    $recordedProductName = $InstallerInfo.ProductName
+
     $ProductCode = $null
     $registryPaths = @(
         'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall',
@@ -461,16 +546,20 @@ function A-Uninstall-Msi {
         foreach ($key in $uninstallKeys) {
             $item = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
             if (!$item) { continue }
-            if ($item.ProductCode -eq $InstallerInfo.ProductCode) {
+
+            # 1. 注册表项自身有 ProductCode 且与记录匹配
+            if ($recordedProductCode -and $item.ProductCode -and $item.ProductCode -eq $recordedProductCode) {
                 $ProductCode = $item.ProductCode
                 break outerLoop
             }
-            if ($item.DisplayName -eq $InstallerInfo.ProductName) {
-                $ProductCode = $key.PSChildName  # 使用子项 GUID 作为 ProductCode
+            # 2. DisplayName 与记录匹配（最可靠的回退）
+            if ($recordedProductName -and $item.DisplayName -and $item.DisplayName -eq $recordedProductName) {
+                $ProductCode = $key.PSChildName
                 break outerLoop
             }
-            if ($item.UninstallString -and $item.UninstallString -match [regex]::Escape($InstallerInfo.ProductCode)) {
-                $ProductCode = $InstallerInfo.ProductCode
+            # 3. UninstallString 中包含记录的 ProductCode
+            if ($recordedProductCode -and $item.UninstallString -and $item.UninstallString -match [regex]::Escape($recordedProductCode)) {
+                $ProductCode = $recordedProductCode
                 break outerLoop
             }
         }
@@ -479,7 +568,6 @@ function A-Uninstall-Msi {
         error "Cannot find product code of '$app'"
         return
     }
-    Write-Host "Running the uninstaller: $UninstallerFileName /X$ProductCode"
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $ArgumentList = @(
             '/x',
@@ -488,16 +576,8 @@ function A-Uninstall-Msi {
             '/norestart'
         )
     }
-    $process = Start-Process -FilePath $Uninstaller -ArgumentList $ArgumentList -PassThru
-    try {
-        $process | Wait-Process -ErrorAction Stop
-    }
-    catch {
-        error $_.Exception.Message
-        A-Show-IssueCreationPrompt
-        $process | Stop-Process -Force -ErrorAction SilentlyContinue
-        A-Exit
-    }
+    Write-Host "Running the uninstaller: $UninstallerFileName /X$ProductCode"
+    A-Invoke-UninstallerProcess -FilePath $Uninstaller -ArgumentList $ArgumentList
 }
 
 function A-Uninstall-Manually {

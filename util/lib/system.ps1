@@ -23,16 +23,21 @@ function A-Stop-Process {
 
     .DESCRIPTION
         该函数用于查找并终止从指定目录路径加载模块的所有进程。
-        函数默认会搜索 $dir 和 $dir\current 目录。
+        函数默认会搜索 $dir 和 current 目录。
+        终止后会轮询等待，直到进程完全退出或超时。
 
     .PARAMETER Extra
         要搜索运行中可执行文件的额外目录路径(绝对路径)或进程名称。
+
+    .PARAMETER TimeoutMs
+        等待所有进程退出的总超时（毫秒），默认 5000。
 
     .NOTES
         Msix/Appx 在移除包时会自动终止进程，不需要手动终止，除非指定绝对路径
     #>
     param(
-        [string[]]$Extra
+        [string[]]$Extra,
+        [int]$TimeoutMs = 5000
     )
     $ExtraPaths = @()
     $ExtraProcessNames = @()
@@ -66,38 +71,54 @@ function A-Stop-Process {
             $Paths += $info.location
         }
     }
-    $Paths = $Paths | Sort-Object -Unique
-    foreach ($app_dir in $Paths) {
-        if (!$app_dir) { continue }
-        $matched = (Get-Process).Where({ $_.Path -and $_.Path.StartsWith($app_dir + '\', [System.StringComparison]::OrdinalIgnoreCase) })
-        foreach ($p in $matched) {
-            try {
-                if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
-                    Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
-                    Stop-Process -Id $p.Id -Force -ErrorAction Stop
+
+    $Paths = $Paths | Where-Object { $_ } | ForEach-Object { $_.TrimEnd('\') } | Sort-Object -Unique
+
+    # 辅助：查找从指定路径启动的进程
+    $getProcessesFromPaths = {
+        param($dirs)
+        (Get-Process).Where({
+                $procPath = $null
+                try { $procPath = $_.Path } catch { $procPath = $null }
+                if (!$procPath) { return $false }
+                foreach ($d in $dirs) {
+                    if ($procPath.StartsWith($d + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+                        return $true
+                    }
                 }
-            }
-            catch {
-                if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
-                    # 进程已经不存在，无需处理
-                    continue
-                }
-                error $_.Exception.Message
-                A-Show-IssueCreationPrompt
-                A-Exit
+                return $false
+            })
+    }
+
+    # 第一次：杀掉所有匹配进程
+    $matched = & $getProcessesFromPaths $Paths
+    foreach ($p in $matched) {
+        try {
+            if (Get-Process -Id $p.Id -ErrorAction SilentlyContinue) {
+                Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
+                Stop-Process -Id $p.Id -Force -ErrorAction Stop
             }
         }
+        catch {
+            if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
+                continue
+            }
+            error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
     }
+
+    # 杀掉按名称指定的进程
     foreach ($processName in $ExtraProcessNames) {
-        $p = Get-Process -Name $processName -ErrorAction SilentlyContinue
-        if ($p) {
+        $process = Get-Process -Name $processName -ErrorAction SilentlyContinue
+        foreach ($p in $process) {
             try {
                 Write-Host "Stopping the process: $($p.Id) $($p.Name) ($($p.Path))"
                 Stop-Process -Id $p.Id -Force -ErrorAction Stop
             }
             catch {
                 if ($_.FullyQualifiedErrorId -like 'NoProcessFoundForGivenId*') {
-                    # 进程已经不存在，无需处理
                     continue
                 }
                 error $_.Exception.Message
@@ -107,19 +128,22 @@ function A-Stop-Process {
         }
     }
 
-    Start-Sleep -Milliseconds 50
+    # 轮询等待，直到无匹配进程或超时
+    $elapsed = 0
+    $interval = 100
+    while ($elapsed -lt $TimeoutMs) {
+        $remaining = & $getProcessesFromPaths $Paths
+        if (-not $remaining) { return }
+        Start-Sleep -Milliseconds $interval
+        $elapsed += $interval
+    }
 
-    # 再次检查是否存在未终止的相关进程
-    # 这里参考了 Scoop 的官方检查逻辑，以确保一致性
-    # https://github.com/ScoopInstaller/Scoop/blob/ebd8c036fa0d2e1dc93bca44c10eeee36c0d233e/lib/install.ps1#L534
-    foreach ($app_dir in $Paths) {
-        if (!$app_dir) { continue }
-        $running_processes = (Get-Process).Where({ $_.Path -and $_.Path.StartsWith($app_dir + '\', [System.StringComparison]::OrdinalIgnoreCase) }) | Out-String
-        if ($running_processes) {
-            error "The following instances of `"$app`" are still running. Close them and try again."
-            Write-Host $running_processes
-            A-Exit
-        }
+    # 超时后仍有进程
+    $remaining = & $getProcessesFromPaths $Paths
+    if ($remaining) {
+        error "The following instances of `"$app`" are still running. Close them and try again."
+        $remaining | Out-String | Write-Host
+        A-Exit
     }
 }
 
