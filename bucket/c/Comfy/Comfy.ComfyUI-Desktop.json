@@ -11,18 +11,19 @@
             "hash": "63eb5d20aaf0689fa37caf8630b3caec5799211dbb82ba967676d1148c850fa4"
         }
     },
-    "shortcuts": [
-        [
-            "app\\ComfyUI.exe",
-            "ComfyUI"
-        ]
+    "location": "$env:LocalAppData\\Programs\\Comfy Desktop",
+    "link": [
+        "$env:AppData\\Comfy Desktop",
+        "$env:LocalAppData\\Comfy-Desktop",
+        "$env:AppData\\ComfyUI"
     ],
-    "link": "$env:AppData\\ComfyUI",
+    "cleanup": "$env:LocalAppData\\comfyui-desktop-2-updater",
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller 'app\\Uninstall ComfyUI.exe'"
+        "# 不能安装在 Scoop 目录下，会导致数据目录位置变化",
+        "A-Install-App -Uninstaller 'Uninstall Comfy Desktop.exe'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
