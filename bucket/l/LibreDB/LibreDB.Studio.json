@@ -1,0 +1,51 @@
+{
+    "version": "0.15.0",
+    "description": "一款基于网页的 SQL 集成开发环境，支持 PostgreSQL、MySQL、SQLite、Oracle、SQL Server、MongoDB 和 Redis，具备 AI 查询辅助功能 | Web-based SQL IDE for PostgreSQL, MySQL, SQLite, Oracle, SQL Server, MongoDB, and Redis with AI query assistance",
+    "homepage": "https://libredb.org",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/libredb/libredb-studio/releases/download/0.15.0/libredb-studio-standalone-0.15.0-win32-x64.zip",
+            "hash": "0d0776bdae5000c8d273fd8312616568678db1d0b5fc71e84d43e3dd061afa1c"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\libredb-studio.exe",
+    "link": "$env:LocalAppData\\LibreDB\\Studio",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/libredb/libredb-studio/releases/download/$version/libredb-studio-standalone-$version-win32-x64.zip"
+            }
+        }
+    }
+}
