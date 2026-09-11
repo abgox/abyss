@@ -1,18 +1,18 @@
 {
-    "version": "2.0.9",
+    "version": "2.0.14",
     "description": "一款支持多个大语言模型 (LLM) 供应商的桌面客户端 | A desktop client that supports for multiple LLM providers",
-    "homepage": "https://cherry-ai.com",
+    "homepage": "https://cherryai.com",
     "license": {
         "identifier": "Unknown"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v2.0.9/Cherry-Studio-2.0.9-x64-setup.exe",
-            "hash": "dc2ff5425763a03380649a57889aa01fe84591cdd4bae6b5efa536656f181fb1"
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v2.0.14/Cherry-Studio-2.0.14-win-x64-setup.exe",
+            "hash": "d2e630c52bdf388bfc052f4738472d47d394afb2ab623ef5efb389b1434f8bd4"
         },
         "arm64": {
-            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v2.0.9/Cherry-Studio-2.0.9-arm64-setup.exe",
-            "hash": "8c417426a5b08a25e4ca380b1541d75fae70e40ab11c79440bda28cbbd71e08b"
+            "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v2.0.14/Cherry-Studio-2.0.14-win-arm64-setup.exe",
+            "hash": "470e1c00460a97b84d07d23cd3e3933fcee6fb957067257866e2f5daeb682051"
         }
     },
     "shortcuts": [
@@ -22,7 +22,10 @@
         ]
     ],
     "link": "$env:AppData\\CherryStudio",
-    "cleanup": "$env:LocalAppData\\cherrystudio-updater",
+    "cleanup": [
+        "$home\\.cherrystudio",
+        "$env:LocalAppData\\cherrystudio-updater"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
@@ -55,10 +58,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-x64-setup.exe"
+                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-win-x64-setup.exe"
             },
             "arm64": {
-                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-arm64-setup.exe"
+                "url": "https://github.com/CherryHQ/cherry-studio/releases/download/v$version/Cherry-Studio-$version-win-arm64-setup.exe"
             }
         }
     }
