@@ -1,0 +1,66 @@
+{
+    "version": "0.1.64",
+    "description": "字节跳动的专为日常工作打造的专业 AI 工作助手 | A professional AI work assistant built for everyday work by ByteDance",
+    "homepage": "https://www.trae.ai/work",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://lf-cdn.trae.com.cn/obj/trae-com-cn/pkg/app/releases/stable/2.3.82598/win32/TraeWork-Setup-x64.exe",
+            "hash": "a586367ac45eb8cdc72081346c9d469ea72eab13b3bf00de006ce62089d82ae6"
+        }
+    },
+    "env_add_path": "app\\bin",
+    "shortcuts": [
+        [
+            "app\\TRAE SOLO.exe",
+            "TraeWork"
+        ]
+    ],
+    "link": [
+        "$home\\.trae",
+        "$env:AppData\\TRAE SOLO"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "winget": {
+            "id": "ByteDance.TraeWork",
+            "ext": "exe"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "_.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
