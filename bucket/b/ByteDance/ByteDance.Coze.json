@@ -1,0 +1,67 @@
+{
+    "version": "1.1.41",
+    "description": "扣子 - 面向 Agent 时代的新一代 AI 团队协作平台 | A next-generation AI team collaboration platform designed for the Agent era",
+    "homepage": "https://www.coze.cn",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://lf3-cdn-tos.bytegoofy.com/obj/tron-demo/7617773946401724698/486433968/1.1.41/win32-x64/Coze-v1.1.41-win32-x64.exe",
+            "hash": "072ecb4ab78c2bbdde5bf8e10c99804d442da1aa7b4742dbe3aa2b47446250fb"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Coze.exe",
+            "扣子"
+        ]
+    ],
+    "link": [
+        "$home\\.coze",
+        "$home\\Coze",
+        "$env:AppData\\Coze"
+    ],
+    "cleanup": "$env:LocalAppData\\coze-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Coze.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "winget": {
+            "id": "ByteDance.Coze",
+            "ext": "exe"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "$matchX64",
+                "hash": {
+                    "url": "_.json",
+                    "jsonpath": "$.x64_user.InstallerSha256"
+                }
+            }
+        }
+    }
+}
