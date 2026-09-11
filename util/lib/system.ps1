@@ -226,7 +226,10 @@ function A-Set-EnvVarShared {
         $env_set_shared | Get-Member -MemberType NoteProperty | ForEach-Object {
             $name = $_.Name
             $owner = $env_set_shared.$name.owner
-            $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object { A-Test-File "$scoopdir\apps\$_\current\manifest.json" }
+            $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object {
+                $ownerDir = A-Get-AppCurrentDir "$scoopdir\apps\$_"
+                (A-Test-File "$ownerDir\scoop-manifest.json") -or (A-Test-File "$ownerDir\manifest.json")
+            }
             if ($has_other_owner) { return }
             Write-Output "Removing $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m"
             Set-EnvVar -Name $name -Value $null -Global:$global

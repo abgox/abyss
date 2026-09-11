@@ -177,34 +177,26 @@ function A-Wait-Uninstaller {
     }
 }
 
-function A-Wait-ForUnlock {
+function A-Wait-ForRelease {
     param(
-        [string]$Path = $dir,
-        [int]$TimeoutMs = 5000
+        [string]$Path,
+        [int]$TimeoutSec = 30
     )
-    if (!(A-Test-Path $Path)) { return }
     $elapsed = 0
-    while ($elapsed -lt $TimeoutMs) {
-        $locked = (Get-Process).Where({
-                $procPath = $null
-                try { $procPath = $_.Path } catch { $procPath = $null }
-                $procPath -and $procPath.StartsWith($Path + '\', [System.StringComparison]::OrdinalIgnoreCase)
-            })
-        if (-not $locked) {
-            try {
-                $testFile = [System.IO.Path]::Combine($Path, '.abyss-lock-test')
-                $stream = [System.IO.File]::Create($testFile, 1, [System.IO.FileOptions]::DeleteOnClose)
-                $stream.Dispose()
-                Remove-Item -LiteralPath $testFile -Force -ErrorAction SilentlyContinue
-                break
-            }
-            catch {}
+    $interval = 500
+    while ($elapsed -lt $TimeoutSec * 1000) {
+        if (!(A-Test-Path $Path)) { return }
+        $busy = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'Un_*.exe' -and $_.CommandLine -like "*$Path*" }
+        if (!$busy) {
+            $locked = (Get-Process).Where({
+                    $procPath = $null
+                    try { $procPath = $_.Path } catch { $procPath = $null }
+                    $procPath -and $procPath.StartsWith($Path + '\', [System.StringComparison]::OrdinalIgnoreCase)
+                })
+            if (!$locked) { return }
         }
-        Start-Sleep -Milliseconds 300
-        $elapsed += 300
-    }
-    if ($elapsed -ge $TimeoutMs) {
-        Write-Host "Files still in use. You can run 'scoop uninstall $app' again to complete removal." -ForegroundColor Yellow
+        Start-Sleep -Milliseconds $interval
+        $elapsed += $interval
     }
 }
 
@@ -289,7 +281,7 @@ function A-Uninstall-App {
         $Uninstaller = $_Uninstaller
     }
     A-Invoke-UninstallerProcess -FilePath $Uninstaller -ArgumentList $ArgumentList
-    A-Wait-ForUnlock -Path $dir
+    A-Wait-ForRelease -Path $dir
 }
 
 function A-Install-Inno {

@@ -87,7 +87,22 @@
                 $dest_file = [System.IO.Path]::Combine($dest_dir, $fileNameList[$i])
                 A-Ensure-Directory $dest_dir
                 Write-Host "Moving $file => $dest_file"
-                Move-Item -LiteralPath $file -Destination $dest_file -Force -ErrorAction Stop
+                $moved = $false
+                for ($retry = 0; $retry -lt 5; $retry++) {
+                    try {
+                        Move-Item -LiteralPath $file -Destination $dest_file -Force -ErrorAction Stop
+                        $moved = $true
+                        break
+                    }
+                    catch {
+                        Start-Sleep -Milliseconds 500
+                    }
+                }
+                if (!$moved) {
+                    error "Cannot move '$file'. It may be locked by another process."
+                    A-Show-IssueCreationPrompt
+                    A-Exit
+                }
             }
         }
     }

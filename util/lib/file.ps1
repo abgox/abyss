@@ -20,6 +20,41 @@ function A-Test-Path {
     Test-Path -LiteralPath $Path
 }
 
+function A-Test-PathPrefix {
+    <#
+    .SYNOPSIS
+        判断路径是否位于指定目录下
+    .DESCRIPTION
+        不能用 -like "$Prefix\*" 判断，因为路径中的通配符（[、]、?、*）会被 -like 解析，导致误判。
+    #>
+    param(
+        [string]$Path,
+        [string]$Prefix
+    )
+    if (!$Path -or !$Prefix) { return $false }
+    return $Path.StartsWith($Prefix.TrimEnd('\', '/') + '\', [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function A-Get-AppCurrentDir {
+    <#
+    .SYNOPSIS
+        解析应用的有效目录（兼容 scoop 的 no_junction 配置）
+    .DESCRIPTION
+        no_junction 关闭时直接返回 current 目录；开启时 scoop 不再创建 current 链接，
+        此时按官方 Get-InstalledVersion 逻辑取最新版本目录，找不到则回退到 current。
+    #>
+    param(
+        [string]$AppDir
+    )
+    $current = [System.IO.Path]::Combine($AppDir, 'current')
+    if (!(get_config NO_JUNCTION)) { return $current }
+    $latest = Get-ChildItem "$AppDir\*\scoop-install.json", "$AppDir\*\install.json" -ErrorAction SilentlyContinue |
+    Where-Object { ($_.Directory.Name -ne 'current') -and ($_.Directory.Name -notlike '_*.old*') } |
+    Sort-Object -Property LastWriteTimeUtc | Select-Object -Last 1
+    if ($latest) { return $latest.Directory.FullName }
+    return $current
+}
+
 function A-Ensure-Directory {
     param (
         [string]$Path = $persist_dir
@@ -237,7 +272,7 @@ function A-Resolve-LinkTargets {
     foreach ($item in $LinkItems) {
         if (!$item) { continue }
         $expandPath = A-Resolve-SpecialPath $item
-        $isDirLink = $expandPath -like "$dir\*"
+        $isDirLink = A-Test-PathPrefix $expandPath $dir
         if ($isDirLink) {
             $leaf = $expandPath.Replace("$dir\app\", '').Replace("$dir\", '')
             $privatePath = [System.IO.Path]::Combine($persist_dir, $leaf)
@@ -258,7 +293,7 @@ function A-Resolve-LinkTargets {
                 catch { error $_.Exception.Message }
             }
             $target = A-Replace-SpecialFolderPrefix $expandPath $sharedRoot
-            if ($target -notlike "$sharedRoot\*") { $target = $target -replace '^[a-zA-Z]:', $sharedRoot }
+            if (!(A-Test-PathPrefix $target $sharedRoot)) { $target = $target -replace '^[a-zA-Z]:', $sharedRoot }
         }
         if (A-Test-Path $expandPath) {
             A-Copy-Item $expandPath $target
@@ -356,14 +391,14 @@ function A-New-LinkBase {
             $linkTarget = A-Get-AbsolutePath $LinkTargets[$i] $_persistDir
         }
         else {
-            if ($LinkPath -like "$dir\*") {
+            if (A-Test-PathPrefix $LinkPath $dir) {
                 # 只有无法使用 persist 字段的特殊情况才能使用它，例如: liule.Snipaste
                 $linkTarget = $LinkPath.replace("$dir\app\", "$_persistDir\").replace("$dir\", "$_persistDir\")
             }
             else {
                 $linkTarget = A-Replace-SpecialFolderPrefix $LinkPath $sharedRoot
                 # 如果不在 $home 目录下，则去掉盘符
-                if ($linkTarget -notlike "$sharedRoot\*") {
+                if (!(A-Test-PathPrefix $linkTarget $sharedRoot)) {
                     $linkTarget = $linkTarget -replace '^[a-zA-Z]:', $sharedRoot
                 }
             }
@@ -538,7 +573,7 @@ function A-Remove-Link {
             foreach ($i in $order) {
                 $p = $LinkPaths[$i]
                 $overlap = $false
-                if ($p -notlike "$dir\*") {
+                if (!(A-Test-PathPrefix $p $dir)) {
                     if ($null -eq $linksInUse) { $linksInUse = A-Get-LinksInUse }
                     if ($linksInUse -and $linksInUse.Contains($p)) { continue } # 他家正用：链和数据都留
                     $overlap = A-Test-LinkOverlap $p $linksInUse
@@ -589,7 +624,7 @@ function A-Get-LinksInUse {
         try { $appDirs = [System.IO.Directory]::GetDirectories($appsRoot) } catch { continue }
         foreach ($appDir in $appDirs) {
             if ([System.String]::Equals([System.IO.Path]::GetFileName($appDir), $app, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
-            $currentDir = [System.IO.Path]::Combine($appDir, 'current')
+            $currentDir = A-Get-AppCurrentDir $appDir
             foreach ($snap in $snapNames) {
                 $snapFile = [System.IO.Path]::Combine($currentDir, $snap)
                 if (![System.IO.File]::Exists($snapFile)) { continue }
