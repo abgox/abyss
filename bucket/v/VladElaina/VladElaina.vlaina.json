@@ -1,0 +1,65 @@
+{
+    "version": "1.1.0",
+    "description": "下一代本地优先安全工作区，致力于为你提供纯粹、安全且无锁定的 Markdown 知识库笔记管理体验 | Next-generation secure & decentralized workspace to provide you with a pure, secure, and lock-in-free Markdown knowledge note base",
+    "homepage": "http://vlaina.com",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/vladelaina/vlaina/releases/download/v1.1.0/vlaina-1.1.0-windows-x64-setup.exe",
+            "hash": "4cc41b7166c49dc5e3ff548b2bf8bea47763a0f7a950302b023550176e8eea2a"
+        },
+        "arm64": {
+            "url": "https://github.com/vladelaina/vlaina/releases/download/v1.1.0/vlaina-1.1.0-windows-arm64-setup.exe",
+            "hash": "0945e872fdc0901b49c3c623b28f2bf2fdef7f2fe2638cdbf06cccb3f16ba938"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\vlaina.exe",
+            "vlaina"
+        ]
+    ],
+    "link": "$env:AppData\\vlaina",
+    "cleanup": "$env:LocalAppData\\vlaina-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall vlaina.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/vladelaina/vlaina/releases/download/v$version/vlaina-$version-windows-x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/vladelaina/vlaina/releases/download/v$version/vlaina-$version-windows-arm64-setup.exe"
+            }
+        }
+    }
+}
