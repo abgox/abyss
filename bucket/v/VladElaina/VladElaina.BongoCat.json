@@ -1,0 +1,57 @@
+{
+    "version": "1.8.0",
+    "description": "采用原生 C11 核心与 OpenGL 硬件加速架构的桌面悬浮猫咪，毫秒级连动您的键盘打字、鼠标轨迹与游戏手柄，极速零负担 | A native C11 desktop companion powered by OpenGL acceleration, responding to keyboard input, pointer movement, and gamepad actions with millisecond precision",
+    "homepage": "https://bongocat.pet",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/vladelaina/BongoCat/releases/download/v1.8.0/BongoCat-1.8.0-windows-x64-setup.exe",
+            "hash": "d6b61f1029a0e7683405867c9c166669d39163ecc11a3def90560e8dbe41859b"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\BongoCat.exe",
+            "BongoCat"
+        ]
+    ],
+    "link": "$env:LocalAppData\\BongoCat",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/vladelaina/BongoCat/releases/download/v$version/BongoCat-$version-windows-x64-setup.exe"
+            }
+        }
+    }
+}
