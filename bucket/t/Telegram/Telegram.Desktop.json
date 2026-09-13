@@ -1,0 +1,68 @@
+{
+    "version": "7.2.7",
+    "description": "一款基于云的移动端与桌面端通讯应用，主打安全性与运行速度 | A cloud-based mobile and desktop messaging app with a focus on security and speed",
+    "homepage": "https://desktop.telegram.org",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/telegramdesktop/tdesktop/releases/download/v7.2.7/td-setup-win-x64-7.2.7.exe",
+            "hash": "c1abbe256c54ba0b743dd6f3d685513c8affe8e18c1a4a76af493d6c86c08dcc"
+        },
+        "arm64": {
+            "url": "https://github.com/telegramdesktop/tdesktop/releases/download/v7.2.7/td-setup-win-arm-7.2.7.exe",
+            "hash": "820e63fb4933435df92a66b6ffdb15546f2f4f7f2dce2b8c88651553915b3404"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Telegram.exe",
+            "Telegram"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\tdata",
+            "tdata"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-Inno"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Uninstall-Inno"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/telegramdesktop/tdesktop/releases/download/v$version/td-setup-win-x64-$version.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/telegramdesktop/tdesktop/releases/download/v$version/td-setup-win-arm-$version.exe"
+            }
+        }
+    }
+}
