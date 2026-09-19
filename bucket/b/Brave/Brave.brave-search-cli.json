@@ -1,0 +1,58 @@
+{
+    "version": "1.7.0",
+    "description": "一个零依赖、令牌高效的 Brave Search API CLI，专为 AI 代理和 LLM 构建 | A zero-dependency, token-efficient CLI for the Brave Search API, built for AI agents and LLMs",
+    "homepage": "https://github.com/brave/brave-search-cli",
+    "license": {
+        "identifier": "MPL-2.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/brave/brave-search-cli/releases/download/v1.7.0/bx-1.7.0-windows-amd64.exe#/bx.exe",
+            "hash": "672170b4551ed328bdb79416a706e0a4acea3e671b1bb412a1cd67def71af703"
+        },
+        "arm64": {
+            "url": "https://github.com/brave/brave-search-cli/releases/download/v1.7.0/bx-1.7.0-windows-arm64.exe#/bx.exe",
+            "hash": "0683e0d11380d409a148453b072d4a844edc39557c68218cc08beb5c75959f30"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\bx.exe",
+    "link": "$env:AppData\\brave-search",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/brave/brave-search-cli/releases/download/v$version/bx-$version-windows-amd64.exe#/bx.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/brave/brave-search-cli/releases/download/v$version/bx-$version-windows-arm64.exe#/bx.exe"
+            }
+        }
+    }
+}
