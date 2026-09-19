@@ -1,0 +1,68 @@
+{
+    "version": "0.39.2",
+    "description": "一款极速、现代化、优先本地运行的 SSH/SFTP/串口客户端 | A lightning-fast, modern, local-first SSH/SFTP/Serial client",
+    "homepage": "https://voltius.app",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/VoltiusApp/voltius/releases/download/v0.39.2/Voltius_0.39.2_x64-setup.exe",
+            "hash": "d54b894f2c3974dd8649c609b5cdb71d84bb87fdb99245e57f78cb9c9a6a247b"
+        },
+        "arm64": {
+            "url": "https://github.com/VoltiusApp/voltius/releases/download/v0.39.2/Voltius_0.39.2_arm64-setup.exe",
+            "hash": "22be534cc5149c2a791ce94de68146184720210546674b6d18cf7e330e50fc9a"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Voltius.exe",
+            "Voltius"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\com.voltius.app",
+        "$env:AppData\\voltius"
+    ],
+    "cleanup": "$env:LocalAppData\\com.voltius.app",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/VoltiusApp/voltius/releases/download/v$version/Voltius_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/VoltiusApp/voltius/releases/download/v$version/Voltius_$version_arm64-setup.exe"
+            }
+        }
+    }
+}
