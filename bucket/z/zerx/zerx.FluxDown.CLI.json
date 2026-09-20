@@ -1,0 +1,63 @@
+{
+    "version": "0.4.8",
+    "description": "一款基于 Rust 开发的下载管理器，支持 HTTP、FTP、BitTorrent 以及 HLS/DASH 流媒体协议 | A Rust-powered download manager with HTTP, FTP, BitTorrent and HLS/DASH streaming support",
+    "homepage": "https://fluxdown.zerx.dev",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zerx-lab/FluxDown/releases/download/cli-v0.4.8/FluxDown-CLI-0.4.8-windows-x64.zip",
+            "hash": "2865bbb8bb12004fced83a90b0e02cecacd9a839c209a109f79a89bd2036901a",
+            "extract_dir": "fluxdown-cli-0.4.8-windows-x64"
+        },
+        "arm64": {
+            "url": "https://github.com/zerx-lab/FluxDown/releases/download/cli-v0.4.8/FluxDown-CLI-0.4.8-windows-arm64.zip",
+            "hash": "0afd11c48f6b1c7fa1ac06528eea587c4a890519084c1a5c9cf518f598a9e214",
+            "extract_dir": "fluxdown-cli-0.4.8-windows-arm64"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\fluxdown.exe",
+    "link": "$env:AppData\\zerx\\fluxdown",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "stable"
+        },
+        "regex": "cli-(.+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zerx-lab/FluxDown/releases/download/cli-v$version/FluxDown-CLI-$version-windows-x64.zip",
+                "extract_dir": "fluxdown-cli-$version-windows-x64"
+            },
+            "arm64": {
+                "url": "https://github.com/zerx-lab/FluxDown/releases/download/cli-v$version/FluxDown-CLI-$version-windows-arm64.zip",
+                "extract_dir": "fluxdown-cli-$version-windows-arm64"
+            }
+        }
+    }
+}
