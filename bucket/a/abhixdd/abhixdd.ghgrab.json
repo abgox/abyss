@@ -1,0 +1,51 @@
+{
+    "version": "2.1.0",
+    "description": "一款简洁美观的终端工具，可让你在命令行界面内直接浏览并下载来自 GitHub、GitLab、Codeberg、Gitea 以及 Forgejo 的文件 | A simple, pretty terminal tool that lets you browse and download files from GitHub, GitLab, Codeberg, Gitea, and Forgejo",
+    "homepage": "https://github.com/abhixdd/ghgrab",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/abhixdd/ghgrab/releases/download/v2.1.0/ghgrab-win32.exe#/ghgrab.exe",
+            "hash": "6d88d6ab5c86895561d4c68526bf1261c63637bac915952c524bf4305a20da47"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\ghgrab.exe",
+    "link": "$env:AppData\\ghgrab",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/abhixdd/ghgrab/releases/download/v$version/ghgrab-win32.exe#/ghgrab.exe"
+            }
+        }
+    }
+}
