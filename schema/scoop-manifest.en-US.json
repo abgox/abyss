@@ -2104,7 +2104,7 @@
                             "examples": [
                                 "$dir\\xxx",
                                 "$persist_dir\\xxx",
-                                "$scoopdir\\persist\\abgox.abyss\\xxx"
+                                "$scoopdir\\persist\\@abgox.abyss\\xxx"
                             ],
                             "allOf": [
                                 {
@@ -2157,7 +2157,7 @@
                                     "examples": [
                                         "$dir\\xxx",
                                         "$persist_dir\\xxx",
-                                        "$scoopdir\\persist\\abgox.abyss\\xxx"
+                                        "$scoopdir\\persist\\@abgox.abyss\\xxx"
                                     ],
                                     "allOf": [
                                         {
@@ -2554,7 +2554,7 @@
             }
         },
         "link": {
-            "markdownDescription": "Data Persistence [link](https://abyss.abgox.com/docs/features/data-persistence/link)\n\n- It is a special property of [abyss](https://abyss.abgox.com)\n- Used to persist data stored in standard data directories (such as `$env:AppData`, `$home`, etc.)\n- It maps paths to the corresponding directory structure in `$scoopdir\\persist\\abgox.abyss` according to [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- Executed automatically in `A-Start-Install`, can also be manually invoked using `A-New-Link`\n- Since Scoop defaults to creating empty directories only, to persist files you need to prepare default data in the `extra` directory in advance\n\n### Example\n\n- Taking [VSCode](https://code.visualstudio.com) as an example, its manifest is `Microsoft.VisualStudioCode`\n\n  ```json\n    \"link\": [\n        \"$env:AppData\\\\Code\",\n        \"$home\\\\.vscode\"\n    ]\n  ```\n\n- Link Targets:\n  - `$env:AppData\\Code` => `$scoopdir\\persist\\abgox.abyss\\AppData\\Roaming\\Code`\n  - `$home\\.vscode` => `$scoopdir\\persist\\abgox.abyss\\.vscode`\n\n- Before linking, [abyss](https://abyss.abgox.com) prepares data in `$scoopdir\\persist\\abgox.abyss` in the following order:\n  1. If data exists in the original path, migrate it directly to `$scoopdir\\persist\\abgox.abyss`\n  2. If default data exists in the `extra\\Microsoft.VisualStudioCode` directory, copy it to `$scoopdir\\persist\\abgox.abyss`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\AppData\\Roaming\\Code` => `$scoopdir\\persist\\abgox.abyss\\AppData\\Roaming\\Code`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\.vscode` => `$scoopdir\\persist\\abgox.abyss\\.vscode`\n  3. If no data is found, an empty directory is created directly (default Scoop behavior)",
+            "markdownDescription": "Data Persistence [link](https://abyss.abgox.com/docs/features/data-persistence/link)\n\n- It is a special property of [abyss](https://abyss.abgox.com)\n- Used to persist data stored in standard data directories (such as `$env:AppData`, `$home`, etc.)\n- It maps paths to the corresponding directory structure in `$scoopdir\\persist\\@abgox.abyss` according to [Link Rules](https://abyss.abgox.com/docs/features/data-persistence/link-rule)\n- Executed automatically in `A-Start-Install`, can also be manually invoked using `A-New-Link`\n- Since Scoop defaults to creating empty directories only, to persist files you need to prepare default data in the `extra` directory in advance\n\n### Example\n\n- Taking [VSCode](https://code.visualstudio.com) as an example, its manifest is `Microsoft.VisualStudioCode`\n\n  ```json\n    \"link\": [\n        \"$env:AppData\\\\Code\",\n        \"$home\\\\.vscode\"\n    ]\n  ```\n\n- Link Targets:\n  - `$env:AppData\\Code` => `$scoopdir\\persist\\@abgox.abyss\\AppData\\Roaming\\Code`\n  - `$home\\.vscode` => `$scoopdir\\persist\\@abgox.abyss\\.vscode`\n\n- Before linking, [abyss](https://abyss.abgox.com) prepares data in `$scoopdir\\persist\\@abgox.abyss` in the following order:\n  1. If data exists in the original path, migrate it directly to `$scoopdir\\persist\\@abgox.abyss`\n  2. If default data exists in the `extra\\Microsoft.VisualStudioCode` directory, copy it to `$scoopdir\\persist\\@abgox.abyss`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\AppData\\Roaming\\Code` => `$scoopdir\\persist\\@abgox.abyss\\AppData\\Roaming\\Code`\n     - `$bucketsdir\\$bucket\\extra\\Microsoft.VisualStudioCode\\.vscode` => `$scoopdir\\persist\\@abgox.abyss\\.vscode`\n  3. If no data is found, an empty directory is created directly (default Scoop behavior)",
             "type": [
                 "string",
                 "array"

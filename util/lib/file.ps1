@@ -162,6 +162,50 @@ function A-Copy-Item {
     }
 }
 
+function A-Move-Item {
+    <#
+    .SYNOPSIS
+        移动文件或目录：目标不存在则整个移动，已存在则合并（新者胜）
+
+    .EXAMPLE
+        A-Move-Item $old $new
+    #>
+    param (
+        [string]$Path,
+        [string]$Destination
+    )
+    if (!(A-Test-Path $Path)) {
+        return
+    }
+    Write-Host "Moving $Path => $Destination"
+    try {
+        if (!(A-Test-Path $Destination)) {
+            A-Ensure-Directory ([System.IO.Path]::GetDirectoryName($Destination))
+            Move-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+        }
+        elseif ((A-Test-File $Path) -and (A-Test-File $Destination)) {
+            if ((Get-Item -LiteralPath $Path -Force).LastWriteTimeUtc -gt (Get-Item -LiteralPath $Destination -Force).LastWriteTimeUtc) {
+                Move-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+            }
+            else {
+                Remove-Item -LiteralPath $Path -Force -ErrorAction Stop
+            }
+        }
+        else {
+            $result = & robocopy "$Path" "$Destination" /E /MOVE /XO /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
+            if ($LASTEXITCODE -ge 8) {
+                throw $result
+            }
+            Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+    catch {
+        error $_.Exception.Message
+        A-Show-IssueCreationPrompt
+        A-Exit
+    }
+}
+
 function A-Remove-ToRecycleBin {
     param(
         [Parameter(Mandatory)]
@@ -253,7 +297,7 @@ function A-New-File {
 function A-Get-SharedPersistRoot {
     $parent = [System.IO.Path]::GetDirectoryName($persist_dir)
     if (!$parent) { $parent = $persist_dir }
-    [System.IO.Path]::Combine($parent, 'abgox.abyss')
+    [System.IO.Path]::Combine($parent, '@abgox.abyss')
 }
 
 function A-Resolve-LinkTargets {
@@ -283,14 +327,16 @@ function A-Resolve-LinkTargets {
             $rel = A-Replace-SpecialFolderPrefix $expandPath
             $privatePath = [System.IO.Path]::Combine($persist_dir, $rel)
             $sharedPath = [System.IO.Path]::Combine($sharedRoot, $rel)
-            if ((A-Test-Path $privatePath) -and !(A-Test-Path $sharedPath)) {
-                try {
-                    A-Ensure-Directory ([System.IO.Path]::GetDirectoryName($sharedPath))
-                    Write-Host "Migrating $privatePath => $sharedPath"
-                    Move-Item -LiteralPath $privatePath -Destination $sharedPath -Force -ErrorAction Stop
-                    A-Remove-EmptyDirectory $privatePath ([System.IO.Path]::GetDirectoryName($persist_dir))
+            if (A-Test-Path $privatePath) {
+                A-Move-Item $privatePath $sharedPath
+                A-Remove-EmptyDirectory $privatePath ([System.IO.Path]::GetDirectoryName($persist_dir))
+            }
+            else {
+                $oldSharedPath = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($sharedRoot), 'abgox.abyss', $rel)
+                if (A-Test-Path $oldSharedPath) {
+                    A-Move-Item $oldSharedPath $sharedPath
+                    A-Remove-EmptyDirectory $oldSharedPath ([System.IO.Path]::GetDirectoryName($persist_dir))
                 }
-                catch { error $_.Exception.Message }
             }
             $target = A-Replace-SpecialFolderPrefix $expandPath $sharedRoot
             if (!(A-Test-PathPrefix $target $sharedRoot)) { $target = $target -replace '^[a-zA-Z]:', $sharedRoot }
@@ -559,6 +605,8 @@ function A-Remove-Link {
     if ($abgox_abyss.skipRemoveLink) {
         return
     }
+    $newRoot = A-Get-SharedPersistRoot
+    $oldRoot = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($newRoot), 'abgox.abyss')
     # 由于字段可能包含可展开的环境变量，应该使用安装时储存的值而不是通过字段展开，以避免环境变量变化导致的不一致性
     $linksInUse = $null
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
@@ -589,8 +637,8 @@ function A-Remove-Link {
                         error $_.Exception.Message
                     }
                 }
-                # 嵌套占用只断自己的链，目标数据可能属于他家，不删
-                if ($purge -and !$overlap -and $t -and (A-Test-Path $t)) {
+                if (!$t -or $overlap -or !(A-Test-Path $t)) { continue }
+                if ($purge) {
                     try {
                         Write-Host "Removing $t"
                         Remove-Item -LiteralPath $t -Force -Recurse -ErrorAction Stop
@@ -599,6 +647,10 @@ function A-Remove-Link {
                     catch {
                         error $_.Exception.Message
                     }
+                }
+                elseif (A-Test-PathPrefix $t $oldRoot) {
+                    A-Move-Item $t ($newRoot + $t.Substring($oldRoot.Length))
+                    A-Remove-EmptyDirectory $t ([System.IO.Path]::GetPathRoot($t))
                 }
             }
         }
