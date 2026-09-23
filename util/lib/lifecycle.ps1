@@ -180,7 +180,7 @@ function A-Start-Uninstall {
 
 function A-Complete-Uninstall {
     $tempPath = @()
-    if ($manifest.location) {
+    if ($manifest.location -and $manifest.version -ne 'virtual') {
         $tempPath += A-Resolve-SpecialPath $manifest.location
     }
     foreach ($c in $manifest.cleanup) {
