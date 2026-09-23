@@ -665,6 +665,7 @@ function A-Get-LinksInUse {
     $inUse = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $roots = @($scoopdir)
     if ($globaldir -and $globaldir -ne $scoopdir) { $roots += $globaldir }
+    $selfDir = Split-Path $dir -Parent
     $snapNames = @(
         (Split-Path $abgox_abyss.path.LinkFile -Leaf),
         (Split-Path $abgox_abyss.path.LinkDirectory -Leaf)
@@ -675,7 +676,7 @@ function A-Get-LinksInUse {
         if (![System.IO.Directory]::Exists($appsRoot)) { continue }
         try { $appDirs = [System.IO.Directory]::GetDirectories($appsRoot) } catch { continue }
         foreach ($appDir in $appDirs) {
-            if ([System.String]::Equals([System.IO.Path]::GetFileName($appDir), $app, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
+            if ([System.String]::Equals($appDir, $selfDir, [System.StringComparison]::OrdinalIgnoreCase)) { continue }
             $currentDir = A-Get-AppCurrentDir $appDir
             foreach ($snap in $snapNames) {
                 $snapFile = [System.IO.Path]::Combine($currentDir, $snap)
