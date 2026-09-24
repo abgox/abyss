@@ -292,8 +292,7 @@ function A-Install-Inno {
         [int]$TimeoutSec = 600
     )
     $installDir = A-Get-InstallDir
-    A-Ensure-Directory "$env:TEMP\Scoop"
-    $logPath = "$env:TEMP\Scoop\$($app)@$($version)_install_inno.log"
+    $logPath = "$env:TEMP\Scoop_$($app)@$($version)_install_inno.log"
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $ArgumentList = @(
             '/CurrentUser',
@@ -355,8 +354,7 @@ function A-Install-Burn {
         [string]$Installer = (Join-Path $dir ($fname | Select-Object -First 1)),
         [int]$TimeoutSec = 600
     )
-    A-Ensure-Directory "$env:TEMP\Scoop"
-    $logPath = "$env:TEMP\Scoop\$($app)@$($version)_install_burn.log"
+    $logPath = "$env:TEMP\Scoop_$($app)@$($version)_install_burn.log"
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $ArgumentList = @('/quiet', '/norestart', '/log', "`"$logPath`"")
     }
@@ -430,8 +428,7 @@ function A-Install-Msi {
     if (!$MsiPath) {
         $MsiPath = Join-Path $dir ($fname | Select-Object -First 1)
     }
-    A-Ensure-Directory "$env:TEMP\Scoop"
-    $logPath = "$env:TEMP\Scoop\$($app)@$($version)_install_msi.log"
+    $logPath = "$env:TEMP\Scoop_$($app)@$($version)_install_msi.log"
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
         $ArgumentList = @(
             '/i',
