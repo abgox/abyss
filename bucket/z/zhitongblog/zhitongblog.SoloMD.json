@@ -1,0 +1,67 @@
+{
+    "version": "4.14.2",
+    "description": "免费开源的 Markdown 编辑器，支持实时预览、数学公式、图表绘制与文件导出 | Free, open-source Markdown editor with live preview, math, diagrams and export",
+    "homepage": "https://solomd.app",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zhitongblog/solomd/releases/download/v4.14.2/SoloMD_4.14.2_x64-portable.zip",
+            "hash": "d048d595c37d5e0bbf450c27c8577e8bd33bd9fd65dfdcf641eacd5cf07ff46d"
+        },
+        "arm64": {
+            "url": "https://github.com/zhitongblog/solomd/releases/download/v4.14.2/SoloMD_4.14.2_arm64-portable.zip",
+            "hash": "e2ddd706bd98a655e4a86e639e0901e150e16ad107e71ca45678b8ef8121d98d"
+        }
+    },
+    "extract_to": "app",
+    "bin": "app\\solomd-mcp.exe",
+    "shortcuts": [
+        [
+            "app\\SoloMD.exe",
+            "SoloMD"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\app.solomd",
+        "$env:LocalAppData\\app.solomd"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zhitongblog/solomd/releases/download/v$version/SoloMD_$version_x64-portable.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/zhitongblog/solomd/releases/download/v$version/SoloMD_$version_arm64-portable.zip"
+            }
+        }
+    }
+}
