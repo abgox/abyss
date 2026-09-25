@@ -436,7 +436,8 @@ function A-Install-Msi {
             # '/passive',
             '/quiet',
             '/norestart',
-            "/lvx*`"$logPath`""
+            '/lvx*',
+            "`"$logPath`""
         )
     }
 
@@ -568,7 +569,6 @@ function A-Uninstall-Msi {
             '/norestart'
         )
     }
-    Write-Host "Running the uninstaller: $UninstallerFileName /X$ProductCode"
     A-Invoke-UninstallerProcess -FilePath $Uninstaller -ArgumentList $ArgumentList
 }
 
