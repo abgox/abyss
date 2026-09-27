@@ -1,5 +1,5 @@
 {
-    "version": "0.7.8-beta",
+    "version": "1.1.5-beta",
     "description": "功能强大的截图工具 | Powerful screenshot tool",
     "homepage": "https://snowshot.top",
     "license": {
@@ -7,24 +7,30 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/mg-chao/snow-shot/releases/download/v0.7.8-beta/Snow.Shot_0.7.8-beta_x64-setup_windows.exe",
-            "hash": "581406bc0164403c9bde86a865792b0424c8310aa8ddff2d0be27a2502b1f8ac"
+            "url": "https://github.com/mg-chao/snow-apps/releases/download/v1.1.5-beta/snow-shot-1.1.5-beta-windows-x64-portable.zip",
+            "hash": "d4690a429abc3c94a9e5bf8bbf15228abc67f5c8ea051c9322f40a638761ef2b"
         }
     },
+    "extract_to": "app",
     "shortcuts": [
         [
-            "app\\snowshot.exe",
+            "app\\bin\\snow_shot.exe",
             "Snow Shot"
         ]
     ],
-    "link": "$env:AppData\\com.chao.snowshot",
-    "cleanup": "$env:LocalAppData\\com.chao.snowshot",
-    "admin": true,
+    "link": [
+        "$env:AppData\\SnowShot",
+        "$env:AppData\\com.chao.snowshot"
+    ],
+    "cleanup": [
+        "$env:LocalAppData\\SnowShot",
+        "$env:LocalAppData\\com.chao.snowshot"
+    ],
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "A-Install-App -Uninstaller 'app\\uninstall.exe'"
+        "Remove-Item $dir\\app\\bin\\__data_directory -Force"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -36,8 +42,7 @@
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link",
-        "A-Uninstall-App"
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -52,7 +57,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/mg-chao/snow-shot/releases/download/v$version/Snow.Shot_$version_x64-setup_windows.exe"
+                "url": "https://github.com/mg-chao/snow-apps/releases/download/v$version/snow-shot-$version-windows-x64-portable.zip"
             }
         }
     }
