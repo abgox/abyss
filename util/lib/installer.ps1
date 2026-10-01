@@ -205,7 +205,8 @@ function A-Install-App {
         [string]$Uninstaller, # 当指定它后，A-Uninstall-App 会默认使用它作为卸载程序路径
         [array]$ArgumentList,
         [string]$Installer = (Join-Path $dir ($fname | Select-Object -First 1)),
-        [int]$TimeoutSec = 600
+        [int]$TimeoutSec = 600,
+        [switch]$UninstallerIsInstaller
     )
     $installDir = A-Get-InstallDir
     if (!$PSBoundParameters.ContainsKey('ArgumentList')) {
@@ -221,7 +222,12 @@ function A-Install-App {
 
     A-Invoke-InstallerProcess -FilePath $Installer -ArgumentList $ArgumentList -TimeoutSec $TimeoutSec
 
-    $Uninstaller = if ($manifest.location) { A-Get-AbsolutePath $Uninstaller $installDir } else { A-Get-AbsolutePath $Uninstaller }
+    if ($UninstallerIsInstaller) {
+        $Uninstaller = $Installer
+    }
+    else {
+        $Uninstaller = if ($manifest.location) { A-Get-AbsolutePath $Uninstaller $installDir } else { A-Get-AbsolutePath $Uninstaller }
+    }
 
     @{
         Installer    = $Installer
@@ -232,7 +238,7 @@ function A-Install-App {
     A-Wait-Uninstaller -Path $Uninstaller
 
     try {
-        if ($Installer -and (A-Test-File $Installer)) {
+        if ($Installer -and !$UninstallerIsInstaller -and (A-Test-File $Installer)) {
             Remove-Item -LiteralPath $Installer -Force -ErrorAction Stop
         }
     }
