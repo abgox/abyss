@@ -4,7 +4,7 @@
     <a href="README.zh-CN.md">简体中文</a> |
     <a href="https://github.com/abgox/abyss">GitHub</a> |
     <a href="https://gitee.com/abgox/abyss">Gitee</a> |
-    <a href="https://gitcode.com/abgox/abyss">GitCode</a>
+    <a href="https://atomgit.com/abgox/abyss">AtomGit</a>
 </p>
 
 <p align="center">
