@@ -17,8 +17,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "A-Install-App -ArgumentList '-install', '-silent'",
-        "A-Hold-App"
+        "A-Install-App -UninstallerIsInstaller -ArgumentList '-install', '-silent'"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -29,7 +28,8 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
-        "A-Uninstall-Manually"
+        "A-Stop-Process",
+        "A-Uninstall-App -ArgumentList '-uninstall', '-silent'"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -38,8 +38,7 @@
     ],
     "checkver": {
         "github": {
-            "channel": "latest",
-            "repo": "namazso/PawnIO.Setup"
+            "channel": "latest"
         }
     },
     "autoupdate": {
