@@ -1,0 +1,71 @@
+{
+    "version": "12.60.0",
+    "description": "为你的单机游戏提供海量免费模组和修改器 | Thousands of free mods and trainers for your favorite single-player PC games",
+    "homepage": "https://wand.com",
+    "license": {
+        "identifier": "Freemium",
+        "url": "https://www.wand.com/terms"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://storage-cdn.wemod.com/app/releases/stable/Wand-12.60.0-full.nupkg",
+            "hash": "00cc347f48e2e7e61f190a13970ad68f8105e3b8dffdfcbdaa51f34c010c1802"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Wand.exe",
+            "Wand"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\Wand",
+        "$env:LocalAppData\\Wand"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "Get-ChildItem -Path \"$original_dir\\app\" -Exclude lib | Remove-Item -Recurse -Force",
+        "$unzip_dir = (Get-ChildItem -Path \"$original_dir\\app\\lib\" -Directory)[0].FullName",
+        "Move-Item -Path \"${unzip_dir}\\*\" -Destination \"$original_dir\\app\" -Force",
+        "Remove-Item -Path \"$original_dir\\app\\lib\" -Recurse -Force",
+        "New-Item -ItemType Junction -Path \"$env:AppData\\Wand\\app-$version\" -Target \"$dir\\app\" | Out-Null"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "Remove-Item -Path \"$env:AppData\\Wand\\app-$version\" -Recurse -Force",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "script": [
+            "$resp = Invoke-WebRequest -Uri 'https://api.wemod.com/client/channels/stable/RELEASES'",
+            "$body = $resp.Content -replace '^\\xEF\\xBB\\xBF', ''",
+            "$download_url = $body -split '\\s' -match '^http(s?)://'",
+            "$version = $download_url -split '-' -match '\\d(\\.\\d+)+'",
+            "Write-Output $version"
+        ],
+        "regex": "(?<version>[\\d\\.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://storage-cdn.wemod.com/app/releases/stable/Wand-$version-full.nupkg"
+            }
+        }
+    }
+}
