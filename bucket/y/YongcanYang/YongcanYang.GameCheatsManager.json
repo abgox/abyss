@@ -1,0 +1,59 @@
+{
+    "version": "2.5.1",
+    "description": "将来自多个平台的单机游戏修改器汇集到一个干净整洁且开源的面板中 | brings single-player game trainers from multiple sources into one clean, open-source dashboard",
+    "homepage": "https://gamezonelabs.com/products/gcm",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/dyang886/Game-Cheats-Manager/releases/download/v2.5.1/Game.Cheats.Manager.Portable.2.5.1.zip",
+            "hash": "fcc32fd5c77a5d3a12fa97c311b16a7caa8f85ff436abc5e6cea06d25a806dfd"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\Game Cheats Manager.exe",
+            "Game Cheats Manager"
+        ]
+    ],
+    "link": [
+        "$env:AppData\\GCM Settings",
+        "$env:AppData\\GCM Trainers"
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/dyang886/Game-Cheats-Manager/releases/download/v$version/Game.Cheats.Manager.Portable.$version.zip"
+            }
+        }
+    }
+}
