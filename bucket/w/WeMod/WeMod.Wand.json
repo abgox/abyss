@@ -12,6 +12,7 @@
             "hash": "00cc347f48e2e7e61f190a13970ad68f8105e3b8dffdfcbdaa51f34c010c1802"
         }
     },
+    "extract_dir": "lib\\net45",
     "extract_to": "app",
     "shortcuts": [
         [
@@ -27,10 +28,6 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "Get-ChildItem -Path \"$original_dir\\app\" -Exclude lib | Remove-Item -Recurse -Force",
-        "$unzip_dir = (Get-ChildItem -Path \"$original_dir\\app\\lib\" -Directory)[0].FullName",
-        "Move-Item -Path \"${unzip_dir}\\*\" -Destination \"$original_dir\\app\" -Force",
-        "Remove-Item -Path \"$original_dir\\app\\lib\" -Recurse -Force",
         "New-Item -ItemType Junction -Path \"$env:AppData\\Wand\\app-$version\" -Target \"$dir\\app\" | Out-Null"
     ],
     "post_install": [
@@ -52,14 +49,8 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "script": [
-            "$resp = Invoke-WebRequest -Uri 'https://api.wemod.com/client/channels/stable/RELEASES'",
-            "$body = $resp.Content -replace '^\\xEF\\xBB\\xBF', ''",
-            "$download_url = $body -split '\\s' -match '^http(s?)://'",
-            "$version = $download_url -split '-' -match '\\d(\\.\\d+)+'",
-            "Write-Output $version"
-        ],
-        "regex": "(?<version>[\\d\\.]+)"
+        "url": "https://api.wemod.com/client/channels/stable/RELEASES",
+        "regex": "Wand-([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
