@@ -1,0 +1,56 @@
+{
+    "version": "3.0.2.1",
+    "description": "通过 NVIDIA 驱动设置 API 编辑驱动配置文件的 Windows 工具 | a Windows tool for editing NVIDIA driver profiles through the NVIDIA Driver Settings API",
+    "homepage": "https://github.com/Orbmu2k/nvidiaProfileInspector",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Orbmu2k/nvidiaProfileInspector/releases/download/v3.0.2.1/nvidiaProfileInspector.zip",
+            "hash": "88dcf3514111e8de630688467c03c36d8c2a8ad9ebc8073f27c069f82b75bb40"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\nvidiaProfileInspector.exe",
+            "NVIDIA Profile Inspector"
+        ]
+    ],
+    "link": "$env:LocalAppData\\nvidiaProfileInspector",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Orbmu2k/nvidiaProfileInspector/releases/download/v$version/nvidiaProfileInspector.zip"
+            }
+        }
+    }
+}
