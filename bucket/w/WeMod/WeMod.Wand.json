@@ -22,13 +22,14 @@
     ],
     "link": [
         "$env:AppData\\Wand",
-        "$env:LocalAppData\\Wand"
+        "$env:LocalAppData\\Wand",
+        "$home\\Videos\\Wand"
     ],
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        "New-Item -ItemType Junction -Path \"$env:AppData\\Wand\\app-$version\" -Target \"$dir\\app\" | Out-Null"
+        "New-Item -ItemType Junction -Path \"$env:LocalAppData\\Wand\\app-$version\" -Target \"$dir\\app\" | Out-Null"
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -40,7 +41,7 @@
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "Remove-Item -Path \"$env:AppData\\Wand\\app-$version\" -Recurse -Force",
+        "Remove-Item -Path \"$env:LocalAppData\\Wand\\app-$version\" -Recurse -Force",
         "A-Remove-Link"
     ],
     "post_uninstall": [

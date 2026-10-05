@@ -1,34 +1,23 @@
 {
-    "version": "46.0.2",
-    "description": "灵活而强大的动态语言 | A flexible and powerful dynamic language",
-    "homepage": "https://www.aardio.com",
+    "version": "1.19.0",
+    "description": "允许你自定义 NVIDIA GeForce 驱动程序包 | lets you customize the NVIDIA GeForce Driver package",
+    "homepage": "https://www.techpowerup.com/nvcleanstall",
     "license": {
         "identifier": "Freeware"
     },
     "architecture": {
         "64bit": {
-            "url": "https://www.aardio.com/download/ide/aardio46.0.2.7z",
-            "hash": "a55384dcbaed22946af9c083724cb38c629346c4fc0f6853603e4a659d107b7f"
+            "url": "https://sg1-dl.techpowerup.com/files/NVCleanstall_1.19.0.exe#/NVCleanstall.exe",
+            "hash": "9dd36ef956af927cf41fa441f91b329a7973e13965e4e7d70e6fa9c1df1cade6"
         }
     },
     "extract_to": "app",
     "shortcuts": [
         [
-            "app\\aardio.exe",
-            "aardio"
+            "app\\NVCleanstall.exe",
+            "NVCleanstall"
         ]
     ],
-    "persist": [
-        [
-            "app\\config",
-            "config"
-        ],
-        [
-            "app\\project",
-            "project"
-        ]
-    ],
-    "cleanup": "$env:LocalAppData\\aardio",
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
@@ -51,14 +40,18 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://d.aardio.com/ide/check",
-        "jsonpath": "$.version"
+        "url": "https://www.techpowerup.com/download/techpowerup-nvcleanstall",
+        "regex": "NVCleanstall v([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://www.aardio.com/download/ide/aardio$version.7z"
+                "url": "https://sg1-dl.techpowerup.com/files/NVCleanstall_$version.exe#/NVCleanstall.exe"
             }
+        },
+        "hash": {
+            "url": "https://www.techpowerup.com/download/techpowerup-nvcleanstall",
+            "regex": "(?s)$basename.*?$sha256"
         }
     }
 }
