@@ -18,6 +18,147 @@ if (-not $env:SCOOP_HOME) { $env:SCOOP_HOME = Convert-Path (scoop prefix scoop) 
 
 . "$env:SCOOP_HOME\lib\core.ps1"
 . "$env:SCOOP_HOME\lib\autoupdate.ps1"
+
+# TODO: https://github.com/ScoopInstaller/Scoop/pull/6772
+function get_hash_for_app([String] $app, $config, [String] $version, [String] $url, [Hashtable] $substitutions) {
+    $hash = $null
+
+    $hashmode = $config.mode
+    $originurl = strip_fragment $url
+    $basename = [System.Web.HttpUtility]::UrlDecode((url_remote_filename($url)))
+
+    $substitutions = $substitutions.Clone()
+    $substitutions.Add('$url', $originurl)
+    $substitutions.Add('$baseurl', (strip_filename $originurl).TrimEnd('/'))
+    $substitutions.Add('$basename', $basename)
+    $substitutions.Add('$urlNoExt', (strip_ext $originurl))
+    $substitutions.Add('$basenameNoExt', (strip_ext $basename))
+
+    debug $substitutions
+
+    $hashfile_url = substitute $config.url $substitutions
+    debug $hashfile_url
+    if ($hashfile_url) {
+        Write-Host 'Searching hash for ' -ForegroundColor DarkYellow -NoNewline
+        Write-Host $basename -ForegroundColor Green -NoNewline
+        Write-Host ' in ' -ForegroundColor DarkYellow -NoNewline
+        Write-Host $hashfile_url -ForegroundColor Green
+    }
+
+    if ($hashmode.Length -eq 0 -and $config.url.Length -ne 0) {
+        $hashmode = 'extract'
+    }
+
+    $jsonpath = ''
+    if ($config.jp) {
+        $jsonpath = $config.jp
+        $hashmode = 'json'
+    }
+    if ($config.jsonpath) {
+        $jsonpath = $config.jsonpath
+        $hashmode = 'json'
+    }
+    $regex = ''
+    if ($config.find) {
+        $regex = $config.find
+    }
+    if ($config.regex) {
+        $regex = $config.regex
+    }
+
+    $xpath = ''
+    if ($config.xpath) {
+        $xpath = $config.xpath
+        $hashmode = 'xpath'
+    }
+
+    if (!$hashfile_url -and $url -match '^(?:.*fosshub.com\/).*(?:\/|\?dwl=)(?<filename>.*)$') {
+        $hashmode = 'fosshub'
+    }
+
+    if (!$hashfile_url -and $url -match '(?:downloads\.)?sourceforge.net\/projects?\/(?<project>[^\/]+)\/(?:files\/)?(?<file>.*)') {
+        $hashmode = 'sourceforge'
+    }
+
+    if (!$hashfile_url -and $url -match 'https:\/\/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/releases\/download\/[^\/]+\/[^\/]+') {
+        $hashmode = 'github'
+    }
+
+    switch ($hashmode) {
+        'extract' {
+            $hash = find_hash_in_textfile $hashfile_url $substitutions $regex
+        }
+        'json' {
+            $hash = find_hash_in_json $hashfile_url $substitutions $jsonpath
+        }
+        'xpath' {
+            $hash = find_hash_in_xml $hashfile_url $substitutions $xpath
+        }
+        'rdf' {
+            $hash = find_hash_in_rdf $hashfile_url $basename
+        }
+        'metalink' {
+            $hash = find_hash_in_headers $url
+            if (!$hash) {
+                $hash = find_hash_in_textfile "$url.meta4" $substitutions
+            }
+        }
+        'fosshub' {
+            $hash = find_hash_in_textfile $url $substitutions ($matches.filename + '.*?"sha256":"([a-fA-F0-9]{64})"')
+        }
+        'sourceforge' {
+            # change the URL because downloads.sourceforge.net doesn't have checksums
+            $hashfile_url = (strip_filename (strip_fragment "https://sourceforge.net/projects/$($matches['project'])/files/$($matches['file'])")).TrimEnd('/')
+            $hash = find_hash_in_textfile $hashfile_url $substitutions '"$basename":.*?"sha1":\s*"([a-fA-F0-9]{40})"'
+        }
+        'github' {
+            $hashfile_url = "https://api.github.com/repos/$($matches['owner'])/$($matches['repo'])/releases"
+            $hash = find_hash_in_json $hashfile_url $substitutions ("$..assets[?(@.browser_download_url == '" + $originurl + "')].digest")
+            if (!$hash -and ($originurl -match '^(?<prefix>https?://[^/]+)(?<path>/.*)$')) {
+                # GitHub percent-encodes special characters (e.g. '+', spaces) in browser_download_url,
+                # while manifests often use the raw characters, so the exact match above misses.
+                # Retry with the URL normalized to canonical percent-encoded form,
+                # but only when normalization actually changes the URL.
+                $encodedurl = $matches['prefix'] + (($matches['path'] -split '/' | ForEach-Object {
+                            if ($_) { [System.Uri]::EscapeDataString([System.Uri]::UnescapeDataString($_)) } else { '' }
+                        }) -join '/')
+                if ($encodedurl -cne $originurl) {
+                    $hash = find_hash_in_json $hashfile_url $substitutions ("$..assets[?(@.browser_download_url == '" + $encodedurl + "')].digest")
+                }
+            }
+        }
+    }
+
+    if ($hash) {
+        # got one!
+        Write-Host 'Found: ' -ForegroundColor DarkYellow -NoNewline
+        Write-Host $hash -ForegroundColor Green -NoNewline
+        Write-Host ' using ' -ForegroundColor DarkYellow -NoNewline
+        Write-Host "$((Get-Culture).TextInfo.ToTitleCase($hashmode)) Mode" -ForegroundColor Green
+        return $hash
+    }
+    elseif ($hashfile_url) {
+        Write-Host -f DarkYellow "Could not find hash in $hashfile_url"
+    }
+
+    Write-Host 'Downloading ' -ForegroundColor DarkYellow -NoNewline
+    Write-Host $basename -ForegroundColor Green -NoNewline
+    Write-Host ' to compute hashes!' -ForegroundColor DarkYellow
+    try {
+        Invoke-CachedDownload $app $version $url $null $null $true
+    }
+    catch [system.net.webexception] {
+        Write-Host $_ -ForegroundColor DarkRed
+        Write-Host "URL $url is not valid" -ForegroundColor DarkRed
+        return $null
+    }
+    $file = cache_path $app $version $url
+    $hash = (Get-FileHash -Path $file -Algorithm SHA256).Hash.ToLower()
+    Write-Host 'Computed hash: ' -ForegroundColor DarkYellow -NoNewline
+    Write-Host $hash -ForegroundColor Green
+    return $hash
+}
+
 . "$env:SCOOP_HOME\lib\manifest.ps1"
 . "$env:SCOOP_HOME\lib\buckets.ps1"
 . "$env:SCOOP_HOME\lib\json.ps1"
