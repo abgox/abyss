@@ -1,0 +1,59 @@
+{
+    "version": "0.47.3",
+    "description": "一个用于 NVIDIA GPU 调优和监控的应用程序 | a utility for NVIDIA GPU tuning and monitoring",
+    "homepage": "https://github.com/b00nz/mVolt",
+    "license": {
+        "identifier": "Freeware"
+    },
+    "notes_cn": "由于 Scoop 的命名限制, 'b00nz.mVolt+' 被命名为 'b00nz.mVoltPlus'。",
+    "notes": "Due to Scoop's naming limit, 'b00nz.mVolt+' is named 'b00nz.mVoltPlus'.",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/b00nz/mVolt/releases/download/v0.47.3/mVolt+.exe",
+            "hash": "2ab951d9973a0d2c23e6c9c0223ef6185a266b9b87ae02c1b2a1af145abd6a25"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\mVolt+.exe",
+            "mVolt+"
+        ]
+    ],
+    "link": "$env:LocalAppData\\mVolt+",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/b00nz/mVolt/releases/download/v$version/mVolt+.exe"
+            }
+        }
+    }
+}
