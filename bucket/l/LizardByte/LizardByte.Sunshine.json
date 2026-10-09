@@ -1,0 +1,74 @@
+{
+    "version": "2026.914.233613",
+    "description": "为 Moonlight 打造的自托管游戏串流主机 | Self-hosted game stream host for Moonlight",
+    "homepage": "https://app.lizardbyte.dev/Sunshine",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LizardByte/Sunshine/releases/download/v2026.914.233613/Sunshine-Windows-AMD64-lite.zip",
+            "hash": "233008e46f4c0e501a586cbfd6c4fd4a4c0d414a0b5fc7f13c070eb92ec3824b"
+        },
+        "arm64": {
+            "url": "https://github.com/LizardByte/Sunshine/releases/download/v2026.914.233613/Sunshine-Windows-ARM64-lite.zip",
+            "hash": "5042736897b2078e3af55f8b2bf8604bf0cd0ceb9d54ada251c4f1c7e352ba24"
+        }
+    },
+    "extract_dir": "Sunshine",
+    "extract_to": "app",
+    "bin": "app\\sunshine.bat",
+    "shortcuts": [
+        [
+            "app\\sunshine.exe",
+            "Sunshine"
+        ]
+    ],
+    "link": "$env:ProgramData\\Sunshine",
+    "persist": [
+        [
+            "app\\config",
+            "Program Files\\Sunshine\\config"
+        ]
+    ],
+    "cleanup": "$env:LocalAppData\\LizardByte\\Sunshine",
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "Copy-Item \"$bucketsdir\\$bucket\\extra\\$app\\sunshine.bat\" \"$dir\\app\" -Force"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LizardByte/Sunshine/releases/download/v$version/Sunshine-Windows-AMD64-lite.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/LizardByte/Sunshine/releases/download/v$version/Sunshine-Windows-ARM64-lite.zip"
+            }
+        }
+    }
+}
