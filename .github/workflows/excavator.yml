@@ -99,7 +99,7 @@ jobs:
               }
           }
 
-  check-sync:
+  check-hash:
     name: Check Hash Difference
     needs: excavate
     runs-on: ubuntu-latest
@@ -127,6 +127,7 @@ jobs:
 
   git-mirror:
     name: Git Mirror
+    needs: check-hash
     runs-on: ubuntu-latest
     steps:
       - uses: abgox/git-mirror-action@main

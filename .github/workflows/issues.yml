@@ -21,7 +21,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  check-sync:
+  check-hash:
     name: Check Hash Difference
     needs: issue-handler
     runs-on: ubuntu-latest
@@ -49,6 +49,7 @@ jobs:
 
   git-mirror:
     name: Git Mirror
+    needs: check-hash
     runs-on: ubuntu-latest
     steps:
       - uses: abgox/git-mirror-action@main

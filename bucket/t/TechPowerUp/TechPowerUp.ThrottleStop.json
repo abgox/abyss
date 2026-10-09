@@ -1,34 +1,33 @@
 {
-    "version": "46.4.0",
-    "description": "灵活而强大的动态语言 | A flexible and powerful dynamic language",
-    "homepage": "https://www.aardio.com",
+    "version": "9.7.3",
+    "description": "监控和调整笔记本电脑上的 CPU 节流 | Monitor and adjust CPU throttling on laptop computers",
+    "homepage": "https://www.techpowerup.com/download/techpowerup-throttlestop",
     "license": {
         "identifier": "Freeware"
     },
     "architecture": {
         "64bit": {
-            "url": "https://www.aardio.com/download/ide/aardio46.4.0.7z",
-            "hash": "8667bfa457e9b9b160d81f31150456d092e3e0b149690c0a84ce02b3bebf309e"
+            "url": "https://sg1-dl.techpowerup.com/files/ThrottleStop_9.7.3.zip",
+            "hash": "7b5e1a650a845cdab200bd6a7766d8f56ae458f633a6f2f3df5a9ec72847098a"
         }
     },
     "extract_to": "app",
     "shortcuts": [
         [
-            "app\\aardio.exe",
-            "aardio"
+            "app\\ThrottleStop.exe",
+            "ThrottleStop"
         ]
     ],
     "persist": [
         [
-            "app\\config",
-            "config"
+            "app\\Logs",
+            "Logs"
         ],
         [
-            "app\\project",
-            "project"
+            "app\\ThrottleStop.ini",
+            "ThrottleStop.ini"
         ]
     ],
-    "cleanup": "$env:LocalAppData\\aardio",
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
@@ -51,14 +50,18 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://d.aardio.com/ide/check",
-        "jsonpath": "$.version"
+        "url": "https://www.techpowerup.com/download/techpowerup-throttlestop",
+        "regex": "ThrottleStop ([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://www.aardio.com/download/ide/aardio$version.7z"
+                "url": "https://sg1-dl.techpowerup.com/files/ThrottleStop_$version.zip"
             }
+        },
+        "hash": {
+            "url": "https://www.techpowerup.com/download/techpowerup-throttlestop",
+            "regex": "(?s)$basename.*?$sha256"
         }
     }
 }
