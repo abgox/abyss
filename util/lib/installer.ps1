@@ -39,7 +39,7 @@ function A-Invoke-InstallerProcess {
 
     Write-Host "Running the installer: $(Split-Path $FilePath -Leaf) $ArgumentList"
 
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi = [System.Diagnostics.ProcessStartInfo]::new()
     $psi.FileName = $FilePath
     $psi.Arguments = if ($ArgumentList) { $ArgumentList -join ' ' } else { '' }
     $psi.WorkingDirectory = Split-Path $FilePath -Parent
@@ -102,7 +102,7 @@ function A-Invoke-UninstallerProcess {
 
     Write-Host "Running the uninstaller: $(Split-Path $FilePath -Leaf) $ArgumentList"
 
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi = [System.Diagnostics.ProcessStartInfo]::new()
     $psi.FileName = $FilePath
     $psi.Arguments = if ($ArgumentList) { $ArgumentList -join ' ' } else { '' }
     $psi.WorkingDirectory = Split-Path $FilePath -Parent
@@ -186,7 +186,9 @@ function A-Wait-ForRelease {
     $interval = 500
     while ($elapsed -lt $TimeoutSec * 1000) {
         if (!(A-Test-Path $Path)) { return }
-        $busy = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'Un_*.exe' -and $_.CommandLine -like "*$Path*" }
+        $busy = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+            $_.Name -like 'Un_*.exe' -and $_.CommandLine -and $_.CommandLine.Contains($Path, [System.StringComparison]::OrdinalIgnoreCase)
+        }
         if (!$busy) {
             $locked = (Get-Process).Where({
                     $procPath = $null
@@ -731,7 +733,8 @@ function A-Install-Font {
         }
     }
     $filter = "*.$FontType"
-    $currentBuildNumber = [int] (Get-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue).CurrentBuildNumber
+    $currentBuildNumberValue = (Get-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue).CurrentBuildNumber
+    $currentBuildNumber = if ($null -eq $currentBuildNumberValue) { [System.Environment]::OSVersion.Version.Build } else { [int]$currentBuildNumberValue }
     $windows10Version1809BuildNumber = 17763
     $isPerUserFontInstallationSupported = $currentBuildNumber -ge $windows10Version1809BuildNumber
     if (!$isPerUserFontInstallationSupported -and !$global) {
@@ -749,8 +752,8 @@ function A-Install-Font {
         # See https://github.com/matthewjberger/scoop-nerd-fonts/issues/198#issuecomment-1488996737
         New-Item $fontInstallDir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
         $accessControlList = Get-Acl $fontInstallDir
-        $allApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-1'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
-        $allRestrictedApplicationPackagesAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-2'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
+        $allApplicationPackagesAccessRule = [System.Security.AccessControl.FileSystemAccessRule]::new([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-1'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
+        $allRestrictedApplicationPackagesAccessRule = [System.Security.AccessControl.FileSystemAccessRule]::new([System.Security.Principal.SecurityIdentifier]::new('S-1-15-2-2'), 'ReadAndExecute', 'ContainerInherit,ObjectInherit', 'None', 'Allow')
         $accessControlList.SetAccessRule($allApplicationPackagesAccessRule)
         $accessControlList.SetAccessRule($allRestrictedApplicationPackagesAccessRule)
         Set-Acl -AclObject $accessControlList $fontInstallDir
@@ -797,7 +800,7 @@ function A-Uninstall-Font {
     Get-ChildItem -LiteralPath $dir -Filter $filter -Recurse -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
         Get-ChildItem -LiteralPath $fontInstallDir -Filter $_.Name -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
             try {
-                Rename-Item -LiteralPath $_.FullName -NewName $_.Name -ErrorVariable LockError -ErrorAction Stop
+                Rename-Item -LiteralPath $_.FullName -NewName $_.Name -ErrorAction Stop
             }
             catch {
                 error "Cannot uninstall '$app' font.`nIt is currently being used by another application.`nPlease close all applications that are using it (e.g. vscode) and try again."
@@ -851,7 +854,7 @@ function A-Uninstall-PowerToysRunPlugin {
         $PluginPath = "$PluginsDir\$PluginName"
         if (A-Test-Path $PluginPath) {
             Write-Host "Removing $PluginPath"
-            Remove-Item -LiteralPath $PluginPath -Recurse -Force -ErrorAction Stop
+            A-Remove-Tree $PluginPath
             Remove-Item -LiteralPath $OutFile -Force -ErrorAction SilentlyContinue
         }
     }

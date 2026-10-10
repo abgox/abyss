@@ -71,7 +71,7 @@ function A-Test-DirectoryNotEmpty {
     if (!(A-Test-Directory $Path)) {
         return $false
     }
-    return [bool](Get-ChildItem -LiteralPath $Path -Force | Select-Object -First 1)
+    return [bool](Get-ChildItem -LiteralPath $Path -Force -ErrorAction SilentlyContinue | Select-Object -First 1)
 }
 
 function A-Remove-EmptyDirectory {
@@ -79,17 +79,26 @@ function A-Remove-EmptyDirectory {
         [string]$Path,
         [string]$StopAt
     )
+    $stop = $StopAt.TrimEnd('\', '/')
     $pp = [System.IO.Path]::GetDirectoryName($Path)
     $last = $null
-    while ($pp -and $pp.StartsWith($StopAt, [System.StringComparison]::OrdinalIgnoreCase) -and $pp.Length -gt $StopAt.Length) {
+    while ($pp) {
+        if ($pp.TrimEnd('\', '/') -eq $stop) { break }
+        if (!(A-Test-PathPrefix $pp $StopAt)) { break }
         if (A-Test-DirectoryNotEmpty $pp) { break }
-        try { Remove-Item -LiteralPath $pp -Force -ErrorAction Stop; $last = $pp } catch { break }
+        A-Remove-Tree $pp
+        if (A-Test-Path $pp) { break }
+        $last = $pp
         $pp = [System.IO.Path]::GetDirectoryName($pp)
     }
     if ($last) { Write-Host "Removing $last" }
 }
 
 function A-Test-Link {
+    <#
+    .SYNOPSIS
+        返回链接类型：'SymbolicLink' / 'Junction' / 'HardLink'；非链接返回 $null
+    #>
     param(
         [string]$Path
     )
@@ -100,6 +109,182 @@ function A-Test-Link {
     catch {
         return $false
     }
+}
+
+function A-Test-SoftLink {
+    # 只认 SymbolicLink / Junction，排除 HardLink 和非链接
+    param([string]$Path)
+    (A-Test-Link $Path) -in @('SymbolicLink', 'Junction')
+}
+
+function A-Get-LinkTarget {
+    <#
+    .SYNOPSIS
+        返回软链接指向的绝对路径；不是软链接或无目标时返回 $null
+    .NOTES
+        Junction 的目标恒为绝对路径；符号链接可能是相对路径，此时按链接所在目录解析
+    #>
+    param([string]$Path)
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (!$item -or ($item.LinkType -notin @('SymbolicLink', 'Junction'))) { return $null }
+    $target = @($item.Target)[0]
+    if (!$target) { return $null }
+    if ([System.IO.Path]::IsPathRooted($target)) { return $target }
+    [System.IO.Path]::Combine((Split-Path $item.FullName -Parent), $target)
+}
+
+function A-Test-LinkPointsTo {
+    # $Path 是链接，且直接指向 $Target 时返回 $true
+    param([string]$Path, [string]$Target)
+    # 注意：局部变量不能叫 $target，与参数 $Target 冲突（PS 变量名大小写不敏感），会覆盖参数
+    $resolved = A-Get-LinkTarget $Path
+    if (!$resolved -or !$Target) { return $false }
+    try {
+        $a = [System.IO.Path]::GetFullPath($resolved).TrimEnd('\', '/')
+        $b = [System.IO.Path]::GetFullPath($Target).TrimEnd('\', '/')
+        return $a -ieq $b
+    }
+    catch { return $false }
+}
+
+function A-Clear-ReadOnly {
+    <#
+    .SYNOPSIS
+        去掉只读属性，使 .NET 的 Delete 能成功
+    .NOTES
+        对 Junction / 符号链接只影响链接本身，不会污染目标项
+    #>
+    param([string]$Path)
+    try {
+        $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+        $item.Attributes = [IO.FileAttributes]($item.Attributes -band (-bnot [IO.FileAttributes]::ReadOnly))
+    }
+    catch {}
+}
+
+function A-Remove-FileItem {
+    param([string]$Path)
+    try {
+        A-Clear-ReadOnly $Path
+        [System.IO.File]::Delete($Path)
+    }
+    catch { warn "Remove failed: $Path ($($_.Exception.Message))" }
+}
+
+function A-Remove-DirectoryItem {
+    # 递归删除；遇到内部链接只摘链接，不穿透到目标内容
+    param([string]$Path)
+    try {
+        $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+            A-Clear-ReadOnly $Path
+            [System.IO.Directory]::Delete($Path, $false)
+            return
+        }
+        $dir = [System.IO.DirectoryInfo]::new($Path)
+        try { $subs = @($dir.EnumerateDirectories()) } catch { $subs = @() }
+        try { $files = @($dir.EnumerateFiles()) } catch { $files = @() }
+        foreach ($sub in $subs) { A-Remove-DirectoryItem $sub.FullName }
+        foreach ($file in $files) { A-Remove-FileItem $file.FullName }
+        A-Clear-ReadOnly $Path
+        [System.IO.Directory]::Delete($Path, $false)
+    }
+    catch { warn "Remove failed: $Path ($($_.Exception.Message))" }
+}
+
+function A-Remove-Tree {
+    <#
+    .SYNOPSIS
+        递归删除，遇到内部链接只删链接，不穿透（替代 Remove-Item -Recurse）
+    .NOTES
+        纯 .NET 实现：删除前对只读项先清属性
+    #>
+    param([string]$Path)
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (!$item) { return }
+    if ($item.PSIsContainer) { A-Remove-DirectoryItem $item.FullName }
+    else { A-Remove-FileItem $item.FullName }
+}
+
+function A-Remove-LinkItem {
+    <#
+    .SYNOPSIS
+        只删除链接本身，绝不穿透到目标内容（含悬空链接）
+    .NOTES
+        不是 SymbolicLink/Junction 时什么都不做，避免误删真实目录；失败只告警不抛异常
+    #>
+    param([string]$Path)
+    if (!(A-Test-SoftLink $Path)) { return }
+    try {
+        if ((Get-Item -LiteralPath $Path -Force -ErrorAction Stop).PSIsContainer) {
+            A-Clear-ReadOnly $Path
+            [System.IO.Directory]::Delete($Path, $false)
+        }
+        else {
+            A-Remove-FileItem $Path
+        }
+    }
+    catch { warn "Unlink failed: $Path ($($_.Exception.Message))" }
+}
+
+function A-Copy-Link {
+    <#
+    .SYNOPSIS
+        在 Destination 重建与 Path 同类型、同指向的链接，成功返回 $true
+    .NOTES
+        指向不存在（悬空）或没有创建符号链接的权限时 New-Item 会失败，
+        此时返回 $false，由调用方回退为直接改名
+    #>
+    param([string]$Path, [string]$Destination)
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (!$item -or ($item.LinkType -notin @('SymbolicLink', 'Junction'))) { return $false }
+    $target = A-Get-LinkTarget $Path
+    if (!$target) { return $false }
+    A-Ensure-Directory (Split-Path $Destination -Parent)
+    try {
+        New-Item -ItemType $item.LinkType -Path $Destination -Target $target -Force -ErrorAction Stop | Out-Null
+        return $true
+    }
+    catch { return $false }
+}
+
+function A-Get-RobocopyLinkFlags {
+    <#
+    .SYNOPSIS
+        返回目录内链接的处理开关；无开关时不输出任何内容
+    .DESCRIPTION
+        $Source 本身是链接时不输出——带 /SJ 会让 robocopy 把根链接当链接复制，
+        而不跟随它取真实内容（实测 EXIT=0 且目标只剩一个链接）。
+        否则有权限用 /SJ（按链接复制），无权限用 /XJ（跳过链接）。
+    .NOTES
+        根不是链接时必须带 /SJ 或 /XJ：robocopy 默认跟随链接，会把链接指向的外部数据
+        一并复制，配合 /MOVE 则直接删掉外部数据。
+
+        调用方必须写成 @(A-Get-RobocopyLinkFlags $X) 再 splat。实测 PowerShell 5.1 下
+        把标量字符串 splat 在参数中间会让它之后的所有参数全部丢失（/XJ 与 /R:1 都被
+        丢掉，重试次数退回默认 1000000），导致 /XJ 失效并跟随链接删掉外部数据
+    #>
+    param([string]$Source)
+    if (A-Test-SoftLink $Source) { return }
+    if ($abgox_abyss.isAdmin -or $abgox_abyss.isDevMode) { '/SJ' } else { '/XJ' }
+}
+
+function A-Test-RobocopyFailure {
+    <#
+    .SYNOPSIS
+        判断 robocopy 退出码是否代表失败
+    .NOTES
+        0-3 成功（3 = 有额外文件）；4-7 是警告（部分文件跳过/不匹配），
+        对"新者胜"的合并语义可以接受。
+        >= 8 一律失败。实测（带 /R:1 /W:1 正确传参时）：
+        - /XO 或 /XJ 把源内容全部跳过    -> 退出码 0，不是 16
+        - 目标是已存在的文件             -> 退出码 16（ERROR 267 目录名无效）
+        - 源是悬空链接/不可达            -> 退出码 16（ERROR 3 找不到路径）
+        所以对 16 绝不能放行，否则 robocopy 之后那句 A-Remove-Tree $Path
+        会把源数据删掉，而目标什么都没有
+    #>
+    param([int]$Code)
+    $Code -ge 8
 }
 
 function A-Copy-Item {
@@ -127,34 +312,45 @@ function A-Copy-Item {
         A-Show-IssueCreationPrompt
         A-Exit
     }
-    $sourceItem = Get-Item -LiteralPath $Path
-    $targetDir = Split-Path $Destination -Parent
+    if ((A-Test-LinkPointsTo $Path $Destination) -or (A-Test-LinkPointsTo $Destination $Path)) { return }
+    $sourceItem = Get-Item -LiteralPath $Path -Force
+    A-Ensure-Directory (Split-Path $Destination -Parent)
 
-    A-Ensure-Directory $targetDir
+    # 源是指向不存在目标的链接时，robocopy 只会返回 16 和一个空目标
+    if (A-Test-SoftLink $Path) {
+        $sourceRoot = A-Get-LinkTarget $Path
+        if (!$sourceRoot -or !(A-Test-Path $sourceRoot)) {
+            error "Source link is dangling: $Path"
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+    }
 
     $needCopy = $true
-    if (A-Test-Path $Destination) {
-        $targetItem = Get-Item -LiteralPath $Destination
-        if ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer) {
+    if ((A-Test-Path $Destination) -or (A-Test-Link $Destination)) {
+        $targetItem = Get-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
+        if ($targetItem -and ($sourceItem.PSIsContainer -eq $targetItem.PSIsContainer)) {
             $needCopy = $targetItem.PSIsContainer -and !(A-Test-DirectoryNotEmpty $Destination)
         }
     }
     if ($needCopy) {
-        A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
         try {
-            if ($sourceItem.PSIsContainer -and !$sourceItem.LinkType) {
-                $result = & robocopy "$Path" "$Destination" /E /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
-                if ($LASTEXITCODE -ge 8) {
-                    throw $result
-                }
+            # 先清旧数据再复制
+            A-Remove-ToRecycleBin $Destination -ErrorAction SilentlyContinue
+            if ($sourceItem.PSIsContainer) {
+                # 源本身是目录链接：robocopy 以它为根取真实内容，所以根为链接时不能带 /SJ
+                $flags = @(A-Get-RobocopyLinkFlags $Path)
+                $result = & robocopy "$Path" "$Destination" /E @flags /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
+                if (A-Test-RobocopyFailure $LASTEXITCODE) { throw $result }
             }
             else {
-                Copy-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+                # File.Copy 对文件链接的行为确定：复制目标内容
+                [System.IO.File]::Copy($sourceItem.FullName, [System.IO.Path]::GetFullPath($Destination), $true)
             }
             Write-Host "Copying $Path => $Destination"
         }
         catch {
-            Remove-Item -LiteralPath $Destination -Recurse -Force -ErrorAction SilentlyContinue
+            A-Remove-Tree $Destination
             error $_
             A-Show-IssueCreationPrompt
             A-Exit
@@ -178,10 +374,38 @@ function A-Move-Item {
         return
     }
     Write-Host "Moving $Path => $Destination"
+    # 源与目标是同一个位置时，合并分支走完后 A-Remove-Tree $Path 会把目标一起删掉
+    if ([System.IO.Path]::GetFullPath($Path) -eq [System.IO.Path]::GetFullPath($Destination)) { return }
     try {
-        if (!(A-Test-Path $Destination)) {
+        $srcIsLink = A-Test-SoftLink $Path
+        # 源链接已指向目标时移动无意义，且会继续操作让目标自引用
+        if ($srcIsLink -and (A-Test-LinkPointsTo $Path $Destination)) { return }
+        $destExists = (A-Test-Path $Destination) -or (A-Test-Link $Destination)   # 含悬空链接
+        if (!$destExists) {
             A-Ensure-Directory ([System.IO.Path]::GetDirectoryName($Destination))
-            Move-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+            if ($srcIsLink -and !(A-Copy-Link $Path $Destination)) {
+                # 无法重建链接（指向悬空/无权限）时直接改名：同卷改名只动重解析点，不碰目标内容
+                Move-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+            }
+            elseif ($srcIsLink) {
+                A-Remove-LinkItem $Path
+            }
+            else {
+                # 调用方都在同一卷内，这里是改名，内部链接原样保留
+                Move-Item -LiteralPath $Path -Destination $Destination -Force -ErrorAction Stop
+            }
+        }
+        elseif ($srcIsLink) {
+            # 源是链接且目标已存在：把链接指向的真实内容合并进来（新者胜），然后只摘链接
+            # 文件链接极少出现，保守处理：保留目标，丢弃链接
+            # 从链接的真实目标发起 robocopy，这样 /SJ 只作用于内部链接，不会把根链接当链接复制
+            $srcRoot = A-Get-LinkTarget $Path
+            if ($srcRoot -and (A-Test-Directory $srcRoot) -and (A-Test-Directory $Destination)) {
+                $flags = @(A-Get-RobocopyLinkFlags $srcRoot)
+                $result = & robocopy "$srcRoot" "$Destination" /E /XO @flags /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
+                if (A-Test-RobocopyFailure $LASTEXITCODE) { throw $result }
+            }
+            A-Remove-LinkItem $Path
         }
         elseif ((A-Test-File $Path) -and (A-Test-File $Destination)) {
             if ((Get-Item -LiteralPath $Path -Force).LastWriteTimeUtc -gt (Get-Item -LiteralPath $Destination -Force).LastWriteTimeUtc) {
@@ -192,11 +416,10 @@ function A-Move-Item {
             }
         }
         else {
-            $result = & robocopy "$Path" "$Destination" /E /MOVE /XO /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
-            if ($LASTEXITCODE -ge 8) {
-                throw $result
-            }
-            Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction SilentlyContinue
+            $flags = @(A-Get-RobocopyLinkFlags $Path)
+            $result = & robocopy "$Path" "$Destination" /E /MOVE /XO @flags /MT:16 /R:1 /W:1 /NP /NFL /NDL /NJH /NJS 2>&1
+            if (A-Test-RobocopyFailure $LASTEXITCODE) { throw $result }
+            A-Remove-Tree $Path
         }
     }
     catch {
@@ -211,11 +434,18 @@ function A-Remove-ToRecycleBin {
         [Parameter(Mandatory)]
         [string]$Path
     )
+    if (A-Test-SoftLink $Path) {
+        A-Remove-LinkItem $Path
+        return
+    }
     if (!(A-Test-Path $Path)) {
         return
     }
     $shell = New-Object -ComObject Shell.Application
-    $shell.Namespace(0).ParseName($Path).InvokeVerb('delete')
+    $toDelete = $shell.Namespace(0).ParseName($Path)
+    if ($toDelete) {
+        $toDelete.InvokeVerb('delete')
+    }
 }
 
 function A-New-File {
@@ -382,6 +612,36 @@ function A-Resolve-LinkTargets {
     }
 }
 
+function A-Resolve-ViaLinks {
+    <#
+    .SYNOPSIS
+        把路径沿已建立的链接逐段解析成物理路径（不依赖文件系统解析）
+    .DESCRIPTION
+        嵌套 link 场景（$dir\app\foo 与 $dir\app\foo\bar 同时是 link 条目）下，
+        父链建好后子链的 linkPath 与 linkTarget 其实指向同一个目录。
+        若仍按普通流程走，会先把该目录当旧数据回收，再建链失败。
+    #>
+    param(
+        [string]$Path,
+        [array]$Links
+    )
+    $p = [System.IO.Path]::GetFullPath($Path)
+    if (!$Links -or $Links.Count -eq 0) { return $p }
+    $changed = $true
+    while ($changed) {
+        $changed = $false
+        foreach ($l in $Links) {
+            $lp = [System.IO.Path]::GetFullPath($l.Path)
+            $lt = [System.IO.Path]::GetFullPath($l.Target)
+            if ($lp.Length -lt $p.Length -and $p.StartsWith($lp + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+                $p = $lt + $p.Substring($lp.Length)
+                $changed = $true
+            }
+        }
+    }
+    return $p
+}
+
 function A-New-LinkBase {
     <#
     .SYNOPSIS
@@ -428,6 +688,8 @@ function A-New-LinkBase {
     }
     $_persistDir = $abgox_abyss.persist_dir, $persist_dir | Select-Object -First 1
     $sharedRoot = A-Get-SharedPersistRoot
+    # 已处理的链接，用于把后续 linkPath 解析成物理路径
+    $linked = @()
     # 建链按深度浅→深：父链接先就位，子路径行为确定
     $order = @()
     if ($LinkPaths.Count -gt 0) { $order = 0..($LinkPaths.Count - 1) | Sort-Object { A-Get-LinkDepth $LinkPaths[$_] } }
@@ -455,24 +717,23 @@ function A-New-LinkBase {
 
         $type = if ($OutFile -eq $abgox_abyss.path.LinkFile) { 'Leaf' } else { 'Container' }
 
-        # 如果链接已存在且指向正确的目标位置，则无需重复创建(避免每次安装/更新时都删除并重建链接)
-        # 注意: 需要同时确认目标位置仍然存在，以处理链接目标丢失(悬空链接)的情况
-        $linkItem = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
-        if ($linkItem -and $linkItem.LinkType -and (Test-Path -LiteralPath $linkTarget -PathType $type)) {
-            try {
-                $linkItemTarget = @($linkItem.Target)[0]
-                if ($linkItemTarget) {
-                    $existingTarget = [System.IO.Path]::GetFullPath([string]$linkItemTarget).TrimEnd('\')
-                    $expectedTarget = [System.IO.Path]::GetFullPath($linkTarget).TrimEnd('\')
-                    if ($existingTarget -ieq $expectedTarget) {
-                        continue
-                    }
-                }
-            }
-            catch {}
+        # 链接已指向正确目标且目标仍然存在时跳过，避免每次安装/更新都删除重建
+        $targetExists = Test-Path -LiteralPath $linkTarget -PathType $type
+        if ((A-Test-LinkPointsTo $linkPath $linkTarget) -and $targetExists) {
+            # 已就位的链接同样要登记：后续子 link 的 linkPath 会经它解析
+            $linked += [pscustomobject]@{ Path = $linkPath; Target = $linkTarget }
+            continue
+        }
+        # 嵌套链接：父链就位后，linkPath 经父链解析就是 linkTarget 本身（同一目录）。
+        # 这时不能再按"替换旧数据"走，否则会先把该目录回收、再建链失败。
+        $resolvedPath = A-Resolve-ViaLinks $linkPath $linked
+        $expectedTarget = [System.IO.Path]::GetFullPath($linkTarget)
+        if ($resolvedPath -eq $expectedTarget) {
+            $linked += [pscustomobject]@{ Path = $linkPath; Target = $linkTarget }
+            continue
         }
         A-Ensure-Directory (Split-Path $linkPath -Parent)
-        if (Test-Path -LiteralPath $linkTarget -PathType $type) {
+        if ($targetExists) {
             if (A-Test-Path $linkPath) {
                 try {
                     Write-Host "Removing $linkPath"
@@ -486,8 +747,8 @@ function A-New-LinkBase {
             }
         }
         else {
-            Remove-Item -LiteralPath $linkTarget -Recurse -Force -ErrorAction SilentlyContinue
-            if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-Link $linkPath)) {
+            A-Remove-Tree $linkTarget
+            if ((Test-Path -LiteralPath $linkPath -PathType $type) -and !(A-Test-SoftLink $linkPath)) {
                 A-Ensure-Directory (Split-Path $linkTarget -Parent)
                 A-Copy-Item $linkPath $linkTarget
             }
@@ -505,8 +766,24 @@ function A-New-LinkBase {
             A-Ensure-Directory $linkTarget
         }
         A-Remove-ToRecycleBin $linkPath -ErrorAction SilentlyContinue
-        New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force | Out-Null
+        try {
+            New-Item -ItemType $ItemType -Path $linkPath -Target $linkTarget -Force -ErrorAction Stop | Out-Null
+        }
+        catch {
+            error "Failed to create link: $linkPath => $linkTarget"
+            error $_.Exception.Message
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
+        # New-Item 对已存在的目标是是非终止性错误，不会进上面的 catch，必须再确认一次
+        if (!(A-Test-SoftLink $linkPath)) {
+            error "Failed to create link: $linkPath => $linkTarget"
+            error "The target may already exist, or the link type '$ItemType' may be unavailable for the current user."
+            A-Show-IssueCreationPrompt
+            A-Exit
+        }
         Write-Host "Persisting (Link) $linkPath => $linkTarget"
+        $linked += [pscustomobject]@{ Path = $linkPath; Target = $linkTarget }
     }
 }
 
@@ -611,7 +888,13 @@ function A-Remove-Link {
     $linksInUse = $null
     $abgox_abyss.path.LinkFile, $abgox_abyss.path.LinkDirectory | ForEach-Object {
         if (A-Test-Path $_) {
-            $data = Get-Content -LiteralPath $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json -ErrorAction SilentlyContinue
+            try {
+                $data = Get-Content -LiteralPath $_ -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json -ErrorAction Stop
+            }
+            catch {
+                warn "Failed to read link snapshot: $_"
+                return
+            }
             if (!$data) { return }
             $LinkPaths = $data.LinkPaths
             $LinkTargets = $data.LinkTargets
@@ -627,10 +910,10 @@ function A-Remove-Link {
                     $overlap = A-Test-LinkOverlap $p $linksInUse
                 }
                 $t = if ($LinkTargets -and $i -lt $LinkTargets.Count) { $LinkTargets[$i] } else { $null }
-                if (A-Test-Link $p) {
+                if (A-Test-SoftLink $p) {
                     try {
                         Write-Host "Unlinking $p"
-                        Remove-Item -LiteralPath $p -Force -Recurse -ErrorAction Stop
+                        A-Remove-LinkItem $p
                         A-Remove-EmptyDirectory $p ([System.IO.Path]::GetPathRoot($p))
                     }
                     catch {
@@ -641,7 +924,7 @@ function A-Remove-Link {
                 if ($purge) {
                     try {
                         Write-Host "Removing $t"
-                        Remove-Item -LiteralPath $t -Force -Recurse -ErrorAction Stop
+                        A-Remove-Tree $t
                         A-Remove-EmptyDirectory $t ([System.IO.Path]::GetPathRoot($t))
                     }
                     catch {
@@ -792,11 +1075,11 @@ function A-Remove-TempData {
         if (A-Test-Path $p) {
             try {
                 Write-Host "Removing $p"
-                Remove-Item -LiteralPath $p -Force -Recurse -ErrorAction Stop
+                A-Remove-Tree $p
                 $parent = Split-Path $p -Parent
-                if (!(A-Test-DirectoryNotEmpty $parent)) {
+                if ($parent -and !(A-Test-DirectoryNotEmpty $parent)) {
                     Write-Host "Removing $parent"
-                    Remove-Item -LiteralPath $parent -Force -Recurse -ErrorAction Stop
+                    A-Remove-Tree $parent
                 }
             }
             catch {

@@ -43,7 +43,7 @@
             if ($target -match 'AppData\\(Roaming|Local)\\.*') {
                 $from = [System.IO.Path]::Combine($home, $target)
                 $exists = A-Test-Directory $from
-                $isLink = A-Test-Link $from
+                $isLink = A-Test-SoftLink $from
                 if ($exists -and !$isLink) {
                     A-Copy-Item $from $to
                 }

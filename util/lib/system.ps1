@@ -198,8 +198,9 @@ function A-Add-Path {
     if (get_config USE_ISOLATED_PATH) {
         Add-Path -Path ('%' + $scoopPathEnvVar + '%') -Global:$global
     }
-    $oldPath = (Get-EnvVar -Name $scoopPathEnvVar -Global:$Global).Split(';')
-    $Paths = $Paths | ForEach-Object { A-Resolve-SpecialPath $_ } | Where-Object { $_ -notin $oldPath }
+    $oldPathValue = Get-EnvVar -Name $scoopPathEnvVar -Global:$global
+    $oldPath = if ($oldPathValue) { $oldPathValue.Split(';') } else { @() }
+    $Paths = $Paths | ForEach-Object { A-Resolve-SpecialPath $_ } | Where-Object { $_ -and ($_ -notin $oldPath) }
     if (!$Paths) { return }
     Add-Path -Path $Paths -TargetEnvVar $scoopPathEnvVar -Global:$global
     @{ Paths = $Paths } | ConvertTo-Json | Out-File -LiteralPath $abgox_abyss.path.EnvPath -Force -Encoding utf8
@@ -227,8 +228,16 @@ function A-Set-EnvVarShared {
             $name = $_.Name
             $owner = $env_set_shared.$name.owner
             $has_other_owner = $owner | Where-Object { $_ -ne $app } | ForEach-Object {
-                $ownerDir = A-Get-AppCurrentDir "$scoopdir\apps\$_"
-                (A-Test-File "$ownerDir\scoop-manifest.json") -or (A-Test-File "$ownerDir\manifest.json")
+                $stillInstalled = $false
+                foreach ($root in @($scoopdir, $globaldir)) {
+                    if (!$root) { continue }
+                    $ownerDir = A-Get-AppCurrentDir ([System.IO.Path]::Combine($root, 'apps', $_))
+                    if ((A-Test-File "$ownerDir\scoop-manifest.json") -or (A-Test-File "$ownerDir\manifest.json")) {
+                        $stillInstalled = $true
+                        break
+                    }
+                }
+                $stillInstalled
             }
             if ($has_other_owner) { return }
             Write-Output "Removing $(if ($global) {'system'} else {'user'}) environment variable: $([char]0x1b)[34m$name$([char]0x1b)[0m"
