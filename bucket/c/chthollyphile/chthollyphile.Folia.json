@@ -1,0 +1,58 @@
+{
+    "version": "0.7.17",
+    "description": "一款带有沉浸式全屏歌词的音乐播放器 | A music player with immersive full-screen lyrics",
+    "homepage": "https://github.com/chthollyphile/folia-major",
+    "license": {
+        "identifier": "AGPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/chthollyphile/folia-major/releases/download/v0.7.17/Folia-Setup-0.7.17.exe",
+            "hash": "06234c4837504c7798576ff816898a054494e814e3de225787dd33c6c59eff1a"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\Folia.exe",
+            "Folia"
+        ]
+    ],
+    "link": "$env:AppData\\Folia",
+    "cleanup": "$env:LocalAppData\\folia-major-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall Folia.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/chthollyphile/folia-major/releases/download/v$version/Folia-Setup-$version.exe"
+            }
+        }
+    }
+}
