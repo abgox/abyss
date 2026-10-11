@@ -1,0 +1,59 @@
+{
+    "version": "0.2.0-rc.2",
+    "description": "DeepSeek Harness（dsh）是由深度求索（DeepSeek AI）开发的开源智能体测试框架 | DeepSeek Harness (dsh) is an open-source agent harness developed by DeepSeek AI",
+    "homepage": "https://www.deepseek.com/harness",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe",
+            "hash": "d61cd8882f8b8a1251144320493ad27920d15139503eba2465b9579eee720cfc"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\DeepSeek Harness.exe",
+            "DeepSeek Harness"
+        ]
+    ],
+    "link": [
+        "$home\\.dsh",
+        "$home\\Documents\\deepseek-harness"
+    ],
+    "cleanup": "$env:LocalAppData\\@deepseek-aidsh-desktop-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall DeepSeek Harness.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "from_installer": true
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe"
+            }
+        }
+    }
+}
