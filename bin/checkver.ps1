@@ -477,8 +477,13 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
             if ($commitMsg) {
                 Write-Host $commitMsg -ForegroundColor Yellow
                 if ($script:Commit) {
-                    git -c core.safecrlf=false add -- $file
-                    git -c core.safecrlf=false commit -m $commitMsg -- $file
+                    if ((Test-Path -LiteralPath "$PSScriptRoot\..\.jj") -and (Get-Command jj -ErrorAction SilentlyContinue)) {
+                        jj commit -m $commitMsg ($file -replace '^.*?\\bucket\\', 'bucket\')
+                    }
+                    else {
+                        git -c core.safecrlf=false add -- $file
+                        git -c core.safecrlf=false commit -m $commitMsg -- $file
+                    }
                 }
             }
         }
