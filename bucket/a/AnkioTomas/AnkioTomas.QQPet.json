@@ -1,0 +1,58 @@
+{
+    "version": "0.6.6",
+    "description": "QQ 宠物的跨平台复刻版本 | Cross-platform remake version of QQ Pet",
+    "homepage": "https://pet.ankio.net",
+    "license": {
+        "identifier": "GPL-3.0-or-later"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/AnkioTomas/qqpet/releases/download/v0.6.6/QQPet.Setup.0.6.6.exe",
+            "hash": "9bbb8069970f6940aeda2ee429d213dfe88c1c7cd74c7b7595f7bb8e19af644e"
+        }
+    },
+    "shortcuts": [
+        [
+            "app\\QQPet.exe",
+            "QQPet"
+        ]
+    ],
+    "link": "$env:AppData\\QQPet",
+    "cleanup": "$env:LocalAppData\\qqpet-updater",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "A-Install-App -Uninstaller 'app\\Uninstall QQPet.exe'"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link",
+        "A-Uninstall-App"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/AnkioTomas/qqpet/releases/download/v$version/QQPet.Setup.$version.exe"
+            }
+        }
+    }
+}
