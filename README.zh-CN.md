@@ -1,10 +1,11 @@
-<h1 align="center">✨<a href="https://abyss.abgox.com">abyss</a>✨</h1>
+<h1 align="center"><a href="https://abyss.abgox.com">abyss</a></h1>
 
 <p align="center">
     <a href="README.md">English</a> |
+    <span>简体中文</span> |
     <a href="https://github.com/abgox/abyss">GitHub</a> |
-    <a href="https://gitee.com/abgox/abyss">Gitee</a> |
-    <a href="https://atomgit.com/abgox/abyss">AtomGit</a>
+    <a href="https://atomgit.com/abgox/abyss">AtomGit</a> |
+    <a href="https://gitee.com/abgox/abyss">Gitee</a>
 </p>
 
 <p align="center">
@@ -24,7 +25,7 @@
         <img src="https://img.shields.io/badge/platform-Windows%2010+-blue" alt="platform" />
     </a>
     <a href="https://abyss.abgox.com/manifests">
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifests.json&query=%24.count&label=manifests" alt="manifests" />
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Findex%2Fmanifests.json&query=%24.count&label=manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
         <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
@@ -75,7 +76,7 @@
 
 > [!TIP]
 >
-> - 如果你无法访问 GitHub ，建议使用 [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors)
+> - 如果你无法访问 GitHub ，建议使用 [scoop-installer-mirrors](https://atomgit.com/scoop-installer-mirrors)
 > - 它可以让你正常安装并使用 Scoop，无需访问 GitHub
 
 - [Scoop](https://scoop.sh)
@@ -83,25 +84,21 @@
 
 ## 如果正在使用 Scoop
 
-1. 添加 [abyss](https://abyss.abgox.com) bucket ([GitHub](https://github.com/abgox/abyss) 或 [Gitee](https://gitee.com/abgox/abyss))
+1. 添加 [abyss](https://abyss.abgox.com) bucket
 
    ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
    ```
 
    ```shell
+   scoop bucket add abyss https://atomgit.com/abgox/abyss
+   ```
+
+   ```shell
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
-2. 在 [PowerShell](https://www.microsoft.com/powershell) 中，使用 [PSCompletions](https://pscompletions.abgox.com) 添加 `scoop` 命令补全
-
-   ```shell
-   scoop install abyss/abgox.PSCompletions
-   ```
-
-   ```powershell
-   Import-Module PSCompletions
-   ```
+2. 使用 [PSCompletions](https://pscompletions.abgox.com) 添加 `scoop` 命令补全
 
    ```shell
    psc add scoop
@@ -117,8 +114,13 @@
 
 [scoop-tools](https://scoop-tools.abgox.com) 允许你临时使用替换之后的代理 url 来下载安装包
 
-- GitHub: https://github.com/abgox/scoop-tools
-- Gitee: https://gitee.com/abgox/scoop-tools
+```shell
+scoop install abyss/abgox.scoop-install
+```
+
+```shell
+scoop install abyss/abgox.scoop-update
+```
 
 ## License
 

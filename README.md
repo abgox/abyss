@@ -1,10 +1,11 @@
-<h1 align="center">✨<a href="https://abyss.abgox.com">abyss</a>✨</h1>
+<h1 align="center"><a href="https://abyss.abgox.com">abyss</a></h1>
 
 <p align="center">
+    <span>English</span> |
     <a href="README.zh-CN.md">简体中文</a> |
     <a href="https://github.com/abgox/abyss">GitHub</a> |
-    <a href="https://gitee.com/abgox/abyss">Gitee</a> |
-    <a href="https://atomgit.com/abgox/abyss">AtomGit</a>
+    <a href="https://atomgit.com/abgox/abyss">AtomGit</a> |
+    <a href="https://gitee.com/abgox/abyss">Gitee</a>
 </p>
 
 <p align="center">
@@ -24,7 +25,7 @@
         <img src="https://img.shields.io/badge/platform-Windows%2010+-blue" alt="platform" />
     </a>
     <a href="https://abyss.abgox.com/manifests">
-        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fabyss.abgox.com%2Fmanifests.json&query=%24.count&label=manifests" alt="manifests" />
+        <img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fabgox%2Fabyss%2Frefs%2Fheads%2Findex%2Fmanifests.json&query=%24.count&label=manifests" alt="manifests" />
     </a>
     <a href="https://github.com/abgox/abyss/commits">
         <img src="https://img.shields.io/github/commit-activity/m/abgox/abyss" alt="commit activity" />
@@ -75,7 +76,7 @@
 
 > [!TIP]
 >
-> - It is recommended to use the [scoop-installer-mirrors](https://gitee.com/scoop-installer-mirrors) if you cannot access GitHub.
+> - It is recommended to use the [scoop-installer-mirrors](https://atomgit.com/scoop-installer-mirrors) if you cannot access GitHub.
 > - It allows you to install and use Scoop normally without accessing GitHub.
 
 - [Scoop](https://scoop.sh)
@@ -83,25 +84,21 @@
 
 ## If you are currently using Scoop
 
-1. Add the [abyss](https://abyss.abgox.com) bucket from [GitHub](https://github.com/abgox/abyss) or [Gitee](https://gitee.com/abgox/abyss).
+1. Add the [abyss](https://abyss.abgox.com) bucket.
 
    ```shell
    scoop bucket add abyss https://github.com/abgox/abyss
    ```
 
    ```shell
+   scoop bucket add abyss https://atomgit.com/abgox/abyss
+   ```
+
+   ```shell
    scoop bucket add abyss https://gitee.com/abgox/abyss
    ```
 
-2. Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com) in [PowerShell](https://www.microsoft.com/powershell).
-
-   ```shell
-   scoop install abyss/abgox.PSCompletions
-   ```
-
-   ```powershell
-   Import-Module PSCompletions
-   ```
+2. Add `scoop` completion via [PSCompletions](https://pscompletions.abgox.com).
 
    ```shell
    psc add scoop
@@ -117,8 +114,13 @@
 
 [scoop-tools](https://scoop-tools.abgox.com) allows you to temporarily use the replaced proxy URL to download app packages.
 
-- GitHub: https://github.com/abgox/scoop-tools
-- Gitee: https://gitee.com/abgox/scoop-tools
+```shell
+scoop install abyss/abgox.scoop-install
+```
+
+```shell
+scoop install abyss/abgox.scoop-update
+```
 
 ## License
 
