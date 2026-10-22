@@ -6,34 +6,20 @@
         "identifier": "Microsoft Software License",
         "url": "https://code.visualstudio.com/license/"
     },
-    "notes_cn": [
-        "通过运行以下命令将 Visual Studio Code 添加到右键菜单选项：",
-        "  reg import \"$dir\\install-context.reg\"",
-        "若要关联文件类型，请运行：",
-        "  reg import \"$dir\\install-associations.reg\"",
-        "若要集成 GitHub，请运行：",
-        "  reg import \"$dir\\install-github-integration.reg\""
-    ],
-    "notes": [
-        "Add Visual Studio Code as a context menu option by running:",
-        "  reg import \"$dir\\install-context.reg\"",
-        "For file associations, run:",
-        "  reg import \"$dir\\install-associations.reg\"",
-        "For github integration, run:",
-        "  reg import \"$dir\\install-github-integration.reg\""
-    ],
     "architecture": {
         "64bit": {
-            "url": "https://update.code.visualstudio.com/1.143.0/win32-x64-archive/stable#/dl.7z",
-            "hash": "459280b4adffd4a17174c6881289f97b005f645a9c79d50274b8ff9bc237e699"
+            "url": "https://update.code.visualstudio.com/1.143.0/win32-x64-user/stable#/dl.exe",
+            "hash": "c7617f4702e7624becbec8d3c2be4432c20402b6911fc0d2aba08971d2afb53a"
         },
         "arm64": {
-            "url": "https://update.code.visualstudio.com/1.143.0/win32-arm64-archive/stable#/dl.7z",
-            "hash": "2179026405fd7a5ada6e8eb16108e8a2ad2e61f0169721d871130236fda14645"
+            "url": "https://update.code.visualstudio.com/1.143.0/win32-arm64-user/stable#/dl.exe",
+            "hash": "0c988752da798465c533c68b2ceaa1acade0ae0bfc296dcd57dfcc0995dc3273"
         }
     },
-    "extract_to": "app",
-    "env_add_path": "app\\bin",
+    "env_add_path": [
+        "app\\bin",
+        "app\\bin\\copilot-shim"
+    ],
     "commands": "code",
     "shortcuts": [
         [
@@ -49,21 +35,7 @@
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Install",
-        " ",
-        "$_dir_path = \"$dir\\app\".Replace('\\', '\\\\')",
-        "$_exe_path = \"$dir\\app\\Code.exe\".Replace('\\', '\\\\')",
-        "Get-ChildItem \"$bucketsdir\\$bucket\\extra\\$app\" -Filter *.reg | ForEach-Object {",
-        "    $content = Get-Content $_.FullName",
-        "    $content = $content.Replace('$code_dir', $_dir_path).Replace('$code', $_exe_path)",
-        "    if ($global) {",
-        "      $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
-        "    }",
-        "    $content | Set-Content -Path \"$dir\\$($_.Name)\"",
-        "}",
-        "$_build_dir = Get-ChildItem \"$dir\\app\" -Directory | Where-Object { $_.Name -match '^[a-f0-9]{10,}$' } | Select-Object -First 1 -ExpandProperty FullName",
-        "if ($_build_dir -and (Test-Path \"$_build_dir\\resources\")) {",
-        "    New-Item -ItemType Junction -Path \"$dir\\app\\resources\" -Target \"$_build_dir\\resources\" | Out-Null",
-        "}"
+        "A-Install-App -Uninstaller 'app\\unins000.exe' -ArgumentList '/CurrentUser', '/VerySilent', '/SuppressMsgBoxes', '/NoRestart', '/MergeTasks=!runcode,!addtopath,addcontextmenufiles,addcontextmenufolders,addcontextmenubackground', '/SP-', \"/Dir=$dir\\app\""
     ],
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -76,11 +48,7 @@
         "A-Start-Uninstall",
         "A-Stop-Process",
         "A-Remove-Link",
-        "if ($cmd -eq 'uninstall') {",
-        "    Get-ChildItem $dir -File -Filter uninstall-*.reg | ForEach-Object {",
-        "        reg import $_.FullName >nul 2>&1",
-        "    }",
-        "}"
+        "A-Uninstall-App -ArgumentList '/VerySilent', '/SuppressMsgBoxes', '/NoRestart', '/Force'"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
@@ -88,22 +56,22 @@
         "A-Complete-Uninstall"
     ],
     "checkver": {
-        "url": "https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/latest",
+        "url": "https://update.code.visualstudio.com/api/update/win32-x64-user/stable/latest",
         "jsonpath": "$.productVersion"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://update.code.visualstudio.com/$version/win32-x64-archive/stable#/dl.7z",
+                "url": "https://update.code.visualstudio.com/$version/win32-x64-user/stable#/dl.exe",
                 "hash": {
-                    "url": "https://update.code.visualstudio.com/api/versions/$version/win32-x64-archive/stable",
+                    "url": "https://update.code.visualstudio.com/api/versions/$version/win32-x64-user/stable",
                     "jsonpath": "$.sha256hash"
                 }
             },
             "arm64": {
-                "url": "https://update.code.visualstudio.com/$version/win32-arm64-archive/stable#/dl.7z",
+                "url": "https://update.code.visualstudio.com/$version/win32-arm64-user/stable#/dl.exe",
                 "hash": {
-                    "url": "https://update.code.visualstudio.com/api/versions/$version/win32-arm64-archive/stable",
+                    "url": "https://update.code.visualstudio.com/api/versions/$version/win32-arm64-user/stable",
                     "jsonpath": "$.sha256hash"
                 }
             }
