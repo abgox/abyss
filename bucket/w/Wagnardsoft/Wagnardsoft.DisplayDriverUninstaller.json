@@ -26,6 +26,7 @@
             "Program Files\\Display Driver Uninstaller\\settings"
         ]
     ],
+    "admin": true,
     "pre_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
@@ -34,10 +35,13 @@
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
-        "Get-ChildItem \"$dir\\app\\settings.original\" | ForEach-Object {",
-        "    Copy-Item $_.FullName \"$persist_dir\\settings\" -Recurse -Force",
+        "if (Test-Path \"$dir\\app\\settings.original\") {",
+        "   Get-ChildItem \"$dir\\app\\settings\" | Where-Object { $_.Name -ne 'Settings.xml' } | Remove-Item -Recurse -Force",
+        "   Get-ChildItem \"$dir\\app\\settings.original\" | ForEach-Object {",
+        "       Copy-Item $_.FullName \"$dir\\app\\settings\" -Recurse -Force",
+        "   }",
+        "   Remove-Item \"$dir\\app\\settings.original\" -Recurse -Force",
         "}",
-        "Remove-Item \"$dir\\app\\settings.original\" -Recurse -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
@@ -45,8 +49,7 @@
         ". $bucketsdir\\$bucket\\util\\_.ps1",
         "A-Start-Uninstall",
         "A-Stop-Process",
-        "A-Remove-Link",
-        "Get-ChildItem \"$persist_dir\\settings\" | Where-Object { $_.Name -ne 'Settings.xml' } | Remove-Item -Recurse -Force"
+        "A-Remove-Link"
     ],
     "post_uninstall": [
         "if (!$bucket) { $bucket = 'abyss' }",
