@@ -1,0 +1,72 @@
+{
+    "version": "3.7.3",
+    "description": "飞智 BS 系列笔记本压风散热器的第三方控制中心 | A lightweight, open-source desktop controller for Flydigi BS-series laptop coolers",
+    "homepage": "https://thrm.tianli0.top",
+    "license": {
+        "identifier": "MIT"
+    },
+    "depends": "abyss/namazso.PawnIO",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/TIANLI0/THRM/releases/download/v3.7.3/THRM-windows-portable.zip",
+            "hash": "1e8a7d1f25cc702260b4fed61abd83d0d68277f0c79bd6e7ba957fa067175c21"
+        }
+    },
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\THRM.exe",
+            "THRM"
+        ]
+    ],
+    "link": [
+        "$home\\.thrm",
+        "$env:LocalAppData\\THRM"
+    ],
+    "persist": [
+        [
+            "app\\telemetry",
+            "Program Files\\THRM\\telemetry"
+        ]
+    ],
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install",
+        "$pawnio_dir = \"$(appdir 'namazso.PawnIO')\"",
+        "if (Test-Path $pawnio_dir) {",
+        "    A-Ensure-Directory \"$dir\\app\\drivers\"",
+        "    New-Item -ItemType Junction -Path \"$dir\\app\\drivers\\PawnIO\" -Target \"$(A-Get-AppCurrentDir $pawnio_dir)\" | Out-Null",
+        "    Remove-Item \"$dir\\app\\PawnIO_setup.exe\" -Force -ErrorAction SilentlyContinue",
+        "}"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process 'THRM', 'THRM Core', 'THRM TempBridge'",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/TIANLI0/THRM/releases/download/v$version/THRM-windows-portable.zip"
+            }
+        }
+    }
+}
