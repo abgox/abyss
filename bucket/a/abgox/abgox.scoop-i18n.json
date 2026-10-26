@@ -16,7 +16,7 @@
         "A-Ensure-Directory \"$dir\\app\\original\"",
         "A-Ensure-Directory \"$dir\\app\\shims\"",
         "Get-ChildItem \"$bucketsdir\\$bucket\\extra\\$app\" | ForEach-Object {",
-        "    Move-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\app\\original\"",
+        "    Copy-Item \"$scoopdir\\shims\\$($_.Name)\" \"$dir\\app\\original\" -Force",
         "    $content = Get-Content $_.FullName -Raw",
         "    $content = $content.Replace('${scoop.ps1}', \"$scoopdir\\apps\\scoop\\current\\bin\\scoop.ps1\")",
         "    $content = $content.Replace('${scoop-i18n.ps1}', \"$scoopdir\\apps\\$app\\current\\app\\scoop-i18n.ps1\")",
@@ -29,7 +29,6 @@
     "post_install": [
         "if (!$bucket) { $bucket = 'abyss' }",
         ". $bucketsdir\\$bucket\\util\\_.ps1",
-        "@{ configFile = $configFile } | ConvertTo-Json | Out-File \"$dir\\app\\data.json\" -Encoding utf8 -Force",
         "A-Complete-Install"
     ],
     "pre_uninstall": [
