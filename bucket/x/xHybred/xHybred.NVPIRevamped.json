@@ -1,0 +1,61 @@
+{
+    "version": "7.3.2.0",
+    "description": "一个组织更完善、文档齐全、用户友好的 NVPI 分支 | A better oragnized, documented, user friendly NVPI fork",
+    "homepage": "https://www.nexusmods.com/site/mods/1287",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xHybred/NvidiaProfileInspectorRevamped/releases/download/v7.3.2.0/NVPI-R.zip",
+            "hash": "febb6e1dda9b420e918aeb54deaf176612a5f2371b0287079bd58a5103757d47"
+        }
+    },
+    "conflicts": [
+        "Orbmu2k.nvidiaProfileInspector",
+        "xHybred.NVPIRevamped"
+    ],
+    "extract_dir": "NVPI Revamped App",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\NVPI-R.exe",
+            "NVIDIA Profile Inspector Revamped (NVPI-R)"
+        ]
+    ],
+    "link": "$env:LocalAppData\\nvidiaProfileInspector",
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "A-Remove-Link"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xHybred/NvidiaProfileInspectorRevamped/releases/download/v$version/NVPI-R.zip"
+            }
+        }
+    }
+}
