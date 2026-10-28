@@ -447,7 +447,7 @@ function Invoke-ManifestResult($state, $result, $err, $cancelled) {
 
     Write-Host $ver -ForegroundColor DarkRed -NoNewline
     Write-Host " (scoop version is $expected_ver)" -NoNewline
-    $update_available = (Compare-Version -ReferenceVersion $ver -DifferenceVersion $expected_ver) -ne 0
+    $update_available = ([Scoop.VersionComparer]::Compare($ver, $expected_ver, (Get-UpdateNightlySetting))) -ne 0
 
     if ($json.autoupdate -and $update_available) {
         Write-Host ' autoupdate available' -ForegroundColor Cyan

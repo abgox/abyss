@@ -604,8 +604,7 @@ function A-Get-InstallerInfoFromWinGet {
     }
     if (!$latestVersion) {
         foreach ($v in $versions) {
-            $compare = Compare-Version -ReferenceVersion $latestVersion -DifferenceVersion $v
-            if ($compare -gt 0) {
+            if ([Scoop.VersionComparer]::Compare($latestVersion, $v) -gt 0) {
                 $latestVersion = $v
             }
         }
