@@ -1,0 +1,76 @@
+{
+    "version": "1.7.1",
+    "description": "一款可在原始输入流中实现鼠标输入加速的驱动程序 | a driver which allows for the acceleration of mouse input in the raw input stream",
+    "homepage": "https://github.com/RawAccelOfficial/rawaccel",
+    "license": {
+        "identifier": "MIT"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/RawAccelOfficial/rawaccel/releases/download/v1.7.1/RawAccel_v1.7.1.zip",
+            "hash": "770fe3ae0919ca3c4d412f58c985eb27f5434decad809f7e8206de4e8852eec4"
+        }
+    },
+    "extract_dir": "RawAccel",
+    "extract_to": "app",
+    "shortcuts": [
+        [
+            "app\\rawaccel.exe",
+            "Raw Accel"
+        ]
+    ],
+    "persist": [
+        [
+            "app\\settings.json",
+            "settings.json"
+        ],
+        [
+            "app\\.config",
+            ".config"
+        ],
+        [
+            "app\\themes",
+            "themes"
+        ]
+    ],
+    "admin": true,
+    "pre_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Install"
+    ],
+    "post_install": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "Push-Location \"$dir\\app\"",
+        ".\\installer.exe",
+        "Pop-Location",
+        "A-Complete-Install"
+    ],
+    "pre_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Start-Uninstall",
+        "A-Stop-Process",
+        "Push-Location \"$dir\\app\"",
+        "if (Test-Path '.\\uninstaller.exe') { .\\uninstaller.exe }",
+        "Pop-Location"
+    ],
+    "post_uninstall": [
+        "if (!$bucket) { $bucket = 'abyss' }",
+        ". $bucketsdir\\$bucket\\util\\_.ps1",
+        "A-Complete-Uninstall"
+    ],
+    "checkver": {
+        "github": {
+            "channel": "latest"
+        }
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/RawAccelOfficial/rawaccel/releases/download/v$version/RawAccel_v$version.zip"
+            }
+        }
+    }
+}
